@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+npm run typecheck
+npx eslint 'src/**/*.ts'
+npx prettier --check 'src/**/*.ts'
+if command -v gitleaks >/dev/null 2>&1; then gitleaks detect --redact --source .; fi

@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Gyms",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/gyms",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/gyms"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/gyms/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/gyms/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/gyms",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/gyms"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/gyms/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/gyms/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/gyms/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/gyms/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/gyms/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/gyms/:id/status"
+        }
+      }
+    }
+  ]
+}

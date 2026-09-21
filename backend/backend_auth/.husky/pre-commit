@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+npx --no-install lint-staged
+npx --no-install tsc --noEmit -p tsconfig.json
+npx --no-install prettier --check .
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks detect --no-banner --redact
+else
+  echo 'gitleaks binary is required for the pre-commit security gate.' >&2
+  exit 1
+fi

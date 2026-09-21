@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Profile",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/profile",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/profile"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/profile/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/profile/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/profile",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/profile"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/profile/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/profile/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/profile/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/profile/:id"
+        }
+      }
+    }
+  ]
+}

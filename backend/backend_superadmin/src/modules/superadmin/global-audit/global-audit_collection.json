@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin GlobalAudit",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/global-audit",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/global-audit"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/global-audit/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/global-audit/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/global-audit",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/global-audit"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/global-audit/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/global-audit/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/global-audit/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/global-audit/:id"
+        }
+      }
+    }
+  ]
+}

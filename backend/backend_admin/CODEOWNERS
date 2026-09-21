@@ -1,0 +1,7 @@
+# Security-sensitive Admin backend paths require human review.
+src/modules/admin/hr/ @buildronix/security-reviewers
+src/modules/admin/finance/ @buildronix/security-reviewers
+src/modules/admin/subscriptions/ @buildronix/security-reviewers
+src/modules/admin/audit_logs/ @buildronix/security-reviewers
+src/core/auth/ @buildronix/security-reviewers
+src/core/tenant/ @buildronix/security-reviewers

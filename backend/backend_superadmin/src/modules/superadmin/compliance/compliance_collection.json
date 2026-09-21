@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Compliance",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/compliance",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/compliance"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/compliance/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/compliance/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/compliance",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/compliance"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/compliance/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/compliance/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/compliance/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/compliance/:id"
+        }
+      }
+    }
+  ]
+}

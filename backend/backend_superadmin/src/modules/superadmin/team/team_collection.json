@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Team",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/team",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/team"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/team/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/team/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/team",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/team"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/team/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/team/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/team/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/team/:id"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Reports",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/reports",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/reports"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/reports/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/reports/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/reports",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/reports"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/reports/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/reports/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/reports/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/reports/:id"
+        }
+      }
+    }
+  ]
+}

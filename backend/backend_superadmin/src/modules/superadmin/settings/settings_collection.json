@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Settings",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/settings",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/settings"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/settings/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/settings/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/settings",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/settings"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/settings/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/settings/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/settings/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/settings/:id"
+        }
+      }
+    }
+  ]
+}

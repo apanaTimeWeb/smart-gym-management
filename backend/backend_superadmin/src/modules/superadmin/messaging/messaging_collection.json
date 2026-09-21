@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Messaging",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/messaging",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/messaging"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/messaging/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/messaging/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/messaging",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/messaging"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/messaging/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/messaging/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/messaging/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/messaging/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/messaging/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/messaging/:id/status"
+        }
+      }
+    }
+  ]
+}

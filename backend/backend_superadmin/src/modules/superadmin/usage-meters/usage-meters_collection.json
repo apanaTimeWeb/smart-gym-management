@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin UsageMeters",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/usage-meters",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/usage-meters"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/usage-meters/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/usage-meters/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/usage-meters",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/usage-meters"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/usage-meters/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/usage-meters/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/usage-meters/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/usage-meters/:id"
+        }
+      }
+    }
+  ]
+}

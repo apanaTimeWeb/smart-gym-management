@@ -1,0 +1,27 @@
+// RESPONSIBILITY: Owns GET endpoints for the gyms feature and contains no mutation logic.
+// FLOW: HTTP GET -> DTO validation -> query service -> repository -> canonical response interceptor.
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@/core/auth/jwt-auth.guard';
+import { RolesGuard } from '@/core/auth/roles.guard';
+import { Roles } from '@/core/auth/roles.decorator';
+import { SuperadminRole } from '@/core/auth/auth.types';
+import { GymsQueryDto } from '@/modules/superadmin/gyms/dtos/gyms-query.dto';
+import { GymsListService } from '@/modules/superadmin/gyms/services/gyms-list.service';
+import { GymsFindService } from '@/modules/superadmin/gyms/services/gyms-find.service';
+
+@ApiTags('gyms')
+@Controller('/superadmin/gyms')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(SuperadminRole.SUPERADMIN)
+export class GymsQueryController {
+  constructor(private readonly listService: GymsListService, private readonly findService: GymsFindService) {}
+  /** Returns a paginated gyms list. */
+  // SLA: STANDARD
+  @Get()
+  async findAll(@Query() query: GymsQueryDto): Promise<unknown> { return await this.listService.findGymsPage(query); }
+  /** Returns one gyms record. */
+  // SLA: FAST
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findGymsById(id); }
+}

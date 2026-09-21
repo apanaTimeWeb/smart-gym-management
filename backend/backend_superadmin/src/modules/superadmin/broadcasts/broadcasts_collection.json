@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Broadcasts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/broadcasts",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/broadcasts"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/broadcasts/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/broadcasts/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/broadcasts",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/broadcasts"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/broadcasts/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/broadcasts/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/broadcasts/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/broadcasts/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/broadcasts/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/broadcasts/:id/status"
+        }
+      }
+    }
+  ]
+}

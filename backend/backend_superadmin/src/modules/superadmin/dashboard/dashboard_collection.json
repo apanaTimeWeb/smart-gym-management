@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Dashboard",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/dashboard",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/dashboard"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/dashboard/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/dashboard/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/dashboard",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/dashboard"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/dashboard/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/dashboard/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/dashboard/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/dashboard/:id"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Infrastructure",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/infrastructure",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/infrastructure"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/infrastructure/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/infrastructure/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/infrastructure",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/infrastructure"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/infrastructure/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/infrastructure/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/infrastructure/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/infrastructure/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/infrastructure/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/infrastructure/:id/status"
+        }
+      }
+    }
+  ]
+}

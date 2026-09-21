@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Migrations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/migrations",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/migrations"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/migrations/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/migrations/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/migrations",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/migrations"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/migrations/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/migrations/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/migrations/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/migrations/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/migrations/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/migrations/:id/status"
+        }
+      }
+    }
+  ]
+}

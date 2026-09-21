@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Coupons",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/coupons",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/coupons"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/coupons/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/coupons/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/coupons",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/coupons"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/coupons/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/coupons/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/coupons/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/coupons/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/coupons/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/coupons/:id/status"
+        }
+      }
+    }
+  ]
+}

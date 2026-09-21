@@ -1,0 +1,40 @@
+// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the gyms feature.
+// FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
+import { RequireIdempotencyKey } from '@/core/cache/idempotency.decorator';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@/core/auth/jwt-auth.guard';
+import { RolesGuard } from '@/core/auth/roles.guard';
+import { Roles } from '@/core/auth/roles.decorator';
+import { SuperadminRole } from '@/core/auth/auth.types';
+import { GymsBusinessControlsService } from '@/modules/superadmin/gyms/services/gyms-business-controls.service';
+import { GymsBusinessControlsBulkActionDto } from '@/modules/superadmin/gyms/dtos/gyms-business-controls-bulk-action.dto';
+import { GymsBusinessControlsResponseDto } from '@/modules/superadmin/gyms/gyms-business-controls-response.dto';
+import { GymDetailBusinessOverviewResponseDto } from '@/modules/superadmin/gyms/gym-detail-business-overview-response.dto';
+import { GymsBulkActionService } from '@/modules/superadmin/gyms/services/gyms-bulk-action.service';
+import { GymsDetailBusinessOverviewService } from '@/modules/superadmin/gyms/services/gyms-detail-business-overview.service';
+
+@ApiTags('gyms-special')
+@Controller()
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(SuperadminRole.SUPERADMIN)
+export class GymsSpecialController {
+  constructor(private readonly businessControlsService: GymsBusinessControlsService, private readonly bulkActionService: GymsBulkActionService, private readonly detailBusinessOverviewService: GymsDetailBusinessOverviewService) {}
+
+  /** Executes GET /superadmin/gyms/business-controls. */
+  @ApiOperation({ summary: 'GET /superadmin/gyms/business-controls' })
+  @Get('superadmin/gyms/business-controls')
+  async businessControls(@Query() query: Record<string, string>): Promise<GymsBusinessControlsResponseDto> { return await this.businessControlsService.findGymsBusinessControls({ query }) as unknown as GymsBusinessControlsResponseDto; }
+
+  /** Executes POST /superadmin/gyms/business-controls. */
+  @RequireIdempotencyKey()
+  @ApiOperation({ summary: 'POST /superadmin/gyms/business-controls' })
+  @Post('superadmin/gyms/business-controls')
+  async bulkAction(@Body() body: GymsBusinessControlsBulkActionDto): Promise<GymsBusinessControlsResponseDto> { return await this.bulkActionService.applyGymsBulkAction(body) as unknown as GymsBusinessControlsResponseDto; }
+
+  /** Executes GET /superadmin/gym-detail/business-overview. */
+  @ApiOperation({ summary: 'GET /superadmin/gym-detail/business-overview' })
+  @Get('superadmin/gym-detail/business-overview')
+  async detailBusinessOverview(@Query() query: Record<string, string>): Promise<GymDetailBusinessOverviewResponseDto> { return await this.detailBusinessOverviewService.findGymsDetailBusinessOverview({ query }) as unknown as GymDetailBusinessOverviewResponseDto; }
+
+}

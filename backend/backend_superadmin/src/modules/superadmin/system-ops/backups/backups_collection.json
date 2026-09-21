@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Backups",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/backups",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/backups"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/backups/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/backups/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/backups",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/backups"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/backups/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/backups/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/backups/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/backups/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/backups/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/backups/:id/status"
+        }
+      }
+    }
+  ]
+}

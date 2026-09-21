@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Jobs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/jobs",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/jobs"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/jobs/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/jobs/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/jobs",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/jobs"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/jobs/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/jobs/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/jobs/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/jobs/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/jobs/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/jobs/:id/status"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Invoices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/invoices",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/invoices"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/invoices/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/invoices/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/invoices",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/invoices"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/invoices/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/invoices/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/invoices/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/invoices/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/invoices/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/invoices/:id/status"
+        }
+      }
+    }
+  ]
+}

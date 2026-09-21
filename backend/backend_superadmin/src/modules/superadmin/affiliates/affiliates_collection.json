@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Affiliates",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/affiliates",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/affiliates"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/affiliates/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/affiliates/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/affiliates",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/affiliates"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/affiliates/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/affiliates/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/affiliates/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/affiliates/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/affiliates/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/affiliates/:id/status"
+        }
+      }
+    }
+  ]
+}

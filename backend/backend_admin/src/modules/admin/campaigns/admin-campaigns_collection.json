@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "Buildronix Admin \u2014 campaigns",
+    "_postman_id": "admin-campaigns-v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Generated from the v1 Admin backend controller surface for feature `campaigns`."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": ""
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "v1-example-idempotency-key"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Campaign audiences compatibility endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/api/admin/campaigns/audiences",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "api",
+            "admin",
+            "campaigns",
+            "audiences"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Campaign templates compatibility endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/api/admin/campaigns/templates",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "api",
+            "admin",
+            "campaigns",
+            "templates"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Campaign recipients compatibility endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/api/admin/campaigns/recipients",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "api",
+            "admin",
+            "campaigns",
+            "recipients"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute fetchAudiences",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/campaigns/audiences",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "admin",
+            "campaigns",
+            "audiences"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute fetchTemplates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/campaigns/templates",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "admin",
+            "campaigns",
+            "templates"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute fetchRecipients",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/campaigns/recipients",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "admin",
+            "campaigns",
+            "recipients"
+          ]
+        }
+      }
+    }
+  ]
+}

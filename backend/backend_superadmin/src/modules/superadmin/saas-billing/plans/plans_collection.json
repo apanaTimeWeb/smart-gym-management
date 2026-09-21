@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Plans",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/plans",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/plans"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/plans/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/plans/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/plans",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/plans"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/plans/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/plans/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/plans/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/plans/:id"
+        }
+      }
+    }
+  ]
+}

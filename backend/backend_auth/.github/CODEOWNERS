@@ -1,0 +1,4 @@
+# Replace placeholder handles before merge.
+src/modules/auth/ @smart-gym-360-security-reviewers
+src/core/security/ @smart-gym-360-security-reviewers
+src/core/database/ @smart-gym-360-security-reviewers

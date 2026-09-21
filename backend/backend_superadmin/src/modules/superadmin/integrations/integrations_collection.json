@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Integrations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/integrations",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/integrations"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/integrations/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/integrations/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/integrations",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/integrations"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/integrations/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/integrations/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/integrations/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/integrations/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/integrations/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/integrations/:id/status"
+        }
+      }
+    }
+  ]
+}

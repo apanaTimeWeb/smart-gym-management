@@ -1,0 +1,4 @@
+# Security-sensitive infrastructure and public data-entry paths require human review.
+src/core/tenant/* @backend-reviewers
+src/core/security/* @backend-reviewers
+src/modules/landing/* @backend-reviewers

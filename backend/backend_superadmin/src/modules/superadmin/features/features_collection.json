@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Superadmin Features",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/features",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/features"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/features/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/features/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/features",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/features"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/features/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/features/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/features/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/features/:id"
+        }
+      }
+    }
+  ]
+}

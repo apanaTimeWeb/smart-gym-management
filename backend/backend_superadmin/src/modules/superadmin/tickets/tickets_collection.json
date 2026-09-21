@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin Tickets",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/tickets",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/tickets"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/tickets/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/tickets/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/tickets",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/tickets"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/tickets/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/tickets/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/tickets/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/tickets/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/tickets/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/tickets/:id/status"
+        }
+      }
+    }
+  ]
+}

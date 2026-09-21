@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Superadmin WhiteLabeling",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /superadmin/white-labeling",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/white-labeling"
+        }
+      }
+    },
+    {
+      "name": "GET /superadmin/white-labeling/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "/superadmin/white-labeling/:id"
+        }
+      }
+    },
+    {
+      "name": "POST /superadmin/white-labeling",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "/superadmin/white-labeling"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/white-labeling/:id",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/white-labeling/:id"
+        }
+      }
+    },
+    {
+      "name": "DELETE /superadmin/white-labeling/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "/superadmin/white-labeling/:id"
+        }
+      }
+    },
+    {
+      "name": "PATCH /superadmin/white-labeling/:id/status",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "/superadmin/white-labeling/:id/status"
+        }
+      }
+    }
+  ]
+}
