@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminDashboardRepository } from '@/modules/admin/dashboard/repositories/admin-dashboard-repository';
 import { AdminDashboardMapper } from '@/modules/admin/dashboard/mappers/admin-dashboard.mapper';
 import { AdminDashboardQueryDto } from '@/modules/admin/dashboard/dtos/admin-dashboard-query.dto';
+import { AdminDashboardResponseDto } from '@/modules/admin/dashboard/dtos/admin-dashboard-response.dto';
 
 @Injectable()
 export class AdminDashboardQueryService {
@@ -18,7 +19,7 @@ export class AdminDashboardQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchDashboardStats(_query?: AdminDashboardQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {};
+  async fetchDashboardStats(_query?: AdminDashboardQueryDto): Promise<AdminDashboardResponseDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {} as AdminDashboardResponseDto;
   }
 }

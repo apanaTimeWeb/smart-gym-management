@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminFinanceQueryService } from '@/modules/admin/finance/services/admin-finance-query.service';
 import { AdminFinanceQueryDto } from '@/modules/admin/finance/dtos/admin-finance-query.dto';
-import { AdminFinanceResponseDto } from '@/modules/admin/finance/dtos/admin-finance-response.dto';
+import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlResponseDto, AdminFinanceExpenseResponseDto } from '@/modules/admin/finance/dtos/admin-finance-response.dto';
 
 @ApiTags('Admin / finance')
 @Controller('admin/finance')
@@ -21,33 +21,33 @@ export class AdminFinanceQueryController {
   // SLA: STANDARD
   @Get('payments/fetchPayments')
   @ApiOperation({ summary: 'Execute fetchPayments' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceResponseDto })
-  async fetchPayments(@Query() query: AdminFinanceQueryDto): Promise<unknown> {
-    return this.service.fetchPayments(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminFinancePaymentResponseDto })
+  async fetchPayments(@Query() query: AdminFinanceQueryDto): Promise<AdminFinancePaymentResponseDto> {
+    return this.service.fetchPayments(query) as unknown as AdminFinancePaymentResponseDto;
   }
 
   // SLA: STANDARD
   @Get('summary')
   @ApiOperation({ summary: 'Execute fetchSummary' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceResponseDto })
-  async fetchSummary(@Query() query: AdminFinanceQueryDto): Promise<unknown> {
-    return this.service.fetchSummary(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceSummaryResponseDto })
+  async fetchSummary(@Query() query: AdminFinanceQueryDto): Promise<AdminFinanceSummaryResponseDto> {
+    return this.service.fetchSummary(query) as unknown as AdminFinanceSummaryResponseDto;
   }
 
   // SLA: STANDARD
   @Get('pnl')
   @ApiOperation({ summary: 'Execute fetchPnl' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceResponseDto })
-  async fetchPnl(@Query() query: AdminFinanceQueryDto): Promise<unknown> {
-    return this.service.fetchPnl(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminFinancePnlResponseDto })
+  async fetchPnl(@Query() query: AdminFinanceQueryDto): Promise<AdminFinancePnlResponseDto> {
+    return this.service.fetchPnl(query) as unknown as AdminFinancePnlResponseDto;
   }
 
   // SLA: STANDARD
   @Get('payments/fetchExpenses')
   @ApiOperation({ summary: 'Execute fetchExpenses' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceResponseDto })
-  async fetchExpenses(@Query() query: AdminFinanceQueryDto): Promise<unknown> {
-    return this.service.fetchExpenses(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminFinanceExpenseResponseDto })
+  async fetchExpenses(@Query() query: AdminFinanceQueryDto): Promise<AdminFinanceExpenseResponseDto> {
+    return this.service.fetchExpenses(query) as unknown as AdminFinanceExpenseResponseDto;
   }
 
 }

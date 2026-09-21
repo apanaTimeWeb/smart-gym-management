@@ -22,7 +22,7 @@ export class AdminDashboardQueryController {
   @Get('fetchDashboardStats')
   @ApiOperation({ summary: 'Execute fetchDashboardStats' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminDashboardResponseDto })
-  async fetchDashboardStats(@Query() query: AdminDashboardQueryDto): Promise<unknown> {
+  async fetchDashboardStats(@Query() query: AdminDashboardQueryDto): Promise<AdminDashboardResponseDto> {
     return this.service.fetchDashboardStats(query);
   }
 

@@ -1,72 +1,123 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin dashboard.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Dashboard response mapper → ApiResponse<T>.
 
+class DashboardMemberGrowth {
+  @ApiProperty() month!: string;
+  @ApiProperty() count!: number;
+}
+
+class DashboardRevenueTrend {
+  @ApiProperty() month!: string;
+  @ApiProperty() revenue!: number;
+  @ApiProperty() profit!: number;
+}
+
+class DashboardMembersByPlan {
+  @ApiProperty() plan!: string;
+  @ApiProperty() count!: number;
+}
+
+class DashboardMembersByStatus {
+  @ApiProperty() active!: number;
+  @ApiProperty() pending!: number;
+  @ApiProperty() expired!: number;
+}
+
+class DashboardBranchPerformance {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() revenue!: number;
+  @ApiProperty() activeMembers!: number;
+  @ApiProperty({ enum: ['up', 'down', 'flat'] }) trend!: string;
+}
+
+class DashboardSystemAlert {
+  @ApiProperty() id!: string;
+  @ApiProperty() message!: string;
+  @ApiProperty({ enum: ['high', 'medium', 'low'] }) severity!: string;
+  @ApiProperty() date!: string;
+}
+
+class DashboardExpiringMembership {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() branch!: string;
+  @ApiProperty() plan!: string;
+  @ApiProperty() expiryDate!: string;
+  @ApiProperty() daysLeft!: number;
+}
+
+class DashboardAttendanceTrendPoint {
+  @ApiProperty() date!: string;
+  @ApiProperty() count!: number;
+}
+
 export class AdminDashboardResponseDto {
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: createdAt' })
   createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: updatedAt' })
   updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalMembers' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalMembers' })
   totalMembers?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: activeMembers' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: activeMembers' })
   activeMembers?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: newMembersThisMonth' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: newMembersThisMonth' })
   newMembersThisMonth?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalRevenue' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalRevenue' })
   totalRevenue?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: monthlyRevenue' })
-  monthlyRevenue?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: netProfit' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: monthlyRevenue' })
+  monthlyRevenue?: number;
+  @ApiPropertyOptional({ description: 'Frontend contract field: netProfit' })
   netProfit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalExpenses' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalExpenses' })
   totalExpenses?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: pendingPayments' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: pendingPayments' })
   pendingPayments?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalStaff' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalStaff' })
   totalStaff?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: activeStaff' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: activeStaff' })
   activeStaff?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalProducts' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalProducts' })
   totalProducts?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: lowStockCount' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: lowStockCount' })
   lowStockCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalInquiries' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalInquiries' })
   totalInquiries?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: newInquiries' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: newInquiries' })
   newInquiries?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: cancellationRate' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: cancellationRate' })
   cancellationRate?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: retentionRate' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: retentionRate' })
   retentionRate?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: arpm' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: arpm' })
   arpm?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: memberGrowth' })
-  memberGrowth?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: revenueTrend' })
-  revenueTrend?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: membersByPlan' })
-  membersByPlan?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: membersByStatus' })
-  membersByStatus?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchLeaderboard' })
-  branchLeaderboard?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: systemAlerts' })
-  systemAlerts?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: todayAttendance' })
+  @ApiPropertyOptional({ type: [DashboardMemberGrowth], description: 'Frontend contract field: memberGrowth' })
+  memberGrowth?: DashboardMemberGrowth[];
+  @ApiPropertyOptional({ type: [DashboardRevenueTrend], description: 'Frontend contract field: revenueTrend' })
+  revenueTrend?: DashboardRevenueTrend[];
+  @ApiPropertyOptional({ type: [DashboardMembersByPlan], description: 'Frontend contract field: membersByPlan' })
+  membersByPlan?: DashboardMembersByPlan[];
+  @ApiPropertyOptional({ type: DashboardMembersByStatus, description: 'Frontend contract field: membersByStatus' })
+  membersByStatus?: DashboardMembersByStatus;
+  @ApiPropertyOptional({ type: [DashboardBranchPerformance], description: 'Frontend contract field: branchLeaderboard' })
+  branchLeaderboard?: DashboardBranchPerformance[];
+  @ApiPropertyOptional({ type: [DashboardSystemAlert], description: 'Frontend contract field: systemAlerts' })
+  systemAlerts?: DashboardSystemAlert[];
+  @ApiPropertyOptional({ description: 'Frontend contract field: todayAttendance' })
   todayAttendance?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expiringThisWeek' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: expiringThisWeek' })
   expiringThisWeek?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalInquiriesOpen' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: totalInquiriesOpen' })
   totalInquiriesOpen?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: avgAttendance' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: avgAttendance' })
   avgAttendance?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: renewalsPending' })
+  @ApiPropertyOptional({ description: 'Frontend contract field: renewalsPending' })
   renewalsPending?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expiringMemberships' })
-  expiringMemberships?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: attendanceTrend' })
-  attendanceTrend?: Record<string, unknown>;
+  @ApiPropertyOptional({ type: [DashboardExpiringMembership], description: 'Frontend contract field: expiringMemberships' })
+  expiringMemberships?: DashboardExpiringMembership[];
+  @ApiPropertyOptional({ type: [DashboardAttendanceTrendPoint], description: 'Frontend contract field: attendanceTrend' })
+  attendanceTrend?: DashboardAttendanceTrendPoint[];
 }
