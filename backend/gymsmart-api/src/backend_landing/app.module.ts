@@ -37,26 +37,7 @@ import { LandingModule } from '@/backend_landing/modules/landing/landing.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, cache: true, load: [buildValidatedConfig] }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: process.env.LOG_LEVEL ?? 'info',
-        redact: ['req.headers.authorization', 'req.headers.cookie', 'req.headers["x-api-key"]'],
-        customProps: () => {
-          const spanContext = trace.getActiveSpan()?.spanContext();
-          return {
-            context: 'HTTP',
-            traceId: spanContext?.traceId ?? 'UNAVAILABLE',
-            spanId: spanContext?.spanId ?? 'UNAVAILABLE',
-          };
-        },
-      },
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (_config: ConfigService) => buildMasterDataSourceOptions(),
-    }),
+
     CoreContextModule,
     CoreDatabaseModule,
     RedisInfrastructureModule,

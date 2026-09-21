@@ -28,10 +28,10 @@ import { AuthModule } from '@/backend_auth/modules/auth/auth.module';
 import type { MiddlewareConsumer, NestModule } from '@nestjs/common';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, cache: true, load: [CoreEnvironmentConfig] }),
+
     CoreLoggerModule,
     CoreRequestContextModule,
-    CoreDatabaseModule,
+
     CoreRedisModule,
     CoreAuditModule,
     CoreHealthModule,
@@ -41,13 +41,7 @@ import type { MiddlewareConsumer, NestModule } from '@nestjs/common';
   providers: [
     CoreRateLimitService,
     CoreMetricsService,
-    { provide: APP_GUARD, useClass: CoreJwtAuthGuard },
-    { provide: APP_GUARD, useClass: CoreRolesGuard },
-    { provide: APP_GUARD, useClass: CoreRateLimitGuard },
-    { provide: APP_INTERCEPTOR, useClass: CoreResponseInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: CoreTimeoutInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: CoreMetricsInterceptor },
-    { provide: APP_FILTER, useClass: CoreValidationExceptionFilter },
+
   ],
 })
 export class CoreAppModule implements NestModule {

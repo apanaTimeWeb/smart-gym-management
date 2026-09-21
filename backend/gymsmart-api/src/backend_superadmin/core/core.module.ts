@@ -31,11 +31,11 @@ import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-wo
 
 @Global()
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [configuration], validate: validateEnvironment }), LoggerModule.forRoot({ pinoHttp: { level: process.env.LOG_LEVEL ?? 'info', redact: ['req.headers.authorization', 'req.headers.cookie'] } }), TypeOrmModule.forRoot(MasterDataSource.options), JwtModule.registerAsync({ inject: [ConfigService], useFactory: (config: ConfigService) => ({ secret: config.getOrThrow<string>('app.jwtAccessSecret'), signOptions: { expiresIn: config.getOrThrow<string>('app.jwtAccessTtl') } }) })],
+  imports: [JwtModule.registerAsync({ inject: [ConfigService], useFactory: (config: ConfigService) => ({ secret: config.getOrThrow<string>('app.jwtAccessSecret'), signOptions: { expiresIn: config.getOrThrow<string>('app.jwtAccessTtl') } }) })],
   controllers: [MetricsController],
   providers: [
     RedisService, IdempotencyService, IdempotencyInterceptor, JwtAuthGuard, RolesGuard,
-    { provide: APP_GUARD, useExisting: RateLimitGuard },
+
     RateLimitGuard, TenantAuthorizationService, TenantDataSourceResolverService, TenantDatabaseProvisionerService, TenantRegistryRepository, TenantRegistryService, EncryptionService, MetricsService, AuditTrailService, EventBusService, TransactionContext, UnitOfWorkService],
   exports: [RedisService, IdempotencyService, IdempotencyInterceptor, RateLimitGuard, JwtAuthGuard, RolesGuard, TenantAuthorizationService, TenantDataSourceResolverService, TenantDatabaseProvisionerService, TenantRegistryRepository, TenantRegistryService, EncryptionService, MetricsService, AuditTrailService, EventBusService, TransactionContext, UnitOfWorkService],
 })
