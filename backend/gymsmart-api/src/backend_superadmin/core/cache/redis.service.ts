@@ -1,13 +1,21 @@
-﻿// RESPONSIBILITY: Owns the infrastructure-level Redis client and primitive operations.
+// RESPONSIBILITY: Owns the infrastructure-level Redis client and primitive operations.
 // FLOW: Core service -> RedisService -> Redis.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const RedisMock = require('ioredis-mock');
+
 @Injectable()
 export class RedisService implements OnModuleDestroy {
   private readonly client: Redis;
-  constructor(config: ConfigService) { this.client = new Redis(config.getOrThrow<string>('app.redisUrl'), { maxRetriesPerRequest: 2, enableOfflineQueue: false }); }
-  /** Increments a Redis counter and sets an expiry for the rate-limit window. */
+  constructor(config: ConfigService) {
+    const url = config.getOrThrow<string>('app.redisUrl');
+    this.client = (url === 'mock' || url === 'redis://mock') 
+      ? new RedisMock() as any 
+      : new Redis(url, { maxRetriesPerRequest: 2, enableOfflineQueue: false });
+  }
   async increment(key: string, ttlSeconds: number): Promise<number> { const count = await this.client.incr(key); if (count === 1) await this.client.expire(key, ttlSeconds); return count; }
   /** Stores a string value with a TTL, optionally only when the key does not already exist. */
   async set(key: string, value: string, ttlSeconds: number, onlyIfAbsent = false): Promise<boolean> { const result = onlyIfAbsent ? await this.client.set(key, value, 'EX', ttlSeconds, 'NX') : await this.client.set(key, value, 'EX', ttlSeconds); return result === 'OK'; }
