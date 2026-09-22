@@ -1,4 +1,4 @@
-# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
+﻿# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
 
 ## The Core Philosophy
 This document outlines the strict architectural rules for building the backend using **NestJS (TypeScript)**. The primary goal is **Extreme Isolation**.
@@ -1639,8 +1639,160 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 * **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
 
 ## Rule 116 — Internationalization (i18n) & Localization
-* **The Rule:** The backend must be designed to support multiple languages from day one. Hardcoding English error strings inside `exceptions.ts` or controllers is forbidden.
-* **Implementation:** Rely on the framework's i18n module (e.g., `nestjs-i18n`). Throw exceptions with translation keys (e.g., `throw new BadRequestException('ERRORS.MEMBER_NOT_FOUND')`). The interceptor must resolve the string using the `Accept-Language` HTTP header from the request before constructing the final `ApiResponse<T>`.
+
+### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+
+The backend uses `nestjs-i18n` with **co-located locale files inside each NestJS module folder** — NOT in a central `src/i18n/` directory. This preserves **Extreme Isolation**: each module owns its own strings and can be moved, deleted, or versioned independently.
+
+**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic.
+
+### Stack
+- **Library:** `nestjs-i18n`
+- **Base language:** English (`en.json`) — written by developer / AI agent
+- **Other languages:** Written by the AI agent in the same commit that creates the module
+- **Runtime cost:** Zero — all files are static JSON, bundled with the app
+
+### Module-Level File Structure
+Each module owns its own `_locales/` folder:
+```
+src/
+  modules/
+    admin/
+      members/
+        _locales/
+          en/
+            errors.json   ← AI writes this when creating the module
+            messages.json
+          nl/
+            errors.json   ← AI translates this in the same commit
+            messages.json
+          fr/
+            errors.json
+            messages.json
+        members.controller.ts
+        members.service.ts
+    superadmin/
+      tenants/
+        _locales/
+          en/
+            errors.json
+          nl/
+            errors.json
+scripts/
+  merge-locales.ts        ← Merges all module _locales into one bundle at build time
+```
+
+### AI Agent Translation Rule
+When an AI agent writes a new module or adds new error/message keys, it MUST:
+1. Create `_locales/en/errors.json` with the English strings.
+2. In the **same commit**, create `_locales/nl/errors.json`, `_locales/fr/errors.json`, etc. for all configured target languages, using its own translation capability.
+3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
+
+```json
+// _locales/en/errors.json
+{
+  "ERRORS": {
+    "MEMBER_NOT_FOUND": "Member not found.",
+    "PLAN_EXPIRED": "Your gym subscription has expired."
+  }
+}
+
+// _locales/nl/errors.json  ← AI writes this, context-aware
+{
+  "ERRORS": {
+    "MEMBER_NOT_FOUND": "Lid niet gevonden.",
+    "PLAN_EXPIRED": "Uw gymabonnement is verlopen."
+  }
+}
+```
+
+### Throwing Errors (Correct Pattern)
+Always throw with a module-scoped translation key — never a hardcoded English string:
+```typescript
+// ❌ FORBIDDEN
+throw new NotFoundException('Member not found.');
+
+// ✅ CORRECT — key maps to _locales/{lang}/errors.json
+throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
+```
+
+### The Interceptor
+The global `I18nValidationExceptionFilter` (from `nestjs-i18n`) automatically reads the `Accept-Language` header from the request and resolves the namespaced key to the correct translated string before sending the `ApiResponse<T>` to the client.
+
+### `scripts/merge-locales.ts` (Build-Time Merge Script)
+This script walks every `_locales/` folder in the project, merges all JSON files by language, and outputs a single bundle per language. Run it as part of the build step.
+
+```typescript
+// scripts/merge-locales.ts
+// Usage: npx ts-node scripts/merge-locales.ts
+import * as fs from 'fs';
+import * as path from 'path';
+import * as glob from 'glob';
+
+const OUTPUT_DIR = 'dist/i18n';
+const mergedByLang: Record<string, Record<string, any>> = {};
+
+const localeFiles = glob.sync('src/modules/**/_locales/**/*.json');
+
+for (const file of localeFiles) {
+  const parts = file.split(path.sep);
+  const localesIdx = parts.indexOf('_locales');
+  const lang = parts[localesIdx + 1];           // 'en', 'nl', etc.
+  const namespace = parts[localesIdx - 1];      // module name as namespace
+  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+
+  mergedByLang[lang] ??= {};
+  mergedByLang[lang][namespace] = { ...mergedByLang[lang][namespace], ...content };
+}
+
+fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+for (const [lang, data] of Object.entries(mergedByLang)) {
+  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
+  console.log(`✅ Merged ${lang}.json`);
+}
+```
+
+Add to `package.json`:
+```json
+{
+  "scripts": {
+    "i18n:merge": "npx ts-node scripts/merge-locales.ts",
+    "build": "npm run i18n:merge && nest build"
+  }
+}
+```
+
+### Developer Workflow
+1. AI agent writes a new module and creates `_locales/en/` JSON files.
+2. AI agent, in the **same response**, creates all target-language `_locales/{lang}/` files using its own translation capability.
+3. Run `npm run i18n:merge` (or let CI do it automatically at build time).
+4. Commit all `_locales/` files alongside the module code.
+5. **Never** put locale files in a central `src/i18n/` folder — that breaks module isolation.
+
+### Configured Target Languages
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
+| `en` | English | Global | Latin | **Base — always first** |
+| `nl` | Dutch | Netherlands, Belgium | Latin | High |
+| `fr` | French | France, Belgium, Canada | Latin | High |
+| `de` | German | Germany, Austria, Switzerland | Latin | High |
+| `hi` | Hindi | India (North) | Devanagari | High |
+| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
+| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
+| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
+| `kn` | Kannada | Karnataka, India | Kannada | Medium |
+| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
+| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
+| `ml` | Malayalam | Kerala, India | Malayalam | Low |
+| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
+
+> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+
+> **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. `nestjs-i18n` handles this natively — no extra configuration needed.
+
+> **AI AGENT NOTE:** When creating any new NestJS module, you MUST create its `_locales/en/errors.json` AND all configured target-language files (e.g., `_locales/nl/errors.json`) in the same commit. Use your own translation capability — do NOT call any external translation API. Keys must be namespaced by module name (e.g., `members.ERRORS.NOT_FOUND`). Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 117 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.

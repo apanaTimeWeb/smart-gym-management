@@ -1,4 +1,4 @@
-Currently, no one writes code manually; AI writes it. Because of this, my primary goal is extreme isolation. **Primary isolation goal:** Prefer single-file repair when the dependency graph allows it. The guaranteed isolation boundary is the owning module. An AI MUST NOT require unrelated business modules for a module-local repair. However, the folder architecture must remain highly organized and visually logical so that human developers can easily navigate it without getting lost in a flat directory of 50+ files.
+﻿Currently, no one writes code manually; AI writes it. Because of this, my primary goal is extreme isolation. **Primary isolation goal:** Prefer single-file repair when the dependency graph allows it. The guaranteed isolation boundary is the owning module. An AI MUST NOT require unrelated business modules for a module-local repair. However, the folder architecture must remain highly organized and visually logical so that human developers can easily navigate it without getting lost in a flat directory of 50+ files.
 
 Please follow these strict architectural rules:
 
@@ -2266,8 +2266,167 @@ export const updateProfile = async (id: string, body: any, idempotencyKey?: stri
 * **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
 
 ## Rule 18 — Internationalization (i18n) & Localization
-* **The Rule:** Hardcoding English text strings in JSX is strictly forbidden. 
-* **Implementation:** The frontend must use a robust i18n library (e.g., `react-i18next` or `next-intl`). Use translation keys for all UI text (e.g., `{t('DASHBOARD.WELCOME_MESSAGE')}`). Additionally, the API client must attach the `Accept-Language` header to every HTTP request so the backend can return localized error messages.
+
+### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+
+The frontend uses `next-intl` (Next.js) with **co-located locale files inside each feature module folder** — NOT in a central `src/messages/` directory. This preserves **Extreme Isolation**: each feature module owns its own strings and can be moved, deleted, or versioned independently.
+
+**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic.
+
+### Stack
+- **Library:** `next-intl` (Next.js) or `react-i18next` (plain React/Vite)
+- **Base language:** English (`en.json`) — written by AI agent when creating the module
+- **Other languages:** Written by the AI agent in the same commit
+- **Runtime cost:** Zero — all files are static JSON, bundled at build time
+
+### Module-Level File Structure
+Each feature module owns its own `_locales/` folder:
+```
+src/features/
+  admin/
+    members/
+      _locales/
+        en.json   ← AI writes this when creating the module
+        nl.json   ← AI translates this in the same commit
+        fr.json
+      components/
+      hooks/
+  superadmin/
+    tenants/
+      _locales/
+        en.json
+        nl.json
+scripts/
+  merge-locales.ts   ← Merges all _locales into one bundle at build time
+```
+
+### `_locales/en.json` (Source of Truth per Module)
+```json
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Members",
+    "ADD_MEMBER": "Add Member",
+    "EMPTY_STATE": "No members found. Add your first member to get started."
+  }
+}
+```
+
+### AI Agent Translation Rule
+When writing a new feature module, the AI MUST:
+1. Create `_locales/en.json` with all English UI strings used in the module.
+2. In the **same commit**, create `_locales/nl.json`, `_locales/fr.json`, etc. for all configured languages, using its own translation capability.
+3. Translations must be **contextually correct** for a Gym Management SaaS.
+
+```json
+// _locales/nl.json — AI writes this, context-aware
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Leden",
+    "ADD_MEMBER": "Lid toevoegen",
+    "EMPTY_STATE": "Geen leden gevonden. Voeg uw eerste lid toe om te beginnen."
+  }
+}
+```
+
+### Using Translations in Components
+Always use the `t()` function — **never** hardcode English strings in JSX:
+```tsx
+import { useTranslations } from 'next-intl';
+
+export const MembersPage = () => {
+  const t = useTranslations('MEMBERS');
+  // ❌ BAD: <h1>Members</h1>
+  // ✅ GOOD:
+  return (
+    <>
+      <h1>{t('PAGE_TITLE')}</h1>
+      <Button>{t('ADD_MEMBER')}</Button>
+    </>
+  );
+};
+```
+
+### `scripts/merge-locales.ts` (Build-Time Merge Script)
+Merges all module `_locales/` folders into a single bundle per language. Runs automatically at build time.
+
+```typescript
+// scripts/merge-locales.ts
+// Usage: npx ts-node scripts/merge-locales.ts
+import * as fs from 'fs';
+import * as path from 'path';
+import { globSync } from 'glob';
+
+const OUTPUT_DIR = 'public/locales';
+const merged: Record<string, Record<string, any>> = {};
+
+for (const file of globSync('src/features/**/_locales/*.json')) {
+  const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
+  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  merged[lang] = { ...merged[lang], ...content };
+}
+
+fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+for (const [lang, data] of Object.entries(merged)) {
+  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
+  console.log(`✅ Merged ${lang}.json`);
+}
+```
+
+Add to `package.json`:
+```json
+{
+  "scripts": {
+    "i18n:merge": "npx ts-node scripts/merge-locales.ts",
+    "build": "npm run i18n:merge && next build"
+  }
+}
+```
+
+### API Client: `Accept-Language` Header
+The central `apiFetch` client MUST attach the current locale to every request:
+```typescript
+import { getLocale } from 'next-intl/server';
+
+export const apiFetch = async (url: string, options?: RequestInit) => {
+  const locale = await getLocale(); // 'nl', 'fr', 'en'
+  return fetch(url, {
+    ...options,
+    headers: { 'Accept-Language': locale, ...options?.headers },
+  });
+};
+```
+
+### Developer Workflow
+1. AI writes a new feature module and creates `_locales/en.json`.
+2. AI, in the **same response**, creates all target-language `_locales/{lang}.json` files.
+3. Run `npm run i18n:merge` (or let CI/build do it automatically).
+4. Commit all `_locales/` files alongside the feature module code.
+5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
+
+### Configured Target Languages
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
+| `en` | English | Global | Latin | **Base — always first** |
+| `nl` | Dutch | Netherlands, Belgium | Latin | High |
+| `fr` | French | France, Belgium, Canada | Latin | High |
+| `de` | German | Germany, Austria, Switzerland | Latin | High |
+| `hi` | Hindi | India (North) | Devanagari | High |
+| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
+| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
+| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
+| `kn` | Kannada | Karnataka, India | Kannada | Medium |
+| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
+| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
+| `ml` | Malayalam | Kerala, India | Malayalam | Low |
+| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
+
+> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+
+> **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
+
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all configured target-language files (e.g., `_locales/nl.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
