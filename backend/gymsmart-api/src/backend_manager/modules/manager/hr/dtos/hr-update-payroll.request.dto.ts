@@ -1,0 +1,50 @@
+import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { HrPayrollStatus } from '@/modules/manager/hr/hr.constants';
+// RESPONSIBILITY: Strict feature-local request DTO for PATCH /api/v1/manager/hr/payrolls/:id.
+// FLOW: HTTP payload -> HrUpdatePayrollRequestDto validation -> write use case -> orchestrator.
+
+import { IsISO8601, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class HrUpdatePayrollRequestDto extends CoreRequestDto {
+  @IsString()
+  staffId!: string;
+
+  @IsString()
+  month!: string;
+
+  @IsNumber()
+  @Type(() => Number)
+  amount!: number;
+
+  @IsNumber()
+  @Type(() => Number)
+  netPayable!: number;
+
+  @IsNumber()
+  @Type(() => Number)
+  paidAmount!: number;
+
+  @IsNumber()
+  @Type(() => Number)
+  pendingAmount!: number;
+
+  @IsEnum(HrPayrollStatus)
+  status!: HrPayrollStatus;
+
+  @IsOptional()
+  @IsISO8601()
+  paidAt?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsString()
+  deductions!: PayrollDeductions;
+
+  @IsOptional()
+  @IsObject()
+  staff?: { name: string; role: string };
+
+}

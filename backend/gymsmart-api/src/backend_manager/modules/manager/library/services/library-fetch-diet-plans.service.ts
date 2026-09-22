@@ -1,0 +1,17 @@
+// RESPONSIBILITY: Read use-case for GET /api/v1/manager/library/diet-plans.
+// FLOW: Controller -> LibraryFetchDietPlansService -> repository query -> ORM-free domain -> response DTO.
+import { Injectable } from '@nestjs/common';
+import type { CoreJsonObject } from '@/core/types/json-value.types';
+import { LibraryRepository } from '@/modules/manager/library/repositories/library-repository';
+
+@Injectable()
+export class LibraryFetchDietPlansService {
+  constructor(private readonly repository: LibraryRepository) {}
+
+  /** @description Loads the library collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
+  async fetchDietPlans(query: CoreJsonObject = {}): Promise<CoreJsonObject> {
+    const result = await this.repository.findLibraryList(query);
+    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    return { data: { dietPlans: rows, total: result.meta.total }, meta: result.meta };
+  }
+}
