@@ -2431,3 +2431,60 @@ This is the **authoritative list of languages** this project supports. There is 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
 * **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
+
+
+## Rule 20 — Multi-Currency Monetary Amounts
+
+### The Rule
+The backend sends all monetary amounts as **integers in the smallest currency unit** (paise for INR, cents for USD/EUR) alongside an ISO 4217 currency code. The frontend is solely responsible for formatting. Never hardcode a currency symbol or divide raw amounts manually.
+
+### Canonical Formatting Utility
+Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
+``````typescript
+// utils/formatCurrency.ts (co-located inside the feature module)
+/**
+ * Formats a monetary amount from its smallest unit to a locale-aware display string.
+ * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
+ * @param currency ISO 4217 currency code (e.g., 'INR', 'USD', 'EUR')
+ * @param locale  BCP 47 locale string (e.g., 'en-IN', 'nl-NL', 'en-US')
+ */
+export const formatCurrency = (
+  amount: number,
+  currency: string,
+  locale: string = 'en-IN'
+): string => {
+  const subunitMap: Record<string, number> = {
+    JPY: 1, KWD: 1000, BHD: 1000, // no subunit or 3-decimal currencies
+  };
+  const divisor = subunitMap[currency] ?? 100;
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: divisor === 1 ? 0 : 2,
+  }).format(amount / divisor);
+};
+
+// Usage:
+// formatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
+// formatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
+// formatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
+// formatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
+``````
+
+### Rules
+- ❌ Never do `amount / 100` inline in JSX.
+- ❌ Never hardcode `₹`, `$`, or `€` symbols anywhere in JSX or components.
+- ❌ Never store the formatted string in state or TanStack Query cache — store the raw integer.
+- ✅ Always derive the locale from the active i18n locale (`useLocale()` from `next-intl`).
+
+``````tsx
+// ❌ BAD
+<Text>₹{plan.amount / 100}</Text>
+
+// ✅ GOOD
+import { useLocale } from 'next-intl';
+const locale = useLocale();
+<Text>{formatCurrency(plan.amount, plan.currency, locale)}</Text>
+``````
+
+> **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.

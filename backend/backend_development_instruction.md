@@ -1797,3 +1797,50 @@ This is the **authoritative list of languages** this project supports. There is 
 ## Rule 117 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
 * **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
+
+
+## Rule 118 — Multi-Currency Monetary Amounts
+
+### The Problem
+Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in financial calculations. Hardcoding currency symbols (₹, $, €) breaks international deployments. Formatting amounts in service methods couples business logic to presentation.
+
+### Storage Contract (Backend is Source of Truth)
+- **Always store monetary amounts as integers in the smallest currency unit.**
+  - INR: store `9999` for ₹99.99 (paise)
+  - USD/EUR: store `9999` for $99.99 (cents)
+  - JPY: store `100` for ¥100 (yen has no subunit)
+- Use `INT` or `BIGINT` column type in TypeORM. Never use `DECIMAL` or `FLOAT` for money.
+- Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
+
+``````typescript
+// ❌ FORBIDDEN — float and no currency
+{ "amount": 99.99 }
+
+// ✅ CORRECT — integer smallest unit + ISO 4217 currency code
+{ "amount": 9999, "currency": "INR" }
+``````
+
+### DTO Rule
+Every DTO that includes a monetary field MUST include the paired currency code:
+``````typescript
+export class CreatePlanDto {
+  @IsInt()
+  @Min(0)
+  price: number; // in smallest unit (paise, cents, etc.)
+
+  @IsString()
+  @IsISO4217CurrencyCode()
+  currency: string; // e.g. 'INR', 'USD', 'EUR'
+}
+``````
+
+### Never Hardcode Currency Symbols
+``````typescript
+// ❌ FORBIDDEN
+return `₹${amount / 100}`;
+
+// ✅ CORRECT — pass raw integer + currency code to frontend; let frontend format
+return { amount, currency };
+``````
+
+> **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
