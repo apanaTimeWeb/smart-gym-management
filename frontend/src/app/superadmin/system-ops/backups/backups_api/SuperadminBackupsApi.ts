@@ -31,10 +31,11 @@ export async function fetchBackupSchedule(): Promise<ApiResponse<SuperadminBacku
     });
 }
 
-export async function updateBackupSchedule(input: SuperadminBackupsScheduleInput): Promise<ApiResponse<SuperadminBackupsSchedule>> {
+export async function updateBackupSchedule(input: SuperadminBackupsScheduleInput, idempotencyKey?: string): Promise<ApiResponse<SuperadminBackupsSchedule>> {
     return apiFetch<ApiResponse<SuperadminBackupsSchedule>>(BackupsUrlConfig.BACKEND_API.SCHEDULE, {
         method: 'PATCH',
         body: JSON.stringify(input),
         dataSchema: SuperadminBackupsScheduleSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     });
 }

@@ -25,10 +25,11 @@ export const gymsApi = {
     updateGymStatus: (id: string, status: string, idempotencyKey?: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }), headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: TenantSchema
     }),
-    impersonateTenant: (id: string) => apiFetch<ApiResponse<{
+    impersonateTenant: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<{
         token: string;
     }>>(`${GymsUrlConfig.BACKEND_API.IMPERSONATE}/${id}/impersonate`, { method: 'POST',
-        dataSchema: z.object({ token: z.string() })
+        dataSchema: z.object({ token: z.string() }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
     deleteGym: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
@@ -39,8 +40,9 @@ export const gymsApi = {
         subject: string;
         message: string;
         [key: string]: unknown;
-    }) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
-        dataSchema: z.object({}).passthrough()
+    }, idempotencyKey?: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
+        dataSchema: z.object({}).passthrough(),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
     exportGymsReport: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
@@ -55,12 +57,13 @@ export const gymsApi = {
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: TenantSchema
     }),
-    exitGhostLogin: () => apiFetch<ApiResponse<null>>(GymsUrlConfig.GHOST_LOGIN.EXIT_GHOST_LOGIN_PROXY, {
+    exitGhostLogin: (idempotencyKey?: string) => apiFetch<ApiResponse<null>>(GymsUrlConfig.GHOST_LOGIN.EXIT_GHOST_LOGIN_PROXY, {
         method: 'POST',
         dataSchema: z.null(),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
     /** Sends the impersonation token to the proxy endpoint to set it as an HTTP-only cookie. */
-    setGhostLoginCookie: async (token: string, id: string) => {
+    setGhostLoginCookie: async (token: string, id: string, idempotencyKey?: string) => {
         return apiFetch<ApiResponse<null>>(GymsUrlConfig.GHOST_LOGIN.SET_COOKIE_PROXY, {
             method: 'POST',
             body: JSON.stringify({
@@ -69,6 +72,7 @@ export const gymsApi = {
                 user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
             }),
             dataSchema: z.null(),
+            headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
         });
     },
 };
