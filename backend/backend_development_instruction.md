@@ -198,7 +198,7 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
 * **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
@@ -465,7 +465,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
 * **The Rule:** This project uses a strict two-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
-  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `e2e/superadmin/dashboard/test_dashboard_api.py`). Never dump test files into a flat `e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -473,7 +473,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 2. Select the **one or two** micro-files associated with that layer.
 3. Pass ONLY those files to the AI.
 4. Review the AI's isolated changes.
-* **For E2E Test Fixes/Updates:** If an API contract changes and the E2E test needs updating, provide the AI with ONLY the specific feature's E2E folder (e.g., `e2e/superadmin/dashboard/`) and the corresponding backend module. Do NOT feed the entire `e2e/` directory to the AI to prevent token explosion.
+* **For E2E Test Fixes/Updates:** If an API contract changes and the E2E test needs updating, provide the AI with ONLY the specific feature's E2E folder (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/`) and the corresponding backend module. Do NOT feed the entire `backend_e2e/` directory to the AI to prevent token explosion.
 
 ---
 
@@ -1892,3 +1892,26 @@ Never emit a critical WebSocket event (like "Export Ready", "Payment Received", 
 2. **Emit Second:** Only after the DB transaction commits, emit the WebSocket event.
 3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
 4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions.
+
+## Rule 121 — Complete Isolation for E2E and Selenium Testing
+
+### The Philosophy
+The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to E2E (pytest/Playwright/Cypress) and Selenium testing suites as they do to the backend source code. 
+
+### Implementation Constraints
+
+1. **Strict Namespace Prefixing:** All test directories must be explicitly prefixed by domain and testing type.
+   - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
+   - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
+
+2. **WET Over DRY (No Global Shared Utilities):** Never create a global `shared/`, `utils/`, or `common/` folder for E2E or Selenium tests. If both `backend_admin_e2e` and `backend_manager_e2e` need a "login and get auth token" helper script, you MUST duplicate the script into both directories.
+   - ❌ **BAD:** `backend_e2e/shared/auth_helper.py`
+   - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/helpers/auth_helper.py` AND `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
+
+3. **No Cross-Domain Imports:** A test script in `backend_manager_selenium` MUST NOT import a fixture, constant, or helper from `backend_admin_selenium`. If tests span multiple roles, they must be orchestrated at a higher CI pipeline level, not through tightly coupled Python/TS test imports.
+
+4. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
+
+5. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
+
+**Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized.
