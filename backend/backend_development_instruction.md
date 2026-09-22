@@ -15,13 +15,23 @@ The backend strictly follows a 3-tier hierarchy:
 
 ```text
 APPLICATION
-  └── DOMAIN / ROLE CONTAINER
+  └── DOMAIN / ROLE CONTAINER (e.g. backend_admin)
         └── FEATURE MODULE
               └── SUB-FEATURE / USE CASE
 ```
 
 **AI Repair Boundary = FEATURE MODULE**
 **Role/Domain Container = NOT the default repair boundary**
+
+### 0D. BACKEND NAMESPACE PREFIXING (MANDATORY)
+
+Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate backend folders from frontend folders. 
+- **The Rule:** EVERY top-level backend role container or domain folder MUST be prefixed with `backend_`.
+- **Primary Examples:** `backend_admin/`, `backend_manager/`, `backend_superadmin/`.
+- **E2E / Selenium Testing Folders:** If tests are grouped in a separate root directory, the test root AND the role subfolders inside it MUST carry the namespace to maintain context.
+  - Example E2E: `src/backend_e2e/backend_admin_e2e/`, `src/backend_e2e/backend_manager_e2e/`
+  - Example Selenium: `src/backend_selenium/backend_admin_selenium/`
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/billing/` and `src/backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
 
 When fixing a bug in `modules/superadmin/billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
