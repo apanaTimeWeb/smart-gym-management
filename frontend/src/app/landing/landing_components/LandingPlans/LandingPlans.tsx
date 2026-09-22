@@ -4,8 +4,10 @@ import { CheckCircle } from 'lucide-react';
 import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 import { formatLandingCurrency } from '@/app/landing/landing_utils/LandingFormattingUtils';
 import { LANDING_PLANS } from '@/app/landing/landing_utils/LandingSharedConstants';
+import { useLocale } from 'next-intl';
 
 export default function LandingPlans() {
+  const locale = useLocale();
   return (
     <section id="plans" className="py-24 px-4 bg-page">
       <div className="max-w-7xl mx-auto">
@@ -23,8 +25,8 @@ export default function LandingPlans() {
               )}
               <h3 className="text-lg font-bold text-primary mb-2">{plan.name}</h3>
               <div className="mb-4">
-                <div className="text-3xl font-black text-primary mb-1">{formatLandingCurrency(plan.priceInr)}</div>
-                <span className="text-secondary text-sm line-through block">{formatLandingCurrency(plan.oldPriceInr)}</span>
+                <div className="text-3xl font-black text-primary mb-1">{formatLandingCurrency(plan.priceInr, locale)}</div>
+                <span className="text-secondary text-sm line-through block">{formatLandingCurrency(plan.oldPriceInr, locale)}</span>
                 {plan.includeEmiNote && <span className="text-xs text-success font-semibold mt-1 block">Includes EMI Options</span>}
               </div>
               <div className="space-y-3 mb-6 flex-1">
