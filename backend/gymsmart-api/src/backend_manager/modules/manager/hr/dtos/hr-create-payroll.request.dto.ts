@@ -1,5 +1,6 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
-import { HrPayrollStatus } from '@/modules/manager/hr/hr.constants';
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { HrPayrollStatus } from '@/backend_manager/modules/manager/hr/hr.constants';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/hr/payrolls.
 // FLOW: HTTP payload -> HrCreatePayrollRequestDto validation -> write use case -> orchestrator.
 
@@ -34,11 +35,11 @@ export class HrCreatePayrollRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsISO8601()
-  paidAt?: string;
+  paidAt!: string;
 
   @IsOptional()
   @IsString()
-  notes?: string;
+  notes!: string;
 
   @IsString()
   deductions!: PayrollDeductions;

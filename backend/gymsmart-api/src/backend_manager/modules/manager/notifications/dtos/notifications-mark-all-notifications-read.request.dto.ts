@@ -1,2 +1,2 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 export class NotificationsMarkAllNotificationsReadRequestDto extends CoreRequestDto {}

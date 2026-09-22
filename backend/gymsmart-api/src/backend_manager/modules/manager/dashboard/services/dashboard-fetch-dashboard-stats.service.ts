@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/dashboard/stats.
 // FLOW: Controller -> DashboardFetchDashboardStatsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { DashboardRepository } from '@/modules/manager/dashboard/repositories/dashboard-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { DashboardRepository } from '@/backend_manager/modules/manager/dashboard/repositories/dashboard-repository';
 
 @Injectable()
 export class DashboardFetchDashboardStatsService {

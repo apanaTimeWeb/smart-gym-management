@@ -3,8 +3,8 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CorePublicDecorator } from '@/core/auth/core-public.decorator';
-import { CoreRedisService } from '@/core/database/core-redis.service';
+import { CorePublicDecorator } from '@/backend_manager/core/auth/core-public.decorator';
+import { CoreRedisService } from '@/backend_manager/core/database/core-redis.service';
 
 @ApiTags('Health')
 @Controller('health')

@@ -2,21 +2,21 @@
 // FLOW: Use-case -> ScheduleRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ScheduleEntity } from '@/modules/manager/schedule/schedule.entity';
-import { ScheduleMapper } from '@/modules/manager/schedule/mappers/schedule-mapper';
-import type { ScheduleDomainData } from '@/modules/manager/schedule/schedule.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ScheduleEntity } from '@/backend_manager/modules/manager/schedule/schedule.entity';
+import { ScheduleMapper } from '@/backend_manager/modules/manager/schedule/mappers/schedule-mapper';
+import type { ScheduleDomainData } from '@/backend_manager/modules/manager/schedule/schedule.interfaces';
 
 export interface ScheduleListResult { data: ScheduleDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ScheduleRepository extends CoreBaseRepository<ScheduleEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ScheduleEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ScheduleEntity); }
 
   /** @description Finds a non-deleted schedule record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findScheduleById(id: string): Promise<ScheduleDomainData | null> {

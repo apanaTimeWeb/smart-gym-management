@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PtFetchAssignmentsResponseDto {
   @ApiProperty({ type: [Object] })
-  assignments?: Array<{ amountPaid?: number; memberName?: string; packageName?: number; paymentStatus?: string; sessionsRemaining?: string; trainerName?: string; }>;
+  assignments?: Array<{ amountPaid: number; memberName: string; packageName: number; paymentStatus: string; sessionsRemaining: string; trainerName: string; }>;
 
 }

@@ -2,21 +2,21 @@
 // FLOW: Use-case -> ReferralsRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ReferralsEntity } from '@/modules/manager/referrals/referrals.entity';
-import { ReferralsMapper } from '@/modules/manager/referrals/mappers/referrals-mapper';
-import type { ReferralsDomainData } from '@/modules/manager/referrals/referrals.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ReferralsEntity } from '@/backend_manager/modules/manager/referrals/referrals.entity';
+import { ReferralsMapper } from '@/backend_manager/modules/manager/referrals/mappers/referrals-mapper';
+import type { ReferralsDomainData } from '@/backend_manager/modules/manager/referrals/referrals.interfaces';
 
 export interface ReferralsListResult { data: ReferralsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ReferralsRepository extends CoreBaseRepository<ReferralsEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ReferralsEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ReferralsEntity); }
 
   /** @description Finds a non-deleted referrals record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findReferralsById(id: string): Promise<ReferralsDomainData | null> {

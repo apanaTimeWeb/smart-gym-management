@@ -5,9 +5,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PlansFetchMembershipOverviewResponseDto {
   @ApiProperty({ type: Number })
-  activeCount?: number;
+  activeCount!: number;
 
   @ApiProperty({ type: Number })
-  revenue?: number;
+  revenue!: number;
 
 }

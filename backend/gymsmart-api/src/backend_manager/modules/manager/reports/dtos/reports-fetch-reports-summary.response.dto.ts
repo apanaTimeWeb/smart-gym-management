@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ReportsFetchReportsSummaryResponseDto {
   @ApiProperty({ type: [Object] })
-  attendanceData?: Array<{ date?: string; rate?: number; }>;
+  attendanceData?: Array<{ date: string; rate: number; }>;
 
   @ApiProperty({ type: [Object] })
-  expenseBreakdown?: Array<{ amount?: number; category?: string; }>;
+  expenseBreakdown?: Array<{ amount: number; category: string; }>;
 
   @ApiProperty({ type: Object })
-  kpis?: { avgAttendanceRate?: number; totalExpenses?: number; totalMembers?: number; totalRevenue?: number; };
+  kpis?: { avgAttendanceRate: number; totalExpenses: number; totalMembers: number; totalRevenue: number; };
 
   @ApiProperty({ type: [Object] })
-  memberChurnData?: Array<{ month?: string; newMembers?: number; }>;
+  memberChurnData?: Array<{ month: string; newMembers: number; }>;
 
   @ApiProperty({ type: [Object] })
-  revenueData?: Array<{ expenses?: string; month?: string; revenue?: number; }>;
+  revenueData?: Array<{ expenses: string; month: string; revenue: number; }>;
 
 }

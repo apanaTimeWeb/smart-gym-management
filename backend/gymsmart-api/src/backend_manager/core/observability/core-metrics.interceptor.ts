@@ -3,7 +3,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 
-import { CoreMetricsService } from '@/core/observability/core-metrics.service';
+import { CoreMetricsService } from '@/backend_manager/core/observability/core-metrics.service';
 
 @Injectable()
 export class CoreMetricsInterceptor implements NestInterceptor {

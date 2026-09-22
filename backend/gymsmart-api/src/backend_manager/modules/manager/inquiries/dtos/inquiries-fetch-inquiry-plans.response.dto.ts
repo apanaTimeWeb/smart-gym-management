@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InquiriesFetchInquiryPlansResponseDto {
   @ApiProperty()
-  name: string;
+  name!: string;
 
 }

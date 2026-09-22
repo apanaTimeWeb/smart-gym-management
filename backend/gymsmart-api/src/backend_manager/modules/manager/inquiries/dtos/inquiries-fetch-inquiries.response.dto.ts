@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InquiriesFetchInquiriesResponseDto {
   @ApiProperty({ type: [Object] })
-  inquiries?: Array<{ createdAt?: string; email?: string; followUpDate?: number; interest?: string; name?: string; phone?: string; source?: string; status?: string; }>;
+  inquiries?: Array<{ createdAt: string; email: string; followUpDate: number; interest: string; name: string; phone: string; source: string; status: string; }>;
 
 }

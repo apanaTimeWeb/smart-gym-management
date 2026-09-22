@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PlansCreateChangeRequestResponseDto {
   @ApiProperty()
-  requestId: string;
+  requestId!: string;
 
 }

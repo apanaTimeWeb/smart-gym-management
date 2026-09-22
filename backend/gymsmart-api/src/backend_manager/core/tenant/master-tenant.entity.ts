@@ -2,7 +2,7 @@
 // FLOW: Master tenants table -> tenant authorization -> trusted database context.
 import { Column, Entity, Index, Unique } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
 
 @Entity({ name: 'tenants' })
 @Index('IDX_tenants_database_name', ['databaseName'])

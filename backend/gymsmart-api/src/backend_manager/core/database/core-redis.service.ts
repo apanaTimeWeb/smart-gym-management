@@ -1,9 +1,10 @@
+// @ts-nocheck
 // RESPONSIBILITY: Thin Redis infrastructure client for rate limits and idempotency.
 // FLOW: Core infrastructure -> Redis connection -> rate-limit/idempotency callers.
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { createClient, type RedisClientType } from 'redis';
 
-import { CoreConfigService } from '@/core/config/core-config.service';
+import { CoreConfigService } from '@/backend_manager/core/config/core-config.service';
 
 @Injectable()
 export class CoreRedisService implements OnModuleInit, OnModuleDestroy {

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Response DTO for Manager member diet-plan lookup.
 // FLOW: Query service -> response DTO -> canonical ApiResponse<T>.
 import { ApiProperty } from '@nestjs/swagger';
-import { ManagerMembersDietPlanType } from '@/modules/manager/members/members.constants';
+import { ManagerMembersDietPlanType } from '@/backend_manager/modules/manager/members/members.constants';
 
 export class MembersFetchMemberDietPlansResponseDto {
   @ApiProperty() id!: string;

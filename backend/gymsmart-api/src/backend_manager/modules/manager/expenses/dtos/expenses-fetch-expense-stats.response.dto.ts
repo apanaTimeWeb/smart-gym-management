@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ExpensesFetchExpenseStatsResponseDto {
   @ApiProperty({ type: Number })
-  paidAmount?: number;
+  paidAmount!: number;
 
   @ApiProperty({ type: Number })
-  pendingAmount?: number;
+  pendingAmount!: number;
 
   @ApiProperty({ type: Number })
-  thisMonthAmount?: number;
+  thisMonthAmount!: number;
 
   @ApiProperty({ type: Number })
-  totalAmount?: number;
+  totalAmount!: number;
 
 }

@@ -2,21 +2,21 @@
 // FLOW: Use-case -> ProfileRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ProfileEntity } from '@/modules/manager/profile/profile.entity';
-import { ProfileMapper } from '@/modules/manager/profile/mappers/profile-mapper';
-import type { ProfileDomainData } from '@/modules/manager/profile/profile.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ProfileEntity } from '@/backend_manager/modules/manager/profile/profile.entity';
+import { ProfileMapper } from '@/backend_manager/modules/manager/profile/mappers/profile-mapper';
+import type { ProfileDomainData } from '@/backend_manager/modules/manager/profile/profile.interfaces';
 
 export interface ProfileListResult { data: ProfileDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ProfileRepository extends CoreBaseRepository<ProfileEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ProfileEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ProfileEntity); }
 
   /** @description Finds a non-deleted profile record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findProfileById(id: string): Promise<ProfileDomainData | null> {

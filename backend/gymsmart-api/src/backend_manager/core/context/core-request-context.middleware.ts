@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
 
-import { CoreRequestContextService } from '@/core/context/core-request-context.service';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
 
 @Injectable()
 export class CoreRequestContextMiddleware implements NestMiddleware {

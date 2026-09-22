@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrFetchLedgerResponseDto {
   @ApiProperty({ type: [Object] })
-  ledger?: Array<{ balance?: number; credit?: number; date?: string; debit?: number; type?: string; }>;
+  ledger?: Array<{ balance: number; credit: number; date: string; debit: number; type: string; }>;
 
 }

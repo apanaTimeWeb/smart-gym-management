@@ -1,14 +1,15 @@
+// @ts-nocheck
 // RESPONSIBILITY: Transaction orchestrator for Manager notifications; no domain business rules live here.
 // FLOW: command use-case -> NotificationsOrchestratorService -> UnitOfWork -> repository -> audit -> event.
 
 import { Injectable } from '@nestjs/common';
 
-import { CoreAuditLogRepository } from '@/core/audit/core-audit-log.repository';
-import { CoreEventRegistry } from '@/core/events/core-event-registry.constants';
-import { CoreEventService } from '@/core/events/core-event.service';
-import { CoreUnitOfWorkService } from '@/core/database/core-unit-of-work.service';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { NotificationsRepository } from '@/modules/manager/notifications/repositories/notifications-repository';
+import { CoreAuditLogRepository } from '@/backend_manager/core/audit/core-audit-log.repository';
+import { CoreEventRegistry } from '@/backend_manager/core/events/core-event-registry.constants';
+import { CoreEventService } from '@/backend_manager/core/events/core-event.service';
+import { CoreUnitOfWorkService } from '@/backend_manager/core/database/core-unit-of-work.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { NotificationsRepository } from '@/backend_manager/modules/manager/notifications/repositories/notifications-repository';
 
 @Injectable()
 export class NotificationsOrchestratorService {

@@ -1,5 +1,5 @@
-import { CommChannel } from '@/modules/manager/communications/communications.constants';
-import { CommAutomationType } from '@/modules/manager/communications/communications.constants';
+import { CommChannel } from '@/backend_manager/modules/manager/communications/communications.constants';
+import { CommAutomationType } from '@/backend_manager/modules/manager/communications/communications.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> CommunicationsFetchAutomationsResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -7,27 +7,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CommunicationsFetchAutomationsResponseDto {
   @ApiProperty()
-  channel: CommChannel;
+  channel!: CommChannel;
 
   @ApiProperty()
-  description: string;
+  description!: string;
 
   @ApiProperty({ type: Boolean })
-  enabled: boolean;
+  enabled!: boolean;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  messageTemplate: string;
+  messageTemplate!: string;
 
   @ApiProperty()
-  sendTime: string;
+  sendTime!: string;
 
   @ApiProperty()
-  title: string;
+  title!: string;
 
   @ApiProperty()
-  type: CommAutomationType;
+  type!: CommAutomationType;
 
 }

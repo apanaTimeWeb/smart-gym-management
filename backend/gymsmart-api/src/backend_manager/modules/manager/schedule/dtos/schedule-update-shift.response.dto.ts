@@ -1,5 +1,5 @@
-import { ShiftDay } from '@/modules/manager/schedule/schedule.constants';
-import { ShiftStatus } from '@/modules/manager/schedule/schedule.constants';
+import { ShiftDay } from '@/backend_manager/modules/manager/schedule/schedule.constants';
+import { ShiftStatus } from '@/backend_manager/modules/manager/schedule/schedule.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> ScheduleUpdateShiftResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -7,27 +7,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ScheduleUpdateShiftResponseDto {
   @ApiProperty()
-  day: ShiftDay;
+  day!: ShiftDay;
 
   @ApiProperty()
-  endTime: string;
+  endTime!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  startTime: string;
+  startTime!: string;
 
   @ApiProperty()
-  status: ShiftStatus;
+  status!: ShiftStatus;
 
   @ApiProperty()
-  trainerId: string;
+  trainerId!: string;
 
   @ApiProperty()
-  trainerName: string;
+  trainerName!: string;
 
   @ApiProperty()
-  trainerRole: string;
+  trainerRole!: string;
 
 }

@@ -1,4 +1,4 @@
-import { PtPaymentStatus } from '@/modules/manager/pt/pt.constants';
+import { PtPaymentStatus } from '@/backend_manager/modules/manager/pt/pt.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> PtMarkSessionCompleteResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -6,48 +6,48 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PtMarkSessionCompleteResponseDto {
   @ApiProperty({ type: Number })
-  amountPaid: number;
+  amountPaid!: number;
 
   @ApiProperty({ type: Number })
-  completedSessions: number;
+  completedSessions!: number;
 
   @ApiProperty()
-  endDate: string;
+  endDate!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  memberId: string;
+  memberId!: string;
 
   @ApiProperty()
-  memberName: string;
+  memberName!: string;
 
   @ApiProperty()
-  packageId: string;
+  packageId!: string;
 
   @ApiProperty()
-  packageName: string;
+  packageName!: string;
 
   @ApiProperty()
-  paymentStatus: PtPaymentStatus;
+  paymentStatus!: PtPaymentStatus;
 
   @ApiProperty({ type: Number })
-  sessionsRemaining: number;
+  sessionsRemaining!: number;
 
   @ApiProperty()
-  startDate: string;
+  startDate!: string;
 
   @ApiProperty({ type: Number })
-  totalAmount: number;
+  totalAmount!: number;
 
   @ApiProperty({ type: Number })
-  totalSessions: number;
+  totalSessions!: number;
 
   @ApiProperty()
-  trainerId: string;
+  trainerId!: string;
 
   @ApiProperty()
-  trainerName: string;
+  trainerName!: string;
 
 }

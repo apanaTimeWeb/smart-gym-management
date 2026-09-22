@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LibraryUpdateExerciseResponseDto {
   @ApiProperty()
-  category: string;
+  category!: string;
 
   @ApiProperty()
-  difficulty: string;
+  difficulty!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty({ type: Boolean })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
 }

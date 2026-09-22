@@ -5,12 +5,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AttendanceFetchAttendanceHistoryResponseDto {
   @ApiProperty()
-  date: string;
+  date!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  type: string;
+  type!: string;
 
 }

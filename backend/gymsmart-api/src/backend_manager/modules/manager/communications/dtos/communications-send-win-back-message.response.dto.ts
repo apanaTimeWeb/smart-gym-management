@@ -1,5 +1,5 @@
-import { CommChannel } from '@/modules/manager/communications/communications.constants';
-import { CommStatus } from '@/modules/manager/communications/communications.constants';
+import { CommChannel } from '@/backend_manager/modules/manager/communications/communications.constants';
+import { CommStatus } from '@/backend_manager/modules/manager/communications/communications.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> CommunicationsSendWinBackMessageResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -7,39 +7,39 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CommunicationsSendWinBackMessageResponseDto {
   @ApiProperty()
-  channel: CommChannel;
+  channel!: CommChannel;
 
   @ApiProperty({ type: Number })
-  deliveredCount: number;
+  deliveredCount!: number;
 
   @ApiProperty({ type: Number })
-  failedCount: number;
+  failedCount!: number;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  message: string;
+  message!: string;
 
   @ApiProperty({ type: Number })
-  recipientCount: number;
+  recipientCount!: number;
 
   @ApiProperty()
-  segmentLabel: string;
+  segmentLabel!: string;
 
   @ApiProperty()
-  sentAt: string;
+  sentAt!: string;
 
   @ApiProperty()
-  sentBy: string;
+  sentBy!: string;
 
   @ApiProperty({ type: Number })
-  sentCount: number;
+  sentCount!: number;
 
   @ApiProperty()
-  status: CommStatus;
+  status!: CommStatus;
 
   @ApiProperty()
-  title: string;
+  title!: string;
 
 }

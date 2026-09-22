@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrGiveStaffAdvanceResponseDto {
   @ApiProperty({ type: Number })
-  advanceAmount: number;
+  advanceAmount!: number;
 
 }

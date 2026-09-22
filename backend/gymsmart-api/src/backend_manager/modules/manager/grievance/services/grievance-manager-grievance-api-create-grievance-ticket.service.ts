@@ -2,8 +2,8 @@
 // FLOW: Controller DTO -> GrievanceOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
 
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { GrievanceOrchestratorService } from '@/modules/manager/grievance/services/grievance-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { GrievanceOrchestratorService } from '@/backend_manager/modules/manager/grievance/services/grievance-orchestrator.service';
 
 @Injectable()
 export class GrievanceManagerGrievanceApiCreateGrievanceTicketService {

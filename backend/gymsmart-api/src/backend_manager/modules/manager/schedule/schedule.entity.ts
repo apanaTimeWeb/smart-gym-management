@@ -2,8 +2,8 @@
 // FLOW: Repository -> ScheduleEntity -> PostgreSQL manager_schedule.
 import { Check, Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { ScheduleRecordStatus } from '@/modules/manager/schedule/schedule.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { ScheduleRecordStatus } from '@/backend_manager/modules/manager/schedule/schedule.constants';
 
 @Entity('manager_schedule')
 @Check('CHK_manager_schedule_payload_object', "jsonb_typeof(payload) = 'object'")
@@ -12,7 +12,7 @@ import { ScheduleRecordStatus } from '@/modules/manager/schedule/schedule.consta
 @Index('IDX_manager_schedule_status', ['status'])
 export class ScheduleEntity extends CoreBaseEntity {
   @Column({ type: 'jsonb', name: 'payload', default: () => "'{}'::jsonb" })
-  payload!: import('@/core/types/json-value.types').CoreJsonObject;
+  payload!: import('@/backend_manager/core/types/json-value.types').CoreJsonObject;
 
   @Column({ type: 'enum', enum: ScheduleRecordStatus, enumName: 'manager_schedule_status_enum', name: 'status', default: ScheduleRecordStatus.ACTIVE })
   status!: ScheduleRecordStatus;

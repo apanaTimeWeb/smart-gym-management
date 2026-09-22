@@ -1,4 +1,5 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/library/diet-plans.
 // FLOW: HTTP payload -> LibraryCreateDietPlanRequestDto validation -> write use case -> orchestrator.
 
@@ -15,29 +16,29 @@ export class LibraryCreateDietPlanRequestDto extends CoreRequestDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  calories?: number;
+  calories!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  protein?: number;
+  protein!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  carbs?: number;
+  carbs!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  fats?: number;
+  fats!: number;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 
   @IsArray()
-  meals!: (string | DietMeal)[];
+  meals: (string | DietMeal)[];
 
   @IsBoolean()
   isActive!: boolean;

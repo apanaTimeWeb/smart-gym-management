@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InquiriesFetchInquiryStatsResponseDto {
   @ApiProperty({ type: Number })
-  converted?: number;
+  converted!: number;
 
   @ApiProperty({ type: Number })
-  followUp?: number;
+  followUp!: number;
 
   @ApiProperty({ type: Number })
-  lost?: number;
+  lost!: number;
 
   @ApiProperty({ type: Number })
-  new?: number;
+  new!: number;
 
   @ApiProperty({ type: Number })
-  total?: number;
+  total!: number;
 
 }

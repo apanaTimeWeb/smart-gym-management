@@ -2,7 +2,7 @@
 // FLOW: HTTP query -> GrievanceQueryDto -> read use case -> allowlisted repository query.
 
 import { IsOptional, IsString } from 'class-validator';
-import { PaginationQueryDto } from '@/core/dtos/pagination-query.dto';
+import { PaginationQueryDto } from '@/backend_manager/core/dtos/pagination-query.dto';
 
 export class GrievanceQueryDto extends PaginationQueryDto {
 }

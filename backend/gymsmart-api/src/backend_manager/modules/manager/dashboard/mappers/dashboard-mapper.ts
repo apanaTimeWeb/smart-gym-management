@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Manager dashboard ORM entities to ORM-free domain objects.
 // FLOW: DashboardEntity -> DashboardMapper -> domain payload -> repository/service.
-import { DashboardEntity } from '@/modules/manager/dashboard/dashboard.entity';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import type { DashboardDomainData } from '@/modules/manager/dashboard/dashboard.interfaces';
+import { DashboardEntity } from '@/backend_manager/modules/manager/dashboard/dashboard.entity';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import type { DashboardDomainData } from '@/backend_manager/modules/manager/dashboard/dashboard.interfaces';
 export class DashboardMapper {
   /** @description Maps an ORM entity to an ORM-free domain object. @param entity - TypeORM entity. @returns Domain object. */
   static toDomain(entity: DashboardEntity): DashboardDomainData { return {id: entity.id, payload: entity.payload}; }

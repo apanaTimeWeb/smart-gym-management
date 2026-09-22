@@ -2,8 +2,8 @@
 // FLOW: Controller query -> repository query -> ORM-free domain -> response contract.
 import { Injectable } from '@nestjs/common';
 
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { GrievanceRepository } from '@/modules/manager/grievance/repositories/grievance-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { GrievanceRepository } from '@/backend_manager/modules/manager/grievance/repositories/grievance-repository';
 
 @Injectable()
 export class GrievanceManagerGrievanceApiFetchGrievanceTicketsService {

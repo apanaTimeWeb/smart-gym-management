@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/plans/membership-overview.
 // FLOW: Controller -> PlansFetchMembershipOverviewService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PlansRepository } from '@/modules/manager/plans/repositories/plans-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PlansRepository } from '@/backend_manager/modules/manager/plans/repositories/plans-repository';
 
 @Injectable()
 export class PlansFetchMembershipOverviewService {

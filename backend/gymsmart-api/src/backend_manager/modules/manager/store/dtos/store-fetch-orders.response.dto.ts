@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class StoreFetchOrdersResponseDto {
   @ApiProperty({ type: [Object] })
-  orders?: Array<{ createdAt?: string; id?: string; items?: Array<string>; method?: string; status?: string; total?: number; }>;
+  orders?: Array<{ createdAt: string; id: string; items?: Array<string>; method: string; status: string; total: number; }>;
 
 }

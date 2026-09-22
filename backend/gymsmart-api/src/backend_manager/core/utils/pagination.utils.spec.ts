@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Proves canonical pagination metadata semantics.
 // FLOW: Test input -> buildPaginationMeta -> exact PaginationMeta contract.
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
 
 describe('buildPaginationMeta', () => {
   it('calculates 1-indexed metadata from the full filtered count', () => {

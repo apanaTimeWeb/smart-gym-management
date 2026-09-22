@@ -2,8 +2,8 @@
 // FLOW: Repository -> MaintenanceEntity -> PostgreSQL manager_maintenance.
 import { Check, Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { MaintenanceRecordStatus } from '@/modules/manager/maintenance/maintenance.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { MaintenanceRecordStatus } from '@/backend_manager/modules/manager/maintenance/maintenance.constants';
 
 @Entity('manager_maintenance')
 @Check('CHK_manager_maintenance_payload_object', "jsonb_typeof(payload) = 'object'")
@@ -12,7 +12,7 @@ import { MaintenanceRecordStatus } from '@/modules/manager/maintenance/maintenan
 @Index('IDX_manager_maintenance_status', ['status'])
 export class MaintenanceEntity extends CoreBaseEntity {
   @Column({ type: 'jsonb', name: 'payload', default: () => "'{}'::jsonb" })
-  payload!: import('@/core/types/json-value.types').CoreJsonObject;
+  payload!: import('@/backend_manager/core/types/json-value.types').CoreJsonObject;
 
   @Column({ type: 'enum', enum: MaintenanceRecordStatus, enumName: 'manager_maintenance_status_enum', name: 'status', default: MaintenanceRecordStatus.ACTIVE })
   status!: MaintenanceRecordStatus;

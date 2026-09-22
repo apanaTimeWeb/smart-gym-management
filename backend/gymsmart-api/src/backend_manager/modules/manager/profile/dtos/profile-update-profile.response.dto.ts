@@ -5,12 +5,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ProfileUpdateProfileResponseDto {
   @ApiPropertyOptional()
-  email?: string;
+  email!: string;
 
   @ApiPropertyOptional()
-  name?: string;
+  name!: string;
 
   @ApiPropertyOptional()
-  phone?: string;
+  phone!: string;
 
 }

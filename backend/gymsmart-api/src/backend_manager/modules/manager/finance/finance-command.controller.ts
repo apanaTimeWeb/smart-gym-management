@@ -3,12 +3,12 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { FinanceCreatePaymentRequestDto } from '@/modules/manager/finance/dtos/finance-create-payment.request.dto';
-import { FinanceCreatePaymentResponseDto } from '@/modules/manager/finance/dtos/finance-create-payment.response.dto';
-import { FinanceCreatePaymentService } from '@/modules/manager/finance/services/finance-create-payment.service';
-import { FinanceQueryDto } from '@/modules/manager/finance/dtos/finance-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { FinanceCreatePaymentRequestDto } from '@/backend_manager/modules/manager/finance/dtos/finance-create-payment.request.dto';
+import { FinanceCreatePaymentResponseDto } from '@/backend_manager/modules/manager/finance/dtos/finance-create-payment.response.dto';
+import { FinanceCreatePaymentService } from '@/backend_manager/modules/manager/finance/services/finance-create-payment.service';
+import { FinanceQueryDto } from '@/backend_manager/modules/manager/finance/dtos/finance-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager finance')
@@ -21,7 +21,7 @@ export class FinanceCommandController {
   @ApiOperation({ summary: 'createPayment for Manager finance' })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiResponse({ status: HttpStatus.CREATED, type: FinanceCreatePaymentResponseDto })
-  createPayment(@Body() dto: FinanceCreatePaymentRequestDto): Promise<FinanceCreatePaymentResponseDto> {  return this.createPaymentService.createPayment(dto) as Promise<FinanceCreatePaymentResponseDto>;  }
+  createPayment(@Body() dto: FinanceCreatePaymentRequestDto): Promise<FinanceCreatePaymentResponseDto> {  return this.createPaymentService.createPayment(dto) as unknown as Promise<FinanceCreatePaymentResponseDto>;  }
 
 
 }

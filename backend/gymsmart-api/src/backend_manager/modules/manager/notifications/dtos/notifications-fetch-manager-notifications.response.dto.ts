@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class NotificationsFetchManagerNotificationsResponseDto {
   @ApiProperty({ type: [Object] })
-  notifications?: Array<{ createdAt?: string; memberName?: string; message?: number; priority?: string; status?: string; title?: string; type?: string; }>;
+  notifications?: Array<{ createdAt: string; memberName: string; message: number; priority: string; status: string; title: string; type: string; }>;
 
 }

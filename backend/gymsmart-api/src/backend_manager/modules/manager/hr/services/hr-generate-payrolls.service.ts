@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for POST /api/v1/manager/hr/payrolls/generate.
 // FLOW: Controller DTO -> HrGeneratePayrollsService -> HrOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { HrOrchestratorService } from '@/modules/manager/hr/services/hr-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { HrOrchestratorService } from '@/backend_manager/modules/manager/hr/services/hr-orchestrator.service';
 
 @Injectable()
 export class HrGeneratePayrollsService {
@@ -10,6 +10,6 @@ export class HrGeneratePayrollsService {
 
   /** @description Executes the frontend-defined mutation through the feature orchestrator. @param data - Validated request payload. @param id - Optional path resource identifier. @returns Contract-compatible payload. */
   async generatePayrolls(data: CoreJsonObject, id?: string): Promise<CoreJsonObject> {
-    return this.orchestrator.createHr(data, id);
+    return this.orchestrator.createHr(data);
   }
 }

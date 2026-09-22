@@ -7,9 +7,9 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationError, ValidationPipe, VersioningType } from '@nestjs/common';
 
-import { CoreAppModule } from '@/core/core-app.module';
-import { CoreConfigService } from '@/core/config/core-config.service';
-import { CoreInputSanitizationPipe } from '@/core/http/core-input-sanitization.pipe';
+import { CoreAppModule } from '@/backend_manager/core/core-app.module';
+import { CoreConfigService } from '@/backend_manager/core/config/core-config.service';
+import { CoreInputSanitizationPipe } from '@/backend_manager/core/http/core-input-sanitization.pipe';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(CoreAppModule, { bufferLogs: true });

@@ -4,8 +4,8 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 
-import { CoreRequestContextService } from '@/core/context/core-request-context.service';
-import { CoreTenantAuthorizationService } from '@/core/tenant/core-tenant-authorization.service';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
+import { CoreTenantAuthorizationService } from '@/backend_manager/core/tenant/core-tenant-authorization.service';
 
 @Injectable()
 export class CoreTenantGuard implements CanActivate {

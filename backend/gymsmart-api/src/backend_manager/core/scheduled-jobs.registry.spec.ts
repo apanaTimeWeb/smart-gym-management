@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Verifies the centralized scheduled-job registry contract.
 // FLOW: Registry -> structural assertions -> CI gate.
-import { SCHEDULED_JOBS_REGISTRY } from '@/core/scheduled-jobs.registry';
+import { SCHEDULED_JOBS_REGISTRY } from '@/backend_manager/core/scheduled-jobs.registry';
 
 describe('scheduled jobs registry', () => {
   it('contains structurally valid entries', () => {

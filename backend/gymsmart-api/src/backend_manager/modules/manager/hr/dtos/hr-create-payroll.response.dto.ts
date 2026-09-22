@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrCreatePayrollResponseDto {
   @ApiProperty({ type: [Object] })
-  payrolls?: Array<{ month?: string; netPayable?: string; paidAmount?: number; pendingAmount?: number; staff?: { name?: string; }; status?: string; }>;
+  payrolls?: Array<{ month: string; netPayable: string; paidAmount: number; pendingAmount: number; staff?: { name: string; }; status: string; }>;
 
 }

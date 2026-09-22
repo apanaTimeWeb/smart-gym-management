@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class WorkoutDeleteExerciseResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
 }

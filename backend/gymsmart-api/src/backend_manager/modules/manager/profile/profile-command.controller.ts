@@ -3,15 +3,15 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { ProfileQueryDto } from '@/modules/manager/profile/dtos/profile-query.dto';
-import { ProfileUpdatePasswordRequestDto } from '@/modules/manager/profile/dtos/profile-update-password.request.dto';
-import { ProfileUpdatePasswordResponseDto } from '@/modules/manager/profile/dtos/profile-update-password.response.dto';
-import { ProfileUpdatePasswordService } from '@/modules/manager/profile/services/profile-update-password.service';
-import { ProfileUpdateProfileRequestDto } from '@/modules/manager/profile/dtos/profile-update-profile.request.dto';
-import { ProfileUpdateProfileResponseDto } from '@/modules/manager/profile/dtos/profile-update-profile.response.dto';
-import { ProfileUpdateProfileService } from '@/modules/manager/profile/services/profile-update-profile.service';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { ProfileQueryDto } from '@/backend_manager/modules/manager/profile/dtos/profile-query.dto';
+import { ProfileUpdatePasswordRequestDto } from '@/backend_manager/modules/manager/profile/dtos/profile-update-password.request.dto';
+import { ProfileUpdatePasswordResponseDto } from '@/backend_manager/modules/manager/profile/dtos/profile-update-password.response.dto';
+import { ProfileUpdatePasswordService } from '@/backend_manager/modules/manager/profile/services/profile-update-password.service';
+import { ProfileUpdateProfileRequestDto } from '@/backend_manager/modules/manager/profile/dtos/profile-update-profile.request.dto';
+import { ProfileUpdateProfileResponseDto } from '@/backend_manager/modules/manager/profile/dtos/profile-update-profile.response.dto';
+import { ProfileUpdateProfileService } from '@/backend_manager/modules/manager/profile/services/profile-update-profile.service';
 
 @Controller('manager')
 @ApiTags('Manager profile')
@@ -24,7 +24,7 @@ export class ProfileCommandController {
   @ApiOperation({ summary: 'updatePassword for Manager profile' })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: ProfileUpdatePasswordResponseDto })
-  updatePassword(@Body() dto: ProfileUpdatePasswordRequestDto): Promise<ProfileUpdatePasswordResponseDto> {  return this.updatePasswordService.updatePassword(dto) as Promise<ProfileUpdatePasswordResponseDto>;  }
+  updatePassword(@Body() dto: ProfileUpdatePasswordRequestDto): Promise<ProfileUpdatePasswordResponseDto> {  return this.updatePasswordService.updatePassword(dto) as unknown as Promise<ProfileUpdatePasswordResponseDto>;  }
 
 
   // SLA: STANDARD
@@ -32,7 +32,7 @@ export class ProfileCommandController {
   @ApiOperation({ summary: 'updateProfile for Manager profile' })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: ProfileUpdateProfileResponseDto })
-  updateProfile(@Body() dto: ProfileUpdateProfileRequestDto): Promise<ProfileUpdateProfileResponseDto> {  return this.updateProfileService.updateProfile(dto) as Promise<ProfileUpdateProfileResponseDto>;  }
+  updateProfile(@Body() dto: ProfileUpdateProfileRequestDto): Promise<ProfileUpdateProfileResponseDto> {  return this.updateProfileService.updateProfile(dto) as unknown as Promise<ProfileUpdateProfileResponseDto>;  }
 
 
 }

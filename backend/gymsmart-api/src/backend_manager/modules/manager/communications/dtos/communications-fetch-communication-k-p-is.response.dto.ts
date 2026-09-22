@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CommunicationsFetchCommunicationKPIsResponseDto {
   @ApiProperty({ type: Number })
-  campaignsThisMonth?: number;
+  campaignsThisMonth!: number;
 
   @ApiProperty({ type: Number })
-  emailSent?: number;
+  emailSent!: number;
 
   @ApiProperty({ type: Number })
-  totalSent?: number;
+  totalSent!: number;
 
   @ApiProperty({ type: Number })
-  whatsappSent?: number;
+  whatsappSent!: number;
 
 }

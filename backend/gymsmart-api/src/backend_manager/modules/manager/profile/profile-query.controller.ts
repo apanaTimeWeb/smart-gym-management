@@ -3,11 +3,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { ProfileFetchProfileResponseDto } from '@/modules/manager/profile/dtos/profile-fetch-profile.response.dto';
-import { ProfileFetchProfileService } from '@/modules/manager/profile/services/profile-fetch-profile.service';
-import { ProfileQueryDto } from '@/modules/manager/profile/dtos/profile-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { ProfileFetchProfileResponseDto } from '@/backend_manager/modules/manager/profile/dtos/profile-fetch-profile.response.dto';
+import { ProfileFetchProfileService } from '@/backend_manager/modules/manager/profile/services/profile-fetch-profile.service';
+import { ProfileQueryDto } from '@/backend_manager/modules/manager/profile/dtos/profile-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager profile')
@@ -19,7 +19,7 @@ export class ProfileQueryController {
   @Get("profile")
   @ApiOperation({ summary: 'fetchProfile for Manager profile' })
   @ApiResponse({ status: HttpStatus.OK, type: ProfileFetchProfileResponseDto })
-  fetchProfile(@Query() query: ProfileQueryDto): Promise<ProfileFetchProfileResponseDto> {  return this.fetchProfileService.fetchProfile(query) as Promise<ProfileFetchProfileResponseDto>;  }
+  fetchProfile(@Query() query: ProfileQueryDto): Promise<ProfileFetchProfileResponseDto> {  return this.fetchProfileService.fetchProfile(query) as unknown as Promise<ProfileFetchProfileResponseDto>;  }
 
 
 }

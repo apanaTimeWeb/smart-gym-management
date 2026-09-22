@@ -2,9 +2,9 @@
 // FLOW: Controller DTO -> MaintenanceOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
 
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { CoreContextException } from '@/core/exceptions/core-context.exception';
-import { MaintenanceOrchestratorService } from '@/modules/manager/maintenance/services/maintenance-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { CoreContextException } from '@/backend_manager/core/exceptions/core-context.exception';
+import { MaintenanceOrchestratorService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-orchestrator.service';
 
 @Injectable()
 export class MaintenanceManagerMaintenanceApiResolveMaintenanceTicketService {

@@ -5,27 +5,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrUpdatePayrollStatusResponseDto {
   @ApiProperty({ type: Number })
-  amount: number;
+  amount!: number;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  month: string;
+  month!: string;
 
   @ApiProperty({ type: Number })
-  netPayable: number;
+  netPayable!: number;
 
   @ApiProperty({ type: Number })
-  paidAmount: number;
+  paidAmount!: number;
 
   @ApiProperty({ type: Number })
-  pendingAmount: number;
+  pendingAmount!: number;
 
   @ApiProperty()
-  staffId: string;
+  staffId!: string;
 
   @ApiProperty()
-  status: string;
+  status!: string;
 
 }

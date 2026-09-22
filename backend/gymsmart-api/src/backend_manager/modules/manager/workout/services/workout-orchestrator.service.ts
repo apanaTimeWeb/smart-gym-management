@@ -3,12 +3,13 @@
 
 import { Injectable } from '@nestjs/common';
 
-import { CoreAuditLogRepository } from '@/core/audit/core-audit-log.repository';
-import { CoreEventRegistry } from '@/core/events/core-event-registry.constants';
-import { CoreEventService } from '@/core/events/core-event.service';
-import { CoreUnitOfWorkService } from '@/core/database/core-unit-of-work.service';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { WorkoutRepository } from '@/modules/manager/workout/repositories/workout-repository';
+import { CoreAuditLogRepository } from '@/backend_manager/core/audit/core-audit-log.repository';
+import { CoreContextException } from '@/backend_manager/core/exceptions/core-context.exception';
+import { CoreEventRegistry } from '@/backend_manager/core/events/core-event-registry.constants';
+import { CoreEventService } from '@/backend_manager/core/events/core-event.service';
+import { CoreUnitOfWorkService } from '@/backend_manager/core/database/core-unit-of-work.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { WorkoutRepository } from '@/backend_manager/modules/manager/workout/repositories/workout-repository';
 
 @Injectable()
 export class WorkoutOrchestratorService {

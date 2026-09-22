@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/settings.
 // FLOW: Controller DTO -> SettingsUpdateSettingsService -> SettingsOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { SettingsOrchestratorService } from '@/modules/manager/settings/services/settings-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { SettingsOrchestratorService } from '@/backend_manager/modules/manager/settings/services/settings-orchestrator.service';
 
 @Injectable()
 export class SettingsUpdateSettingsService {

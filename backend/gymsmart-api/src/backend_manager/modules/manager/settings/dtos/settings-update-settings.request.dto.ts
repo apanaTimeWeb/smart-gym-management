@@ -1,4 +1,4 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for PATCH /api/v1/manager/settings.
 // FLOW: HTTP payload -> SettingsUpdateSettingsRequestDto validation -> write use case -> orchestrator.
 
@@ -6,18 +6,18 @@ import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class SettingsUpdateSettingsRequestDto extends CoreRequestDto {
   @IsString()
-  preferences!: ManagerSettingsPreferences;
+  preferences!: any;
 
   @IsString()
-  gymProfile!: GymProfile;
+  gymProfile!: any;
 
   @IsString()
-  operatingHours!: OperatingHours;
+  operatingHours!: any;
 
   @IsString()
-  membershipSettings!: MembershipSettings;
+  membershipSettings!: any;
 
   @IsArray()
-  notificationTemplates!: NotificationTemplate[];
+  notificationTemplates!: any[];
 
 }

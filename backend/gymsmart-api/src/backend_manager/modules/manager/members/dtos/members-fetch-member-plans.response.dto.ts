@@ -5,21 +5,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersFetchMemberPlansResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty({ type: Number })
-  price12Month: number;
+  price12Month!: number;
 
   @ApiProperty({ type: Number })
-  price1Month: number;
+  price1Month!: number;
 
   @ApiProperty({ type: Number })
-  price3Month: number;
+  price3Month!: number;
 
   @ApiProperty({ type: Number })
-  price6Month: number;
+  price6Month!: number;
 
 }

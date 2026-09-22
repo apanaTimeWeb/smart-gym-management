@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 
-import { CoreConfigService } from '@/core/config/core-config.service';
+import { CoreConfigService } from '@/backend_manager/core/config/core-config.service';
 
 @Injectable()
 export class CoreEncryptionService {

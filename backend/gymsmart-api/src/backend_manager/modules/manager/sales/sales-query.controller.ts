@@ -3,17 +3,17 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { SalesFetchAllMembershipsResponseDto } from '@/modules/manager/sales/dtos/sales-fetch-all-memberships.response.dto';
-import { SalesFetchAllMembershipsService } from '@/modules/manager/sales/services/sales-fetch-all-memberships.service';
-import { SalesFetchMembershipReportResponseDto } from '@/modules/manager/sales/dtos/sales-fetch-membership-report.response.dto';
-import { SalesFetchMembershipReportService } from '@/modules/manager/sales/services/sales-fetch-membership-report.service';
-import { SalesFetchPendingPaymentsResponseDto } from '@/modules/manager/sales/dtos/sales-fetch-pending-payments.response.dto';
-import { SalesFetchPendingPaymentsService } from '@/modules/manager/sales/services/sales-fetch-pending-payments.service';
-import { SalesFetchSalesOverviewResponseDto } from '@/modules/manager/sales/dtos/sales-fetch-sales-overview.response.dto';
-import { SalesFetchSalesOverviewService } from '@/modules/manager/sales/services/sales-fetch-sales-overview.service';
-import { SalesQueryDto } from '@/modules/manager/sales/dtos/sales-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { SalesFetchAllMembershipsResponseDto } from '@/backend_manager/modules/manager/sales/dtos/sales-fetch-all-memberships.response.dto';
+import { SalesFetchAllMembershipsService } from '@/backend_manager/modules/manager/sales/services/sales-fetch-all-memberships.service';
+import { SalesFetchMembershipReportResponseDto } from '@/backend_manager/modules/manager/sales/dtos/sales-fetch-membership-report.response.dto';
+import { SalesFetchMembershipReportService } from '@/backend_manager/modules/manager/sales/services/sales-fetch-membership-report.service';
+import { SalesFetchPendingPaymentsResponseDto } from '@/backend_manager/modules/manager/sales/dtos/sales-fetch-pending-payments.response.dto';
+import { SalesFetchPendingPaymentsService } from '@/backend_manager/modules/manager/sales/services/sales-fetch-pending-payments.service';
+import { SalesFetchSalesOverviewResponseDto } from '@/backend_manager/modules/manager/sales/dtos/sales-fetch-sales-overview.response.dto';
+import { SalesFetchSalesOverviewService } from '@/backend_manager/modules/manager/sales/services/sales-fetch-sales-overview.service';
+import { SalesQueryDto } from '@/backend_manager/modules/manager/sales/dtos/sales-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager sales')
@@ -25,28 +25,28 @@ export class SalesQueryController {
   @Get("sales/all-memberships")
   @ApiOperation({ summary: 'fetchAllMemberships for Manager sales' })
   @ApiResponse({ status: HttpStatus.OK, type: SalesFetchAllMembershipsResponseDto })
-  fetchAllMemberships(@Query() query: SalesQueryDto): Promise<SalesFetchAllMembershipsResponseDto> {  return this.fetchAllMembershipsService.fetchAllMemberships(query) as Promise<SalesFetchAllMembershipsResponseDto>;  }
+  fetchAllMemberships(@Query() query: SalesQueryDto): Promise<SalesFetchAllMembershipsResponseDto> {  return this.fetchAllMembershipsService.fetchAllMemberships(query) as unknown as Promise<SalesFetchAllMembershipsResponseDto>;  }
 
 
   // SLA: STANDARD
   @Get("sales/membership-report")
   @ApiOperation({ summary: 'fetchMembershipReport for Manager sales' })
   @ApiResponse({ status: HttpStatus.OK, type: SalesFetchMembershipReportResponseDto })
-  fetchMembershipReport(@Query() query: SalesQueryDto): Promise<SalesFetchMembershipReportResponseDto> {  return this.fetchMembershipReportService.fetchMembershipReport(query) as Promise<SalesFetchMembershipReportResponseDto>;  }
+  fetchMembershipReport(@Query() query: SalesQueryDto): Promise<SalesFetchMembershipReportResponseDto> {  return this.fetchMembershipReportService.fetchMembershipReport(query) as unknown as Promise<SalesFetchMembershipReportResponseDto>;  }
 
 
   // SLA: STANDARD
   @Get("sales/overview")
   @ApiOperation({ summary: 'fetchSalesOverview for Manager sales' })
   @ApiResponse({ status: HttpStatus.OK, type: SalesFetchSalesOverviewResponseDto })
-  fetchSalesOverview(@Query() query: SalesQueryDto): Promise<SalesFetchSalesOverviewResponseDto> {  return this.fetchSalesOverviewService.fetchSalesOverview(query) as Promise<SalesFetchSalesOverviewResponseDto>;  }
+  fetchSalesOverview(@Query() query: SalesQueryDto): Promise<SalesFetchSalesOverviewResponseDto> {  return this.fetchSalesOverviewService.fetchSalesOverview(query) as unknown as Promise<SalesFetchSalesOverviewResponseDto>;  }
 
 
   // SLA: STANDARD
   @Get("sales/pending-payments")
   @ApiOperation({ summary: 'fetchPendingPayments for Manager sales' })
   @ApiResponse({ status: HttpStatus.OK, type: SalesFetchPendingPaymentsResponseDto })
-  fetchPendingPayments(@Query() query: SalesQueryDto): Promise<SalesFetchPendingPaymentsResponseDto> {  return this.fetchPendingPaymentsService.fetchPendingPayments(query) as Promise<SalesFetchPendingPaymentsResponseDto>;  }
+  fetchPendingPayments(@Query() query: SalesQueryDto): Promise<SalesFetchPendingPaymentsResponseDto> {  return this.fetchPendingPaymentsService.fetchPendingPayments(query) as unknown as Promise<SalesFetchPendingPaymentsResponseDto>;  }
 
 
 }

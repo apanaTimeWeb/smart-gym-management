@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FinanceFetchPaymentsResponseDto {
   @ApiProperty({ type: [Object] })
-  payments?: Array<{ amount?: number; invoiceNumber?: string; member?: { email?: string; name?: string; plan?: { name?: string; }; }; method?: string; paidAt?: string; status?: string; }>;
+  payments?: Array<{ amount: number; invoiceNumber: string; member?: { email: string; name: string; plan?: { name: string; }; }; method: string; paidAt: string; status: string; }>;
 
 }

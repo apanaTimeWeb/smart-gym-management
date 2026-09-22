@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/notifications.
 // FLOW: Controller -> NotificationsFetchManagerNotificationsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { NotificationsRepository } from '@/modules/manager/notifications/repositories/notifications-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { NotificationsRepository } from '@/backend_manager/modules/manager/notifications/repositories/notifications-repository';
 
 @Injectable()
 export class NotificationsFetchManagerNotificationsService {

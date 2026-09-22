@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersAssignDietPlanResponseDto {
   @ApiProperty({ type: Boolean })
-  success: boolean;
+  success!: boolean;
 
 }

@@ -2,21 +2,21 @@
 // FLOW: Use-case -> PlansRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PlansEntity } from '@/modules/manager/plans/plans.entity';
-import { PlansMapper } from '@/modules/manager/plans/mappers/plans-mapper';
-import type { PlansDomainData } from '@/modules/manager/plans/plans.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PlansEntity } from '@/backend_manager/modules/manager/plans/plans.entity';
+import { PlansMapper } from '@/backend_manager/modules/manager/plans/mappers/plans-mapper';
+import type { PlansDomainData } from '@/backend_manager/modules/manager/plans/plans.interfaces';
 
 export interface PlansListResult { data: PlansDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class PlansRepository extends CoreBaseRepository<PlansEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PlansEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PlansEntity); }
 
   /** @description Finds a non-deleted plans record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findPlansById(id: string): Promise<PlansDomainData | null> {

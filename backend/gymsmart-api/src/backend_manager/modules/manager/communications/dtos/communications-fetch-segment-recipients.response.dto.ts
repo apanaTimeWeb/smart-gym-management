@@ -5,24 +5,24 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CommunicationsFetchSegmentRecipientsResponseDto {
   @ApiProperty()
-  email: string;
+  email!: string;
 
   @ApiProperty()
-  expiryDate: string;
+  expiryDate!: string;
 
   @ApiProperty()
-  memberId: string;
+  memberId!: string;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty({ type: Number })
-  pendingAmount: number;
+  pendingAmount!: number;
 
   @ApiProperty()
-  phone: string;
+  phone!: string;
 
   @ApiProperty()
-  status: string;
+  status!: string;
 
 }

@@ -1,4 +1,4 @@
-import type { CoreJsonValue } from '@/core/types/json-value.types';
+import type { CoreJsonValue } from '@/backend_manager/core/types/json-value.types';
 // RESPONSIBILITY: Shared validated page/limit query contract.
 // FLOW: Controller query → PaginationQueryDto → feature query DTO extension → repository.
 import { Type } from 'class-transformer';

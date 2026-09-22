@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PlansFetchPlansResponseDto {
   @ApiProperty({ type: [Object] })
-  plans?: Array<{ duration?: number; isActive?: number; name?: string; price?: number; }>;
+  plans?: Array<{ duration: number; isActive: number; name: string; price: number; }>;
 
 }

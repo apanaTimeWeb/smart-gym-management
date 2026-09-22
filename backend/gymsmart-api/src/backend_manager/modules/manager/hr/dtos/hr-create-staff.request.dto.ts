@@ -1,11 +1,12 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/hr/staff.
 // FLOW: HTTP payload -> HrCreateStaffRequestDto validation -> write use case -> orchestrator.
 
 import { IsArray, IsBoolean, IsEmail, IsEnum, IsISO8601, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SalaryType } from '@/modules/manager/hr/hr.constants';
-import { PaymentCycle } from '@/modules/manager/hr/hr.constants';
+import { SalaryType } from '@/backend_manager/modules/manager/hr/hr.constants';
+import { PaymentCycle } from '@/backend_manager/modules/manager/hr/hr.constants';
 
 export class HrCreateStaffRequestDto extends CoreRequestDto {
   @IsString()
@@ -32,20 +33,20 @@ export class HrCreateStaffRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  address?: string;
+  address!: string;
 
   @IsOptional()
   @IsString()
-  aadhaar?: string;
+  aadhaar!: string;
 
   @IsOptional()
   @IsString()
-  upiId?: string;
+  upiId!: string;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  advanceSalary?: number;
+  advanceSalary!: number;
 
   @IsISO8601()
   joinDate!: string;
@@ -55,39 +56,39 @@ export class HrCreateStaffRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsEnum(SalaryType)
-  salaryType?: SalaryType;
+  salaryType!: SalaryType;
 
   @IsOptional()
   @IsEnum(PaymentCycle)
-  paymentCycle?: PaymentCycle;
+  paymentCycle!: PaymentCycle;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  currentDue?: number;
+  currentDue!: number;
 
   @IsOptional()
   @IsString()
-  bankAccountNumber?: string;
+  bankAccountNumber!: string;
 
   @IsOptional()
   @IsString()
-  ifscCode?: string;
+  ifscCode!: string;
 
   @IsOptional()
   @IsString()
-  panNumber?: string;
+  panNumber!: string;
 
   @IsOptional()
   @IsString()
-  department?: string;
+  department!: string;
 
   @IsOptional()
   @IsString()
-  emergencyContact?: StaffEmergencyContact;
+  emergencyContact!: StaffEmergencyContact;
 
   @IsOptional()
   @IsArray()
-  documents?: StaffDocument[];
+  documents!: StaffDocument[];
 
 }

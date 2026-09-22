@@ -4,5 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class HrFetchStaffAttendanceResponseDto {
   @ApiProperty({ type: [Object] })
-  history!: Array<{ date: string; status: string; checkIn?: string; checkOut?: string }>;
+  history!: Array<{ date: string; status: string; checkIn: string; checkOut?: string }>;
 }

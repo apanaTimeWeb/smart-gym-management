@@ -5,21 +5,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PtFetchPackagesResponseDto {
   @ApiProperty()
-  description: string;
+  description!: string;
 
   @ApiProperty({ type: Number })
-  durationDays: number;
+  durationDays!: number;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty({ type: Number })
-  price: number;
+  price!: number;
 
   @ApiProperty({ type: Number })
-  sessionCount: number;
+  sessionCount!: number;
 
 }

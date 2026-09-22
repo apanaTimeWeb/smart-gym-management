@@ -3,11 +3,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { SettingsFetchSettingsResponseDto } from '@/modules/manager/settings/dtos/settings-fetch-settings.response.dto';
-import { SettingsFetchSettingsService } from '@/modules/manager/settings/services/settings-fetch-settings.service';
-import { SettingsQueryDto } from '@/modules/manager/settings/dtos/settings-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { SettingsFetchSettingsResponseDto } from '@/backend_manager/modules/manager/settings/dtos/settings-fetch-settings.response.dto';
+import { SettingsFetchSettingsService } from '@/backend_manager/modules/manager/settings/services/settings-fetch-settings.service';
+import { SettingsQueryDto } from '@/backend_manager/modules/manager/settings/dtos/settings-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager settings')
@@ -19,7 +19,7 @@ export class SettingsQueryController {
   @Get("settings")
   @ApiOperation({ summary: 'fetchSettings for Manager settings' })
   @ApiResponse({ status: HttpStatus.OK, type: SettingsFetchSettingsResponseDto })
-  fetchSettings(@Query() query: SettingsQueryDto): Promise<SettingsFetchSettingsResponseDto> {  return this.fetchSettingsService.fetchSettings(query) as Promise<SettingsFetchSettingsResponseDto>;  }
+  fetchSettings(@Query() query: SettingsQueryDto): Promise<SettingsFetchSettingsResponseDto> {  return this.fetchSettingsService.fetchSettings(query) as unknown as Promise<SettingsFetchSettingsResponseDto>;  }
 
 
 }

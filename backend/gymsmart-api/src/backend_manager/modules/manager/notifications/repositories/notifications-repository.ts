@@ -2,21 +2,21 @@
 // FLOW: Use-case -> NotificationsRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { NotificationsEntity } from '@/modules/manager/notifications/notifications.entity';
-import { NotificationsMapper } from '@/modules/manager/notifications/mappers/notifications-mapper';
-import type { NotificationsDomainData } from '@/modules/manager/notifications/notifications.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { NotificationsEntity } from '@/backend_manager/modules/manager/notifications/notifications.entity';
+import { NotificationsMapper } from '@/backend_manager/modules/manager/notifications/mappers/notifications-mapper';
+import type { NotificationsDomainData } from '@/backend_manager/modules/manager/notifications/notifications.interfaces';
 
 export interface NotificationsListResult { data: NotificationsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class NotificationsRepository extends CoreBaseRepository<NotificationsEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, NotificationsEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, NotificationsEntity); }
 
   /** @description Finds a non-deleted notifications record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findNotificationsById(id: string): Promise<NotificationsDomainData | null> {

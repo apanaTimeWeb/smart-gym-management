@@ -1,6 +1,6 @@
 // RESPONSIBILITY: ORM-free domain contract for Manager members.
 // FLOW: TypeORM entity -> MembersMapper -> MembersDomainData -> use case/controller.
-import type { CoreJsonObject } from '@/core/types/json-value.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
 export interface MembersDomainData { id: string; payload: CoreJsonObject; }
 
 

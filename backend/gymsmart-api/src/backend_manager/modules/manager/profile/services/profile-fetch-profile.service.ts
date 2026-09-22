@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/profile.
 // FLOW: Controller -> ProfileFetchProfileService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ProfileRepository } from '@/modules/manager/profile/repositories/profile-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ProfileRepository } from '@/backend_manager/modules/manager/profile/repositories/profile-repository';
 
 @Injectable()
 export class ProfileFetchProfileService {

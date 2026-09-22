@@ -1,6 +1,6 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
-import { InquiryBillingCycle } from '@/modules/manager/inquiries/inquiries.constants';
-import { InquiryGender } from '@/modules/manager/inquiries/inquiries.constants';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { InquiryBillingCycle } from '@/backend_manager/modules/manager/inquiries/inquiries.constants';
+import { InquiryGender } from '@/backend_manager/modules/manager/inquiries/inquiries.constants';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/inquiries/:id/convert.
 // FLOW: HTTP payload -> InquiriesConvertLeadRequestDto validation -> write use case -> orchestrator.
 
@@ -13,18 +13,18 @@ export class InquiriesConvertLeadRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email!: string;
 
   @IsString()
   phone!: string;
 
   @IsOptional()
   @IsString()
-  address?: string;
+  address!: string;
 
   @IsOptional()
   @IsString()
-  aadhaar?: string;
+  aadhaar!: string;
 
   @IsString()
   gender!: InquiryGender;
@@ -35,7 +35,7 @@ export class InquiriesConvertLeadRequestDto extends CoreRequestDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  customDays?: number;
+  customDays!: number;
 
   @IsString()
   planId!: string;
@@ -45,25 +45,25 @@ export class InquiriesConvertLeadRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsISO8601()
-  expiryDate?: string;
+  expiryDate!: string;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  totalAmount?: number;
+  totalAmount!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  paidAmount?: number;
+  paidAmount!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  pendingAmount?: number;
+  pendingAmount!: number;
 
   @IsOptional()
   @IsString()
-  medicalHistory?: string;
+  medicalHistory!: string;
 
 }

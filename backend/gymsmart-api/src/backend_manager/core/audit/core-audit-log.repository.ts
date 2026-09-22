@@ -2,11 +2,11 @@
 // FLOW: Feature orchestrator → CoreAuditLogRepository.append → transaction context → audit_logs.
 import { Injectable } from '@nestjs/common';
 
-import { CoreRequestContextService } from '@/core/context/core-request-context.service';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreContextException } from '@/core/exceptions/core-context.exception';
-import { CoreAuditLogEntity } from '@/core/audit/core-audit-log.entity';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreContextException } from '@/backend_manager/core/exceptions/core-context.exception';
+import { CoreAuditLogEntity } from '@/backend_manager/core/audit/core-audit-log.entity';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
 
 @Injectable()
 export class CoreAuditLogRepository {

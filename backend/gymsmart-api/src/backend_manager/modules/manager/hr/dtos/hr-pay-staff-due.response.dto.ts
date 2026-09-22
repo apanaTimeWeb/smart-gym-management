@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrPayStaffDueResponseDto {
   @ApiProperty({ type: Number })
-  paidAmount: number;
+  paidAmount!: number;
 
 }

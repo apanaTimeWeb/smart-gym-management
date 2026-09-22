@@ -1,4 +1,4 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/hr/ledger/advance.
 // FLOW: HTTP payload -> HrGiveStaffAdvanceRequestDto validation -> write use case -> orchestrator.
 
@@ -18,6 +18,6 @@ export class HrGiveStaffAdvanceRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  notes?: string;
+  notes!: string;
 
 }

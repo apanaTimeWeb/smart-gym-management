@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for DELETE /api/v1/manager/members/:id.
 // FLOW: Controller DTO -> MembersDeleteMemberService -> MembersOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { MembersOrchestratorService } from '@/modules/manager/members/services/members-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { MembersOrchestratorService } from '@/backend_manager/modules/manager/members/services/members-orchestrator.service';
 
 @Injectable()
 export class MembersDeleteMemberService {

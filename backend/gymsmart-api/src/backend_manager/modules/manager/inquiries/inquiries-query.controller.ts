@@ -3,19 +3,19 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { InquiriesFetchInquiriesResponseDto } from '@/modules/manager/inquiries/dtos/inquiries-fetch-inquiries.response.dto';
-import { InquiriesFetchInquiriesService } from '@/modules/manager/inquiries/services/inquiries-fetch-inquiries.service';
-import { InquiriesFetchInquiryByIdResponseDto } from '@/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-by-id.response.dto';
-import { InquiriesFetchInquiryByIdService } from '@/modules/manager/inquiries/services/inquiries-fetch-inquiry-by-id.service';
-import { InquiriesFetchInquiryPlansResponseDto } from '@/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-plans.response.dto';
-import { InquiriesFetchInquiryPlansService } from '@/modules/manager/inquiries/services/inquiries-fetch-inquiry-plans.service';
-import { InquiriesFetchInquiryPlansSnapshotResponseDto } from '@/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-plans-snapshot.response.dto';
-import { InquiriesFetchInquiryPlansSnapshotService } from '@/modules/manager/inquiries/services/inquiries-fetch-inquiry-plans-snapshot.service';
-import { InquiriesFetchInquiryStatsResponseDto } from '@/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-stats.response.dto';
-import { InquiriesFetchInquiryStatsService } from '@/modules/manager/inquiries/services/inquiries-fetch-inquiry-stats.service';
-import { InquiriesQueryDto } from '@/modules/manager/inquiries/dtos/inquiries-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { InquiriesFetchInquiriesResponseDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-fetch-inquiries.response.dto';
+import { InquiriesFetchInquiriesService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-fetch-inquiries.service';
+import { InquiriesFetchInquiryByIdResponseDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-by-id.response.dto';
+import { InquiriesFetchInquiryByIdService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-fetch-inquiry-by-id.service';
+import { InquiriesFetchInquiryPlansResponseDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-plans.response.dto';
+import { InquiriesFetchInquiryPlansService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-fetch-inquiry-plans.service';
+import { InquiriesFetchInquiryPlansSnapshotResponseDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-plans-snapshot.response.dto';
+import { InquiriesFetchInquiryPlansSnapshotService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-fetch-inquiry-plans-snapshot.service';
+import { InquiriesFetchInquiryStatsResponseDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-fetch-inquiry-stats.response.dto';
+import { InquiriesFetchInquiryStatsService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-fetch-inquiry-stats.service';
+import { InquiriesQueryDto } from '@/backend_manager/modules/manager/inquiries/dtos/inquiries-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager inquiries')
@@ -27,28 +27,28 @@ export class InquiriesQueryController {
   @Get("inquiries/plans")
   @ApiOperation({ summary: 'fetchInquiryPlans for Manager inquiries' })
   @ApiResponse({ status: HttpStatus.OK, type: [InquiriesFetchInquiryPlansResponseDto] })
-  fetchInquiryPlans(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryPlansResponseDto[]> {  return this.fetchInquiryPlansService.fetchInquiryPlans(query) as Promise<InquiriesFetchInquiryPlansResponseDto[]>;  }
+  fetchInquiryPlans(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryPlansResponseDto[]> {  return this.fetchInquiryPlansService.fetchInquiryPlans(query) as unknown as Promise<InquiriesFetchInquiryPlansResponseDto[]>;  }
 
 
   // SLA: STANDARD
   @Get("inquiries/plans-snapshot")
   @ApiOperation({ summary: 'fetchInquiryPlansSnapshot for Manager inquiries' })
   @ApiResponse({ status: HttpStatus.OK, type: [InquiriesFetchInquiryPlansSnapshotResponseDto] })
-  fetchInquiryPlansSnapshot(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryPlansSnapshotResponseDto[]> {  return this.fetchInquiryPlansSnapshotService.fetchInquiryPlansSnapshot(query) as Promise<InquiriesFetchInquiryPlansSnapshotResponseDto[]>;  }
+  fetchInquiryPlansSnapshot(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryPlansSnapshotResponseDto[]> {  return this.fetchInquiryPlansSnapshotService.fetchInquiryPlansSnapshot(query) as unknown as Promise<InquiriesFetchInquiryPlansSnapshotResponseDto[]>;  }
 
 
   // SLA: FAST
   @Get("inquiries/stats")
   @ApiOperation({ summary: 'fetchInquiryStats for Manager inquiries' })
   @ApiResponse({ status: HttpStatus.OK, type: InquiriesFetchInquiryStatsResponseDto })
-  fetchInquiryStats(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryStatsResponseDto> {  return this.fetchInquiryStatsService.fetchInquiryStats(query) as Promise<InquiriesFetchInquiryStatsResponseDto>;  }
+  fetchInquiryStats(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryStatsResponseDto> {  return this.fetchInquiryStatsService.fetchInquiryStats(query) as unknown as Promise<InquiriesFetchInquiryStatsResponseDto>;  }
 
 
   // SLA: STANDARD
   @Get("inquiries")
   @ApiOperation({ summary: 'fetchInquiries for Manager inquiries' })
   @ApiResponse({ status: HttpStatus.OK, type: InquiriesFetchInquiriesResponseDto })
-  fetchInquiries(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiriesResponseDto> {  return this.fetchInquiriesService.fetchInquiries(query) as Promise<InquiriesFetchInquiriesResponseDto>;  }
+  fetchInquiries(@Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiriesResponseDto> {  return this.fetchInquiriesService.fetchInquiries(query) as unknown as Promise<InquiriesFetchInquiriesResponseDto>;  }
 
 
   // SLA: STANDARD
@@ -56,7 +56,7 @@ export class InquiriesQueryController {
   @ApiOperation({ summary: 'fetchInquiryById for Manager inquiries' })
   @ApiParam({ name: 'id', required: true })
   @ApiResponse({ status: HttpStatus.OK, type: InquiriesFetchInquiryByIdResponseDto })
-  fetchInquiryById(@Param('id') id: string, @Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryByIdResponseDto> {  return this.fetchInquiryByIdService.fetchInquiryById(id, query) as Promise<InquiriesFetchInquiryByIdResponseDto>;  }
+  fetchInquiryById(@Param('id') id: string, @Query() query: InquiriesQueryDto): Promise<InquiriesFetchInquiryByIdResponseDto> {  return this.fetchInquiryByIdService.fetchInquiryById(id, query) as unknown as Promise<InquiriesFetchInquiryByIdResponseDto>;  }
 
 
 }

@@ -9,7 +9,7 @@ export enum WorkoutRecordStatus {
 
 export const WorkoutAllowedSortFields = ['createdAt', 'updatedAt', 'id'] as const;
 
-export enum WorkoutLevel {
+export enum WorkoutDay {
   BEGINNER = 'BEGINNER',
   INTERMEDIATE = 'INTERMEDIATE',
   ADVANCED = 'ADVANCED',

@@ -1,6 +1,6 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
-import { CommChannel, CommSegment } from '@/modules/manager/communications/communications.constants';
+import { CommChannel, CommSegment } from '@/backend_manager/modules/manager/communications/communications.constants';
 
 export class CommunicationsSendCampaignRequestDto extends CoreRequestDto {
   @IsString() title!: string;

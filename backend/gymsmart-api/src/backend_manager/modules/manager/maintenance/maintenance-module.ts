@@ -2,13 +2,13 @@
 // FLOW: ManagerDomainModule -> MaintenanceModule -> controllers -> use cases -> repository.
 import { Module } from '@nestjs/common';
 
-import { MaintenanceCommandController } from '@/modules/manager/maintenance/maintenance-command.controller';
-import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketService } from '@/modules/manager/maintenance/services/maintenance-manager-maintenance-api-create-maintenance-ticket.service';
-import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesService } from '@/modules/manager/maintenance/services/maintenance-manager-maintenance-api-fetch-maintenance-issues.service';
-import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketService } from '@/modules/manager/maintenance/services/maintenance-manager-maintenance-api-resolve-maintenance-ticket.service';
-import { MaintenanceOrchestratorService } from '@/modules/manager/maintenance/services/maintenance-orchestrator.service';
-import { MaintenanceQueryController } from '@/modules/manager/maintenance/maintenance-query.controller';
-import { MaintenanceRepository } from '@/modules/manager/maintenance/repositories/maintenance-repository';
+import { MaintenanceCommandController } from '@/backend_manager/modules/manager/maintenance/maintenance-command.controller';
+import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-create-maintenance-ticket.service';
+import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-fetch-maintenance-issues.service';
+import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-resolve-maintenance-ticket.service';
+import { MaintenanceOrchestratorService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-orchestrator.service';
+import { MaintenanceQueryController } from '@/backend_manager/modules/manager/maintenance/maintenance-query.controller';
+import { MaintenanceRepository } from '@/backend_manager/modules/manager/maintenance/repositories/maintenance-repository';
 
 @Module({
   controllers: [MaintenanceQueryController, MaintenanceCommandController],

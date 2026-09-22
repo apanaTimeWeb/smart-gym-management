@@ -1,4 +1,4 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/pt/assignments.
 // FLOW: HTTP payload -> PtCreateAssignmentRequestDto validation -> write use case -> orchestrator.
 

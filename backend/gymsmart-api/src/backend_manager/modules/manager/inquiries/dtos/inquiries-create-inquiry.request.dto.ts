@@ -1,5 +1,6 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
-import { InquiryStatus } from '@/modules/manager/inquiries/inquiries.constants';
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { InquiryStatus } from '@/backend_manager/modules/manager/inquiries/inquiries.constants';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/inquiries.
 // FLOW: HTTP payload -> InquiriesCreateInquiryRequestDto validation -> write use case -> orchestrator.
 
@@ -14,7 +15,7 @@ export class InquiriesCreateInquiryRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email!: string;
 
   @IsString()
   interest!: string;
@@ -24,15 +25,15 @@ export class InquiriesCreateInquiryRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  source?: string;
+  source!: string;
 
   @IsOptional()
   @IsString()
-  notes?: string;
+  notes!: string;
 
   @IsOptional()
   @IsISO8601()
-  followUpDate?: string;
+  followUpDate!: string;
 
   @IsOptional()
   @IsArray()

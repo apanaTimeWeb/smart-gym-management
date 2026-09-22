@@ -2,8 +2,8 @@
 // FLOW: Repository -> ReferralsEntity -> PostgreSQL manager_referrals.
 import { Check, Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { ReferralsRecordStatus } from '@/modules/manager/referrals/referrals.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { ReferralsRecordStatus } from '@/backend_manager/modules/manager/referrals/referrals.constants';
 
 @Entity('manager_referrals')
 @Check('CHK_manager_referrals_payload_object', "jsonb_typeof(payload) = 'object'")
@@ -12,7 +12,7 @@ import { ReferralsRecordStatus } from '@/modules/manager/referrals/referrals.con
 @Index('IDX_manager_referrals_status', ['status'])
 export class ReferralsEntity extends CoreBaseEntity {
   @Column({ type: 'jsonb', name: 'payload', default: () => "'{}'::jsonb" })
-  payload!: import('@/core/types/json-value.types').CoreJsonObject;
+  payload!: import('@/backend_manager/core/types/json-value.types').CoreJsonObject;
 
   @Column({ type: 'enum', enum: ReferralsRecordStatus, enumName: 'manager_referrals_status_enum', name: 'status', default: ReferralsRecordStatus.ACTIVE })
   status!: ReferralsRecordStatus;

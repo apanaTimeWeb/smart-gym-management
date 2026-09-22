@@ -2,8 +2,8 @@
 // FLOW: Controller query -> repository query -> ORM-free domain -> response contract.
 import { Injectable } from '@nestjs/common';
 
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { MaintenanceRepository } from '@/modules/manager/maintenance/repositories/maintenance-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { MaintenanceRepository } from '@/backend_manager/modules/manager/maintenance/repositories/maintenance-repository';
 
 @Injectable()
 export class MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesService {

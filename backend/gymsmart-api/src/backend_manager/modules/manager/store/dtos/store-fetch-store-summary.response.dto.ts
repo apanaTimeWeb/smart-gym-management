@@ -8,12 +8,12 @@ export class StoreFetchStoreSummaryResponseDto {
   lowStockProducts?: Array<number>;
 
   @ApiProperty({ type: Number })
-  totalOrders?: number;
+  totalOrders!: number;
 
   @ApiProperty({ type: Number })
-  totalProducts?: number;
+  totalProducts!: number;
 
   @ApiProperty({ type: Number })
-  totalRevenue?: number;
+  totalRevenue!: number;
 
 }

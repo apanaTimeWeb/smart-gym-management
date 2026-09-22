@@ -3,9 +3,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { CoreRequestContextService } from '@/core/context/core-request-context.service';
-import { MasterTenantEntity } from '@/core/tenant/master-tenant.entity';
-import { MasterUserTenantEntity } from '@/core/tenant/master-user-tenant.entity';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
+import { MasterTenantEntity } from '@/backend_manager/core/tenant/master-tenant.entity';
+import { MasterUserTenantEntity } from '@/backend_manager/core/tenant/master-user-tenant.entity';
 
 @Injectable()
 export class CoreTenantAuthorizationService {

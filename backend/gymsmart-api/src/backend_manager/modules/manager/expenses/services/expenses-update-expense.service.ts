@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/expenses/:id.
 // FLOW: Controller DTO -> ExpensesUpdateExpenseService -> ExpensesOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ExpensesOrchestratorService } from '@/modules/manager/expenses/services/expenses-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ExpensesOrchestratorService } from '@/backend_manager/modules/manager/expenses/services/expenses-orchestrator.service';
 
 @Injectable()
 export class ExpensesUpdateExpenseService {

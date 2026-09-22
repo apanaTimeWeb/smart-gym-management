@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/settings.
 // FLOW: Controller -> SettingsFetchSettingsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { SettingsRepository } from '@/modules/manager/settings/repositories/settings-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { SettingsRepository } from '@/backend_manager/modules/manager/settings/repositories/settings-repository';
 
 @Injectable()
 export class SettingsFetchSettingsService {

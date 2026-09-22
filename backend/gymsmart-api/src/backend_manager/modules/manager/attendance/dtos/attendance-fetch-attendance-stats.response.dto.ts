@@ -5,12 +5,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AttendanceFetchAttendanceStatsResponseDto {
   @ApiProperty({ type: Number })
-  memberCheckIns?: number;
+  memberCheckIns!: number;
 
   @ApiProperty({ type: Number })
-  staffCheckIns?: number;
+  staffCheckIns!: number;
 
   @ApiProperty({ type: Number })
-  totalCheckIns?: number;
+  totalCheckIns!: number;
 
 }

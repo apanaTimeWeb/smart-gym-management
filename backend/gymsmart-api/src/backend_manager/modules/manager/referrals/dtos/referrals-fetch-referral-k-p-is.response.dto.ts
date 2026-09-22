@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ReferralsFetchReferralKPIsResponseDto {
   @ApiProperty({ type: Number })
-  claimedRewards?: number;
+  claimedRewards!: number;
 
   @ApiProperty({ type: Number })
-  pendingRewards?: number;
+  pendingRewards!: number;
 
   @ApiProperty({ type: Number })
-  totalConverted?: number;
+  totalConverted!: number;
 
   @ApiProperty({ type: Number })
-  totalReferrals?: number;
+  totalReferrals!: number;
 
 }

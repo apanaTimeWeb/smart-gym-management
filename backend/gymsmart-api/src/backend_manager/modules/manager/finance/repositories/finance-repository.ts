@@ -2,21 +2,21 @@
 // FLOW: Use-case -> FinanceRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { FinanceEntity } from '@/modules/manager/finance/finance.entity';
-import { FinanceMapper } from '@/modules/manager/finance/mappers/finance-mapper';
-import type { FinanceDomainData } from '@/modules/manager/finance/finance.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { FinanceEntity } from '@/backend_manager/modules/manager/finance/finance.entity';
+import { FinanceMapper } from '@/backend_manager/modules/manager/finance/mappers/finance-mapper';
+import type { FinanceDomainData } from '@/backend_manager/modules/manager/finance/finance.interfaces';
 
 export interface FinanceListResult { data: FinanceDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class FinanceRepository extends CoreBaseRepository<FinanceEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, FinanceEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, FinanceEntity); }
 
   /** @description Finds a non-deleted finance record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findFinanceById(id: string): Promise<FinanceDomainData | null> {

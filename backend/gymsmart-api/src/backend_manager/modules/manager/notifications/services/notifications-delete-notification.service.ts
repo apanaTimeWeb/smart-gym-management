@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for DELETE /api/v1/manager/notifications/:id.
 // FLOW: Controller DTO -> NotificationsDeleteNotificationService -> NotificationsOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { NotificationsOrchestratorService } from '@/modules/manager/notifications/services/notifications-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { NotificationsOrchestratorService } from '@/backend_manager/modules/manager/notifications/services/notifications-orchestrator.service';
 
 @Injectable()
 export class NotificationsDeleteNotificationService {

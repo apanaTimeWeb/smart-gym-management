@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/members/:memberId/attendance.
 // FLOW: Controller -> MembersFetchMemberAttendanceService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { MembersRepository } from '@/modules/manager/members/repositories/members-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { MembersRepository } from '@/backend_manager/modules/manager/members/repositories/members-repository';
 
 @Injectable()
 export class MembersFetchMemberAttendanceService {

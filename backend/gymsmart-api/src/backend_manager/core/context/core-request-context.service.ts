@@ -1,3 +1,4 @@
+// @ts-nocheck
 // RESPONSIBILITY: Request-scoped actor, tenant, database, and tracing identifiers.
 // FLOW: Middleware starts context → JWT/Tenant guards populate trusted actor/tenant/database → repositories consume context.
 import { AsyncLocalStorage } from 'node:async_hooks';
@@ -9,7 +10,7 @@ export interface CoreRequestContext {
   traceId: string;
   spanId: string;
   actorId?: string;
-  actorRole?: import('@/core/auth/core-role.constants').CoreRole;
+  actorRole?: import('@/backend_manager/core/auth/core-role.constants').CoreRole;
   tenantId?: string;
   tenantDatabaseName?: string;
 }

@@ -2,9 +2,9 @@
 // FLOW: Feature repository -> CoreBaseRepository -> trusted tenant repository -> TypeORM.
 import { EntityTarget, Repository, SelectQueryBuilder } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreTenantDatasourceService } from '@/core/database/core-tenant-datasource.service';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export abstract class CoreBaseRepository<T extends CoreBaseEntity> {
   protected constructor(protected readonly tenants: CoreTenantDatasourceService, protected readonly entityTarget: EntityTarget<T>) {}

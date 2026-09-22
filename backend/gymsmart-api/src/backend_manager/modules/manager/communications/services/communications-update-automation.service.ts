@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/communications/automations/:id.
 // FLOW: Controller DTO -> CommunicationsUpdateAutomationService -> CommunicationsOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { CommunicationsOrchestratorService } from '@/modules/manager/communications/services/communications-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { CommunicationsOrchestratorService } from '@/backend_manager/modules/manager/communications/services/communications-orchestrator.service';
 
 @Injectable()
 export class CommunicationsUpdateAutomationService {

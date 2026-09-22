@@ -57,7 +57,7 @@ export enum ManagerMembersDietPlanType {
   OTHER = 'OTHER',
 }
 
-export enum ManagerMembersWorkoutLevel {
+export enum ManagerMembersstring {
   BEGINNER = 'BEGINNER',
   INTERMEDIATE = 'INTERMEDIATE',
   ADVANCED = 'ADVANCED',

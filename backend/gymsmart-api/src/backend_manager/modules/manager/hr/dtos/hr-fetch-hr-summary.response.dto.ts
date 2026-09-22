@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrFetchHrSummaryResponseDto {
   @ApiProperty({ type: Number })
-  activeStaff?: number;
+  activeStaff!: number;
 
   @ApiProperty({ type: Number })
-  totalAdvanceGiven?: number;
+  totalAdvanceGiven!: number;
 
   @ApiProperty({ type: Number })
-  totalSalaryDue?: number;
+  totalSalaryDue!: number;
 
   @ApiProperty({ type: Number })
-  totalSalaryPaid?: number;
+  totalSalaryPaid!: number;
 
   @ApiProperty({ type: Number })
-  totalSalaryThisMonth?: number;
+  totalSalaryThisMonth!: number;
 
 }

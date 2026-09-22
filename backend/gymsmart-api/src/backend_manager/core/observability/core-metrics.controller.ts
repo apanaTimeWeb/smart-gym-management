@@ -2,8 +2,8 @@
 // FLOW: GET /api/metrics → CoreMetricsService.renderPrometheus().
 import { Controller, Get, Header } from '@nestjs/common';
 
-import { CoreMetricsService } from '@/core/observability/core-metrics.service';
-import { CorePublicDecorator } from '@/core/auth/core-public.decorator';
+import { CoreMetricsService } from '@/backend_manager/core/observability/core-metrics.service';
+import { CorePublicDecorator } from '@/backend_manager/core/auth/core-public.decorator';
 
 @Controller('metrics')
 @CorePublicDecorator()

@@ -2,8 +2,8 @@
 // FLOW: Repository -> SalesEntity -> PostgreSQL manager_sales.
 import { Check, Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { SalesRecordStatus } from '@/modules/manager/sales/sales.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { SalesRecordStatus } from '@/backend_manager/modules/manager/sales/sales.constants';
 
 @Entity('manager_sales')
 @Check('CHK_manager_sales_payload_object', "jsonb_typeof(payload) = 'object'")
@@ -12,7 +12,7 @@ import { SalesRecordStatus } from '@/modules/manager/sales/sales.constants';
 @Index('IDX_manager_sales_status', ['status'])
 export class SalesEntity extends CoreBaseEntity {
   @Column({ type: 'jsonb', name: 'payload', default: () => "'{}'::jsonb" })
-  payload!: import('@/core/types/json-value.types').CoreJsonObject;
+  payload!: import('@/backend_manager/core/types/json-value.types').CoreJsonObject;
 
   @Column({ type: 'enum', enum: SalesRecordStatus, enumName: 'manager_sales_status_enum', name: 'status', default: SalesRecordStatus.ACTIVE })
   status!: SalesRecordStatus;

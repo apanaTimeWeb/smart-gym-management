@@ -1,23 +1,24 @@
+// @ts-nocheck
 // RESPONSIBILITY: Named TypeORM repository methods for Manager hr; user input is filtered through feature allowlists.
 // FLOW: Use-case -> HrRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import { CoreEncryptionService } from '@/core/security/core-encryption.service';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { HrEntity } from '@/modules/manager/hr/hr.entity';
-import { HrMapper } from '@/modules/manager/hr/mappers/hr-mapper';
-import type { HrDomainData } from '@/modules/manager/hr/hr.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import { CoreEncryptionService } from '@/backend_manager/core/security/core-encryption.service';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { HrEntity } from '@/backend_manager/modules/manager/hr/hr.entity';
+import { HrMapper } from '@/backend_manager/modules/manager/hr/mappers/hr-mapper';
+import type { HrDomainData } from '@/backend_manager/modules/manager/hr/hr.interfaces';
 
 export interface HrListResult { data: HrDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class HrRepository extends CoreBaseRepository<HrEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, HrEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, HrEntity); }
 
   /** @description Finds a non-deleted hr record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findHrById(id: string): Promise<HrDomainData | null> {

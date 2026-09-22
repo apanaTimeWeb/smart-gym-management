@@ -2,25 +2,25 @@
 // CoreJsonObject: CoreJsonObject projection -> MembersRenewMemberResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
 
 export class MembersRenewMemberResponseDto {
   @ApiPropertyOptional()
-  plan?: CoreJsonObject;
+  plan!: CoreJsonObject;
 
   @ApiPropertyOptional()
-  recentPayments?: CoreJsonObject[];
+  recentPayments!: CoreJsonObject[];
 
   @ApiPropertyOptional()
-  dietPlan?: CoreJsonObject;
+  dietPlan!: CoreJsonObject;
 
   @ApiPropertyOptional()
-  workoutPlan?: CoreJsonObject;
+  workoutPlan!: CoreJsonObject;
 
   @ApiPropertyOptional()
-  assignedDiet?: CoreJsonObject;
+  assignedDiet!: CoreJsonObject;
 
   @ApiPropertyOptional()
-  assignedWorkout?: CoreJsonObject;
+  assignedWorkout!: CoreJsonObject;
 
 }

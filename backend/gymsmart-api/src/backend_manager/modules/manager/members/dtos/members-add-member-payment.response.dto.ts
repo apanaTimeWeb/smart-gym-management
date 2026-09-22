@@ -1,4 +1,4 @@
-import { ManagerMembersPaymentStatus } from '@/modules/manager/members/members.constants';
+import { ManagerMembersPaymentStatus } from '@/backend_manager/modules/manager/members/members.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> MembersAddMemberPaymentResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -6,21 +6,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersAddMemberPaymentResponseDto {
   @ApiProperty({ type: Number })
-  amount: number;
+  amount!: number;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  invoiceNumber: string;
+  invoiceNumber!: string;
 
   @ApiProperty()
-  method: string;
+  method!: string;
 
   @ApiProperty()
-  paidAt: string;
+  paidAt!: string;
 
   @ApiProperty()
-  status: ManagerMembersPaymentStatus;
+  status!: ManagerMembersPaymentStatus;
 
 }

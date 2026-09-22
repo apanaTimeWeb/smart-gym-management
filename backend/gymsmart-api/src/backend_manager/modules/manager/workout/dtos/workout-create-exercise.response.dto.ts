@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class WorkoutCreateExerciseResponseDto {
   @ApiProperty({ type: [Object] })
-  exercises?: Array<{ category?: string; difficulty?: string; equipment?: string; muscleGroup?: Array<string>; name?: string; }>;
+  exercises?: Array<{ category: string; difficulty: string; equipment: string; muscleGroup?: Array<string>; name: string; }>;
 
 }

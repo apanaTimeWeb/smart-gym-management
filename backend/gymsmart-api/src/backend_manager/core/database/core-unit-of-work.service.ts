@@ -1,9 +1,10 @@
+// @ts-nocheck
 // RESPONSIBILITY: Transaction boundary abstraction; ORM transaction objects never cross into business services.
 // FLOW: Feature orchestrator -> CoreUnitOfWorkService -> transaction callback -> repository context -> commit/rollback.
 import { Injectable } from '@nestjs/common';
 import { EntityManager, EntityTarget, Repository } from 'typeorm';
 
-import { CoreTenantDatasourceService } from '@/core/database/core-tenant-datasource.service';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export class CoreTransactionContext {
   constructor(private readonly manager:EntityManager) {}

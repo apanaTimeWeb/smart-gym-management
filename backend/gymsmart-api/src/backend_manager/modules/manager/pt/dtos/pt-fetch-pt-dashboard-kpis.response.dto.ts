@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PtFetchPtDashboardKpisResponseDto {
   @ApiProperty({ type: Number })
-  monthlyPtRevenue?: number;
+  monthlyPtRevenue!: number;
 
   @ApiProperty({ type: Number })
-  packagesExpiringSoon?: number;
+  packagesExpiringSoon!: number;
 
   @ApiProperty({ type: Number })
-  sessionsScheduledToday?: number;
+  sessionsScheduledToday!: number;
 
   @ApiProperty({ type: Number })
-  totalActiveAssignments?: number;
+  totalActiveAssignments!: number;
 
 }

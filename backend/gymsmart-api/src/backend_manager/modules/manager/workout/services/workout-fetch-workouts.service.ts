@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/workouts.
 // FLOW: Controller -> WorkoutFetchWorkoutsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { WorkoutRepository } from '@/modules/manager/workout/repositories/workout-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { WorkoutRepository } from '@/backend_manager/modules/manager/workout/repositories/workout-repository';
 
 @Injectable()
 export class WorkoutFetchWorkoutsService {

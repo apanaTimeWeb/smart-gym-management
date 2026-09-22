@@ -3,11 +3,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { DashboardFetchDashboardStatsResponseDto } from '@/modules/manager/dashboard/dtos/dashboard-fetch-dashboard-stats.response.dto';
-import { DashboardFetchDashboardStatsService } from '@/modules/manager/dashboard/services/dashboard-fetch-dashboard-stats.service';
-import { DashboardQueryDto } from '@/modules/manager/dashboard/dtos/dashboard-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { DashboardFetchDashboardStatsResponseDto } from '@/backend_manager/modules/manager/dashboard/dtos/dashboard-fetch-dashboard-stats.response.dto';
+import { DashboardFetchDashboardStatsService } from '@/backend_manager/modules/manager/dashboard/services/dashboard-fetch-dashboard-stats.service';
+import { DashboardQueryDto } from '@/backend_manager/modules/manager/dashboard/dtos/dashboard-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager dashboard')
@@ -19,7 +19,7 @@ export class DashboardQueryController {
   @Get("dashboard/stats")
   @ApiOperation({ summary: 'fetchDashboardStats for Manager dashboard' })
   @ApiResponse({ status: HttpStatus.OK, type: DashboardFetchDashboardStatsResponseDto })
-  fetchDashboardStats(@Query() query: DashboardQueryDto): Promise<DashboardFetchDashboardStatsResponseDto> {  return this.fetchDashboardStatsService.fetchDashboardStats(query) as Promise<DashboardFetchDashboardStatsResponseDto>;  }
+  fetchDashboardStats(@Query() query: DashboardQueryDto): Promise<DashboardFetchDashboardStatsResponseDto> {  return this.fetchDashboardStatsService.fetchDashboardStats(query) as unknown as Promise<DashboardFetchDashboardStatsResponseDto>;  }
 
 
 }

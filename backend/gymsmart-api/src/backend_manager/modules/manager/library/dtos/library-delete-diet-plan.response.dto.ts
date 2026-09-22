@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LibraryDeleteDietPlanResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
 }

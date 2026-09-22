@@ -2,8 +2,8 @@
 // FLOW: Feature transaction → audit row → commit → immutable operational history.
 import { Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { CoreRole } from '@/core/auth/core-role.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 
 @Entity({ name: 'audit_logs' })
 @Index('IDX_audit_logs_entity', ['entityType', 'entityId'])

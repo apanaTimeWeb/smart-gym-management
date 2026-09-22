@@ -3,15 +3,15 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { ReferralsClaimRewardRequestDto } from '@/modules/manager/referrals/dtos/referrals-claim-reward.request.dto';
-import { ReferralsClaimRewardResponseDto } from '@/modules/manager/referrals/dtos/referrals-claim-reward.response.dto';
-import { ReferralsClaimRewardService } from '@/modules/manager/referrals/services/referrals-claim-reward.service';
-import { ReferralsCreateReferralRequestDto } from '@/modules/manager/referrals/dtos/referrals-create-referral.request.dto';
-import { ReferralsCreateReferralResponseDto } from '@/modules/manager/referrals/dtos/referrals-create-referral.response.dto';
-import { ReferralsCreateReferralService } from '@/modules/manager/referrals/services/referrals-create-referral.service';
-import { ReferralsQueryDto } from '@/modules/manager/referrals/dtos/referrals-query.dto';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { ReferralsClaimRewardRequestDto } from '@/backend_manager/modules/manager/referrals/dtos/referrals-claim-reward.request.dto';
+import { ReferralsClaimRewardResponseDto } from '@/backend_manager/modules/manager/referrals/dtos/referrals-claim-reward.response.dto';
+import { ReferralsClaimRewardService } from '@/backend_manager/modules/manager/referrals/services/referrals-claim-reward.service';
+import { ReferralsCreateReferralRequestDto } from '@/backend_manager/modules/manager/referrals/dtos/referrals-create-referral.request.dto';
+import { ReferralsCreateReferralResponseDto } from '@/backend_manager/modules/manager/referrals/dtos/referrals-create-referral.response.dto';
+import { ReferralsCreateReferralService } from '@/backend_manager/modules/manager/referrals/services/referrals-create-referral.service';
+import { ReferralsQueryDto } from '@/backend_manager/modules/manager/referrals/dtos/referrals-query.dto';
 
 @Controller('manager')
 @ApiTags('Manager referrals')
@@ -24,7 +24,7 @@ export class ReferralsCommandController {
   @ApiOperation({ summary: 'createReferral for Manager referrals' })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiResponse({ status: HttpStatus.CREATED, type: ReferralsCreateReferralResponseDto })
-  createReferral(@Body() dto: ReferralsCreateReferralRequestDto): Promise<ReferralsCreateReferralResponseDto> {  return this.createReferralService.createReferral(dto) as Promise<ReferralsCreateReferralResponseDto>;  }
+  createReferral(@Body() dto: ReferralsCreateReferralRequestDto): Promise<ReferralsCreateReferralResponseDto> {  return this.createReferralService.createReferral(dto) as unknown as Promise<ReferralsCreateReferralResponseDto>;  }
 
 
   // SLA: STANDARD
@@ -33,7 +33,7 @@ export class ReferralsCommandController {
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiParam({ name: 'referralId', required: true })
   @ApiResponse({ status: HttpStatus.CREATED, type: ReferralsClaimRewardResponseDto })
-  claimReward(@Param('referralId') referralId: string, @Body() dto: ReferralsClaimRewardRequestDto): Promise<ReferralsClaimRewardResponseDto> {  return this.claimRewardService.claimReward(dto, referralId) as Promise<ReferralsClaimRewardResponseDto>;  }
+  claimReward(@Param('referralId') referralId: string, @Body() dto: ReferralsClaimRewardRequestDto): Promise<ReferralsClaimRewardResponseDto> {  return this.claimRewardService.claimReward(dto, referralId) as unknown as Promise<ReferralsClaimRewardResponseDto>;  }
 
 
 }

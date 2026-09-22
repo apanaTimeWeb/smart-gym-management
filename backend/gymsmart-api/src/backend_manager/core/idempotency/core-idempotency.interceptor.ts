@@ -4,8 +4,8 @@ import { BadRequestException, CallHandler, ExecutionContext, Injectable, NestInt
 import type { Request } from 'express';
 import { catchError, from, type Observable, switchMap, throwError } from 'rxjs';
 
-import { CORE_IDEMPOTENT_ROUTES } from '@/core/idempotency/core-idempotency.routes';
-import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.service';
+import { CORE_IDEMPOTENT_ROUTES } from '@/backend_manager/core/idempotency/core-idempotency.routes';
+import { CoreIdempotencyService } from '@/backend_manager/core/idempotency/core-idempotency.service';
 
 @Injectable()
 export class CoreIdempotencyInterceptor implements NestInterceptor {

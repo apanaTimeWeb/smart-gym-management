@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/inquiries/plans.
 // FLOW: Controller -> InquiriesFetchInquiryPlansService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { InquiriesRepository } from '@/modules/manager/inquiries/repositories/inquiries-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { InquiriesRepository } from '@/backend_manager/modules/manager/inquiries/repositories/inquiries-repository';
 
 @Injectable()
 export class InquiriesFetchInquiryPlansService {

@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SalesFetchMembershipReportResponseDto {
   @ApiProperty({ type: [Object] })
-  report?: Array<{ plan?: string; refund?: string; remaining?: string; revenue?: number; }>;
+  report?: Array<{ plan: string; refund: string; remaining: string; revenue: number; }>;
 
 }

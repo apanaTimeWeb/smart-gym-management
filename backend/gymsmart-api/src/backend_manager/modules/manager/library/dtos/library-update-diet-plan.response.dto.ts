@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LibraryUpdateDietPlanResponseDto {
   @ApiProperty()
-  goal: string;
+  goal!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty({ type: Boolean })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
 }

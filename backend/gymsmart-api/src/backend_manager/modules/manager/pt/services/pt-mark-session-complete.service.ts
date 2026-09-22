@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/pt/assignments/:assignmentId/complete-session.
 // FLOW: Controller DTO -> PtMarkSessionCompleteService -> PtOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PtOrchestratorService } from '@/modules/manager/pt/services/pt-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PtOrchestratorService } from '@/backend_manager/modules/manager/pt/services/pt-orchestrator.service';
 
 @Injectable()
 export class PtMarkSessionCompleteService {

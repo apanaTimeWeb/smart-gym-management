@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class StoreDeleteProductResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
 }

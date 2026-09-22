@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/hr/payrolls/:id/status.
 // FLOW: Controller DTO -> HrUpdatePayrollStatusService -> HrOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { HrOrchestratorService } from '@/modules/manager/hr/services/hr-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { HrOrchestratorService } from '@/backend_manager/modules/manager/hr/services/hr-orchestrator.service';
 
 @Injectable()
 export class HrUpdatePayrollStatusService {

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/pt/packages.
 // FLOW: Controller -> PtFetchPackagesService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PtRepository } from '@/modules/manager/pt/repositories/pt-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PtRepository } from '@/backend_manager/modules/manager/pt/repositories/pt-repository';
 
 @Injectable()
 export class PtFetchPackagesService {

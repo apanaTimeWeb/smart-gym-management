@@ -2,21 +2,21 @@
 // FLOW: Use-case -> WorkoutRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { WorkoutEntity } from '@/modules/manager/workout/workout.entity';
-import { WorkoutMapper } from '@/modules/manager/workout/mappers/workout-mapper';
-import type { WorkoutDomainData } from '@/modules/manager/workout/workout.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { WorkoutEntity } from '@/backend_manager/modules/manager/workout/workout.entity';
+import { WorkoutMapper } from '@/backend_manager/modules/manager/workout/mappers/workout-mapper';
+import type { WorkoutDomainData } from '@/backend_manager/modules/manager/workout/workout.interfaces';
 
 export interface WorkoutListResult { data: WorkoutDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class WorkoutRepository extends CoreBaseRepository<WorkoutEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, WorkoutEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, WorkoutEntity); }
 
   /** @description Finds a non-deleted workout record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findWorkoutById(id: string): Promise<WorkoutDomainData | null> {

@@ -1,10 +1,10 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/schedule/shifts.
 // FLOW: HTTP payload -> ScheduleCreateShiftRequestDto validation -> write use case -> orchestrator.
 
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { ShiftDay } from '@/modules/manager/schedule/schedule.constants';
-import { ShiftStatus } from '@/modules/manager/schedule/schedule.constants';
+import { ShiftDay } from '@/backend_manager/modules/manager/schedule/schedule.constants';
+import { ShiftStatus } from '@/backend_manager/modules/manager/schedule/schedule.constants';
 
 export class ScheduleCreateShiftRequestDto extends CoreRequestDto {
   @IsString()
@@ -24,14 +24,14 @@ export class ScheduleCreateShiftRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  notes?: string;
+  notes!: string;
 
   @IsOptional()
   @IsString()
-  location?: string;
+  location!: string;
 
   @IsOptional()
   @IsString()
-  substituteTrainerId?: string;
+  substituteTrainerId!: string;
 
 }

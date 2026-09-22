@@ -5,33 +5,33 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class HrFetchStaffByIdResponseDto {
   @ApiProperty()
-  branch: string;
+  branch!: string;
 
   @ApiProperty()
-  email: string;
+  email!: string;
 
   @ApiProperty()
-  gender: string;
+  gender!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty({ type: Boolean })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty()
-  joinDate: string;
+  joinDate!: string;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty()
-  phone: string;
+  phone!: string;
 
   @ApiProperty()
-  role: string;
+  role!: string;
 
   @ApiProperty({ type: Number })
-  salary: number;
+  salary!: number;
 
 }

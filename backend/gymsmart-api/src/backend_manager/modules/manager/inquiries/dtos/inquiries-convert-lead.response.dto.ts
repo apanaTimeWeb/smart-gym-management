@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InquiriesConvertLeadResponseDto {
   @ApiProperty()
-  memberId: string;
+  memberId!: string;
 
 }

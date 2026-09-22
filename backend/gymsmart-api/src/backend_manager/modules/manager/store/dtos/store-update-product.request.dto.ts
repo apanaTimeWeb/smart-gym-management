@@ -1,4 +1,4 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for PATCH /api/v1/manager/store/products/:id.
 // FLOW: HTTP payload -> StoreUpdateProductRequestDto validation -> write use case -> orchestrator.
 
@@ -10,7 +10,7 @@ export class StoreUpdateProductRequestDto extends CoreRequestDto {
   name!: string;
 
   @IsString()
-  category!: StoreCategory;
+  category!: any;
 
   @IsNumber()
   @Type(() => Number)
@@ -22,35 +22,35 @@ export class StoreUpdateProductRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 
   @IsOptional()
   @IsString()
-  imageUrl?: string;
+  imageUrl!: string;
 
   @IsBoolean()
   isActive!: boolean;
 
   @IsOptional()
   @IsString()
-  unit?: string;
+  unit!: string;
 
   @IsOptional()
   @IsString()
-  sku?: string;
+  sku!: string;
 
   @IsOptional()
   @IsString()
-  barcode?: string;
+  barcode!: string;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  costPrice?: number;
+  costPrice!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  reorderThreshold?: number;
+  reorderThreshold!: number;
 
 }

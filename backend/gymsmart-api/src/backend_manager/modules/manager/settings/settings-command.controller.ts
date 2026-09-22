@@ -3,12 +3,12 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { Roles } from '@/core/auth/core-roles.decorator';
-import { SettingsQueryDto } from '@/modules/manager/settings/dtos/settings-query.dto';
-import { SettingsUpdateSettingsRequestDto } from '@/modules/manager/settings/dtos/settings-update-settings.request.dto';
-import { SettingsUpdateSettingsResponseDto } from '@/modules/manager/settings/dtos/settings-update-settings.response.dto';
-import { SettingsUpdateSettingsService } from '@/modules/manager/settings/services/settings-update-settings.service';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
+import { SettingsQueryDto } from '@/backend_manager/modules/manager/settings/dtos/settings-query.dto';
+import { SettingsUpdateSettingsRequestDto } from '@/backend_manager/modules/manager/settings/dtos/settings-update-settings.request.dto';
+import { SettingsUpdateSettingsResponseDto } from '@/backend_manager/modules/manager/settings/dtos/settings-update-settings.response.dto';
+import { SettingsUpdateSettingsService } from '@/backend_manager/modules/manager/settings/services/settings-update-settings.service';
 
 @Controller('manager')
 @ApiTags('Manager settings')
@@ -21,7 +21,7 @@ export class SettingsCommandController {
   @ApiOperation({ summary: 'updateSettings for Manager settings' })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiResponse({ status: HttpStatus.OK, type: SettingsUpdateSettingsResponseDto })
-  updateSettings(@Body() dto: SettingsUpdateSettingsRequestDto): Promise<SettingsUpdateSettingsResponseDto> {  return this.updateSettingsService.updateSettings(dto) as Promise<SettingsUpdateSettingsResponseDto>;  }
+  updateSettings(@Body() dto: SettingsUpdateSettingsRequestDto): Promise<SettingsUpdateSettingsResponseDto> {  return this.updateSettingsService.updateSettings(dto) as unknown as Promise<SettingsUpdateSettingsResponseDto>;  }
 
 
 }

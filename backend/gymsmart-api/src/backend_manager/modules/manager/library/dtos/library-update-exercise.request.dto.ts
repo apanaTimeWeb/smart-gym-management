@@ -1,5 +1,5 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
-import { LibraryCategory } from '@/modules/manager/library/library.constants';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { LibraryCategory } from '@/backend_manager/modules/manager/library/library.constants';
 // RESPONSIBILITY: Strict feature-local request DTO for PATCH /api/v1/manager/library/exercises/:id.
 // FLOW: HTTP payload -> LibraryUpdateExerciseRequestDto validation -> write use case -> orchestrator.
 
@@ -15,33 +15,33 @@ export class LibraryUpdateExerciseRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsArray()
-  muscleGroup?: string[];
+  muscleGroup!: string[];
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  sets?: number;
+  sets!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  reps?: number;
+  reps!: number;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  duration?: number;
+  duration!: number;
 
   @IsString()
   difficulty!: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 
   @IsOptional()
   @IsString()
-  videoUrl?: string;
+  videoUrl!: string;
 
   @IsBoolean()
   isActive!: boolean;

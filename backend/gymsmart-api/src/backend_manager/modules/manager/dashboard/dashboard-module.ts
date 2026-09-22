@@ -2,11 +2,11 @@
 // FLOW: ManagerDomainModule -> DashboardModule -> controllers -> use cases -> repository.
 import { Module } from '@nestjs/common';
 
-import { DashboardCommandController } from '@/modules/manager/dashboard/dashboard-command.controller';
-import { DashboardFetchDashboardStatsService } from '@/modules/manager/dashboard/services/dashboard-fetch-dashboard-stats.service';
-import { DashboardOrchestratorService } from '@/modules/manager/dashboard/services/dashboard-orchestrator.service';
-import { DashboardQueryController } from '@/modules/manager/dashboard/dashboard-query.controller';
-import { DashboardRepository } from '@/modules/manager/dashboard/repositories/dashboard-repository';
+import { DashboardCommandController } from '@/backend_manager/modules/manager/dashboard/dashboard-command.controller';
+import { DashboardFetchDashboardStatsService } from '@/backend_manager/modules/manager/dashboard/services/dashboard-fetch-dashboard-stats.service';
+import { DashboardOrchestratorService } from '@/backend_manager/modules/manager/dashboard/services/dashboard-orchestrator.service';
+import { DashboardQueryController } from '@/backend_manager/modules/manager/dashboard/dashboard-query.controller';
+import { DashboardRepository } from '@/backend_manager/modules/manager/dashboard/repositories/dashboard-repository';
 
 @Module({
   controllers: [DashboardQueryController, DashboardCommandController],

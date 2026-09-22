@@ -3,7 +3,7 @@
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 import type { Response } from 'express';
 
-import type { ValidationErrorItem } from '@/core/types/api-response.types';
+import type { ValidationErrorItem } from '@/backend_manager/core/types/api-response.types';
 
 interface ValidationPayload { __validation?: boolean; validationErrors?: ValidationErrorItem[]; }
 

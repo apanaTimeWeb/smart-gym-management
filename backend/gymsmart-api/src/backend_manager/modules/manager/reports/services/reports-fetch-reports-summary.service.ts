@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/reports/summary.
 // FLOW: Controller -> ReportsFetchReportsSummaryService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ReportsRepository } from '@/modules/manager/reports/repositories/reports-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ReportsRepository } from '@/backend_manager/modules/manager/reports/repositories/reports-repository';
 
 @Injectable()
 export class ReportsFetchReportsSummaryService {

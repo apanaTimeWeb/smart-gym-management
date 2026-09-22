@@ -2,7 +2,7 @@
 // FLOW: HTTP mutation -> Idempotency-Key + route scope -> shared Redis reservation/replay -> mutation -> response cache.
 import { ConflictException, Injectable } from '@nestjs/common';
 
-import { CoreRedisService } from '@/core/database/core-redis.service';
+import { CoreRedisService } from '@/backend_manager/core/database/core-redis.service';
 
 @Injectable()
 export class CoreIdempotencyService {

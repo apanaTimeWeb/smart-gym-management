@@ -5,15 +5,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class NotificationsFetchNotificationKPIsResponseDto {
   @ApiProperty({ type: Number })
-  highPriority?: number;
+  highPriority!: number;
 
   @ApiProperty({ type: Number })
-  todayCount?: number;
+  todayCount!: number;
 
   @ApiProperty({ type: Number })
-  total?: number;
+  total!: number;
 
   @ApiProperty({ type: Number })
-  unread?: number;
+  unread!: number;
 
 }

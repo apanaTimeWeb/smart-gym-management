@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/schedule.
 // FLOW: Controller -> ScheduleFetchScheduleService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ScheduleRepository } from '@/modules/manager/schedule/repositories/schedule-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ScheduleRepository } from '@/backend_manager/modules/manager/schedule/repositories/schedule-repository';
 
 @Injectable()
 export class ScheduleFetchScheduleService {

@@ -1,6 +1,6 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
-import { CommChannel, WinBackTemplateTier } from '@/modules/manager/communications/communications.constants';
+import { CommChannel, WinBackTemplateTier } from '@/backend_manager/modules/manager/communications/communications.constants';
 
 export class CommunicationsSendWinBackMessageRequestDto extends CoreRequestDto {
   @IsString() memberId!: string;

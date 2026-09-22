@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class WorkoutUpdateExerciseResponseDto {
   @ApiProperty()
-  difficulty: string;
+  difficulty!: string;
 
   @ApiProperty()
-  equipment: string;
+  equipment!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  muscleGroup: string[];
+  muscleGroup!: string[];
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
 }

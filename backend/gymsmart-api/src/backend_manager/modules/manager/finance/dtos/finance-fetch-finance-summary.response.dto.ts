@@ -5,18 +5,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FinanceFetchFinanceSummaryResponseDto {
   @ApiProperty({ type: Number })
-  gstCollected?: number;
+  gstCollected!: number;
 
   @ApiProperty({ type: [Object] })
-  monthlyData?: Array<{ revenue?: number; }>;
+  monthlyData?: Array<{ revenue: number; }>;
 
   @ApiProperty({ type: Number })
-  monthlyRevenue?: number;
+  monthlyRevenue!: number;
 
   @ApiProperty({ type: Number })
-  pendingAmount?: number;
+  pendingAmount!: number;
 
   @ApiProperty({ type: Number })
-  totalRevenue?: number;
+  totalRevenue!: number;
 
 }

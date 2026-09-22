@@ -1,4 +1,4 @@
-import { ManagerMembersAttendancePersonType } from '@/modules/manager/members/members.constants';
+import { ManagerMembersAttendancePersonType } from '@/backend_manager/modules/manager/members/members.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> MembersFetchMemberAttendanceResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -6,15 +6,15 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersFetchMemberAttendanceResponseDto {
   @ApiProperty()
-  checkIn: string;
+  checkIn!: string;
 
   @ApiProperty()
-  date: string;
+  date!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  type: ManagerMembersAttendancePersonType;
+  type!: ManagerMembersAttendancePersonType;
 
 }

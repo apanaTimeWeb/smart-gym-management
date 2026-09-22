@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for POST /api/v1/manager/inquiries/:id/convert.
 // FLOW: Controller DTO -> InquiriesConvertLeadService -> InquiriesOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { InquiriesOrchestratorService } from '@/modules/manager/inquiries/services/inquiries-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { InquiriesOrchestratorService } from '@/backend_manager/modules/manager/inquiries/services/inquiries-orchestrator.service';
 
 @Injectable()
 export class InquiriesConvertLeadService {

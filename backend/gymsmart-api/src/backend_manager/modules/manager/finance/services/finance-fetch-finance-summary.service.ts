@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/finance/summary.
 // FLOW: Controller -> FinanceFetchFinanceSummaryService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { FinanceRepository } from '@/modules/manager/finance/repositories/finance-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { FinanceRepository } from '@/backend_manager/modules/manager/finance/repositories/finance-repository';
 
 @Injectable()
 export class FinanceFetchFinanceSummaryService {

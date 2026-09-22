@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CommunicationsSendCampaignResponseDto {
   @ApiProperty({ type: [Object] })
-  campaigns?: Array<{ channel?: string; segmentLabel?: string; sentCount?: number; status?: string; title?: string; }>;
+  campaigns?: Array<{ channel: string; segmentLabel: string; sentCount: number; status: string; title: string; }>;
 
 }

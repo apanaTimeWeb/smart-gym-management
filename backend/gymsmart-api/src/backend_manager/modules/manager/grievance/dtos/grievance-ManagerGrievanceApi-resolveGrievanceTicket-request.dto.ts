@@ -6,6 +6,6 @@ export class GrievanceManagerGrievanceApiResolveGrievanceTicketRequestDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  resolutionNote?: string;
+  resolutionNote!: string;
 
 }

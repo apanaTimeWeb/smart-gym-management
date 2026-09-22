@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for DELETE /api/v1/manager/schedule/shifts/:id.
 // FLOW: Controller DTO -> ScheduleDeleteShiftService -> ScheduleOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ScheduleOrchestratorService } from '@/modules/manager/schedule/services/schedule-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ScheduleOrchestratorService } from '@/backend_manager/modules/manager/schedule/services/schedule-orchestrator.service';
 
 @Injectable()
 export class ScheduleDeleteShiftService {

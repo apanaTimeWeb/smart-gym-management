@@ -2,21 +2,21 @@
 // FLOW: Use-case -> SalesRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { SalesEntity } from '@/modules/manager/sales/sales.entity';
-import { SalesMapper } from '@/modules/manager/sales/mappers/sales-mapper';
-import type { SalesDomainData } from '@/modules/manager/sales/sales.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { SalesEntity } from '@/backend_manager/modules/manager/sales/sales.entity';
+import { SalesMapper } from '@/backend_manager/modules/manager/sales/mappers/sales-mapper';
+import type { SalesDomainData } from '@/backend_manager/modules/manager/sales/sales.interfaces';
 
 export interface SalesListResult { data: SalesDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class SalesRepository extends CoreBaseRepository<SalesEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, SalesEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, SalesEntity); }
 
   /** @description Finds a non-deleted sales record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findSalesById(id: string): Promise<SalesDomainData | null> {

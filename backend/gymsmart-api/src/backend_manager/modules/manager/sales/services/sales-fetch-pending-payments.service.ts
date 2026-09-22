@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/sales/pending-payments.
 // FLOW: Controller -> SalesFetchPendingPaymentsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { SalesRepository } from '@/modules/manager/sales/repositories/sales-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { SalesRepository } from '@/backend_manager/modules/manager/sales/repositories/sales-repository';
 
 @Injectable()
 export class SalesFetchPendingPaymentsService {

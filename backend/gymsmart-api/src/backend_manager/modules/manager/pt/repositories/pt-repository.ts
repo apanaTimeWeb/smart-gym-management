@@ -2,21 +2,21 @@
 // FLOW: Use-case -> PtRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PtEntity } from '@/modules/manager/pt/pt.entity';
-import { PtMapper } from '@/modules/manager/pt/mappers/pt-mapper';
-import type { PtDomainData } from '@/modules/manager/pt/pt.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PtEntity } from '@/backend_manager/modules/manager/pt/pt.entity';
+import { PtMapper } from '@/backend_manager/modules/manager/pt/mappers/pt-mapper';
+import type { PtDomainData } from '@/backend_manager/modules/manager/pt/pt.interfaces';
 
 export interface PtListResult { data: PtDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class PtRepository extends CoreBaseRepository<PtEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PtEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PtEntity); }
 
   /** @description Finds a non-deleted pt record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findPtById(id: string): Promise<PtDomainData | null> {

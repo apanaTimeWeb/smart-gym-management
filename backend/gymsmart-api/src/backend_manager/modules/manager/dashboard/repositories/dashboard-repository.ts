@@ -2,21 +2,21 @@
 // FLOW: Use-case -> DashboardRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { DashboardEntity } from '@/modules/manager/dashboard/dashboard.entity';
-import { DashboardMapper } from '@/modules/manager/dashboard/mappers/dashboard-mapper';
-import type { DashboardDomainData } from '@/modules/manager/dashboard/dashboard.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { DashboardEntity } from '@/backend_manager/modules/manager/dashboard/dashboard.entity';
+import { DashboardMapper } from '@/backend_manager/modules/manager/dashboard/mappers/dashboard-mapper';
+import type { DashboardDomainData } from '@/backend_manager/modules/manager/dashboard/dashboard.interfaces';
 
 export interface DashboardListResult { data: DashboardDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class DashboardRepository extends CoreBaseRepository<DashboardEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, DashboardEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, DashboardEntity); }
 
   /** @description Finds a non-deleted dashboard record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findDashboardById(id: string): Promise<DashboardDomainData | null> {

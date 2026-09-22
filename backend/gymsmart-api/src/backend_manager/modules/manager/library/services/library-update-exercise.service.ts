@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/library/exercises/:id.
 // FLOW: Controller DTO -> LibraryUpdateExerciseService -> LibraryOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { LibraryOrchestratorService } from '@/modules/manager/library/services/library-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { LibraryOrchestratorService } from '@/backend_manager/modules/manager/library/services/library-orchestrator.service';
 
 @Injectable()
 export class LibraryUpdateExerciseService {

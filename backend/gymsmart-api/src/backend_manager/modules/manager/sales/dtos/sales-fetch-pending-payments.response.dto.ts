@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SalesFetchPendingPaymentsResponseDto {
   @ApiProperty({ type: [Object] })
-  members?: Array<{ expiryDate?: string; name?: string; pendingAmount?: number; }>;
+  members?: Array<{ expiryDate: string; name: string; pendingAmount: number; }>;
 
 }

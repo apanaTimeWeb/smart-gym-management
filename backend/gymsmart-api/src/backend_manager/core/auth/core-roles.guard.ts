@@ -3,8 +3,8 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { CoreRole } from '@/core/auth/core-role.constants';
-import { CoreRequestContextService } from '@/core/context/core-request-context.service';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
 
 @Injectable()
 export class CoreRolesGuard implements CanActivate {

@@ -6,16 +6,16 @@ export class GrievanceManagerGrievanceApiCreateGrievanceTicketRequestDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  name?: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  description?: string;
+  description!: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  status?: string;
+  status!: string;
 
 }

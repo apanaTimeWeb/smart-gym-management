@@ -1,5 +1,5 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
-import { MemberStatus } from '@/modules/manager/members/members.constants';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { MemberStatus } from '@/backend_manager/modules/manager/members/members.constants';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/members/:memberId/payments.
 // FLOW: HTTP payload -> MembersAddMemberPaymentRequestDto validation -> write use case -> orchestrator.
 

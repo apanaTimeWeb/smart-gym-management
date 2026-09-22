@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FinanceExportPaymentsReportResponseDto {
   @ApiProperty()
-  url: string;
+  url!: string;
 
 }

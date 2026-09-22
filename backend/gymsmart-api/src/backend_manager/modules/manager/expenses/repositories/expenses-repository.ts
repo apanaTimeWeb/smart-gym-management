@@ -2,21 +2,21 @@
 // FLOW: Use-case -> ExpensesRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ExpensesEntity } from '@/modules/manager/expenses/expenses.entity';
-import { ExpensesMapper } from '@/modules/manager/expenses/mappers/expenses-mapper';
-import type { ExpensesDomainData } from '@/modules/manager/expenses/expenses.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ExpensesEntity } from '@/backend_manager/modules/manager/expenses/expenses.entity';
+import { ExpensesMapper } from '@/backend_manager/modules/manager/expenses/mappers/expenses-mapper';
+import type { ExpensesDomainData } from '@/backend_manager/modules/manager/expenses/expenses.interfaces';
 
 export interface ExpensesListResult { data: ExpensesDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ExpensesRepository extends CoreBaseRepository<ExpensesEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ExpensesEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ExpensesEntity); }
 
   /** @description Finds a non-deleted expenses record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findExpensesById(id: string): Promise<ExpensesDomainData | null> {

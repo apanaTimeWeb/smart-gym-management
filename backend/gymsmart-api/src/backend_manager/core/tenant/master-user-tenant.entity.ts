@@ -2,7 +2,7 @@
 // FLOW: Actor + tenant -> membership -> trusted tenant database name.
 import { Column, Entity, Index, Unique } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
 
 @Entity({ name: 'user_tenants' })
 @Unique('UQ_user_tenants_user_id_tenant_id', ['userId', 'tenantId'])

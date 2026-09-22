@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for DELETE /api/v1/manager/plans/:id.
 // FLOW: Controller DTO -> PlansDeletePlanService -> PlansOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { PlansOrchestratorService } from '@/modules/manager/plans/services/plans-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { PlansOrchestratorService } from '@/backend_manager/modules/manager/plans/services/plans-orchestrator.service';
 
 @Injectable()
 export class PlansDeletePlanService {

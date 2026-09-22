@@ -1,5 +1,5 @@
-import { PaymentMethod } from '@/modules/manager/finance/finance.constants';
-import { PaymentStatus } from '@/modules/manager/finance/finance.constants';
+import { PaymentMethod } from '@/backend_manager/modules/manager/finance/finance.constants';
+import { PaymentStatus } from '@/backend_manager/modules/manager/finance/finance.constants';
 // RESPONSIBILITY: Explicit response DTO for the frontend-frozen Manager API data contract.
 // FLOW: Controller result -> FinanceFetchPaymentsByMemberResponseDto -> CoreResponseInterceptor -> canonical ApiResponse<T>.
 
@@ -7,33 +7,33 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FinanceFetchPaymentsByMemberResponseDto {
   @ApiProperty({ type: Number })
-  amount: number;
+  amount!: number;
 
   @ApiProperty({ type: Number })
-  discountAmount: number;
+  discountAmount!: number;
 
   @ApiProperty({ type: Number })
-  gstAmount: number;
+  gstAmount!: number;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  invoiceNumber: string;
+  invoiceNumber!: string;
 
   @ApiProperty()
-  memberId: string;
+  memberId!: string;
 
   @ApiProperty()
-  method: PaymentMethod;
+  method!: PaymentMethod;
 
   @ApiProperty()
-  paidAt: string;
+  paidAt!: string;
 
   @ApiProperty()
-  status: PaymentStatus;
+  status!: PaymentStatus;
 
   @ApiProperty({ type: Number })
-  taxableAmount: number;
+  taxableAmount!: number;
 
 }

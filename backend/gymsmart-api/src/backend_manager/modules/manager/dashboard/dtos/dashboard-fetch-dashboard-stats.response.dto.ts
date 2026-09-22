@@ -5,10 +5,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class DashboardFetchDashboardStatsResponseDto {
   @ApiProperty({ type: Number })
-  activeMembers?: number;
+  activeMembers!: number;
 
   @ApiProperty({ type: [Object] })
-  expiringMemberships?: Array<{ name?: string; }>;
+  expiringMemberships?: Array<{ name: string; }>;
 
   @ApiProperty({ type: [Object] })
   memberGrowth?: Array<string>;
@@ -17,30 +17,30 @@ export class DashboardFetchDashboardStatsResponseDto {
   membersByPlan?: Array<string>;
 
   @ApiProperty({ type: Number })
-  pendingPayments?: number;
+  pendingPayments!: number;
 
   @ApiProperty({ type: [Object] })
-  pendingPaymentsList?: Array<{ name?: string; }>;
+  pendingPaymentsList?: Array<{ name: string; }>;
 
   @ApiProperty({ type: [Object] })
-  recentMembers?: Array<{ name?: string; plan?: string; }>;
+  recentMembers?: Array<{ name: string; plan: string; }>;
 
   @ApiProperty({ type: [Object] })
-  recentPayments?: Array<{ amount?: number; }>;
+  recentPayments?: Array<{ amount: number; }>;
 
   @ApiProperty({ type: [Object] })
   revenueChart?: Array<number>;
 
   @ApiProperty({ type: Number })
-  todayAttendance?: number;
+  todayAttendance!: number;
 
   @ApiProperty({ type: Number })
-  totalMembers?: number;
+  totalMembers!: number;
 
   @ApiProperty({ type: Number })
-  totalRevenue?: number;
+  totalRevenue!: number;
 
   @ApiProperty({ type: Number })
-  totalStaff?: number;
+  totalStaff!: number;
 
 }

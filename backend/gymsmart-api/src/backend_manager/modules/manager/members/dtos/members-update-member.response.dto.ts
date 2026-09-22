@@ -5,12 +5,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersUpdateMemberResponseDto {
   @ApiProperty({ type: Object })
-  dietPlan?: { name?: string; };
+  dietPlan?: { name: string; };
 
   @ApiProperty({ type: [Object] })
-  recentPayments?: Array<{ amount?: number; }>;
+  recentPayments?: Array<{ amount: number; }>;
 
   @ApiProperty({ type: Object })
-  workoutPlan?: { name?: string; };
+  workoutPlan?: { name: string; };
 
 }

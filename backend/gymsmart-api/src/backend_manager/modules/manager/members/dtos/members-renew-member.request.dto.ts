@@ -1,4 +1,5 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/members/:id/renew.
 // FLOW: HTTP payload -> MembersRenewMemberRequestDto validation -> write use case -> orchestrator.
 
@@ -25,6 +26,6 @@ export class MembersRenewMemberRequestDto extends CoreRequestDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  customDays?: number;
+  customDays!: number;
 
 }

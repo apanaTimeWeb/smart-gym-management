@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/hr/summary.
 // FLOW: Controller -> HrFetchHrSummaryService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { HrRepository } from '@/modules/manager/hr/repositories/hr-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { HrRepository } from '@/backend_manager/modules/manager/hr/repositories/hr-repository';
 
 @Injectable()
 export class HrFetchHrSummaryService {

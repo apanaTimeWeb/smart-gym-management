@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Write use-case for PATCH /api/v1/manager/store/products/:id.
 // FLOW: Controller DTO -> StoreUpdateProductService -> StoreOrchestratorService -> UnitOfWork -> repository -> audit/event.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { StoreOrchestratorService } from '@/modules/manager/store/services/store-orchestrator.service';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { StoreOrchestratorService } from '@/backend_manager/modules/manager/store/services/store-orchestrator.service';
 
 @Injectable()
 export class StoreUpdateProductService {

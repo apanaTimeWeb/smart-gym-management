@@ -1,4 +1,4 @@
-import { CoreRequestDto } from '@/core/dtos/core-request.dto';
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/workouts/exercises.
 // FLOW: HTTP payload -> WorkoutCreateExerciseRequestDto validation -> write use case -> orchestrator.
 
@@ -19,6 +19,6 @@ export class WorkoutCreateExerciseRequestDto extends CoreRequestDto {
 
   @IsOptional()
   @IsString()
-  category?: string;
+  category!: string;
 
 }

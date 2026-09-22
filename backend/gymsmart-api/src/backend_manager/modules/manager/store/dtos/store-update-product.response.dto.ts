@@ -5,21 +5,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class StoreUpdateProductResponseDto {
   @ApiProperty()
-  category: string;
+  category!: string;
 
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty({ type: Boolean })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty({ type: Number })
-  price: number;
+  price!: number;
 
   @ApiProperty({ type: Number })
-  stock: number;
+  stock!: number;
 
 }

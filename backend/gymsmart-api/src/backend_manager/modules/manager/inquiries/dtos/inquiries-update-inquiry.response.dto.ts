@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InquiriesUpdateInquiryResponseDto {
   @ApiProperty({ type: [Object] })
-  followUpLogs?: Array<{ note?: string; }>;
+  followUpLogs?: Array<{ note: string; }>;
 
 }

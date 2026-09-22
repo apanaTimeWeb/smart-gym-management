@@ -5,6 +5,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersExportMembersReportResponseDto {
   @ApiProperty({ type: Number })
-  total: number;
+  total!: number;
 
 }

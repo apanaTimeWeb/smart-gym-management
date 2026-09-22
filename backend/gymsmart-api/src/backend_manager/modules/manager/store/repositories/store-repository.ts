@@ -2,21 +2,21 @@
 // FLOW: Use-case -> StoreRepository -> CoreBaseRepository -> trusted tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
-import { CoreBaseRepository } from '@/core/database/core-base.repository';
-import type { CoreTransactionContext } from '@/core/database/core-unit-of-work.service';
-import { CoreNotFoundException } from '@/core/exceptions/core-not-found.exception';
-import { buildPaginationMeta } from '@/core/utils/pagination.utils';
-import type { PaginationMeta } from '@/core/types/pagination.types';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { StoreEntity } from '@/modules/manager/store/store.entity';
-import { StoreMapper } from '@/modules/manager/store/mappers/store-mapper';
-import type { StoreDomainData } from '@/modules/manager/store/store.interfaces';
+import { CoreBaseRepository } from '@/backend_manager/core/database/core-base.repository';
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
+import { CoreNotFoundException } from '@/backend_manager/core/exceptions/core-not-found.exception';
+import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
+import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { StoreEntity } from '@/backend_manager/modules/manager/store/store.entity';
+import { StoreMapper } from '@/backend_manager/modules/manager/store/mappers/store-mapper';
+import type { StoreDomainData } from '@/backend_manager/modules/manager/store/store.interfaces';
 
 export interface StoreListResult { data: StoreDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class StoreRepository extends CoreBaseRepository<StoreEntity> {
-  constructor(tenants: import('@/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, StoreEntity); }
+  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, StoreEntity); }
 
   /** @description Finds a non-deleted store record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findStoreById(id: string): Promise<StoreDomainData | null> {

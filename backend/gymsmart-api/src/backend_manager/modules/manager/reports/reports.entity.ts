@@ -2,8 +2,8 @@
 // FLOW: Repository -> ReportsEntity -> PostgreSQL manager_reports.
 import { Check, Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/core/database/core-base.entity';
-import { ReportsRecordStatus } from '@/modules/manager/reports/reports.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
+import { ReportsRecordStatus } from '@/backend_manager/modules/manager/reports/reports.constants';
 
 @Entity('manager_reports')
 @Check('CHK_manager_reports_payload_object', "jsonb_typeof(payload) = 'object'")
@@ -12,7 +12,7 @@ import { ReportsRecordStatus } from '@/modules/manager/reports/reports.constants
 @Index('IDX_manager_reports_status', ['status'])
 export class ReportsEntity extends CoreBaseEntity {
   @Column({ type: 'jsonb', name: 'payload', default: () => "'{}'::jsonb" })
-  payload!: import('@/core/types/json-value.types').CoreJsonObject;
+  payload!: import('@/backend_manager/core/types/json-value.types').CoreJsonObject;
 
   @Column({ type: 'enum', enum: ReportsRecordStatus, enumName: 'manager_reports_status_enum', name: 'status', default: ReportsRecordStatus.ACTIVE })
   status!: ReportsRecordStatus;

@@ -5,12 +5,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class MembersFetchMemberStatsResponseDto {
   @ApiProperty({ type: Number })
-  active?: number;
+  active!: number;
 
   @ApiProperty({ type: Number })
-  expired?: number;
+  expired!: number;
 
   @ApiProperty({ type: Number })
-  total?: number;
+  total!: number;
 
 }

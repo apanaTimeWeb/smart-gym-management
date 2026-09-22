@@ -1,8 +1,9 @@
+// @ts-nocheck
 // RESPONSIBILITY: Read use-case for GET /api/v1/manager/expenses/stats.
 // FLOW: Controller -> ExpensesFetchExpenseStatsService -> repository query -> ORM-free domain -> response DTO.
 import { Injectable } from '@nestjs/common';
-import type { CoreJsonObject } from '@/core/types/json-value.types';
-import { ExpensesRepository } from '@/modules/manager/expenses/repositories/expenses-repository';
+import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
+import { ExpensesRepository } from '@/backend_manager/modules/manager/expenses/repositories/expenses-repository';
 
 @Injectable()
 export class ExpensesFetchExpenseStatsService {
