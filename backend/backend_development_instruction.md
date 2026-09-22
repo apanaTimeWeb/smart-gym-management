@@ -1914,4 +1914,12 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 5. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
-**Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized.
+6. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
+
+7. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
+
+8. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
+   - ❌ **BAD:** Hardcoding a single brittle locator: `driver.find_element(By.ID, "submit-btn")`
+   - ✅ **GOOD:** Writing robust selector logic that attempts a primary locator (e.g., `data-testid`), and if that fails, gracefully falls back to a secondary locator (e.g., specific CSS class, XPath, or ARIA label). The AI must ensure that if the primary locator fails, the backup locator works to complete the action.
+
+**Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized. Tests must be real and resilient, not just "green" checkboxes.
