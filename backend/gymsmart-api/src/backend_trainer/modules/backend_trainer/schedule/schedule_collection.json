@@ -1,0 +1,129 @@
+{
+  "info": {
+    "name": "trainer-schedule",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Schedule read",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/schedule",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "schedule"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Actual frontend availability mutation",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/schedule/availability",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "schedule",
+            "availability"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Documented compatibility mutation",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/schedule/availability",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "schedule",
+            "availability"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create leave request",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/schedule/leaves",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "schedule",
+            "leaves"
+          ]
+        }
+      }
+    }
+  ]
+}

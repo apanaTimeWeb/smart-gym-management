@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "trainer-progress-tracking",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Progress member list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            "members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Paginated progress entries",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "entries"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Progress detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/entries/:entryId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "entries",
+            ":entryId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Progress summary",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "summary"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create progress entry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "entries"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update progress entry",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/entries/:entryId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "entries",
+            ":entryId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Soft-delete progress entry",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/progress-tracking/:memberId/entries/:entryId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "progress-tracking",
+            ":memberId",
+            "entries",
+            ":entryId"
+          ]
+        }
+      }
+    }
+  ]
+}

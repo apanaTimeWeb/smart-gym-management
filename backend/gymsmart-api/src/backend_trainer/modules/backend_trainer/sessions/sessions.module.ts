@@ -1,0 +1,6 @@
+// RESPONSIBILITY: Registers the isolated sessions feature slice and its controller/service/repository graph.
+// FLOW: Nest bootstrap → SessionsModule → feature-owned providers/controllers.
+
+import { Module } from '@nestjs/common';
+import { SessionsQueryController } from '@/backend_trainer/modules/backend_trainer/sessions/controllers/sessions-query.controller'; import { SessionsCommandController } from '@/backend_trainer/modules/backend_trainer/sessions/controllers/sessions-command.controller'; import { SessionsQueryService } from '@/backend_trainer/modules/backend_trainer/sessions/services/sessions-query.service'; import { SessionsCommandService } from '@/backend_trainer/modules/backend_trainer/sessions/services/sessions-command.service'; import { SessionsAuthorizationService } from '@/backend_trainer/modules/backend_trainer/sessions/services/sessions-authorization.service'; import { SessionsRepository } from '@/backend_trainer/modules/backend_trainer/sessions/repositories/sessions-repository';
+@Module({controllers:[SessionsQueryController,SessionsCommandController],providers:[SessionsQueryService,SessionsCommandService,SessionsRepository,SessionsAuthorizationService]}) export class SessionsModule {}

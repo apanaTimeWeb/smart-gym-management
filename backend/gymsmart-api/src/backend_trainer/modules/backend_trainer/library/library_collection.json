@@ -1,0 +1,160 @@
+{
+  "info": {
+    "name": "trainer-library",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Paginated diet plans",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/library/diet-plans",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "library",
+            "diet-plans"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Member diet assignments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/library/assigned-members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "library",
+            "assigned-members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Assign diet plan",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/members/:memberId/diet",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "members",
+            ":memberId",
+            "diet"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update diet plan",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/library/diet-plans/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "library",
+            "diet-plans",
+            ":id"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Soft-delete diet plan",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/library/diet-plans/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "library",
+            "diet-plans",
+            ":id"
+          ]
+        }
+      }
+    }
+  ]
+}

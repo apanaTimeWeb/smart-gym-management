@@ -1,0 +1,4 @@
+// RESPONSIBILITY: Maps exercise ORM state to the trainer API domain shape.
+// FLOW: WorkoutExerciseEntity → WorkoutExerciseMapper → WorkoutExerciseDomain.
+
+import type { WorkoutExerciseEntity } from '@/backend_trainer/modules/backend_trainer/workout/workout-exercise.entity'; import type { WorkoutExerciseDomain } from '@/backend_trainer/modules/backend_trainer/workout/workout-exercise.domain'; export function WorkoutExerciseMapper(entity:WorkoutExerciseEntity):WorkoutExerciseDomain{return {id:entity.id,name:entity.name,category:entity.category,muscleGroup:entity.muscleGroup,equipment:entity.equipment,difficulty:entity.difficulty,instructions:entity.instructions,videoUrl:entity.videoUrl,imageUrl:entity.imageUrl,isActive:entity.isActive,sets:entity.sets,reps:entity.reps,duration:entity.duration,description:entity.description};}
