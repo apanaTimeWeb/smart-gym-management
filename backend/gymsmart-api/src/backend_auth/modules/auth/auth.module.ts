@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Composes only the isolated Auth feature and its core infrastructure dependencies.
+// RESPONSIBILITY: Composes only the isolated Auth feature and its core infrastructure dependencies.
 // FLOW: AuthModule -> controllers -> orchestrator/services -> repositories -> PostgreSQL/Redis/audit.
 
 import { Module } from '@nestjs/common';
@@ -8,6 +8,7 @@ import { CoreAuditModule } from '@/backend_auth/core/audit/core-audit.module';
 import { CoreDatabaseModule } from '@/backend_auth/core/database/core-database.module';
 import { AuthCommandController } from '@/backend_auth/modules/auth/controllers/auth-command.controller';
 import { AuthQueryController } from '@/backend_auth/modules/auth/controllers/auth-query.controller';
+import { AuthCompatibilityController } from '@/backend_auth/modules/auth/controllers/auth-compatibility.controller';
 import { AuthSeeder } from '@/backend_auth/modules/auth/auth.seeder';
 import { AuthRefreshSessionEntity } from '@/backend_auth/modules/auth/entities/auth-refresh-session.entity';
 import { AuthUserEntity } from '@/backend_auth/modules/auth/entities/auth-user.entity';
@@ -25,7 +26,7 @@ import { AuthRefreshService } from '@/backend_auth/modules/auth/services/auth-re
     CoreDatabaseModule,
     CoreAuditModule,
   ],
-  controllers: [AuthCommandController, AuthQueryController],
+  controllers: [AuthCommandController, AuthQueryController, AuthCompatibilityController],
   providers: [
     AuthSessionOrchestrator,
     AuthLoginService,
