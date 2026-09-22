@@ -1878,3 +1878,17 @@ All data exports MUST be processed asynchronously via background jobs and delive
 - A scheduled cron job MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws.
 
 > **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.
+
+
+## Rule 120 — Persistent WebSockets (Notifications & Chats)
+
+### The Problem
+WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('notification')` or `socket.emit('chat_message')`) while the user is offline or experiencing a network blip, that message is lost forever.
+
+### The Rule
+Never emit a critical WebSocket event (like "Export Ready", "Payment Received", or a "Chat Message") without **first saving it to the database**.
+
+1. **Save First:** Insert a record into the `Notifications` or `Chats` table.
+2. **Emit Second:** Only after the DB transaction commits, emit the WebSocket event.
+3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
+4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions.

@@ -2508,3 +2508,14 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
 5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
 
 > **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
+
+
+## Notification & WebSocket Recovery Rule
+
+### The Problem
+If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
+
+### The Rule
+The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
+1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
+2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
