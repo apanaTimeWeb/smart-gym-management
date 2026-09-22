@@ -1,0 +1,9 @@
+// RESPONSIBILITY: Owns all read endpoints for the Trainer Earnings feature.
+// FLOW: HTTP /trainer/earnings* → EarningsQueryService → canonical envelope.
+
+import { Controller, Get, Query, HttpStatus } from '@nestjs/common'; import { ApiResponse, ApiTags } from '@nestjs/swagger'; import { CoreRoles } from '@/backend_trainer/core/security/core-roles.decorator';
+import { CoreRole } from '@/backend_trainer/core/types/core-auth.types'; import { EarningsQueryService } from '@/backend_trainer/modules/backend_trainer/earnings/services/earnings-query.service'; import { EarningsQueryDto } from '@/backend_trainer/modules/backend_trainer/earnings/dtos/earnings-query.dto'; @ApiTags('trainer/earnings') @Controller('trainer/earnings') export class EarningsQueryController { constructor(private readonly service:EarningsQueryService){} // SLA: STANDARD
+@Get() @CoreRoles(CoreRole.TRAINER) @ApiResponse({status:HttpStatus.OK}) /** Returns the combined earnings page contract. */ async list(@Query() q:EarningsQueryDto){return this.service.findAll(q);} // SLA: STANDARD
+@Get('kpis') @CoreRoles(CoreRole.TRAINER) @ApiResponse({status:HttpStatus.OK}) /** Returns only trainer earnings KPI data. */ async kpis(@Query() q:EarningsQueryDto){const all=await this.service.findAll(q); return all.kpis;} // SLA: STANDARD
+@Get('pending') @CoreRoles(CoreRole.TRAINER) @ApiResponse({status:HttpStatus.OK}) /** Returns pending payout rows. */ async pending(@Query() q:EarningsQueryDto){const all=await this.service.findAll(q); return all.pendingPayouts;} // SLA: STANDARD
+@Get('history') @CoreRoles(CoreRole.TRAINER) @ApiResponse({status:HttpStatus.OK}) /** Returns paginated history rows. */ async history(@Query() q:EarningsQueryDto){const all=await this.service.findAll(q); return {history:all.history,historyTotal:all.historyTotal,historyPage:all.historyPage,historyLimit:all.historyLimit,pagination:all.pagination};} }

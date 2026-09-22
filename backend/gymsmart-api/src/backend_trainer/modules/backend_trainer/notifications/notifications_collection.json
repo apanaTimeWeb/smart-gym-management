@@ -1,0 +1,157 @@
+{
+  "info": {
+    "name": "trainer-notifications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Paginated notifications",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Mark one read",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/notifications/:id/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "notifications",
+            ":id",
+            "read"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Mark all read",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "notifications",
+            "read-all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Read preferences",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/notifications/preferences",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "notifications",
+            "preferences"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update preferences",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/notifications/preferences",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "notifications",
+            "preferences"
+          ]
+        }
+      }
+    }
+  ]
+}

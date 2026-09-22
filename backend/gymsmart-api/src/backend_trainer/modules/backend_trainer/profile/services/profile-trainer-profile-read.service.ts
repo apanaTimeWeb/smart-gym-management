@@ -1,0 +1,5 @@
+// RESPONSIBILITY: Reads the authenticated trainer profile through its feature-local repository.
+// FLOW: Profile controller → read service → profile repository.
+
+import { CoreNotFoundException } from '@/backend_trainer/core/errors/core-not-found.exception';
+import { Injectable } from '@nestjs/common'; import { CoreRequestContext } from '@/backend_trainer/core/context/core-request-context'; import { ProfileTrainerProfileRepository } from '@/backend_trainer/modules/backend_trainer/profile/repositories/profile-trainer-profile.repository'; import { ProfileTrainerProfileMapper } from '@/backend_trainer/modules/backend_trainer/profile/profile-trainer-profile.mapper'; @Injectable() export class ProfileTrainerProfileReadService { constructor(private readonly repo:ProfileTrainerProfileRepository){} /** Returns the authenticated trainer profile. */ async find():Promise<ReturnType<typeof ProfileTrainerProfileMapper>>{const row=await this.repo.findByUserId(CoreRequestContext.get().userId??''); if (!row) throw new CoreNotFoundException('PROFILE.TRAINER_PROFILE', CoreRequestContext.get().userId ?? ''); return ProfileTrainerProfileMapper(row);} }

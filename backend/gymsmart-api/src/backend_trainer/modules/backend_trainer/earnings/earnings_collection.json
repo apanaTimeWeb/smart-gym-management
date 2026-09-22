@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "trainer-earnings",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "tenantId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Combined earnings contract",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/earnings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "earnings"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Earnings KPI values",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/earnings/kpis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "earnings",
+            "kpis"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pending payout rows",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/earnings/pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "earnings",
+            "pending"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Paginated earnings history",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/earnings/history",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "earnings",
+            "history"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CSV earnings export",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          },
+          {
+            "key": "x-tenant-id",
+            "value": "{{tenantId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/trainer/earnings/export",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "trainer",
+            "earnings",
+            "export"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+// RESPONSIBILITY: Proves the attendance create service enforces member identity before persistence.
+// FLOW: Unit test → AttendanceCreateService → repository fake.
+
+import { AttendanceCreateService } from '@/backend_trainer/modules/backend_trainer/attendance/services/attendance-create.service'; import { CoreRequestContext } from '@/backend_trainer/core/context/core-request-context';
+describe('AttendanceCreateService',()=>{it('rejects member attendance without a member ID',async()=>{const service=new AttendanceCreateService({createRecord:jest.fn(),memberBelongsToTrainer:jest.fn()} as never,{record:jest.fn()} as never); const original=CoreRequestContext.get; CoreRequestContext.get=()=>({requestId:'r',userId:'u'}); await expect(service.create({type:'MEMBER',date:'2026-09-22'} as never)).rejects.toThrow('DOMAIN.ATTENDANCE.MEMBER_REQUIRED'); CoreRequestContext.get=original;});});

@@ -1,0 +1,6 @@
+// RESPONSIBILITY: Owns export-only command/read delivery for trainer earnings.
+// FLOW: GET export → EarningsExportService → CSV text.
+
+import { Controller, Get, Res, HttpStatus } from '@nestjs/common'; import { ApiResponse, ApiTags } from '@nestjs/swagger'; import type { Response } from 'express'; import { CoreRoles } from '@/backend_trainer/core/security/core-roles.decorator';
+import { CoreRole } from '@/backend_trainer/core/types/core-auth.types'; import { CoreRawResponse } from '@/backend_trainer/core/response/core-raw-response.decorator'; import { EarningsExportService } from '@/backend_trainer/modules/backend_trainer/earnings/services/earnings-export.service'; @ApiTags('trainer/earnings') @Controller('trainer/earnings') export class EarningsCommandController { constructor(private readonly service:EarningsExportService){} // SLA: STANDARD
+@Get('export') @CoreRoles(CoreRole.TRAINER) @CoreRawResponse() @ApiResponse({status:HttpStatus.OK}) /** Streams the bounded earnings CSV response with download headers. */ async export(@Res() response:Response):Promise<void>{response.type('text/csv').attachment('trainer-earnings.csv').send(await this.service.exportCsv());} }

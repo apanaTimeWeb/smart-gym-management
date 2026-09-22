@@ -20,6 +20,7 @@ import { CoreAppModule as AuthAppModule } from '@/backend_auth/core/app.module';
 import { AppModule as SuperadminAppModule } from '@/backend_superadmin/app.module';
 import { AppModule as LandingAppModule } from '@/backend_landing/app.module';
 import { CoreAppModule as ManagerAppModule } from '@/backend_manager/core/core-app.module';
+import { AppModule as TrainerAppModule } from '@/backend_trainer/app.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
 import { CoreRateLimitGuard } from '@/backend_admin/core/auth/core-rate-limit.guard';
@@ -87,6 +88,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
     SuperadminAppModule,
     LandingAppModule,
     ManagerAppModule,
+    TrainerAppModule,
   ],
   providers: [
     // 4. Unified Global Guards and Interceptors

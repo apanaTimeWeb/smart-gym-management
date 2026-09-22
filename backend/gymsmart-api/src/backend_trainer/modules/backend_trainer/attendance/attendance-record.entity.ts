@@ -1,0 +1,8 @@
+// RESPONSIBILITY: Maps trainer/member attendance records with finite type and method values.
+// FLOW: Attendance repository → AttendanceRecordEntity → attendance_records.
+
+import { Column, Entity } from 'typeorm'; import { CoreBaseEntity } from '@/backend_trainer/core/database/core-base.entity'; import { AttendanceCheckInMethod, AttendanceRecordType } from '@/backend_trainer/modules/backend_trainer/attendance/attendance-enums';
+export interface AttendanceRelatedPerson { id:string; name:string; phone?:string|null; email?:string|null; }
+@Entity('trainer_attendance_records') export class AttendanceRecordEntity extends CoreBaseEntity { @Column({ type:'enum', enum:AttendanceRecordType, enumName:'attendance_record_type_enum' }) type!: AttendanceRecordType; @Column({ type:'date' }) date!: string; @Column({ name:'check_in', type:'timestamptz', nullable:true }) checkIn!: Date | null; @Column({ name:'check_out', type:'timestamptz', nullable:true }) checkOut!: Date | null; @Column({ name:'duration_minutes', type:'int', nullable:true }) durationMinutes!: number | null; @Column({ name:'check_in_method', type:'enum', enum:AttendanceCheckInMethod, enumName:'attendance_check_in_method_enum', nullable:true }) checkInMethod!: AttendanceCheckInMethod | null; @Column({ nullable:true }) notes!: string | null; @Column({ name:'staff_id', type:'uuid', nullable:true }) staffId!: string | null; @Column({ name:'member_id', type:'uuid', nullable:true }) memberId!: string | null; @Column({ name:'created_by', type:'uuid' }) createdBy!: string;
+  member?: AttendanceRelatedPerson | null;
+  staff?: AttendanceRelatedPerson | null; }

@@ -1,0 +1,6 @@
+// RESPONSIBILITY: Owns the read-only Dashboard HTTP contract.
+// FLOW: GET /trainer/dashboard/stats → DashboardStatsService → canonical response.
+
+import { Controller, Get, Query, HttpStatus } from '@nestjs/common'; import { ApiResponse, ApiTags } from '@nestjs/swagger'; import { CoreRoles } from '@/backend_trainer/core/security/core-roles.decorator';
+import { CoreRole } from '@/backend_trainer/core/types/core-auth.types'; import { DashboardStatsService } from '@/backend_trainer/modules/backend_trainer/dashboard/services/dashboard-stats.service'; import { DashboardQueryDto } from '@/backend_trainer/modules/backend_trainer/dashboard/dtos/dashboard-query.dto'; @ApiTags('trainer/dashboard') @Controller('trainer/dashboard') export class DashboardQueryController { constructor(private readonly service:DashboardStatsService){} // SLA: STANDARD
+@Get('stats') @CoreRoles(CoreRole.TRAINER) @ApiResponse({status:HttpStatus.OK}) /** Returns trainer operational dashboard metrics for the selected range. */ async getStats(@Query() query:DashboardQueryDto){ return this.service.findStats(query); } }
