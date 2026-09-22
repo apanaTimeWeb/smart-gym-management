@@ -40,7 +40,7 @@ export function useSuperadminMessagingNotificationMutations() {
   });
 
   const markAllReadMutation = useMutation({
-    mutationFn: superadminMessagingApi.markAllNotificationsRead,
+    mutationFn: () => superadminMessagingApi.markAllNotificationsRead(),
     onSuccess: (response) => {
       queryClient.setQueryData<NotificationsQueryData>(NOTIFICATION_QUERY_KEY, response);
     },
