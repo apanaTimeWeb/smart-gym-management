@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the dashboard feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the dashboard feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,9 +15,10 @@ import { DashboardBusinessOverviewService } from '@/backend_superadmin/modules/s
 import { DashboardMainService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-main.service';
 import { DashboardMetricsService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-metrics.service';
 import { DashboardSpecialController } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard-special.controller';
+import { DashboardCompatibilityController } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([DashboardSnapshotEntity])],
-  controllers: [DashboardQueryController, DashboardCommandController, DashboardSpecialController],
+  controllers: [DashboardQueryController, DashboardCommandController, DashboardSpecialController, DashboardCompatibilityController],
   providers: [DashboardBusinessOverviewService, DashboardMainService, DashboardMetricsService, DashboardRepository, DashboardListService, DashboardFindService, DashboardCreateService, DashboardUpdateService, DashboardDeleteService],
   exports: [DashboardRepository],
 })

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the features feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the features feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,9 +19,10 @@ import { FeaturesDeleteService } from '@/backend_superadmin/modules/superadmin/f
 import { FeaturesRolloutInsightsService } from '@/backend_superadmin/modules/superadmin/features/services/features-rollout-insights.service';
 import { FeaturesMainService } from '@/backend_superadmin/modules/superadmin/features/services/features-main.service';
 import { FeaturesSpecialController } from '@/backend_superadmin/modules/superadmin/features/features-special.controller';
+import { FeaturesCompatibilityController, FeaturesInsightsCompatibilityController } from '@/backend_superadmin/modules/superadmin/features/features-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([FeaturesContractSnapshotEntity, FeatureFlagEntity, FeatureReleaseNoteEntity])],
-  controllers: [FeaturesQueryController, FeaturesCommandController, FeaturesSpecialController],
+  controllers: [FeaturesQueryController, FeaturesCommandController, FeaturesSpecialController, FeaturesCompatibilityController, FeaturesInsightsCompatibilityController],
   providers: [FeaturesContractSnapshotRepository, FeatureReleaseNoteRepository, FeaturesReleaseNoteService, FeaturesRolloutInsightsService, FeaturesMainService, FeaturesRepository, FeaturesListService, FeaturesFindService, FeaturesCreateService, FeaturesUpdateService, FeaturesDeleteService],
   exports: [FeaturesRepository],
 })

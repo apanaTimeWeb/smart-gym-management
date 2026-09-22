@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the compliance feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the compliance feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,9 +13,10 @@ import { ComplianceUpdateService } from '@/backend_superadmin/modules/superadmin
 import { ComplianceDeleteService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-delete.service';
 import { ComplianceMainService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-main.service';
 import { ComplianceSpecialController } from '@/backend_superadmin/modules/superadmin/compliance/compliance-special.controller';
+import { ComplianceCompatibilityController } from '@/backend_superadmin/modules/superadmin/compliance/compliance-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([ComplianceSnapshotEntity])],
-  controllers: [ComplianceQueryController, ComplianceCommandController, ComplianceSpecialController],
+  controllers: [ComplianceQueryController, ComplianceCommandController, ComplianceSpecialController, ComplianceCompatibilityController],
   providers: [ComplianceMainService, ComplianceRepository, ComplianceListService, ComplianceFindService, ComplianceCreateService, ComplianceUpdateService, ComplianceDeleteService],
   exports: [ComplianceRepository],
 })

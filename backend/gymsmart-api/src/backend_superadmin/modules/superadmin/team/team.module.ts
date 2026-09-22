@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the team feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the team feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,9 +14,10 @@ import { TeamDeleteService } from '@/backend_superadmin/modules/superadmin/team/
 import { TeamMainService } from '@/backend_superadmin/modules/superadmin/team/services/team-main.service';
 import { TeamAlertsService } from '@/backend_superadmin/modules/superadmin/team/services/team-alerts.service';
 import { TeamSpecialController } from '@/backend_superadmin/modules/superadmin/team/team-special.controller';
+import { TeamCompatibilityController } from '@/backend_superadmin/modules/superadmin/team/team-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([TeamSnapshotEntity])],
-  controllers: [TeamQueryController, TeamCommandController, TeamSpecialController],
+  controllers: [TeamQueryController, TeamCommandController, TeamSpecialController, TeamCompatibilityController],
   providers: [TeamMainService, TeamAlertsService, TeamRepository, TeamListService, TeamFindService, TeamCreateService, TeamUpdateService, TeamDeleteService],
   exports: [TeamRepository],
 })

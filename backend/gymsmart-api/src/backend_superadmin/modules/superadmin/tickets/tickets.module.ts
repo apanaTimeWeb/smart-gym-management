@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the tickets feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the tickets feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,9 +18,11 @@ import { TicketsInsightsService } from '@/backend_superadmin/modules/superadmin/
 import { TicketsSpecialController } from '@/backend_superadmin/modules/superadmin/tickets/tickets-special.controller';
 import { TicketsActionsController } from '@/backend_superadmin/modules/superadmin/tickets/tickets-actions.controller';
 import { TicketsActionsService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-actions.service';
+import { TicketsCompatibilityController } from '@/backend_superadmin/modules/superadmin/tickets/tickets-compatibility.controller';
+
 @Module({
   imports: [TypeOrmModule.forFeature([TicketsContractSnapshotEntity, SupportTicketEntity])],
-  controllers: [TicketsQueryController, TicketsCommandController, TicketsSpecialController, TicketsActionsController],
+  controllers: [TicketsQueryController, TicketsCommandController, TicketsSpecialController, TicketsActionsController, TicketsCompatibilityController],
   providers: [TicketsActionsService, TicketsContractSnapshotRepository, TicketsInsightsService, TicketsRepository, TicketsListService, TicketsFindService, TicketsCreateService, TicketsUpdateService, TicketsDeleteService, TicketsStatusService],
   exports: [TicketsRepository],
 })

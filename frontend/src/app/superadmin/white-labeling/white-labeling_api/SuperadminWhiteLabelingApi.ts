@@ -16,9 +16,10 @@ export const SuperadminWhiteLabelingApi = {
       dataSchema: WhiteLabelDomainsDataSchema,
     });
   },
-  updateDomainStatus: async (id: string, dto: UpdateDomainStatusDto): Promise<UpdateDomainStatusResponse> => apiFetch<UpdateDomainStatusResponse>(SuperadminWhiteLabelingUrlConfig.API.UPDATE_STATUS(id), {
+  updateDomainStatus: async (id: string, dto: UpdateDomainStatusDto, idempotencyKey?: string): Promise<UpdateDomainStatusResponse> => apiFetch<UpdateDomainStatusResponse>(SuperadminWhiteLabelingUrlConfig.API.UPDATE_STATUS(id), {
     method: 'PATCH',
     body: JSON.stringify(dto),
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
     dataSchema: UpdateDomainStatusDataSchema,
   }),
 };

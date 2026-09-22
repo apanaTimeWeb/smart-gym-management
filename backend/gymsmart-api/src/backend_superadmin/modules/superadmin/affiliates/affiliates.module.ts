@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the affiliates feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the affiliates feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,10 +13,11 @@ import { AffiliatesUpdateService } from '@/backend_superadmin/modules/superadmin
 import { AffiliatesDeleteService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-delete.service';
 import { AffiliatesStatusService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-status.service';
 import { AffiliatesPayoutService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-payout.service';
+import { AffiliatesCompatibilityController } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([AffiliateEntity])],
-  controllers: [AffiliatesQueryController, AffiliatesCommandController],
-  providers: [AffiliatesPayoutService, AffiliatesRepository, AffiliatesListService, AffiliatesFindService, AffiliatesCreateService, AffiliatesUpdateService, AffiliatesDeleteService, AffiliatesStatusService],
+  controllers: [AffiliatesQueryController, AffiliatesCommandController, AffiliatesCompatibilityController],
+  providers: [AffiliatesStatusService, AffiliatesPayoutService, AffiliatesRepository, AffiliatesListService, AffiliatesFindService, AffiliatesCreateService, AffiliatesUpdateService, AffiliatesDeleteService],
   exports: [AffiliatesRepository],
 })
 export class AffiliatesModule {}

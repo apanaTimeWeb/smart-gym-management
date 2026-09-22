@@ -25,9 +25,11 @@ import { GymsOperationalService } from '@/backend_superadmin/modules/superadmin/
 import { JwtModule } from '@nestjs/jwt';
 import { FeaturesModule } from '@/backend_superadmin/modules/superadmin/features/features.module';
 
+import { GymsCompatibilityController, GymsSpecialCompatibilityController } from '@/backend_superadmin/modules/superadmin/gyms/gyms-compatibility.controller';
+
 @Module({
   imports: [TypeOrmModule.forFeature([GymDetailContractSnapshotEntity, TenantEntity]), JwtModule.register({}), FeaturesModule],
-  controllers: [GymsQueryController, GymsCommandController, GymsSpecialController, GymsLookupController],
+  controllers: [GymsQueryController, GymsCommandController, GymsSpecialController, GymsLookupController, GymsCompatibilityController, GymsSpecialCompatibilityController],
   providers: [GymDetailContractSnapshotRepository, GymsBusinessControlsService, GymsBulkActionService, GymsDetailBusinessOverviewService, GymsRepository, GymsListService, GymsFindService, GymsCreateService, GymsUpdateService, GymsDeleteService, GymsStatusService, GymsLookupService, GymsProvisionService, GymsOperationalService],
   exports: [GymsRepository],
 })

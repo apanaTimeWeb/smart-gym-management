@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the plans feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the plans feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,9 +15,11 @@ import { PlansUpdateService } from '@/backend_superadmin/modules/superadmin/saas
 import { PlansDeleteService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-delete.service';
 import { PlansBusinessControlsService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-business-controls.service';
 import { PlansArchiveService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-archive.service';
+import { PlansCompatibilityController } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-compatibility.controller';
+
 @Module({
   imports: [TypeOrmModule.forFeature([PlansContractSnapshotEntity, SubscriptionPlanEntity])],
-  controllers: [PlansQueryController, PlansCommandController],
+  controllers: [PlansQueryController, PlansCommandController, PlansCompatibilityController],
   providers: [PlansArchiveService, PlansContractSnapshotRepository, PlansBusinessControlsService, PlansRepository, PlansListService, PlansFindService, PlansCreateService, PlansUpdateService, PlansDeleteService],
   exports: [PlansRepository],
 })

@@ -48,19 +48,22 @@ export const superadminMessagingApi = {
   fetchTenants: () => apiFetch<ApiResponse<MessagingTenant[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/tenants`, {
     responseSchema: apiResponseSchema(z.array(MessagingTenantSchema)),
   }),
-  markNotificationRead: (id: string) => apiFetch<ApiResponse<SuperadminNotification>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/${encodeURIComponent(id)}/read`, {
+  markNotificationRead: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<SuperadminNotification>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/${encodeURIComponent(id)}/read`, {
     method: 'PATCH',
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
     responseSchema: apiResponseSchema(SuperadminNotificationSchema),
   }),
-  markAllNotificationsRead: () => apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/read-all`, {
+  markAllNotificationsRead: (idempotencyKey?: string) => apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/read-all`, {
     method: 'PATCH',
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
     responseSchema: apiResponseSchema(z.array(SuperadminNotificationSchema)),
   }),
-  sendMessage: (payload: TenantMessageCreatePayload) => {
+  sendMessage: (payload: TenantMessageCreatePayload, idempotencyKey?: string) => {
     const validatedPayload = TenantMessageCreatePayloadSchema.parse(payload);
     return apiFetch<ApiResponse<TenantMessage>>(`${MessagingUrlConfig.BACKEND_API.BASE}/messages`, {
       method: 'POST',
       body: JSON.stringify(validatedPayload),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
       responseSchema: apiResponseSchema(TenantMessageSchema),
     });
   },

@@ -14,10 +14,12 @@ export const gymsApi = {
     },
     fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: TenantSchema }),
     fetchSubscriptionPlans: () => apiFetch<ApiResponse<SuperadminGymsPlanOption[]>>(GymsUrlConfig.BACKEND_API.SUBSCRIPTION_PLANS, { dataSchema: z.array(SuperadminGymsPlanOptionSchema) }),
-    createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
+    createGym: (body: Partial<Tenant>, idempotencyKey?: string) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: TenantSchema
     }),
-    updateGym: (id: string, body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+    updateGym: (id: string, body: Partial<Tenant>, idempotencyKey?: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: TenantSchema
     }),
     updateGymStatus: (id: string, status: string, idempotencyKey?: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }), headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
