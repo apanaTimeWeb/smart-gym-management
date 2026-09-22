@@ -1,4 +1,4 @@
-﻿# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
 
 > Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
 > Swift/Kotlin). This document defines architectural discipline, not a specific
@@ -2425,3 +2425,23 @@ import i18n from '@/i18n/i18n';
 ``````
 
 > **AI AGENT NOTE:** Every time you display a monetary amount inside a `<Text>` component, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly. The locale MUST come from `i18n.language` — never hardcode `'en-IN'`. No currency symbol may appear as a literal character anywhere in JSX.
+
+
+## Rule 64 — Tenant Data Export & Offboarding UX
+
+### The Rule
+Data exports take minutes to process. Mobile operating systems are not designed to easily download and extract massive ZIP files of business CSVs. Therefore, the mobile app MUST handle the export trigger strictly as an asynchronous background request that emails the file to the user.
+
+### UI Placement
+The export functionality must live in a dedicated section: **Admin Settings -> Data Export & Offboarding**. 
+- **Role Constraint:** This UI MUST only be available in the **Superadmin** (or top-level Gym Admin) mobile dashboard. Never add export buttons to manager, trainer, or member interfaces.
+
+### Interaction Flow
+1. **Button:** Display a clear `[ Request Full Data Export ]` button.
+2. **Action:** When clicked, call the backend `POST /export-data`.
+3. **Feedback:** Do NOT show a continuous loading spinner. Since the API returns `202 Accepted` immediately, show a success toast/alert: 
+   *"Export started. A secure download link will be sent to your email within a few minutes."*
+4. **Format Expectation:** The UI should inform the user that their data will be sent via email as a ZIP file containing Excel (CSV) files, which are best viewed on a computer.
+5. **Real-time Completion Feedback:** The mobile dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+
+> **AI AGENT NOTE:** Never attempt to download, parse, or open the `.zip` file directly within the mobile app's file system or using a Webview. The mobile app's ONLY responsibility is to hit the export endpoint and display a confirmation message indicating that an email is on the way.

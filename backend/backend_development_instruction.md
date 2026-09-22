@@ -1,4 +1,4 @@
-﻿# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
+# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
 
 ## The Core Philosophy
 This document outlines the strict architectural rules for building the backend using **NestJS (TypeScript)**. The primary goal is **Extreme Isolation**.
@@ -1844,3 +1844,27 @@ return { amount, currency };
 ``````
 
 > **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
+
+
+## Rule 119 — Tenant Data Export & Offboarding
+
+### The Problem
+When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
+
+### Implementation Strategy
+All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
+- **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
+
+1. **Data Format (Denormalized/Flattened):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys (e.g., exporting `plan_id` without the plan name). Non-technical business owners cannot perform SQL JOINs. You MUST use TypeORM QueryBuilder to flatten the data so that human-readable reference names (e.g., `Member Name`, `Plan Name`, `Trainer Name`) are included explicitly alongside their foreign key IDs in the CSV. Compress these CSVs into a single `.zip` file.
+2. **Trigger:** `POST /api/v1/admin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
+3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
+4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
+5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/admin/download-export?token=xyz`) that streams the file.
+6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
+
+### Data Retention & Hard Deletion
+- When a tenant cancels, their account is **Soft Deleted** (suspended).
+- Maintain a **90-day grace period** in case they return.
+- A scheduled cron job MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws.
+
+> **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.

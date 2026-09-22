@@ -1,4 +1,4 @@
-﻿Currently, no one writes code manually; AI writes it. Because of this, my primary goal is extreme isolation. **Primary isolation goal:** Prefer single-file repair when the dependency graph allows it. The guaranteed isolation boundary is the owning module. An AI MUST NOT require unrelated business modules for a module-local repair. However, the folder architecture must remain highly organized and visually logical so that human developers can easily navigate it without getting lost in a flat directory of 50+ files.
+Currently, no one writes code manually; AI writes it. Because of this, my primary goal is extreme isolation. **Primary isolation goal:** Prefer single-file repair when the dependency graph allows it. The guaranteed isolation boundary is the owning module. An AI MUST NOT require unrelated business modules for a module-local repair. However, the folder architecture must remain highly organized and visually logical so that human developers can easily navigate it without getting lost in a flat directory of 50+ files.
 
 Please follow these strict architectural rules:
 
@@ -2488,3 +2488,23 @@ const locale = useLocale();
 ``````
 
 > **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
+
+
+## Rule 21 — Tenant Data Export & Offboarding UX
+
+### The Rule
+Data exports take minutes to process and cannot be downloaded synchronously. The frontend MUST handle the export trigger as an asynchronous background request.
+
+### UI Placement
+The export functionality must live in a dedicated, clearly visible section: **Admin Settings -> Data Export & Offboarding**. 
+- **Role Constraint:** This UI MUST only be available in the **Superadmin** (or top-level Gym Admin) dashboard. Never add export buttons to manager, trainer, or member interfaces.
+
+### Interaction Flow
+1. **Button:** Display a clear `[ Request Full Data Export ]` button.
+2. **Action:** When clicked, call the backend `POST /export-data`.
+3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
+   *"Export started. You will receive an email with a secure download link within a few minutes."*
+4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
+5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+
+> **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
