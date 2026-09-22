@@ -1623,3 +1623,25 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 - The `@RequireIdempotencyKey()` decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
 - Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
+
+## Rule 113 — WebSockets & Real-Time Communication
+* **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
+* **Implementation:** Use a Redis Pub/Sub adapter (e.g., `@nestjs/platform-ws` or `socket.io` with `redis-adapter`) to ensure that WebSocket events scale across multiple backend instances.
+* **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
+
+## Rule 114 — Role-Based Data Serialization & Field Masking
+* **The Rule:** Data intended to be hidden from specific user roles (e.g., hiding internal revenue metrics from a basic Member, but showing it to a Superadmin) MUST be masked at the serialization layer.
+* **Implementation:** Use `class-transformer` decorators such as `@Exclude()` or `@Expose({ groups: ['admin'] })` on the DTO. The controller must pass the current user's role to the serialization interceptor so that the DTO automatically strips forbidden fields before sending the JSON response.
+* **Why:** This ensures data hiding is centralized and declarative, preventing developers from manually trying to `delete user.revenue` in various service methods, which is error-prone.
+
+## Rule 115 — Strict Cache Invalidation Strategy
+* **The Rule:** Caching data in Redis (Rule 20) is mandatory for high-traffic read operations, but stale data in an enterprise app is dangerous. Every cached query MUST have a strict, programmatic invalidation strategy.
+* **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
+
+## Rule 116 — Internationalization (i18n) & Localization
+* **The Rule:** The backend must be designed to support multiple languages from day one. Hardcoding English error strings inside `exceptions.ts` or controllers is forbidden.
+* **Implementation:** Rely on the framework's i18n module (e.g., `nestjs-i18n`). Throw exceptions with translation keys (e.g., `throw new BadRequestException('ERRORS.MEMBER_NOT_FOUND')`). The interceptor must resolve the string using the `Accept-Language` HTTP header from the request before constructing the final `ApiResponse<T>`.
+
+## Rule 117 — Centralized Feature Flags
+* **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
+* **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.

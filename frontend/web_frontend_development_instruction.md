@@ -2252,3 +2252,23 @@ export const updateProfile = async (id: string, body: any, idempotencyKey?: stri
   headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
 });
 ```
+
+## Rule 15 — WebSockets & Real-Time Communication
+* **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components. 
+* **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
+
+## Rule 16 — Role-Based Field Masking & Optional Types
+* **The Rule:** The backend strictly masks sensitive data fields (like revenue) based on the user's role before transmitting the response. 
+* **Implementation:** Frontend TypeScript interfaces and Zod schemas MUST mark these potentially masked fields as optional (`?`). UI components consuming this data must implement graceful fallback behavior (e.g., hiding a specific chart or displaying a generic placeholder) if a field is `undefined`. The frontend must never crash due to a missing role-restricted field.
+
+## Rule 17 — Strict Cache Invalidation Strategy
+* **The Rule:** TanStack Query (React Query) server state must always remain perfectly synchronized with the backend data. 
+* **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
+
+## Rule 18 — Internationalization (i18n) & Localization
+* **The Rule:** Hardcoding English text strings in JSX is strictly forbidden. 
+* **Implementation:** The frontend must use a robust i18n library (e.g., `react-i18next` or `next-intl`). Use translation keys for all UI text (e.g., `{t('DASHBOARD.WELCOME_MESSAGE')}`). Additionally, the API client must attach the `Accept-Language` header to every HTTP request so the backend can return localized error messages.
+
+## Rule 19 — Centralized Feature Flags
+* **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
+* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.

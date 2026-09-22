@@ -1,4 +1,4 @@
-# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+﻿# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
 
 > Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
 > Swift/Kotlin). This document defines architectural discipline, not a specific
@@ -2059,15 +2059,31 @@ Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
 
 ---
 
-## Rule 53 — Idempotency-Key for Irreversible Mutations
+## Rule 53 — Idempotency for ALL API Mutations
 
-Any financial or irreversible mutation (payment, renewal, payroll, purchase) MUST generate an `Idempotency-Key` exactly once per user intent.
+The backend strictly enforces idempotency on **all** state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) via `@RequireIdempotencyKey()`. Omitting the header causes an immediate **HTTP 400** rejection. Therefore, every mobile API client function that performs a mutation MUST attach an `Idempotency-Key` header.
 
-Rules:
-- Generate the UUID when the user confirms the action (e.g., in the confirmation bottom sheet).
-- Attach it to the HTTP request headers as `Idempotency-Key`.
-- If the network request times out or fails (5xx), and the client automatically or manually retries, it MUST send the exact same `Idempotency-Key`.
-- Never generate a new key for a retry of the same intent.
+### 53A — General Mutations
+Every mutating API client function MUST accept an optional `idempotencyKey?: string` parameter and inject it as a header:
+
+```typescript
+export const updateProfile = async (id: string, body: UpdateProfileDto, idempotencyKey?: string) =>
+  apiFetch('/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+  });
+```
+
+### 53B — Irreversible / Financial Mutations (Stricter Rules)
+For financial or irreversible actions (payment, renewal, payroll, purchase), the key policy is stricter:
+
+- Generate a `crypto.randomUUID()` **once**, at the moment the user confirms the action (e.g., in the confirmation bottom sheet).
+- Store the key in a `useRef` — do NOT regenerate it on re-renders.
+- On network timeout or 5xx failure, the app MUST retry with the **exact same key** — never a fresh one.
+- Only generate a new key if the user explicitly cancels and re-opens the confirmation dialog (new user intent = new key).
+
+> **AI NOTE:** Generating a fresh `randomUUID()` on every retry is a critical bug — the backend will process the request twice, creating duplicate payments or records. The key must survive retries.
 
 ---
 
@@ -2160,22 +2176,29 @@ The mobile architecture MUST enforce the following security and robustness const
 4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan, hard-write-boundary diff check.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
 
-57. **Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)**:
+## Rule 57 — Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., 	rainer_url_config) and file case (e.g., Trainer_url_config.ts) will cause the build to fail in CI/CD.
-- **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
-- ❌ **BAD:** File is UserComponent.tsx, imported as import UserComponent from './userComponent'.
-- ✅ **GOOD:** File is UserComponent.tsx, imported as import UserComponent from './UserComponent'.
+- **Rule:** A mismatch between import case (e.g., ` 	rainer_url_config `) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
+- **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
+- [?] **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
+- [?] **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from './UserComponent'`.
 
-## Rule 25 — Idempotency for API Mutations
+## Rule 58 — WebSockets & Real-Time Communication
+* **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components.
+* **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
 
-All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY mobile API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
+## Rule 59 — Role-Based Field Masking & Optional Types
+* **The Rule:** The backend strictly masks sensitive data fields (like revenue) based on the user's role before transmitting the response.
+* **Implementation:** Frontend TypeScript interfaces and Zod schemas MUST mark these potentially masked fields as optional (`?`). UI components consuming this data must implement graceful fallback behavior (e.g., hiding a specific chart or displaying a generic placeholder) if a field is `undefined`. The frontend must never crash due to a missing role-restricted field.
 
-Example:
-```typescript
-export const updateProfile = async (id: string, body: any, idempotencyKey?: string) => apiFetch('/profile', {
-  method: 'PATCH',
-  body: JSON.stringify(body),
-  headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
-});
-```
+## Rule 60 — Strict Cache Invalidation Strategy
+* **The Rule:** TanStack Query (React Query) server state must always remain perfectly synchronized with the backend data.
+* **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
+
+## Rule 61 — Internationalization (i18n) & Localization
+* **The Rule:** Hardcoding English text strings in JSX is strictly forbidden.
+* **Implementation:** The frontend must use a robust i18n library (e.g., `react-i18next` or `next-intl`). Use translation keys for all UI text (e.g., `{t('DASHBOARD.WELCOME_MESSAGE')}`). Additionally, the API client must attach the `Accept-Language` header to every HTTP request so the backend can return localized error messages.
+
+## Rule 62 — Centralized Feature Flags
+* **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements.
+* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
