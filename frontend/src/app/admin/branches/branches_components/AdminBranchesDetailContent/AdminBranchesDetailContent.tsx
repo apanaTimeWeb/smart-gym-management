@@ -1,5 +1,6 @@
 import { BRANCH_PAYMENT_METHOD_STYLES } from '@/app/admin/branches/branches_utils/AdminBranchesSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { DetailView } from '@/app/admin/branches/branches_types/AdminBranchesUiTypes';
 import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 import AdminBranchesDetailEmpty from '@/app/admin/branches/branches_components/AdminBranchesDetailEmpty/AdminBranchesDetailEmpty';

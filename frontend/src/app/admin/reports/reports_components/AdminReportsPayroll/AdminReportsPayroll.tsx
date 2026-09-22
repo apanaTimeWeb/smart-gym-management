@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders the Payroll summary report tab — staff count, total payroll, paid, pending, advances per gym.
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';

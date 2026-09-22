@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders the coupons data table with edit, delete, and toggle actions.
 
 import { Edit2, Trash2, ToggleLeft, ToggleRight, Copy } from 'lucide-react';

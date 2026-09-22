@@ -5,7 +5,8 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import AdminFinancePnlBreakdownBar from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlBreakdownBar';
 import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
-import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatPercent1dp } from '@/lib/formatters';
 
 import type { AdminFinancePnlRowBreakdownProps } from '@/app/admin/finance/finance_types/AdminFinancePnlRowBreakdownPropsTypes';
 

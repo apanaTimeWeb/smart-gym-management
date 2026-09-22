@@ -3,7 +3,8 @@
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import AdminStatCard from '@/app/admin/admin_layout/AdminShared/AdminStatCard';
-import { formatCurrency, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, Clock, UserCheck } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 

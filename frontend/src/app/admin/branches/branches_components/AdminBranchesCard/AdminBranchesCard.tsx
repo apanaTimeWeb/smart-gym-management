@@ -2,7 +2,8 @@
 // RESPONSIBILITY: Renders filtered branch records as KPI cards and opens the module-owned detail drawer for the selected view.
 import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight } from 'lucide-react';
 import { useAdminBranchesLogic } from '@/app/admin/branches/branches_context/useAdminBranchesLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import AdminBranchesCardSkeleton from '@/app/admin/branches/branches_components/AdminBranchesCard/AdminBranchesCardSkeleton';
 import AdminBranchesEmptyState from '@/app/admin/branches/branches_components/AdminBranchesEmptyState/AdminBranchesEmptyState';
 import { BRANCH_STATUS_STYLES } from '@/app/admin/branches/branches_utils/AdminBranchesSharedConstants';

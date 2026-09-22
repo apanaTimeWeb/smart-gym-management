@@ -2,7 +2,8 @@
 import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the Admin HR staff ledger using typed query state and accessible table sorting from the ledger hook.
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { useAdminHrLedgerLogic } from '@/app/admin/hr/hr_context/useAdminHrLedgerLogic';
 import { ChevronDown, ChevronUp, ChevronsUpDown, FileText } from 'lucide-react';
@@ -13,9 +14,9 @@ const LEDGER_COLUMNS: ReadonlyArray<{ key: AdminHrLedgerSortKey | null; label: s
   { key: 'date', label: 'Date' },
   { key: 'type', label: 'Transaction Type' },
   { key: null, label: 'Notes' },
-  { key: 'credit', label: 'Credit (₹)' },
-  { key: 'debit', label: 'Debit (₹)' },
-  { key: 'balance', label: 'Balance (₹)' },
+  { key: 'credit', label: 'Credit ' },
+  { key: 'debit', label: 'Debit ' },
+  { key: 'balance', label: 'Balance ' },
 ];
 
 export default function AdminHrLedgerTable() {

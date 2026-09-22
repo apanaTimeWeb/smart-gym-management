@@ -4,7 +4,8 @@
 
 import { ChevronRight } from 'lucide-react';
 import { PNL_TABLE_HEADERS, PNL_STATUS_CONFIG } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
-import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatPercent1dp } from '@/lib/formatters';
 import AdminFinancePnlRowBreakdown from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlRowBreakdown';
 import AdminFinancePnlTableSortIcon from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlTableSortIcon';
 import AdminFinancePnlEmptyState from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlEmptyState';

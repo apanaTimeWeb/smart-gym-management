@@ -1,7 +1,8 @@
 "use client";
 // RESPONSIBILITY: Renders Admin Sales revenue, member-trend, and referral-source charts using ApexCharts.
 import dynamic from 'next/dynamic';
-import { formatCurrency, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 
@@ -20,7 +21,7 @@ export default function AdminSalesOverview() {
 
   return <div className="space-y-6">
     <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">
-      <h3 className="font-bold text-primary mb-4">Monthly Revenue (₹)</h3>
+      <h3 className="font-bold text-primary mb-4">Monthly Revenue </h3>
       <ReactApexChart type="bar" height={288} options={{ chart: { toolbar: { show: false } }, xaxis: { categories: months, labels: { style: { colors: ADMIN_CHART_THEME.textSecondary } } }, yaxis: { labels: { formatter: (value: number) => `${formatKPI(value)}K` } }, dataLabels: { enabled: false }, grid: { borderColor: ADMIN_CHART_THEME.border }, tooltip: { y: { formatter: (value: number) => formatCurrency(value) } } }} series={[{ name: 'Revenue', data: revenue }]} />
     </div>
     <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">

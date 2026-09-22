@@ -3,7 +3,8 @@
 
 import { Users, UserCheck, Clock, IndianRupee } from 'lucide-react';
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
-import { formatCurrency, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminMembersKPIs() {

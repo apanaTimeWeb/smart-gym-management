@@ -3,7 +3,8 @@
 // RESPONSIBILITY: Displays read-only Finance KPIs and exposes only the meaningful Pending Amount status filter.
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { FileText, TrendingUp, IndianRupee, CreditCard } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 
 export default function AdminFinanceKPIs() {
   const { summary, statusFilter, setStatusFilter } = useAdminFinanceLogic();

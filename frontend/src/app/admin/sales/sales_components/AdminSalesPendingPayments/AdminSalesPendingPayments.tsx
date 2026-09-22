@@ -1,7 +1,8 @@
 "use client";
 import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
-import { formatCurrency, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { SalesUrlConfig } from '@/app/admin/sales/admin_sales_url_config';

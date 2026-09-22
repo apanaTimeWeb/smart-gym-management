@@ -3,7 +3,7 @@ import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormat
 
 describe('formatCurrency', () => {
   it('formats INR values consistently', () => {
-    expect(formatCurrency(1000)).toMatch(/₹/);
+    expect(formatCurrency(1000)).toMatch(//);
     expect(formatCurrency(1000)).toMatch(/1,000/);
   });
 });

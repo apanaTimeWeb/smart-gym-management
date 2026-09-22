@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders the revenue distribution donut chart for Plans.
 
 import dynamic from 'next/dynamic';

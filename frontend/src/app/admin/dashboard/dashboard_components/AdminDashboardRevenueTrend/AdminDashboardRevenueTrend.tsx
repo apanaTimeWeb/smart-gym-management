@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
 
 import dynamic from 'next/dynamic';

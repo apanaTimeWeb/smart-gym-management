@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the 4 KPI cards for the Coupons module — total, active, redeemed, revenue lost. Derived from live coupon data.
 
 import { Tag, CheckCircle, BarChart2, TrendingDown } from 'lucide-react';

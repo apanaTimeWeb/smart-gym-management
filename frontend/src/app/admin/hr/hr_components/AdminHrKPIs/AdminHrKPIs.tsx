@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';

@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { Building2, TrendingUp, TrendingDown, Users, Activity, X, RefreshCw } from 'lucide-react';
 import { useAdminBranchesLogic } from '@/app/admin/branches/branches_context/useAdminBranchesLogic';
 import { BRANCH_DETAIL_TITLES, BRANCH_PAYMENT_METHOD_STYLES, BRANCH_STATUS_STYLES } from '@/app/admin/branches/branches_utils/AdminBranchesSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { DetailView } from '@/app/admin/branches/branches_types/AdminBranchesUiTypes';
 import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 

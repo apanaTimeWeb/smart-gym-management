@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders/orchestrates AdminHrDueTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -72,7 +73,7 @@ export default function AdminHrDueTable() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1 text-primary">Amount to Pay (₹) *</label>
+              <label className="block text-sm font-medium mb-1 text-primary">Amount to Pay  *</label>
               <input 
                 type="number" required min="1" max={selectedStaff?.currentDue || undefined}
                 value={amount} onChange={(e) => setAmount(e.target.value)}

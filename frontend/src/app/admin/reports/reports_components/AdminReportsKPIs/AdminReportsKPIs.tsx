@@ -1,5 +1,6 @@
 "use client";
-import { formatPercent1dp, formatCurrency, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatPercent1dp, formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the KPI summary row for the Reports module — total revenue, expenses, profit, members, attendance rate.
 
 import { TrendingUp, TrendingDown, Users, IndianRupee, Activity, Wallet } from 'lucide-react';

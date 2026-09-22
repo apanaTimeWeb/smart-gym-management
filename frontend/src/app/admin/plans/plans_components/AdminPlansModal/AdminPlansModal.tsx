@@ -64,11 +64,11 @@ export default function AdminPlansModal() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { label: '1 Month Price (₹)',    key: 'price1Month'  },
-              { label: '3 Months Price (₹)',   key: 'price3Month'  },
-              { label: '6 Months Price (₹)',   key: 'price6Month'  },
-              { label: '12 Months Price (₹)',  key: 'price12Month' },
-              { label: 'Custom Price / Day (₹)', key: 'priceCustom' },
+              { label: '1 Month Price ',    key: 'price1Month'  },
+              { label: '3 Months Price ',   key: 'price3Month'  },
+              { label: '6 Months Price ',   key: 'price6Month'  },
+              { label: '12 Months Price ',  key: 'price12Month' },
+              { label: 'Custom Price / Day ', key: 'priceCustom' },
             ].map(f => (
               <div key={f.key}>
                 <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>

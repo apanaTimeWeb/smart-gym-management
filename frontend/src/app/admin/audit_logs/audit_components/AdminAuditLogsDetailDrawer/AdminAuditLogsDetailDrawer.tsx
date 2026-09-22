@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Detail drawer for a single audit log — full metadata, IP, user agent, affected record.
 
-import { X, Download, ShieldAlert, Clock, User, Building2, Monitor, Hash } from 'lucide-react';
+import { X, ShieldAlert, Clock, User, Building2, Monitor, Hash } from 'lucide-react';
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
@@ -18,7 +18,17 @@ import type { AdminAuditLogsDetailDrawerProps } from '@/app/admin/audit_logs/aud
 
 
 export default function AdminAuditLogsDetailDrawer({ log, isOpen, onClose }: { log: AuditLog | null; isOpen?: boolean; onClose: () => void }) {
-  const { exportCSV } = useAdminAuditLogsLogic();
+  const {
+    paginated,
+    filtered,
+    status,
+    kpis,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems,
+
+  } = useAdminAuditLogsLogic();
 
   const fields = [
     { icon: Clock,     label: 'Timestamp',       value: format(new Date(log?.timestamp ?? 0), 'dd MMM yyyy, hh:mm:ss a') },
@@ -87,12 +97,7 @@ export default function AdminAuditLogsDetailDrawer({ log, isOpen, onClose }: { l
           >
             Close
           </button>
-          <button
-            onClick={() => exportCSV(log ? [log] : [])}
-            className="flex-1 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
-          >
-            <Download size={14} /> Export This Log
-          </button>
+
         </div>
       </div>
     </>

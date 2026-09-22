@@ -2,7 +2,8 @@
 // RESPONSIBILITY: Renders plan tiers and owns only the view-level trigger for an upgrade request.
 
 import { Check, Loader2, Zap } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { AdminUsagePlanCardProps, AdminUsagePlanTier } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
 export default function AdminUsagePlanCard({ planTiers, onRequestUpgrade, pendingUpgradePlan }: AdminUsagePlanCardProps) {

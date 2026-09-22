@@ -1,7 +1,7 @@
 "use client";
 // RESPONSIBILITY: Toolbar with search, severity/module/branch/date filters, and CSV export for Audit Logs.
 
-import { Search, Download, RotateCcw } from 'lucide-react';
+import { Search, RotateCcw } from 'lucide-react';
 import { useAdminAuditLogsStore } from '@/app/admin/audit_logs/audit_store/useAdminAuditLogsStore';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
 import {
@@ -20,7 +20,7 @@ export default function AdminAuditLogsToolbar() {
     dateTo, setDateTo,
   } = useAdminAuditLogsStore();
 
-  const { filtered, exportCSV } = useAdminAuditLogsLogic();
+  const { filtered } = useAdminAuditLogsLogic();
 
   function resetFilters() {
     setSearch('');
@@ -60,13 +60,7 @@ export default function AdminAuditLogsToolbar() {
               <RotateCcw size={13} /> Reset
             </button>
           )}
-          <button
-            onClick={() => exportCSV(filtered)}
-            className="min-h-11 min-w-11 flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
-            aria-label="Export logs as CSV"
-          >
-            <Download size={14} /> Export CSV
-          </button>
+
         </div>
       </div>
 

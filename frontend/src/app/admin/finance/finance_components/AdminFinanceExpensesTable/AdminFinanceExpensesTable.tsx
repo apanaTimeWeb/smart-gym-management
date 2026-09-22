@@ -4,7 +4,8 @@ import { format } from 'date-fns';
 
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { EXPENSE_CATEGORIES } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import AdminFinanceEmptyState from '@/app/admin/finance/finance_components/AdminFinanceEmptyState/AdminFinanceEmptyState';

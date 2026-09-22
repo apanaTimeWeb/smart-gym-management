@@ -1,6 +1,7 @@
 "use client";
 import { format } from 'date-fns';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { MembershipFilter } from '@/app/admin/sales/sales_types/AdminSalesAllMembershipsTypes';
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
 

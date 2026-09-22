@@ -57,11 +57,11 @@ export default function AdminCouponsModal() {
           {/* Min Order + Max Discount */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Min Order (₹)</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Min Order </label>
               <input {...register('minOrderAmount')} type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }} placeholder="0" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Max Discount (₹)</label>
+              <label className="block text-sm font-medium text-secondary mb-1">Max Discount </label>
               <input {...register('maxDiscount')} type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }} placeholder="0 = unlimited" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             </div>
           </div>

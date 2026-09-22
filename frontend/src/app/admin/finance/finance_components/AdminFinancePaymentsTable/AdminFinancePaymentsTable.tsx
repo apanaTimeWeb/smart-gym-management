@@ -2,7 +2,8 @@
 import { format } from 'date-fns';
 
 // RESPONSIBILITY: Renders the read-only paginated Finance payment history returned by TanStack Query.
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { AdminFinancePaymentSortKey } from '@/app/admin/finance/finance_types/AdminFinanceUiTypes';
 import type { AdminFinanceSortDirection } from '@/app/admin/finance/finance_types/AdminFinanceSortTypes';
 import { useMemo, useState } from 'react';

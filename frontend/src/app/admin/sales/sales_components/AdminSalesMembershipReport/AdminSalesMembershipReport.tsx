@@ -1,6 +1,7 @@
 "use client";
 // RESPONSIBILITY: Renders the sortable membership receivable report and its server-backed empty/error states.
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
