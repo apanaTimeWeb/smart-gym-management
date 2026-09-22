@@ -25,6 +25,7 @@ export const trainerScheduleApi = {
       method: 'PUT',
       body: JSON.stringify(data),
       ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     });
     const response = createTrainerApiResponseSchema(z.array(WeeklyAvailabilitySchema)).parse(raw);
     if (!response.data) throw new Error(response.message);
@@ -36,6 +37,7 @@ export const trainerScheduleApi = {
       method: 'POST',
       body: JSON.stringify(data),
       ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     });
     const response = createTrainerApiResponseSchema(LeaveRequestSchema).parse(raw);
     if (!response.data) throw new Error(response.message);

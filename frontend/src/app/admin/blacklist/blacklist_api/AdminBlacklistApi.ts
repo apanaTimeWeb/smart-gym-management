@@ -14,7 +14,9 @@ function buildQuery(params?: AdminBlacklistQueryParams): string {
 export const blacklistApi = {
   fetchBlacklist: async (params?: AdminBlacklistQueryParams) => apiFetch<ApiResponse<BlacklistedMember[]>>(`${AdminBlacklistUrlConfig.api.base}/fetchBlacklist${buildQuery(params)}`, { method: 'GET', dataSchema: z.array(blacklistedMemberSchema) }),
   fetchKPIs: async () => apiFetch<ApiResponse<BlacklistKPIData>>(`${AdminBlacklistUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: blacklistKpiDataSchema }),
-  addToBlacklist: async (payload: BlacklistFormValues) => apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: blacklistedMemberSchema }),
+  addToBlacklist: async (payload: BlacklistFormValues, idempotencyKey?: string) => apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: blacklistedMemberSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   removeFromBlacklist: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${AdminBlacklistUrlConfig.api.base}/removeFromBlacklist`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
   toggleBlacklist: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/toggleBlacklist`, { method: 'POST', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: blacklistedMemberSchema }),
   propagateToAllBranches: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/propagateToAllBranches`, { method: 'POST', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: blacklistedMemberSchema }),

@@ -15,11 +15,15 @@ export const hrApi = {
   fetchStaffById: async (id: string): Promise<ApiResponse<Staff>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { dataSchema: staffSchema });
   },
-  createStaff: async (body: Partial<Staff>): Promise<ApiResponse<Staff>> => {
-    return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: staffSchema });
+  createStaff: async (body: Partial<Staff>, idempotencyKey?: string): Promise<ApiResponse<Staff>> => {
+    return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: staffSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
-  updateStaff: async (id: string, body: Partial<Staff>): Promise<ApiResponse<Staff>> => {
-    return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: staffSchema });
+  updateStaff: async (id: string, body: Partial<Staff>, idempotencyKey?: string): Promise<ApiResponse<Staff>> => {
+    return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: staffSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   deleteStaff: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.object({ id: z.string() }) });
@@ -37,8 +41,10 @@ export const hrApi = {
   updatePayroll: async (id: string, body: Partial<Payroll>, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: payrollSchema });
   },
-  updatePayrollStatus: async (id: string, status: string): Promise<ApiResponse<Payroll>> => {
-    return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }), dataSchema: payrollSchema });
+  updatePayrollStatus: async (id: string, status: string, idempotencyKey?: string): Promise<ApiResponse<Payroll>> => {
+    return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ status }), dataSchema: payrollSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   fetchHrSummary: async (): Promise<ApiResponse<HrSummary>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.SUMMARY, { dataSchema: hrSummarySchema });

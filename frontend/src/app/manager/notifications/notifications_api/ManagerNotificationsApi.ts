@@ -16,9 +16,13 @@ export const notificationsApi = {
   },
   fetchNotificationKPIs: async (): Promise<ApiResponse<NotificationKPIData>> =>
     apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.STATS, { dataSchema: notificationKpiSchema }),
-  markNotificationRead: async (id: string): Promise<ApiResponse<null>> =>
-    apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.MARK_READ(id), { method: 'PATCH', dataSchema: nullResponseSchema }),
-  markAllNotificationsRead: async (): Promise<ApiResponse<null>> =>
-    apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.MARK_ALL_READ, { method: 'PATCH', dataSchema: nullResponseSchema }),
+  markNotificationRead: async (id: string, idempotencyKey?: string): Promise<ApiResponse<null>> =>
+    apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.MARK_READ(id), { method: 'PATCH', dataSchema: nullResponseSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    }),
+  markAllNotificationsRead: async (idempotencyKey?: string): Promise<ApiResponse<null>> =>
+    apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.MARK_ALL_READ, { method: 'PATCH', dataSchema: nullResponseSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    }),
   deleteNotification: async (id: string, idempotencyKey: string): Promise<ApiResponse<null>> =>
     apiFetch(ManagerNotificationsUrlConfig.BACKEND_API.DELETE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: nullResponseSchema }) };

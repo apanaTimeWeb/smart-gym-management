@@ -42,7 +42,8 @@ export async function createProgressEntry(memberId: string, dto: CreateProgressE
     method: 'POST',
     body: JSON.stringify(dto),
     ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
-  });
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(ProgressEntrySchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
@@ -53,7 +54,8 @@ export async function updateProgressEntry(memberId: string, entryId: string, dto
     method: 'PATCH',
     body: JSON.stringify(dto),
     ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
-  });
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(ProgressEntrySchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
@@ -63,7 +65,8 @@ export async function deleteProgressEntry(memberId: string, entryId: string, ide
   const raw = await apiFetch<ApiResponse<unknown>>(ProgressUrlConfig.BACKEND_API.ENTRY_DETAIL(memberId, entryId), {
     method: 'DELETE',
     ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
-  });
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }

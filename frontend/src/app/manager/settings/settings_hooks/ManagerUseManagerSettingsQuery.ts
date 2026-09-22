@@ -12,7 +12,7 @@ export function useManagerSettingsQuery() {
   const queryClient = useQueryClient();
   const query = useQuery({ queryKey: MANAGER_SETTINGS_QUERY_KEY, queryFn: managerSettingsApi.fetchSettings });
   const updateMutation = useMutation({
-    mutationFn: managerSettingsApi.updateSettings,
+    mutationFn: (payload: Parameters<typeof managerSettingsApi.updateSettings>[0]) => managerSettingsApi.updateSettings(payload),
     onSuccess: (response) => {
       queryClient.setQueryData(MANAGER_SETTINGS_QUERY_KEY, response);
     },

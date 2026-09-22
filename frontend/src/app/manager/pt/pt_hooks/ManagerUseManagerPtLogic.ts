@@ -43,7 +43,7 @@ export function useManagerPtLogic() {
   const assignmentsQuery = useQuery({ queryKey: ['manager', 'pt', 'assignments', assignmentParams], queryFn: async () => (await managerPtApi.fetchAssignments(assignmentParams)).data ?? { assignments: [], total: 0, page: currentPage, limit } });
 
   const createAssignmentMutation = useMutation({
-    mutationFn: managerPtApi.createAssignment,
+    mutationFn: (payload: Parameters<typeof managerPtApi.createAssignment>[0]) => managerPtApi.createAssignment(payload),
     onSuccess: (response) => {
       showManagerSuccessToast(response.message, 'manager-pt-success');
       queryClient.invalidateQueries({ queryKey: ['manager', 'pt', 'assignments'] });

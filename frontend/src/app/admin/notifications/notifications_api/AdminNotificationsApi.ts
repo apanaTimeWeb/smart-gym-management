@@ -20,14 +20,16 @@ export const AdminNotificationsApi = {
       dataSchema: z.array(adminNotificationSchema),
     });
   },
-  markNotificationAsRead: async (id: string) =>
+  markNotificationAsRead: async (id: string, idempotencyKey?: string) =>
     apiFetch<ApiResponse<AdminNotification | null>>(`${AdminNotificationsUrlConfig.api.base}/${id}/read`, {
       method: 'PATCH',
       dataSchema: adminNotificationSchema.nullable(),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
-  markAllNotificationsAsRead: async () =>
+  markAllNotificationsAsRead: async (idempotencyKey?: string) =>
     apiFetch<ApiResponse<null>>(`${AdminNotificationsUrlConfig.api.base}/read-all`, {
       method: 'PATCH',
       dataSchema: z.null(),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
 };

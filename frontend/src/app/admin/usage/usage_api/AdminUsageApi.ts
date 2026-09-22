@@ -12,10 +12,11 @@ export const adminUsageApi = {
       dataSchema: adminUsageDataSchema,
     }),
 
-  requestUpgrade: async (planName: string) =>
+  requestUpgrade: async (planName: string, idempotencyKey?: string) =>
     apiFetch<ApiResponse<AdminUsageUpgradeRequest>>(AdminUsageUrlConfig.BACKEND_API.UPGRADE_REQUEST, {
       method: 'POST',
       body: JSON.stringify({ planName }),
       dataSchema: adminUsageUpgradeRequestSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
 };

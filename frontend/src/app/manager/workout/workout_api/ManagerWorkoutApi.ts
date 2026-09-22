@@ -14,12 +14,16 @@ export const workoutApi = {
     return apiFetch(`${ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ workouts: z.array(workoutSchema), total: z.number() }) });
   },
   
-  createWorkout: async (body: Partial<Workout>): Promise<ApiResponse<Workout>> => {
-    return apiFetch(`${ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}`, { method: 'POST', body: JSON.stringify(body), dataSchema: workoutSchema });
+  createWorkout: async (body: Partial<Workout>, idempotencyKey?: string): Promise<ApiResponse<Workout>> => {
+    return apiFetch(`${ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE}`, { method: 'POST', body: JSON.stringify(body), dataSchema: workoutSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
-  updateWorkout: async (id: string, body: Partial<Workout>): Promise<ApiResponse<Workout>> => {
-    return apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUT(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: workoutSchema });
+  updateWorkout: async (id: string, body: Partial<Workout>, idempotencyKey?: string): Promise<ApiResponse<Workout>> => {
+    return apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUT(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: workoutSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
   deleteWorkout: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {
@@ -35,12 +39,16 @@ export const workoutApi = {
     return apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUT_EXERCISES(query), { dataSchema: z.object({ exercises: z.array(exerciseSnapshotSchema), total: z.number().default(0) }) });
   },
   
-  createExercise: async (body: Partial<ExerciseSnapshot>): Promise<ApiResponse<ExerciseSnapshot>> => {
-    return apiFetch(`${ManagerWorkoutUrlConfig.BACKEND_API.EXERCISES_BASE}`, { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSnapshotSchema });
+  createExercise: async (body: Partial<ExerciseSnapshot>, idempotencyKey?: string): Promise<ApiResponse<ExerciseSnapshot>> => {
+    return apiFetch(`${ManagerWorkoutUrlConfig.BACKEND_API.EXERCISES_BASE}`, { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSnapshotSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
-  updateExercise: async (id: string, body: Partial<ExerciseSnapshot>): Promise<ApiResponse<ExerciseSnapshot>> => {
-    return apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.EXERCISE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSnapshotSchema });
+  updateExercise: async (id: string, body: Partial<ExerciseSnapshot>, idempotencyKey?: string): Promise<ApiResponse<ExerciseSnapshot>> => {
+    return apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.EXERCISE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSnapshotSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
   fetchAssignments: async (): Promise<ApiResponse<ManagerWorkoutAssignment[]>> => apiFetch(ManagerWorkoutUrlConfig.BACKEND_API.ASSIGNMENTS, { dataSchema: z.array(z.object({ id: z.string(), memberName: z.string(), planName: z.string(), assignedBy: z.string(), startDate: z.string() })) }),

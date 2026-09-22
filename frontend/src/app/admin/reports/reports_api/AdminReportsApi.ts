@@ -13,5 +13,7 @@ function buildQuery(params?: AdminReportsQueryParams): string {
 
 export const reportsApi = {
   fetchReportData: async (params?: AdminReportsQueryParams) => apiFetch<ApiResponse<ReportData>>(`${AdminReportsUrlConfig.api.base}/fetchReportData${buildQuery(params)}`, { method: 'GET', dataSchema: reportDataSchema }),
-  exportReport: async (params?: { tab?: string; format?: AdminReportsExportFormat }) => apiFetch<ApiResponse<AdminReportsExportResponse>>(`${AdminReportsUrlConfig.api.base}/exportReport`, { method: 'POST', body: JSON.stringify(params ?? {}), dataSchema: z.object({ url: z.string(), fileName: z.string().optional() }) }),
+  exportReport: async (params?: { tab?: string; format?: AdminReportsExportFormat }, idempotencyKey?: string) => apiFetch<ApiResponse<AdminReportsExportResponse>>(`${AdminReportsUrlConfig.api.base}/exportReport`, { method: 'POST', body: JSON.stringify(params ?? {}), dataSchema: z.object({ url: z.string(), fileName: z.string().optional() }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
 };

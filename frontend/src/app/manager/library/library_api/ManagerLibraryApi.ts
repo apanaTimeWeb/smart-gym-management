@@ -19,13 +19,17 @@ export const libraryApi = {
       dataSchema: z.object({ exercises: z.array(exerciseSchema), total: z.number() }),
     });
   },
-  createExercise: async (body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => apiFetch(
+  createExercise: async (body: Partial<Exercise>, idempotencyKey?: string): Promise<ApiResponse<Exercise>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE,
-    { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema },
+    { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    },
   ),
-  updateExercise: async (id: string, body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => apiFetch(
+  updateExercise: async (id: string, body: Partial<Exercise>, idempotencyKey?: string): Promise<ApiResponse<Exercise>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_UPDATE(id),
-    { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema },
+    { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    },
   ),
   deleteExercise: async (id: string, idempotencyKey?: string): Promise<ApiResponse<{ id: string }>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id),
@@ -37,13 +41,17 @@ export const libraryApi = {
       dataSchema: z.object({ dietPlans: z.array(dietPlanSchema), total: z.number() }),
     });
   },
-  createDietPlan: async (body: Partial<DietPlan>): Promise<ApiResponse<DietPlan>> => apiFetch(
+  createDietPlan: async (body: Partial<DietPlan>, idempotencyKey?: string): Promise<ApiResponse<DietPlan>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE,
-    { method: 'POST', body: JSON.stringify(body), dataSchema: dietPlanSchema },
+    { method: 'POST', body: JSON.stringify(body), dataSchema: dietPlanSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    },
   ),
-  updateDietPlan: async (id: string, body: Partial<DietPlan>): Promise<ApiResponse<DietPlan>> => apiFetch(
+  updateDietPlan: async (id: string, body: Partial<DietPlan>, idempotencyKey?: string): Promise<ApiResponse<DietPlan>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id),
-    { method: 'PATCH', body: JSON.stringify(body), dataSchema: dietPlanSchema },
+    { method: 'PATCH', body: JSON.stringify(body), dataSchema: dietPlanSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    },
   ),
   deleteDietPlan: async (id: string, idempotencyKey?: string): Promise<ApiResponse<{ id: string }>> => apiFetch(
     ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id),

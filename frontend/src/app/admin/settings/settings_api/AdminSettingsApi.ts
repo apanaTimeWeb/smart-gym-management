@@ -10,7 +10,9 @@ export const settingsApi = {
   fetchSettings: async () => {
             return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/fetchSettings`, { method: 'GET', responseSchema: AdminSettingsResponseSchema });
         },
-  updateSettings: async (body: Record<string, unknown>) => {
-            return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/updateSettings`, { method: 'POST', body: JSON.stringify(body), responseSchema: AdminSettingsResponseSchema });
+  updateSettings: async (body: Record<string, unknown>, idempotencyKey?: string) => {
+            return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/updateSettings`, { method: 'POST', body: JSON.stringify(body), responseSchema: AdminSettingsResponseSchema,
+                headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+            });
         }
 };
