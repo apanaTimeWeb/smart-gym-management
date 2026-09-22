@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getLocale } from 'next-intl/server';
 
 export default async function RootLayout({
   children,
@@ -28,6 +28,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const messages = await getMessages();
+  const locale = await getLocale();
 
   return (
     <html lang="en" data-scroll-behavior="smooth" className="font-sans" suppressHydrationWarning>
@@ -35,7 +36,7 @@ export default async function RootLayout({
         <link rel="icon" href="/icon.png" type="image/png" />
       </head>
       <body suppressHydrationWarning>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
