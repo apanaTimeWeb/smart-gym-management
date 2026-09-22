@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { ScheduleEntity } from '@/backend_manager/modules/manager/schedule/schedule.entity';
 import { ScheduleMapper } from '@/backend_manager/modules/manager/schedule/mappers/schedule-mapper';
 import type { ScheduleDomainData } from '@/backend_manager/modules/manager/schedule/schedule.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface ScheduleListResult { data: ScheduleDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ScheduleRepository extends CoreBaseRepository<ScheduleEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ScheduleEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, ScheduleEntity); }
 
   /** @description Finds a non-deleted schedule record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findScheduleById(id: string): Promise<ScheduleDomainData | null> {

@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { StoreEntity } from '@/backend_manager/modules/manager/store/store.entity';
 import { StoreMapper } from '@/backend_manager/modules/manager/store/mappers/store-mapper';
 import type { StoreDomainData } from '@/backend_manager/modules/manager/store/store.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface StoreListResult { data: StoreDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class StoreRepository extends CoreBaseRepository<StoreEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, StoreEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, StoreEntity); }
 
   /** @description Finds a non-deleted store record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findStoreById(id: string): Promise<StoreDomainData | null> {

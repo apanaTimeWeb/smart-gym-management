@@ -4,7 +4,7 @@ import { AttendancePersonType } from '@/backend_manager/modules/manager/attendan
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/attendance.
 // FLOW: HTTP payload -> AttendanceMarkAttendanceRequestDto validation -> write use case -> orchestrator.
 
-import { IsISO8601, IsOptional, IsString } from 'class-validator';
+import { IsISO8601, IsOptional, IsString, IsEnum } from 'class-validator';
 
 export class AttendanceMarkAttendanceRequestDto extends CoreRequestDto {
   @IsOptional()

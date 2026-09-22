@@ -13,12 +13,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { MembersEntity } from '@/backend_manager/modules/manager/members/members.entity';
 import { MembersMapper } from '@/backend_manager/modules/manager/members/mappers/members-mapper';
 import type { MembersDomainData } from '@/backend_manager/modules/manager/members/members.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface MembersListResult { data: MembersDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class MembersRepository extends CoreBaseRepository<MembersEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, MembersEntity); }
+  constructor(tenants: CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, MembersEntity); }
 
   /** @description Finds a non-deleted members record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findMembersById(id: string): Promise<MembersDomainData | null> {

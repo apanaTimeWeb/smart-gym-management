@@ -4,7 +4,7 @@ import { InquiryStatus } from '@/backend_manager/modules/manager/inquiries/inqui
 // RESPONSIBILITY: Strict feature-local request DTO for POST /api/v1/manager/inquiries.
 // FLOW: HTTP payload -> InquiriesCreateInquiryRequestDto validation -> write use case -> orchestrator.
 
-import { IsArray, IsEmail, IsISO8601, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsISO8601, IsOptional, IsString, IsEnum } from 'class-validator';
 
 export class InquiriesCreateInquiryRequestDto extends CoreRequestDto {
   @IsString()

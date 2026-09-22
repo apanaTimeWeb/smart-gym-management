@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { AttendanceEntity } from '@/backend_manager/modules/manager/attendance/attendance.entity';
 import { AttendanceMapper } from '@/backend_manager/modules/manager/attendance/mappers/attendance-mapper';
 import type { AttendanceDomainData } from '@/backend_manager/modules/manager/attendance/attendance.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface AttendanceListResult { data: AttendanceDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class AttendanceRepository extends CoreBaseRepository<AttendanceEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, AttendanceEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, AttendanceEntity); }
 
   /** @description Finds a non-deleted attendance record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findAttendanceById(id: string): Promise<AttendanceDomainData | null> {

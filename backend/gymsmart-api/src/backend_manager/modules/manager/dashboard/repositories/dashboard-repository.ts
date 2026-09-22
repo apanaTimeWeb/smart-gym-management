@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { DashboardEntity } from '@/backend_manager/modules/manager/dashboard/dashboard.entity';
 import { DashboardMapper } from '@/backend_manager/modules/manager/dashboard/mappers/dashboard-mapper';
 import type { DashboardDomainData } from '@/backend_manager/modules/manager/dashboard/dashboard.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface DashboardListResult { data: DashboardDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class DashboardRepository extends CoreBaseRepository<DashboardEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, DashboardEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, DashboardEntity); }
 
   /** @description Finds a non-deleted dashboard record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findDashboardById(id: string): Promise<DashboardDomainData | null> {

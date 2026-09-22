@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { PlansEntity } from '@/backend_manager/modules/manager/plans/plans.entity';
 import { PlansMapper } from '@/backend_manager/modules/manager/plans/mappers/plans-mapper';
 import type { PlansDomainData } from '@/backend_manager/modules/manager/plans/plans.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface PlansListResult { data: PlansDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class PlansRepository extends CoreBaseRepository<PlansEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PlansEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, PlansEntity); }
 
   /** @description Finds a non-deleted plans record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findPlansById(id: string): Promise<PlansDomainData | null> {

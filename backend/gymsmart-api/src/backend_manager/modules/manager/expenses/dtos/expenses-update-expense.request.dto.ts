@@ -5,7 +5,7 @@ import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
 
 import { IsBoolean, IsEnum, IsISO8601, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ExpenseStatus } from '@/backend_manager/modules/manager/expenses/expenses.constants';
+import { ExpenseStatus, RecurringFrequency } from '@/backend_manager/modules/manager/expenses/expenses.constants';
 import { ExpensePaymentMode } from '@/backend_manager/modules/manager/expenses/expenses.constants';
 
 export class ExpensesUpdateExpenseRequestDto extends CoreRequestDto {

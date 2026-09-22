@@ -1,7 +1,8 @@
+import { Reflector } from '@nestjs/core';
 // @ts-nocheck
 // RESPONSIBILITY: Canonical success response envelope for JSON endpoints, with explicit binary-response escape hatch.
 // FLOW: Controller result -> raw-response metadata check -> canonical ApiResponse<T>.
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor, Reflector } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { map, type Observable } from 'rxjs';
 
 import type { ApiResponse } from '@/backend_manager/core/types/api-response.types';

@@ -13,12 +13,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { HrEntity } from '@/backend_manager/modules/manager/hr/hr.entity';
 import { HrMapper } from '@/backend_manager/modules/manager/hr/mappers/hr-mapper';
 import type { HrDomainData } from '@/backend_manager/modules/manager/hr/hr.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface HrListResult { data: HrDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class HrRepository extends CoreBaseRepository<HrEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, HrEntity); }
+  constructor(tenants: CoreTenantDatasourceService, private readonly encryption: CoreEncryptionService) { super(tenants, HrEntity); }
 
   /** @description Finds a non-deleted hr record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findHrById(id: string): Promise<HrDomainData | null> {

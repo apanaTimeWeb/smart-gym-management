@@ -7,8 +7,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
 
-import { GrievanceManagerGrievanceApiFetchGrievanceTicketsResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-fetch-grievance-tickets.response.dto.ts';
-import { GrievanceManagerGrievanceApiFetchGrievanceTicketsService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-fetch-grievance-tickets.service.ts';
+import { GrievanceManagerGrievanceApiFetchGrievanceTicketsResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-fetch-grievance-tickets.response.dto';
+import { GrievanceManagerGrievanceApiFetchGrievanceTicketsService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-fetch-grievance-tickets.service';
 import { GrievanceQueryDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-query.dto';
 
 @Controller('manager')

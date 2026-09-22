@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { SalesEntity } from '@/backend_manager/modules/manager/sales/sales.entity';
 import { SalesMapper } from '@/backend_manager/modules/manager/sales/mappers/sales-mapper';
 import type { SalesDomainData } from '@/backend_manager/modules/manager/sales/sales.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface SalesListResult { data: SalesDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class SalesRepository extends CoreBaseRepository<SalesEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, SalesEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, SalesEntity); }
 
   /** @description Finds a non-deleted sales record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findSalesById(id: string): Promise<SalesDomainData | null> {

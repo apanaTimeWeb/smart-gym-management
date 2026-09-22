@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { InquiriesEntity } from '@/backend_manager/modules/manager/inquiries/inquiries.entity';
 import { InquiriesMapper } from '@/backend_manager/modules/manager/inquiries/mappers/inquiries-mapper';
 import type { InquiriesDomainData } from '@/backend_manager/modules/manager/inquiries/inquiries.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface InquiriesListResult { data: InquiriesDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class InquiriesRepository extends CoreBaseRepository<InquiriesEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, InquiriesEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, InquiriesEntity); }
 
   /** @description Finds a non-deleted inquiries record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findInquiriesById(id: string): Promise<InquiriesDomainData | null> {

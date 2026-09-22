@@ -7,12 +7,12 @@ import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
 
-import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketRequestDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-create-maintenance-ticket.request.dto.ts';
-import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-create-maintenance-ticket.response.dto.ts';
-import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-create-maintenance-ticket.service.ts';
-import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketRequestDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-resolve-maintenance-ticket.request.dto.ts';
-import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-resolve-maintenance-ticket.response.dto.ts';
-import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-resolve-maintenance-ticket.service.ts';
+import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketRequestDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-create-maintenance-ticket.request.dto';
+import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-create-maintenance-ticket.response.dto';
+import { MaintenanceManagerMaintenanceApiCreateMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-create-maintenance-ticket.service';
+import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketRequestDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-resolve-maintenance-ticket.request.dto';
+import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-resolve-maintenance-ticket.response.dto';
+import { MaintenanceManagerMaintenanceApiResolveMaintenanceTicketService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-resolve-maintenance-ticket.service';
 
 @Controller('manager')
 @ApiTags('Manager maintenance')

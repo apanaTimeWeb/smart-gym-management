@@ -8,3 +8,5 @@ export enum MaintenanceRecordStatus {
 }
 
 export const MaintenanceAllowedSortFields = ['createdAt', 'updatedAt', 'id'] as const;
+
+export enum MaintenancePriority { DEFAULT = 'DEFAULT' }

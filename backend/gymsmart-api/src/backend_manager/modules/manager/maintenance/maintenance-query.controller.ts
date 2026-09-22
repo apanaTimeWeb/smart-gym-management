@@ -7,8 +7,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
 
-import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-fetch-maintenance-issues.response.dto.ts';
-import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-fetch-maintenance-issues.service.ts';
+import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesResponseDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-manager-maintenance-api-fetch-maintenance-issues.response.dto';
+import { MaintenanceManagerMaintenanceApiFetchMaintenanceIssuesService } from '@/backend_manager/modules/manager/maintenance/services/maintenance-manager-maintenance-api-fetch-maintenance-issues.service';
 import { MaintenanceQueryDto } from '@/backend_manager/modules/manager/maintenance/dtos/maintenance-query.dto';
 
 @Controller('manager')

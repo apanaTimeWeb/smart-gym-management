@@ -8,3 +8,5 @@ export enum GrievanceRecordStatus {
 }
 
 export const GrievanceAllowedSortFields = ['createdAt', 'updatedAt', 'id'] as const;
+
+export enum GrievanceCategory { DEFAULT = 'DEFAULT' }

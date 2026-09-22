@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { ProfileEntity } from '@/backend_manager/modules/manager/profile/profile.entity';
 import { ProfileMapper } from '@/backend_manager/modules/manager/profile/mappers/profile-mapper';
 import type { ProfileDomainData } from '@/backend_manager/modules/manager/profile/profile.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface ProfileListResult { data: ProfileDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ProfileRepository extends CoreBaseRepository<ProfileEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ProfileEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, ProfileEntity); }
 
   /** @description Finds a non-deleted profile record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findProfileById(id: string): Promise<ProfileDomainData | null> {

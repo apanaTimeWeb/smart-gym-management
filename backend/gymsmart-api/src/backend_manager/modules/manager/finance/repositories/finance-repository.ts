@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { FinanceEntity } from '@/backend_manager/modules/manager/finance/finance.entity';
 import { FinanceMapper } from '@/backend_manager/modules/manager/finance/mappers/finance-mapper';
 import type { FinanceDomainData } from '@/backend_manager/modules/manager/finance/finance.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface FinanceListResult { data: FinanceDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class FinanceRepository extends CoreBaseRepository<FinanceEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, FinanceEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, FinanceEntity); }
 
   /** @description Finds a non-deleted finance record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findFinanceById(id: string): Promise<FinanceDomainData | null> {

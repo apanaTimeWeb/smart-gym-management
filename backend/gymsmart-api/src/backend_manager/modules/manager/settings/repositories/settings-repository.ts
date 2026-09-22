@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { SettingsEntity } from '@/backend_manager/modules/manager/settings/settings.entity';
 import { SettingsMapper } from '@/backend_manager/modules/manager/settings/mappers/settings-mapper';
 import type { SettingsDomainData } from '@/backend_manager/modules/manager/settings/settings.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface SettingsListResult { data: SettingsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class SettingsRepository extends CoreBaseRepository<SettingsEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, SettingsEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, SettingsEntity); }
 
   /** @description Finds a non-deleted settings record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findSettingsById(id: string): Promise<SettingsDomainData | null> {

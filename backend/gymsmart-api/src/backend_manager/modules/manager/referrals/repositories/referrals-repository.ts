@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { ReferralsEntity } from '@/backend_manager/modules/manager/referrals/referrals.entity';
 import { ReferralsMapper } from '@/backend_manager/modules/manager/referrals/mappers/referrals-mapper';
 import type { ReferralsDomainData } from '@/backend_manager/modules/manager/referrals/referrals.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface ReferralsListResult { data: ReferralsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ReferralsRepository extends CoreBaseRepository<ReferralsEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ReferralsEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, ReferralsEntity); }
 
   /** @description Finds a non-deleted referrals record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findReferralsById(id: string): Promise<ReferralsDomainData | null> {

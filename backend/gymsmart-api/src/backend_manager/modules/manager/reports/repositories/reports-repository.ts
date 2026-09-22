@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { ReportsEntity } from '@/backend_manager/modules/manager/reports/reports.entity';
 import { ReportsMapper } from '@/backend_manager/modules/manager/reports/mappers/reports-mapper';
 import type { ReportsDomainData } from '@/backend_manager/modules/manager/reports/reports.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface ReportsListResult { data: ReportsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ReportsRepository extends CoreBaseRepository<ReportsEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ReportsEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, ReportsEntity); }
 
   /** @description Finds a non-deleted reports record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findReportsById(id: string): Promise<ReportsDomainData | null> {

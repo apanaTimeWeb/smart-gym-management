@@ -1,7 +1,7 @@
 // @ts-nocheck
 // RESPONSIBILITY: Owns the Manager reports query/read HTTP boundary; contains no business logic or direct ORM access.
 // FLOW: HTTP request -> DTO/query validation -> feature use-case service -> repository/domain -> canonical response.
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Header } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CoreRawResponse } from '@/backend_manager/core/http/core-raw-response.decorator';

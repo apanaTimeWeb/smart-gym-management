@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { PtEntity } from '@/backend_manager/modules/manager/pt/pt.entity';
 import { PtMapper } from '@/backend_manager/modules/manager/pt/mappers/pt-mapper';
 import type { PtDomainData } from '@/backend_manager/modules/manager/pt/pt.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface PtListResult { data: PtDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class PtRepository extends CoreBaseRepository<PtEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, PtEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, PtEntity); }
 
   /** @description Finds a non-deleted pt record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findPtById(id: string): Promise<PtDomainData | null> {

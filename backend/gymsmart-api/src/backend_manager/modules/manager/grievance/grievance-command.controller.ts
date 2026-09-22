@@ -7,12 +7,12 @@ import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 import { Roles } from '@/backend_manager/core/auth/core-roles.decorator';
 
-import { GrievanceManagerGrievanceApiCreateGrievanceTicketRequestDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-create-grievance-ticket.request.dto.ts';
-import { GrievanceManagerGrievanceApiCreateGrievanceTicketResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-create-grievance-ticket.response.dto.ts';
-import { GrievanceManagerGrievanceApiCreateGrievanceTicketService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-create-grievance-ticket.service.ts';
-import { GrievanceManagerGrievanceApiResolveGrievanceTicketRequestDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-resolve-grievance-ticket.request.dto.ts';
-import { GrievanceManagerGrievanceApiResolveGrievanceTicketResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-resolve-grievance-ticket.response.dto.ts';
-import { GrievanceManagerGrievanceApiResolveGrievanceTicketService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-resolve-grievance-ticket.service.ts';
+import { GrievanceManagerGrievanceApiCreateGrievanceTicketRequestDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-create-grievance-ticket.request.dto';
+import { GrievanceManagerGrievanceApiCreateGrievanceTicketResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-create-grievance-ticket.response.dto';
+import { GrievanceManagerGrievanceApiCreateGrievanceTicketService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-create-grievance-ticket.service';
+import { GrievanceManagerGrievanceApiResolveGrievanceTicketRequestDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-resolve-grievance-ticket.request.dto';
+import { GrievanceManagerGrievanceApiResolveGrievanceTicketResponseDto } from '@/backend_manager/modules/manager/grievance/dtos/grievance-manager-grievance-api-resolve-grievance-ticket.response.dto';
+import { GrievanceManagerGrievanceApiResolveGrievanceTicketService } from '@/backend_manager/modules/manager/grievance/services/grievance-manager-grievance-api-resolve-grievance-ticket.service';
 
 @Controller('manager')
 @ApiTags('Manager grievance')

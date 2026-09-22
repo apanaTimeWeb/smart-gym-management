@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { GrievanceEntity } from '@/backend_manager/modules/manager/grievance/grievance.entity';
 import { GrievanceMapper } from '@/backend_manager/modules/manager/grievance/mappers/grievance-mapper';
 import type { GrievanceDomainData } from '@/backend_manager/modules/manager/grievance/grievance.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface GrievanceListResult { data: GrievanceDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class GrievanceRepository extends CoreBaseRepository<GrievanceEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, GrievanceEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, GrievanceEntity); }
 
   /** @description Finds a non-deleted grievance record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findGrievanceById(id: string): Promise<GrievanceDomainData | null> {

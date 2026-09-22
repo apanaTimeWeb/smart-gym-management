@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { CommunicationsEntity } from '@/backend_manager/modules/manager/communications/communications.entity';
 import { CommunicationsMapper } from '@/backend_manager/modules/manager/communications/mappers/communications-mapper';
 import type { CommunicationsDomainData } from '@/backend_manager/modules/manager/communications/communications.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface CommunicationsListResult { data: CommunicationsDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class CommunicationsRepository extends CoreBaseRepository<CommunicationsEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, CommunicationsEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, CommunicationsEntity); }
 
   /** @description Finds a non-deleted communications record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findCommunicationsById(id: string): Promise<CommunicationsDomainData | null> {

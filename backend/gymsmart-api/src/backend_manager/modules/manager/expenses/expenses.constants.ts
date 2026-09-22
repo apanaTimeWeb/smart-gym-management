@@ -6,6 +6,13 @@ export enum ExpenseStatus {
   PENDING = 'PENDING',
 }
 
+export enum ExpensePaymentMode {
+  CASH = 'CASH',
+  CARD = 'CARD',
+  UPI = 'UPI',
+  BANK_TRANSFER = 'BANK_TRANSFER'
+}
+
 export enum RecurringFrequency {
   DAILY = 'Daily',
   WEEKLY = 'Weekly',

@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { MaintenanceEntity } from '@/backend_manager/modules/manager/maintenance/maintenance.entity';
 import { MaintenanceMapper } from '@/backend_manager/modules/manager/maintenance/mappers/maintenance-mapper';
 import type { MaintenanceDomainData } from '@/backend_manager/modules/manager/maintenance/maintenance.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface MaintenanceListResult { data: MaintenanceDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class MaintenanceRepository extends CoreBaseRepository<MaintenanceEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, MaintenanceEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, MaintenanceEntity); }
 
   /** @description Finds a non-deleted maintenance record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findMaintenanceById(id: string): Promise<MaintenanceDomainData | null> {

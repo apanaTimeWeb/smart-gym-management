@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { LibraryEntity } from '@/backend_manager/modules/manager/library/library.entity';
 import { LibraryMapper } from '@/backend_manager/modules/manager/library/mappers/library-mapper';
 import type { LibraryDomainData } from '@/backend_manager/modules/manager/library/library.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface LibraryListResult { data: LibraryDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class LibraryRepository extends CoreBaseRepository<LibraryEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, LibraryEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, LibraryEntity); }
 
   /** @description Finds a non-deleted library record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findLibraryById(id: string): Promise<LibraryDomainData | null> {

@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { ExpensesEntity } from '@/backend_manager/modules/manager/expenses/expenses.entity';
 import { ExpensesMapper } from '@/backend_manager/modules/manager/expenses/mappers/expenses-mapper';
 import type { ExpensesDomainData } from '@/backend_manager/modules/manager/expenses/expenses.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface ExpensesListResult { data: ExpensesDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class ExpensesRepository extends CoreBaseRepository<ExpensesEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, ExpensesEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, ExpensesEntity); }
 
   /** @description Finds a non-deleted expenses record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findExpensesById(id: string): Promise<ExpensesDomainData | null> {

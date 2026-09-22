@@ -11,12 +11,13 @@ import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.typ
 import { WorkoutEntity } from '@/backend_manager/modules/manager/workout/workout.entity';
 import { WorkoutMapper } from '@/backend_manager/modules/manager/workout/mappers/workout-mapper';
 import type { WorkoutDomainData } from '@/backend_manager/modules/manager/workout/workout.interfaces';
+import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
 export interface WorkoutListResult { data: WorkoutDomainData[]; meta: PaginationMeta; }
 
 @Injectable()
 export class WorkoutRepository extends CoreBaseRepository<WorkoutEntity> {
-  constructor(tenants: import('@/backend_manager/core/database/core-tenant-datasource.service').CoreTenantDatasourceService) { super(tenants, WorkoutEntity); }
+  constructor(tenants: CoreTenantDatasourceService) { super(tenants, WorkoutEntity); }
 
   /** @description Finds a non-deleted workout record by identifier. @param id - Record UUID. @returns Domain record or null. */
   async findWorkoutById(id: string): Promise<WorkoutDomainData | null> {
