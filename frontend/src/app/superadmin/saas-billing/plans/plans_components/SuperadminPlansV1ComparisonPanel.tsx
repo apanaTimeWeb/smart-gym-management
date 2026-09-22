@@ -1,9 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Plan comparison view.
 'use client';
-import { displayValue, formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { displayValue, formatNumber } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPlansV1SectionProps) {
+    const locale = useLocale();
+
     return <Panel title="Plan comparison" description="Simple plan comparison for pricing and limit decisions.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
@@ -32,7 +37,7 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
             {p.name}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrencyFromMinorUnits(p.monthly)}
+            {formatCurrency(p.monthly, 'INR', locale)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {p.members < 0 ? 'Unlimited' : formatNumber(p.members)}

@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders Reports from hook-owned server state and URL-owned filters. No direct API calls occur in this component.
 'use client';
 import type { ChangeEvent } from 'react';
+import toast from 'react-hot-toast';
 import { formatDecimal } from '@/lib/formatters';
 import type { SuperadminReportsTab } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
 import { Search } from 'lucide-react';
@@ -43,24 +44,17 @@ export default function SuperadminReportsClient() {
     setParam('preset', 'CUSTOM');
     setParam(key, value);
   };
-  const handleExportCSV = () => {
-    const headers: string[] = tab === 'revenue'
-      ? ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms']
-      : tab === 'cancellations'
-        ? ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active']
-        : ['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'];
-    const rows = tab === 'revenue'
-      ? revenueData.map((row) => [row.month, row.mrr, row.newRevenue, row.cancelledRevenue, row.netRevenue, row.tenantCount])
-      : tab === 'cancellations'
-        ? cancellationsData.map((row) => [row.gymName, row.ownerName, row.plan, row.cancelledAt, row.reason, row.mrr, row.daysActive])
-        : healthData.map((row) => [row.gymName, row.plan, row.score, row.grade, row.memberCount, row.lastLogin, row.paymentHealth, row.featureUsage, row.supportTickets]);
-    const csv = [headers, ...rows].map((row) => row.map((value) => `"${String(value ?? '').replaceAll('"','""')}"`).join(',')).join('\n');
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `superadmin_${tab}_report.csv`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+  const handleExportCSV = async () => {
+    try {
+      const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+      if (response.status === 202) {
+        toast.success('Export started. A secure download link will be sent to your email.');
+      } else {
+        toast.error('Failed to start data export.');
+      }
+    } catch (e) {
+      toast.error('Error starting data export.');
+    }
   };
   if (isPending) return <div className="space-y-4 p-8" aria-busy="true"><div className="h-8 w-52 rounded bg-skeleton-base motion-safe:animate-pulse" /><div className="h-72 rounded-xl bg-skeleton-base motion-safe:animate-pulse" /></div>;
   if (isError) return <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-border bg-danger-bg p-8 text-center"><p className="font-medium text-danger">Reports could not be loaded.</p><button type="button" onClick={() => { void revenue.refetch(); void cancellations.refetch(); void health.refetch(); }} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;

@@ -1,9 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Price history, Add-ons, Plan move preview view.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { formatNumber } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data }: SuperadminPlansV1SectionProps) {
+    const locale = useLocale();
+
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
   <Panel title="Price history" description="Versioned pricing protects existing tenants from accidental surprise changes.">
     <div className="space-y-3">
@@ -21,7 +26,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {v.change}
         </p>
         <p className="mt-2 text-sm text-primary">
-          {formatCurrencyFromMinorUnits(v.monthly)}
+          {formatCurrency(v.monthly, 'INR', locale)}
           / month
         </p>
       </div>)}
@@ -34,7 +39,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {a.name}
         </span>
         <span className="text-sm font-medium text-primary">
-          {formatCurrencyFromMinorUnits(a.price)}
+          {formatCurrency(a.price, 'INR', locale)}
         </span>
       </div>)}
     </div>
@@ -66,7 +71,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           </p>
           <p className="text-lg font-semibold text-success">
             +
-            {formatCurrencyFromMinorUnits(data.migration.monthlyChange)}
+            {formatCurrency(data.migration.monthlyChange, 'INR', locale)}
           </p>
         </div>
       </div>

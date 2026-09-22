@@ -1,4 +1,5 @@
-import { displayValue, formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { displayValue } from '@/lib/formatters';
+import { formatCurrency } from '@/app/superadmin/messaging/messaging_utils/formatCurrency';
 import type { SuperadminWhatsAppRecipient } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 const VARIABLE_FIELDS: Record<string, keyof SuperadminWhatsAppRecipient> = {
@@ -24,7 +25,7 @@ function formatVariableValue(field: keyof SuperadminWhatsAppRecipient, value: un
     if (value === 'TENANT_MANAGER')
         return 'Manager';
     if (field === 'subscriptionAmount' && typeof value === 'number')
-        return formatCurrencyFromMinorUnits(value);
+        return formatCurrency(value, 'INR', 'en-IN');
     return displayValue(value as string | number | null | undefined, '—');
 }
 export function replaceWhatsAppVariables(template: string, recipient: SuperadminWhatsAppRecipient): string {

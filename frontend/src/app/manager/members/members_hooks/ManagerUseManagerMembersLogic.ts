@@ -11,7 +11,7 @@ import { useManagerMembersPrintLogic } from '@/app/manager/members/members_hooks
 import { useFetchMember } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
 import { useManagerMembersUrlState } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersUrlState';
 import { useManagerMembersUiStore } from '@/app/manager/members/members_store/ManagerUseManagerMembersUiStore';
-import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
+
 import { EMPTY_MEMBER_FORM, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
 import type { Member, ManagerMembersViewModel, MembersInitialData, ExportFormat } from '@/app/manager/members/members_types/ManagerMembersTypes';
@@ -59,20 +59,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showToast, selectedMember, setSelectedMember, ui.editId, ui.setShowAddModal, ui.setShowRenewModal, ui.setShowPaymentModal
   );
 
-  const exportMembers = useCallback(async (format: ExportFormat) => {
-    const response = await membersApi.exportMembersReport({
-      search: urlState.debouncedSearch,
-      status: urlState.statusFilter,
-      gender: urlState.genderFilter,
-      plan: urlState.planFilter,
-      expiryFrom: urlState.expiryFrom,
-      expiryTo: urlState.expiryTo,
-      sort: urlState.sortColumn,
-      dir: urlState.sortDirection });
-    const allMembers = response.data?.members ?? [];
-    if (format === 'csv') downloadManagerMembersCsv(allMembers);
-    else printManagerMembersPdf(allMembers);
-  }, [urlState.debouncedSearch, urlState.statusFilter, urlState.genderFilter, urlState.planFilter, urlState.expiryFrom, urlState.expiryTo, urlState.sortColumn, urlState.sortDirection]);
+
 
   const { printData, setPrintData, handlePrint, handleSharePaymentWhatsApp } = useManagerMembersPrintLogic(
     selectedMember, showToast
@@ -96,6 +83,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showPaymentModal: ui.showPaymentModal, setShowPaymentModal: ui.setShowPaymentModal,
     openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal: ui.msgModal, openMsg, closeMsg,
-    printData: ui.printData, handlePrint, handleSharePaymentWhatsApp, setPrintData: ui.setPrintData, exportMembers
+    printData: ui.printData, handlePrint, handleSharePaymentWhatsApp, setPrintData: ui.setPrintData
   };
 }

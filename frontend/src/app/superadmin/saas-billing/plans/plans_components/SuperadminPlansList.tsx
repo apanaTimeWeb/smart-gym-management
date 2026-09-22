@@ -1,11 +1,16 @@
 // RESPONSIBILITY: Renders the grid of subscription plan cards using TanStack Query.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 // DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+
 import type { SubscriptionPlan } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansTypes';
 import { useSuperadminPlansList } from '@/app/superadmin/saas-billing/plans/plans_components/useSuperadminPlansList';
 export default function SuperadminPlansList() {
+    const locale = useLocale();
+
     const { plans, isPending, isError, deleteMutation, archiveMutation, openEditModal, confirmPlanDestructiveAction } = useSuperadminPlansList();
     if (isPending) {
         return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -29,7 +34,7 @@ export default function SuperadminPlansList() {
             <div className="mb-4">
               <h2 className="text-xl font-bold text-primary">{plan.name}</h2>
               <div className="flex items-end gap-1 mt-2">
-                <span className="text-3xl font-extrabold text-primary">{formatCurrencyFromMinorUnits(Number(plan.priceMonthly))}</span>
+                <span className="text-3xl font-extrabold text-primary">{formatCurrency(Number(plan.priceMonthly), plan.currency || 'INR', locale)}</span>
                 <span className="text-secondary font-medium mb-1">/ mo</span>
               </div>
             </div>

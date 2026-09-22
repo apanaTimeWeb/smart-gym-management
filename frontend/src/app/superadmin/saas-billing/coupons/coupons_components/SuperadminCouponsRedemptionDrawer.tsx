@@ -1,14 +1,19 @@
 // RESPONSIBILITY: Renders the coupon redemption history drawer using the feature-owned redemption query.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import { useEffect } from 'react';
 import { History, Loader2, X } from 'lucide-react';
 import type { Coupon } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
 import type { SuperadminCouponsRedemptionDrawerProps } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsRedemptionDrawerTypes';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/saas-billing/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatDate } from '@/lib/formatters';
 import { useSuperadminCouponRedemptions } from '@/app/superadmin/saas-billing/coupons/coupons_utils/useSuperadminCouponRedemptions';
 
 export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onClose }: SuperadminCouponsRedemptionDrawerProps) {
+    const locale = useLocale();
+
   const query = useSuperadminCouponRedemptions(coupon?.id ?? null);
   // EFFECT INTENT: lock page scrolling while the drawer is open and always restore the prior browser state on cleanup.
   useEffect(() => {
@@ -34,7 +39,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
         <div className="flex-1 overflow-y-auto p-6">
           <div className="mb-6 grid grid-cols-2 gap-3">
             <div className="rounded-lg border border-border bg-input p-3"><p className="text-xs text-secondary">Redemptions</p><p className="mt-1 text-lg font-bold text-primary">{redemptions.length}</p></div>
-            <div className="rounded-lg border border-border bg-input p-3"><p className="text-xs text-secondary">Discount applied</p><p className="mt-1 text-lg font-bold text-primary">{formatCurrencyFromMinorUnits(totalDiscount)}</p></div>
+            <div className="rounded-lg border border-border bg-input p-3"><p className="text-xs text-secondary">Discount applied</p><p className="mt-1 text-lg font-bold text-primary">{formatCurrency(totalDiscount, 'INR', locale)}</p></div>
           </div>
           {query.isPending ? (
             <div className="flex min-h-48 items-center justify-center gap-2 text-secondary" aria-busy="true"><Loader2 size={18} className="motion-safe:animate-spin"/> Loading redemptions…</div>
@@ -46,7 +51,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
             <div className="space-y-3">
               {redemptions.map((redemption) => (
                 <div key={redemption.id} className="rounded-lg border border-border bg-card p-4 shadow-card">
-                  <div className="flex items-start justify-between gap-3"><div><p className="font-medium text-primary">{redemption.tenantName}</p><p className="mt-1 text-xs text-secondary">{redemption.planName}</p></div><p className="font-semibold text-success">{formatCurrencyFromMinorUnits(redemption.discountApplied)}</p></div>
+                  <div className="flex items-start justify-between gap-3"><div><p className="font-medium text-primary">{redemption.tenantName}</p><p className="mt-1 text-xs text-secondary">{redemption.planName}</p></div><p className="font-semibold text-success">{formatCurrency(redemption.discountApplied, 'INR', locale)}</p></div>
                   <time className="mt-3 block text-xs text-secondary">Redeemed {formatDate(redemption.redeemedAt)}</time>
                 </div>
               ))}

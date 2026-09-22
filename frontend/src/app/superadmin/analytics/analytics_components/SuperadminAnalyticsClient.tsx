@@ -1,5 +1,8 @@
 // RESPONSIBILITY: Renders the Revenue Analytics dashboard â€” KPI cards + ApexCharts area/bar charts.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/analytics/analytics_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 // Pure view layer: consumes useSuperadminAnalyticsPage hook. No data-fetching or business logic here.
 //
 // DATA FLOW: useSuperadminAnalyticsPage â†’ SuperadminAnalyticsClient â†’ KPI Cards + Charts
@@ -10,9 +13,11 @@ import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import { SuperadminAnalyticsDateFilterDropdown } from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsDateFilterDropdown';
 import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 // Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
-import { formatCurrencyFromMinorUnits, formatKPI, formatDecimal } from '@/lib/formatters';
+import { formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function SuperadminAnalyticsClient() {
+    const locale = useLocale();
+
     const { metrics, monthlyData, isPending, isError: error } = useSuperadminAnalyticsPage();
     const dateSuffix = useDateRangeSuffix();
     if (isPending) {
@@ -50,7 +55,7 @@ export default function SuperadminAnalyticsClient() {
     const kpiCards = [
         {
             label: 'Monthly Income' + dateSuffix,
-            value: formatCurrencyFromMinorUnits(metrics.mrr),
+            value: formatCurrency(metrics.mrr, 'INR', locale),
             delta: mrrDelta,
             deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
             icon: IndianRupee,
@@ -59,7 +64,7 @@ export default function SuperadminAnalyticsClient() {
         },
         {
             label: 'ARR' + dateSuffix,
-            value: formatCurrencyFromMinorUnits(metrics.arr),
+            value: formatCurrency(metrics.arr, 'INR', locale),
             delta: arrDelta,
             deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
             icon: TrendingUp,
@@ -87,7 +92,7 @@ export default function SuperadminAnalyticsClient() {
         {
             label: 'Avg. Income per Gym' + dateSuffix,
             // Design Â§21: Indian currency â€” â‚¹1,24,500
-            value: formatCurrencyFromMinorUnits(arpu),
+            value: formatCurrency(arpu, 'INR', locale),
             delta: 'Avg revenue per gym',
             deltaUp: true,
             icon: DollarSign,
@@ -206,7 +211,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.ltv)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.ltv, 'INR', locale)}</p>
           <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
@@ -217,7 +222,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.cac)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.cac, 'INR', locale)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>

@@ -46,7 +46,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary mb-1.5">Amount (₹)</label>
+            <label className="block text-sm font-medium text-secondary mb-1.5">Amount</label>
             <div className="relative">
               <DollarSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
               <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')

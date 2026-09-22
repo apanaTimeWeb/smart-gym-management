@@ -1,11 +1,16 @@
 // RESPONSIBILITY: Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/dashboard/dashboard_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { SUPERADMIN_DASHBOARD_CHART_COLORS } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
 import type { SuperadminDashboardChartsProps, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatNumber } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminDashboardCharts({ metrics, revenueChartData, growthChartData, timeMultiplier, mrrLabel }: SuperadminDashboardChartsProps) {
+    const locale = useLocale();
+
     const chartOptions = {
         chart: { type: 'area' as const, toolbar: { show: false }, background: 'transparent' },
         colors: [SUPERADMIN_DASHBOARD_CHART_COLORS.PRIMARY],
@@ -24,7 +29,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         yaxis: {
             labels: {
                 style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY },
-                formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k',
+                formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k',
             },
         },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4 },
@@ -62,7 +67,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         dataLabels: { enabled: false },
         tooltip: {
             theme: 'dark' as const,
-            y: { formatter: (val: number) => formatCurrencyFromMinorUnits(val) },
+            y: { formatter: (val: number) => formatCurrency(val, 'INR', locale) },
         },
         legend: { position: 'bottom' as const, labels: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } },
     };
@@ -75,19 +80,19 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
             enabled: true,
             offsetX: 20,
             style: { fontSize: '12px', colors: [SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY] },
-            formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k'
+            formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k'
         },
         stroke: { show: true, width: 1, colors: ['transparent'] },
         xaxis: {
             categories: (metrics.revenueByGeography || []).map((g) => g.region),
-            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k' },
+            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k' },
             axisBorder: { show: false },
             axisTicks: { show: false },
         },
         yaxis: { labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } } },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
         theme: { mode: 'dark' as const },
-        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrencyFromMinorUnits(val) } },
+        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrency(val, 'INR', locale) } },
     };
     const geoChartSeries = [{
             name: 'Revenue',

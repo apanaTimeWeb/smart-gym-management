@@ -1,14 +1,19 @@
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/affiliates/affiliates_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
-import { maskSensitiveData, formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { maskSensitiveData, formatNumber } from '@/lib/formatters';
 import type { SuperadminAffiliatesTableRowProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTableRowTypes';
 
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: SuperadminAffiliatesTableRowProps) {
+    const locale = useLocale();
+
     const { confirm } = useConfirm();
     return (<tr tabIndex={0} aria-label={`Edit affiliate ${aff.name}`} className="hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => onEdit(aff)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(aff); } }}>
       <td className="px-6 py-4">
@@ -27,8 +32,8 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : 'â€”'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
-        {formatCurrencyFromMinorUnits(aff.commissionEarned)}
-        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrencyFromMinorUnits(aff.pendingPayout)} pending)</span>) : null}
+        {formatCurrency(aff.commissionEarned, 'INR', locale)}
+        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout, 'INR', locale)} pending)</span>) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <SuperadminAffiliateStatusBadge status={aff.status}/>
@@ -64,7 +69,7 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
                 e.stopPropagation();
                 const ok = await confirm({
                     title: 'Pay Commission',
-                    message: `Pay ${formatCurrencyFromMinorUnits(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
+                    message: `Pay ${formatCurrency(aff.pendingPayout || 0, 'INR', locale)} to ${aff.name}? This will trigger a bank transfer.`,
                     type: 'warning',
                     confirmText: 'Pay Now',
                 });

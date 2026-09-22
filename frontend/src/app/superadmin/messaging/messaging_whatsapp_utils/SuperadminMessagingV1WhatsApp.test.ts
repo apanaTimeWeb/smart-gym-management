@@ -19,7 +19,7 @@ describe('Superadmin tenant WhatsApp free workflow utilities', () => {
         expect(message).toContain('Iron Paradise');
         expect(message).toContain('Owner');
         expect(message).toContain('Growth');
-        expect(message).toContain('₹7,999');
+        expect(message).toContain('₹7,999.00');
         expect(message).toContain('INV-T1-0926');
         expect(message).toContain('2026-09-20');
         expect(message).toContain('https://app.example.com/t1');

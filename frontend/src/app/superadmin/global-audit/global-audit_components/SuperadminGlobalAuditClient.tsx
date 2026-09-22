@@ -46,33 +46,17 @@ export default function SuperadminGlobalAuditClient() {
                 return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary-subtle text-primary tracking-wider"><Info size={18} className="w-3"/> INFO</span>;
         }
     };
-    const exportLogs = () => {
-        if (filteredLogs.length === 0) {
-            
-            return;
+    const exportLogs = async () => {
+        try {
+          const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+          if (response.status === 202) {
+            toast.success('Export started. A secure download link will be sent to your email.');
+          } else {
+            toast.error('Failed to start data export.');
+          }
+        } catch (e) {
+          toast.error('Error starting data export.');
         }
-        const headers = ['Timestamp', 'Severity', 'Action', 'Resource', 'Details', 'Actor', 'IP Address'];
-        const csvContent = [
-            headers.join(','),
-            ...filteredLogs.map((log: AuditLog) => [
-                serializeSuperadminGlobalAuditTimestamp(log.timestamp),
-                log.severity,
-                `"${(log.action || '').replace(/"/g, '""')}"`,
-                `"${(log.resource || '').replace(/"/g, '""')}"`,
-                `"${(log.details || '').replace(/"/g, '""')}"`,
-                `"${(log.actor || '').replace(/"/g, '""')}"`,
-                log.ipAddress
-            ].join(','))
-        ].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `global_audit_logs_${getSuperadminGlobalAuditExportDate()}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
     };
     const severityOptions = SUPERADMIN_GLOBAL_AUDIT_SEVERITY_FILTERS.map((value) => ({ value, label: value === 'ALL' ? 'All Severities' : value.charAt(0) + value.slice(1).toLowerCase() }));
     const actorTypeOptions = SUPERADMIN_GLOBAL_AUDIT_ACTOR_FILTERS.map((value) => ({ value, label: value === 'ALL' ? 'All Actors' : value === 'SUPERADMIN' ? 'Superadmin' : value === 'SYSTEM' ? 'System' : 'Gym' }));

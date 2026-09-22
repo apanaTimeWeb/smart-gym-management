@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders the historical uptime chart from Infrastructure API data; no generated business values are created in the component.
 'use client';
 import { formatSuperadminInfrastructureUptimeAxisTime } from '@/app/superadmin/system-ops/infrastructure/infrastructure_utils/SuperadminInfrastructureUptimeUtils';
+import { useLocale } from 'next-intl';
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatDecimal } from '@/lib/formatters';
@@ -9,11 +10,12 @@ import { CHART_COLORS } from '@/components/ui/ChartConstants';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminUptimeChart() {
+  const locale = useLocale();
   const query = useSuperadminInfrastructureUptime();
   const { series, options } = useMemo(() => {
     const points = query.data?.data ?? [];
     return {
-      series: [{ name: 'Uptime %', data: points.map((point) => ({ x: formatSuperadminInfrastructureUptimeAxisTime(point.timestamp), y: Number(formatDecimal(point.uptimePercent, 2)) })) }],
+      series: [{ name: 'Uptime %', data: points.map((point) => ({ x: formatSuperadminInfrastructureUptimeAxisTime(point.timestamp, locale), y: Number(formatDecimal(point.uptimePercent, 2)) })) }],
       options: {
         chart: { type: 'area', height: 250, toolbar: { show: false }, zoom: { enabled: false }, background: 'transparent', fontFamily: 'inherit' },
         colors: [CHART_COLORS.SUCCESS],

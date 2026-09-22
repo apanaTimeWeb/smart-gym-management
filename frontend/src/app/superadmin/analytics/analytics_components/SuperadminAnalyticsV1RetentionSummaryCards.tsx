@@ -1,9 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber, formatPercent1dp } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/analytics/analytics_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { formatNumber, formatPercent1dp } from '@/lib/formatters';
 import MetricCard from '@/components/ui/MetricCard';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1RetentionSummaryCards({ data }: SuperadminAnalyticsV1SectionProps) {
+    const locale = useLocale();
+
     return <div className="grid grid-cols-2 gap-4 xl:grid-cols-5">
   <MetricCard label="Income kept from existing gyms" value={formatPercent1dp(data.metrics.existingIncomeRetained)} helper="Existing gym income" tone="success"/>
   <MetricCard label="Income kept without upgrades" value={formatPercent1dp(data.metrics.grossIncomeRetained)} helper="Protected base income"/>

@@ -1,13 +1,18 @@
 // RESPONSIBILITY: Renders the modal UI for editing Gym details. Purely a view component.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/gyms/gyms_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+
 export default function SuperadminGymEditModal() {
+    const locale = useLocale();
+
     const { isEditModalOpen, closeEditModal, selectedGym, plans, loadingPlans, register, handleSubmit, onSubmit, control, errors, isDirty, isSubmitting, } = useSuperadminGymEditModal();
     useUnsavedChangesGuard(isDirty);
     const [showPassword, setShowPassword] = React.useState(false);
@@ -60,7 +65,7 @@ export default function SuperadminGymEditModal() {
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-danger">*</span></label>
-            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrencyFromMinorUnits(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
+            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
             {errors.plan && <p className="text-xs text-danger mt-1">{errors.plan.message}</p>}
           </div>
 

@@ -2,7 +2,7 @@
 'use client';
 // DATA FLOW: local search input -> 300ms debounce -> URL params -> TanStack Query -> earnings rows; row expansion is UI-only.
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, ArrowUpDown, Download, Loader2, Search } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, Search } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import TrainerEarningsEmptyState from '@/app/trainer/earnings/earnings_components/TrainerEarningsEmptyState/TrainerEarningsEmptyState';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
@@ -71,30 +71,10 @@ export default function TrainerEarningsHistory() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const handleExportCsv = async () => {
-    const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (startDate) params.set('startDate', startDate);
-    if (endDate) params.set('endDate', endDate);
-    if (sortBy) params.set('sortBy', sortBy);
-    params.set('sortDirection', sortDirection);
-    setIsExporting(true);
-    try {
-      const queryString = params.toString();
-      const url = `${EarningsUrlConfig.BACKEND_API.EXPORT_CSV}${queryString ? `&${queryString}` : ''}`;
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `earnings-export-${formatDate(new Date().toISOString())}.csv`.replaceAll(' ', '-');
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  
 
   const { data, isPending, isError, refetch } = useTrainerEarningsQuery();
-  const [isExporting, setIsExporting] = useState(false);
+  
   const history = data?.history ?? [];
   const totalPages = Math.max(1, Math.ceil((data?.historyTotal ?? history.length) / EARNINGS_ITEMS_PER_PAGE));
 
@@ -122,7 +102,7 @@ export default function TrainerEarningsHistory() {
             <span className="text-secondary text-sm" aria-hidden="true">to</span>
             <label htmlFor="trainer-earnings-end-date" className="sr-only">End date</label>
             <input id="trainer-earnings-end-date" type="date" value={endDate} onChange={(event) => handleDateChange('endDate', event.target.value)} className="min-h-11 px-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-            <button type="button" onClick={() => void handleExportCsv()} disabled={isExporting} className="min-h-11 min-w-36 inline-flex items-center justify-center gap-1.5 px-3 bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-hover disabled:opacity-70 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Export earnings as CSV">{isExporting ? <Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> : <Download size={18} aria-hidden="true" />}{isExporting ? 'Exporting…' : 'Export CSV'}</button>
+            
           </div>
         </div>
       </div>

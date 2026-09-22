@@ -1,11 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin Gym 360 detail workspace from query-owned data and feature-owned action hooks. No direct API calls.
 'use client';
 
+
+import { formatCurrency } from '@/app/superadmin/gyms/gyms_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { Activity, ArrowLeft, Building2, Clock, CreditCard, Link as LinkIcon, MapPin, Palette, Ticket, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { formatCurrencyFromMinorUnits, formatDate, formatNumber, displayValue } from '@/lib/formatters';
+import { formatDate, formatNumber, displayValue } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminGymDetail } from '@/app/superadmin/gyms/gyms_utils/useSuperadminGymDetail';
 import { useSuperadminGymDetailActions } from '@/app/superadmin/gyms/gyms_utils/useSuperadminGymDetailActions';
@@ -19,6 +22,8 @@ const SUPERADMIN_GYM_DETAIL_BILLING_ROUTE = GymsUrlConfig.PAGES.BILLING_PLANS;
 
 
 export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetailClientProps) {
+    const locale = useLocale();
+
   const router = useRouter();
   const query = useSuperadminGymDetail(gymId);
   const gym = query.data?.data;
@@ -71,7 +76,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { label: 'Members', value: formatNumber(gym.memberCount), icon: User, tone: 'bg-primary-subtle text-primary' },
-              { label: 'Monthly Revenue', value: formatCurrencyFromMinorUnits(gym.monthlyRevenue), icon: CreditCard, tone: 'bg-success-bg text-success' },
+              { label: 'Monthly Revenue', value: formatCurrency(gym.monthlyRevenue, 'INR', locale), icon: CreditCard, tone: 'bg-success-bg text-success' },
               { label: 'Plan', value: displayValue(gym.plan).toUpperCase(), icon: Activity, tone: 'bg-purple-bg text-purple-text' },
               { label: 'DB Version', value: displayValue(gym.databaseVersion), icon: Clock, tone: 'bg-warning-bg text-warning' },
             ].map(({ label, value, icon: Icon, tone }) => (

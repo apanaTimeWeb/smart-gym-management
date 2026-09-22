@@ -1,12 +1,17 @@
 // RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/dashboard/dashboard_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
 import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatNumber } from '@/lib/formatters';
 export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMultiplier, mrrLabel }: SuperadminDashboardKpiGridProps) {
+    const locale = useLocale();
+
     const router = useRouter();
     const dateSuffix = useSuperadminDashboardDateRangeSuffix();
     const lastTwoMonths = revenueChartData.length >= 2 ? revenueChartData.slice(-2) : [];
@@ -19,7 +24,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
     const kpiCards = [
         {
             label: mrrLabel + dateSuffix,
-            value: formatCurrencyFromMinorUnits(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
+            value: formatCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier), 'INR', locale),
             trend: metrics.mrrDeltaPercent !== undefined
                 ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month`
                 : mrrTrendStr,
@@ -57,7 +62,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'Avg. Income per Gym',
-            value: formatCurrencyFromMinorUnits(metrics.arpu || 0),
+            value: formatCurrency(metrics.arpu || 0, 'INR', locale),
             trend: undefined,
             trendUp: true,
             icon: DollarSign,
@@ -84,7 +89,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'PENDING REVENUE',
-            value: formatCurrencyFromMinorUnits(metrics.pendingRevenue || 0),
+            value: formatCurrency(metrics.pendingRevenue || 0, 'INR', locale),
             trend: undefined,
             trendUp: true,
             icon: CreditCard,

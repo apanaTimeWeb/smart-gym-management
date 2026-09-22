@@ -30,9 +30,4 @@ export const reportsApi = {
   fetchReportsSummary: async (params?: Record<string, string>): Promise<ApiResponse<ReportSummary>> => {
     const query = new URLSearchParams(params || {}).toString();
     return apiFetch(`${ManagerReportsUrlConfig.BACKEND_API.SUMMARY}${query ? `?${query}` : ''}`, { dataSchema: managerReportSummarySchema });
-  },
-
-  exportReportsReport: async (tab: string, params?: Record<string, string>): Promise<Blob> => {
-    const query = new URLSearchParams({ tab, ...params }).toString();
-    return downloadManagerReportsBinary(`${ManagerReportsUrlConfig.BACKEND_API.EXPORT}?${query}`);
   } };

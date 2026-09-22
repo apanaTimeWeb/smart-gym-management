@@ -1,9 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin invoices V1 Payment recovery queue view.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber, formatDateTime } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { formatNumber, formatDateTime } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminInvoicesV1SectionProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesV1Types.ts';
 export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: SuperadminInvoicesV1SectionProps) {
+    const locale = useLocale();
+
     return <Panel title="Payment recovery queue" description="Every failed payment has a reason, retry count, next step, and age.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
@@ -38,7 +43,7 @@ export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: 
             {r.invoice}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrencyFromMinorUnits(r.amount)}
+            {formatCurrency(r.amount, 'INR', locale)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {formatNumber(r.attempts)}

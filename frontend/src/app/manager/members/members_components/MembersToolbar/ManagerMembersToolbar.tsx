@@ -6,7 +6,6 @@ import { Search, RefreshCw, Plus, Download, Calendar } from 'lucide-react';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
 import { useFetchPlans } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
-import { MEMBER_EXPORT_FORMATS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { MEMBER_STATUS_OPTIONS, MEMBER_GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 
 
@@ -18,7 +17,7 @@ export default function ManagerMembersToolbar() {
     planFilter, setPlanFilter,
     expiryFrom, expiryTo, setExpiryRange,
     sortColumn, sortDirection,
-    openAdd, currentPage, exportMembers
+    openAdd, currentPage
   } = useManagerMembersLogic();
   const { data: plansData } = useFetchPlans();
   const plans = plansData || [];
@@ -71,17 +70,7 @@ export default function ManagerMembersToolbar() {
           >
             <RefreshCw size={18} /> Refresh
           </button>
-          {/* Export buttons — CRITICAL FIX */}
-          {MEMBER_EXPORT_FORMATS.map(fmt => (
-            <button
-              key={fmt.value}
-              onClick={() => void exportMembers(fmt.value)}
-              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors w-full sm:w-auto"
-              aria-label={fmt.label}
-            >
-              <Download size={18} /> {fmt.label}
-            </button>
-          ))}
+
           <button
             onClick={openAdd}
             className="flex justify-center items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary rounded-xl hover:opacity-90 motion-safe:transition-opacity w-full sm:w-auto"
