@@ -13,7 +13,7 @@ export class CoreIdempotencyService {
     const client = this.redis.getClient();
     const cached = await client.get(this.resultKey(key, scope));
     if (cached) return cached;
-    const lock = await client.set(this.lockKey(key, scope), '1', { NX: true, EX: 30 });
+    const lock = await client.set(this.lockKey(key, scope), '1', 'EX', 30, 'NX');
     if (!lock) throw new ConflictException({ errorCode: 'CORE.IDEMPOTENCY.IN_PROGRESS', message: 'A request with this Idempotency-Key is already processing.' });
     return null;
   }
@@ -21,7 +21,7 @@ export class CoreIdempotencyService {
   /** @description Stores a first response for 24 hours and releases its lock. @param key - Client key. @param scope - Route scope. @param payload - Serialized result. @returns Nothing. */
   async store(key: string, scope: string, payload: string): Promise<void> {
     const client = this.redis.getClient();
-    await client.set(this.resultKey(key, scope), payload, { EX: 86_400 });
+    await client.set(this.resultKey(key, scope), payload, 'EX', 86_400);
     await client.del(this.lockKey(key, scope));
   }
 
