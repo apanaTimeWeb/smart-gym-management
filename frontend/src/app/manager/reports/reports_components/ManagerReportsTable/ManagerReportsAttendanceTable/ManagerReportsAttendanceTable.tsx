@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders the ManagerReportsAttendanceTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
 

@@ -1,13 +1,15 @@
 // RESPONSIBILITY: Renders the payment history section for the selected member profile.
 'use client';
 import { Printer, MessageCircle } from 'lucide-react';
-import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
 import { useFetchPayments } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerProfilePayments() {
+    const locale = useLocale();
   const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal, selectedMember } = useManagerMembersLogic();
   const { data: payments = [] } = useFetchPayments(selectedMember?.id || '');
 
@@ -23,15 +25,15 @@ export default function ManagerProfilePayments() {
   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
   <div className="bg-success-bg rounded-xl p-4 border border-success">
   <p className="text-xs text-success">Total Paid</p>
-  <p className="text-xl font-bold text-success">{formatCurrencyFromMinorUnits(totalPaid, ManagerEnvConfig.currencyCode)}</p>
+  <p className="text-xl font-bold text-success">{formatCurrency(totalPaid, ManagerEnvConfig.currencyCode, locale)}</p>
   </div>
   <div className="bg-danger-bg rounded-xl p-4 border border-border">
   <p className="text-xs text-danger">Total Due</p>
-  <p className="text-xl font-bold text-danger">{formatCurrencyFromMinorUnits(totalDue, ManagerEnvConfig.currencyCode)}</p>
+  <p className="text-xl font-bold text-danger">{formatCurrency(totalDue, ManagerEnvConfig.currencyCode, locale)}</p>
   </div>
   <div className="bg-primary-subtle rounded-xl p-4 border border-border">
   <p className="text-xs text-primary">Advance</p>
-  <p className="text-xl font-bold text-primary">{formatCurrencyFromMinorUnits(selectedMember?.advanceAmount || 0, ManagerEnvConfig.currencyCode)}</p>
+  <p className="text-xl font-bold text-primary">{formatCurrency(selectedMember?.advanceAmount || 0, ManagerEnvConfig.currencyCode, locale)}</p>
   </div>
   <div className="bg-info-bg rounded-xl p-4 border border-info">
   <p className="text-xs text-info">Transactions</p>
@@ -58,7 +60,7 @@ export default function ManagerProfilePayments() {
  </div>
  <div className="flex items-center gap-3">
  <div className="text-right">
- <p className="text-sm font-bold text-success">{formatCurrencyFromMinorUnits(p.amount, ManagerEnvConfig.currencyCode)}</p>
+ <p className="text-sm font-bold text-success">{formatCurrency(p.amount, ManagerEnvConfig.currencyCode, locale)}</p>
  <span className={`text-xs px-2 py-0.5 rounded-full ${
  p.status === 'PAID' ? 'bg-success text-on-success' 
  : 'bg-danger text-on-danger'

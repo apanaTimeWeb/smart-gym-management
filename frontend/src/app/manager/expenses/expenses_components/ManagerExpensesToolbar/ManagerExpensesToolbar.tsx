@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Renders the action bar for Expenses: Search, Filters, and "Add Expense" button.
 'use client';
-import { Search, Plus, Download } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { useManagerExpensesLogic } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
 import { EXPENSE_STATUS_LABELS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 
 export default function ManagerExpensesToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, openAdd, exportExpenses } = useManagerExpensesLogic();
+  const { search, setSearch, statusFilter, setStatusFilter, openAdd } = useManagerExpensesLogic();
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-4 rounded-xl border border-border shadow-card">
@@ -36,13 +36,6 @@ export default function ManagerExpensesToolbar() {
         </div>
       </div>
       <div className="flex w-full sm:w-auto items-center gap-2">
-        <button
-          onClick={() => exportExpenses && exportExpenses()}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-input border border-border text-secondary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-subtle hover:text-primary motion-safe:transition-all motion-safe:duration-base"
-        >
-          <Download size={18} />
-          Export
-        </button>
         <button
           onClick={openAdd}
           className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-lg text-sm font-bold shadow-card shadow-card hover:shadow-card hover:shadow-card motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:transition-all motion-safe:duration-base"

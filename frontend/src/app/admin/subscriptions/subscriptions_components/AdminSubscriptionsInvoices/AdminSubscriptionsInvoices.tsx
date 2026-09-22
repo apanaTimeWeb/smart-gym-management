@@ -1,7 +1,8 @@
 "use client";
 import { format } from 'date-fns';
 // RESPONSIBILITY: Renders paginated invoice history with feature-owned status mapping and demonstrable PDF actions.
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import { CheckCircle, Clock, Download, FileText, RotateCcw, XCircle } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';

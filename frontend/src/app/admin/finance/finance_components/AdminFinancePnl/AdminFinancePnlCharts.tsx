@@ -1,5 +1,6 @@
 "use client";
-import { formatKPI, formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Renders two ApexCharts — grouped bar (Revenue vs Expenses per branch)
 // and donut (profit share by branch). Code-split via next/dynamic to avoid SSR issues.
 
@@ -19,8 +20,8 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
   if (data.length === 0) return null;
 
   const branchNames = data.map((b) => b.branchName.split(' ').slice(0, 2).join(' '));
-  const revenues    = data.map((b) => Math.round(b.revenue / 1000));    // in ₹K
-  const expenses    = data.map((b) => Math.round(b.expenses / 1000));   // in ₹K
+  const revenues    = data.map((b) => Math.round(b.revenue / 1000));    // in K
+  const expenses    = data.map((b) => Math.round(b.expenses / 1000));   // in K
   const profits     = data.filter((b) => b.netProfit > 0).map((b) => b.netProfit);
   const profitLabels = data.filter((b) => b.netProfit > 0).map((b) => b.branchName.split(' ').slice(0, 2).join(' '));
 

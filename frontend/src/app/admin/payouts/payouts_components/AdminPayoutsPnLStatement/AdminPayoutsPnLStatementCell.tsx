@@ -1,6 +1,7 @@
 "use client";
 // RESPONSIBILITY: Renders one formatted monetary cell in the payouts P&L statement.
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 
 import type { AdminPayoutsPnLStatementCellProps } from '@/app/admin/payouts/payouts_types/AdminPayoutsPnLStatementCellPropsTypes';
 

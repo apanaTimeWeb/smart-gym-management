@@ -2,7 +2,8 @@
 'use client';
 import { useRef } from 'react';
 import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
@@ -11,11 +12,13 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { useLocale } from "next-intl";
 
 // CRITICAL FIX: Added Download Payslip per row, Generate Payroll button, and netPayable/deductions display.
 
 
 export default function ManagerHrPayrollTable() {
+    const locale = useLocale();
   const { confirm } = useConfirm();
   const generatePayrollKeyRef = useRef<string | null>(null);
   const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, totalPayrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, isPending, staff, bulkGeneratePayroll, downloadPayslip } = useManagerHrLogic();
@@ -110,11 +113,11 @@ export default function ManagerHrPayrollTable() {
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
                 <td className="px-4 py-3 text-sm font-medium text-secondary text-right">
-                  {formatCurrencyFromMinorUnits(((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0), ManagerEnvConfig.currencyCode)}
+                  {formatCurrency(((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0), ManagerEnvConfig.currencyCode, locale)}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-primary text-right">{formatCurrencyFromMinorUnits(p.amount || 0, ManagerEnvConfig.currencyCode)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrencyFromMinorUnits(p.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrencyFromMinorUnits(p.pendingAmount || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-primary text-right">{formatCurrency(p.amount || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(p.paidAmount || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(p.pendingAmount || 0, ManagerEnvConfig.currencyCode, locale)}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${

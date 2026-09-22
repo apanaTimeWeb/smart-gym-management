@@ -4,7 +4,8 @@
 import { useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { LeaderboardSortDirection, LeaderboardSortKey } from '@/app/admin/dashboard/dashboard_types/AdminDashboardBranchLeaderboardTypes';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { TrendingUp, TrendingDown, Minus, Building2 } from 'lucide-react';
 import AdminDashboardBranchLeaderboardSortIcon from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboardSortIcon';

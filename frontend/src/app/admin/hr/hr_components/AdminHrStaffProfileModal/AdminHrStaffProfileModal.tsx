@@ -1,6 +1,7 @@
 "use client";
 import { format } from 'date-fns';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
 

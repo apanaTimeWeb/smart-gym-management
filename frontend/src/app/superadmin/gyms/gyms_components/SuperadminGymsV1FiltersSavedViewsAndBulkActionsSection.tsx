@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { Filter, UsersRound, Download } from 'lucide-react';
+import toast from 'react-hot-toast';
 import Panel from '@/components/ui/Panel';
 import { SUPERADMIN_GYMS_V1_PLAN_OPTIONS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsV1Constants';
 import type { SuperadminGymsV1FiltersSavedViewsAndBulkActionsSectionProps, SuperadminGymsV1BulkAction } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsV1Types';
@@ -29,14 +30,16 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
   const handleBulkAction = async () => {
     if (!pendingAction || selectedGymIds.length === 0) return;
     if (pendingAction === 'Export selected') {
-      const selectedRows = selectableRows.filter((row) => selectedSet.has(row.id));
-      const csv = ['Gym,Status,Region,Plan,Income,Health,Usage', ...selectedRows.map((row) => [row.name, row.status, row.region, row.plan, row.income, row.health, row.usage].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(','))].join('\n');
-      const href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-      const link = document.createElement('a');
-      link.href = href;
-      link.download = 'superadmin-selected-tenants.csv';
-      link.click();
-      URL.revokeObjectURL(href);
+      try {
+        const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+        if (response.status === 202) {
+          toast.success('Export started. A secure download link will be sent to your email.');
+        } else {
+          toast.error('Failed to start data export.');
+        }
+      } catch (e) {
+        toast.error('Error starting data export.');
+      }
       setPendingAction('');
       onSelectionChange([]);
       return;

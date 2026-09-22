@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the selected member profile view and composes its feature-owned profile sections.
 'use client';
 import { Edit, MessageCircle, Mail } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { displayValue, formatDate } from '@/lib/formatters';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
@@ -14,9 +15,10 @@ import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/Mana
 import { PROFILE_TABS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 import type { MemberProfileTab } from '@/app/manager/members/members_types/ManagerMembersTypes';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerMemberProfile() {
+    const locale = useLocale();
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg, setShowRenewModal } = useManagerMembersLogic();
 
 
@@ -95,8 +97,8 @@ export default function ManagerMemberProfile() {
               { label: 'Join Date', value: formatDate(selectedMember.joinDate) },
               { label: 'Expiry Date', value: formatDate(selectedMember.expiryDate) },
               { label: 'Address', value: selectedMember.address || 'N/A' },
-              { label: 'Total Paid', value: formatCurrencyFromMinorUnits(selectedMember.paidAmount, ManagerEnvConfig.currencyCode) },
-              { label: 'Pending', value: formatCurrencyFromMinorUnits(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode) },
+              { label: 'Total Paid', value: formatCurrency(selectedMember.paidAmount, ManagerEnvConfig.currencyCode, locale) },
+              { label: 'Pending', value: formatCurrency(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode, locale) },
             ].map((f, i) => (
               <div key={`member-summary-stat-${f.label.replace(/\s+/g, '-')}`} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>

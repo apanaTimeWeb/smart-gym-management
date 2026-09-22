@@ -19,50 +19,58 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getLocale } from 'next-intl/server';
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const messages = await getMessages();
+  const locale = await getLocale();
+
   return (
     <html lang="en" data-scroll-behavior="smooth" className="font-sans" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.png" type="image/png" />
       </head>
       <body suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextTopLoader 
-            color="#FACC15"
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={3}
-            crawl={true}
-            showSpinner={false}
-            easing="ease"
-            speed={200}
-            shadow="0 0 10px #FACC15,0 0 5px #FACC15"
-          />
-          <QueryProvider>
-            <MSWProvider>
-              {children}
-            </MSWProvider>
-          </QueryProvider>
-          <Toaster 
-            position="top-center" 
-            containerStyle={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              bottom: 'auto',
-              right: 'auto'
-            }}
-          />
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NextTopLoader 
+              color="#FACC15"
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={3}
+              crawl={true}
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+              shadow="0 0 10px #FACC15,0 0 5px #FACC15"
+            />
+            <QueryProvider>
+              <MSWProvider>
+                {children}
+              </MSWProvider>
+            </QueryProvider>
+            <Toaster 
+              position="top-center" 
+              containerStyle={{
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                bottom: 'auto',
+                right: 'auto'
+              }}
+            />
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -1,10 +1,14 @@
 // RESPONSIBILITY: Renders the Reports Revenue Tab component and its associated UI logic.
+import { useLocale } from 'next-intl';
+import { formatCurrency } from '@/app/superadmin/reports/reports_utils/formatCurrency';
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import type { SuperadminReportsRevenueTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatKPI } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminReportsRevenueTab({ revenueData }: SuperadminReportsRevenueTabProps) {
+    const locale = useLocale();
+
     const revenueChartOptions = {
         chart: { type: 'area' as const, toolbar: { show: false }, background: 'transparent' },
         colors: [CHART_COLORS.PRIMARY, CHART_COLORS.DANGER],
@@ -50,10 +54,10 @@ export function SuperadminReportsRevenueTab({ revenueData }: SuperadminReportsRe
             <tbody className="divide-y divide-border">
               {revenueData.map((row) => (<tr key={row.month} className="hover:bg-input motion-safe:transition-colors">
                   <td className="px-4 py-3 font-medium text-primary">{row.month}</td>
-                  <td className="px-4 py-3 text-primary">{formatCurrencyFromMinorUnits(row.mrr)}</td>
-                  <td className="px-4 py-3 text-success">+{formatCurrencyFromMinorUnits(row.newRevenue)}</td>
-                  <td className="px-4 py-3 text-danger">-{formatCurrencyFromMinorUnits(row.cancelledRevenue)}</td>
-                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrencyFromMinorUnits(row.netRevenue)}</td>
+                  <td className="px-4 py-3 text-primary">{formatCurrency(row.mrr, 'INR', locale)}</td>
+                  <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue, 'INR', locale)}</td>
+                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancelledRevenue, 'INR', locale)}</td>
+                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrency(row.netRevenue, 'INR', locale)}</td>
                   <td className="px-4 py-3 text-secondary">{row.tenantCount}</td>
                 </tr>))}
             </tbody>

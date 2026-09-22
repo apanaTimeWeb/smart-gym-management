@@ -1,5 +1,8 @@
 // RESPONSIBILITY: Renders a single row in the Invoices table with WhatsApp, Email resend, and PDF download actions.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import React from 'react';
 import type { MouseEvent } from 'react';
 import { Receipt, MessageCircle, Mail } from 'lucide-react';
@@ -7,7 +10,7 @@ import toast from 'react-hot-toast';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { useSuperadminInvoiceActions } from '@/app/superadmin/saas-billing/invoices/invoices_utils/useSuperadminInvoiceActions';
 import type { SaaSInvoice } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTypes';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatDate } from '@/lib/formatters';
 import { InvoicesUrlConfig } from '@/app/superadmin/saas-billing/invoices/superadmin_invoices_url_config';
 import type { SuperadminInvoicesTableRowProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTableRowTypes';
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
@@ -18,6 +21,8 @@ const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
 };
 
 export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminInvoicesTableRowProps) {
+    const locale = useLocale();
+
     const { downloadInvoice, resendInvoice, isDownloading, isResending } = useSuperadminInvoiceActions();
     const handleShareWhatsApp = (e: MouseEvent) => {
         e.stopPropagation();
@@ -34,7 +39,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
                 {
                     items: {
                         'Plan': inv.planName,
-                        'Amount': formatCurrencyFromMinorUnits(inv.amount),
+                        'Amount': formatCurrency(inv.amount, inv.currency || 'INR', locale),
                         'Status': inv.status,
                     },
                 },
@@ -75,7 +80,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
       <td className="p-4 text-sm text-secondary font-mono">{inv.taxId || '—'}</td>
       <td className="p-4 text-sm text-secondary">{inv.planName || '—'}</td>
       <td className="p-4 text-sm text-secondary capitalize">{inv.invoiceType ? inv.invoiceType.replace('_', ' ').toLowerCase() : '—'}</td>
-      <td className="p-4 text-sm font-bold text-primary">{formatCurrencyFromMinorUnits(Number(inv.amount || 0))}</td>
+      <td className="p-4 text-sm font-bold text-primary">{formatCurrency(Number(inv.amount || 0), inv.currency || 'INR', locale)}</td>
       <td className="p-4">
         <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${STATUS_COLORS[inv.status] || 'bg-surface-highlight text-secondary'}`}>
           {inv.status || 'UNKNOWN'}

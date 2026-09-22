@@ -1,11 +1,14 @@
-// RESPONSIBILITY: Renders the TrainerEarningsKPIs UI for the owning Trainer feature; data access remains in the feature API/query layer.
 'use client';
+// RESPONSIBILITY: Renders the TrainerEarningsKPIs UI for the owning Trainer feature; data access remains in the feature API/query layer.
+import { useLocale } from 'next-intl';
+import { formatCurrency } from '@/app/trainer/trainer_layout/trainer_utils/TrainerFormatCurrency';
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatNumber } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerEarningsKPIs() {
+  const locale = useLocale();
   const { data } = useTrainerEarningsQuery();
   const kpis = data?.kpis;
   const dateSuffix = useDateRangeSuffix();
@@ -21,11 +24,11 @@ export default function TrainerEarningsKPIs() {
   }
 
   const cards = [
-    { label: 'Total Earnings' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.totalEarnings, 'INR'), icon: IndianRupee, color: 'text-success', bg: 'bg-success-bg' },
-    { label: 'Pending Payouts' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.pendingPayouts, 'INR'), icon: Clock, color: 'text-warning', bg: 'bg-warning-bg' },
+    { label: 'Total Earnings' + dateSuffix, value: formatCurrency(kpis.totalEarnings, 'INR', locale), icon: IndianRupee, color: 'text-success', bg: 'bg-success-bg' },
+    { label: 'Pending Payouts' + dateSuffix, value: formatCurrency(kpis.pendingPayouts, 'INR', locale), icon: Clock, color: 'text-warning', bg: 'bg-warning-bg' },
     { label: 'Sessions Completed' + dateSuffix, value: formatNumber(kpis.sessionsCompleted), icon: Activity, color: 'text-info', bg: 'bg-info-bg' },
     { label: 'Commission Rate' + dateSuffix, value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
-    { label: 'Tax Deducted (TDS)' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.taxDeduction, 'INR'), icon: Minus, color: 'text-danger', bg: 'bg-danger-bg' },
+    { label: 'Tax Deducted (TDS)' + dateSuffix, value: formatCurrency(kpis.taxDeduction, 'INR', locale), icon: Minus, color: 'text-danger', bg: 'bg-danger-bg' },
   ];
 
   return (

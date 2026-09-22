@@ -2252,3 +2252,270 @@ export const updateProfile = async (id: string, body: any, idempotencyKey?: stri
   headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
 });
 ```
+
+## Rule 15 — WebSockets & Real-Time Communication
+* **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components. 
+* **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
+
+## Rule 16 — Role-Based Field Masking & Optional Types
+* **The Rule:** The backend strictly masks sensitive data fields (like revenue) based on the user's role before transmitting the response. 
+* **Implementation:** Frontend TypeScript interfaces and Zod schemas MUST mark these potentially masked fields as optional (`?`). UI components consuming this data must implement graceful fallback behavior (e.g., hiding a specific chart or displaying a generic placeholder) if a field is `undefined`. The frontend must never crash due to a missing role-restricted field.
+
+## Rule 17 — Strict Cache Invalidation Strategy
+* **The Rule:** TanStack Query (React Query) server state must always remain perfectly synchronized with the backend data. 
+* **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
+
+## Rule 18 — Internationalization (i18n) & Localization
+
+### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+
+The frontend uses `next-intl` (Next.js) with **co-located locale files inside each feature module folder** — NOT in a central `src/messages/` directory. This preserves **Extreme Isolation**: each feature module owns its own strings and can be moved, deleted, or versioned independently.
+
+**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic.
+
+### Stack
+- **Library:** `next-intl` (Next.js) or `react-i18next` (plain React/Vite)
+- **Base language:** English (`en.json`) — written by AI agent when creating the module
+- **Other languages:** Written by the AI agent in the same commit
+- **Runtime cost:** Zero — all files are static JSON, bundled at build time
+
+### Module-Level File Structure
+Each feature module owns its own `_locales/` folder:
+```
+src/features/
+  admin/
+    members/
+      _locales/
+        en.json   ← AI writes this when creating the module
+        nl.json   ← AI translates this in the same commit
+        fr.json
+      components/
+      hooks/
+  superadmin/
+    tenants/
+      _locales/
+        en.json
+        nl.json
+scripts/
+  merge-locales.ts   ← Merges all _locales into one bundle at build time
+```
+
+### `_locales/en.json` (Source of Truth per Module)
+```json
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Members",
+    "ADD_MEMBER": "Add Member",
+    "EMPTY_STATE": "No members found. Add your first member to get started."
+  }
+}
+```
+
+### AI Agent Translation Rule
+When writing a new feature module, the AI MUST:
+1. Create `_locales/en.json` with all English UI strings used in the module.
+2. In the **same commit**, create `_locales/nl.json`, `_locales/fr.json`, etc. for all configured languages, using its own translation capability.
+3. Translations must be **contextually correct** for a Gym Management SaaS.
+
+```json
+// _locales/nl.json — AI writes this, context-aware
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Leden",
+    "ADD_MEMBER": "Lid toevoegen",
+    "EMPTY_STATE": "Geen leden gevonden. Voeg uw eerste lid toe om te beginnen."
+  }
+}
+```
+
+### Using Translations in Components
+Always use the `t()` function — **never** hardcode English strings in JSX:
+```tsx
+import { useTranslations } from 'next-intl';
+
+export const MembersPage = () => {
+  const t = useTranslations('MEMBERS');
+  // ❌ BAD: <h1>Members</h1>
+  // ✅ GOOD:
+  return (
+    <>
+      <h1>{t('PAGE_TITLE')}</h1>
+      <Button>{t('ADD_MEMBER')}</Button>
+    </>
+  );
+};
+```
+
+### `scripts/merge-locales.ts` (Build-Time Merge Script)
+Merges all module `_locales/` folders into a single bundle per language. Runs automatically at build time.
+
+```typescript
+// scripts/merge-locales.ts
+// Usage: npx ts-node scripts/merge-locales.ts
+import * as fs from 'fs';
+import * as path from 'path';
+import { globSync } from 'glob';
+
+const OUTPUT_DIR = 'public/locales';
+const merged: Record<string, Record<string, any>> = {};
+
+for (const file of globSync('src/features/**/_locales/*.json')) {
+  const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
+  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  merged[lang] = { ...merged[lang], ...content };
+}
+
+fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+for (const [lang, data] of Object.entries(merged)) {
+  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
+  console.log(`✅ Merged ${lang}.json`);
+}
+```
+
+Add to `package.json`:
+```json
+{
+  "scripts": {
+    "i18n:merge": "npx ts-node scripts/merge-locales.ts",
+    "build": "npm run i18n:merge && next build"
+  }
+}
+```
+
+### API Client: `Accept-Language` Header
+The central `apiFetch` client MUST attach the current locale to every request:
+```typescript
+import { getLocale } from 'next-intl/server';
+
+export const apiFetch = async (url: string, options?: RequestInit) => {
+  const locale = await getLocale(); // 'nl', 'fr', 'en'
+  return fetch(url, {
+    ...options,
+    headers: { 'Accept-Language': locale, ...options?.headers },
+  });
+};
+```
+
+### Developer Workflow
+1. AI writes a new feature module and creates `_locales/en.json`.
+2. AI, in the **same response**, creates all target-language `_locales/{lang}.json` files.
+3. Run `npm run i18n:merge` (or let CI/build do it automatically).
+4. Commit all `_locales/` files alongside the feature module code.
+5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
+
+### Configured Target Languages
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
+| `en` | English | Global | Latin | **Base — always first** |
+| `nl` | Dutch | Netherlands, Belgium | Latin | High |
+| `fr` | French | France, Belgium, Canada | Latin | High |
+| `de` | German | Germany, Austria, Switzerland | Latin | High |
+| `hi` | Hindi | India (North) | Devanagari | High |
+| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
+| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
+| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
+| `kn` | Kannada | Karnataka, India | Kannada | Medium |
+| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
+| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
+| `ml` | Malayalam | Kerala, India | Malayalam | Low |
+| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
+
+> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+
+> **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
+
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all configured target-language files (e.g., `_locales/nl.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
+
+## Rule 19 — Centralized Feature Flags
+* **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
+* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
+
+
+## Rule 20 — Multi-Currency Monetary Amounts
+
+### The Rule
+The backend sends all monetary amounts as **integers in the smallest currency unit** (paise for INR, cents for USD/EUR) alongside an ISO 4217 currency code. The frontend is solely responsible for formatting. Never hardcode a currency symbol or divide raw amounts manually.
+
+### Canonical Formatting Utility
+Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
+``````typescript
+// utils/formatCurrency.ts (co-located inside the feature module)
+/**
+ * Formats a monetary amount from its smallest unit to a locale-aware display string.
+ * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
+ * @param currency ISO 4217 currency code (e.g., 'INR', 'USD', 'EUR')
+ * @param locale  BCP 47 locale string (e.g., 'en-IN', 'nl-NL', 'en-US')
+ */
+export const formatCurrency = (
+  amount: number,
+  currency: string,
+  locale: string = 'en-IN'
+): string => {
+  const subunitMap: Record<string, number> = {
+    JPY: 1, KWD: 1000, BHD: 1000, // no subunit or 3-decimal currencies
+  };
+  const divisor = subunitMap[currency] ?? 100;
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: divisor === 1 ? 0 : 2,
+  }).format(amount / divisor);
+};
+
+// Usage:
+// formatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
+// formatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
+// formatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
+// formatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
+``````
+
+### Rules
+- ❌ Never do `amount / 100` inline in JSX.
+- ❌ Never hardcode `₹`, `$`, or `€` symbols anywhere in JSX or components.
+- ❌ Never store the formatted string in state or TanStack Query cache — store the raw integer.
+- ✅ Always derive the locale from the active i18n locale (`useLocale()` from `next-intl`).
+
+``````tsx
+// ❌ BAD
+<Text>₹{plan.amount / 100}</Text>
+
+// ✅ GOOD
+import { useLocale } from 'next-intl';
+const locale = useLocale();
+<Text>{formatCurrency(plan.amount, plan.currency, locale)}</Text>
+``````
+
+> **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
+
+
+## Rule 21 — Tenant Data Export & Offboarding UX
+
+### The Rule
+Data exports take minutes to process and cannot be downloaded synchronously. The frontend MUST handle the export trigger as an asynchronous background request.
+
+### UI Placement
+The export functionality must live in a dedicated, clearly visible section: **Admin Settings -> Data Export & Offboarding**. 
+- **Role Constraint:** This UI MUST only be available in the **Superadmin** (or top-level Gym Admin) dashboard. Never add export buttons to manager, trainer, or member interfaces.
+
+### Interaction Flow
+1. **Button:** Display a clear `[ Request Full Data Export ]` button.
+2. **Action:** When clicked, call the backend `POST /export-data`.
+3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
+   *"Export started. You will receive an email with a secure download link within a few minutes."*
+4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
+5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+
+> **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
+
+
+## Notification & WebSocket Recovery Rule
+
+### The Problem
+If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
+
+### The Rule
+The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
+1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
+2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.

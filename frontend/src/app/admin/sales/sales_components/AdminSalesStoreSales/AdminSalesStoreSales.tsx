@@ -4,7 +4,8 @@ import { format } from 'date-fns';
 // DATA FLOW: Store Sales UI → useAdminSalesLogic → AdminSalesApi → module-owned MSW/backend → TanStack Query → visible list/summary.
 import { useState } from 'react';
 import { Package, ShoppingCart, IndianRupee, TrendingUp, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 

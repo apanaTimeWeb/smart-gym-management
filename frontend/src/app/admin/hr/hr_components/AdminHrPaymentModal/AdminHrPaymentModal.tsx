@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders/orchestrates AdminHrPaymentModal for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';

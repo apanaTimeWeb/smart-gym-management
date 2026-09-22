@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
-import type { AdminReportsExportFormat, AdminReportsExportResponse, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
+import type { AdminReportsExportFormat, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 /** Coordinates ReportsLogic state, data flow, and feature behavior. */
 export function useAdminReportsLogic() {
@@ -24,36 +24,8 @@ export function useAdminReportsLogic() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const exportMutation = useMutation<AdminReportsExportResponse, Error, AdminReportsExportFormat>({
-    mutationFn: async (format) => {
-      const response = await reportsApi.exportReport({ tab: activeTab, format });
-      if (!response.data?.url || response.data.url === '#') {
-        throw new Error('Export service did not provide a downloadable file.');
-      }
-      return response.data;
-    },
-    onSuccess: (response, format) => {
-      const extension = format === 'excel' ? 'xlsx' : 'pdf';
-      const fileName = response.fileName ?? `report-${activeTab}-${dateRange}.${extension}`;
-      const link = document.createElement('a');
-      link.href = response.url;
-      link.download = fileName;
-      link.rel = 'noopener';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      adminToast.success('Export completed successfully', 'admin-reports-export');
-      void queryClient.invalidateQueries({ queryKey: ['admin', 'reports'] });
-    },
-    onError: (error) => {
-      adminToast.error(error.message, 'admin-reports-export');
-    },
-  });
-
   return {
     reportData: reportQuery.data ?? null,
     status: reportQuery.status,
-    exportReport: exportMutation.mutate,
-    isExporting: exportMutation.isPending,
   };
 }

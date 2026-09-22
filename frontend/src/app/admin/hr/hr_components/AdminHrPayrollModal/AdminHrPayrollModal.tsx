@@ -38,7 +38,7 @@ export default function AdminHrPayrollModal() {
                     value={field.value || ''}
                     onChange={field.onChange}
                     placeholder="Select Staff"
-                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ₹${s.salary}`, value: String(s.id) }))}
+                    options={staff.map(s => ({ label: `${s.name} (${s.role}) - ${s.salary}`, value: String(s.id) }))}
                   />
                 )}
               />
@@ -56,7 +56,7 @@ export default function AdminHrPayrollModal() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-secondary">Amount (₹) <span className="text-danger">*</span></label>
+              <label className="text-sm font-semibold text-secondary">Amount  <span className="text-danger">*</span></label>
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}

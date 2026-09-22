@@ -1,5 +1,8 @@
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useSuperadminGymsTable hook.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/gyms/gyms_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import { CheckCircle2, Ban, LogIn, PlayCircle, MessageCircle, Trash2, Loader2 } from 'lucide-react';
 import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
@@ -11,7 +14,7 @@ import Pagination from '@/components/ui/Pagination';
 import CopyButton from '@/components/ui/CopyButton';
 import type { KeyboardEvent } from 'react';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatDate } from '@/lib/formatters';
 import SuperadminGymsTableSortIcon from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon';
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
@@ -24,6 +27,8 @@ function getPlanBadgeClasses(plan: string | undefined): string {
     return GYMS_PLAN_COLORS[key] ?? GYMS_PLAN_COLORS.DEFAULT;
 }
 export default function SuperadminGymsTable() {
+    const locale = useLocale();
+
     const { filteredGyms, isPending, isError, total, actionLoadingId, handleRowClick, onGhostLoginClick, onSuspendClick, onDeleteClick, openWhatsappModal, currentPage, pageLimit, setCurrentPage, setSortBy, setSortOrder, sortBy, sortOrder, refetch } = useSuperadminGymsTable();
     const totalPages = Math.ceil(total / pageLimit) || 1;
     const handleSort = (col: string) => {
@@ -123,7 +128,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-success font-medium text-right">
                   {/* Design Â§21: Indian Numbering System â€” â‚¹1,23,456 */}
-                  {formatCurrencyFromMinorUnits(gym.monthlyRevenue)}
+                  {formatCurrency(gym.monthlyRevenue, 'INR', locale)}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">

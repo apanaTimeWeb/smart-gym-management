@@ -1,14 +1,15 @@
 // RESPONSIBILITY: Renders the Manager FinanceTable presentation layer for the Manager module.
 'use client';
 import { Printer } from 'lucide-react';
-import { displayValue, formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { displayValue, formatDate } from '@/lib/formatters';
 import ManagerFinanceEmptyState from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceEmptyState';
 import { useManagerFinanceLogic } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
 import { PAYMENTS_TABLE_HEADERS } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-
+import { useLocale } from "next-intl";
 
 const METHOD_STYLES: Record<string, { bg: string; text: string }> = {
   UPI:        { bg: "bg-primary-subtle",   text: 'text-primary'   },
@@ -17,6 +18,7 @@ const METHOD_STYLES: Record<string, { bg: string; text: string }> = {
   NetBanking: { bg: 'bg-input', text: 'text-secondary' } };
 
 export default function ManagerFinanceTable() {
+    const locale = useLocale();
   const { payments, totalPayments, currentPage, setCurrentPage, printReceipt } = useManagerFinanceLogic();
   const totalPages = Math.ceil(totalPayments / MANAGER_ITEMS_PER_PAGE);
 
@@ -44,7 +46,7 @@ export default function ManagerFinanceTable() {
                     <p className="text-xs text-secondary">{displayValue(p.member?.email)}</p>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{displayValue(p.member?.plan?.name)}</td>
-                  <td className="px-5 py-3.5 text-sm font-semibold text-success whitespace-nowrap">{formatCurrencyFromMinorUnits(p.amount, ManagerEnvConfig.currencyCode)}</td>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-success whitespace-nowrap">{formatCurrency(p.amount, ManagerEnvConfig.currencyCode, locale)}</td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${ms.bg} ${ms.text}`}>{p.method}</span>
                   </td>

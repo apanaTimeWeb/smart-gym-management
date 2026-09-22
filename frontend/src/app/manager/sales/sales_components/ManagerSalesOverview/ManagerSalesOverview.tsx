@@ -1,18 +1,20 @@
 // RESPONSIBILITY: Renders the sales overview cards and charts from feature-owned data.
 'use client';
 import dynamic from 'next/dynamic';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import type { OverviewDataPoint } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-
+import { useLocale } from "next-intl";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
   loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });
 
 export default function ManagerSalesOverview() {
+    const locale = useLocale();
   const { overviewData, isPending, isError, errorMessage } = useManagerSalesLogic();
 
   if (isPending) {
@@ -35,7 +37,7 @@ export default function ManagerSalesOverview() {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif', stacked: true },
     colors: ['var(--chart-primary)', 'var(--chart-success)'],
     grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
-    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrencyFromMinorUnits(v, ManagerEnvConfig.currencyCode) } },
+    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v, ManagerEnvConfig.currencyCode, locale) } },
     xaxis: {
       categories: overviewData.map((d: OverviewDataPoint) => d.month),
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },

@@ -127,5 +127,5 @@ export interface ManagerMembersViewModel {
   handlePrint: (p: Payment) => void;
   handleSharePaymentWhatsApp: (p: Payment) => void;
   setPrintData: (data: ManagerMembersReceiptData | null) => void;
-  exportMembers: (format: ExportFormat) => Promise<void>;
+
 }

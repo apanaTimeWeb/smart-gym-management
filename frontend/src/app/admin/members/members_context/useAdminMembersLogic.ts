@@ -112,7 +112,6 @@ export function useAdminMembersLogic() {
     currentPage,
     setCurrentPage,
     totalPages,
-    exportMembers,
     loadAll,
   };
 }

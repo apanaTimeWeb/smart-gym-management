@@ -36,6 +36,7 @@ export default function AdminHeader() {
         <AdminMembersHeaderSearch />
         <AdminBranchesHeaderSelector />
 
+        <ThemeToggle />
         <AdminNotificationsHeader />
         <AdminHeaderProfile />
       </div>

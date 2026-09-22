@@ -60,7 +60,7 @@ export default function ManagerPlansRequestChangeModal() {
               value={note}
               onChange={e => setNote(e.target.value)}
               rows={4}
-              placeholder="e.g. Increase 1-month price to ₹1500, add sauna access feature..."
+              placeholder="e.g. Increase 1-month price to 1500, add sauna access feature..."
               className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:border-primary resize-none"
             />
           </div>

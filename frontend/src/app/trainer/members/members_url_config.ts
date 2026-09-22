@@ -11,7 +11,6 @@ export const MembersUrlConfig = {
     DIET_PLANS: '/trainer/library/diet-plans',
     WORKOUT_PLANS: '/trainer/workout/workouts',
     PROGRESS_ENTRIES: (id: string) => `/trainer/progress-tracking/${id}/entries`,
-    EXPORT_CSV: '/trainer/members/export?format=csv',
     WHATSAPP: (phone: string, message: string) => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
     MAILTO: (email: string, subject: string, body: string) => `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
   },

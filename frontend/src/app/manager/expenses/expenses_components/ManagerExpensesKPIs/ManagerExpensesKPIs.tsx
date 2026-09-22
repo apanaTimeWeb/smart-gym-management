@@ -1,21 +1,23 @@
 // RESPONSIBILITY: Renders high-level KPIs for the Expenses module.
 'use client';
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerExpensesKPIs() {
+    const locale = useLocale();
   const { data: stats, isPending, isError } = useExpensesStatsQuery();
 
   if (isPending || isError || !stats) return null; // Let Suspense/Main handle it
 
   const KPI_CARDS = [
-    { label: 'Total Expenses (All Time)', value: formatCurrencyFromMinorUnits(stats.totalAmount, ManagerEnvConfig.currencyCode), icon: IndianRupee, color: 'text-primary', bg: "bg-primary-subtle" },
-    { label: 'Expenses This Month', value: formatCurrencyFromMinorUnits(stats.thisMonthAmount, ManagerEnvConfig.currencyCode), icon: TrendingDown, color: 'text-info', bg: 'bg-info-bg' },
-    { label: 'Pending Dues', value: formatCurrencyFromMinorUnits(stats.pendingAmount, ManagerEnvConfig.currencyCode), icon: Clock, color: 'text-danger', bg: 'bg-danger-bg' },
-    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(stats.paidAmount, ManagerEnvConfig.currencyCode), icon: CheckCircle, color: 'text-success', bg: 'bg-success-bg' }
+    { label: 'Total Expenses (All Time)', value: formatCurrency(stats.totalAmount, ManagerEnvConfig.currencyCode, locale), icon: IndianRupee, color: 'text-primary', bg: "bg-primary-subtle" },
+    { label: 'Expenses This Month', value: formatCurrency(stats.thisMonthAmount, ManagerEnvConfig.currencyCode, locale), icon: TrendingDown, color: 'text-info', bg: 'bg-info-bg' },
+    { label: 'Pending Dues', value: formatCurrency(stats.pendingAmount, ManagerEnvConfig.currencyCode, locale), icon: Clock, color: 'text-danger', bg: 'bg-danger-bg' },
+    { label: 'Total Paid', value: formatCurrency(stats.paidAmount, ManagerEnvConfig.currencyCode, locale), icon: CheckCircle, color: 'text-success', bg: 'bg-success-bg' }
   ];
 
   return (

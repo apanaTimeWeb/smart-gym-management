@@ -23,7 +23,7 @@ import AdminReportsSkeleton from '@/app/admin/reports/reports_components/AdminRe
 
 export default function AdminReportsMain() {
   const { activeTab, selectedGymId, setSelectedGymId } = useAdminReportsStore();
-  const { status, exportReport, isExporting } = useAdminReportsLogic();
+  const { status } = useAdminReportsLogic();
   const { data: branches = [] } = useAdminReportsBranchReference();
   const [exportFormat, setExportFormat] = useState<AdminReportsExportFormat>('pdf');
 
@@ -32,7 +32,7 @@ export default function AdminReportsMain() {
     ...(branches as AdminReportsBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
-  const handleExport = () => exportReport(exportFormat);
+
 
   if (status === 'pending') return <AdminReportsSkeleton />;
 
@@ -54,26 +54,7 @@ export default function AdminReportsMain() {
             <AdminReportsDateFilterDropdown />
           </div>
 
-          {/* Export Controls */}
-          <div className="flex items-center gap-2">
-            <div className="w-40 bg-input rounded-lg border-none">
-              <AdminSearchableDropdown
-                options={EXPORT_FORMAT_OPTIONS}
-                value={exportFormat}
-                onChange={(v) => setExportFormat(v as AdminReportsExportFormat)}
-              />
-            </div>
-            <button
-              onClick={handleExport}
-              disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary hover:border-primary motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
-            >
-              {isExporting
-                ? <><Loader2 size={15} className="motion-safe:animate-spin motion-safe:duration-base" /> Exporting...</>
-                : <><Download size={15} /> Export</>
-              }
-            </button>
-          </div>
+
         </div>
 
         {/* KPIs */}

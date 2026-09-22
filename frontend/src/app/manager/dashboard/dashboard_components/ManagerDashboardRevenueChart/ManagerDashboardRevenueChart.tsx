@@ -1,18 +1,20 @@
 // RESPONSIBILITY: Renders the Manager DashboardRevenueChart presentation layer for the Manager module.
 'use client';
 import dynamic from 'next/dynamic';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import type { DashboardRevenueChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
-
+import { useLocale } from "next-intl";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
   loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });
 
 export default function ManagerDashboardRevenueChart() {
+    const locale = useLocale();
   const { range } = useManagerDashboardUrlState();
   const { data: stats } = useDashboardStatsQuery({ range });
   
@@ -33,7 +35,7 @@ export default function ManagerDashboardRevenueChart() {
       opacity: 0.22
     },
     grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
-    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrencyFromMinorUnits(v, ManagerEnvConfig.currencyCode) } },
+    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v, ManagerEnvConfig.currencyCode, locale) } },
     xaxis: {
       categories: stats.revenueChart.map((d: DashboardRevenueChartData) => d.month),
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },

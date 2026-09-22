@@ -1,11 +1,15 @@
 // RESPONSIBILITY: Renders the Reports Cancellations Tab component and its associated UI logic.
+import { useLocale } from 'next-intl';
+import { formatCurrency } from '@/app/superadmin/reports/reports_utils/formatCurrency';
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import type { CancellationsRecord } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 import type { SuperadminReportsCancellationsTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminReportsCancellationsTab({ cancellationsData, filteredCancellationsData, totalCancelledRevenue, avgDaysActive }: SuperadminReportsCancellationsTabProps) {
+    const locale = useLocale();
+
     const cancellationsReasonCounts = cancellationsData.reduce<Record<string, number>>((acc, c) => {
         acc[c.reason] = (acc[c.reason] ?? 0) + 1;
         return acc;
@@ -31,7 +35,7 @@ export function SuperadminReportsCancellationsTab({ cancellationsData, filteredC
         <div className="bg-card border border-border rounded-xl p-6 shadow-card space-y-3">
           <h2 className="text-base font-semibold text-primary mb-2">Lost Gyms Summary</h2>
           <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Lost Gyms</span><span className="text-primary font-medium">{filteredCancellationsData.length}</span></div>
-          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">{formatCurrencyFromMinorUnits(totalCancelledRevenue)}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">{formatCurrency(totalCancelledRevenue, 'INR', locale)}</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Avg Days Active Before Leaving</span><span className="text-primary font-medium">{avgDaysActive} days</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Top Reason for Leaving</span><span className="text-primary font-medium">{cancellationsData.length ? Object.entries(cancellationsData.reduce<Record<string,number>>((acc,row)=>{acc[row.reason]=(acc[row.reason]??0)+1;return acc},{})).sort((a,b)=>b[1]-a[1])[0]?.[0] ?? "—" : "—"}</span></div>
         </div>
@@ -54,7 +58,7 @@ export function SuperadminReportsCancellationsTab({ cancellationsData, filteredC
                   <td className="px-4 py-3 text-secondary">{row.plan}</td>
                   <td className="px-4 py-3 text-secondary">{row.cancelledAt}</td>
                   <td className="px-4 py-3 text-secondary">{row.reason}</td>
-                  <td className="px-4 py-3 text-danger font-medium">{formatCurrencyFromMinorUnits(row.mrr)}</td>
+                  <td className="px-4 py-3 text-danger font-medium">{formatCurrency(row.mrr, 'INR', locale)}</td>
                   <td className="px-4 py-3 text-secondary">{row.daysActive}d</td>
                 </tr>))}
             </tbody>

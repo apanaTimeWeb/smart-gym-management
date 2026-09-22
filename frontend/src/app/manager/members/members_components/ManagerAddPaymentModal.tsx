@@ -2,7 +2,8 @@
 'use client';
 import { useRef, useState } from 'react';
 import { X } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
@@ -11,9 +12,10 @@ import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastruct
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
 import { MANAGER_MEMBER_MAX_AMOUNT_MAJOR_UNITS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { FormEvent } from 'react';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerAddPaymentModal() {
+    const locale = useLocale();
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useManagerMembersLogic();
   const { confirm } = useConfirm();
   const idempotencyKeyRef = useRef<string | null>(null);
@@ -29,7 +31,7 @@ export default function ManagerAddPaymentModal() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!amount || Number(amount) <= 0) return;
-    const confirmed = await confirm({ title: 'Confirm Payment', message: `Record this payment of ${formatCurrencyFromMinorUnits(toManagerMinorUnits(Number(amount)), ManagerEnvConfig.currencyCode)} for ${selectedMember?.name ?? 'the member'}?`, confirmText: 'Record Payment', type: 'warning' });
+    const confirmed = await confirm({ title: 'Confirm Payment', message: `Record this payment of ${formatCurrency(toManagerMinorUnits(Number(amount)), ManagerEnvConfig.currencyCode, locale)} for ${selectedMember?.name ?? 'the member'}?`, confirmText: 'Record Payment', type: 'warning' });
     if (!confirmed) return;
     idempotencyKeyRef.current ??= createManagerIdempotencyKey();
     setIsSubmitting(true);
@@ -56,8 +58,8 @@ export default function ManagerAddPaymentModal() {
             <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-border' : 'bg-success-bg border-success'}`}>
               <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
                 {selectedMember.pendingAmount > 0 
-                  ? `Current Dues: ${formatCurrencyFromMinorUnits(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode)}` 
-                  : `Advance Balance: ${formatCurrencyFromMinorUnits(selectedMember.advanceAmount || 0, ManagerEnvConfig.currencyCode)}`}
+                  ? `Current Dues: ${formatCurrency(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode, locale)}` 
+                  : `Advance Balance: ${formatCurrency(selectedMember.advanceAmount || 0, ManagerEnvConfig.currencyCode, locale)}`}
               </p>
             </div>
           )}

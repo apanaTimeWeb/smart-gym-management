@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders the grid of membership plan cards with edit/delete actions and pagination.
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';

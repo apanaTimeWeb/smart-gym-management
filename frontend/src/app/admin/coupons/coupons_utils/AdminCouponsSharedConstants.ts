@@ -3,7 +3,7 @@ import type { Coupon, CouponsKPIData } from '@/app/admin/coupons/coupons_types/A
 
 export const COUPON_TYPE_OPTIONS = [
   { value: 'percentage', label: 'Percentage (%)' },
-  { value: 'flat', label: 'Flat Amount (₹)' },
+  { value: 'flat', label: 'Flat Amount ' },
 ];
 
 export const COUPON_STATUS_OPTIONS = [

@@ -15,6 +15,7 @@ interface ManagerHrUiState {
   editData: Partial<Staff> | null;
   viewProfileData: Staff | null;
   toast: { message: string; type: ManagerToastType } | null;
+  saving: boolean;
   setShowModal: (value: boolean) => void;
   setShowPayrollModal: (value: boolean) => void;
   setPaymentModal: (value: ManagerHrUiState['paymentModal']) => void;
@@ -24,6 +25,7 @@ interface ManagerHrUiState {
   setToast: (value: ManagerHrUiState['toast']) => void;
   showToast: (message: string, type: ManagerToastType) => void;
   hideToast: () => void;
+  setSaving: (value: boolean) => void;
   openAdd: () => void;
   openEdit: (staff: Staff) => void;
   openAddPayroll: () => void;
@@ -37,6 +39,7 @@ export const useManagerHrUiStore = create<ManagerHrUiState>((set) => ({
   editData: null,
   viewProfileData: null,
   toast: null,
+  saving: false,
   setShowModal: (showModal) => set({ showModal }),
   setShowPayrollModal: (showPayrollModal) => set({ showPayrollModal }),
   setPaymentModal: (paymentModal) => set({ paymentModal }),
@@ -46,6 +49,7 @@ export const useManagerHrUiStore = create<ManagerHrUiState>((set) => ({
   setToast: (toast) => set({ toast }),
   showToast: (message, type) => set({ toast: { message, type } }),
   hideToast: () => set({ toast: null }),
+  setSaving: (saving) => set({ saving }),
   openAdd: () => set({ editId: null, editData: EMPTY_STAFF, showModal: true }),
   openEdit: (staff) => set({
     editId: staff.id,

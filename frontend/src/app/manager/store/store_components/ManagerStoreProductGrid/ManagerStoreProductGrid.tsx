@@ -1,16 +1,18 @@
 // RESPONSIBILITY: Renders the store product grid from feature-owned product data.
 'use client';
 import { Edit2, Trash2 } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerStoreProductGrid() {
+    const locale = useLocale();
   const { confirm } = useConfirm();
   const { products, summary, isPending, isError, errorMessage, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useManagerStoreLogic();
 
@@ -97,7 +99,7 @@ export default function ManagerStoreProductGrid() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold text-primary">
-                {formatCurrencyFromMinorUnits(p.price, ManagerEnvConfig.currencyCode)}
+                {formatCurrency(p.price, ManagerEnvConfig.currencyCode, locale)}
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 10 

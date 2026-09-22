@@ -1,10 +1,15 @@
 // RESPONSIBILITY: Renders the Superadmin invoices V1 Recovery schedule, Refunds, credits & write-offs view.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber, formatDateTime } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { formatNumber, formatDateTime } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminInvoicesV1SectionProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesV1Types.ts';
 import { getSuperadminInvoicesStatusBadgeClasses } from '@/app/superadmin/saas-billing/invoices/invoices_utils/SuperadminInvoicesStatusBadgeConfig';
 export default function SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSection({ data }: SuperadminInvoicesV1SectionProps) {
+    const locale = useLocale();
+
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Recovery schedule" description="Simple timing policy for failed payments.">
     <div className="space-y-2">
@@ -31,7 +36,7 @@ export default function SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSecti
         </div>
         <div className="text-right">
           <p className="font-medium text-primary">
-            {formatCurrencyFromMinorUnits(r.amount)}
+            {formatCurrency(r.amount, 'INR', locale)}
           </p>
           <span className={`text-xs font-semibold ${getSuperadminInvoicesStatusBadgeClasses(r.status)}`}>
             {r.status}

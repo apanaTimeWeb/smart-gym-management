@@ -1,19 +1,19 @@
 // RESPONSIBILITY: Renders the success state after converting a lead.
 'use client';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { ManagerInquiriesUrlConfig } from '@/app/manager/inquiries/inquiries_url_config';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import type { ManagerConvertLeadSuccessProps } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSuccessTypes';
-
-
-
+import { useLocale } from "next-intl";
 
 export default function ManagerConvertLeadSuccess({ successData, closeConvert }: ManagerConvertLeadSuccessProps) {
+    const locale = useLocale();
   const handleSendWhatsApp = () => {
     if (!successData || !successData.phone) return;
     const phone = successData.phone.replace(/\D/g, '');
     const aadhaarLine = successData.aadhaar ? `\n• *Aadhaar No:* ${successData.aadhaar}` : '';
-    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}${aadhaarLine}\n• *Join Date:* ${formatDate(successData.joinDate)}\n• *Expiry Date:* ${formatDate(successData.expiryDate)}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ${formatCurrencyFromMinorUnits(successData.paidAmount, ManagerEnvConfig.currencyCode)}\n• *Pending:* ${formatCurrencyFromMinorUnits(successData.pendingAmount, ManagerEnvConfig.currencyCode)}\n\nLet's crush those goals! 🔥`;
+    const message = `🎉 *Congratulations ${successData.name}!* 🎉\n\nYour admission at GymSmart is confirmed. Welcome to the fitness family! 💪\n\n*📝 ADMISSION DETAILS*\n• *Gym ID:* ${successData.gymId}\n• *Plan:* ${successData.planName}${aadhaarLine}\n• *Join Date:* ${formatDate(successData.joinDate)}\n• *Expiry Date:* ${formatDate(successData.expiryDate)}\n\n*💰 PAYMENT DETAILS*\n• *Paid:* ${formatCurrency(successData.paidAmount, ManagerEnvConfig.currencyCode, locale)}\n• *Pending:* ${formatCurrency(successData.pendingAmount, ManagerEnvConfig.currencyCode, locale)}\n\nLet's crush those goals! 🔥`;
     
     window.open(`${ManagerInquiriesUrlConfig.INTEGRATIONS.WHATSAPP_WEB_BASE}/91${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };

@@ -15,6 +15,7 @@ import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { gymWhatsappSchema, type GymWhatsappFormValues } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsSchema';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { formatSuperadminGymWhatsappReceiptDate } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymWhatsappReceiptUtils';
+import { useLocale } from 'next-intl';
 /**
  * Purpose: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
  * Inputs: values defined by the exported hook signature.
@@ -26,6 +27,7 @@ export function useSuperadminGymWhatsappModal() {
     const isWhatsappModalOpen = useSuperadminGymsStore(state => state.isWhatsappModalOpen);
     const closeWhatsappModal = useSuperadminGymsStore(state => state.closeWhatsappModal);
     const selectedGym = useSuperadminGymsStore(state => state.selectedGym);
+    const locale = useLocale();
     const queryClient = useQueryClient();
     const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty }, } = useForm<GymWhatsappFormValues>({
         resolver: zodResolver(gymWhatsappSchema),
@@ -49,7 +51,7 @@ export function useSuperadminGymWhatsappModal() {
         onSuccess: (res, data) => {
             if (data.phone) {
                 const cleanPhone = String(data.phone).replace(/\D/g, '');
-                const dateStr = formatSuperadminGymWhatsappReceiptDate();
+                const dateStr = formatSuperadminGymWhatsappReceiptDate(new Date(), locale);
                 const waText = WhatsAppFormatter.formatReceipt({
                     title: 'Smart Gym 360',
                     subtitle: String(data.subject),

@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
 
 import type { AdminMembersExpiryFilter } from '@/app/admin/members/members_types/AdminMembersUiTypes';
-import { Search, Download } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import { useAdminMembersBranchReference } from '@/app/admin/members/members_context/useAdminMembersBranchReference';
 import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
@@ -13,7 +13,7 @@ import type { AdminMembersBranchReference } from '@/app/admin/members/members_ty
 import type { AdminMembersToolbarProps } from '@/app/admin/members/members_types/AdminMembersToolbarPropsTypes';
 
 
-export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToolbarProps) {
+export default function AdminMembersToolbar() {
 
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, expiryFilter, setExpiryFilter, genderFilter, setGenderFilter, planFilter, setPlanFilter } = useAdminMembersStore();
   const { data: branches = [] } = useAdminMembersBranchReference();
@@ -86,11 +86,7 @@ export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToo
           placeholder="All Plans"
         />
       </div>
-      <div className="flex gap-2 ml-auto">
-        <button onClick={() => void onExportMembers()} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
-          <Download size={16} /> CSV
-        </button>
-      </div>
+
     </div>
   );
 }

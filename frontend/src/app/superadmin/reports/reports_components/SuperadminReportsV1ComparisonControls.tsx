@@ -1,20 +1,24 @@
 // RESPONSIBILITY: Renders report period/segment controls from server-provided definitions and exports the selected comparison dataset.
 'use client';
 import { useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { formatDecimal, formatNumber } from '@/lib/formatters';
 import type { SuperadminReportsV1ComparisonControlsProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsV1ComparisonTypes';
 import { createSuperadminReportsV1ComparisonCsv, getSuperadminReportsV1ComparisonMetrics } from '@/app/superadmin/reports/reports_utils/SuperadminReportsV1ComparisonUtils';
 
 export default function SuperadminReportsV1ComparisonControls({ data, period, segment, onPeriodChange, onSegmentChange }: SuperadminReportsV1ComparisonControlsProps) {
   const metrics = useMemo(() => getSuperadminReportsV1ComparisonMetrics(data, period, segment), [data, period, segment]);
-  const handleExport = () => {
-    const blob = new Blob([createSuperadminReportsV1ComparisonCsv(metrics)], { type: 'text/csv;charset=utf-8;' });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = href;
-    link.download = `superadmin-report-comparison-${segment}.csv`;
-    link.click();
-    URL.revokeObjectURL(href);
+  const handleExport = async () => {
+    try {
+      const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+      if (response.status === 202) {
+        toast.success('Export started. A secure download link will be sent to your email.');
+      } else {
+        toast.error('Failed to start data export.');
+      }
+    } catch (e) {
+      toast.error('Error starting data export.');
+    }
   };
   const periodLabel = data.periods.find((item) => item.key === period)?.label ?? period;
   const segmentLabel = data.segments.find((item) => item.key === segment)?.label ?? segment;

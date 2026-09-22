@@ -26,7 +26,7 @@ export interface ManagerFinanceViewModel {
   isError: boolean;
   errorMessage: string;
   reload: () => void;
-  exportCSV: () => void;
+
   exportPDF: () => void;
   printReceipt: (id: string) => void;
   toast: { message: string; type: ManagerToastType } | null;

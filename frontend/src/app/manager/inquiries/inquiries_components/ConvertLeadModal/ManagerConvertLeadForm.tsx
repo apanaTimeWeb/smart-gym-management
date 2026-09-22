@@ -1,15 +1,14 @@
 // RESPONSIBILITY: Renders the form fields for converting a lead.
 'use client';
 import { Controller } from 'react-hook-form';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS, MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS, MANAGER_INQUIRY_MAX_CUSTOM_DAYS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import type { ManagerConvertLeadFormProps } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadFormTypes';
 import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
-
-
-
+import { useLocale } from "next-intl";
 
 export default function ManagerConvertLeadForm({
   useFormReturn,
@@ -18,6 +17,7 @@ export default function ManagerConvertLeadForm({
   watchBillingCycle,
   watchCustomDays
 }: ManagerConvertLeadFormProps) {
+    const locale = useLocale();
   const { register, formState: { errors }, control } = useFormReturn;
   const selectedPlan = plans.find(p => p.id.toString() === watchPlanId?.toString());
 
@@ -118,12 +118,12 @@ export default function ManagerConvertLeadForm({
           <div>
             <span className="font-semibold text-warning">Calculated Price:</span>
             <span className="text-warning ml-1 font-bold">
-              {formatCurrencyFromMinorUnits(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode)}
+              {formatCurrency(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode, locale)}
             </span>
           </div>
           {watchBillingCycle === 'CUSTOM' && (
             <div className="text-warning text-xs opacity-80">
-              (Per Day: {formatCurrencyFromMinorUnits(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode)} × {watchCustomDays || 0} days)
+              (Per Day: {formatCurrency(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode, locale)} × {watchCustomDays || 0} days)
             </div>
           )}
         </div>
@@ -139,11 +139,11 @@ export default function ManagerConvertLeadForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount (₹)</label>
+        <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount </label>
         <input type="number" min="0" max={MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS} step="0.01" disabled {...register('totalAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid (₹)</label>
+        <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid </label>
         <input type="number" min="0" max={MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS} step="0.01" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base" />
       </div>
     </div>

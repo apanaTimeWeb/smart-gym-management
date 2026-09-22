@@ -1,11 +1,15 @@
 import { http, HttpResponse, delay } from 'msw';
-import { MOCK_GYMS, MOCK_GYM_STATS } from '@/app/superadmin/gyms/gyms_mocks/fixtures/SuperadminGymsMockFixtures';
+import { MOCK_GYMS, MOCK_GYM_STATS, MOCK_SUBSCRIPTION_PLANS } from '@/app/superadmin/gyms/gyms_mocks/fixtures/SuperadminGymsMockFixtures';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { gymCreateSchema, gymProvisionSchema } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsSchema';
 import { StatusCodes } from 'http-status-codes';
 let mockGymsList = [...MOCK_GYMS];
 export function resetSuperadminGymsMockState(): void { mockGymsList = [...MOCK_GYMS]; }
 export const superadminGymsHandlers = [
+    http.get(GymsUrlConfig.BACKEND_API.SUBSCRIPTION_PLANS, async () => {
+        await delay(300);
+        return HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUBSCRIPTION_PLANS });
+    }),
     http.get(GymsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);

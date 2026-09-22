@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
 'use client';
 import { Edit, Trash2, ExternalLink, CheckCircle2, Banknote, Loader2 } from 'lucide-react';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { useManagerExpensesLogic } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
 import { useExpensesListQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
@@ -11,9 +12,10 @@ import ManagerPagination from '@/app/manager/manager_components/ManagerShared/Ma
 import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerExpensesTable() {
+    const locale = useLocale();
   const { confirm } = useConfirm();
   const { search, statusFilter, currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useManagerExpensesLogic();
   
@@ -57,7 +59,7 @@ export default function ManagerExpensesTable() {
                         {e.referenceNo && <span className="block text-xs font-normal text-secondary mt-0.5">Ref: {e.referenceNo}</span>}
                       </td>
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{e.category}</td>
-                      <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{formatCurrencyFromMinorUnits(e.amount, ManagerEnvConfig.currencyCode)}</td>
+                      <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{formatCurrency(e.amount, ManagerEnvConfig.currencyCode, locale)}</td>
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">
                         {formatDate(e.date)}
                       </td>

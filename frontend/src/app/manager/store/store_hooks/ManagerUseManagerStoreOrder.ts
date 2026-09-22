@@ -3,7 +3,8 @@
 'use client';
 import { useRef } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
@@ -17,7 +18,7 @@ import type { ManagerConfirmType } from '@/app/manager/manager_components/Manage
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
 import type { Product, OrderItem } from '@/app/manager/store/store_types/ManagerStoreTypes';
-
+import { useLocale } from "next-intl";
 
 /** Owns one Store POS draft from confirmation through authoritative mutation completion. */
 export function useManagerStoreOrder(
@@ -28,6 +29,7 @@ export function useManagerStoreOrder(
   setSaving: (saving: boolean) => void,
   confirm: (args: { title: string; message: string; confirmText: string; cancelText: string; type: ManagerConfirmType }) => Promise<boolean>,
 ) {
+    const locale = useLocale();
   const ui = useManagerStoreUiStore();
   const idempotencyKeyRef = useRef<string | null>(null);
   const hasDraftChanges = ui.orderItems.length > 0 || ui.customerPhone.length > 0 || ui.sendViaWhatsapp;
@@ -54,7 +56,7 @@ export function useManagerStoreOrder(
       showToast(res.message, 'success');
       if (ui.sendViaWhatsapp && ui.customerPhone) {
         const itemsRecord = ui.orderItems.reduce<Record<string, string>>((acc, item) => {
-          acc[`${item.qty}x ${item.name}`] = formatCurrencyFromMinorUnits(item.price * item.qty, ManagerEnvConfig.currencyCode);
+          acc[`${item.qty}x ${item.name}`] = formatCurrency(item.price * item.qty, ManagerEnvConfig.currencyCode, locale);
           return acc;
         }, {});
         const waText = WhatsAppFormatter.formatReceipt({
@@ -62,7 +64,7 @@ export function useManagerStoreOrder(
           subtitle: 'Retail Invoice',
           date: formatDate(new Date().toISOString()),
           customerInfo: { Phone: ui.customerPhone, 'Order ID': res.data?.id || 'PENDING' },
-          sections: [{ title: 'Items', items: itemsRecord }, { items: { Total: formatCurrencyFromMinorUnits(orderTotal, ManagerEnvConfig.currencyCode), Payment: ui.orderMethod } }],
+          sections: [{ title: 'Items', items: itemsRecord }, { items: { Total: formatCurrency(orderTotal, ManagerEnvConfig.currencyCode, locale), Payment: ui.orderMethod } }],
           footer: 'Thank You! Visit Again',
         });
         window.open(`${ManagerStoreUrlConfig.INTEGRATIONS.WHATSAPP_WEB_BASE}/91${ui.customerPhone.replace(/\D/g, '')}?text=${encodeURIComponent(waText)}`, '_blank', 'noopener,noreferrer');

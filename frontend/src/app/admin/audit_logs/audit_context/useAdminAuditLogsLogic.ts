@@ -44,5 +44,5 @@ export function useAdminAuditLogsLogic() {
     const anchor = document.createElement('a'); anchor.href = url; anchor.download = `audit_logs_${new Date().toISOString().split('T')[0]}.csv`; anchor.click(); URL.revokeObjectURL(url);
   }
 
-  return { paginated, filtered: paginated, status: logsQuery.status, kpis: kpis?.data ?? null, currentPage, setCurrentPage, totalPages: Math.max(1, Math.ceil(totalItems / AUDIT_ITEMS_PER_PAGE)), totalItems, exportCSV };
+  return { paginated, filtered: paginated, status: logsQuery.status, kpis: kpis?.data ?? null, currentPage, setCurrentPage, totalPages: Math.max(1, Math.ceil(totalItems / AUDIT_ITEMS_PER_PAGE)), totalItems };
 }

@@ -3,7 +3,8 @@
 'use client';
 import { useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { useManagerMembersMutations } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersMutations';
@@ -11,16 +12,18 @@ import { useManagerMembersPrintLogic } from '@/app/manager/members/members_hooks
 import { useFetchMember } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
 import { useManagerMembersUrlState } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersUrlState';
 import { useManagerMembersUiStore } from '@/app/manager/members/members_store/ManagerUseManagerMembersUiStore';
-import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
+
 import { EMPTY_MEMBER_FORM, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
 import type { Member, ManagerMembersViewModel, MembersInitialData, ExportFormat } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { useLocale } from "next-intl";
 
 /** Manages UseMembersLogic for the Manager module. */
 
 
 /** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersLogic(initialData?: MembersInitialData | null): ManagerMembersViewModel {
+    const locale = useLocale();
   const urlState = useManagerMembersUrlState();
 
   const ui = useManagerMembersUiStore();
@@ -59,20 +62,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showToast, selectedMember, setSelectedMember, ui.editId, ui.setShowAddModal, ui.setShowRenewModal, ui.setShowPaymentModal
   );
 
-  const exportMembers = useCallback(async (format: ExportFormat) => {
-    const response = await membersApi.exportMembersReport({
-      search: urlState.debouncedSearch,
-      status: urlState.statusFilter,
-      gender: urlState.genderFilter,
-      plan: urlState.planFilter,
-      expiryFrom: urlState.expiryFrom,
-      expiryTo: urlState.expiryTo,
-      sort: urlState.sortColumn,
-      dir: urlState.sortDirection });
-    const allMembers = response.data?.members ?? [];
-    if (format === 'csv') downloadManagerMembersCsv(allMembers);
-    else printManagerMembersPdf(allMembers);
-  }, [urlState.debouncedSearch, urlState.statusFilter, urlState.genderFilter, urlState.planFilter, urlState.expiryFrom, urlState.expiryTo, urlState.sortColumn, urlState.sortDirection]);
+
 
   const { printData, setPrintData, handlePrint, handleSharePaymentWhatsApp } = useManagerMembersPrintLogic(
     selectedMember, showToast
@@ -82,7 +72,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     const tpl = m.status === 'EXPIRED'
       ? MSG_TEMPLATES.EXPIRED(m.name)
       : m.pendingAmount > 0
-      ? MSG_TEMPLATES.PENDING(m.name, formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode))
+      ? MSG_TEMPLATES.PENDING(m.name, formatCurrency(m.pendingAmount, ManagerEnvConfig.currencyCode, locale))
       : MSG_TEMPLATES.DEFAULT(m.name);
     ui.setMsgModal({ open: true, type, recipient: { name: m.name, phone: m.phone, email: m.email }, message: tpl });
   }, [ui]);
@@ -96,6 +86,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showPaymentModal: ui.showPaymentModal, setShowPaymentModal: ui.setShowPaymentModal,
     openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal: ui.msgModal, openMsg, closeMsg,
-    printData: ui.printData, handlePrint, handleSharePaymentWhatsApp, setPrintData: ui.setPrintData, exportMembers
+    printData: ui.printData, handlePrint, handleSharePaymentWhatsApp, setPrintData: ui.setPrintData
   };
 }

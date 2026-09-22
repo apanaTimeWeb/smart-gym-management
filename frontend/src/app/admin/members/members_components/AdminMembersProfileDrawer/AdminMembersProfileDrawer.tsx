@@ -4,7 +4,8 @@ import { format } from 'date-fns';
 
 import { X, Phone, Mail, Building2, Calendar, IndianRupee, User } from 'lucide-react';
 import type { AdminMembersProfileDrawerProps } from '@/app/admin/members/members_types/AdminMembersProfileDrawerTypes';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 

@@ -1,14 +1,16 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using server data from the dashboard TanStack Query contract.
 'use client';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart, Snowflake, TrendingDown, Target } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerDashboardKPIs() {
+    const locale = useLocale();
   const { range } = useManagerDashboardUrlState();
   const { data: stats } = useDashboardStatsQuery({ range });
   
@@ -32,7 +34,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Today's Collection"
-          value={formatCurrencyFromMinorUnits(s.todayCollection, ManagerEnvConfig.currencyCode)}
+          value={formatCurrency(s.todayCollection, ManagerEnvConfig.currencyCode, locale)}
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
@@ -50,7 +52,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Pending Dues"
-          value={formatCurrencyFromMinorUnits(s.pendingPayments, ManagerEnvConfig.currencyCode)}
+          value={formatCurrency(s.pendingPayments, ManagerEnvConfig.currencyCode, locale)}
           change={`${s.membersByStatus?.pending || 0} members`}
           changeType="down"
           icon={AlertCircle}
@@ -102,7 +104,7 @@ export default function ManagerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
         <ManagerStatCard
           title="Today's Collection"
-          value={formatCurrencyFromMinorUnits(s.todayCollection || 0, ManagerEnvConfig.currencyCode)}
+          value={formatCurrency(s.todayCollection || 0, ManagerEnvConfig.currencyCode, locale)}
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
@@ -120,7 +122,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="PT Revenue"
-          value={formatCurrencyFromMinorUnits(s.totalPTRevenue || 0, ManagerEnvConfig.currencyCode)}
+          value={formatCurrency(s.totalPTRevenue || 0, ManagerEnvConfig.currencyCode, locale)}
           change="This Month"
           changeType="neutral"
           icon={Target}

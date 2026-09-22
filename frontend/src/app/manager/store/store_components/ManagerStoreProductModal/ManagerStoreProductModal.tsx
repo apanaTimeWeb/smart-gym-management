@@ -12,7 +12,7 @@ import type { ManagerStoreProductFieldType } from '@/app/manager/store/store_typ
 const PRODUCT_FIELDS: ReadonlyArray<{ label: string; key: keyof ProductFormValues; type: ManagerStoreProductFieldType }> = [
   { label: 'Product Name', key: 'name', type: 'text' },
   { label: 'Unit/Variant (e.g. 1 KG, 500 ML)', key: 'unit', type: 'text' },
-  { label: 'Price (₹)', key: 'price', type: 'number' },
+  { label: 'Price ', key: 'price', type: 'number' },
   { label: 'Stock Quantity', key: 'stock', type: 'number' },
   { label: 'Description', key: 'description', type: 'text' },
 ];

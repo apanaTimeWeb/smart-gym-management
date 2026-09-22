@@ -7,7 +7,8 @@ import { RefreshCw, Calendar, CreditCard } from 'lucide-react';
 import AdminUsageMetricCard from '@/app/admin/usage/usage_components/AdminUsageMetricCard/AdminUsageMetricCard';
 import AdminUsagePlanCard from '@/app/admin/usage/usage_components/AdminUsagePlanCard/AdminUsagePlanCard';
 import { useAdminUsageLogic } from '@/app/admin/usage/usage_context/useAdminUsageLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 
 export default function AdminUsageMain() {
   const { data, metrics, planTiers, refresh, status, requestUpgrade, pendingUpgradePlan } = useAdminUsageLogic();

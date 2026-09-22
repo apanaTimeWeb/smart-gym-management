@@ -1,9 +1,11 @@
 "use client";
+import React from 'react';
 import { format } from 'date-fns';
 
 // RESPONSIBILITY: Owns TanStack Query state and notification mutations for the Admin notification page.
 // DATA FLOW: AdminNotificationsApi → TanStack Query → AdminNotificationsClient → AdminNotificationsList
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { AdminNotificationsApi } from '@/app/admin/notifications/notifications_api/AdminNotificationsApi';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
@@ -27,6 +29,31 @@ export const useAdminNotificationsPage = () => {
     queryFn: () => AdminNotificationsApi.fetchNotifications(),
     staleTime: 1000 * 60,
   });
+
+  React.useEffect(() => {
+    // 1. WebSocket Real-time UI updates
+    const handleWs = (e: Event) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'notifications'] });
+    };
+    window.addEventListener('notification.received', handleWs);
+    window.addEventListener('chat_message', handleWs);
+
+    // 2. Offline Recovery / Tab Focus
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        queryClient.invalidateQueries({ queryKey: ['admin', 'notifications'] });
+      }
+    };
+    window.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleVisibility);
+
+    return () => {
+      window.removeEventListener('notification.received', handleWs);
+      window.removeEventListener('chat_message', handleWs);
+      window.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleVisibility);
+    };
+  }, [queryClient]);
 
   const notifications = (notificationsQuery.data?.data ?? []).map(mapNotificationToItem);
 

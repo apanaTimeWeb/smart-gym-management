@@ -52,6 +52,6 @@ export interface ManagerExpensesViewModel {
   saveExpense: (data: Partial<Expense>, idempotencyKey?: string) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
   markAsPaid: (id: string) => Promise<void>;
-  exportExpenses: () => void;
+
   saving: boolean;
 }

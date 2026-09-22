@@ -1,7 +1,8 @@
 "use client";
 // RESPONSIBILITY: Renders one SaaS subscription plan comparison card and its upgrade action.
 import { Star, CheckCircle, Zap } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import type { SaaSPlan } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
 import { PLAN_TIER_STYLES } from '@/app/admin/subscriptions/subscriptions_utils/AdminSubscriptionsSharedConstants';
 export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading }: { plan: SaaSPlan; onUpgrade: (id: string, name: string) => void; upgrading: boolean }) {

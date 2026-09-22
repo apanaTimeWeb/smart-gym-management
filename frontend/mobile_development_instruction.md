@@ -2059,15 +2059,31 @@ Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
 
 ---
 
-## Rule 53 — Idempotency-Key for Irreversible Mutations
+## Rule 53 — Idempotency for ALL API Mutations
 
-Any financial or irreversible mutation (payment, renewal, payroll, purchase) MUST generate an `Idempotency-Key` exactly once per user intent.
+The backend strictly enforces idempotency on **all** state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) via `@RequireIdempotencyKey()`. Omitting the header causes an immediate **HTTP 400** rejection. Therefore, every mobile API client function that performs a mutation MUST attach an `Idempotency-Key` header.
 
-Rules:
-- Generate the UUID when the user confirms the action (e.g., in the confirmation bottom sheet).
-- Attach it to the HTTP request headers as `Idempotency-Key`.
-- If the network request times out or fails (5xx), and the client automatically or manually retries, it MUST send the exact same `Idempotency-Key`.
-- Never generate a new key for a retry of the same intent.
+### 53A — General Mutations
+Every mutating API client function MUST accept an optional `idempotencyKey?: string` parameter and inject it as a header:
+
+```typescript
+export const updateProfile = async (id: string, body: UpdateProfileDto, idempotencyKey?: string) =>
+  apiFetch('/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+  });
+```
+
+### 53B — Irreversible / Financial Mutations (Stricter Rules)
+For financial or irreversible actions (payment, renewal, payroll, purchase), the key policy is stricter:
+
+- Generate a `crypto.randomUUID()` **once**, at the moment the user confirms the action (e.g., in the confirmation bottom sheet).
+- Store the key in a `useRef` — do NOT regenerate it on re-renders.
+- On network timeout or 5xx failure, the app MUST retry with the **exact same key** — never a fresh one.
+- Only generate a new key if the user explicitly cancels and re-opens the confirmation dialog (new user intent = new key).
+
+> **AI NOTE:** Generating a fresh `randomUUID()` on every retry is a critical bug — the backend will process the request twice, creating duplicate payments or records. The key must survive retries.
 
 ---
 
@@ -2160,22 +2176,283 @@ The mobile architecture MUST enforce the following security and robustness const
 4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan, hard-write-boundary diff check.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
 
-57. **Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)**:
+## Rule 57 — Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., 	rainer_url_config) and file case (e.g., Trainer_url_config.ts) will cause the build to fail in CI/CD.
-- **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
-- ❌ **BAD:** File is UserComponent.tsx, imported as import UserComponent from './userComponent'.
-- ✅ **GOOD:** File is UserComponent.tsx, imported as import UserComponent from './UserComponent'.
+- **Rule:** A mismatch between import case (e.g., ` 	rainer_url_config `) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
+- **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
+- [?] **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
+- [?] **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from './UserComponent'`.
 
-## Rule 25 — Idempotency for API Mutations
+## Rule 58 — WebSockets & Real-Time Communication
+* **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components.
+* **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
 
-All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY mobile API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
+## Rule 59 — Role-Based Field Masking & Optional Types
+* **The Rule:** The backend strictly masks sensitive data fields (like revenue) based on the user's role before transmitting the response.
+* **Implementation:** Frontend TypeScript interfaces and Zod schemas MUST mark these potentially masked fields as optional (`?`). UI components consuming this data must implement graceful fallback behavior (e.g., hiding a specific chart or displaying a generic placeholder) if a field is `undefined`. The frontend must never crash due to a missing role-restricted field.
 
-Example:
-```typescript
-export const updateProfile = async (id: string, body: any, idempotencyKey?: string) => apiFetch('/profile', {
-  method: 'PATCH',
-  body: JSON.stringify(body),
-  headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
-});
+## Rule 60 — Strict Cache Invalidation Strategy
+* **The Rule:** TanStack Query (React Query) server state must always remain perfectly synchronized with the backend data.
+* **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
+
+## Rule 61 — Internationalization (i18n) & Localization
+
+### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+
+The mobile app uses `react-i18next` with **co-located locale files inside each feature module folder** — NOT in a central `src/i18n/locales/` directory. This preserves **Extreme Isolation**: each feature module owns its own strings and can be moved, deleted, or versioned independently.
+
+**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic — and faster than any external service.
+
+### Stack
+- **Library:** `react-i18next` + `i18next`
+- **Locale detection:** `react-native-localize` (auto-detects device language)
+- **Base language:** English (`en.json`) — written by AI agent when creating the module
+- **Other languages:** Written by the AI agent in the same commit
+- **Runtime cost:** Zero — all files are static JSON, bundled inside the app
+
+### Module-Level File Structure
+Each feature module owns its own `_locales/` folder:
 ```
+src/features/
+  admin/
+    members/
+      _locales/
+        en.json   ← AI writes this when creating the module
+        nl.json   ← AI translates this in the same commit
+        fr.json
+      components/
+      hooks/
+  trainer/
+    schedule/
+      _locales/
+        en.json
+        nl.json
+scripts/
+  merge-locales.ts   ← Merges all _locales into one bundle, run at build time
+src/
+  i18n/
+    i18n.ts          ← i18next init file (loads merged bundle)
+```
+
+### `_locales/en.json` (Source of Truth per Module)
+```json
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Members",
+    "ADD_MEMBER": "Add Member",
+    "EMPTY_STATE": "No members found. Add your first member to get started."
+  }
+}
+```
+
+### AI Agent Translation Rule
+When writing a new feature module, the AI MUST:
+1. Create `_locales/en.json` with all English UI strings used in the module.
+2. In the **same commit**, create `_locales/nl.json`, `_locales/fr.json`, etc. for all configured target languages using its own translation capability.
+3. Translations must be **contextually correct** for a Gym Management SaaS — not literal.
+
+```json
+// _locales/nl.json — AI writes this, context-aware
+{
+  "MEMBERS": {
+    "PAGE_TITLE": "Leden",
+    "ADD_MEMBER": "Lid toevoegen",
+    "EMPTY_STATE": "Geen leden gevonden. Voeg uw eerste lid toe om te beginnen."
+  }
+}
+```
+
+### Using Translations in Components
+Always use `useTranslation` hook — **never** hardcode English strings in JSX/TSX:
+```tsx
+import { useTranslation } from 'react-i18next';
+
+export const MembersScreen = () => {
+  const { t } = useTranslation('MEMBERS');
+  // ❌ BAD: <Text>Members</Text>
+  // ✅ GOOD:
+  return (
+    <>
+      <Text>{t('PAGE_TITLE')}</Text>
+      <Button title={t('ADD_MEMBER')} />
+    </>
+  );
+};
+```
+
+### `src/i18n/i18n.ts` (Initialization — loads merged bundle)
+```typescript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import * as RNLocalize from 'react-native-localize';
+// Merged bundles are generated by scripts/merge-locales.ts at build time
+import en from '../../public/locales/en.json';
+import nl from '../../public/locales/nl.json';
+
+const bestLang = RNLocalize.findBestAvailableLanguage(['en', 'nl', 'fr']) ?? { languageTag: 'en' };
+
+i18n.use(initReactI18next).init({
+  resources: { en: { translation: en }, nl: { translation: nl } },
+  lng: bestLang.languageTag,
+  fallbackLng: 'en',
+  interpolation: { escapeValue: false },
+});
+
+export default i18n;
+```
+
+### `scripts/merge-locales.ts` (Build-Time Merge Script)
+```typescript
+// Usage: npx ts-node scripts/merge-locales.ts
+import * as fs from 'fs';
+import * as path from 'path';
+import { globSync } from 'glob';
+
+const OUTPUT_DIR = 'public/locales';
+const merged: Record<string, Record<string, any>> = {};
+
+for (const file of globSync('src/features/**/_locales/*.json')) {
+  const lang = path.basename(file, '.json');
+  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  merged[lang] = { ...merged[lang], ...content };
+}
+
+fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+for (const [lang, data] of Object.entries(merged)) {
+  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
+  console.log(`✅ Merged ${lang}.json`);
+}
+```
+
+### API Client: `Accept-Language` Header
+```typescript
+import i18n from '@/i18n/i18n';
+
+export const apiFetch = (url: string, options?: RequestInit) =>
+  fetch(url, {
+    ...options,
+    headers: { 'Accept-Language': i18n.language, ...options?.headers },
+  });
+```
+
+### Developer Workflow
+1. AI writes a new feature module and creates `_locales/en.json`.
+2. AI, in the **same response**, creates all target-language `_locales/{lang}.json` files.
+3. Run `npm run i18n:merge` (CI/build does this automatically).
+4. Commit all `_locales/` files alongside the feature code.
+5. **Never** put locale files in a central `src/i18n/locales/` folder.
+
+### Configured Target Languages
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
+| `en` | English | Global | Latin | **Base — always first** |
+| `nl` | Dutch | Netherlands, Belgium | Latin | High |
+| `fr` | French | France, Belgium, Canada | Latin | High |
+| `de` | German | Germany, Austria, Switzerland | Latin | High |
+| `hi` | Hindi | India (North) | Devanagari | High |
+| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
+| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
+| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
+| `kn` | Kannada | Karnataka, India | Kannada | Medium |
+| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
+| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
+| `ml` | Malayalam | Kerala, India | Malayalam | Low |
+| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
+
+> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+
+> **Indian Script Note (Mobile):** Indian script fonts (Devanagari, Tamil, Telugu, etc.) are bundled inside the APK/IPA. Use `react-native-localize` to detect the active script and load the correct font family from the app bundle. All Indian scripts are Left-to-Right (LTR) — no RTL layout changes are needed. Ensure fonts are declared in `react-native.config.js` and linked correctly for both iOS and Android.
+
+> **AI AGENT NOTE:** Every UI string inside `<Text>` or component props MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all configured target-language files (e.g., `_locales/nl.json`) in the same response. Use your own translation capability — do NOT call any external API. Hardcoding English strings is a critical rule violation.
+
+## Rule 62 — Centralized Feature Flags
+* **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements.
+* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
+
+
+## Rule 63 — Multi-Currency Monetary Amounts
+
+### The Rule
+The backend sends all monetary amounts as **integers in the smallest currency unit** (paise for INR, cents for USD/EUR) alongside an ISO 4217 currency code. The mobile app is solely responsible for formatting. Never hardcode a currency symbol or divide raw amounts manually.
+
+### Canonical Formatting Utility
+Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
+``````typescript
+// utils/formatCurrency.ts (co-located inside the feature module)
+/**
+ * Formats a monetary amount from its smallest unit to a locale-aware display string.
+ * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
+ * @param currency ISO 4217 currency code (e.g., 'INR', 'USD', 'EUR')
+ * @param locale  BCP 47 locale string (e.g., 'en-IN', 'nl-NL')
+ */
+export const formatCurrency = (
+  amount: number,
+  currency: string,
+  locale: string = 'en-IN'
+): string => {
+  const subunitMap: Record<string, number> = {
+    JPY: 1, KWD: 1000, BHD: 1000,
+  };
+  const divisor = subunitMap[currency] ?? 100;
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: divisor === 1 ? 0 : 2,
+  }).format(amount / divisor);
+};
+
+// Usage:
+// formatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
+// formatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
+// formatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
+``````
+
+### Rules
+- ❌ Never do `amount / 100` inline inside a `<Text>` component.
+- ❌ Never hardcode `₹`, `$`, or `€` symbols anywhere in JSX.
+- ❌ Never store the formatted string in state or React Query cache — store the raw integer.
+- ✅ Always derive the locale from the active i18n language (`i18n.language` from `react-i18next`).
+
+``````tsx
+// ❌ BAD
+<Text>₹{plan.amount / 100}</Text>
+
+// ✅ GOOD
+import i18n from '@/i18n/i18n';
+<Text>{formatCurrency(plan.amount, plan.currency, i18n.language)}</Text>
+``````
+
+> **AI AGENT NOTE:** Every time you display a monetary amount inside a `<Text>` component, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly. The locale MUST come from `i18n.language` — never hardcode `'en-IN'`. No currency symbol may appear as a literal character anywhere in JSX.
+
+
+## Rule 64 — Tenant Data Export & Offboarding UX
+
+### The Rule
+Data exports take minutes to process. Mobile operating systems are not designed to easily download and extract massive ZIP files of business CSVs. Therefore, the mobile app MUST handle the export trigger strictly as an asynchronous background request that emails the file to the user.
+
+### UI Placement
+The export functionality must live in a dedicated section: **Admin Settings -> Data Export & Offboarding**. 
+- **Role Constraint:** This UI MUST only be available in the **Superadmin** (or top-level Gym Admin) mobile dashboard. Never add export buttons to manager, trainer, or member interfaces.
+
+### Interaction Flow
+1. **Button:** Display a clear `[ Request Full Data Export ]` button.
+2. **Action:** When clicked, call the backend `POST /export-data`.
+3. **Feedback:** Do NOT show a continuous loading spinner. Since the API returns `202 Accepted` immediately, show a success toast/alert: 
+   *"Export started. A secure download link will be sent to your email within a few minutes."*
+4. **Format Expectation:** The UI should inform the user that their data will be sent via email as a ZIP file containing Excel (CSV) files, which are best viewed on a computer.
+5. **Real-time Completion Feedback:** The mobile dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+
+> **AI AGENT NOTE:** Never attempt to download, parse, or open the `.zip` file directly within the mobile app's file system or using a Webview. The mobile app's ONLY responsibility is to hit the export endpoint and display a confirmation message indicating that an email is on the way.
+
+
+## Notification & WebSocket Recovery Rule
+
+### The Problem
+If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
+
+### The Rule
+The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
+1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
+2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.

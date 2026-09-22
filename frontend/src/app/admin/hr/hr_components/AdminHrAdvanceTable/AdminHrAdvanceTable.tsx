@@ -1,5 +1,6 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 // RESPONSIBILITY: Renders/orchestrates AdminHrAdvanceTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -50,7 +51,7 @@ export default function AdminHrAdvanceTable() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-primary">Amount (₹) *</label>
+            <label className="block text-sm font-medium mb-1 text-primary">Amount  *</label>
             <input 
               type="number" required min="1"
               value={amount} onChange={(e) => setAmount(e.target.value)}

@@ -4,7 +4,8 @@
 import { TrendingUp, IndianRupee, TrendingDown, Clock } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_layout/AdminShared/AdminStatCard';
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminPayoutsKPIs() {

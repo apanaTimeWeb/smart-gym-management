@@ -1,9 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber, formatPercent1dp } from '@/lib/formatters';
+
+import { formatCurrency } from '@/app/superadmin/analytics/analytics_utils/formatCurrency';
+import { useLocale } from 'next-intl';
+import { formatNumber, formatPercent1dp } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ data }: SuperadminAnalyticsV1SectionProps) {
+    const locale = useLocale();
+
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Feature adoption" description="Available vs enabled vs actually used by tenants.">
     <div className="overflow-x-auto">
@@ -57,7 +62,7 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </div>
         <div className="mt-2 flex items-center justify-between text-xs text-secondary">
           <span>
-            {formatCurrencyFromMinorUnits(s.monthlyIncome)}
+            {formatCurrency(s.monthlyIncome, 'INR', locale)}
           </span>
           <span>
             {formatPercent1dp(s.churn)}

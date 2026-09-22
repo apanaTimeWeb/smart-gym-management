@@ -8,7 +8,6 @@ import { adminBranchesMockHandlers } from '@/app/admin/branches/branches_mocks/h
 import { adminCouponsMockHandlers } from '@/app/admin/coupons/coupons_mocks/handlers/AdminCouponsMockHandlers';
 import { adminCampaignsMockHandlers } from '@/app/admin/campaigns/campaigns_mocks/handlers/AdminCampaignsMockHandlers';
 import { adminDashboardMockHandlers } from '@/app/admin/dashboard/dashboard_mocks/handlers/AdminDashboardMockHandlers';
-import { adminDataExportMockHandlers } from '@/app/admin/data-export/data-export_mocks/handlers/AdminDataExportMockHandlers';
 import { adminFinanceMockHandlers } from '@/app/admin/finance/finance_mocks/handlers/AdminFinanceMockHandlers';
 import { adminGymHealthAlertsMockHandlers } from '@/app/admin/gym-health-alerts/gym-health-alerts_mocks/handlers/AdminGymHealthAlertsMockHandlers';
 import { adminHrMockHandlers } from '@/app/admin/hr/hr_mocks/handlers/AdminHrMockHandlers';
@@ -41,7 +40,6 @@ export const adminHandlers = [
   ...adminCouponsMockHandlers,
   ...adminCampaignsMockHandlers,
   ...adminDashboardMockHandlers,
-  ...adminDataExportMockHandlers,
   ...adminFinanceMockHandlers,
   ...adminGymHealthAlertsMockHandlers,
   ...adminHrMockHandlers,

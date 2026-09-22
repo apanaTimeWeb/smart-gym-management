@@ -1,5 +1,8 @@
 // RESPONSIBILITY: Renders the form UI for onboarding a new gym tenant. Receives logic from useSuperadminAddGymForm hook.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/gyms/gyms_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -7,8 +10,10 @@ import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+
 export default function SuperadminAddGymForm() {
+    const locale = useLocale();
+
     const { register, handleSubmit, onSubmit, control, errors, isDirty, isProvisioning, provisioningLogs, showPassword, setShowPassword, plans, loadingPlans, } = useSuperadminAddGymForm();
     useUnsavedChangesGuard(isDirty && !isProvisioning, 'You have unsaved gym details. Discard?');
     return (<div className="max-w-4xl mx-auto space-y-6">
@@ -70,7 +75,7 @@ export default function SuperadminAddGymForm() {
 
               <div className="space-y-2">
                 <label htmlFor="superadmin-add-gym-plan" className="text-sm font-bold text-secondary">SaaS Plan</label>
-                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrencyFromMinorUnits(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
+                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
                 {errors.plan && <p className="text-danger text-xs">{errors.plan.message}</p>}
               </div>
             </div>

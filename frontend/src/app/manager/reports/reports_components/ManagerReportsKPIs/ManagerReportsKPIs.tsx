@@ -1,15 +1,18 @@
 // RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
 'use client';
 import { TrendingUp, Users, CalendarCheck, TrendingDown, IndianRupee, UserPlus, UserMinus, Activity } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { ManagerReportsKpiCard } from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKpiCard/ManagerReportsKpiCard';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+import { useLocale } from "next-intl";
 
-
-
-const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
+const formatReportCurrency = (value: number) => {
+  const locale = useLocale();
+  return formatCurrency(value, ManagerEnvConfig.currencyCode, locale);
+};
 
 export default function ManagerReportsKPIs() {
   const { summary } = useManagerReportsLogic();

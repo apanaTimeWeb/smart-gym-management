@@ -1,8 +1,11 @@
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 'use client';
+
+import { formatCurrency } from '@/app/superadmin/saas-billing/saas-billing_utils/formatCurrency';
+import { useLocale } from 'next-intl';
 import type { MouseEvent } from 'react';
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatDate } from '@/lib/formatters';
 import { CouponsUrlConfig } from '@/app/superadmin/saas-billing/coupons/superadmin_coupons_url_config';
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/saas-billing/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
@@ -11,6 +14,8 @@ import type { Coupon, CouponStatus } from '@/app/superadmin/saas-billing/coupons
 import type { SuperadminCouponsTableRowProps } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTableRowTypes';
 
 export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: SuperadminCouponsTableRowProps) {
+    const locale = useLocale();
+
     const cpn = coupon;
     const { confirm } = useConfirm();
     const handleShareWhatsApp = (e: MouseEvent, cpn: Coupon) => {
@@ -18,7 +23,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
         const dateStr = formatDate(cpn.expiryDate);
         const discountStr = cpn.discountType === 'PERCENTAGE'
             ? `${cpn.discountValue}% OFF`
-            : `${formatCurrencyFromMinorUnits(cpn.discountValue)} OFF`;
+            : `${formatCurrency(cpn.discountValue, 'INR', locale)} OFF`;
         const waText = WhatsAppFormatter.formatReceipt({
             title: 'Smart Gym 360',
             subtitle: 'Exclusive Gym Partner Coupon',
@@ -50,7 +55,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
         {cpn.discountType === 'PERCENTAGE'
             ? <span className="font-semibold text-success">{cpn.discountValue}% OFF</span>
-            : <span className="font-semibold text-success">{formatCurrencyFromMinorUnits(cpn.discountValue)} OFF</span>}
+            : <span className="font-semibold text-success">{formatCurrency(cpn.discountValue, 'INR', locale)} OFF</span>}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>
       <td className="px-6 py-4 whitespace-nowrap"><SuperadminCouponsStatusBadge status={coupon.status}/></td>

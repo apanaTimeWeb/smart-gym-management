@@ -4,7 +4,8 @@
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, ChevronsUpDown, FileWarning } from 'lucide-react';
 import { REVENUE_TABLE_HEADERS } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';
 import type { PlanRevenueRecord, RevenueSortDirection, RevenueSortKey } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import { formatCurrency, formatPercent1dp, formatNumber} from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatPercent1dp, formatNumber } from '@/lib/formatters';
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import AdminPlansEmptyState from '@/app/admin/plans/plans_components/AdminPlansEmptyState/AdminPlansEmptyState';
 

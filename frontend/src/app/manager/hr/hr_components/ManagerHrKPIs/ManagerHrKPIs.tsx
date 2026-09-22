@@ -1,19 +1,21 @@
 // RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 'use client';
 import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerHrKPIs() {
+    const locale = useLocale();
   const { summary } = useManagerHrLogic();
 
   const kpis = [
-    { label: 'Total Salary Generated', value: formatCurrencyFromMinorUnits(summary?.totalSalaryThisMonth || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-primary', bgClass: "bg-primary-subtle" },
-    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(summary?.totalSalaryPaid || 0, ManagerEnvConfig.currencyCode), icon: UserCheck, colorClass: 'text-success', bgClass: "bg-success-bg" },
-    { label: 'Outstanding Due', value: formatCurrencyFromMinorUnits(summary?.totalSalaryDue || 0, ManagerEnvConfig.currencyCode), icon: FileText, colorClass: 'text-warning', bgClass: "bg-warning-bg" },
-    { label: 'Advance Given', value: formatCurrencyFromMinorUnits(summary?.totalAdvanceGiven || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-danger', bgClass: "bg-danger-bg" },
+    { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0, ManagerEnvConfig.currencyCode, locale), icon: DollarSign, colorClass: 'text-primary', bgClass: "bg-primary-subtle" },
+    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0, ManagerEnvConfig.currencyCode, locale), icon: UserCheck, colorClass: 'text-success', bgClass: "bg-success-bg" },
+    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0, ManagerEnvConfig.currencyCode, locale), icon: FileText, colorClass: 'text-warning', bgClass: "bg-warning-bg" },
+    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0, ManagerEnvConfig.currencyCode, locale), icon: DollarSign, colorClass: 'text-danger', bgClass: "bg-danger-bg" },
   ];
 
   return (

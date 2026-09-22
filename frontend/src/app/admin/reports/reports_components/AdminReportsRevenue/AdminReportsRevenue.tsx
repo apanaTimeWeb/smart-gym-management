@@ -1,5 +1,6 @@
 "use client";
-import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import { formatPercent1dp } from '@/lib/formatters';
 import type { AdminReportsRevenueSortKey } from '@/app/admin/reports/reports_types/AdminReportsUiTypes';
 import type { AdminReportsSortDirection } from '@/app/admin/reports/reports_types/AdminReportsSortTypes';
 import { useMemo, useState } from 'react';

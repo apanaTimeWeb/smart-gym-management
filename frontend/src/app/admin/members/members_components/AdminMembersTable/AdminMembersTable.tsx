@@ -8,7 +8,8 @@ import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_con
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import AdminMembersEmptyState from '@/app/admin/members/members_components/AdminMembersEmptyState/AdminMembersEmptyState';
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { maskSensitiveData } from '@/app/admin/admin_layout/admin_utils/AdminMaskSensitiveData';
 import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 

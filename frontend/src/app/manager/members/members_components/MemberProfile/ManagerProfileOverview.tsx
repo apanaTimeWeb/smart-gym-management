@@ -2,14 +2,16 @@
 'use client';
 import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
 import { useFetchTrainers } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerProfileOverview() {
+    const locale = useLocale();
   const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useManagerMembersLogic();
   const { data: trainersData } = useFetchTrainers();
   const trainers = (trainersData || []) as Array<{ id: string; name: string; role?: string }>;
@@ -31,22 +33,22 @@ export default function ManagerProfileOverview() {
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="flex flex-col p-4 bg-page rounded-xl border border-border shadow-card">
               <span className="text-xs text-secondary font-medium mb-1">Total Plan Amount</span>
-              <span className="text-lg font-bold text-primary">{formatCurrencyFromMinorUnits(totalAmount, ManagerEnvConfig.currencyCode)}</span>
+              <span className="text-lg font-bold text-primary">{formatCurrency(totalAmount, ManagerEnvConfig.currencyCode, locale)}</span>
             </div>
             <div className="flex flex-col p-4 bg-success-bg rounded-xl border border-success shadow-card">
               <span className="text-xs text-success font-medium mb-1">Total Paid</span>
-              <span className="text-lg font-bold text-success">{formatCurrencyFromMinorUnits(selectedMember.paidAmount || 0, ManagerEnvConfig.currencyCode)}</span>
+              <span className="text-lg font-bold text-success">{formatCurrency(selectedMember.paidAmount || 0, ManagerEnvConfig.currencyCode, locale)}</span>
             </div>
             {dues > 0 && (
               <div className="flex flex-col p-4 bg-danger-bg rounded-xl border border-border shadow-card">
                 <span className="text-xs text-danger font-medium mb-1">Pending Dues</span>
-                <span className="text-lg font-bold text-danger">{formatCurrencyFromMinorUnits(dues, ManagerEnvConfig.currencyCode)}</span>
+                <span className="text-lg font-bold text-danger">{formatCurrency(dues, ManagerEnvConfig.currencyCode, locale)}</span>
               </div>
             )}
             {advance > 0 && (
               <div className="flex flex-col p-4 bg-primary-subtle rounded-xl border border-border shadow-card">
                 <span className="text-xs text-primary font-medium mb-1">Advance Payment</span>
-                <span className="text-lg font-bold text-primary">{formatCurrencyFromMinorUnits(advance, ManagerEnvConfig.currencyCode)}</span>
+                <span className="text-lg font-bold text-primary">{formatCurrency(advance, ManagerEnvConfig.currencyCode, locale)}</span>
               </div>
             )}
             {selectedMember.assignedTrainerId && (

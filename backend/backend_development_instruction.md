@@ -15,13 +15,23 @@ The backend strictly follows a 3-tier hierarchy:
 
 ```text
 APPLICATION
-  └── DOMAIN / ROLE CONTAINER
+  └── DOMAIN / ROLE CONTAINER (e.g. backend_admin)
         └── FEATURE MODULE
               └── SUB-FEATURE / USE CASE
 ```
 
 **AI Repair Boundary = FEATURE MODULE**
 **Role/Domain Container = NOT the default repair boundary**
+
+### 0D. BACKEND NAMESPACE PREFIXING (MANDATORY)
+
+Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate backend folders from frontend folders. 
+- **The Rule:** EVERY top-level backend role container or domain folder MUST be prefixed with `backend_`.
+- **Primary Examples:** `backend_admin/`, `backend_manager/`, `backend_superadmin/`.
+- **E2E / Selenium Testing Folders:** If tests are grouped in a separate root directory, the test root AND the role subfolders inside it MUST carry the namespace to maintain context.
+  - Example E2E: `src/backend_e2e/backend_admin_e2e/`, `src/backend_e2e/backend_manager_e2e/`
+  - Example Selenium: `src/backend_selenium/backend_admin_selenium/`
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/billing/` and `src/backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
 
 When fixing a bug in `modules/superadmin/billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
@@ -1623,3 +1633,262 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 - The `@RequireIdempotencyKey()` decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
 - Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
+
+## Rule 113 — WebSockets & Real-Time Communication
+* **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
+* **Implementation:** Use a Redis Pub/Sub adapter (e.g., `@nestjs/platform-ws` or `socket.io` with `redis-adapter`) to ensure that WebSocket events scale across multiple backend instances.
+* **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
+
+## Rule 114 — Role-Based Data Serialization & Field Masking
+* **The Rule:** Data intended to be hidden from specific user roles (e.g., hiding internal revenue metrics from a basic Member, but showing it to a Superadmin) MUST be masked at the serialization layer.
+* **Implementation:** Use `class-transformer` decorators such as `@Exclude()` or `@Expose({ groups: ['admin'] })` on the DTO. The controller must pass the current user's role to the serialization interceptor so that the DTO automatically strips forbidden fields before sending the JSON response.
+* **Why:** This ensures data hiding is centralized and declarative, preventing developers from manually trying to `delete user.revenue` in various service methods, which is error-prone.
+
+## Rule 115 — Strict Cache Invalidation Strategy
+* **The Rule:** Caching data in Redis (Rule 20) is mandatory for high-traffic read operations, but stale data in an enterprise app is dangerous. Every cached query MUST have a strict, programmatic invalidation strategy.
+* **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
+
+## Rule 116 — Internationalization (i18n) & Localization
+
+### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+
+The backend uses `nestjs-i18n` with **co-located locale files inside each NestJS module folder** — NOT in a central `src/i18n/` directory. This preserves **Extreme Isolation**: each module owns its own strings and can be moved, deleted, or versioned independently.
+
+**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic.
+
+### Stack
+- **Library:** `nestjs-i18n`
+- **Base language:** English (`en.json`) — written by developer / AI agent
+- **Other languages:** Written by the AI agent in the same commit that creates the module
+- **Runtime cost:** Zero — all files are static JSON, bundled with the app
+
+### Module-Level File Structure
+Each module owns its own `_locales/` folder:
+```
+src/
+  modules/
+    admin/
+      members/
+        _locales/
+          en/
+            errors.json   ← AI writes this when creating the module
+            messages.json
+          nl/
+            errors.json   ← AI translates this in the same commit
+            messages.json
+          fr/
+            errors.json
+            messages.json
+        members.controller.ts
+        members.service.ts
+    superadmin/
+      tenants/
+        _locales/
+          en/
+            errors.json
+          nl/
+            errors.json
+scripts/
+  merge-locales.ts        ← Merges all module _locales into one bundle at build time
+```
+
+### AI Agent Translation Rule
+When an AI agent writes a new module or adds new error/message keys, it MUST:
+1. Create `_locales/en/errors.json` with the English strings.
+2. In the **same commit**, create `_locales/nl/errors.json`, `_locales/fr/errors.json`, etc. for all configured target languages, using its own translation capability.
+3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
+
+```json
+// _locales/en/errors.json
+{
+  "ERRORS": {
+    "MEMBER_NOT_FOUND": "Member not found.",
+    "PLAN_EXPIRED": "Your gym subscription has expired."
+  }
+}
+
+// _locales/nl/errors.json  ← AI writes this, context-aware
+{
+  "ERRORS": {
+    "MEMBER_NOT_FOUND": "Lid niet gevonden.",
+    "PLAN_EXPIRED": "Uw gymabonnement is verlopen."
+  }
+}
+```
+
+### Throwing Errors (Correct Pattern)
+Always throw with a module-scoped translation key — never a hardcoded English string:
+```typescript
+// ❌ FORBIDDEN
+throw new NotFoundException('Member not found.');
+
+// ✅ CORRECT — key maps to _locales/{lang}/errors.json
+throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
+```
+
+### The Interceptor
+The global `I18nValidationExceptionFilter` (from `nestjs-i18n`) automatically reads the `Accept-Language` header from the request and resolves the namespaced key to the correct translated string before sending the `ApiResponse<T>` to the client.
+
+### `scripts/merge-locales.ts` (Build-Time Merge Script)
+This script walks every `_locales/` folder in the project, merges all JSON files by language, and outputs a single bundle per language. Run it as part of the build step.
+
+```typescript
+// scripts/merge-locales.ts
+// Usage: npx ts-node scripts/merge-locales.ts
+import * as fs from 'fs';
+import * as path from 'path';
+import * as glob from 'glob';
+
+const OUTPUT_DIR = 'dist/i18n';
+const mergedByLang: Record<string, Record<string, any>> = {};
+
+const localeFiles = glob.sync('src/modules/**/_locales/**/*.json');
+
+for (const file of localeFiles) {
+  const parts = file.split(path.sep);
+  const localesIdx = parts.indexOf('_locales');
+  const lang = parts[localesIdx + 1];           // 'en', 'nl', etc.
+  const namespace = parts[localesIdx - 1];      // module name as namespace
+  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+
+  mergedByLang[lang] ??= {};
+  mergedByLang[lang][namespace] = { ...mergedByLang[lang][namespace], ...content };
+}
+
+fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+for (const [lang, data] of Object.entries(mergedByLang)) {
+  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
+  console.log(`✅ Merged ${lang}.json`);
+}
+```
+
+Add to `package.json`:
+```json
+{
+  "scripts": {
+    "i18n:merge": "npx ts-node scripts/merge-locales.ts",
+    "build": "npm run i18n:merge && nest build"
+  }
+}
+```
+
+### Developer Workflow
+1. AI agent writes a new module and creates `_locales/en/` JSON files.
+2. AI agent, in the **same response**, creates all target-language `_locales/{lang}/` files using its own translation capability.
+3. Run `npm run i18n:merge` (or let CI do it automatically at build time).
+4. Commit all `_locales/` files alongside the module code.
+5. **Never** put locale files in a central `src/i18n/` folder — that breaks module isolation.
+
+### Configured Target Languages
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
+| `en` | English | Global | Latin | **Base — always first** |
+| `nl` | Dutch | Netherlands, Belgium | Latin | High |
+| `fr` | French | France, Belgium, Canada | Latin | High |
+| `de` | German | Germany, Austria, Switzerland | Latin | High |
+| `hi` | Hindi | India (North) | Devanagari | High |
+| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
+| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
+| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
+| `kn` | Kannada | Karnataka, India | Kannada | Medium |
+| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
+| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
+| `ml` | Malayalam | Kerala, India | Malayalam | Low |
+| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
+
+> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+
+> **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. `nestjs-i18n` handles this natively — no extra configuration needed.
+
+> **AI AGENT NOTE:** When creating any new NestJS module, you MUST create its `_locales/en/errors.json` AND all configured target-language files (e.g., `_locales/nl/errors.json`) in the same commit. Use your own translation capability — do NOT call any external translation API. Keys must be namespaced by module name (e.g., `members.ERRORS.NOT_FOUND`). Hardcoding English strings in exceptions is a critical violation.
+
+## Rule 117 — Centralized Feature Flags
+* **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
+* **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
+
+
+## Rule 118 — Multi-Currency Monetary Amounts
+
+### The Problem
+Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in financial calculations. Hardcoding currency symbols (₹, $, €) breaks international deployments. Formatting amounts in service methods couples business logic to presentation.
+
+### Storage Contract (Backend is Source of Truth)
+- **Always store monetary amounts as integers in the smallest currency unit.**
+  - INR: store `9999` for ₹99.99 (paise)
+  - USD/EUR: store `9999` for $99.99 (cents)
+  - JPY: store `100` for ¥100 (yen has no subunit)
+- Use `INT` or `BIGINT` column type in TypeORM. Never use `DECIMAL` or `FLOAT` for money.
+- Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
+
+``````typescript
+// ❌ FORBIDDEN — float and no currency
+{ "amount": 99.99 }
+
+// ✅ CORRECT — integer smallest unit + ISO 4217 currency code
+{ "amount": 9999, "currency": "INR" }
+``````
+
+### DTO Rule
+Every DTO that includes a monetary field MUST include the paired currency code:
+``````typescript
+export class CreatePlanDto {
+  @IsInt()
+  @Min(0)
+  price: number; // in smallest unit (paise, cents, etc.)
+
+  @IsString()
+  @IsISO4217CurrencyCode()
+  currency: string; // e.g. 'INR', 'USD', 'EUR'
+}
+``````
+
+### Never Hardcode Currency Symbols
+``````typescript
+// ❌ FORBIDDEN
+return `₹${amount / 100}`;
+
+// ✅ CORRECT — pass raw integer + currency code to frontend; let frontend format
+return { amount, currency };
+``````
+
+> **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
+
+
+## Rule 119 — Tenant Data Export & Offboarding
+
+### The Problem
+When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
+
+### Implementation Strategy
+All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
+- **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
+
+1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use TypeORM QueryBuilder to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
+2. **Trigger:** `POST /api/v1/admin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
+3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
+4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
+5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/admin/download-export?token=xyz`) that streams the file.
+6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
+
+### Data Retention & Hard Deletion
+- When a tenant cancels, their account is **Soft Deleted** (suspended).
+- Maintain a **90-day grace period** in case they return.
+- A scheduled cron job MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws.
+
+> **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.
+
+
+## Rule 120 — Persistent WebSockets (Notifications & Chats)
+
+### The Problem
+WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('notification')` or `socket.emit('chat_message')`) while the user is offline or experiencing a network blip, that message is lost forever.
+
+### The Rule
+Never emit a critical WebSocket event (like "Export Ready", "Payment Received", or a "Chat Message") without **first saving it to the database**.
+
+1. **Save First:** Insert a record into the `Notifications` or `Chats` table.
+2. **Emit Second:** Only after the DB transaction commits, emit the WebSocket event.
+3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
+4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions.

@@ -59,8 +59,8 @@ export const STAFF_MODAL_FIELDS = [
  { label: 'Phone', key: 'phone', type: 'tel', placeholder: '' },
  { label: 'Aadhaar No.', key: 'aadhaar', type: 'tel', placeholder: '123456789012' },
  { label: 'UPI ID', key: 'upiId', type: 'text', placeholder: 'rahul@okhdfcbank' },
- { label: 'Monthly Salary (₹)', key: 'salary', type: 'number', placeholder: '' },
- { label: 'Advance Paid (₹)', key: 'advanceSalary', type: 'number', placeholder: '0' },
+ { label: 'Monthly Salary ', key: 'salary', type: 'number', placeholder: '' },
+ { label: 'Advance Paid ', key: 'advanceSalary', type: 'number', placeholder: '0' },
 ];
 
 export const HR_ITEMS_PER_PAGE = 10;

@@ -3,14 +3,15 @@
 
 import { useState } from 'react';
 import { AlertCircle, CheckCircle, Clock, Loader2, Plus } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, formatDateTime } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDateTime } from '@/lib/formatters';
 import { ManagerMaintenanceLogIssueModal } from '@/app/manager/maintenance/maintenance_components/ManagerMaintenanceLogIssueModal';
 import { useManagerMaintenanceLogic } from '@/app/manager/maintenance/maintenance_hooks/ManagerUseManagerMaintenanceLogic';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import type { MaintenancePriority, MaintenanceStatus } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
-
+import { useLocale } from "next-intl";
 
 function getMaintenancePriorityClass(priority: MaintenancePriority): string {
   switch (priority) {
@@ -30,6 +31,7 @@ function getMaintenanceStatusIcon(status: MaintenanceStatus) {
 
 /** Renders the Manager maintenance issue queue and completion actions. */
 export default function ManagerMaintenanceMain() {
+    const locale = useLocale();
   const { tickets, isPending, isError, error, reload, createTicket, resolveTicket, isResolving } = useManagerMaintenanceLogic();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -84,7 +86,7 @@ export default function ManagerMaintenanceMain() {
                 <div className="mt-auto space-y-2 text-xs text-secondary">
                   <div className="flex justify-between gap-3"><span>Reported:</span><span className="font-medium text-primary text-right">{formatDateTime(ticket.reportedAt)}</span></div>
                   {ticket.assignedVendor && <div className="flex justify-between gap-3"><span>Vendor:</span><span className="font-medium text-primary text-right truncate">{ticket.assignedVendor}</span></div>}
-                  {ticket.estimatedCost !== undefined && <div className="flex justify-between gap-3"><span>Est. Cost:</span><span className="font-medium text-primary text-right">{formatCurrencyFromMinorUnits(ticket.estimatedCost * 100, ManagerEnvConfig.currencyCode)}</span></div>}
+                  {ticket.estimatedCost !== undefined && <div className="flex justify-between gap-3"><span>Est. Cost:</span><span className="font-medium text-primary text-right">{formatCurrency(ticket.estimatedCost * 100, ManagerEnvConfig.currencyCode, locale)}</span></div>}
                 </div>
 
                 {ticket.status !== 'RESOLVED' && (

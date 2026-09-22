@@ -2,16 +2,19 @@
 'use client';
 // DATA FLOW: local search input -> 300ms debounce -> URL params -> TanStack Query -> earnings rows; row expansion is UI-only.
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, ArrowUpDown, Download, Loader2, Search } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, Search } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import TrainerEarningsEmptyState from '@/app/trainer/earnings/earnings_components/TrainerEarningsEmptyState/TrainerEarningsEmptyState';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { EARNINGS_ITEMS_PER_PAGE, EARNINGS_SORT_OPTIONS, PAYOUT_STATUS_STYLES, type EarningsSortDirection, type EarningsSortField } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 import { EarningsUrlConfig } from '@/app/trainer/earnings/earnings_url_config';
-import { formatCurrencyFromMinorUnits, formatDate, formatNumber } from '@/lib/formatters';
+import { formatDate, formatNumber } from '@/lib/formatters';
 import { useDebounce } from '@/app/trainer/trainer_utils/TrainerUseDebounce';
+import { formatCurrency } from '@/app/trainer/trainer_layout/trainer_utils/TrainerFormatCurrency';
+import { useLocale } from 'next-intl';
 
 export default function TrainerEarningsHistory() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -71,30 +74,10 @@ export default function TrainerEarningsHistory() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const handleExportCsv = async () => {
-    const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (startDate) params.set('startDate', startDate);
-    if (endDate) params.set('endDate', endDate);
-    if (sortBy) params.set('sortBy', sortBy);
-    params.set('sortDirection', sortDirection);
-    setIsExporting(true);
-    try {
-      const queryString = params.toString();
-      const url = `${EarningsUrlConfig.BACKEND_API.EXPORT_CSV}${queryString ? `&${queryString}` : ''}`;
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `earnings-export-${formatDate(new Date().toISOString())}.csv`.replaceAll(' ', '-');
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  
 
   const { data, isPending, isError, refetch } = useTrainerEarningsQuery();
-  const [isExporting, setIsExporting] = useState(false);
+  
   const history = data?.history ?? [];
   const totalPages = Math.max(1, Math.ceil((data?.historyTotal ?? history.length) / EARNINGS_ITEMS_PER_PAGE));
 
@@ -122,7 +105,7 @@ export default function TrainerEarningsHistory() {
             <span className="text-secondary text-sm" aria-hidden="true">to</span>
             <label htmlFor="trainer-earnings-end-date" className="sr-only">End date</label>
             <input id="trainer-earnings-end-date" type="date" value={endDate} onChange={(event) => handleDateChange('endDate', event.target.value)} className="min-h-11 px-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
-            <button type="button" onClick={() => void handleExportCsv()} disabled={isExporting} className="min-h-11 min-w-36 inline-flex items-center justify-center gap-1.5 px-3 bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-hover disabled:opacity-70 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Export earnings as CSV">{isExporting ? <Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> : <Download size={18} aria-hidden="true" />}{isExporting ? 'Exporting…' : 'Export CSV'}</button>
+            
           </div>
         </div>
       </div>
@@ -148,10 +131,10 @@ export default function TrainerEarningsHistory() {
                     <tr key={row.id} tabIndex={0} aria-expanded={expanded} aria-controls={`trainer-earnings-row-${row.id}-details`} onClick={() => setExpandedRowId(expanded ? null : row.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setExpandedRowId(expanded ? null : row.id); } }} className="cursor-pointer hover:bg-surface-highlight motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary">
                       <td className="py-3 px-4 text-sm text-secondary whitespace-nowrap">{formatDate(row.date)}</td>
                       <td className="py-3 px-4"><p className="text-sm font-medium text-primary truncate max-w-80" title={row.description}>{row.description}</p><p className="text-xs text-secondary mt-0.5">{row.type}</p></td>
-                      <td className="py-3 px-4 text-sm font-semibold text-primary text-right whitespace-nowrap">{formatCurrencyFromMinorUnits(row.amount, 'INR')}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-primary text-right whitespace-nowrap">{formatCurrency(row.amount, 'INR', locale)}</td>
                       <td className="py-3 px-4 text-right"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg ?? 'bg-input'} ${style?.text ?? 'text-secondary'}`}>{style?.label ?? row.status}</span></td>
                     </tr>
-                    {expanded && <tr id={`trainer-earnings-row-${row.id}-details`} key={`${row.id}-details`}><td colSpan={4} className="px-4 py-3 bg-input"><div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-secondary"><span><strong className="text-primary">Session ID:</strong> {row.sessionId ?? '—'}</span><span><strong className="text-primary">Invoice:</strong> {row.invoiceNumber ?? '—'}</span><span><strong className="text-primary">Net Payout:</strong> {row.netPayout == null ? '—' : formatCurrencyFromMinorUnits(row.netPayout, 'INR')}</span></div></td></tr>}
+                    {expanded && <tr id={`trainer-earnings-row-${row.id}-details`} key={`${row.id}-details`}><td colSpan={4} className="px-4 py-3 bg-input"><div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-secondary"><span><strong className="text-primary">Session ID:</strong> {row.sessionId ?? '—'}</span><span><strong className="text-primary">Invoice:</strong> {row.invoiceNumber ?? '—'}</span><span><strong className="text-primary">Net Payout:</strong> {row.netPayout == null ? '—' : formatCurrency(row.netPayout, 'INR', locale)}</span></div></td></tr>}
                   </>
                 );
               })}

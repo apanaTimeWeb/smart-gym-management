@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the paginated staff members table with inline row actions.
 'use client';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
-import { displayValue, formatCurrencyFromMinorUnits, formatDate, maskSensitiveData } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { displayValue, formatDate, maskSensitiveData } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
@@ -9,12 +10,14 @@ import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { useLocale } from "next-intl";
 
 // Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
 // Rule 48 FIX: Uses ManagerEmptyState component for empty state.
 
 
 export default function ManagerHrStaffTable() {
+    const locale = useLocale();
   const { staff, totalStaff, isPending, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useManagerHrLogic();
   const { confirm } = useConfirm();
 
@@ -120,8 +123,8 @@ export default function ManagerHrStaffTable() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrencyFromMinorUnits(s.advanceSalary, ManagerEnvConfig.currencyCode) : displayValue(null)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrency(s.salary || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary, ManagerEnvConfig.currencyCode, locale) : displayValue(null)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {displayValue(s.joinDate ? formatDate(s.joinDate) : null)}
                 </td>
@@ -209,7 +212,7 @@ export default function ManagerHrStaffTable() {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div><p className="text-xs text-secondary">Role</p><p className="text-primary truncate">{s.role || '—'}</p></div>
               <div><p className="text-xs text-secondary">Phone</p><p className="text-primary truncate">{s.phone || '—'}</p></div>
-              <div><p className="text-xs text-secondary">Salary</p><p className="text-primary">{formatCurrencyFromMinorUnits(s.salary || 0)}</p></div>
+              <div><p className="text-xs text-secondary">Salary</p><p className="text-primary">{formatCurrency(s.salary || 0, ManagerEnvConfig.currencyCode, locale)}</p></div>
               <div><p className="text-xs text-secondary">Join Date</p><p className="text-primary">{s.joinDate ? formatDate(s.joinDate) : '—'}</p></div>
             </div>
             <div className="flex justify-end gap-2">

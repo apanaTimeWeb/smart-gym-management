@@ -9,7 +9,6 @@ export interface ManagerReportsViewModel {
   summary: ReportSummary | null;
   isPending: boolean;
   isError: boolean;
-  exporting: boolean;
-  handleExportCSV: () => Promise<void>;
+
   reload: () => Promise<void>;
 }

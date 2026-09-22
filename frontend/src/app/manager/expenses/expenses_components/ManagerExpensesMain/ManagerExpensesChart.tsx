@@ -2,11 +2,12 @@
 'use client';
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 import { MANAGER_EXPENSE_CHART_COLORS } from '@/app/manager/expenses/expenses_constants/ManagerExpensesChartConstants';
 import { useExpensesListQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -15,6 +16,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 
 export default function ManagerExpensesChart() {
+    const locale = useLocale();
   const { data, isPending, isError } = useExpensesListQuery({ limit: '1000' });
   const expenses = data?.expenses || [];
 
@@ -70,7 +72,7 @@ export default function ManagerExpensesChart() {
     grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
     tooltip: { 
       theme: 'dark' as const,
-      y: { formatter: (v: number) => formatCurrencyFromMinorUnits(v, ManagerEnvConfig.currencyCode) }
+      y: { formatter: (v: number) => formatCurrency(v, ManagerEnvConfig.currencyCode, locale) }
     },
     xaxis: {
       categories: chartData.map(d => d.name),
@@ -90,13 +92,13 @@ export default function ManagerExpensesChart() {
         <div className="p-4 bg-input rounded-lg border border-border">
           <p className="text-sm font-bold text-secondary uppercase tracking-wider mb-1">Total Tracked Expenses</p>
           <p className="text-2xl font-black text-danger">
-            {formatCurrencyFromMinorUnits(totalThisMonth, ManagerEnvConfig.currencyCode)}
+            {formatCurrency(totalThisMonth, ManagerEnvConfig.currencyCode, locale)}
           </p>
         </div>
         <div className="p-4 bg-input rounded-lg border border-border">
           <p className="text-sm font-bold text-secondary uppercase tracking-wider mb-1">Highest Category</p>
           <p className="text-2xl font-black text-warning">
-            {highestCategory ? `${highestCategory.name} (${formatCurrencyFromMinorUnits(highestCategory.value || 0, ManagerEnvConfig.currencyCode)})` : 'N/A'}
+            {highestCategory ? `${highestCategory.name} (${formatCurrency(highestCategory.value || 0, ManagerEnvConfig.currencyCode, locale)})` : 'N/A'}
           </p>
         </div>
         <div className="p-4 bg-input rounded-lg border border-border">

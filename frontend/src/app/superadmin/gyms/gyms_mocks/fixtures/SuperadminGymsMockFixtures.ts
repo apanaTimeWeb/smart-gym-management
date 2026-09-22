@@ -1,4 +1,13 @@
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
+import type { SuperadminGymsPlanOption } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsPlanTypes';
+
+export const MOCK_SUBSCRIPTION_PLANS: SuperadminGymsPlanOption[] = [
+    { id: 'plan-1', name: 'Starter', priceMonthly: 2900, currency: 'INR' },
+    { id: 'plan-2', name: 'Basic', priceMonthly: 4900, currency: 'INR' },
+    { id: 'plan-3', name: 'Pro', priceMonthly: 9900, currency: 'INR' },
+    { id: 'plan-4', name: 'Enterprise', priceMonthly: 19900, currency: 'INR' }
+];
+
 export const MOCK_GYMS: Tenant[] = [
     {
         id: 't1', name: 'Iron Paradise', ownerName: 'John Doe', adminEmail: 'john@iron.com',

@@ -5,7 +5,8 @@ import { CheckCircle, Clock, Loader2 } from 'lucide-react';
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
 import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+
 import { PAYOUT_MONTH_OPTIONS, PAYOUT_GYM_OPTIONS, PAYOUT_STATUS_OPTIONS } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
 import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import type { PayoutSortKey } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';

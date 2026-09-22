@@ -13,7 +13,7 @@ import { REPORT_TABS } from '@/app/manager/reports/reports_utils/ManagerReportsS
 
 
 export function ManagerReportsContent() {
-  const { tab, setTab, dateRange, setDateRange, isPending, isError, exporting, handleExportCSV, reload } = useManagerReportsLogic();
+  const { tab, setTab, dateRange, setDateRange, isPending, isError, reload } = useManagerReportsLogic();
 
   return (
     <div className="min-h-full pb-10">
@@ -48,14 +48,7 @@ export function ManagerReportsContent() {
             >
               <RefreshCw size={18} /> Refresh
             </button>
-            <button
-              onClick={handleExportCSV}
-              disabled={exporting || isPending}
-              className="min-w-32 flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 motion-safe:transition-opacity disabled:opacity-50"
-            >
-              {exporting ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <Download size={18} />}
-              Export CSV
-            </button>
+            
           </div>
         </div>
 

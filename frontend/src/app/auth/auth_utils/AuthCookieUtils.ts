@@ -28,7 +28,9 @@ export const AuthCookieUtils = {
   setSession(response: NextResponse, accessToken: string, refreshToken: string, user: AuthUser) {
     setAccessAndRefreshCookies(response, accessToken, refreshToken);
     response.cookies.set(AuthSessionConstants.COOKIES.USER, JSON.stringify(user), {
-      ...secureCookieBase,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict' as const,
+      path: '/',
       maxAge: AuthSessionConstants.MAX_AGE_SECONDS.REFRESH_TOKEN,
     });
   },
@@ -41,22 +43,35 @@ export const AuthCookieUtils = {
     for (const cookieName of [
       AuthSessionConstants.COOKIES.ACCESS_TOKEN,
       AuthSessionConstants.COOKIES.REFRESH_TOKEN,
-      AuthSessionConstants.COOKIES.USER,
     ]) {
       response.cookies.set(cookieName, '', { ...secureCookieBase, maxAge: 0 });
     }
+    // Clear user cookie without httpOnly
+    response.cookies.set(AuthSessionConstants.COOKIES.USER, '', {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict' as const,
+      path: '/',
+      maxAge: 0,
+    });
   },
 
   restoreOriginalGhostSession(response: NextResponse, accessToken: string, refreshToken: string, userJson?: string) {
     setAccessAndRefreshCookies(response, accessToken, refreshToken);
     if (userJson) {
       response.cookies.set(AuthSessionConstants.COOKIES.USER, userJson, {
-        ...secureCookieBase,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict' as const,
+        path: '/',
         maxAge: AuthSessionConstants.MAX_AGE_SECONDS.REFRESH_TOKEN,
       });
     }
     response.cookies.set(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_ACCESS_TOKEN, '', { ...secureCookieBase, maxAge: 0 });
     response.cookies.set(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_REFRESH_TOKEN, '', { ...secureCookieBase, maxAge: 0 });
-    response.cookies.set(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_USER, '', { ...secureCookieBase, maxAge: 0 });
+    response.cookies.set(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_USER, '', {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict' as const,
+      path: '/',
+      maxAge: 0,
+    });
   },
 };

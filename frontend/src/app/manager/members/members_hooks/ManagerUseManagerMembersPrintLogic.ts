@@ -1,7 +1,8 @@
 // DATA FLOW: Manager module state/API data → useManagerMembersPrintLogic → owning Manager UI components.
 'use client';
 import { useCallback } from 'react';
-import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
@@ -10,6 +11,7 @@ import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_confi
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { PaymentSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { useLocale } from "next-intl";
 
 /** Manages UseMembersPrintLogic for the Manager module. */
 
@@ -19,6 +21,7 @@ export function useManagerMembersPrintLogic(
   selectedMember: Member | null,
   showToast: (msg: string, t: ManagerToastType) => void
 ) {
+    const locale = useLocale();
   const setPrintData = useManagerMembersUiStore((state) => state.setPrintData);
 
   const handlePrint = useCallback((p: PaymentSnapshot) => {
@@ -49,7 +52,7 @@ export function useManagerMembersPrintLogic(
         {
           items: {
             'Membership': m.plan?.name || 'Standard',
-            'Amount': formatCurrencyFromMinorUnits(p.amount, ManagerEnvConfig.currencyCode),
+            'Amount': formatCurrency(p.amount, ManagerEnvConfig.currencyCode, locale),
             'Method': p.method
           }
         },

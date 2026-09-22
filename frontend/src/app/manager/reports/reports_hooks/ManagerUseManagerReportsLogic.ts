@@ -23,8 +23,7 @@ export function useManagerReportsLogic(): ManagerReportsViewModel {
     router.push(`?${params.toString()}`, { scroll: false });
   }, [router, searchParams]);
   const summaryQuery = useQuery({ queryKey: ['manager', 'reports', 'summary', dateRange], queryFn: async () => (await reportsApi.fetchReportsSummary({ range: dateRange })).data ?? null });
-  const exportMutation = useMutation({ mutationFn: () => reportsApi.exportReportsReport(ui.tab, { range: dateRange }), onSuccess: (blob) => { const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `${ui.tab.toLowerCase()}_report_${new Date().toISOString().slice(0, 10)}.csv`; anchor.click(); URL.revokeObjectURL(url); } });
+
   const reload = useCallback(async () => { await queryClient.invalidateQueries({ queryKey: ['manager', 'reports', 'summary'] }); }, [queryClient]);
-  const handleExportCSV = useCallback(async () => { await exportMutation.mutateAsync(); }, [exportMutation]);
-  return { tab: ui.tab, setTab: ui.setTab, dateRange, setDateRange, summary: summaryQuery.data ?? null, isPending: summaryQuery.isPending, isError: summaryQuery.isError, exporting: exportMutation.isPending, handleExportCSV, reload };
+  return { tab: ui.tab, setTab: ui.setTab, dateRange, setDateRange, summary: summaryQuery.data ?? null, isPending: summaryQuery.isPending, isError: summaryQuery.isError, reload };
 }
