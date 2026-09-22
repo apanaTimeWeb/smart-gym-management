@@ -8,10 +8,13 @@ import TrainerEarningsEmptyState from '@/app/trainer/earnings/earnings_component
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { EARNINGS_ITEMS_PER_PAGE, EARNINGS_SORT_OPTIONS, PAYOUT_STATUS_STYLES, type EarningsSortDirection, type EarningsSortField } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
 import { EarningsUrlConfig } from '@/app/trainer/earnings/earnings_url_config';
-import { formatCurrencyFromMinorUnits, formatDate, formatNumber } from '@/lib/formatters';
+import { formatDate, formatNumber } from '@/lib/formatters';
 import { useDebounce } from '@/app/trainer/trainer_utils/TrainerUseDebounce';
+import { formatCurrency } from '@/app/trainer/trainer_layout/trainer_utils/TrainerFormatCurrency';
+import { useLocale } from 'next-intl';
 
 export default function TrainerEarningsHistory() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -128,10 +131,10 @@ export default function TrainerEarningsHistory() {
                     <tr key={row.id} tabIndex={0} aria-expanded={expanded} aria-controls={`trainer-earnings-row-${row.id}-details`} onClick={() => setExpandedRowId(expanded ? null : row.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setExpandedRowId(expanded ? null : row.id); } }} className="cursor-pointer hover:bg-surface-highlight motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary">
                       <td className="py-3 px-4 text-sm text-secondary whitespace-nowrap">{formatDate(row.date)}</td>
                       <td className="py-3 px-4"><p className="text-sm font-medium text-primary truncate max-w-80" title={row.description}>{row.description}</p><p className="text-xs text-secondary mt-0.5">{row.type}</p></td>
-                      <td className="py-3 px-4 text-sm font-semibold text-primary text-right whitespace-nowrap">{formatCurrencyFromMinorUnits(row.amount, 'INR')}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-primary text-right whitespace-nowrap">{formatCurrency(row.amount, 'INR', locale)}</td>
                       <td className="py-3 px-4 text-right"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg ?? 'bg-input'} ${style?.text ?? 'text-secondary'}`}>{style?.label ?? row.status}</span></td>
                     </tr>
-                    {expanded && <tr id={`trainer-earnings-row-${row.id}-details`} key={`${row.id}-details`}><td colSpan={4} className="px-4 py-3 bg-input"><div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-secondary"><span><strong className="text-primary">Session ID:</strong> {row.sessionId ?? '—'}</span><span><strong className="text-primary">Invoice:</strong> {row.invoiceNumber ?? '—'}</span><span><strong className="text-primary">Net Payout:</strong> {row.netPayout == null ? '—' : formatCurrencyFromMinorUnits(row.netPayout, 'INR')}</span></div></td></tr>}
+                    {expanded && <tr id={`trainer-earnings-row-${row.id}-details`} key={`${row.id}-details`}><td colSpan={4} className="px-4 py-3 bg-input"><div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-secondary"><span><strong className="text-primary">Session ID:</strong> {row.sessionId ?? '—'}</span><span><strong className="text-primary">Invoice:</strong> {row.invoiceNumber ?? '—'}</span><span><strong className="text-primary">Net Payout:</strong> {row.netPayout == null ? '—' : formatCurrency(row.netPayout, 'INR', locale)}</span></div></td></tr>}
                   </>
                 );
               })}

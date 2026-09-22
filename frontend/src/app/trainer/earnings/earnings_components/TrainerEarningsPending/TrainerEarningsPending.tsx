@@ -3,10 +3,13 @@
 import { CalendarClock } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatNumber } from '@/lib/formatters';
 import { formatDate } from '@/lib/formatters';
+import { useLocale } from 'next-intl';
+import { formatCurrency } from '@/app/trainer/trainer_layout/trainer_utils/TrainerFormatCurrency';
 
 export default function TrainerEarningsPending() {
+  const locale = useLocale();
   const { data } = useTrainerEarningsQuery();
   const pendingPayouts = data?.pendingPayouts || [];
 
@@ -33,7 +36,7 @@ export default function TrainerEarningsPending() {
               <div key={p.id} className="p-4 rounded-xl border border-border bg-page flex flex-col gap-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-sm font-semibold text-primary">{formatCurrencyFromMinorUnits(p.amount, 'INR')}</p>
+                    <p className="text-sm font-semibold text-primary">{formatCurrency(p.amount, 'INR', locale)}</p>
                     <p className="text-xs text-secondary mt-0.5">{p.period}</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg || 'bg-input'} ${style?.text || 'text-secondary'}`}>
