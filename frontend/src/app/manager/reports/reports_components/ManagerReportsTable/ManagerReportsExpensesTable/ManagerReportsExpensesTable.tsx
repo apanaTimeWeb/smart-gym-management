@@ -1,12 +1,17 @@
 // RESPONSIBILITY: Renders the ManagerReportsExpensesTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
+import { useLocale } from "next-intl";
 
-const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
+const formatReportCurrency = (value: number) => {
+  const locale = useLocale();
+  return formatCurrency(value, ManagerEnvConfig.currencyCode, locale);
+};
 
 export function ManagerReportsExpensesTable() {
   const { summary } = useManagerReportsLogic();

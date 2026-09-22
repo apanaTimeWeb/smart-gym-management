@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the ManagerFinanceRevenueExpenseChart sub-view extracted from ManagerFinanceRevenueChart; owns only this presentation responsibility.
 'use client';
 import dynamic from 'next/dynamic';
-import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatKPI } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,

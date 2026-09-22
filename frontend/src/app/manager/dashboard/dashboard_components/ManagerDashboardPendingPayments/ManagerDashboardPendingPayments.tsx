@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import { Search, BellRing } from 'lucide-react';
 import Link from 'next/link';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerDashboardPendingPayments() {
+    const locale = useLocale();
   const { range } = useManagerDashboardUrlState();
   const { data: stats } = useDashboardStatsQuery({ range });
   const [search, setSearch] = useState('');
@@ -57,7 +59,7 @@ export default function ManagerDashboardPendingPayments() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <p className="text-sm font-bold text-danger">{formatCurrencyFromMinorUnits(p.pendingAmount, ManagerEnvConfig.currencyCode)}</p>
+              <p className="text-sm font-bold text-danger">{formatCurrency(p.pendingAmount, ManagerEnvConfig.currencyCode, locale)}</p>
               <button
                 onClick={() => setRemindedId(p.id)}
                 className={`p-1.5 rounded-lg motion-safe:transition-colors ${

@@ -2,7 +2,8 @@
 ﻿'use client';
 import { useState } from 'react';
 import { Edit, MessageCircle, Mail, Trash2, Users, Banknote, Ban, Loader2 } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
@@ -18,9 +19,10 @@ import { MEMBERS_TABLE_HEADERS } from '@/app/manager/members/members_utils/Manag
 import { MEMBERS_STATUS_COLORS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 import type { MemberSortColumn } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { ChangeEvent } from 'react';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerMembersTable() {
+    const locale = useLocale();
   // useConfirm provides the design-system confirm modal (Rule 71 â€” no window.confirm)
   const { confirm } = useConfirm();
   const { 
@@ -170,8 +172,8 @@ export default function ManagerMembersTable() {
                     </td>
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.joinDate)}</td>
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
-                    <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
-                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode) : 'â€”'}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrency(m.paidAmount, ManagerEnvConfig.currencyCode, locale)}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrency(m.pendingAmount, ManagerEnvConfig.currencyCode, locale) : 'â€”'}</td>
                     <td className="px-2 py-3 text-xs whitespace-nowrap">
 
                       <div className="flex items-center gap-1.5">

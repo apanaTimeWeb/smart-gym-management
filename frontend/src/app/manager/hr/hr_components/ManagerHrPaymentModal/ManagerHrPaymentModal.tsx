@@ -2,7 +2,8 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { IndianRupee, X } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
@@ -10,9 +11,10 @@ import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructur
 import { fromManagerMinorUnits, toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import type { FormEvent } from 'react';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerHrPaymentModal() {
+    const locale = useLocale();
   const { paymentModal, setPaymentModal, markPayrollPaid } = useManagerHrLogic();
   const { confirm } = useConfirm();
   const keyRef = useRef<string | null>(null);
@@ -35,7 +37,7 @@ export default function ManagerHrPaymentModal() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!amount || Number(amount) <= 0) return;
-    const confirmed = await confirm({ title: 'Confirm Salary Payment', message: `Record ${formatCurrencyFromMinorUnits(toManagerMinorUnits(Number(amount)), ManagerEnvConfig.currencyCode)} as a salary payment for ${paymentModal.staffName}?`, confirmText: 'Record Payment', type: 'warning' });
+    const confirmed = await confirm({ title: 'Confirm Salary Payment', message: `Record ${formatCurrency(toManagerMinorUnits(Number(amount)), ManagerEnvConfig.currencyCode, locale)} as a salary payment for ${paymentModal.staffName}?`, confirmText: 'Record Payment', type: 'warning' });
     if (!confirmed) return;
     keyRef.current ??= createManagerIdempotencyKey();
     setIsSubmitting(true);
@@ -60,7 +62,7 @@ export default function ManagerHrPaymentModal() {
               Staff: <strong className="text-primary">{paymentModal.staffName}</strong>
             </p>
             <p className="text-sm text-secondary">
-              Pending: <strong className="text-danger font-bold text-lg">{formatCurrencyFromMinorUnits(paymentModal.pendingAmount, ManagerEnvConfig.currencyCode)}</strong>
+              Pending: <strong className="text-danger font-bold text-lg">{formatCurrency(paymentModal.pendingAmount, ManagerEnvConfig.currencyCode, locale)}</strong>
             </p>
           </div>
 

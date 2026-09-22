@@ -1,17 +1,19 @@
 // RESPONSIBILITY: Renders the membership sales report table and its feature-owned controls.
 'use client';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import ManagerSalesMembershipReportEmptyState from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReportEmptyState';
 import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
-
+import { useLocale } from "next-intl";
 
 const SALES_MEMBERSHIP_REPORT_COLUMN_COUNT = 5;
 
 export default function ManagerSalesMembershipReport() {
+    const locale = useLocale();
   const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isPending, isError, errorMessage } = useManagerSalesLogic();
   
   const totalPages = Math.max(1, Math.ceil(membershipReportTotal / MANAGER_ITEMS_PER_PAGE));
@@ -50,10 +52,10 @@ export default function ManagerSalesMembershipReport() {
     paginated.map((r) => (
       <tr key={r.plan} className="hover:bg-primary-subtle motion-safe:transition-colors">
       <td className="px-4 py-3 text-sm font-medium text-primary">{r.plan || ''}</td>
-      <td className="px-4 py-3 text-sm text-secondary">{formatCurrencyFromMinorUnits(r.receivable || 0, ManagerEnvConfig.currencyCode)}</td>
-      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrencyFromMinorUnits(r.received || 0, ManagerEnvConfig.currencyCode)}</td>
-      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrencyFromMinorUnits(r.remaining || 0, ManagerEnvConfig.currencyCode)}</td>
-      <td className="px-4 py-3 text-sm text-danger">{formatCurrencyFromMinorUnits(r.refund || 0, ManagerEnvConfig.currencyCode)}</td>
+      <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrency(r.remaining || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+      <td className="px-4 py-3 text-sm text-danger">{formatCurrency(r.refund || 0, ManagerEnvConfig.currencyCode, locale)}</td>
       </tr>
     ))
   ) : (
@@ -65,10 +67,10 @@ export default function ManagerSalesMembershipReport() {
   )}
  <tr className="bg-input font-semibold border-t-2 border-border">
  <td className="px-4 py-3 text-sm text-primary">Total</td>
-          <td className="px-4 py-3 text-sm text-primary">{formatCurrencyFromMinorUnits(membershipTotals.totalReceivable || 0, ManagerEnvConfig.currencyCode)}</td>
-          <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrencyFromMinorUnits(membershipTotals.totalReceived || 0, ManagerEnvConfig.currencyCode)}</td>
-          <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrencyFromMinorUnits(membershipTotals.remaining || 0, ManagerEnvConfig.currencyCode)}</td>
-          <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrencyFromMinorUnits(membershipTotals.refunds || 0, ManagerEnvConfig.currencyCode)}</td>
+          <td className="px-4 py-3 text-sm text-primary">{formatCurrency(membershipTotals.totalReceivable || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+          <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrency(membershipTotals.totalReceived || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+          <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrency(membershipTotals.remaining || 0, ManagerEnvConfig.currencyCode, locale)}</td>
+          <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrency(membershipTotals.refunds || 0, ManagerEnvConfig.currencyCode, locale)}</td>
  </tr>
   </tbody>
   </table>

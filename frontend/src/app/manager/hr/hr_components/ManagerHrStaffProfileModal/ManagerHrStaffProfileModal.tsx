@@ -1,13 +1,15 @@
 // RESPONSIBILITY: Renders the HR staff profile dialog from feature-owned staff data.
 'use client';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerHrStaffProfileModal() {
+    const locale = useLocale();
   const { viewProfileData, setViewProfileData, openEdit } = useManagerHrLogic();
 
   if (!viewProfileData) return null;
@@ -73,7 +75,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Monthly Salary</p>
-                <p className="text-sm font-bold text-success">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</p>
+                <p className="text-sm font-bold text-success">{formatCurrency(s.salary || 0, ManagerEnvConfig.currencyCode, locale)}</p>
               </div>
             </div>
 
@@ -81,7 +83,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-danger mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Advance Balance</p>
-                <p className="text-sm font-bold text-danger">{formatCurrencyFromMinorUnits(s.advanceSalary || 0, ManagerEnvConfig.currencyCode)}</p>
+                <p className="text-sm font-bold text-danger">{formatCurrency(s.advanceSalary || 0, ManagerEnvConfig.currencyCode, locale)}</p>
               </div>
             </div>
 
@@ -89,7 +91,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-warning mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Current Due</p>
-                <p className="text-sm font-bold text-warning">{formatCurrencyFromMinorUnits(s.currentDue || 0, ManagerEnvConfig.currencyCode)}</p>
+                <p className="text-sm font-bold text-warning">{formatCurrency(s.currentDue || 0, ManagerEnvConfig.currencyCode, locale)}</p>
               </div>
             </div>
 

@@ -11,7 +11,7 @@ export default function ManagerFinanceFilters() {
     search, setSearch,
     statusFilter, setStatusFilter,
     methodFilter, setMethodFilter,
-    setCurrentPage, reload, exportCSV, exportPDF
+    setCurrentPage, reload, exportPDF
   } = useManagerFinanceLogic();
 
   return (
@@ -59,10 +59,6 @@ export default function ManagerFinanceFilters() {
             className="bg-input"
           />
         </div>
-        <button onClick={exportCSV}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-primary text-on-primary hover:opacity-90 motion-safe:transition-opacity">
-          <Download size={18} /> CSV
-        </button>
         <button onClick={exportPDF}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-on-info hover:opacity-90 motion-safe:transition-opacity">
           <FileText size={18} /> PDF

@@ -1,20 +1,22 @@
 // RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
 'use client';
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerStoreKPIs() {
+    const locale = useLocale();
  const { summary } = useManagerStoreLogic();
  const dateSuffix = useDateRangeSuffix();
 
  const kpis = [
  { label: 'Total Products' + dateSuffix, value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info-bg dark:bg-info-bg' },
  { label: 'Total Orders' + dateSuffix, value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success-bg dark:bg-success-bg' },
- { label: 'Store Revenue' + dateSuffix, value: formatCurrencyFromMinorUnits(summary?.totalRevenue || 0, ManagerEnvConfig.currencyCode), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
+ { label: 'Store Revenue' + dateSuffix, value: formatCurrency(summary?.totalRevenue || 0, ManagerEnvConfig.currencyCode, locale), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
  { label: 'Low Stock' + dateSuffix, value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
  ];
 

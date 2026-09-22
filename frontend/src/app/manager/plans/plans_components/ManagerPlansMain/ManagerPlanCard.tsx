@@ -1,11 +1,12 @@
 // RESPONSIBILITY: Renders one membership-plan card and exposes the plan actions supplied by the feature state layer.
 'use client';
 import { CheckCircle, XCircle, IndianRupee, Send } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
-
+import { useLocale } from "next-intl";
 
 const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   BASIC:   { bg: "bg-info-bg",    text: 'text-info',    label: 'Basic'   },
@@ -13,6 +14,7 @@ const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> =
   PREMIUM: { bg: "bg-primary-subtle", text: 'text-primary', label: 'Premium' } };
 
 export default function ManagerPlanCard({ plan }: { plan: Plan }) {
+    const locale = useLocale();
   const { openRequestModal } = useManagerPlansLogic();
   const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'] ?? { bg: 'bg-input', text: 'text-secondary', label: plan.tier ?? 'BASIC' };
   const features = Array.isArray(plan.features)
@@ -48,7 +50,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
         ].map(row => (
           <div key={`plan-${plan.id}-price-${row.label}`} className="bg-input rounded-lg px-3 py-2">
             <p className="text-xs text-secondary">{row.label}</p>
-            <p className="text-sm font-bold text-primary">{formatCurrencyFromMinorUnits(row.price, ManagerEnvConfig.currencyCode)}</p>
+            <p className="text-sm font-bold text-primary">{formatCurrency(row.price, ManagerEnvConfig.currencyCode, locale)}</p>
           </div>
         ))}
       </div>

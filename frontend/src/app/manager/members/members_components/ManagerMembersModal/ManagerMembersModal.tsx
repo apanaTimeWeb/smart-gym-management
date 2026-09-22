@@ -3,7 +3,8 @@
 import { useIsMutating } from '@tanstack/react-query';
 import { X, Save } from 'lucide-react';
 import { Controller } from 'react-hook-form';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
@@ -13,9 +14,10 @@ import { useFetchPlans } from '@/app/manager/members/members_hooks/ManagerUseMan
 import { getPriceForCycle, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS, MANAGER_MEMBER_MAX_AMOUNT_MAJOR_UNITS, MANAGER_MEMBER_MAX_CUSTOM_DAYS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerMembersModal() {
+    const locale = useLocale();
   const {
     showAddModal, setShowAddModal, editId, editData,
     saveMember
@@ -176,12 +178,12 @@ export default function ManagerMembersModal() {
                 <div>
                   <span className="font-semibold text-warning">Calculated Price:</span>
                   <span className="text-warning ml-1 font-bold">
-                    {formatCurrencyFromMinorUnits(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode)}
+                    {formatCurrency(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode, locale)}
                   </span>
                 </div>
                 {watchBillingCycle === 'CUSTOM' && (
                   <div className="text-warning text-xs opacity-80">
-                    (Per Day: {formatCurrencyFromMinorUnits(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode)} × {watchCustomDays || 0} days)
+                    (Per Day: {formatCurrency(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode, locale)} × {watchCustomDays || 0} days)
                   </div>
                 )}
               </div>
@@ -207,7 +209,7 @@ export default function ManagerMembersModal() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount ({formatCurrencyFromMinorUnits(0, ManagerEnvConfig.currencyCode).replace(/0/g, '').trim()})</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount ({formatCurrency(0, ManagerEnvConfig.currencyCode, locale).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 readOnly
@@ -216,7 +218,7 @@ export default function ManagerMembersModal() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid ({formatCurrencyFromMinorUnits(0, ManagerEnvConfig.currencyCode).replace(/0/g, '').trim()})</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid ({formatCurrency(0, ManagerEnvConfig.currencyCode, locale).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 min="0"

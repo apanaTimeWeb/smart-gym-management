@@ -47,7 +47,7 @@
 - Zustand may own transient composer/selection UI state only; it must not mirror URL-backed query state.
 
 ## No Direct Number Formatting
-- Never use `.toFixed()`, `.toLocaleString()`, or manual `₹` concatenation.
+- Never use `.toFixed()`, `.toLocaleString()`, or manual `` concatenation.
 - Always use `formatCurrencyFromMinorUnits()`, `formatNumber()`, `formatPercentage()` from `@/lib/formatters`.
 
 ## No Scattered Toast Messages

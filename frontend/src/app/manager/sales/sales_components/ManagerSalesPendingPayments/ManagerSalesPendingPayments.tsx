@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Renders the pending-payments sales table and its feature-owned actions.
 'use client';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
@@ -11,9 +12,10 @@ import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/Manager
 import{ useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
 import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerSalesPendingPayments() {
+    const locale = useLocale();
   const { currentPage, setCurrentPage, pendingPayments, pendingTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
 
   const totalPages = Math.ceil(pendingTotal / MANAGER_ITEMS_PER_PAGE) || 1;
@@ -71,7 +73,7 @@ export default function ManagerSalesPendingPayments() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="font-bold text-danger">{formatCurrencyFromMinorUnits(p.pendingAmount || 0, ManagerEnvConfig.currencyCode)}</p>
+                <p className="font-bold text-danger">{formatCurrency(p.pendingAmount || 0, ManagerEnvConfig.currencyCode, locale)}</p>
                 <p className="text-xs text-secondary opacity-80">{p.daysOverdue || 0} days overdue</p>
               </div>
               <button
@@ -87,7 +89,7 @@ export default function ManagerSalesPendingPayments() {
                       {
                         title: 'Outstanding Dues',
                         items: {
-                          'Pending Amount': formatCurrencyFromMinorUnits(p.pendingAmount || 0, ManagerEnvConfig.currencyCode),
+                          'Pending Amount': formatCurrency(p.pendingAmount || 0, ManagerEnvConfig.currencyCode, locale),
                           'Overdue By': `${p.daysOverdue || 0} days` }
                       }
                     ],

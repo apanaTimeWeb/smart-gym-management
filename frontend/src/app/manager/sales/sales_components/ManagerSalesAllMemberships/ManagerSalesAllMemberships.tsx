@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the all-memberships sales table and its feature-owned actions.
 'use client';
 import { useState } from 'react';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate } from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
@@ -11,8 +12,7 @@ import { MANAGER_MEMBERSHIP_FILTERS } from '@/app/manager/sales/sales_constants/
 import { MANAGER_SALES_MEMBERSHIP_TABLE_HEADERS } from '@/app/manager/sales/sales_constants/ManagerSalesTableConstants';
 import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
-
-
+import { useLocale } from "next-intl";
 
 /** Returns the Tailwind text color class for the days-left column based on urgency. */
 function getDaysLeftColorClass(daysLeft: number): string {
@@ -23,6 +23,7 @@ function getDaysLeftColorClass(daysLeft: number): string {
 }
 
 export default function ManagerSalesAllMemberships() {
+    const locale = useLocale();
   const [filter, setFilter] = useState('All');
   const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
   const [now] = useState(() => Date.now());
@@ -104,7 +105,7 @@ export default function ManagerSalesAllMemberships() {
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-medium text-primary">{formatCurrencyFromMinorUnits(r.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary">{formatCurrency(r.paidAmount || 0, ManagerEnvConfig.currencyCode, locale)}</td>
                 <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(
                   Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000))
                 )}`}>

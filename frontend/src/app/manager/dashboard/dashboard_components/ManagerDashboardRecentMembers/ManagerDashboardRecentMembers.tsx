@@ -4,7 +4,8 @@ import { useMemo, useState } from 'react';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { formatCurrencyFromMinorUnits, formatDate, displayValue } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatDate, displayValue } from '@/lib/formatters';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
@@ -12,9 +13,10 @@ import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_S
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerDashboardRecentMembers() {
+    const locale = useLocale();
   const { range } = useManagerDashboardUrlState();
   const router = useRouter();
   const pathname = usePathname();
@@ -96,7 +98,7 @@ export default function ManagerDashboardRecentMembers() {
                   <td className="px-6 py-4 text-sm text-secondary">
                     {formatDate(m.joinDate)}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrency(m.paidAmount, ManagerEnvConfig.currencyCode, locale)}</td>
                 </tr>
               );
             })}

@@ -1,14 +1,16 @@
 // RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 'use client';
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
-
+import { useLocale } from "next-intl";
 
 export default function ManagerStorePosModal() {
+    const locale = useLocale();
  const { 
  showOrderModal, closeOrderModal, 
  products, 
@@ -47,7 +49,7 @@ export default function ManagerStorePosModal() {
         if (p) addToOrder(p);
       }}
       options={products.filter(p => p.stock > 0).map(p => ({ 
-        label: `${p.name} ${p.unit ? `(${p.unit})` : ''} - ${formatCurrencyFromMinorUnits(p.price, ManagerEnvConfig.currencyCode)} (Stock: ${p.stock})`, 
+        label: `${p.name} ${p.unit ? `(${p.unit})` : ''} - ${formatCurrency(p.price, ManagerEnvConfig.currencyCode, locale)} (Stock: ${p.stock})`, 
         value: String(p.id) 
       }))}
       placeholder="Search and select products..."
@@ -66,7 +68,7 @@ export default function ManagerStorePosModal() {
  <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
  <div className="flex-1">
  <p className="text-xs font-medium text-primary">{i.name} {i.unit && <span className="text-secondary font-normal">({i.unit})</span>}</p>
- <p className="text-xs text-secondary">{formatCurrencyFromMinorUnits(i.price, ManagerEnvConfig.currencyCode)} each</p>
+ <p className="text-xs text-secondary">{formatCurrency(i.price, ManagerEnvConfig.currencyCode, locale)} each</p>
  </div>
  <div className="flex flex-wrap items-center gap-2">
    <div className="flex items-center bg-overlay rounded border border-border">
@@ -90,7 +92,7 @@ export default function ManagerStorePosModal() {
        <Plus size={18} aria-hidden="true" />
      </button>
    </div>
-   <p className="text-xs font-bold text-primary w-16 text-right">{formatCurrencyFromMinorUnits(i.price * i.qty, ManagerEnvConfig.currencyCode)}</p>
+   <p className="text-xs font-bold text-primary w-16 text-right">{formatCurrency(i.price * i.qty, ManagerEnvConfig.currencyCode, locale)}</p>
    <button type="button" aria-label={`Remove ${i.name} from order`}
      onClick={() => removeFromOrder(i.productId)} 
      className="p-1 text-danger hover:text-danger dark:hover:text-danger motion-safe:transition-colors ml-1"
@@ -105,7 +107,7 @@ export default function ManagerStorePosModal() {
  <div className="mt-4 pt-4 border-t border-border">
  <div className="flex justify-between mb-3">
  <span className="font-semibold text-primary">Total</span>
- <span className="font-bold text-lg text-success dark:text-success">{formatCurrencyFromMinorUnits(orderTotal, ManagerEnvConfig.currencyCode)}</span>
+ <span className="font-bold text-lg text-success dark:text-success">{formatCurrency(orderTotal, ManagerEnvConfig.currencyCode, locale)}</span>
  </div>
  
  <ManagerSearchableDropdown

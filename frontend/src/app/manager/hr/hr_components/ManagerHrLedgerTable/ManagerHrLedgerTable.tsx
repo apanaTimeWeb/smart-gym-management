@@ -1,18 +1,20 @@
 // RESPONSIBILITY: Renders the HR ledger table and exposes feature-owned ledger actions.
 'use client';
 import { useState, useEffect } from 'react';
-import { displayValue, formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { displayValue, formatDate } from '@/lib/formatters';
 import ManagerHrLedgerEmptyState from '@/app/manager/hr/hr_components/ManagerHrLedgerEmptyState/ManagerHrLedgerEmptyState';
 import { useManagerHrLedgerQuery } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLedgerQuery';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-
+import { useLocale } from "next-intl";
 
 const HR_LEDGER_COLUMN_COUNT = 6;
 
 export default function ManagerHrLedgerTable() {
+    const locale = useLocale();
   const { staff } = useManagerHrLogic();
   const [selectedStaffId, setSelectedStaffId] = useState<string>('');
   const { data: ledgerResponse, isPending: loading, isError, error } = useManagerHrLedgerQuery(selectedStaffId);
@@ -50,15 +52,15 @@ export default function ManagerHrLedgerTable() {
         <div className="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-3">
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Base Salary</p>
-            <p className="text-xl font-bold text-primary">{formatCurrencyFromMinorUnits(selectedStaff.salary || 0, ManagerEnvConfig.currencyCode)}/mo</p>
+            <p className="text-xl font-bold text-primary">{formatCurrency(selectedStaff.salary || 0, ManagerEnvConfig.currencyCode, locale)}/mo</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Advance Balance</p>
-            <p className="text-xl font-bold text-danger">{formatCurrencyFromMinorUnits(selectedStaff.advanceSalary || 0, ManagerEnvConfig.currencyCode)}</p>
+            <p className="text-xl font-bold text-danger">{formatCurrency(selectedStaff.advanceSalary || 0, ManagerEnvConfig.currencyCode, locale)}</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Due Amount</p>
-            <p className="text-xl font-bold text-warning">{formatCurrencyFromMinorUnits(selectedStaff.currentDue || 0, ManagerEnvConfig.currencyCode)}</p>
+            <p className="text-xl font-bold text-warning">{formatCurrency(selectedStaff.currentDue || 0, ManagerEnvConfig.currencyCode, locale)}</p>
           </div>
         </div>
       )}
@@ -71,9 +73,9 @@ export default function ManagerHrLedgerTable() {
                 <th className="p-4 font-medium text-secondary whitespace-nowrap">Date</th>
                 <th className="p-4 font-medium text-secondary whitespace-nowrap">Transaction Type</th>
                 <th className="p-4 font-medium text-secondary">Notes</th>
-                <th className="p-4 font-medium text-secondary text-right">Credit (₹)</th>
-                <th className="p-4 font-medium text-secondary text-right">Debit (₹)</th>
-                <th className="p-4 font-medium text-secondary text-right bg-primary-subtle">Balance (₹)</th>
+                <th className="p-4 font-medium text-secondary text-right">Credit </th>
+                <th className="p-4 font-medium text-secondary text-right">Debit </th>
+                <th className="p-4 font-medium text-secondary text-right bg-primary-subtle">Balance </th>
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-border">
@@ -103,9 +105,9 @@ export default function ManagerHrLedgerTable() {
                       </span>
                     </td>
                     <td className="p-4 text-secondary max-w-50 truncate" title={displayValue(l.notes)}>{displayValue(l.notes)}</td>
-                    <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${formatCurrencyFromMinorUnits(l.credit, ManagerEnvConfig.currencyCode)}` : '—'}</td>
-                    <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${formatCurrencyFromMinorUnits(l.debit, ManagerEnvConfig.currencyCode)}` : '—'}</td>
-                    <td className="p-4 text-right font-bold text-on-primary bg-primary-subtle">{formatCurrencyFromMinorUnits(l.balance, ManagerEnvConfig.currencyCode)}</td>
+                    <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${formatCurrency(l.credit, ManagerEnvConfig.currencyCode, locale)}` : '—'}</td>
+                    <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${formatCurrency(l.debit, ManagerEnvConfig.currencyCode, locale)}` : '—'}</td>
+                    <td className="p-4 text-right font-bold text-on-primary bg-primary-subtle">{formatCurrency(l.balance, ManagerEnvConfig.currencyCode, locale)}</td>
                   </tr>
                 ))
               )}

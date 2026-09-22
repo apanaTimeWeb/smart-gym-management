@@ -9,7 +9,7 @@ To maintain extreme isolation and enterprise-grade architecture in the Manager F
 ## 2. Theming & Formatting
 - **No Arbitrary Classes:** Raw Tailwind values (e.g., `text-[#EF4444]`, `bg-green-500`) are strictly prohibited in React components. You MUST use semantic tokens defined in `finance_theme_contract.md` (e.g., `text-danger`, `bg-success-bg`).
 - **Chart Exceptions:** Passing exact hex values (like `#EF4444`) directly to the ApexCharts configuration object is permitted since Canvas/SVG libraries do not reliably resolve all Tailwind variable classes.
-- **No Inline Currency Formatting:** Never use `.toLocaleString()` or string concatenations for currency (`₹${value}`). All monetary values MUST pass through `formatCurrencyFromMinorUnits()` or `formatKPI()` from `@/lib/formatters`.
+- **No Inline Currency Formatting:** Never use `.toLocaleString()` or string concatenations for currency (`${value}`). All monetary values MUST pass through `formatCurrencyFromMinorUnits()` or `formatKPI()` from `@/lib/formatters`.
 
 ## 3. Component Boundaries
 - **Dumb Presentation Tables:** `ManagerFinanceTable` must remain a dumb presentation component. It receives data from the Context but does not contain heavy business logic or local data fetching.

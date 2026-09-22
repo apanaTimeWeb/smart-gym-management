@@ -5,7 +5,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
@@ -18,7 +19,7 @@ import { getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMem
 import { MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 import type { ManagerMembersRenewFormValues } from '@/app/manager/members/members_types/ManagerMembersRenewFormTypes';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
-
+import { useLocale } from "next-intl";
 
 const PAYMENT_METHODS = [
   { label: 'UPI', value: 'UPI' },
@@ -42,6 +43,7 @@ function getExpiryDate(actionType: ManagerMembersRenewFormValues['actionType'], 
 
 /** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersRenewForm() {
+    const locale = useLocale();
   const { showRenewModal, setShowRenewModal, selectedMember, renewMember } = useManagerMembersLogic();
   const { data: plansData } = useFetchPlans();
   const plans = plansData ?? [];
@@ -86,7 +88,7 @@ export function useManagerMembersRenewForm() {
     if (!selectedMember) return;
     const confirmed = await confirm({
       title: data.actionType === 'renew' ? 'Confirm Membership Renewal' : 'Confirm Membership Upgrade',
-      message: `Confirm ${data.actionType} for ${selectedMember.name} with ${data.paymentMethod} payment of ${formatCurrencyFromMinorUnits(toManagerMinorUnits(data.paidAmount), ManagerEnvConfig.currencyCode)}.`,
+      message: `Confirm ${data.actionType} for ${selectedMember.name} with ${data.paymentMethod} payment of ${formatCurrency(toManagerMinorUnits(data.paidAmount), ManagerEnvConfig.currencyCode, locale)}.`,
       confirmText: data.actionType === 'renew' ? 'Confirm Renewal' : 'Confirm Upgrade',
       type: 'danger',
     });

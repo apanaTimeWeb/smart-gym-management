@@ -2,7 +2,8 @@
 'use client';
 import { useState } from 'react';
 import { Loader2, Dumbbell, UserPlus } from 'lucide-react';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import ManagerPtAssignmentForm from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentForm';
@@ -13,6 +14,7 @@ import ManagerPtTrainerWorkload from '@/app/manager/pt/pt_components/ManagerPtMa
 import { useManagerPtLogic } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtLogic';
 import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_schemas/ManagerPtAssignmentSchema';
+import { useLocale } from "next-intl";
 
 // THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
 
@@ -26,6 +28,7 @@ import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_schemas/
 
 // Assign Trainer form is isolated in ManagerPtAssignmentForm.tsx so the page remains a view/orchestrator.
 export default function ManagerPtMain() {
+    const locale = useLocale();
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
 
   const {
@@ -153,7 +156,7 @@ export default function ManagerPtMain() {
                         {pkg.sessionCount} Sessions
                       </span>
                       <span className="text-primary font-bold text-xl">
-                        {formatCurrencyFromMinorUnits(pkg.price, ManagerEnvConfig.currencyCode)}
+                        {formatCurrency(pkg.price, ManagerEnvConfig.currencyCode, locale)}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-primary mb-2">{pkg.name}</h3>

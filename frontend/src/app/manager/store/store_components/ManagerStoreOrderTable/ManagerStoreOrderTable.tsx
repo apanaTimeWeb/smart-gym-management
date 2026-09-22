@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the store order table and its feature-owned actions.
 'use client';
 import{ Printer, MessageCircle } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, displayValue , formatDate} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { displayValue, formatDate } from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
@@ -10,11 +11,12 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/Man
 import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
 import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
-
+import { useLocale } from "next-intl";
 
 const STORE_ORDER_COLUMN_COUNT = 6;
 
 export default function ManagerStoreOrderTable() {
+    const locale = useLocale();
   const { 
     orders, totalOrders, isPending, isError, errorMessage, currentPage, setCurrentPage, setPrintData
   } = useManagerStoreLogic();
@@ -40,10 +42,10 @@ export default function ManagerStoreOrderTable() {
   const handleWhatsApp = (o: Order) => {
     const itemsText = (o.items || []).map(i => {
       const name = i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '';
-      return `- ${name}\n  ${i.qty} x ${formatCurrencyFromMinorUnits(i.price, ManagerEnvConfig.currencyCode)} = ${formatCurrencyFromMinorUnits(i.qty * i.price, ManagerEnvConfig.currencyCode)}`;
+      return `- ${name}\n  ${i.qty} x ${formatCurrency(i.price, ManagerEnvConfig.currencyCode, locale)} = ${formatCurrency(i.qty * i.price, ManagerEnvConfig.currencyCode, locale)}`;
     }).join('\n');
 
-    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${formatDate(o.createdAt)}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrencyFromMinorUnits(o.total, ManagerEnvConfig.currencyCode)}*\nPaid via: ${o.method}\n\nThank You!`;
+    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${formatDate(o.createdAt)}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total, ManagerEnvConfig.currencyCode, locale)}*\nPaid via: ${o.method}\n\nThank You!`;
     const url = `${ManagerStoreUrlConfig.INTEGRATIONS.WHATSAPP_WEB_BASE}/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
@@ -110,7 +112,7 @@ export default function ManagerStoreOrderTable() {
                   ORD-{String(o.id).padStart(4, '0')}
                 </td>
                 <td className="px-4 py-3 text-sm font-bold text-success dark:text-success">
-                  {formatCurrencyFromMinorUnits(o.total, ManagerEnvConfig.currencyCode)}
+                  {formatCurrency(o.total, ManagerEnvConfig.currencyCode, locale)}
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">
                   {o.method}

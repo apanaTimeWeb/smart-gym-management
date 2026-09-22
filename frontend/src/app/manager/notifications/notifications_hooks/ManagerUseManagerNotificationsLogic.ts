@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Notifications feature facade. URL owns filters, TanStack Query owns server state, and mutations invalidate notification queries.
 "use client";
 /** Coordinates the Manager / feature. */
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useConfirm } from "@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider";
@@ -17,7 +17,28 @@ import type { ManagerNotificationsViewModel } from '@/app/manager/notifications/
 export function useManagerNotificationsLogic(): ManagerNotificationsViewModel {
   const router = useRouter(); const pathname = usePathname(); const searchParams = useSearchParams(); const queryClient = useQueryClient(); const { confirm } = useConfirm(); const search = searchParams.get("search") || ""; const typeFilter = searchParams.get("type") || "ALL"; const priorityFilter = searchParams.get("priority") || "ALL"; const statusFilter = searchParams.get("status") || "ALL"; const debouncedSearch = useManagerDebounce(search, 300);
   const setUrlParam = useCallback((key: string, value: string) => { const params = new URLSearchParams(searchParams.toString()); if (!value || (key !== "search" && value === "ALL")) params.delete(key); else params.set(key, value); router.replace(params.size ? `${pathname}?${params.toString()}` : pathname, { scroll: false }); }, [pathname, router, searchParams]);
-  const queryParams = useMemo(() => ({ search: debouncedSearch, type: typeFilter, priority: priorityFilter, status: statusFilter }), [debouncedSearch, priorityFilter, statusFilter, typeFilter]); const listQuery = useQuery({ queryKey: ["manager", "notifications", "list", queryParams], queryFn: async () => (await notificationsApi.fetchManagerNotifications(queryParams)).data ?? { notifications: [], total: 0 } }); const kpiQuery = useQuery({ queryKey: ["manager", "notifications", "kpis"], queryFn: async () => (await notificationsApi.fetchNotificationKPIs()).data ?? null }); const invalidate = () => queryClient.invalidateQueries({ queryKey: ["manager", "notifications"] });
+  const queryParams = useMemo(() => ({ search: debouncedSearch, type: typeFilter, priority: priorityFilter, status: statusFilter }), [debouncedSearch, priorityFilter, statusFilter, typeFilter]); const listQuery = useQuery({ queryKey: ["manager", "notifications", "list", queryParams], queryFn: async () => (await notificationsApi.fetchManagerNotifications(queryParams)).data ?? { notifications: [], total: 0 } });
+    
+  useEffect(() => {
+    const handleWs = () => queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] });
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] });
+      }
+    };
+
+    window.addEventListener('notification.received', handleWs);
+    window.addEventListener('chat_message', handleWs);
+    window.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleVisibility);
+
+    return () => {
+      window.removeEventListener('notification.received', handleWs);
+      window.removeEventListener('chat_message', handleWs);
+      window.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleVisibility);
+    };
+  }, [queryClient]); const kpiQuery = useQuery({ queryKey: ["manager", "notifications", "kpis"], queryFn: async () => (await notificationsApi.fetchNotificationKPIs()).data ?? null }); const invalidate = () => queryClient.invalidateQueries({ queryKey: ["manager", "notifications"] });
   const readMutation = useMutation({ mutationFn: (id: string) => notificationsApi.markNotificationRead(id), onSuccess: (response, id) => { showManagerSuccessToast(response.message, `manager-notifications-mark-read-${id}`); void invalidate(); }, onError: (error, id) => { showManagerErrorToast(error, `manager-notifications-mark-read-${id}`); } }); const readAllMutation = useMutation({ mutationFn: () => notificationsApi.markAllNotificationsRead(), onSuccess: (response) => { showManagerSuccessToast(response.message, "manager-notifications-mark-all-read"); void invalidate(); }, onError: (error) => { showManagerErrorToast(error, "manager-notifications-mark-all-read"); } }); const deleteMutation = useMutation({ mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => notificationsApi.deleteNotification(id, idempotencyKey), onSuccess: (response, id) => { showManagerSuccessToast(response.message, `manager-notifications-delete-${id}`); void invalidate(); }, onError: (error, id) => { showManagerErrorToast(error, `manager-notifications-delete-${id}`); } });
   const handleDelete = useCallback(async (id: string) => { const confirmed = await confirm({ title: "Delete Notification", message: "Delete this notification? This action cannot be undone.", confirmText: "Delete", cancelText: "Keep Notification", type: "danger" }); if (confirmed) await deleteMutation.mutateAsync({ id, idempotencyKey: createManagerIdempotencyKey() }); }, [confirm, deleteMutation]);
   const errorMessage = listQuery.error instanceof Error ? listQuery.error.message : kpiQuery.error instanceof Error ? kpiQuery.error.message : MANAGER_GENERIC_ERROR_MESSAGE;

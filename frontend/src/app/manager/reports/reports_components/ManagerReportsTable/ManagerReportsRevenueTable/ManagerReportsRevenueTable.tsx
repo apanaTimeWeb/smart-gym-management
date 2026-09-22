@@ -1,11 +1,16 @@
 // RESPONSIBILITY: Renders the ManagerReportsRevenueTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
 'use client';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { formatNumber } from '@/lib/formatters';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+import { useLocale } from "next-intl";
 
-const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
+const formatReportCurrency = (value: number) => {
+  const locale = useLocale();
+  return formatCurrency(value, ManagerEnvConfig.currencyCode, locale);
+};
 
 export function ManagerReportsRevenueTable() {
   const { summary } = useManagerReportsLogic();

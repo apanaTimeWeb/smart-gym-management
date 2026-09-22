@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Renders the referrals data table and its row-level actions using feature-owned referral data.
 'use client';
 import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
-import { formatCurrencyFromMinorUnits, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
@@ -9,6 +10,7 @@ import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEn
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_REFERRAL_STATUS_OPTIONS } from '@/app/manager/referrals/referrals_constants/ManagerReferralsFilterConstants';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hooks/ManagerUseManagerReferralsLogic';
+import { useLocale } from "next-intl";
 
 // Rule 20 FIX: Replaced native <select> with SearchableDropdown.
 
@@ -16,6 +18,7 @@ import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hook
 
 
 export default function ManagerReferralsTable() {
+    const locale = useLocale();
   const { 
     referrals, isReferralsLoading, isReferralsError, reloadReferrals, errorMessage, 
     searchQuery, setSearchQuery, 
@@ -126,7 +129,7 @@ export default function ManagerReferralsTable() {
                           disabled={isClaiming}
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-subtle text-primary rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
-                          <IndianRupee size={18} /> Claim {formatCurrencyFromMinorUnits(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode)}
+                          <IndianRupee size={18} /> Claim {formatCurrency(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode, locale)}
                         </button>
                       ) : (
                         <span className="text-secondary text-xs italic">Awaiting Join</span>

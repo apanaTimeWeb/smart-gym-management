@@ -2,9 +2,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { formatCurrency } from '@/app/manager/manager_layout/manager_utils/ManagerFormatCurrency';
+
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import type { ManagerStoreThermalReceiptProps } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+import { useLocale } from "next-intl";
 
 // DATA FLOW: feature print state → receipt component props → print portal → browser print stylesheet.
 
@@ -12,6 +14,7 @@ import type { ManagerStoreThermalReceiptProps } from '@/app/manager/store/store_
 
 
 export default function ManagerStoreThermalReceipt(props: ManagerStoreThermalReceiptProps) {
+    const locale = useLocale();
  const { data } = props;
  const [mounted, setMounted] = useState(false);
 
@@ -50,11 +53,11 @@ export default function ManagerStoreThermalReceipt(props: ManagerStoreThermalRec
  {item.name}
  {item.qty && item.qty > 1 && (
  <span className="block text-primary mt-0.5" style={{ fontSize: '10px' }}>
- {item.qty} x {formatCurrencyFromMinorUnits(item.price, ManagerEnvConfig.currencyCode)}
+ {item.qty} x {formatCurrency(item.price, ManagerEnvConfig.currencyCode, locale)}
  </span>
  )}
  </td>
- <td className="text-right py-1.5 align-top">{formatCurrencyFromMinorUnits(item.amount, ManagerEnvConfig.currencyCode)}</td>
+ <td className="text-right py-1.5 align-top">{formatCurrency(item.amount, ManagerEnvConfig.currencyCode, locale)}</td>
  </tr>
  ))}
  </tbody>
@@ -62,7 +65,7 @@ export default function ManagerStoreThermalReceipt(props: ManagerStoreThermalRec
  
  <div className="flex justify-between font-bold text-base mb-2">
  <span>TOTAL:</span>
- <span>{formatCurrencyFromMinorUnits(data.total, ManagerEnvConfig.currencyCode)}</span>
+ <span>{formatCurrency(data.total, ManagerEnvConfig.currencyCode, locale)}</span>
  </div>
  
  <div className="mb-4 text-xs">

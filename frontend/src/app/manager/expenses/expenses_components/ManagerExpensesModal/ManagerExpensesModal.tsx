@@ -61,7 +61,7 @@ export default function ManagerExpensesModal() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-secondary mb-1">Amount (₹)</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Amount </label>
                 <input
                   type="number"
                   min="0"
