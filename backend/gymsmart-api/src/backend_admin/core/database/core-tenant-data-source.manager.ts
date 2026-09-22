@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Lazily caches TypeORM DataSources for authorized tenant databases while enforcing a global per-process pool budget.
+// RESPONSIBILITY: Lazily caches TypeORM DataSources for authorized tenant databases while enforcing a global per-process pool budget.
 // FLOW: Trusted tenant context â†’ master tenant metadata â†’ bounded DataSource â†’ feature repository.
 
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
@@ -40,7 +40,7 @@ export class CoreTenantDataSourceManager implements OnModuleDestroy {
       entities: CoreTenantEntityRegistry,
       migrations: [__dirname + '/migrations/tenant/*.{js,ts}'],
       migrationsRun: true,
-      synchronize: false,
+      synchronize: process.env.NODE_ENV !== 'production',
       extra: { max: configuredMax, connectionTimeoutMillis: 30000, idleTimeoutMillis: 10000, statement_timeout: 3000 },
     });
     await dataSource.initialize();

@@ -13,10 +13,14 @@ export const hrApi = {
     return apiFetch<ApiResponse<{ staff: Staff[]; total: number }>>(`${AdminHrUrlConfig.BACKEND_API.STAFF_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ staff: z.array(staffSchema), total: z.number() }) });
   },
   fetchStaffById: async (id: string) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { dataSchema: staffSchema }),
-  createStaff: async (body: Partial<Staff>) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: staffSchema }),
+  createStaff: async (body: Partial<Staff>, idempotencyKey?: string) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: staffSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   updateStaff: async (id: string, body: Partial<Staff>, idempotencyKey?: string) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ id, ...body }), headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined, dataSchema: staffSchema }),
   deleteStaff: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
-  bulkDeactivateStaff: async (ids: string[]) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.BULK_DEACTIVATE, { method: 'POST', body: JSON.stringify({ ids }), dataSchema: z.null() }),
+  bulkDeactivateStaff: async (ids: string[], idempotencyKey?: string) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.BULK_DEACTIVATE, { method: 'POST', body: JSON.stringify({ ids }), dataSchema: z.null(),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   fetchPayrolls: async (params?: Record<string, string>) => {
     const query = new URLSearchParams(params ?? {}).toString();
     return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${AdminHrUrlConfig.BACKEND_API.PAYROLLS_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ payrolls: z.array(payrollSchema), total: z.number() }) });

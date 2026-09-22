@@ -7,5 +7,9 @@ import type { ApiResponse } from '@/lib/api';
 
 export const managerProfileApi = {
   fetchProfile: async (): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { dataSchema: managerProfileDataSchema }),
-  updateProfile: async (body: UpdateManagerProfilePayload): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerProfileDataSchema }),
-  updatePassword: async (body: UpdateManagerPasswordPayload): Promise<ApiResponse<Record<string, unknown>>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.PASSWORD, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerPasswordUpdateResponseSchema }) };
+  updateProfile: async (body: UpdateManagerProfilePayload, idempotencyKey?: string): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerProfileDataSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  updatePassword: async (body: UpdateManagerPasswordPayload, idempotencyKey?: string): Promise<ApiResponse<Record<string, unknown>>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.PASSWORD, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerPasswordUpdateResponseSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}) };

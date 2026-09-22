@@ -2239,3 +2239,16 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
+
+## Rule 14 — Idempotency for API Mutations
+
+All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY frontend API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
+
+Example:
+```typescript
+export const updateProfile = async (id: string, body: any, idempotencyKey?: string) => apiFetch('/profile', {
+  method: 'PATCH',
+  body: JSON.stringify(body),
+  headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+});
+```

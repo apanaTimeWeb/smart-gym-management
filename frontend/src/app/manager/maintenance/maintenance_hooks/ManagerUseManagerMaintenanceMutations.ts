@@ -9,7 +9,7 @@ import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/ma
 export function useManagerMaintenanceMutations() {
   const queryClient = useQueryClient();
   const createMaintenanceTicket = useMutation({
-    mutationFn: ManagerMaintenanceApi.createMaintenanceTicket,
+    mutationFn: (payload: Parameters<typeof ManagerMaintenanceApi.createMaintenanceTicket>[0]) => ManagerMaintenanceApi.createMaintenanceTicket(payload),
     onSuccess: async (response) => {
       await queryClient.invalidateQueries({ queryKey: managerMaintenanceKeys.lists() });
       showManagerSuccessToast(response.message, 'manager-maintenance-create-success');

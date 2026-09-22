@@ -9,7 +9,7 @@ import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/ma
 export function useManagerGrievanceMutations() {
   const queryClient = useQueryClient();
   const createGrievanceTicket = useMutation({
-    mutationFn: ManagerGrievanceApi.createGrievanceTicket,
+    mutationFn: (payload: Parameters<typeof ManagerGrievanceApi.createGrievanceTicket>[0]) => ManagerGrievanceApi.createGrievanceTicket(payload),
     onSuccess: async (response) => {
       await queryClient.invalidateQueries({ queryKey: managerGrievanceKeys.lists() });
       showManagerSuccessToast(response.message, 'manager-grievance-create-success');

@@ -35,11 +35,15 @@ export const membersApi = {
   fetchMemberStats: async (): Promise<ApiResponse<MemberStats>> => {
     return apiFetch(ManagerMembersUrlConfig.BACKEND_API.STATS, { dataSchema: memberStatsSchema });
   },
-  createMember: async (body: Partial<Member>): Promise<ApiResponse<Member>> => {
-    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: populatedMemberSchema });
+  createMember: async (body: Partial<Member>, idempotencyKey?: string): Promise<ApiResponse<Member>> => {
+    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: populatedMemberSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
-  updateMember: async (id: string, body: Partial<Member> & Record<string, unknown>): Promise<ApiResponse<Member>> => {
-    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: populatedMemberSchema });
+  updateMember: async (id: string, body: Partial<Member> & Record<string, unknown>, idempotencyKey?: string): Promise<ApiResponse<Member>> => {
+    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: populatedMemberSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   deleteMember: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {
     return apiFetch(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: memberDeleteResponseSchema });
@@ -65,13 +69,17 @@ export const membersApi = {
   fetchMemberDietPlans: async (): Promise<ApiResponse<DietPlanSnapshot[]>> => {
     return apiFetch(ManagerMembersUrlConfig.BACKEND_API.DIET_PLANS, { dataSchema: z.array(dietPlanSnapshotSchema) });
   },
-  assignDietPlan: async (memberId: string, dietPlanId: string): Promise<ApiResponse<{ success: boolean }>> => {
-    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.DIET_ASSIGN(memberId), { method: 'POST', body: JSON.stringify({ dietPlanId }), dataSchema: z.object({ success: z.boolean() }) });
+  assignDietPlan: async (memberId: string, dietPlanId: string, idempotencyKey?: string): Promise<ApiResponse<{ success: boolean }>> => {
+    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.DIET_ASSIGN(memberId), { method: 'POST', body: JSON.stringify({ dietPlanId }), dataSchema: z.object({ success: z.boolean() }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   fetchMemberWorkouts: async (): Promise<ApiResponse<WorkoutSnapshot[]>> => {
     return apiFetch(ManagerMembersUrlConfig.BACKEND_API.WORKOUTS, { dataSchema: z.array(workoutSnapshotSchema) });
   },
-  assignWorkout: async (memberId: string, workoutId: string): Promise<ApiResponse<{ success: boolean }>> => {
-    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.WORKOUT_ASSIGN(memberId), { method: 'POST', body: JSON.stringify({ workoutId }), dataSchema: z.object({ success: z.boolean() }) });
+  assignWorkout: async (memberId: string, workoutId: string, idempotencyKey?: string): Promise<ApiResponse<{ success: boolean }>> => {
+    return apiFetch(ManagerMembersUrlConfig.BACKEND_API.WORKOUT_ASSIGN(memberId), { method: 'POST', body: JSON.stringify({ workoutId }), dataSchema: z.object({ success: z.boolean() }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   }
 };

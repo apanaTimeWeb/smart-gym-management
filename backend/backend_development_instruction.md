@@ -1614,3 +1614,12 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
 * **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy.
 * **Why:** A global Naming Strategy blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+
+## Rule 112 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
+
+All state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) across the entire backend architecture MUST enforce strict idempotency by applying the `@RequireIdempotencyKey()` decorator to the controller method. 
+This is a non-negotiable enterprise requirement designed to prevent duplicate payments, duplicate record creation, and partial transaction failures from network retries.
+
+- The `@RequireIdempotencyKey()` decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
+- Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
+- `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.

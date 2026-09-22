@@ -17,13 +17,15 @@ export const jobsApi = {
             dataSchema: z.array(BackgroundJobSchema),
         });
     },
-    retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, {
+    retryAllJobs: (idempotencyKey?: string) => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, {
         method: 'POST',
         dataSchema: z.object({ queuedCount: z.number().nonnegative() }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
-    retryJob: (id: string) => apiFetch<ApiResponse<BackgroundJob>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}/retry`, {
+    retryJob: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<BackgroundJob>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}/retry`, {
         method: 'POST',
         dataSchema: BackgroundJobSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
     cancelJob: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<BackgroundJob>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}/cancel`, {
         method: 'POST',
@@ -40,10 +42,10 @@ export const jobsApi = {
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: CountResponseSchema,
     }),
-    bulkRetryJobs: (ids: string[]) => apiFetch<ApiResponse<CountResponse>>(`${JobsUrlConfig.BACKEND_API.BASE}/bulk-retry`, {
+    bulkRetryJobs: (ids: string[], idempotencyKey?: string) => apiFetch<ApiResponse<CountResponse>>(`${JobsUrlConfig.BACKEND_API.BASE}/bulk-retry`, {
         method: 'POST',
         body: JSON.stringify({ ids }),
-        headers: { 'Content-Type': 'application/json' },
+        headers: idempotencyKey ? { ...{ 'Content-Type': 'application/json' }, 'Idempotency-Key': idempotencyKey } : { 'Content-Type': 'application/json' },
         dataSchema: CountResponseSchema,
     }),
     bulkDeleteJobs: (ids: string[], idempotencyKey?: string) => apiFetch<ApiResponse<CountResponse>>(`${JobsUrlConfig.BACKEND_API.BASE}/bulk-delete`, {

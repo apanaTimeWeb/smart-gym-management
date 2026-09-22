@@ -13,10 +13,16 @@ function buildQuery(params?: AdminCouponsQueryParams): string {
 
 export const couponsApi = {
   fetchCoupons: async (params?: AdminCouponsQueryParams) => apiFetch<ApiResponse<Coupon[]>>(`${AdminCouponsUrlConfig.api.base}/fetchCoupons${buildQuery(params)}`, { method: 'GET', dataSchema: z.array(couponSchema) }),
-  createCoupon: async (payload: Partial<Coupon>) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/createCoupon`, { method: 'POST', body: JSON.stringify(payload), dataSchema: couponSchema }),
-  updateCoupon: async (id: string, payload: Partial<Coupon>) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/updateCoupon`, { method: 'POST', body: JSON.stringify({ id, ...payload }), dataSchema: couponSchema }),
+  createCoupon: async (payload: Partial<Coupon>, idempotencyKey?: string) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/createCoupon`, { method: 'POST', body: JSON.stringify(payload), dataSchema: couponSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  updateCoupon: async (id: string, payload: Partial<Coupon>, idempotencyKey?: string) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/updateCoupon`, { method: 'POST', body: JSON.stringify({ id, ...payload }), dataSchema: couponSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   deleteCoupon: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${AdminCouponsUrlConfig.api.base}/deleteCoupon`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
-  toggleCoupon: async (id: string) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/toggleCoupon`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: couponSchema }),
+  toggleCoupon: async (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/toggleCoupon`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: couponSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
 };
 
 export type { CouponsKPIData };

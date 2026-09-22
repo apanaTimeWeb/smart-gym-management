@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the global-audit feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the global-audit feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,10 +16,12 @@ import { GlobalAuditDeleteService } from '@/backend_superadmin/modules/superadmi
 import { GlobalAuditInvestigationService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-investigation.service';
 import { GlobalAuditSpecialController } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-special.controller';
 import { GlobalAuditFrontendContractController } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-frontend-contract.controller';
+import { GlobalAuditCompatibilityController } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-compatibility.controller';
+
 @Module({
   imports: [TypeOrmModule.forFeature([GlobalAuditContractSnapshotEntity, AuditLogEntity])],
-  controllers: [GlobalAuditQueryController, GlobalAuditCommandController, GlobalAuditSpecialController, GlobalAuditFrontendContractController],
-  providers: [GlobalAuditContractSnapshotRepository, GlobalAuditInvestigationService, GlobalAuditRepository, GlobalAuditListService, GlobalAuditFindService, GlobalAuditCreateService, GlobalAuditUpdateService, GlobalAuditDeleteService],
+  controllers: [GlobalAuditQueryController, GlobalAuditCommandController, GlobalAuditSpecialController, GlobalAuditFrontendContractController, GlobalAuditCompatibilityController],
+  providers: [GlobalAuditInvestigationService, GlobalAuditContractSnapshotRepository, GlobalAuditRepository, GlobalAuditListService, GlobalAuditFindService, GlobalAuditCreateService, GlobalAuditUpdateService, GlobalAuditDeleteService],
   exports: [GlobalAuditRepository],
 })
 export class GlobalAuditModule {}

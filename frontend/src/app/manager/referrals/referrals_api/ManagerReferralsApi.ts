@@ -18,11 +18,12 @@ export const ManagerReferralsApi = {
     return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}?${query.toString()}`, { dataSchema: z.array(managerReferralSchema) });
   },
 
-  createReferral: async (dto: CreateReferralDto): Promise<ApiResponse<ManagerReferral>> => {
+  createReferral: async (dto: CreateReferralDto, idempotencyKey?: string): Promise<ApiResponse<ManagerReferral>> => {
     return apiFetch(ManagerReferralsUrlConfig.BACKEND_API.BASE, {
       method: 'POST',
       body: JSON.stringify(dto),
-      dataSchema: managerReferralSchema
+      dataSchema: managerReferralSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     });
   },
 

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the analytics feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the analytics feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,9 +14,10 @@ import { AnalyticsDeleteService } from '@/backend_superadmin/modules/superadmin/
 import { AnalyticsMainService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-main.service';
 import { AnalyticsRetentionInsightsService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-retention-insights.service';
 import { AnalyticsSpecialController } from '@/backend_superadmin/modules/superadmin/analytics/analytics-special.controller';
+import { AnalyticsCompatibilityController } from '@/backend_superadmin/modules/superadmin/analytics/analytics-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([AnalyticsSnapshotEntity])],
-  controllers: [AnalyticsQueryController, AnalyticsCommandController, AnalyticsSpecialController],
+  controllers: [AnalyticsQueryController, AnalyticsCommandController, AnalyticsSpecialController, AnalyticsCompatibilityController],
   providers: [AnalyticsMainService, AnalyticsRetentionInsightsService, AnalyticsRepository, AnalyticsListService, AnalyticsFindService, AnalyticsCreateService, AnalyticsUpdateService, AnalyticsDeleteService],
   exports: [AnalyticsRepository],
 })

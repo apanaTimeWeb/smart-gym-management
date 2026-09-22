@@ -15,8 +15,12 @@ export const plansApi = {
     return apiFetch<ApiResponse<Plan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans${suffix}`, { method: 'GET', dataSchema: z.array(planSchema) });
   },
   fetchPlanById: async (id: string) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanById`, { method: 'GET', body: JSON.stringify({ id }), dataSchema: planSchema }),
-  createPlan: async (body: Partial<Plan>) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema }),
-  updatePlan: async (id: string, body: Partial<Plan>) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify({ id, ...body }), dataSchema: planSchema }),
+  createPlan: async (body: Partial<Plan>, idempotencyKey?: string) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  updatePlan: async (id: string, body: Partial<Plan>, idempotencyKey?: string) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify({ id, ...body }), dataSchema: planSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   deletePlan: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
   fetchPlanRevenue: async (period: RevenuePeriod, params?: { search?: string; sortKey?: RevenueSortKey; sortDir?: RevenueSortDirection; page?: number; limit?: number }) => {
     const query = new URLSearchParams({ period });

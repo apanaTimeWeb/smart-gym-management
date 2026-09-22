@@ -2164,5 +2164,18 @@ The mobile architecture MUST enforce the following security and robustness const
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
 - **Rule:** A mismatch between import case (e.g., 	rainer_url_config) and file case (e.g., Trainer_url_config.ts) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
-- ? **BAD:** File is UserComponent.tsx, imported as import UserComponent from './userComponent'.
-- ? **GOOD:** File is UserComponent.tsx, imported as import UserComponent from './UserComponent'.
+- ❌ **BAD:** File is UserComponent.tsx, imported as import UserComponent from './userComponent'.
+- ✅ **GOOD:** File is UserComponent.tsx, imported as import UserComponent from './UserComponent'.
+
+## Rule 25 — Idempotency for API Mutations
+
+All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY mobile API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
+
+Example:
+```typescript
+export const updateProfile = async (id: string, body: any, idempotencyKey?: string) => apiFetch('/profile', {
+  method: 'PATCH',
+  body: JSON.stringify(body),
+  headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+});
+```

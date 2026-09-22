@@ -7,4 +7,6 @@ import type { ApiResponse } from '@/lib/api';
 
 export const managerSettingsApi = {
   fetchSettings: async (): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { dataSchema: managerAllSettingsSchema }),
-  updateSettings: async (body: Partial<ManagerAllSettings>): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerAllSettingsSchema }) };
+  updateSettings: async (body: Partial<ManagerAllSettings>, idempotencyKey?: string): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerAllSettingsSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}) };

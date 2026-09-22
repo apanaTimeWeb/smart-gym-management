@@ -10,13 +10,15 @@ export const ManagerMaintenanceApi = {
   fetchMaintenanceIssues: async (): Promise<ApiResponse<MaintenanceTicket[]>> => apiFetch<ApiResponse<MaintenanceTicket[]>>(ManagerMaintenanceUrlConfig.BACKEND_API.BASE, {
     dataSchema: z.array(MaintenanceTicketSchema),
   }),
-  createMaintenanceTicket: async (payload: CreateMaintenanceTicketPayload): Promise<ApiResponse<MaintenanceTicket>> => apiFetch<ApiResponse<MaintenanceTicket>>(ManagerMaintenanceUrlConfig.BACKEND_API.BASE, {
+  createMaintenanceTicket: async (payload: CreateMaintenanceTicketPayload, idempotencyKey?: string): Promise<ApiResponse<MaintenanceTicket>> => apiFetch<ApiResponse<MaintenanceTicket>>(ManagerMaintenanceUrlConfig.BACKEND_API.BASE, {
     method: 'POST',
     body: JSON.stringify(payload),
     dataSchema: MaintenanceTicketSchema,
-  }),
-  resolveMaintenanceTicket: async (id: string): Promise<ApiResponse<MaintenanceTicket>> => apiFetch<ApiResponse<MaintenanceTicket>>(ManagerMaintenanceUrlConfig.BACKEND_API.RESOLVE(id), {
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  resolveMaintenanceTicket: async (id: string, idempotencyKey?: string): Promise<ApiResponse<MaintenanceTicket>> => apiFetch<ApiResponse<MaintenanceTicket>>(ManagerMaintenanceUrlConfig.BACKEND_API.RESOLVE(id), {
     method: 'POST',
     dataSchema: MaintenanceTicketSchema,
-  }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
 };

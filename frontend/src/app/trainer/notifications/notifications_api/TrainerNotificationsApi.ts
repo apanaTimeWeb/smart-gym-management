@@ -12,12 +12,16 @@ export async function fetchTrainerNotifications(page = 1, limit = 20): Promise<T
   return { notifications: response.data.notifications };
 }
 
-export async function markTrainerNotificationRead(id: string): Promise<void> {
-  const raw = await apiFetch<ApiResponse<unknown>>(TrainerNotificationsUrlConfig.BACKEND_API.MARK_READ(id), { method: 'PATCH' });
+export async function markTrainerNotificationRead(id: string, idempotencyKey?: string): Promise<void> {
+  const raw = await apiFetch<ApiResponse<unknown>>(TrainerNotificationsUrlConfig.BACKEND_API.MARK_READ(id), { method: 'PATCH',
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   TrainerNotificationMutationResponseSchema.parse(raw);
 }
 
-export async function markAllTrainerNotificationsRead(): Promise<void> {
-  const raw = await apiFetch<ApiResponse<unknown>>(TrainerNotificationsUrlConfig.BACKEND_API.MARK_ALL_READ, { method: 'PATCH' });
+export async function markAllTrainerNotificationsRead(idempotencyKey?: string): Promise<void> {
+  const raw = await apiFetch<ApiResponse<unknown>>(TrainerNotificationsUrlConfig.BACKEND_API.MARK_ALL_READ, { method: 'PATCH',
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   TrainerNotificationMutationResponseSchema.parse(raw);
 }

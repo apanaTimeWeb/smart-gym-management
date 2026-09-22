@@ -36,16 +36,20 @@ export const ManagerCommunicationsApi = {
     return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.SEGMENT(segment), { dataSchema: z.array(commRecipientSchema) });
   },
 
-  sendCampaign: async (payload: CommFormValues & { recipientCount: number; segmentLabel: string }): Promise<ApiResponse<CommCampaign>> => {
-    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.CAMPAIGNS, { method: 'POST', body: JSON.stringify(payload), dataSchema: commCampaignSchema });
+  sendCampaign: async (payload: CommFormValues & { recipientCount: number; segmentLabel: string }, idempotencyKey?: string): Promise<ApiResponse<CommCampaign>> => {
+    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.CAMPAIGNS, { method: 'POST', body: JSON.stringify(payload), dataSchema: commCampaignSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
 
   fetchAutomations: async (): Promise<ApiResponse<CommAutomation[]>> => {
     return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.AUTOMATIONS, { dataSchema: z.array(commAutomationSchema) });
   },
 
-  updateAutomation: async (id: string, payload: Partial<CommAutomation>): Promise<ApiResponse<CommAutomation>> => {
-    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.AUTOMATION(id), { method: 'PATCH', body: JSON.stringify(payload), dataSchema: commAutomationSchema });
+  updateAutomation: async (id: string, payload: Partial<CommAutomation>, idempotencyKey?: string): Promise<ApiResponse<CommAutomation>> => {
+    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.AUTOMATION(id), { method: 'PATCH', body: JSON.stringify(payload), dataSchema: commAutomationSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
 
   // ─── Churn Recovery API ───────────────────────────────────────────────────
@@ -70,6 +74,8 @@ export const ManagerCommunicationsApi = {
     templateTier: WinBackTemplateTier;
     message: string;
     subject: string;
-  }): Promise<ApiResponse<CommCampaign>> => {
-    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.WIN_BACK, { method: 'POST', body: JSON.stringify(payload), dataSchema: commCampaignSchema });
+  }, idempotencyKey?: string): Promise<ApiResponse<CommCampaign>> => {
+    return apiFetch(ManagerCommunicationsUrlConfig.BACKEND_API.WIN_BACK, { method: 'POST', body: JSON.stringify(payload), dataSchema: commCampaignSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   } };

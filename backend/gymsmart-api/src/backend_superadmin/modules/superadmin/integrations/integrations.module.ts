@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the integrations feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the integrations feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,9 +17,10 @@ import { IntegrationsStatusService } from '@/backend_superadmin/modules/superadm
 import { IntegrationsMainService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-main.service';
 import { IntegrationsGenerateKeyService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-generate-key.service';
 import { IntegrationsSpecialController } from '@/backend_superadmin/modules/superadmin/integrations/integrations-special.controller';
+import { IntegrationsCompatibilityController } from '@/backend_superadmin/modules/superadmin/integrations/integrations-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([IntegrationsContractSnapshotEntity, IntegrationKeyEntity])],
-  controllers: [IntegrationsQueryController, IntegrationsCommandController, IntegrationsSpecialController],
+  controllers: [IntegrationsQueryController, IntegrationsCommandController, IntegrationsSpecialController, IntegrationsCompatibilityController],
   providers: [IntegrationsContractSnapshotRepository, IntegrationsMainService, IntegrationsGenerateKeyService, IntegrationsRepository, IntegrationsListService, IntegrationsFindService, IntegrationsCreateService, IntegrationsUpdateService, IntegrationsDeleteService, IntegrationsStatusService],
   exports: [IntegrationsRepository],
 })

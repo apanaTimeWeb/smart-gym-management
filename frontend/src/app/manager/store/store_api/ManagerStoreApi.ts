@@ -11,11 +11,15 @@ export const storeApi = {
     const query = new URLSearchParams(params || {}).toString();
     return apiFetch(`${ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ products: z.array(productSchema), total: z.number() }) });
   },
-  createProduct: async (body: Partial<Product>): Promise<ApiResponse<Product>> => {
-    return apiFetch(ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: productSchema });
+  createProduct: async (body: Partial<Product>, idempotencyKey?: string): Promise<ApiResponse<Product>> => {
+    return apiFetch(ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: productSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
-  updateProduct: async (id: string, body: Partial<Product>): Promise<ApiResponse<Product>> => {
-    return apiFetch(ManagerStoreUrlConfig.BACKEND_API.PRODUCT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: productSchema });
+  updateProduct: async (id: string, body: Partial<Product>, idempotencyKey?: string): Promise<ApiResponse<Product>> => {
+    return apiFetch(ManagerStoreUrlConfig.BACKEND_API.PRODUCT_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: productSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   deleteProduct: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {
     return apiFetch(ManagerStoreUrlConfig.BACKEND_API.PRODUCT_DELETE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.object({ id: z.string() }) });

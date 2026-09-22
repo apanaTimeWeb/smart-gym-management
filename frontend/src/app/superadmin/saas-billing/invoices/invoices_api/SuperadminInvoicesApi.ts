@@ -25,9 +25,10 @@ export const invoicesApi = {
             downloadUrl: string;
         }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.object({ downloadUrl: z.string() }) });
     },
-    resendInvoiceEmail: (id: string) => apiFetch<ApiResponse<null>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/resend`, {
+    resendInvoiceEmail: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<null>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/resend`, {
         method: 'POST',
-        dataSchema: z.null()
+        dataSchema: z.null(),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
     }),
     fetchTenants: () => {
         // Local tenant lookup to avoid cross-module business imports

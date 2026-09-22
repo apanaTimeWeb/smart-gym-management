@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the profile feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the profile feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,10 +15,11 @@ import { ProfileMainService } from '@/backend_superadmin/modules/superadmin/prof
 import { ProfilePasswordService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-password.service';
 import { ProfileTwoFactorService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-two-factor.service';
 import { ProfileSpecialController } from '@/backend_superadmin/modules/superadmin/profile/profile-special.controller';
+import { ProfileCompatibilityController } from '@/backend_superadmin/modules/superadmin/profile/profile-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminProfileEntity])],
-  controllers: [ProfileQueryController, ProfileCommandController, ProfileSpecialController],
-  providers: [ProfileMainService, ProfileUpdateService, ProfilePasswordService, ProfileTwoFactorService, ProfileRepository, ProfileListService, ProfileFindService, ProfileCreateService, ProfileUpdateService, ProfileDeleteService],
+  controllers: [ProfileQueryController, ProfileCommandController, ProfileSpecialController, ProfileCompatibilityController],
+  providers: [ProfileRepository, ProfileListService, ProfileFindService, ProfileCreateService, ProfileUpdateService, ProfileDeleteService, ProfilePasswordService, ProfileTwoFactorService, ProfileMainService],
   exports: [ProfileRepository],
 })
 export class ProfileModule {}

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the broadcasts feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the broadcasts feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,9 +18,10 @@ import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/
 import { BroadcastsSpecialController } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-special.controller';
 import { BroadcastsContractController } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-contract.controller';
 import { BroadcastsDeliveryService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-delivery.service';
+import { BroadcastsCompatibilityController, BroadcastsInsightsCompatibilityController } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([BroadcastsContractSnapshotEntity, BroadcastEntity])],
-  controllers: [BroadcastsQueryController, BroadcastsCommandController, BroadcastsSpecialController, BroadcastsContractController],
+  controllers: [BroadcastsQueryController, BroadcastsCommandController, BroadcastsSpecialController, BroadcastsContractController, BroadcastsCompatibilityController, BroadcastsInsightsCompatibilityController],
   providers: [BroadcastsContractSnapshotRepository, BroadcastsDeliveryService, BroadcastsAudienceInsightsService, BroadcastsRepository, BroadcastsListService, BroadcastsFindService, BroadcastsCreateService, BroadcastsUpdateService, BroadcastsDeleteService, BroadcastsStatusService],
   exports: [BroadcastsRepository],
 })

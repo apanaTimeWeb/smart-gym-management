@@ -28,8 +28,10 @@ export const subscriptionsApi = {
   toggleAutoRenew: async (idempotencyKey: string) => {
           return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/toggleAutoRenew`, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() });
       },
-  setDefaultPaymentMethod: async (id: string) => {
-          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/setDefaultPaymentMethod`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.null() });
+  setDefaultPaymentMethod: async (id: string, idempotencyKey?: string) => {
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/setDefaultPaymentMethod`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.null(),
+              headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+        });
       },
   removePaymentMethod: async (id: string, idempotencyKey: string) => {
           return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/removePaymentMethod`, { method: 'DELETE', body: JSON.stringify(id), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() });

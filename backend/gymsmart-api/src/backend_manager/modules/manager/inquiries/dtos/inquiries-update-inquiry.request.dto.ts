@@ -1,0 +1,42 @@
+// @ts-nocheck
+import { CoreRequestDto } from '@/backend_manager/core/dtos/core-request.dto';
+import { InquiryStatus } from '@/backend_manager/modules/manager/inquiries/inquiries.constants';
+// RESPONSIBILITY: Strict feature-local request DTO for PATCH /api/v1/manager/inquiries/:id.
+// FLOW: HTTP payload -> InquiriesUpdateInquiryRequestDto validation -> write use case -> orchestrator.
+
+import { IsArray, IsEmail, IsISO8601, IsOptional, IsString, IsEnum } from 'class-validator';
+
+export class InquiriesUpdateInquiryRequestDto extends CoreRequestDto {
+  @IsString()
+  name!: string;
+
+  @IsString()
+  phone!: string;
+
+  @IsOptional()
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  interest!: string;
+
+  @IsEnum(InquiryStatus)
+  status!: InquiryStatus;
+
+  @IsOptional()
+  @IsString()
+  source!: string;
+
+  @IsOptional()
+  @IsString()
+  notes!: string;
+
+  @IsOptional()
+  @IsISO8601()
+  followUpDate!: string;
+
+  @IsOptional()
+  @IsArray()
+  followUpLogs?: { date: string; note: string }[];
+
+}

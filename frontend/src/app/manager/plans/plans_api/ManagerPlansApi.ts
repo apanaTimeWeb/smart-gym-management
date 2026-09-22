@@ -18,10 +18,16 @@ export const plansApi = {
     return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ plans: z.array(planSchema), total: z.number() }) });
   },
   fetchPlanById: async (id: string): Promise<ApiResponse<Plan>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(id), { dataSchema: planSchema }),
-  createPlan: async (body: Partial<Plan>): Promise<ApiResponse<Plan>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema }),
-  updatePlan: async (id: string, body: Partial<Plan>): Promise<ApiResponse<Plan>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: planSchema }),
+  createPlan: async (body: Partial<Plan>, idempotencyKey?: string): Promise<ApiResponse<Plan>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  updatePlan: async (id: string, body: Partial<Plan>, idempotencyKey?: string): Promise<ApiResponse<Plan>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: planSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   deletePlan: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.object({ id: z.string() }) }),
-  createChangeRequest: async (body: ManagerPlansChangeRequestPayload): Promise<ApiResponse<ManagerPlansChangeRequestResponse>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.CHANGE_REQUESTS, { method: 'POST', body: JSON.stringify(body), dataSchema: managerPlansChangeRequestResponseSchema }),
+  createChangeRequest: async (body: ManagerPlansChangeRequestPayload, idempotencyKey?: string): Promise<ApiResponse<ManagerPlansChangeRequestResponse>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.CHANGE_REQUESTS, { method: 'POST', body: JSON.stringify(body), dataSchema: managerPlansChangeRequestResponseSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   fetchMembershipOverview: async (): Promise<ApiResponse<ManagerPlansMembershipOverview>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_OVERVIEW, { dataSchema: managerPlansMembershipOverviewSchema }),
   activateMembership: async (body: ManagerPlansActivatePayload, idempotencyKey: string): Promise<ApiResponse<Record<string, never>>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_ACTIVATE, { method: 'POST', body: JSON.stringify(body), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: managerPlansActionResponseSchema }),
   renewMembership: async (body: ManagerPlansRenewPayload, idempotencyKey: string): Promise<ApiResponse<Record<string, never>>> => apiFetch(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_RENEW, { method: 'POST', body: JSON.stringify(body), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: managerPlansActionResponseSchema }),

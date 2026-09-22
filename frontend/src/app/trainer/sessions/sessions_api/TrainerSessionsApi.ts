@@ -19,7 +19,8 @@ export async function createTrainerSession(dto: CreateSessionDto, idempotencyKey
     method: 'POST',
     body: JSON.stringify(dto),
     ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
-  });
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
@@ -30,20 +31,25 @@ export async function updateTrainerSession(id: string, dto: Partial<CreateSessio
     method: 'PATCH',
     body: JSON.stringify(dto),
     ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
-  });
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
 }
 
 export async function markTrainerSessionNoShow(id: string, idempotencyKey?: string): Promise<{ message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CANCEL(id), { method: 'POST', ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CANCEL(id), { method: 'POST', ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }
 
 export async function markTrainerSessionAttendance(id: string, memberIds: string[], idempotencyKey?: string): Promise<{ message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.MARK_ATTENDANCE(id), { method: 'POST', body: JSON.stringify({ memberIds }), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.MARK_ATTENDANCE(id), { method: 'POST', body: JSON.stringify({ memberIds }), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+});
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }

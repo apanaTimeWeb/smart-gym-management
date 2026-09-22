@@ -7,6 +7,6 @@ import type { SuperadminTeamResponse, SuperadminTeamAlertPreferenceUpdate } from
 export async function fetchTeam(): Promise<ApiResponse<SuperadminTeamResponse>> {
     return apiFetch<ApiResponse<SuperadminTeamResponse>>(SuperadminTeamUrlConfig.BACKEND_API.BASE, { dataSchema: SuperadminTeamResponseSchema });
 }
-export async function updateTeamAlertPreferences(preferences: SuperadminTeamAlertPreferenceUpdate[]): Promise<ApiResponse<null>> {
-    return apiFetch<ApiResponse<null>>(SuperadminTeamUrlConfig.BACKEND_API.ALERT_PREFERENCES, { method: 'PATCH', body: JSON.stringify({ preferences }), dataSchema: SuperadminTeamAlertPreferencesUpdateResponseSchema.shape.data });
+export async function updateTeamAlertPreferences(preferences: SuperadminTeamAlertPreferenceUpdate[], idempotencyKey?: string): Promise<ApiResponse<null>> {
+    return apiFetch<ApiResponse<null>>(SuperadminTeamUrlConfig.BACKEND_API.ALERT_PREFERENCES, { method: 'PATCH', body: JSON.stringify({ preferences }), headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined, dataSchema: SuperadminTeamAlertPreferencesUpdateResponseSchema.shape.data });
 }

@@ -21,8 +21,8 @@ export const useTrainerNotificationsLogic = () => {
     getNextPageParam: (lastPage, pages) => (lastPage.notifications.length >= NOTIFICATIONS_PAGE_LIMIT ? pages.length + 1 : undefined),
   });
   const notifications = listQuery.data?.pages.flatMap((page) => page.notifications) ?? [];
-  const markReadMutation = useMutation({ mutationFn: markTrainerNotificationRead, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
-  const markAllMutation = useMutation({ mutationFn: markAllTrainerNotificationsRead, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
+  const markReadMutation = useMutation({ mutationFn: (id: string) => markTrainerNotificationRead(id), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
+  const markAllMutation = useMutation({ mutationFn: () => markAllTrainerNotificationsRead(), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
   const loadMore = useCallback(async () => { setLoadingMore(true); try { await listQuery.fetchNextPage(); } finally { setLoadingMore(false); } }, [listQuery]);
   const markAsRead = useCallback((id: string) => { markReadMutation.mutate(id); }, [markReadMutation]);
   const markAllAsRead = useCallback(() => { markAllMutation.mutate(); }, [markAllMutation]);

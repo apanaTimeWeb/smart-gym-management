@@ -12,6 +12,10 @@ export const managerScheduleApi = {
     return apiFetch(`${ManagerScheduleUrlConfig.BACKEND_API.BASE}${query ? `?${query}` : ''}`, {
       dataSchema: z.object({ trainers: z.array(managerScheduleTrainerSchema), kpis: managerScheduleKpiSchema }) });
   },
-  createShift: async (body: CreateShiftDto): Promise<ApiResponse<TrainerShift>> => apiFetch(ManagerScheduleUrlConfig.BACKEND_API.SHIFTS, { method: 'POST', body: JSON.stringify(body), dataSchema: managerScheduleShiftSchema }),
-  updateShift: async (id: string, body: CreateShiftDto): Promise<ApiResponse<TrainerShift>> => apiFetch(ManagerScheduleUrlConfig.BACKEND_API.SHIFT(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerScheduleShiftSchema }),
+  createShift: async (body: CreateShiftDto, idempotencyKey?: string): Promise<ApiResponse<TrainerShift>> => apiFetch(ManagerScheduleUrlConfig.BACKEND_API.SHIFTS, { method: 'POST', body: JSON.stringify(body), dataSchema: managerScheduleShiftSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  updateShift: async (id: string, body: CreateShiftDto, idempotencyKey?: string): Promise<ApiResponse<TrainerShift>> => apiFetch(ManagerScheduleUrlConfig.BACKEND_API.SHIFT(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerScheduleShiftSchema,
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
   deleteShift: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => apiFetch(ManagerScheduleUrlConfig.BACKEND_API.SHIFT(id), { method: 'DELETE', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.object({ id: z.string() }) }) };

@@ -9,8 +9,10 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export const attendanceApi = {
-  markAttendance: async (body: ManagerMarkAttendanceRequest): Promise<ApiResponse<Attendance>> => {
-    return apiFetch(ManagerAttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: attendanceSchema });
+  markAttendance: async (body: ManagerMarkAttendanceRequest, idempotencyKey?: string): Promise<ApiResponse<Attendance>> => {
+    return apiFetch(ManagerAttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: attendanceSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   fetchAttendanceRecords: async (params?: Record<string, string>): Promise<ApiResponse<AttendanceResponse>> => {
     const query = new URLSearchParams(params || {}).toString();

@@ -24,7 +24,9 @@ export const TrainerMembersApi = {
     return MemberStatsResponseSchema.parse(response);
   },
   updateMember: async (id: string, body: Partial<Member>, idempotencyKey?: string) => {
-    const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
+    const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
     return MemberDetailResponseSchema.parse(response);
   },
   updateMemberAssessment: async (id: string, assessment: TrainerMemberAssessment, idempotencyKey?: string) => {
@@ -45,7 +47,9 @@ export const TrainerMembersApi = {
     return TrainerMemberWorkoutPlansResponseSchema.parse(response);
   },
   addMemberNote: async (memberId: string, body: CreateTrainerMemberNote, idempotencyKey?: string) => {
-    const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.NOTES(memberId), { method: 'POST', body: JSON.stringify(body), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
+    const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.NOTES(memberId), { method: 'POST', body: JSON.stringify(body), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
     return MemberDetailResponseSchema.parse(response);
   },
   fetchMemberProgressEntries: async (memberId: string) => {

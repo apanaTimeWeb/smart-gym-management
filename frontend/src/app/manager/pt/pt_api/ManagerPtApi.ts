@@ -30,10 +30,14 @@ export const managerPtApi = {
     return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.ASSIGNMENTS}${query ? `?${query}` : ''}`, { dataSchema: z.object({ assignments: z.array(ptAssignmentSchema), total: z.number(), page: z.number(), limit: z.number() }) });
   },
 
-  createAssignment: async (body: CreatePtAssignmentPayload): Promise<ApiResponse<PtAssignment>> => {
-    return apiFetch(ManagerPtUrlConfig.BACKEND_API.ASSIGNMENTS, { method: 'POST', body: JSON.stringify(body), dataSchema: ptAssignmentSchema });
+  createAssignment: async (body: CreatePtAssignmentPayload, idempotencyKey?: string): Promise<ApiResponse<PtAssignment>> => {
+    return apiFetch(ManagerPtUrlConfig.BACKEND_API.ASSIGNMENTS, { method: 'POST', body: JSON.stringify(body), dataSchema: ptAssignmentSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
 
-  markSessionComplete: async (assignmentId: string): Promise<ApiResponse<PtAssignment>> => {
-    return apiFetch(ManagerPtUrlConfig.BACKEND_API.COMPLETE_SESSION(assignmentId), { method: 'PATCH', dataSchema: ptAssignmentSchema });
+  markSessionComplete: async (assignmentId: string, idempotencyKey?: string): Promise<ApiResponse<PtAssignment>> => {
+    return apiFetch(ManagerPtUrlConfig.BACKEND_API.COMPLETE_SESSION(assignmentId), { method: 'PATCH', dataSchema: ptAssignmentSchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   } };

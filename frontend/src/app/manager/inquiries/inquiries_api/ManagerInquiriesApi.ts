@@ -22,8 +22,10 @@ export const inquiriesApi = {
     return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.PLANS_SNAPSHOT, { dataSchema: z.array(z.object({ name: z.string() })) });
   },
   
-  convertLead: async (id: string, body: Record<string, unknown>): Promise<ApiResponse<{ memberId: string }>> => {
-    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.CONVERT(id), { method: 'POST', body: JSON.stringify(body), dataSchema: z.object({ memberId: z.string() }) });
+  convertLead: async (id: string, body: Record<string, unknown>, idempotencyKey?: string): Promise<ApiResponse<{ memberId: string }>> => {
+    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.CONVERT(id), { method: 'POST', body: JSON.stringify(body), dataSchema: z.object({ memberId: z.string() }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
   fetchInquiryById: async (id: string): Promise<ApiResponse<Inquiry>> => {
@@ -34,12 +36,16 @@ export const inquiriesApi = {
     return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.STATS, { dataSchema: inquiryStatsSchema });
   },
   
-  createInquiry: async (body: Partial<Inquiry>): Promise<ApiResponse<Inquiry>> => {
-    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: inquirySchema });
+  createInquiry: async (body: Partial<Inquiry>, idempotencyKey?: string): Promise<ApiResponse<Inquiry>> => {
+    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: inquirySchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
-  updateInquiry: async (id: string, body: Partial<Inquiry>): Promise<ApiResponse<Inquiry>> => {
-    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: inquirySchema });
+  updateInquiry: async (id: string, body: Partial<Inquiry>, idempotencyKey?: string): Promise<ApiResponse<Inquiry>> => {
+    return apiFetch(ManagerInquiriesUrlConfig.BACKEND_API.GET_ONE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: inquirySchema,
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+    });
   },
   
   deleteInquiry: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {

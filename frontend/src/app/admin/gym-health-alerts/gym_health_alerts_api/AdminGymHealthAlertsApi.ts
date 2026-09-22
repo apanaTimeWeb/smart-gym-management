@@ -14,6 +14,10 @@ function buildQuery(params?: AdminGymHealthAlertsQueryParams): string {
 export const gymHealthAlertsApi = {
   fetchAlerts: async (params?: AdminGymHealthAlertsQueryParams) => apiFetch<ApiResponse<GymHealthAlert[]>>(`${AdminGymHealthAlertsUrlConfig.api.base}/fetchAlerts${buildQuery(params)}`, { method: 'GET', dataSchema: z.array(gymHealthAlertSchema) }),
   fetchKPIs: async () => apiFetch<ApiResponse<GymHealthKPIData>>(`${AdminGymHealthAlertsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: gymHealthKpiDataSchema }),
-  resolveAlert: async (id: string) => apiFetch<ApiResponse<null>>(`${AdminGymHealthAlertsUrlConfig.api.base}/resolveAlert`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: z.null() }),
-  dismissAlert: async (id: string) => apiFetch<ApiResponse<null>>(`${AdminGymHealthAlertsUrlConfig.api.base}/dismissAlert`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: z.null() }),
+  resolveAlert: async (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<null>>(`${AdminGymHealthAlertsUrlConfig.api.base}/resolveAlert`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: z.null(),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  dismissAlert: async (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<null>>(`${AdminGymHealthAlertsUrlConfig.api.base}/dismissAlert`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: z.null(),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
 };

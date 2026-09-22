@@ -10,10 +10,14 @@ export const adminProfileApi = {
   fetchProfile: async () => {
             return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.fetchProfile}`, { method: 'GET', dataSchema: adminProfileDataSchema });
         },
-  updateProfile: async (body: UpdateAdminProfilePayload) => {
-            return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updateProfile}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema });
+  updateProfile: async (body: UpdateAdminProfilePayload, idempotencyKey?: string) => {
+            return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updateProfile}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema,
+                headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+            });
         },
-  updatePassword: async (body: UpdateAdminPasswordPayload) => {
-          return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updatePassword}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema });
+  updatePassword: async (body: UpdateAdminPasswordPayload, idempotencyKey?: string) => {
+          return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updatePassword}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema,
+              headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+        });
       },
 };

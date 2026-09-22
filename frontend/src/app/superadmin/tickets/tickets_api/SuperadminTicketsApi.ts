@@ -11,26 +11,30 @@ export const ticketsApi = {
         return apiFetch<ApiResponse<SupportTicket[]>>(`${TicketsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SupportTicketSchema) });
     },
     fetchTicketById: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SupportTicketSchema }),
-    updateTicket: (id: string, body: Partial<SupportTicket>) => apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, {
+    updateTicket: (id: string, body: Partial<SupportTicket>, idempotencyKey?: string) => apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(body),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: SupportTicketSchema
     }),
-    closeTicket: (id: string) => apiFetch<ApiResponse<SupportTicket>>(TicketsUrlConfig.BACKEND_API.CLOSE(id), {
+    closeTicket: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<SupportTicket>>(TicketsUrlConfig.BACKEND_API.CLOSE(id), {
         method: 'POST',
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: SupportTicketSchema
     }),
-    assignTicket: (id: string, assignee: string) => apiFetch<ApiResponse<SupportTicket>>(TicketsUrlConfig.BACKEND_API.ASSIGN(id), {
+    assignTicket: (id: string, assignee: string, idempotencyKey?: string) => apiFetch<ApiResponse<SupportTicket>>(TicketsUrlConfig.BACKEND_API.ASSIGN(id), {
         method: 'POST',
         body: JSON.stringify({ assignee }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: SupportTicketSchema
     }),
 };
 
-export async function replyToTicket(id: string, replyText: string): Promise<ApiResponse<SupportTicket>> {
+export async function replyToTicket(id: string, replyText: string, idempotencyKey?: string): Promise<ApiResponse<SupportTicket>> {
     return apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/reply`, {
         method: 'POST',
         body: JSON.stringify({ replyText }),
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: SupportTicketSchema,
     });
 }

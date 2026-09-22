@@ -10,14 +10,16 @@ export const ManagerGrievanceApi = {
   fetchGrievanceTickets: async (): Promise<ApiResponse<GrievanceTicket[]>> => apiFetch<ApiResponse<GrievanceTicket[]>>(ManagerGrievanceUrlConfig.BACKEND_API.BASE, {
     dataSchema: z.array(GrievanceTicketSchema),
   }),
-  createGrievanceTicket: async (payload: CreateGrievanceTicketPayload): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.BASE, {
+  createGrievanceTicket: async (payload: CreateGrievanceTicketPayload, idempotencyKey?: string): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.BASE, {
     method: 'POST',
     body: JSON.stringify(payload),
     dataSchema: GrievanceTicketSchema,
-  }),
-  resolveGrievanceTicket: async (id: string, resolutionNote: string): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(id), {
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
+  resolveGrievanceTicket: async (id: string, resolutionNote: string, idempotencyKey?: string): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(id), {
     method: 'POST',
     body: JSON.stringify({ resolutionNote }),
     dataSchema: GrievanceTicketSchema,
-  }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined
+}),
 };

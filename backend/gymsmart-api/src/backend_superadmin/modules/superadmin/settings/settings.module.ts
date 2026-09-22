@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the settings feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the settings feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,9 +15,10 @@ import { SettingsUpdateService } from '@/backend_superadmin/modules/superadmin/s
 import { SettingsDeleteService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-delete.service';
 import { SettingsGovernanceService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-governance.service';
 import { SettingsSpecialController } from '@/backend_superadmin/modules/superadmin/settings/settings-special.controller';
+import { SettingsCompatibilityController } from '@/backend_superadmin/modules/superadmin/settings/settings-compatibility.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([SettingsContractSnapshotEntity, PlatformSettingEntity])],
-  controllers: [SettingsQueryController, SettingsCommandController, SettingsSpecialController],
+  controllers: [SettingsQueryController, SettingsCommandController, SettingsSpecialController, SettingsCompatibilityController],
   providers: [SettingsContractSnapshotRepository, SettingsGovernanceService, SettingsRepository, SettingsListService, SettingsFindService, SettingsCreateService, SettingsUpdateService, SettingsDeleteService],
   exports: [SettingsRepository],
 })
