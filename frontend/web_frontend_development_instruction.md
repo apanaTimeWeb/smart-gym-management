@@ -1136,13 +1136,19 @@ AI-generated code is not considered complete until the required tests exist.
 Approved stack:
 - Unit tests: Vitest
 - React component tests: React Testing Library
+- E2E tests: Playwright
 - API/network mocking: MSW
-- Note: Full browser E2E (Selenium) is handled externally. Do not use Playwright or Cypress here.
 
-Co-location rule:
-- `ManagerMembersTable.tsx` → `ManagerMembersTable.test.tsx`
-- `useManagerMembersTable.ts` → `useManagerMembersTable.test.ts`
-- `ManagerMembersFormatting.ts` → `ManagerMembersFormatting.test.ts`
+Co-location rule (Unit & Component Tests ONLY):
+- ManagerMembersTable.tsx → ManagerMembersTable.test.tsx
+- useManagerMembersTable.ts → useManagerMembersTable.test.ts
+- ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
+
+**Complete Isolation for E2E Testing (The AI Zip Principle):**
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/members/members.spec.ts`).
+2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `billing` test need a login helper, duplicate it directly into BOTH the `members` and `billing` test folders.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
+3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/billing/`.
 
 Minimum expectations:
 - Utilities: 90% branch coverage

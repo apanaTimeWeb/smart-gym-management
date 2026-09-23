@@ -572,10 +572,11 @@ visually renders with placeholder values.
 - **Integration tests:** Live inside the feature's `tests/` directory and verify
   multi-file feature flows, API/mock integration, state coordination, and critical
   feature behavior.
-- **E2E tests:** MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders, but keep them in the project-level E2E suite to verify complete user
-  journeys through the real application (e.g. Maestro or a comparable YAML/script-
-  driven E2E runner works across both RN and Flutter — choose ONE tool project-wide
-  and document the choice; do not mix multiple E2E tools in the same repo).
+- **E2E tests (Maestro / Detox) - AI Zip Principle:**
+  1. **Top-Level Mirrored Folders:** E2E tests MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders.
+  2. **WET Over DRY (Module-Level Isolation):** Mobile E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `dashboard` test need a login helper script, duplicate it directly into BOTH the `members` and `dashboard` test folders.
+     - **Why:** If a bug occurs in the Members mobile flow, a developer must be able to ZIP only the `mobile_e2e/mobile_admin_e2e/members/` folder and feed it to an AI. If the AI is missing parent helpers, it loses context and breaks the test.
+  3. **No Cross-Module Imports:** A test script in `mobile_admin_e2e/members/` MUST NOT import a fixture or helper from `mobile_admin_e2e/dashboard/`. Isolation is absolute.
 - Native modules (camera, biometrics, secure storage, notifications) are
   mocked at the test boundary — unit and component tests never touch a real
   native API.
