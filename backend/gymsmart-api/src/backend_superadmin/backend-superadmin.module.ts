@@ -1,32 +1,32 @@
 // RESPONSIBILITY: Aggregates the complete Superadmin backend role/domain into one explicit NestJS module.
-// FLOW: Application root -> BackendSuperadminModule -> CoreModule + Auth/Health + Superadmin feature modules.
+// FLOW: Application root -> BackendSuperadminModule -> SuperadminCoreModule + Auth/Health + Superadmin feature modules.
 import { Module } from '@nestjs/common';
-import { CoreModule } from '@/backend_superadmin/core/core.module';
-import { ExportDataModule } from '@/backend_superadmin/modules/superadmin/export-data/export-data.module';
-import { AuthModule } from '@/backend_superadmin/modules/auth/auth.module';
-import { HealthModule } from '@/backend_superadmin/modules/health/health.module';
-import { AffiliatesModule } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.module';
-import { AnalyticsModule } from '@/backend_superadmin/modules/superadmin/analytics/analytics.module';
-import { BroadcastsModule } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.module';
-import { ComplianceModule } from '@/backend_superadmin/modules/superadmin/compliance/compliance.module';
-import { DashboardModule } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.module';
-import { FeaturesModule } from '@/backend_superadmin/modules/superadmin/features/features.module';
-import { GlobalAuditModule } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.module';
-import { GymsModule } from '@/backend_superadmin/modules/superadmin/gyms/gyms.module';
-import { IntegrationsModule } from '@/backend_superadmin/modules/superadmin/integrations/integrations.module';
-import { MessagingModule } from '@/backend_superadmin/modules/superadmin/messaging/messaging.module';
-import { ProfileModule } from '@/backend_superadmin/modules/superadmin/profile/profile.module';
-import { ReportsModule } from '@/backend_superadmin/modules/superadmin/reports/reports.module';
-import { SaasBillingModule } from '@/backend_superadmin/modules/superadmin/saas-billing/saas-billing.module';
-import { SettingsModule } from '@/backend_superadmin/modules/superadmin/settings/settings.module';
-import { SystemOpsContainerModule } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops-container.module';
-import { TeamModule } from '@/backend_superadmin/modules/superadmin/team/team.module';
-import { TicketsModule } from '@/backend_superadmin/modules/superadmin/tickets/tickets.module';
-import { UsageMetersModule } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.module';
-import { WhiteLabelingModule } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.module';
+import { SuperadminCoreModule } from '@/backend_superadmin/superadmin_core/superadmin-core.module';
+import { SuperadminExportDataModule } from '@/backend_superadmin/superadmin_modules/export-data/superadmin-export-data.module';
+import { SuperadminAuthModule } from '@/backend_superadmin/superadmin_modules/auth/superadmin-auth.module';
+import { SuperadminHealthModule } from '@/backend_superadmin/superadmin_core/health/superadmin-health.module';
+import { SuperadminAffiliatesModule } from '@/backend_superadmin/superadmin_modules/affiliates/superadmin-affiliates.module';
+import { SuperadminAnalyticsModule } from '@/backend_superadmin/superadmin_modules/analytics/superadmin-analytics.module';
+import { SuperadminBroadcastsModule } from '@/backend_superadmin/superadmin_modules/broadcasts/superadmin-broadcasts.module';
+import { SuperadminComplianceModule } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance.module';
+import { SuperadminDashboardModule } from '@/backend_superadmin/superadmin_modules/dashboard/superadmin-dashboard.module';
+import { SuperadminFeaturesModule } from '@/backend_superadmin/superadmin_modules/features/superadmin-features.module';
+import { SuperadminGlobalAuditModule } from '@/backend_superadmin/superadmin_modules/global-audit/superadmin-global-audit.module';
+import { SuperadminGymsModule } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.module';
+import { SuperadminIntegrationsModule } from '@/backend_superadmin/superadmin_modules/integrations/superadmin-integrations.module';
+import { SuperadminMessagingModule } from '@/backend_superadmin/superadmin_modules/messaging/superadmin-messaging.module';
+import { SuperadminProfileModule } from '@/backend_superadmin/superadmin_modules/profile/superadmin-profile.module';
+import { SuperadminReportsModule } from '@/backend_superadmin/superadmin_modules/reports/superadmin-reports.module';
+import { SuperadminSaasBillingModule } from '@/backend_superadmin/superadmin_modules/saas-billing/superadmin-saas-billing.module';
+import { SuperadminSettingsModule } from '@/backend_superadmin/superadmin_modules/settings/superadmin-settings.module';
+import { SuperadminSystemOpsContainerModule } from '@/backend_superadmin/superadmin_modules/system-ops/superadmin-system-ops-container.module';
+import { SuperadminTeamModule } from '@/backend_superadmin/superadmin_modules/team/superadmin-team.module';
+import { SuperadminTicketsModule } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.module';
+import { SuperadminUsageMetersModule } from '@/backend_superadmin/superadmin_modules/usage-meters/superadmin-usage-meters.module';
+import { SuperadminWhiteLabelingModule } from '@/backend_superadmin/superadmin_modules/white-labeling/superadmin-white-labeling.module';
 
 @Module({
-  imports: [CoreModule, ExportDataModule, AuthModule, HealthModule, AffiliatesModule, AnalyticsModule, BroadcastsModule, ComplianceModule, DashboardModule, FeaturesModule, GlobalAuditModule, GymsModule, IntegrationsModule, MessagingModule, ProfileModule, ReportsModule, SaasBillingModule, SettingsModule, SystemOpsContainerModule, TeamModule, TicketsModule, UsageMetersModule, WhiteLabelingModule],
-  exports: [CoreModule],
+  imports: [SuperadminCoreModule, SuperadminExportDataModule, SuperadminAuthModule, SuperadminHealthModule, SuperadminAffiliatesModule, SuperadminAnalyticsModule, SuperadminBroadcastsModule, SuperadminComplianceModule, SuperadminDashboardModule, SuperadminFeaturesModule, SuperadminGlobalAuditModule, SuperadminGymsModule, SuperadminIntegrationsModule, SuperadminMessagingModule, SuperadminProfileModule, SuperadminReportsModule, SuperadminSaasBillingModule, SuperadminSettingsModule, SuperadminSystemOpsContainerModule, SuperadminTeamModule, SuperadminTicketsModule, SuperadminUsageMetersModule, SuperadminWhiteLabelingModule],
+  exports: [SuperadminCoreModule],
 })
 export class BackendSuperadminModule {}
