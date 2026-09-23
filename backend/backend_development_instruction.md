@@ -85,6 +85,27 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 - ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
 * **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
+* **Top-Level & Structural Folder Prefixing (CRITICAL):** NEVER use generic names for ANY structural folders (e.g., `core/`, `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL folders MUST be explicitly prefixed with their parent domain/role name. This rule applies universally to ALL folders, not just a few specific ones.
+  - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
+  - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
+  This ensures that when an AI or developer is instructed to look into ANY folder, the folder name itself uniquely identifies its exact role and domain, completely eliminating cross-domain context confusion.
+  
+  **Canonical Example of Complete Prefixing Architecture:**
+  ```text
+  backend_admin/
+  ├── admin_core/                                <-- (Top-level prefixed)
+  │   ├── admin_guards/                          <-- (Sub-folder prefixed)
+  │   │   └── admin-core-jwt-auth.guard.ts       <-- (Role: admin, Module: core, Resp: jwt-auth)
+  │   └── admin-core.module.ts                   <-- (Main Core Module)
+  │
+  └── admin_modules/                             <-- (Top-level prefixed)
+      └── admin_billing/                         <-- (Feature Folder prefixed)
+          ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
+          │   └── admin-billing-invoice.controller.ts
+          ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
+          │   └── admin-billing-create-invoice.dto.ts
+          └── admin-billing.module.ts            <-- (Main Feature Module)
+  ```
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
