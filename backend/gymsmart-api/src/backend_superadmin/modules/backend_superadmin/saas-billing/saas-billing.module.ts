@@ -1,9 +1,0 @@
-// RESPONSIBILITY: Groups the Superadmin SaaS billing feature modules under the frontend-mirrored saas-billing container.
-// FLOW: AppModule -> SaasBillingModule -> coupons/invoices/plans feature modules.
-import { Module } from '@nestjs/common';
-import { CouponsModule } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/coupons.module';
-import { InvoicesModule } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.module';
-import { PlansModule } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.module';
-
-@Module({ imports: [CouponsModule, InvoicesModule, PlansModule] })
-export class SaasBillingModule {}

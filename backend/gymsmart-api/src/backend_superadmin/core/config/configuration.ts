@@ -28,8 +28,8 @@ const environmentSchema = z.object({
   SEED_SUPERADMIN_PASSWORD: z.string().min(16).optional(),
   EXPORT_STORAGE_PATH: z.string().default('/tmp/gymsmart-exports'),
   EXPORT_DOWNLOAD_TTL_HOURS: z.coerce.number().int().min(24).max(48).default(24),
-  EXPORT_DOWNLOAD_SECRET: z.string().min(32),
-  EXPORT_EMAIL_WEBHOOK_URL: z.string().url(),
+  EXPORT_DOWNLOAD_SECRET: z.string().min(32).optional(),
+  EXPORT_EMAIL_WEBHOOK_URL: z.string().url().optional(),
   EXPORT_WHATSAPP_WEBHOOK_URL: z.string().url().optional(),
 });
 

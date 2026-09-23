@@ -83,8 +83,29 @@ Rename all controllers, services, and models to be extremely descriptive based o
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
 - ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
-* **The Rule:** Every file name (not just the containing folder) MUST begin with the module name as a prefix. This applies to components, hooks, utils, types, constants, services, controllers — everything.
-* **Component/Class Internal Naming:** The exported component, class, or function name inside the file MUST exactly match the filename (minus the extension) — no mismatches, no default-export-with-different-name. For example, `billing-invoice-generation.service.ts` must export `class BillingInvoiceGenerationService`. This prevents AI hallucination.
+* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
+* **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
+* **Top-Level & Structural Folder Prefixing (CRITICAL):** NEVER use generic names for ANY structural folders (e.g., `core/`, `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL folders MUST be explicitly prefixed with their parent domain/role name. This rule applies universally to ALL folders, not just a few specific ones.
+  - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
+  - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
+  This ensures that when an AI or developer is instructed to look into ANY folder, the folder name itself uniquely identifies its exact role and domain, completely eliminating cross-domain context confusion.
+  
+  **Canonical Example of Complete Prefixing Architecture:**
+  ```text
+  backend_admin/
+  ├── admin_core/                                <-- (Top-level prefixed)
+  │   ├── admin_guards/                          <-- (Sub-folder prefixed)
+  │   │   └── admin-core-jwt-auth.guard.ts       <-- (Role: admin, Module: core, Resp: jwt-auth)
+  │   └── admin-core.module.ts                   <-- (Main Core Module)
+  │
+  └── admin_modules/                             <-- (Top-level prefixed)
+      └── admin_billing/                         <-- (Feature Folder prefixed)
+          ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
+          │   └── admin-billing-invoice.controller.ts
+          ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
+          │   └── admin-billing-create-invoice.dto.ts
+          └── admin-billing.module.ts            <-- (Main Feature Module)
+  ```
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
@@ -93,7 +114,7 @@ Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Se
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
 AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
-* **The Rule:** Extract all TypeScript `Interfaces`, `Types`, or Python `TypedDicts`/`Pydantic Models` into a dedicated `[module-name].interfaces.ts` file.
+* **The Rule:** Extract all TypeScript `Interfaces` or `Types` into a dedicated file inside a prefixed types folder (e.g., `billing_types/admin-billing-payment-payload.type.ts`). Never dump them inline or use generic `interfaces.ts` files.
 * **Why?** When you want the AI to write a new function, you just feed it the `interfaces` file. The AI instantly knows exactly what properties are available without having to read 500 lines of implementation code.
 
 ## 5. Centralized Constants (Single Source of Truth)
@@ -1942,3 +1963,5 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
   1. **Fault Isolation (Debugging):** If the database query for the revenue chart fails, it should not crash the entire dashboard. The user should still see their KPIs and Tables, with only the chart showing an error state. Mega APIs make identifying the failing query extremely difficult.
   2. **Progressive Rendering:** The frontend should be able to render fast data (KPIs) instantly while displaying skeleton loaders for slower data (complex aggregations/charts). A Mega API forces the frontend to wait for the *slowest* query before rendering *anything*.
   3. **Caching & Scalability:** Widget-based APIs allow you to cache heavy/slow queries (like charts) in Redis for 1 hour, while keeping fast queries (like today's attendance) strictly real-time. Mega APIs force an all-or-nothing caching strategy which does not scale for Enterprise apps.
+
+
