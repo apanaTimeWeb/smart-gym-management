@@ -8,7 +8,7 @@ import { CoreUserEntity } from '@/backend_trainer/core/database/core-user.entity
 
 @Injectable()
 export class CoreAuthUserRepository {
-  constructor(@InjectRepository(CoreUserEntity, 'master') private readonly repository: Repository<CoreUserEntity>) {}
+  constructor(@InjectRepository(CoreUserEntity) private readonly repository: Repository<CoreUserEntity>) {}
 
   /** Finds an active master user by normalized email. */
   async findActiveByEmail(email: string): Promise<CoreUserEntity | null> {

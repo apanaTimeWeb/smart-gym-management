@@ -16,10 +16,12 @@ import { ReportsDataService } from '@/backend_superadmin/modules/superadmin/repo
 import { ReportsSpecialController } from '@/backend_superadmin/modules/superadmin/reports/reports-special.controller';
 import { ReportsCompatibilityController } from '@/backend_superadmin/modules/superadmin/reports/reports-compatibility.controller';
 
+import { ReportsUpdateService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-update.service';
+
 @Module({
   imports: [TypeOrmModule.forFeature([ReportSnapshotEntity])],
   controllers: [ReportsQueryController, ReportsCommandController, ReportsSpecialController, ReportsCompatibilityController],
-  providers: [ReportsDataService, ReportsMainService, ReportsComparisonService, ReportsRepository, ReportsListService, ReportsFindService, ReportsCreateService, ReportsDeleteService],
+  providers: [ReportsDataService, ReportsMainService, ReportsComparisonService, ReportsRepository, ReportsListService, ReportsFindService, ReportsCreateService, ReportsUpdateService, ReportsDeleteService],
   exports: [ReportsRepository],
 })
 export class ReportsModule {}

@@ -18,9 +18,11 @@ import { ReportsModule } from '@/backend_superadmin/modules/superadmin/reports/r
 import { SaaSBillingModule } from '@/backend_superadmin/modules/superadmin/saas-billing/saas-billing.module';
 import { SuperadminSystemOpsContainerModule } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops-container.module';
 import { GlobalAuditModule } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.module';
+import { CoreModule as SuperadminCoreModule } from '@/backend_superadmin/core/core.module';
 
 @Module({
   imports: [
+    SuperadminCoreModule,
     AffiliatesModule,
     BroadcastsModule,
     GymsModule,

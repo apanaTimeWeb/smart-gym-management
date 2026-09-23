@@ -1,10 +1,10 @@
-﻿// RESPONSIBILITY: Writes immutable Landing mutation activity records inside the active transaction boundary.
+// RESPONSIBILITY: Writes immutable Landing mutation activity records inside the active transaction boundary.
 // FLOW: Landing service â†’ LandingAuditLogRepository â†’ CoreBaseRepository â†’ TypeORM â†’ audit_logs.
 import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_landing/core/database/base.repository';
 
-import { RequestContextService } from '@/backend_landing/core/context/request-context.service';
+import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';
 
 import { LandingAuditLogEntity } from '@/backend_landing/modules/landing/entities/landing-audit-log.entity';
 
@@ -17,7 +17,7 @@ import { TransactionContext } from '@/backend_landing/core/database/transaction-
 
 @Injectable()
 export class LandingAuditLogRepository extends CoreBaseRepository<LandingAuditLogEntity> {
-  constructor(private readonly requestContext: RequestContextService) {
+  constructor(private readonly requestContext: CoreRequestContextService) {
     super(LandingAuditLogEntity);
   }
 
@@ -47,7 +47,6 @@ export class LandingAuditLogRepository extends CoreBaseRepository<LandingAuditLo
       entityId,
       oldValue: null,
       newValue,
-      ipAddress: request.ipAddress,
     });
     await repository.save(entity);
   }

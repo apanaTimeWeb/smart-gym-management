@@ -11,8 +11,11 @@ import { ScheduleModule } from '@/backend_trainer/modules/backend_trainer/schedu
 import { SessionsModule } from '@/backend_trainer/modules/backend_trainer/sessions/sessions.module';
 import { WorkoutModule } from '@/backend_trainer/modules/backend_trainer/workout/workout.module';
 
+import { TrainerCoreModule } from '@/backend_trainer/core/trainer-core.module';
+
 @Module({
   imports: [
+    TrainerCoreModule,
     AttendanceModule,
     DashboardModule,
     EarningsModule,

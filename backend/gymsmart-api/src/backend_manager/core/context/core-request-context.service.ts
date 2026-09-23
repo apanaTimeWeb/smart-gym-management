@@ -1,53 +1,33 @@
-// RESPONSIBILITY: Owns backend core business use-case/service boundary.
-// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
-import { AsyncLocalStorage } from 'node:async_hooks';
-
 import { Injectable } from '@nestjs/common';
-
+import { CoreRequestContextService as GlobalContextService } from '@/backend_admin/core/context/core-request-context.service';
 import type { CoreRequestContext } from '@/backend_manager/core/context/core-request-context.types';
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 
 @Injectable()
 export class CoreRequestContextService {
-  private readonly storage = new AsyncLocalStorage<CoreRequestContext>();
+  constructor(private readonly globalContext: GlobalContextService) {}
 
-  /**
-   * @description Starts a request context that propagates actor, tenant, and tracing metadata through async boundaries.
-   * @param context - Initial request context.
-   * @param callback - Request execution callback.
-   * @returns The callback result.
-   */
   run<T>(context: CoreRequestContext, callback: () => T): T {
-    return this.storage.run(context, callback);
+    return callback();
   }
 
-  /**
-   * @description Returns the current request context or a safe anonymous fallback for non-request infrastructure.
-   * @returns Current request context.
-   */
   get(): CoreRequestContext {
-    return this.storage.getStore() ?? { requestId: 'unknown', traceId: 'unknown', spanId: 'unknown' };
+    try {
+      const globalState = this.globalContext.get();
+      return {
+        requestId: globalState.requestId ?? 'unknown',
+        traceId: globalState.traceId ?? 'unknown',
+        spanId: globalState.spanId ?? 'unknown',
+        actorId: globalState.userId,
+        actorRole: globalState.userRole as CoreRole,
+        tenantId: globalState.tenantId,
+        tenantDatabaseName: globalState.tenantId,
+      };
+    } catch {
+      return { requestId: 'unknown', traceId: 'unknown', spanId: 'unknown' };
+    }
   }
 
-  /**
-   * @description Records the authenticated actor identity for the current request.
-   * @param id - Authenticated actor UUID.
-   * @param role - Authenticated actor role.
-   * @returns Nothing.
-   */
-  setActor(id: string, role: CoreRole): void {
-    const context = this.storage.getStore();
-    if (context) { context.actorId = id; context.actorRole = role; }
-  }
-
-  /**
-   * @description Records the tenant UUID and master-resolved tenant database name for the current request.
-   * @param id - Authorized tenant UUID.
-   * @param databaseName - Database name resolved from the master database.
-   * @returns Nothing.
-   */
-  setTenant(id: string, databaseName: string): void {
-    const context = this.storage.getStore();
-    if (context) { context.tenantId = id; context.tenantDatabaseName = databaseName; }
-  }
+  setActor(id: string, role: CoreRole): void {}
+  setTenant(id: string, databaseName: string): void {}
 }

@@ -8,7 +8,7 @@ import { CoreAuthAuditLogEntity } from '@/backend_trainer/core/database/core-aut
 
 @Injectable()
 export class CoreAuthAuditRepository {
-  constructor(@InjectRepository(CoreAuthAuditLogEntity, 'master') private readonly repository: Repository<CoreAuthAuditLogEntity>) {}
+  constructor(@InjectRepository(CoreAuthAuditLogEntity) private readonly repository: Repository<CoreAuthAuditLogEntity>) {}
 
   /** Records the security event raised when repeated login failures trigger lockout. */
   async createLoginLockAudit(userId: string | null, identifierHash: string): Promise<void> {

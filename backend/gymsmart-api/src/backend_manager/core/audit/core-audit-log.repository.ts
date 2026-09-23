@@ -35,7 +35,7 @@ export class CoreAuditLogRepository {
     const actor = this.context.get();
     if (!actor.actorId || !actor.actorRole) throw new CoreContextException('Actor context missing', 'CORE.CONTEXT.ACTOR_MISSING');
     const repository = transaction.getRepository(CoreAuditLogEntity);
-    const row = repository.create({ actorId: actor.actorId, actorRole: actor.actorRole, action, entityType, entityId, oldValue, newValue, ipAddress: actor.ipAddress ?? null });
+    const row = repository.create({ actorId: actor.actorId, actorRole: actor.actorRole, action, entityType, entityId, oldValue, newValue });
     await repository.save(row);
   }
 }

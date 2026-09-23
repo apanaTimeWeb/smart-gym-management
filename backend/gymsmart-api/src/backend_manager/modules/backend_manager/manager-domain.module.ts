@@ -25,7 +25,9 @@ import { SettingsModule } from '@/backend_manager/modules/backend_manager/settin
 import { StoreModule } from '@/backend_manager/modules/backend_manager/store/store-module';
 import { WorkoutModule } from '@/backend_manager/modules/backend_manager/workout/workout-module';
 
+import { ManagerCoreModule } from '@/backend_manager/core/manager-core.module';
+
 @Module({
-  imports: [AttendanceModule, CommunicationsModule, DashboardModule, ExpensesModule, FinanceModule, GrievanceModule, HrModule, InquiriesModule, LibraryModule, MaintenanceModule, MembersModule, NotificationsModule, PlansModule, ProfileModule, PtModule, ReferralsModule, ReportsModule, SalesModule, ScheduleModule, SettingsModule, StoreModule, WorkoutModule],
+  imports: [ManagerCoreModule, AttendanceModule, CommunicationsModule, DashboardModule, ExpensesModule, FinanceModule, GrievanceModule, HrModule, InquiriesModule, LibraryModule, MaintenanceModule, MembersModule, NotificationsModule, PlansModule, ProfileModule, PtModule, ReferralsModule, ReportsModule, SalesModule, ScheduleModule, SettingsModule, StoreModule, WorkoutModule],
 })
 export class ManagerDomainModule {}
