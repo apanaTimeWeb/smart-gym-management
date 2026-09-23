@@ -1927,3 +1927,10 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ## Rule 122 — No AI Runtime Verification Requirement
 * **The Rule:** AI agents are NOT required to execute code, run servers, or perform runtime verification to validate their changes, as they often lack the necessary local environment variables, database connections, or API keys.
 * **The Expectation:** Instead of failing or complaining about missing environments, the AI MUST rely on its deep knowledge of the framework, TypeScript, and these architectural guidelines to write syntactically and logically correct code. The AI should aim to write code that is "correct by construction" so that when the human developer runs it locally, it works with zero or minimal issues. Do not attempt to spin up local servers or run `npm run start` if the environment is incomplete.
+
+## Rule 123 — Dashboard & UI Data APIs (Avoid "Mega APIs")
+* **The Rule:** Never create a single "Mega API" endpoint that fetches an entire dashboard's worth of data (e.g., all KPIs, all charts, and all recent table lists) in one massive response payload. You MUST fragment complex dashboards into **widget-based / feature-sliced APIs** (e.g., `/dashboard/kpis`, `/dashboard/charts`, `/dashboard/recent-members`).
+* **Why:**
+  1. **Fault Isolation (Debugging):** If the database query for the revenue chart fails, it should not crash the entire dashboard. The user should still see their KPIs and Tables, with only the chart showing an error state. Mega APIs make identifying the failing query extremely difficult.
+  2. **Progressive Rendering:** The frontend should be able to render fast data (KPIs) instantly while displaying skeleton loaders for slower data (complex aggregations/charts). A Mega API forces the frontend to wait for the *slowest* query before rendering *anything*.
+  3. **Caching & Scalability:** Widget-based APIs allow you to cache heavy/slow queries (like charts) in Redis for 1 hour, while keeping fast queries (like today's attendance) strictly real-time. Mega APIs force an all-or-nothing caching strategy which does not scale for Enterprise apps.
