@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Provisions, migrates, and cleans up logical PostgreSQL tenant databases.
+// RESPONSIBILITY: Provisions, migrates, and cleans up logical PostgreSQL tenant databases.
 // FLOW: Master provisioning -> CREATE DATABASE -> tenant migrations -> ready tenant database.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -17,6 +17,7 @@ export class TenantDatabaseProvisionerService {
     if (!existing.length) await this.master.query(`CREATE DATABASE "${databaseName}"`);
     const tenant = new DataSource({
       type: 'postgres', url: this.tenantUrl(databaseName), synchronize: false, migrationsRun: false,
+      entities: [],
       migrations: [TenantSchemaMigration202609210001],
       extra: { max: this.config.getOrThrow<number>('app.tenantPoolMaxPerDatabase'), connectionTimeoutMillis: this.config.getOrThrow<number>('app.databaseAcquireTimeoutMs'), idleTimeoutMillis: this.config.getOrThrow<number>('app.databaseIdleTimeoutMs'), statement_timeout: this.config.getOrThrow<number>('app.databaseStatementTimeoutMs') },
     });

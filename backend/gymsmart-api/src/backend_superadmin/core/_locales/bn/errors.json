@@ -1,0 +1,18 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "ভ্যালিডেশন ব্যর্থ হয়েছে।",
+    "NOT_FOUND": "রিসোর্স পাওয়া যায়নি।",
+    "FORBIDDEN": "অ্যাক্সেস অস্বীকৃত।",
+    "UNAUTHORIZED": "প্রমাণীকরণ প্রয়োজন।",
+    "CONFLICT": "অনুরোধটি বর্তমান রিসোর্স অবস্থার সঙ্গে বিরোধপূর্ণ।",
+    "INTERNAL": "অভ্যন্তরীণ সার্ভার ত্রুটি।",
+    "BAD_REQUEST": "অবৈধ অনুরোধ।",
+    "DEPENDENCIES_UNAVAILABLE": "নির্ভরশীল সেবাগুলো উপলভ্য নয়।",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key হেডার প্রয়োজন।",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent অনুরোধটি ইতিমধ্যে প্রক্রিয়াধীন।",
+    "IDEMPOTENCY_INVALID": "সংরক্ষিত idempotent প্রতিক্রিয়াটি অবৈধ।",
+    "PROVISION_FAILED": "Tenant provisioning ব্যর্থ হয়েছে।",
+    "RATE_LIMIT_EXCEEDED": "অনেক বেশি অনুরোধ। পরে আবার চেষ্টা করুন।",
+    "CIRCUIT_OPEN": "বাহ্যিক পরিষেবা সার্কিট সাময়িকভাবে খোলা আছে."
+  }
+}

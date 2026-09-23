@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "ਵੈਧਤਾ ਅਸਫਲ ਰਹੀ।",
+    "NOT_FOUND": "ਸਰੋਤ ਨਹੀਂ ਮਿਲਿਆ।",
+    "FORBIDDEN": "ਪਹੁੰਚ ਰੱਦ ਕੀਤੀ ਗਈ ਹੈ।",
+    "UNAUTHORIZED": "ਪ੍ਰਮਾਣਿਕਤਾ ਲੋੜੀਂਦੀ ਹੈ।",
+    "CONFLICT": "ਬੇਨਤੀ ਸਰੋਤ ਦੀ ਮੌਜੂਦਾ ਸਥਿਤੀ ਨਾਲ ਟਕਰਾਉਂਦੀ ਹੈ।",
+    "INTERNAL": "ਅੰਦਰੂਨੀ ਸਰਵਰ ਗਲਤੀ।",
+    "BAD_REQUEST": "ਅਵੈਧ ਬੇਨਤੀ।",
+    "DEPENDENCIES_UNAVAILABLE": "ਨਿਰਭਰ ਸੇਵਾਵਾਂ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key ਹੈਡਰ ਲੋੜੀਂਦਾ ਹੈ।",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent ਬੇਨਤੀ ਪਹਿਲਾਂ ਹੀ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਹੈ।",
+    "IDEMPOTENCY_INVALID": "ਸੰਭਾਲਿਆ idempotent ਜਵਾਬ ਅਵੈਧ ਹੈ।",
+    "PROVISION_FAILED": "Tenant provisioning ਅਸਫਲ ਰਹੀ।",
+    "RECIPIENT_MISSING": "ਡਿਲਿਵਰੀ ਪ੍ਰਾਪਤਕਰਤਾ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ।",
+    "DELIVERY_FAILED": "ਐਕਸਪੋਰਟ ਡਿਲਿਵਰੀ ਅਸਫਲ ਰਹੀ।",
+    "TIMEOUT": "ਐਕਸਪੋਰਟ ਡਿਲਿਵਰੀ ਦਾ ਸਮਾਂ ਸਮਾਪਤ ਹੋ ਗਿਆ।",
+    "FAILED": "ਐਕਸਪੋਰਟ ਜੌਬ ਅਸਫਲ ਰਹੀ।"
+  }
+}

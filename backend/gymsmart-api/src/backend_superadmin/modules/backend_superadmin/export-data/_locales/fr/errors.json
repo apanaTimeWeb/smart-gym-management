@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Échec de la validation.",
+    "NOT_FOUND": "Ressource introuvable.",
+    "FORBIDDEN": "Accès refusé.",
+    "UNAUTHORIZED": "Authentification requise.",
+    "CONFLICT": "La requête est en conflit avec l’état actuel de la ressource.",
+    "INTERNAL": "Erreur interne du serveur.",
+    "BAD_REQUEST": "Requête invalide.",
+    "DEPENDENCIES_UNAVAILABLE": "Les dépendances ne sont pas disponibles.",
+    "IDEMPOTENCY_REQUIRED": "L’en-tête Idempotency-Key est requis.",
+    "IDEMPOTENCY_IN_PROGRESS": "La requête idempotente est déjà en cours de traitement.",
+    "IDEMPOTENCY_INVALID": "La réponse idempotente enregistrée est invalide.",
+    "PROVISION_FAILED": "Le provisionnement du tenant a échoué.",
+    "RECIPIENT_MISSING": "Aucun destinataire de livraison n’est configuré.",
+    "DELIVERY_FAILED": "La livraison de l’export a échoué.",
+    "TIMEOUT": "La livraison de l’export a expiré.",
+    "FAILED": "La tâche d’export a échoué."
+  }
+}

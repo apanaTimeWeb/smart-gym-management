@@ -1,0 +1,6 @@
+{
+  "validation.failed": "Validation failed.",
+  "notFound": "Resource not found.",
+  "forbidden": "Access denied.",
+  "internal": "Internal server error."
+}

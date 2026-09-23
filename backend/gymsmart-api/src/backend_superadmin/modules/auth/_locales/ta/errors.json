@@ -1,0 +1,17 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "சரிபார்ப்பு தோல்வியடைந்தது.",
+    "NOT_FOUND": "வளம் கிடைக்கவில்லை.",
+    "FORBIDDEN": "அணுகல் மறுக்கப்பட்டது.",
+    "UNAUTHORIZED": "அங்கீகாரம் தேவை.",
+    "CONFLICT": "கோரிக்கை தற்போதைய வள நிலைக்கு முரண்படுகிறது.",
+    "INTERNAL": "உள் சேவையக பிழை.",
+    "BAD_REQUEST": "தவறான கோரிக்கை.",
+    "DEPENDENCIES_UNAVAILABLE": "சார்புகள் கிடைக்கவில்லை.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key தலைப்பு தேவை.",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent கோரிக்கை ஏற்கனவே செயலாக்கப்படுகிறது.",
+    "IDEMPOTENCY_INVALID": "சேமிக்கப்பட்ட idempotent பதில் தவறானது.",
+    "PROVISION_FAILED": "Tenant provisioning தோல்வியடைந்தது.",
+    "ACCOUNT_LOCKED": "Account temporarily locked. Please try again later."
+  }
+}

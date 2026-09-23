@@ -1,0 +1,18 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Validation failed.",
+    "NOT_FOUND": "ಸಂಪನ್ಮೂಲ ಕಂಡುಬಂದಿಲ್ಲ.",
+    "FORBIDDEN": "ಪ್ರವೇಶ ನಿರಾಕರಿಸಲಾಗಿದೆ.",
+    "UNAUTHORIZED": "ಪ್ರಮಾಣೀಕರಣ ಅಗತ್ಯವಿದೆ.",
+    "CONFLICT": "ವಿನಂತಿಯು ಪ್ರಸ್ತುತ ಸಂಪನ್ಮೂಲ ಸ್ಥಿತಿಯೊಂದಿಗೆ ಸಂಘರ್ಷದಲ್ಲಿದೆ.",
+    "INTERNAL": "ಆಂತರಿಕ ಸರ್ವರ್ ದೋಷ.",
+    "BAD_REQUEST": "Invalid request.",
+    "DEPENDENCIES_UNAVAILABLE": "ಅವಲಂಬಿತ ಸೇವೆಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key ಹೆಡರ್ ಅಗತ್ಯವಿದೆ.",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent ವಿನಂತಿ ಈಗಾಗಲೇ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ.",
+    "IDEMPOTENCY_INVALID": "ಸಂಗ್ರಹಿಸಿದ idempotent ಪ್ರತಿಕ್ರಿಯೆ ಅಮಾನ್ಯವಾಗಿದೆ.",
+    "PROVISION_FAILED": "Tenant provisioning ವಿಫಲವಾಗಿದೆ.",
+    "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later.",
+    "CIRCUIT_OPEN": "ಬಾಹ್ಯ ಸೇವಾ ಸರ್ಕ್ಯೂಟ್ ತಾತ್ಕಾಲಿಕವಾಗಿ ತೆರೆಯಲಾಗಿದೆ."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Validatie mislukt.",
+    "NOT_FOUND": "Bron niet gevonden.",
+    "FORBIDDEN": "Toegang geweigerd.",
+    "UNAUTHORIZED": "Authenticatie is vereist.",
+    "CONFLICT": "Het verzoek conflicteert met de huidige status van de bron.",
+    "INTERNAL": "Interne serverfout.",
+    "BAD_REQUEST": "Ongeldig verzoek.",
+    "DEPENDENCIES_UNAVAILABLE": "Afhankelijkheden zijn niet beschikbaar.",
+    "IDEMPOTENCY_REQUIRED": "De header Idempotency-Key is vereist.",
+    "IDEMPOTENCY_IN_PROGRESS": "Het idempotente verzoek wordt al verwerkt.",
+    "IDEMPOTENCY_INVALID": "De opgeslagen idempotente respons is ongeldig.",
+    "PROVISION_FAILED": "Het provisioneren van de tenant is mislukt.",
+    "RECIPIENT_MISSING": "Er is geen ontvanger voor levering geconfigureerd.",
+    "DELIVERY_FAILED": "Exportlevering is mislukt.",
+    "TIMEOUT": "De exportlevering duurde te lang.",
+    "FAILED": "De exporttaak is mislukt."
+  }
+}

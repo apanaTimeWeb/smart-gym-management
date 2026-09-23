@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Centralizes outbound and persistence timeout tiers for all infrastructure adapters.
+// RESPONSIBILITY: Centralizes outbound and persistence timeout tiers for all infrastructure adapters.
 // FLOW: Config consumer -> timeout tier -> bounded external/database operation.
 
 export const TIMEOUT_CONFIG = {

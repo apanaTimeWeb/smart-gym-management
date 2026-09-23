@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "सत्यापन विफल हुआ।",
+    "NOT_FOUND": "संसाधन नहीं मिला।",
+    "FORBIDDEN": "पहुँच अस्वीकृत है।",
+    "UNAUTHORIZED": "प्रमाणीकरण आवश्यक है।",
+    "CONFLICT": "अनुरोध संसाधन की वर्तमान स्थिति से टकराता है।",
+    "INTERNAL": "आंतरिक सर्वर त्रुटि।",
+    "BAD_REQUEST": "अमान्य अनुरोध।",
+    "DEPENDENCIES_UNAVAILABLE": "निर्भरताएँ उपलब्ध नहीं हैं।",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key हेडर आवश्यक है।",
+    "IDEMPOTENCY_IN_PROGRESS": "आइडेम्पोटेंट अनुरोध पहले से संसाधित हो रहा है।",
+    "IDEMPOTENCY_INVALID": "संग्रहीत आइडेम्पोटेंट प्रतिक्रिया अमान्य है।",
+    "PROVISION_FAILED": "टेनेंट प्रावधान विफल हुआ।",
+    "RECIPIENT_MISSING": "डिलीवरी प्राप्तकर्ता कॉन्फ़िगर नहीं है।",
+    "DELIVERY_FAILED": "एक्सपोर्ट डिलीवरी विफल हुई।",
+    "TIMEOUT": "एक्सपोर्ट डिलीवरी का समय समाप्त हो गया।",
+    "FAILED": "एक्सपोर्ट जॉब विफल हुई।"
+  }
+}

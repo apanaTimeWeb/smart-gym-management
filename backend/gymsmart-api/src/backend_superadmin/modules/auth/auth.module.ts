@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the isolated Superadmin authentication feature.
+// RESPONSIBILITY: Registers the isolated Superadmin authentication feature.
 // FLOW: AuthController -> AuthService -> AuthRepository -> core JWT/Redis infrastructure.
 import { Module } from '@nestjs/common';
 import { AuthController } from '@/backend_superadmin/modules/auth/auth.controller';

@@ -17,7 +17,7 @@ import superadminConfig from '@/backend_superadmin/core/config/configuration';
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { AppModule as AdminAppModule } from '@/backend_admin/app.module';
 import { AuthModule } from '@/backend_auth/modules/auth/auth.module';
-import { SuperadminDomainModule } from '@/backend_superadmin/core/superadmin-domain.module';
+import { CoreModule as SuperadminDomainModule } from '@/backend_superadmin/core/core.module';
 import { LandingModule } from '@/backend_landing/modules/landing/landing.module';
 import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/manager-domain.module';
 import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';

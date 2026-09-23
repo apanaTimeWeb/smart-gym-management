@@ -1,0 +1,17 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "માન્યકરણ નિષ્ફળ ગયું.",
+    "NOT_FOUND": "સ્રોત મળ્યો નથી.",
+    "FORBIDDEN": "ઍક્સેસ નકારવામાં આવ્યો છે.",
+    "UNAUTHORIZED": "પ્રમાણીકરણ જરૂરી છે.",
+    "CONFLICT": "વિનંતી વર્તમાન સ્રોત સ્થિતિ સાથે સંઘર્ષ કરે છે.",
+    "INTERNAL": "આંતરિક સર્વર ભૂલ.",
+    "BAD_REQUEST": "અમાન્ય વિનંતી.",
+    "DEPENDENCIES_UNAVAILABLE": "આશ્રિત સેવાઓ ઉપલબ્ધ નથી.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key હેડર જરૂરી છે.",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent વિનંતી પહેલેથી પ્રક્રિયામાં છે.",
+    "IDEMPOTENCY_INVALID": "સંગ્રહિત idempotent પ્રતિસાદ અમાન્ય છે.",
+    "PROVISION_FAILED": "Tenant provisioning નિષ્ફળ ગયું.",
+    "ACCOUNT_LOCKED": "ખાતું તાત્કાલિક લૉક છે. કૃપા કરીને પછી ફરી પ્રયાસ કરો."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "ਵੈਲੀਡੇਸ਼ਨ ਅਸਫਲ ਹੋਈ।",
+    "NOT_FOUND": "ਸਰੋਤ ਨਹੀਂ ਮਿਲਿਆ।",
+    "FORBIDDEN": "ਪਹੁੰਚ ਰੱਦ ਕੀਤੀ ਗਈ ਹੈ।",
+    "UNAUTHORIZED": "ਪ੍ਰਮਾਣਿਕਤਾ ਲੋੜੀਂਦੀ ਹੈ।",
+    "CONFLICT": "ਬੇਨਤੀ ਸਰੋਤ ਦੀ ਮੌਜੂਦਾ ਸਥਿਤੀ ਨਾਲ ਟਕਰਾਉਂਦੀ ਹੈ।",
+    "INTERNAL": "ਅੰਦਰੂਨੀ ਸਰਵਰ ਗਲਤੀ।",
+    "BAD_REQUEST": "ਅਵੈਧ ਬੇਨਤੀ।",
+    "DEPENDENCIES_UNAVAILABLE": "ਨਿਰਭਰ ਸੇਵਾਵਾਂ ਉਪਲਬਧ ਨਹੀਂ ਹਨ।",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key ਹੈਡਰ ਲੋੜੀਂਦਾ ਹੈ।",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent ਬੇਨਤੀ ਪਹਿਲਾਂ ਹੀ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਹੈ।",
+    "IDEMPOTENCY_INVALID": "ਸੰਭਾਲਿਆ idempotent ਜਵਾਬ ਅਵੈਧ ਹੈ।",
+    "PROVISION_FAILED": "Tenant provisioning ਅਸਫਲ ਰਹੀ।",
+    "RATE_LIMIT_EXCEEDED": "ਬਹੁਤ ਜ਼ਿਆਦਾ ਬੇਨਤੀਆਂ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "CIRCUIT_OPEN": "ਬਾਹਰੀ ਸੇਵਾ ਸਰਕਿਟ ਅਸਥਾਈ ਤੌਰ ਤੇ ਖੁੱਲ੍ਹਾ ਹੈ."
+  }
+}

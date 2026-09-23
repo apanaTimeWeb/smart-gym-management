@@ -1,0 +1,17 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Validation failed.",
+    "NOT_FOUND": "Resource not found.",
+    "FORBIDDEN": "Access denied.",
+    "UNAUTHORIZED": "Authentication is required.",
+    "CONFLICT": "The request conflicts with the current resource state.",
+    "INTERNAL": "Internal server error.",
+    "BAD_REQUEST": "Invalid request.",
+    "DEPENDENCIES_UNAVAILABLE": "Dependencies are unavailable.",
+    "IDEMPOTENCY_REQUIRED": "The Idempotency-Key header is required.",
+    "IDEMPOTENCY_IN_PROGRESS": "The idempotent request is already being processed.",
+    "IDEMPOTENCY_INVALID": "The stored idempotency response is invalid.",
+    "PROVISION_FAILED": "Tenant provisioning failed.",
+    "ACCOUNT_LOCKED": "Account temporarily locked. Please try again later."
+  }
+}

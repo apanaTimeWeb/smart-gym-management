@@ -1,0 +1,18 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Validation failed.",
+    "NOT_FOUND": "Ressource introuvable.",
+    "FORBIDDEN": "Accès refusé.",
+    "UNAUTHORIZED": "Authentification requise.",
+    "CONFLICT": "La requête est en conflit avec l’état actuel de la ressource.",
+    "INTERNAL": "Erreur interne du serveur.",
+    "BAD_REQUEST": "Invalid request.",
+    "DEPENDENCIES_UNAVAILABLE": "Les dépendances ne sont pas disponibles.",
+    "IDEMPOTENCY_REQUIRED": "L’en-tête Idempotency-Key est requis.",
+    "IDEMPOTENCY_IN_PROGRESS": "La requête idempotente est déjà en cours de traitement.",
+    "IDEMPOTENCY_INVALID": "La réponse idempotente enregistrée est invalide.",
+    "PROVISION_FAILED": "Le provisionnement du tenant a échoué.",
+    "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later.",
+    "CIRCUIT_OPEN": "Le circuit du service externe est temporairement ouvert."
+  }
+}
