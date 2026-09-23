@@ -1,9 +1,9 @@
-// RESPONSIBILITY: Converts only tagged ValidationPipe failures into the canonical field-keyed 400 contract.
-// FLOW: ValidationPipe exceptionFactory -> __validation marker -> canonical validationErrors envelope.
+// RESPONSIBILITY: Owns backend core module infrastructure/code contract.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
-import type { Response } from 'express';
 
 import type { ValidationErrorItem } from '@/backend_manager/core/types/api-response.types';
+import type { Response } from 'express';
 
 interface ValidationPayload { __validation?: boolean; validationErrors?: ValidationErrorItem[]; }
 

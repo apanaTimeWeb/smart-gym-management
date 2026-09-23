@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Lightweight request/error/latency metric accumulator exposed in Prometheus format.
-// FLOW: Request metrics interceptor → CoreMetricsService → /api/metrics scrape.
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

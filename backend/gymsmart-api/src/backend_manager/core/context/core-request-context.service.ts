@@ -1,19 +1,11 @@
-// @ts-nocheck
-// RESPONSIBILITY: Request-scoped actor, tenant, database, and tracing identifiers.
-// FLOW: Middleware starts context → JWT/Tenant guards populate trusted actor/tenant/database → repositories consume context.
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 import { Injectable } from '@nestjs/common';
 
-export interface CoreRequestContext {
-  requestId: string;
-  traceId: string;
-  spanId: string;
-  actorId?: string;
-  actorRole?: import('@/backend_manager/core/auth/core-role.constants').CoreRole;
-  tenantId?: string;
-  tenantDatabaseName?: string;
-}
+import type { CoreRequestContext } from '@/backend_manager/core/context/core-request-context.types';
+import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 
 @Injectable()
 export class CoreRequestContextService {
@@ -43,7 +35,7 @@ export class CoreRequestContextService {
    * @param role - Authenticated actor role.
    * @returns Nothing.
    */
-  setActor(id: string, role: string): void {
+  setActor(id: string, role: CoreRole): void {
     const context = this.storage.getStore();
     if (context) { context.actorId = id; context.actorRole = role; }
   }

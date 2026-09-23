@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Proves canonical pagination metadata semantics.
-// FLOW: Test input -> buildPaginationMeta -> exact PaginationMeta contract.
+// RESPONSIBILITY: Owns backend core co-located unit-test verification.
+// FLOW: Arrange isolated inputs → execute target unit → assert observable behavior and failure paths.
 import { buildPaginationMeta } from '@/backend_manager/core/utils/pagination.utils';
 
 describe('buildPaginationMeta', () => {

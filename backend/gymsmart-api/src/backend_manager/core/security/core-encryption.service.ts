@@ -1,7 +1,8 @@
-// RESPONSIBILITY: AES-256-GCM application-layer encryption for sensitive tenant data.
-// FLOW: Feature repository -> CoreEncryptionService -> PostgreSQL encrypted payload.
-import { Injectable } from '@nestjs/common';
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+
+import { Injectable } from '@nestjs/common';
 
 import { CoreConfigService } from '@/backend_manager/core/config/core-config.service';
 

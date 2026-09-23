@@ -1,4 +1,5 @@
-// RESPONSIBILITY: Core or feature infrastructure file; see its exported contract for exact scope.
+// RESPONSIBILITY: Owns backend core database schema migration.
+// FLOW: Migration runner → ordered schema change → reversible database state transition.
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class MasterHardening1711000000200 implements MigrationInterface {

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Enforces controller-layer RBAC from trusted request context; no inline service authorization rules.
-// FLOW: @Roles metadata -> trusted actor role -> allow/deny.
+// RESPONSIBILITY: Owns backend core authorization/security guard.
+// FLOW: Request context → authentication/authorization decision → allow or reject.
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 

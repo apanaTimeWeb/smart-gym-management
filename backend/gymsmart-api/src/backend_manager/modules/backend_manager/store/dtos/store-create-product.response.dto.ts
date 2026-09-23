@@ -1,0 +1,8 @@
+// RESPONSIBILITY: Owns the backend application API request/response validation contract.
+// FLOW: HTTP payload → strict validation/coercion → typed feature contract.
+import { ApiProperty } from '@nestjs/swagger';
+
+export class StoreCreateProductResponseDto {
+  @ApiProperty({ type: [Object] })
+  products?: Array<{ category: string; name: string; price: number; sku: string; stock: number; unit: string; }>;
+}

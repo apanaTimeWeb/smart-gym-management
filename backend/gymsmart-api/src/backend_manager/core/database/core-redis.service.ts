@@ -1,7 +1,7 @@
-// @ts-nocheck
-// RESPONSIBILITY: Thin Redis infrastructure client for rate limits and idempotency.
-// FLOW: Core infrastructure -> Redis connection -> rate-limit/idempotency callers.
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+
 import Redis from 'ioredis';
 
 import { CoreConfigService } from '@/backend_manager/core/config/core-config.service';

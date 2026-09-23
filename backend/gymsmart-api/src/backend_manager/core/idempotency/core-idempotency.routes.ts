@@ -1,3 +1,5 @@
+// RESPONSIBILITY: Retained legacy route catalogue for historical traceability; runtime enforcement is now method-wide at the command-controller boundary.
+// FLOW: Route catalogue -> documentation only; CoreIdempotencyInterceptor -> HTTP mutation methods.
 // RESPONSIBILITY: Critical mutation idempotency route policy derived from frontend Idempotency-Key usage and backend Rule 31.
 // FLOW: Request method/path -> route allowlist -> Redis reservation/replay.
 

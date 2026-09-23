@@ -1,11 +1,12 @@
-// RESPONSIBILITY: Blocks feature access until the authenticated actor has a trusted tenant context.
-// FLOW: HTTP header -> CoreJwtGuard actor -> master tenant authorization -> trusted tenant context.
+// RESPONSIBILITY: Owns backend core authorization/security guard.
+// FLOW: Request context → authentication/authorization decision → allow or reject.
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
 
 import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
 import { CoreTenantAuthorizationService } from '@/backend_manager/core/tenant/core-tenant-authorization.service';
+
+import type { Request } from 'express';
 
 @Injectable()
 export class CoreTenantGuard implements CanActivate {

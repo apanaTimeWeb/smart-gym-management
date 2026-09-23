@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Typed configuration facade; business code does not read process.env directly.
-// FLOW: ConfigModule -> CoreConfigService getters -> infrastructure consumers.
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -12,7 +12,7 @@ export class CoreConfigService {
   /** @description Returns master DB URL. @returns PostgreSQL connection URL. */
   get masterDatabaseUrl(): string { return this.config.getOrThrow<string>('MASTER_DATABASE_URL'); }
   /** @description Returns trusted frontend origins. @returns Origin allowlist. */
-  get trustedFrontendOrigins(): string[] { return this.config.getOrThrow<string>('TRUSTED_FRONTEND_ORIGINS').split(',').map((value) => value.trim()).filter(Boolean); }
+  get trustedFrontendOrigins(): string[] { return this.config.getOrThrow<string>('TRUSTED_FRONTEND_ORIGINS').split(',').map((value: string) => value.trim()).filter(Boolean); }
   /** @description Returns tenant DB host. @returns Host. */
   get tenantDbHost(): string { return this.config.getOrThrow<string>('TENANT_DB_HOST'); }
   /** @description Returns tenant DB port. @returns Port. */

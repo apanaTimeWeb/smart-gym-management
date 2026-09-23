@@ -1,20 +1,23 @@
-// @ts-nocheck
-// RESPONSIBILITY: Transaction boundary abstraction; ORM transaction objects never cross into business services.
-// FLOW: Feature orchestrator -> CoreUnitOfWorkService -> transaction callback -> repository context -> commit/rollback.
+// RESPONSIBILITY: Owns the unit-of-work transaction boundary for Manager backend mutations.
+// FLOW: Use-case callback -> tenant DataSource transaction -> transaction context -> commit/rollback.
 import { Injectable } from '@nestjs/common';
-import { EntityManager, EntityTarget, Repository } from 'typeorm';
 
 import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
 
-export class CoreTransactionContext {
-  constructor(private readonly manager:EntityManager) {}
-  /** @description Returns a repository bound to the current transaction. @param entity - Entity target. @returns Transaction-bound repository. */
-  getRepository<T>(entity:EntityTarget<T>):Repository<T> { return this.manager.getRepository(entity); }
-}
+import { CoreTransactionContext } from '@/backend_manager/core/database/core-transaction-context';
 
 @Injectable()
 export class CoreUnitOfWorkService {
-  constructor(private readonly tenants:CoreTenantDatasourceService) {}
-  /** @description Executes an all-or-nothing operation in the authorized tenant database. @param work - Transaction callback. @returns Callback result after commit. */
-  async run<T>(work:(context:CoreTransactionContext)=>Promise<T>):Promise<T> { const ds=await this.tenants.getDataSource(); return ds.transaction(async(manager)=>work(new CoreTransactionContext(manager))); }
+  constructor(private readonly tenants: CoreTenantDatasourceService) {}
+
+  /**
+   * @description Executes a callback inside one tenant database transaction.
+   * @param work - Callback that receives the transaction-bound context.
+   * @returns The callback result after a successful commit.
+   * @throws Propagates the underlying transaction error after rollback.
+   */
+  async run<T>(work: (context: CoreTransactionContext) => Promise<T>): Promise<T> {
+    const dataSource = await this.tenants.getDataSource();
+    return dataSource.transaction(async (manager) => work(new CoreTransactionContext(manager)));
+  }
 }

@@ -1,10 +1,11 @@
-// RESPONSIBILITY: Shared TypeORM repository infrastructure for active-row scope and transaction binding.
-// FLOW: Feature repository -> CoreBaseRepository -> trusted tenant repository -> TypeORM.
+// RESPONSIBILITY: Owns backend core persistence/query boundary.
+// FLOW: Trusted domain input → tenant-scoped query/mutation → ORM entity → mapper → domain result.
 import { EntityTarget, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
-import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
 import { CoreTenantDatasourceService } from '@/backend_manager/core/database/core-tenant-datasource.service';
+
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-transaction-context';
 
 export abstract class CoreBaseRepository<T extends CoreBaseEntity> {
   protected constructor(protected readonly tenants: CoreTenantDatasourceService, protected readonly entityTarget: EntityTarget<T>) {}

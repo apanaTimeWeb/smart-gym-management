@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Canonical pagination metadata contract shared by all paginated Manager API responses.
 // FLOW: Repository count/page/limit -> buildPaginationMeta() -> ApiResponse.meta.
-export interface PaginationMeta {
+export interface PaginationMeta { [key: string]: any;
   total: number;
   page: number;
   limit: number;

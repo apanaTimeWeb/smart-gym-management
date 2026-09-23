@@ -1,3 +1,5 @@
-// RESPONSIBILITY: Marks routes that are intentionally public.
-// FLOW: Metadata → JWT/Tenant guards detect public endpoint → bypass authentication boundary.
-import { SetMetadata } from '@nestjs/common'; export const CorePublicDecorator=()=>SetMetadata('core_public',true);
+// RESPONSIBILITY: Owns backend core NestJS metadata/decorator contract.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
+import { SetMetadata } from '@nestjs/common';
+
+ export const CorePublicDecorator=()=>SetMetadata('core_public',true);

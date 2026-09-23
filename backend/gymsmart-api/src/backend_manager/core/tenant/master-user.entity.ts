@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Master DB user entity for authentication and tenant membership lookup.
-// FLOW: Master users table -> JWT actor -> tenant authorization.
+// RESPONSIBILITY: Owns backend core database entity boundary.
+// FLOW: Domain persistence contract → ORM metadata → tenant database table with soft-delete lifecycle.
 import { Column, Entity, Index, Unique } from 'typeorm';
 
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';

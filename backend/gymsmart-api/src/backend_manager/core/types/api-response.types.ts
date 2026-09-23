@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Canonical success/error response envelope and validation item shape.
-// FLOW: Controller result → ResponseInterceptor → ApiResponse<T>; exception filters use the same contract.
+// RESPONSIBILITY: Owns backend core module infrastructure/code contract.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';
 
 export interface ValidationErrorItem { field: string; message: string }
