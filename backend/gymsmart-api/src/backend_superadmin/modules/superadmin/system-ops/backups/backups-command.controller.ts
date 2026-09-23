@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the backups-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { BackupsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-status.dto';
+import { BackupsStatusDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { BackupsCreateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-create.service';
-import { BackupsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-create.dto';
-import { BackupsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-update.service';
-import { BackupsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-update.dto';
-import { BackupsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-delete.service';
-import { BackupsStatusService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-status.service';
+import { BackupsCreateService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-create.service';
+import { BackupsCreateDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-create.dto';
+import { BackupsUpdateService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-update.service';
+import { BackupsUpdateDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-update.dto';
+import { BackupsDeleteService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-delete.service';
+import { BackupsStatusService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-status.service';
 
 @ApiTags('backups')
 @Controller('/superadmin/system-ops/backups')

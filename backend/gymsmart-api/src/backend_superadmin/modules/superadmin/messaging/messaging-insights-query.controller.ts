@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { MessagingWhatsappBulkCenterResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
-import { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-template-insights-response.dto';
+import { MessagingWhatsappBulkCenterResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
+import { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-template-insights-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { MessagingTemplateInsightsService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-template-insights.service';
-import { MessagingWhatsappBulkCenterService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-whatsapp-bulk-center.service';
+import { MessagingTemplateInsightsService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-template-insights.service';
+import { MessagingWhatsappBulkCenterService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-whatsapp-bulk-center.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('messaginginsightsquery')

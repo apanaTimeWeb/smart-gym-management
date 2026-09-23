@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Affiliates ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> AffiliatesMapper -> domain model -> response DTO.
-import { AffiliatesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/responses/affiliates-response.dto';
-import type { AffiliatesEntity } from '@/backend_superadmin/modules/backend_superadmin/affiliates/affiliates.entity';
-import type { AffiliatesDomainModel } from '@/backend_superadmin/modules/backend_superadmin/affiliates/types/affiliates.interfaces';
+import { AffiliatesResponseDto } from '@/backend_superadmin/modules/superadmin/affiliates/responses/affiliates-response.dto';
+import type { AffiliatesEntity } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.entity';
+import type { AffiliatesDomainModel } from '@/backend_superadmin/modules/superadmin/affiliates/types/affiliates.interfaces';
 
 export class AffiliatesMapper {
   /** Maps a persistence entity to the domain representation. */

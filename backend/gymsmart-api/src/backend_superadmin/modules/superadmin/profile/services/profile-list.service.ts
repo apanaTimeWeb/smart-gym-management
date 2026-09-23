@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the profile feature.
 // FLOW: QueryController -> ProfileListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { ProfileRepository } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.repository';
-import { ProfileMapper } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.mapper';
+import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';
+import { ProfileMapper } from '@/backend_superadmin/modules/superadmin/profile/profile.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { ProfileListQuery } from '@/backend_superadmin/modules/backend_superadmin/profile/types/profile.interfaces';
+import type { ProfileListQuery } from '@/backend_superadmin/modules/superadmin/profile/types/profile.interfaces';
 
 @Injectable()
 export class ProfileListService {

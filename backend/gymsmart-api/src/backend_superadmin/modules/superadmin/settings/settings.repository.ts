@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { SettingsEntity } from '@/backend_superadmin/modules/backend_superadmin/settings/settings.entity';
-import type { SettingsListQuery, SettingsCreateInput, SettingsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/settings/types/settings.interfaces';
+import { SettingsEntity } from '@/backend_superadmin/modules/superadmin/settings/settings.entity';
+import type { SettingsListQuery, SettingsCreateInput, SettingsUpdateInput } from '@/backend_superadmin/modules/superadmin/settings/types/settings.interfaces';
 
 @Injectable()
 export class SettingsRepository extends BaseRepository<SettingsEntity> {

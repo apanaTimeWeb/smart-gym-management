@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { AnalyticsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/dtos/analytics-query.dto';
-import { AnalyticsListService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-list.service';
-import { AnalyticsFindService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-find.service';
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
+import { AnalyticsQueryDto } from '@/backend_superadmin/modules/superadmin/analytics/dtos/analytics-query.dto';
+import { AnalyticsListService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-list.service';
+import { AnalyticsFindService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-find.service';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
 
 @ApiTags('analytics')
 @Controller('/superadmin/analytics')

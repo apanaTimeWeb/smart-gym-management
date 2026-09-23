@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the plans feature.
 // FLOW: CommandController -> PlansDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { PlansRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.repository';
+import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';
 @Injectable()
 export class PlansDeleteService {
   constructor(private readonly repository: PlansRepository) {}

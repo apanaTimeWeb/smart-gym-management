@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { IntegrationsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-query.dto';
-import { IntegrationsListService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-list.service';
-import { IntegrationsFindService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-find.service';
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
+import { IntegrationsQueryDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-query.dto';
+import { IntegrationsListService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-list.service';
+import { IntegrationsFindService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-find.service';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
 
 @ApiTags('integrations')
 @Controller('/superadmin/integrations')

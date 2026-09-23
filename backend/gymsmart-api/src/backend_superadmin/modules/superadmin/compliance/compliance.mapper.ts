@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Compliance ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> ComplianceMapper -> domain model -> response DTO.
-import { ComplianceResponseDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/responses/compliance-response.dto';
-import type { ComplianceEntity } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance.entity';
-import type { ComplianceDomainModel } from '@/backend_superadmin/modules/backend_superadmin/compliance/types/compliance.interfaces';
+import { ComplianceResponseDto } from '@/backend_superadmin/modules/superadmin/compliance/responses/compliance-response.dto';
+import type { ComplianceEntity } from '@/backend_superadmin/modules/superadmin/compliance/compliance.entity';
+import type { ComplianceDomainModel } from '@/backend_superadmin/modules/superadmin/compliance/types/compliance.interfaces';
 
 export class ComplianceMapper {
   /** Maps a persistence entity to the domain representation. */

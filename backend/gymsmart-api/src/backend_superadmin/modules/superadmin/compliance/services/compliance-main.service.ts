@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> ComplianceMainService -> ComplianceRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable } from '@nestjs/common';
-import { ComplianceResponseDataDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance-response-data.dto';
-import { ComplianceRepository } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance.repository';
+import { ComplianceResponseDataDto } from '@/backend_superadmin/modules/superadmin/compliance/compliance-response-data.dto';
+import { ComplianceRepository } from '@/backend_superadmin/modules/superadmin/compliance/compliance.repository';
 
 @Injectable()
 export class ComplianceMainService {

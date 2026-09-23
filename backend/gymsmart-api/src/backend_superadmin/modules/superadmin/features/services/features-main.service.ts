@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Returns live feature-flag and release-note state for the Superadmin frontend contract.
 // FLOW: Controller -> FeaturesMainService -> FeaturesRepository + FeaturesReleaseNoteRepository -> public contract.
 import { Injectable } from '@nestjs/common';
-import { FeaturesRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features.repository';
-import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features-release-note.repository';
-import { FeaturesMapper } from '@/backend_superadmin/modules/backend_superadmin/features/features.mapper';
+import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
+import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/superadmin/features/features-release-note.repository';
+import { FeaturesMapper } from '@/backend_superadmin/modules/superadmin/features/features.mapper';
 @Injectable()
 export class FeaturesMainService {
   constructor(private readonly repository: FeaturesRepository, private readonly releaseNotes: FeaturesReleaseNoteRepository) {}

@@ -8,17 +8,17 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { GymsCreateService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-create.service';
-import { GymsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-create.dto';
-import { GymsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-update.service';
-import { GymsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-update.dto';
-import { GymsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-delete.service';
-import { GymsStatusService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-status.service';
-import { GymsProvisionService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-provision.service';
-import { GymsProvisionDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-provision.dto';
-import { GymsOwnerEmailDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-owner-email.dto';
-import { GymsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-status.dto';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
+import { GymsCreateService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-create.service';
+import { GymsCreateDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-create.dto';
+import { GymsUpdateService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-update.service';
+import { GymsUpdateDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-update.dto';
+import { GymsDeleteService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-delete.service';
+import { GymsStatusService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-status.service';
+import { GymsProvisionService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-provision.service';
+import { GymsProvisionDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-provision.dto';
+import { GymsOwnerEmailDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-owner-email.dto';
+import { GymsStatusDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-status.dto';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
 
 @ApiTags('gyms')
 @Controller('/superadmin/gyms')

@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SystemOpsEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/system-ops.entity';
+import { SystemOpsEntity } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops.entity';
 
 @Injectable()
 export class SystemOpsRepository {

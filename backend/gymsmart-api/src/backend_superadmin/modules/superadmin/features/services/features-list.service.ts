@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the features feature.
 // FLOW: QueryController -> FeaturesListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { FeaturesRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features.repository';
-import { FeaturesMapper } from '@/backend_superadmin/modules/backend_superadmin/features/features.mapper';
+import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
+import { FeaturesMapper } from '@/backend_superadmin/modules/superadmin/features/features.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { FeaturesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/responses/features-response.dto';
-import type { FeaturesListQuery } from '@/backend_superadmin/modules/backend_superadmin/features/types/features.interfaces';
+import { FeaturesResponseDto } from '@/backend_superadmin/modules/superadmin/features/responses/features-response.dto';
+import type { FeaturesListQuery } from '@/backend_superadmin/modules/superadmin/features/types/features.interfaces';
 
 @Injectable()
 export class FeaturesListService {

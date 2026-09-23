@@ -7,7 +7,7 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UsageMetersMainService } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/services/usage-meters-main.service';
+import { UsageMetersMainService } from '@/backend_superadmin/modules/superadmin/usage-meters/services/usage-meters-main.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('usagemetersanalyticsquery')

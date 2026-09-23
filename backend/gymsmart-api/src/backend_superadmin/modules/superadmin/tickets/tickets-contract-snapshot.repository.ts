@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TicketsContractSnapshotEntity } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets-contract-snapshot.entity';
+import { TicketsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/tickets/tickets-contract-snapshot.entity';
 
 @Injectable()
 export class TicketsContractSnapshotRepository {

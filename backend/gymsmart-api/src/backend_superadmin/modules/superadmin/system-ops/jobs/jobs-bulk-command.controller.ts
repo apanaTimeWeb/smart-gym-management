@@ -8,13 +8,13 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { JobsBulkActionDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-bulk-action.dto';
-import { JobsRetryAllService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-retry-all.service';
-import { JobsRetryService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-retry.service';
-import { JobsCancelService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-cancel.service';
-import { JobsClearCompletedService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-clear-completed.service';
-import { JobsBulkRetryService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-bulk-retry.service';
-import { JobsBulkDeleteService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-bulk-delete.service';
+import { JobsBulkActionDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-bulk-action.dto';
+import { JobsRetryAllService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-retry-all.service';
+import { JobsRetryService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-retry.service';
+import { JobsCancelService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-cancel.service';
+import { JobsClearCompletedService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-clear-completed.service';
+import { JobsBulkRetryService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-bulk-retry.service';
+import { JobsBulkDeleteService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-bulk-delete.service';
 
 @ApiTags('jobsbulkcommand')
 @Controller()

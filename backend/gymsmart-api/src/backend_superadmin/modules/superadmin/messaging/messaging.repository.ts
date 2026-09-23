@@ -5,8 +5,8 @@ import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { MessagingEntity } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.entity';
-import type { MessagingListQuery, MessagingCreateInput, MessagingUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/messaging/types/messaging.interfaces';
+import { MessagingEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';
+import type { MessagingListQuery, MessagingCreateInput, MessagingUpdateInput } from '@/backend_superadmin/modules/superadmin/messaging/types/messaging.interfaces';
 
 @Injectable()
 export class MessagingRepository extends BaseRepository<MessagingEntity> {

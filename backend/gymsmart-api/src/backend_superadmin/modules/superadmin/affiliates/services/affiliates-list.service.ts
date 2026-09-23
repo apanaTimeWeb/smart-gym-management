@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
 import { PaginatedResult } from '@/backend_superadmin/core/pagination/paginated-result';
-import { AffiliatesRepository } from '@/backend_superadmin/modules/backend_superadmin/affiliates/affiliates.repository';
-import { AffiliatesMapper } from '@/backend_superadmin/modules/backend_superadmin/affiliates/affiliates.mapper';
-import { AffiliatesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/responses/affiliates-response.dto';
-import type { AffiliatesListQuery } from '@/backend_superadmin/modules/backend_superadmin/affiliates/types/affiliates.interfaces';
+import { AffiliatesRepository } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.repository';
+import { AffiliatesMapper } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.mapper';
+import { AffiliatesResponseDto } from '@/backend_superadmin/modules/superadmin/affiliates/responses/affiliates-response.dto';
+import type { AffiliatesListQuery } from '@/backend_superadmin/modules/superadmin/affiliates/types/affiliates.interfaces';
 
 @Injectable()
 export class AffiliatesListService {

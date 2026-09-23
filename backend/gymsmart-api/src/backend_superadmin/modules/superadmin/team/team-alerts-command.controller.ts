@@ -8,8 +8,8 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { TeamAlertsService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-alerts.service';
-import { TeamAlertActionDto } from '@/backend_superadmin/modules/backend_superadmin/team/dtos/team-alert-action.dto';
+import { TeamAlertsService } from '@/backend_superadmin/modules/superadmin/team/services/team-alerts.service';
+import { TeamAlertActionDto } from '@/backend_superadmin/modules/superadmin/team/dtos/team-alert-action.dto';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('teamalertscommand')

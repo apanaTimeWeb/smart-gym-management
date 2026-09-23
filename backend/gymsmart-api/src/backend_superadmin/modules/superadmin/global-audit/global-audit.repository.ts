@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { GlobalAuditEntity } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit.entity';
-import type { GlobalAuditListQuery, GlobalAuditCreateInput, GlobalAuditUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/global-audit/types/global-audit.interfaces';
+import { GlobalAuditEntity } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.entity';
+import type { GlobalAuditListQuery, GlobalAuditCreateInput, GlobalAuditUpdateInput } from '@/backend_superadmin/modules/superadmin/global-audit/types/global-audit.interfaces';
 
 @Injectable()
 export class GlobalAuditRepository extends BaseRepository<GlobalAuditEntity> {

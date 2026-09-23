@@ -2,8 +2,8 @@
 // FLOW: Controller -> AnalyticsMainService -> AnalyticsRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AnalyticsRepository } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.repository';
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
+import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
 
 @Injectable()
 export class AnalyticsMainService {

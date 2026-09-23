@@ -9,10 +9,10 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { ExportDataRequestDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/dtos/export-data-request.dto';
-import { ExportDataAcceptedResponseDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/responses/export-data-accepted-response.dto';
-import { ExportDataStatusResponseDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/responses/export-data-status-response.dto';
-import { ExportDataService } from '@/backend_superadmin/modules/backend_superadmin/export-data/services/export-data.service';
+import { ExportDataRequestDto } from '@/backend_superadmin/modules/superadmin/export-data/dtos/export-data-request.dto';
+import { ExportDataAcceptedResponseDto } from '@/backend_superadmin/modules/superadmin/export-data/responses/export-data-accepted-response.dto';
+import { ExportDataStatusResponseDto } from '@/backend_superadmin/modules/superadmin/export-data/responses/export-data-status-response.dto';
+import { ExportDataService } from '@/backend_superadmin/modules/superadmin/export-data/services/export-data.service';
 
 @ApiTags('export-data')
 @Controller()

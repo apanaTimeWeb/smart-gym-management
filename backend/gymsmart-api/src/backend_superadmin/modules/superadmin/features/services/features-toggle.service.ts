@@ -2,10 +2,10 @@
 // FLOW: FeaturesCommandController -> FeaturesToggleService -> FeaturesRepository -> mapper/response.
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { FeaturesRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features.repository';
-import { FeaturesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/responses/features-response.dto';
+import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
+import { FeaturesResponseDto } from '@/backend_superadmin/modules/superadmin/features/responses/features-response.dto';
 import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-work.service';
-import { FeaturesMapper } from '@/backend_superadmin/modules/backend_superadmin/features/features.mapper';
+import { FeaturesMapper } from '@/backend_superadmin/modules/superadmin/features/features.mapper';
 
 @Injectable()
 export class FeaturesToggleService {

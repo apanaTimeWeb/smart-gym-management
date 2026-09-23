@@ -8,14 +8,14 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { MessagingCreateService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-create.service';
-import { MessagingCreateDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-create.dto';
-import { MessagingUpdateService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-update.service';
-import { MessagingUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-update.dto';
-import { MessagingDeleteService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-delete.service';
-import { MessagingStatusService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-status.service';
-import { MessagingStatusDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-status.dto';
-import { MessagingResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-response.dto';
+import { MessagingCreateService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-create.service';
+import { MessagingCreateDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-create.dto';
+import { MessagingUpdateService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-update.service';
+import { MessagingUpdateDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-update.dto';
+import { MessagingDeleteService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-delete.service';
+import { MessagingStatusService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-status.service';
+import { MessagingStatusDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-status.dto';
+import { MessagingResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-response.dto';
 
 @ApiTags('messaging')
 @Controller('/superadmin/messaging')

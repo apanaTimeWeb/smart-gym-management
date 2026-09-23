@@ -5,8 +5,8 @@ import { ScheduledJobRegistryService } from '@/backend_superadmin/core/jobs/sche
 import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tenant-registry.repository';
 import { TenantDatasourceResolverService } from '@/backend_superadmin/core/tenancy/tenant-datasource-resolver.service';
 import { TenantDatabaseProvisionerService } from '@/backend_superadmin/core/tenancy/tenant-database-provisioner.service';
-import { ExportDataJobRepository } from '@/backend_superadmin/modules/backend_superadmin/export-data/repositories/export-data-job.repository';
-import { ExportDataStorageAdapter } from '@/backend_superadmin/modules/backend_superadmin/export-data/adapters/export-data-storage.adapter';
+import { ExportDataJobRepository } from '@/backend_superadmin/modules/superadmin/export-data/repositories/export-data-job.repository';
+import { ExportDataStorageAdapter } from '@/backend_superadmin/modules/superadmin/export-data/adapters/export-data-storage.adapter';
 
 const RETENTION_DAYS = 90;
 const MS_PER_DAY = 86_400_000;

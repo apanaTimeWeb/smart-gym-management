@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { BroadcastsEntity } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.entity';
-import type { BroadcastsListQuery, BroadcastsCreateInput, BroadcastsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/types/broadcasts.interfaces';
+import { BroadcastsEntity } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.entity';
+import type { BroadcastsListQuery, BroadcastsCreateInput, BroadcastsUpdateInput } from '@/backend_superadmin/modules/superadmin/broadcasts/types/broadcasts.interfaces';
 
 @Injectable()
 export class BroadcastsRepository extends BaseRepository<BroadcastsEntity> {

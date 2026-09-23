@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { PlansQueryDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/dtos/plans-query.dto';
-import { PlansListService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-list.service';
-import { PlansFindService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-find.service';
-import { PlansBusinessControlsService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-business-controls.service';
+import { PlansQueryDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/dtos/plans-query.dto';
+import { PlansListService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-list.service';
+import { PlansFindService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-find.service';
+import { PlansBusinessControlsService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-business-controls.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('plans')

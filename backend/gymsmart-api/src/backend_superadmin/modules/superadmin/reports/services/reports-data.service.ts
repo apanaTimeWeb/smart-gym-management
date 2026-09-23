@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Produces revenue, cancellation, and tenant-health report arrays from the persisted report dataset.
 // FLOW: Controller -> report data service -> reports repository -> typed contract projection.
 import { Injectable } from '@nestjs/common';
-import { ReportsRepository } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.repository';
+import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
 
 export interface RevenueRow { month: string; mrr: number; newRevenue: number; cancelledRevenue: number; netRevenue: number; tenantCount: number }
 export interface CancellationsRecord { id: string; gymName: string; ownerName: string; plan: string; cancelledAt: string; reason: string; mrr: number; daysActive: number }

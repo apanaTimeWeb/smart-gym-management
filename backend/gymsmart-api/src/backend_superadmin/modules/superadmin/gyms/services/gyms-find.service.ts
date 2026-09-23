@@ -2,9 +2,9 @@
 // FLOW: QueryController -> GymsFindService -> repository findByIdOrThrow -> mapper.
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsMapper } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.mapper';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsMapper } from '@/backend_superadmin/modules/superadmin/gyms/gyms.mapper';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
 @Injectable()
 export class GymsFindService {
   constructor(private readonly repository: GymsRepository, private readonly config: ConfigService) {}

@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { WhiteLabelingQueryDto } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/dtos/white-labeling-query.dto';
-import { WhiteLabelingListService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-list.service';
-import { WhiteLabelingFindService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-find.service';
+import { WhiteLabelingQueryDto } from '@/backend_superadmin/modules/superadmin/white-labeling/dtos/white-labeling-query.dto';
+import { WhiteLabelingListService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-list.service';
+import { WhiteLabelingFindService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-find.service';
 
 @ApiTags('white-labeling')
 @Controller('/superadmin/white-labeling')

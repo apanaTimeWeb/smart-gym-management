@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { BroadcastsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/dtos/broadcasts-query.dto';
-import { BroadcastsListService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-list.service';
-import { BroadcastsFindService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-find.service';
-import { BroadcastsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/responses/broadcasts-response.dto';
+import { BroadcastsQueryDto } from '@/backend_superadmin/modules/superadmin/broadcasts/dtos/broadcasts-query.dto';
+import { BroadcastsListService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-list.service';
+import { BroadcastsFindService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-find.service';
+import { BroadcastsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 
 @ApiTags('broadcasts')
 @Controller('/superadmin/broadcasts')

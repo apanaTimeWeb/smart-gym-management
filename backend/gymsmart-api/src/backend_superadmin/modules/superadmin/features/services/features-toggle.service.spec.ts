@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Tests feature-flag toggle behavior and guardrails.
 // FLOW: Unit test -> FeaturesToggleService -> mocked repository.
-import { FeaturesToggleService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-toggle.service';
+import { FeaturesToggleService } from '@/backend_superadmin/modules/superadmin/features/services/features-toggle.service';
 
 describe('FeaturesToggleService', () => {
   it('toggles the flag through the named repository mutation', async () => {

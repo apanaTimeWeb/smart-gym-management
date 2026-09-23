@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/features-rollout-insights-response.dto';
+import { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/features/features-rollout-insights-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FeaturesRolloutInsightsService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-rollout-insights.service';
-import { FeaturesMainService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-main.service';
-import { FeaturesResponseDataDto } from '@/backend_superadmin/modules/backend_superadmin/features/features-response-data.dto';
+import { FeaturesRolloutInsightsService } from '@/backend_superadmin/modules/superadmin/features/services/features-rollout-insights.service';
+import { FeaturesMainService } from '@/backend_superadmin/modules/superadmin/features/services/features-main.service';
+import { FeaturesResponseDataDto } from '@/backend_superadmin/modules/superadmin/features/features-response-data.dto';
 
 @ApiTags('featuresrolloutinsightsquery')
 @Controller()

@@ -7,9 +7,9 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BackupsHealthService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-health.service';
-import { BackupsDownloadService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-download.service';
-import { BackupsScheduleService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-schedule.service';
+import { BackupsHealthService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-health.service';
+import { BackupsDownloadService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-download.service';
+import { BackupsScheduleService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-schedule.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('backupsoperationsquery')

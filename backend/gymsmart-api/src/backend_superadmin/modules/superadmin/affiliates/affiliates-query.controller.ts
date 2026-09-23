@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { AffiliatesQueryDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/dtos/affiliates-query.dto';
-import { AffiliatesListService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-list.service';
-import { AffiliatesFindService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-find.service';
-import { AffiliatesPayoutService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-payout.service';
-import { AffiliatesResponseDto, AffiliatePayoutRecordDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/responses/affiliates-response.dto';
+import { AffiliatesQueryDto } from '@/backend_superadmin/modules/superadmin/affiliates/dtos/affiliates-query.dto';
+import { AffiliatesListService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-list.service';
+import { AffiliatesFindService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-find.service';
+import { AffiliatesPayoutService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-payout.service';
+import { AffiliatesResponseDto, AffiliatePayoutRecordDto } from '@/backend_superadmin/modules/superadmin/affiliates/responses/affiliates-response.dto';
 
 @ApiTags('affiliates')
 @Controller('/superadmin/affiliates')

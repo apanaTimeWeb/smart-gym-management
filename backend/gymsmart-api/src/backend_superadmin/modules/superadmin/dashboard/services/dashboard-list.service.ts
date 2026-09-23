@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the dashboard feature.
 // FLOW: QueryController -> DashboardListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { DashboardRepository } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard.repository';
-import { DashboardMapper } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard.mapper';
+import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';
+import { DashboardMapper } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { DashboardResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-response.dto';
-import type { DashboardListQuery } from '@/backend_superadmin/modules/backend_superadmin/dashboard/types/dashboard.interfaces';
+import { DashboardResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-response.dto';
+import type { DashboardListQuery } from '@/backend_superadmin/modules/superadmin/dashboard/types/dashboard.interfaces';
 
 @Injectable()
 export class DashboardListService {

@@ -2,13 +2,13 @@
 // FLOW: CommandController -> GymsUpdateService -> named repository mutation -> mapper.
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsMapper } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.mapper';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsMapper } from '@/backend_superadmin/modules/superadmin/gyms/gyms.mapper';
 import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tenant-registry.repository';
 import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-work.service';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
 import * as bcrypt from 'bcrypt';
-import type { GymsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
+import type { GymsUpdateInput } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 @Injectable()
 export class GymsUpdateService {
   constructor(private readonly repository: GymsRepository, private readonly registry: TenantRegistryRepository, private readonly unitOfWork: UnitOfWorkService, private readonly config: ConfigService) {}

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Maps Infrastructure ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> InfrastructureMapper -> domain model -> response DTO.
-import type { InfrastructureEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure.entity';
-import type { InfrastructureDomainModel } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
+import type { InfrastructureEntity } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.entity';
+import type { InfrastructureDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
 
 export class InfrastructureMapper {
   /** Maps a persistence entity to the domain representation. */

@@ -3,12 +3,12 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { ExportDataAcceptedResponseDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/responses/export-data-accepted-response.dto';
-import { ExportDataRequestDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/dtos/export-data-request.dto';
-import { ExportDataJobRepository } from '@/backend_superadmin/modules/backend_superadmin/export-data/repositories/export-data-job.repository';
+import { ExportDataAcceptedResponseDto } from '@/backend_superadmin/modules/superadmin/export-data/responses/export-data-accepted-response.dto';
+import { ExportDataRequestDto } from '@/backend_superadmin/modules/superadmin/export-data/dtos/export-data-request.dto';
+import { ExportDataJobRepository } from '@/backend_superadmin/modules/superadmin/export-data/repositories/export-data-job.repository';
 import { getRequestContext } from '@/backend_superadmin/core/observability/request-context';
 import { TenantAuthorizationService } from '@/backend_superadmin/core/tenancy/tenant-authorization.service';
-import { ExportDataStatusResponseDto } from '@/backend_superadmin/modules/backend_superadmin/export-data/responses/export-data-status-response.dto';
+import { ExportDataStatusResponseDto } from '@/backend_superadmin/modules/superadmin/export-data/responses/export-data-status-response.dto';
 
 @Injectable()
 export class ExportDataService {

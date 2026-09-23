@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
-import { AnalyticsRetentionInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics-retention-insights-response.dto';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
+import { AnalyticsRetentionInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/analytics-retention-insights-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AnalyticsMainService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-main.service';
-import { AnalyticsRetentionInsightsService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-retention-insights.service';
+import { AnalyticsMainService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-main.service';
+import { AnalyticsRetentionInsightsService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-retention-insights.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('analyticsinsightsquery')

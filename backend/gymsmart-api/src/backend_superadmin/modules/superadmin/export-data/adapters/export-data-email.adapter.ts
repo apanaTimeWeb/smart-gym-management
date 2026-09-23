@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CircuitBreakerService } from '@/backend_superadmin/core/external/circuit-breaker.service';
 import { TIMEOUT_CONFIG } from '@/backend_superadmin/core/config/timeout.config';
-import { ExportEmailDeliveryException, ExportEmailTimeoutException } from '@/backend_superadmin/modules/backend_superadmin/export-data/export-data.exceptions';
+import { ExportEmailDeliveryException, ExportEmailTimeoutException } from '@/backend_superadmin/modules/superadmin/export-data/export-data.exceptions';
 
 @Injectable()
 export class ExportDataEmailAdapter {

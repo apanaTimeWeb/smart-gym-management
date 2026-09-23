@@ -8,11 +8,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { ReportsCreateService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-create.service';
-import { ReportsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/reports/dtos/reports-create.dto';
-import { ReportsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-update.service';
-import { ReportsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/reports/dtos/reports-update.dto';
-import { ReportsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-delete.service';
+import { ReportsCreateService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-create.service';
+import { ReportsCreateDto } from '@/backend_superadmin/modules/superadmin/reports/dtos/reports-create.dto';
+import { ReportsUpdateService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-update.service';
+import { ReportsUpdateDto } from '@/backend_superadmin/modules/superadmin/reports/dtos/reports-update.dto';
+import { ReportsDeleteService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-delete.service';
 
 @ApiTags('reports')
 @Controller('/superadmin/reports')

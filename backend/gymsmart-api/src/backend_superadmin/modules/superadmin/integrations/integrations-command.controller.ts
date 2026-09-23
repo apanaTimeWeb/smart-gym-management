@@ -8,15 +8,15 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-generate-key.dto';
-import { IntegrationsCreateService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-create.service';
-import { IntegrationsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-create.dto';
-import { IntegrationsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-update.service';
-import { IntegrationsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-update.dto';
-import { IntegrationsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-delete.service';
-import { IntegrationsStatusService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-status.service';
-import { IntegrationsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-status.dto';
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
+import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-generate-key.dto';
+import { IntegrationsCreateService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-create.service';
+import { IntegrationsCreateDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-create.dto';
+import { IntegrationsUpdateService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-update.service';
+import { IntegrationsUpdateDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-update.dto';
+import { IntegrationsDeleteService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-delete.service';
+import { IntegrationsStatusService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-status.service';
+import { IntegrationsStatusDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-status.dto';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
 
 @ApiTags('integrations')
 @Controller('/superadmin/integrations')

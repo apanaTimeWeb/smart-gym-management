@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the plan archive state transition through a named repository mutation.
 // FLOW: Controller -> archive service -> repository update -> active plan response.
 import { Injectable } from '@nestjs/common';
-import { PlansRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.repository';
+import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';
 
 @Injectable()
 export class PlansArchiveService {

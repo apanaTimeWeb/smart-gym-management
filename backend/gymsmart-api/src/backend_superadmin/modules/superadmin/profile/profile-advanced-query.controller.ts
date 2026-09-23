@@ -7,7 +7,7 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ProfileMainService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-main.service';
+import { ProfileMainService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-main.service';
 import type { AuthenticatedUser } from '@/backend_superadmin/core/auth/auth.types';
 import type { Request } from 'express';
 

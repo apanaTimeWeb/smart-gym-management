@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Creates a pending tenant migration record and returns its exact frontend mutation contract.
 // FLOW: Controller -> MigrationsTriggerService -> MigrationsRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { MigrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.repository';
-import { MigrationLogStatus } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.entity';
-import { MigrationsTriggerDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/dtos/migrations-trigger.dto';
+import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';
+import { MigrationLogStatus } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.entity';
+import { MigrationsTriggerDto } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/dtos/migrations-trigger.dto';
 @Injectable()
 export class MigrationsTriggerService {
   constructor(private readonly repository: MigrationsRepository) {}

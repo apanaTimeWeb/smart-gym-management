@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes partial update business flow for the reports feature.
 // FLOW: CommandController -> ReportsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
-import { ReportsRepository } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.repository';
-import { ReportsMapper } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.mapper';
-import type { ReportsDomainModel, ReportsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/reports/types/reports.interfaces';
+import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
+import { ReportsMapper } from '@/backend_superadmin/modules/superadmin/reports/reports.mapper';
+import type { ReportsDomainModel, ReportsUpdateInput } from '@/backend_superadmin/modules/superadmin/reports/types/reports.interfaces';
 @Injectable()
 export class ReportsUpdateService {
   constructor(private readonly repository: ReportsRepository) {}

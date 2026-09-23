@@ -3,11 +3,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SaasInvoiceStatus } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.entity';
+import { SaasInvoiceStatus } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.entity';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { InvoicesEntity } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.entity';
-import type { InvoicesListQuery, InvoicesCreateInput, InvoicesUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/types/invoices.interfaces';
+import { InvoicesEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.entity';
+import type { InvoicesListQuery, InvoicesCreateInput, InvoicesUpdateInput } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/types/invoices.interfaces';
 
 @Injectable()
 export class InvoicesRepository extends BaseRepository<InvoicesEntity> {

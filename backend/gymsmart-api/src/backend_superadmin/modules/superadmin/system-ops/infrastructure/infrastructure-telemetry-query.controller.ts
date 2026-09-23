@@ -7,9 +7,9 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { InfrastructureRedisService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-redis.service';
-import { InfrastructureUptimeService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-uptime.service';
-import { InfrastructureApiHealthService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-api-health.service';
+import { InfrastructureRedisService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-redis.service';
+import { InfrastructureUptimeService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-uptime.service';
+import { InfrastructureApiHealthService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-api-health.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('infrastructuretelemetryquery')

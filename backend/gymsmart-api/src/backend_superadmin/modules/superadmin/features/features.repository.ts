@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { FeaturesEntity } from '@/backend_superadmin/modules/backend_superadmin/features/features.entity';
-import type { FeaturesListQuery, FeaturesCreateInput, FeaturesUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/features/types/features.interfaces';
+import { FeaturesEntity } from '@/backend_superadmin/modules/superadmin/features/features.entity';
+import type { FeaturesListQuery, FeaturesCreateInput, FeaturesUpdateInput } from '@/backend_superadmin/modules/superadmin/features/types/features.interfaces';
 
 @Injectable()
 export class FeaturesRepository extends BaseRepository<FeaturesEntity> {

@@ -8,9 +8,9 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { InfrastructureFlushTenantDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/dtos/infrastructure-flush-tenant.dto';
-import { InfrastructureFlushGlobalService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-flush-global.service';
-import { InfrastructureFlushTenantService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-flush-tenant.service';
+import { InfrastructureFlushTenantDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/dtos/infrastructure-flush-tenant.dto';
+import { InfrastructureFlushGlobalService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-flush-global.service';
+import { InfrastructureFlushTenantService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-flush-tenant.service';
 
 @ApiTags('infrastructurecachecommand')
 @Controller()

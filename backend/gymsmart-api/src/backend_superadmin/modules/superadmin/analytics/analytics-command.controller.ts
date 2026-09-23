@@ -8,12 +8,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { AnalyticsCreateService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-create.service';
-import { AnalyticsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/dtos/analytics-create.dto';
-import { AnalyticsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-update.service';
-import { AnalyticsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/dtos/analytics-update.dto';
-import { AnalyticsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/analytics/services/analytics-delete.service';
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
+import { AnalyticsCreateService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-create.service';
+import { AnalyticsCreateDto } from '@/backend_superadmin/modules/superadmin/analytics/dtos/analytics-create.dto';
+import { AnalyticsUpdateService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-update.service';
+import { AnalyticsUpdateDto } from '@/backend_superadmin/modules/superadmin/analytics/dtos/analytics-update.dto';
+import { AnalyticsDeleteService } from '@/backend_superadmin/modules/superadmin/analytics/services/analytics-delete.service';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
 
 @ApiTags('analytics')
 @Controller('/superadmin/analytics')

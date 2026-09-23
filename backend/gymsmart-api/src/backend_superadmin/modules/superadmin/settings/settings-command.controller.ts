@@ -8,11 +8,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { SettingsCreateService } from '@/backend_superadmin/modules/backend_superadmin/settings/services/settings-create.service';
-import { SettingsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/settings/dtos/settings-create.dto';
-import { SettingsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/settings/services/settings-update.service';
-import { SettingsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/settings/dtos/settings-update.dto';
-import { SettingsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/settings/services/settings-delete.service';
+import { SettingsCreateService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-create.service';
+import { SettingsCreateDto } from '@/backend_superadmin/modules/superadmin/settings/dtos/settings-create.dto';
+import { SettingsUpdateService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-update.service';
+import { SettingsUpdateDto } from '@/backend_superadmin/modules/superadmin/settings/dtos/settings-update.dto';
+import { SettingsDeleteService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-delete.service';
 
 @ApiTags('settings')
 @Controller('/superadmin/settings')

@@ -8,11 +8,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { UsageMetersCreateService } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/services/usage-meters-create.service';
-import { UsageMetersCreateDto } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/dtos/usage-meters-create.dto';
-import { UsageMetersUpdateService } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/services/usage-meters-update.service';
-import { UsageMetersUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/dtos/usage-meters-update.dto';
-import { UsageMetersDeleteService } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/services/usage-meters-delete.service';
+import { UsageMetersCreateService } from '@/backend_superadmin/modules/superadmin/usage-meters/services/usage-meters-create.service';
+import { UsageMetersCreateDto } from '@/backend_superadmin/modules/superadmin/usage-meters/dtos/usage-meters-create.dto';
+import { UsageMetersUpdateService } from '@/backend_superadmin/modules/superadmin/usage-meters/services/usage-meters-update.service';
+import { UsageMetersUpdateDto } from '@/backend_superadmin/modules/superadmin/usage-meters/dtos/usage-meters-update.dto';
+import { UsageMetersDeleteService } from '@/backend_superadmin/modules/superadmin/usage-meters/services/usage-meters-delete.service';
 
 @ApiTags('usage-meters')
 @Controller('/superadmin/usage-meters')

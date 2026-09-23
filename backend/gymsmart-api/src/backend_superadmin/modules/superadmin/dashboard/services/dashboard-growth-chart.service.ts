@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Owns the dashboard gym-growth widget use case.
 // FLOW: QueryController -> DashboardGrowthChartService -> DashboardRepository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
-import { DashboardRepository } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard.repository';
-import type { DashboardGrowthChartProjection, DashboardWidgetQuery } from '@/backend_superadmin/modules/backend_superadmin/dashboard/types/dashboard.interfaces';
+import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';
+import type { DashboardGrowthChartProjection, DashboardWidgetQuery } from '@/backend_superadmin/modules/superadmin/dashboard/types/dashboard.interfaces';
 
 @Injectable()
 export class DashboardGrowthChartService {

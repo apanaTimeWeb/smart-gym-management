@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Produces the report comparison contract while honoring selected period/segment filters.
 // FLOW: Controller -> comparison service -> persisted snapshot -> normalized comparison response.
 import { Injectable } from '@nestjs/common';
-import { ReportsComparisonResponseDto } from '@/backend_superadmin/modules/backend_superadmin/reports/reports-comparison-response.dto';
-import { ReportsRepository } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.repository';
+import { ReportsComparisonResponseDto } from '@/backend_superadmin/modules/superadmin/reports/reports-comparison-response.dto';
+import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
 
 @Injectable()
 export class ReportsComparisonService {

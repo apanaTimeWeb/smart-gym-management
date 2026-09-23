@@ -3,12 +3,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SupportTicketPriority } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.entity';
+import { SupportTicketPriority } from '@/backend_superadmin/modules/superadmin/tickets/tickets.entity';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
 import { randomUUID } from 'node:crypto';
-import { TicketsEntity, SupportTicketStatus } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.entity';
-import type { TicketsListQuery, TicketsCreateInput, TicketsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/tickets/types/tickets.interfaces';
+import { TicketsEntity, SupportTicketStatus } from '@/backend_superadmin/modules/superadmin/tickets/tickets.entity';
+import type { TicketsListQuery, TicketsCreateInput, TicketsUpdateInput } from '@/backend_superadmin/modules/superadmin/tickets/types/tickets.interfaces';
 
 
 @Injectable()

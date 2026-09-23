@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Validates and persists a frozen WhatsApp campaign contract; no HTTP parsing or fixture data.
 // FLOW: MessagingSpecialController -> MessagingWhatsappCampaignCreateDto -> MessagingWhatsappCampaignService -> MessagingRepository.
 import { Injectable } from '@nestjs/common';
-import { MessagingRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.repository';
-import { TenantMessageChannel, TenantMessageStatus } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.entity';
-import { MessagingWhatsappCampaignCreateDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-whatsapp-campaign-create.dto';
-import { MessagingWhatsappCampaignResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-whatsapp-campaign-response.dto';
+import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';
+import { TenantMessageChannel, TenantMessageStatus } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';
+import { MessagingWhatsappCampaignCreateDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-whatsapp-campaign-create.dto';
+import { MessagingWhatsappCampaignResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-whatsapp-campaign-response.dto';
 
 @Injectable()
 export class MessagingWhatsappCampaignService {

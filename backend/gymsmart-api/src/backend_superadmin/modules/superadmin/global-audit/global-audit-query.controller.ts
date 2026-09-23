@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { GlobalAuditQueryDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/dtos/global-audit-query.dto';
-import { GlobalAuditListService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-list.service';
-import { GlobalAuditFindService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-find.service';
-import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/responses/global-audit-response.dto';
+import { GlobalAuditQueryDto } from '@/backend_superadmin/modules/superadmin/global-audit/dtos/global-audit-query.dto';
+import { GlobalAuditListService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-list.service';
+import { GlobalAuditFindService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-find.service';
+import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/responses/global-audit-response.dto';
 
 @ApiTags('global-audit')
 @Controller('/superadmin/global-audit')

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Persists the single authoritative backup schedule contract owned by the backups feature.
 // FLOW: Controller -> BackupsScheduleService -> BackupScheduleContractSnapshotRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { BackupsScheduleDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-schedule.dto';
-import { BackupScheduleContractSnapshotRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups-schedule-contract-snapshot.repository';
+import { BackupsScheduleDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-schedule.dto';
+import { BackupScheduleContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups-schedule-contract-snapshot.repository';
 
 @Injectable()
 export class BackupsScheduleService {

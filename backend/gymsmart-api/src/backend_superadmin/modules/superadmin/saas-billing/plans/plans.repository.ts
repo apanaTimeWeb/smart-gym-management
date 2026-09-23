@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { PlansEntity } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.entity';
-import type { PlansListQuery, PlansCreateInput, PlansUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/types/plans.interfaces';
+import { PlansEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.entity';
+import type { PlansListQuery, PlansCreateInput, PlansUpdateInput } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/types/plans.interfaces';
 
 @Injectable()
 export class PlansRepository extends BaseRepository<PlansEntity> {

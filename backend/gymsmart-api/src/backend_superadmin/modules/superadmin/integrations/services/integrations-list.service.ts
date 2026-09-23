@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the integrations feature.
 // FLOW: QueryController -> IntegrationsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { IntegrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.repository';
-import { IntegrationsMapper } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.mapper';
+import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';
+import { IntegrationsMapper } from '@/backend_superadmin/modules/superadmin/integrations/integrations.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
-import type { IntegrationsListQuery } from '@/backend_superadmin/modules/backend_superadmin/integrations/types/integrations.interfaces';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
+import type { IntegrationsListQuery } from '@/backend_superadmin/modules/superadmin/integrations/types/integrations.interfaces';
 
 @Injectable()
 export class IntegrationsListService {

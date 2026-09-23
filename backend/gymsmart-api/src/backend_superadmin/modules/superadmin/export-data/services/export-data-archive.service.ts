@@ -6,8 +6,8 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
 import { deflateRawSync } from 'node:zlib';
-import { ExportDataArchiveRepository } from '@/backend_superadmin/modules/backend_superadmin/export-data/repositories/export-data-archive.repository';
-import type { ExportDataResource } from '@/backend_superadmin/modules/backend_superadmin/export-data/dtos/export-data-request.dto';
+import { ExportDataArchiveRepository } from '@/backend_superadmin/modules/superadmin/export-data/repositories/export-data-archive.repository';
+import type { ExportDataResource } from '@/backend_superadmin/modules/superadmin/export-data/dtos/export-data-request.dto';
 
 const PAGE_SIZE = 500;
 interface ZipEntry { name: string; content: Buffer; }

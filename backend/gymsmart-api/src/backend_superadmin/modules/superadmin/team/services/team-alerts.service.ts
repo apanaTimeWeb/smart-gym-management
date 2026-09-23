@@ -2,7 +2,7 @@
 // FLOW: Controller -> TeamAlertsService -> AuditTrailService -> audit_logs.
 import { Injectable } from '@nestjs/common';
 import { AuditTrailService } from '@/backend_superadmin/core/observability/audit-trail.service';
-import { TeamAlertActionDto } from '@/backend_superadmin/modules/backend_superadmin/team/dtos/team-alert-action.dto';
+import { TeamAlertActionDto } from '@/backend_superadmin/modules/superadmin/team/dtos/team-alert-action.dto';
 
 @Injectable()
 export class TeamAlertsService {

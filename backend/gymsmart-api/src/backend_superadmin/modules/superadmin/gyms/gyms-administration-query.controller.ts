@@ -7,11 +7,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GymsBusinessControlsService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-business-controls.service';
-import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms-business-controls-response.dto';
-import { GymsDetailBusinessOverviewResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms-detail-business-overview-response.dto';
-import { GymsDetailBusinessOverviewService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-detail-business-overview.service';
-import { GymsOperationalService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-operational.service';
+import { GymsBusinessControlsService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-business-controls.service';
+import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-business-controls-response.dto';
+import { GymsDetailBusinessOverviewResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-detail-business-overview-response.dto';
+import { GymsDetailBusinessOverviewService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-detail-business-overview.service';
+import { GymsOperationalService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-operational.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('gymsadministrationquery')

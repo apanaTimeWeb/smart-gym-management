@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds message template and campaign insights from persisted messaging records.
 // FLOW: Controller -> MessagingTemplateInsightsService -> MessagingRepository -> PostgreSQL tenant_messages.
 import { Injectable } from '@nestjs/common';
-import { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-template-insights-response.dto';
-import { MessagingRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.repository';
+import { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-template-insights-response.dto';
+import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';
 
 @Injectable()
 export class MessagingTemplateInsightsService {

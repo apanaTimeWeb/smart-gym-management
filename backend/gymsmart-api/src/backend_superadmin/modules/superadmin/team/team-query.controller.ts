@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { TeamQueryDto } from '@/backend_superadmin/modules/backend_superadmin/team/dtos/team-query.dto';
-import { TeamListService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-list.service';
-import { TeamFindService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-find.service';
+import { TeamQueryDto } from '@/backend_superadmin/modules/superadmin/team/dtos/team-query.dto';
+import { TeamListService } from '@/backend_superadmin/modules/superadmin/team/services/team-list.service';
+import { TeamFindService } from '@/backend_superadmin/modules/superadmin/team/services/team-find.service';
 
 @ApiTags('team')
 @Controller('/superadmin/team')

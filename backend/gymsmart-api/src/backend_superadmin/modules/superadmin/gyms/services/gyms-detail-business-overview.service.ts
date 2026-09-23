@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Builds the gym detail business overview from the authoritative tenant record.
 // FLOW: Controller -> GymsDetailBusinessOverviewService -> GymsRepository -> domain projection.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import type { GymsEntity } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.entity';
-import { GymsDetailBusinessOverviewResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms-detail-business-overview-response.dto';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import type { GymsEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
+import { GymsDetailBusinessOverviewResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-detail-business-overview-response.dto';
 
 interface GymDetailState {
   currency?: string;

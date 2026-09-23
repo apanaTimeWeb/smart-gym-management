@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the team feature.
 // FLOW: QueryController -> TeamListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { TeamRepository } from '@/backend_superadmin/modules/backend_superadmin/team/team.repository';
-import { TeamMapper } from '@/backend_superadmin/modules/backend_superadmin/team/team.mapper';
+import { TeamRepository } from '@/backend_superadmin/modules/superadmin/team/team.repository';
+import { TeamMapper } from '@/backend_superadmin/modules/superadmin/team/team.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { TeamListQuery } from '@/backend_superadmin/modules/backend_superadmin/team/types/team.interfaces';
+import type { TeamListQuery } from '@/backend_superadmin/modules/superadmin/team/types/team.interfaces';
 
 @Injectable()
 export class TeamListService {

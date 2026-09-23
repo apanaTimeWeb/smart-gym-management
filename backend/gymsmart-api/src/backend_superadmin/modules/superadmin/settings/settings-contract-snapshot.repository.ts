@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SettingsContractSnapshotEntity } from '@/backend_superadmin/modules/backend_superadmin/settings/settings-contract-snapshot.entity';
+import { SettingsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/settings/settings-contract-snapshot.entity';
 
 @Injectable()
 export class SettingsContractSnapshotRepository {

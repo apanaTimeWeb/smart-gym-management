@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the backups feature.
 // FLOW: QueryController -> BackupsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { BackupsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.repository';
-import { BackupsMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.mapper';
+import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';
+import { BackupsMapper } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { BackupsListQuery } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/types/backups.interfaces';
+import type { BackupsListQuery } from '@/backend_superadmin/modules/superadmin/system-ops/backups/types/backups.interfaces';
 
 @Injectable()
 export class BackupsListService {

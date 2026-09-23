@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Performs status transitions for tickets records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
-import { TicketsRepository } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.repository';
-import { TicketsMapper } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.mapper';
-import type { TicketsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/tickets/types/tickets.interfaces';
+import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';
+import { TicketsMapper } from '@/backend_superadmin/modules/superadmin/tickets/tickets.mapper';
+import type { TicketsDomainModel } from '@/backend_superadmin/modules/superadmin/tickets/types/tickets.interfaces';
 @Injectable()
 export class TicketsStatusService {
   constructor(private readonly repository: TicketsRepository) {}

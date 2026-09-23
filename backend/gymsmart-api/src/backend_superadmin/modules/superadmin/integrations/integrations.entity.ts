@@ -2,7 +2,7 @@
 // FLOW: integrations repository -> IntegrationKey entity -> PostgreSQL `integration_keys`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
-import { IntegrationKeyScope } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.constants';
+import { IntegrationKeyScope } from '@/backend_superadmin/modules/superadmin/integrations/integrations.constants';
 
 export enum IntegrationKeyStatus {
   ACTIVE = 'ACTIVE',

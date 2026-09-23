@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes creation business flow for the white-labeling feature.
 // FLOW: CommandController -> WhiteLabelingCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
-import { WhiteLabelingRepository } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/white-labeling.repository';
-import { WhiteLabelingMapper } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/white-labeling.mapper';
-import type { WhiteLabelingCreateInput, WhiteLabelingDomainModel } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/types/white-labeling.interfaces';
+import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';
+import { WhiteLabelingMapper } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.mapper';
+import type { WhiteLabelingCreateInput, WhiteLabelingDomainModel } from '@/backend_superadmin/modules/superadmin/white-labeling/types/white-labeling.interfaces';
 @Injectable()
 export class WhiteLabelingCreateService {
   constructor(private readonly repository: WhiteLabelingRepository) {}

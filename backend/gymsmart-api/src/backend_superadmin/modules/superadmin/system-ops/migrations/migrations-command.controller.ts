@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the migrations-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { MigrationsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/dtos/migrations-status.dto';
+import { MigrationsStatusDto } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/dtos/migrations-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { MigrationsCreateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-create.service';
-import { MigrationsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/dtos/migrations-create.dto';
-import { MigrationsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-update.service';
-import { MigrationsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/dtos/migrations-update.dto';
-import { MigrationsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-delete.service';
-import { MigrationsStatusService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-status.service';
+import { MigrationsCreateService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-create.service';
+import { MigrationsCreateDto } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/dtos/migrations-create.dto';
+import { MigrationsUpdateService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-update.service';
+import { MigrationsUpdateDto } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/dtos/migrations-update.dto';
+import { MigrationsDeleteService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-delete.service';
+import { MigrationsStatusService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-status.service';
 
 @ApiTags('migrations')
 @Controller('/superadmin/system-ops/migrations')

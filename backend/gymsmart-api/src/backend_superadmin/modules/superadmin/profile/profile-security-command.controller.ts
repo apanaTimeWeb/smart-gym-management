@@ -8,12 +8,12 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { ProfileUpdateService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-update.service';
-import { ProfilePasswordService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-password.service';
-import { ProfileTwoFactorService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-two-factor.service';
-import { ProfileUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-update.dto';
-import { ProfilePasswordChangeDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-password-change.dto';
-import { ProfileTwoFactorDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-two-factor.dto';
+import { ProfileUpdateService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-update.service';
+import { ProfilePasswordService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-password.service';
+import { ProfileTwoFactorService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-two-factor.service';
+import { ProfileUpdateDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-update.dto';
+import { ProfilePasswordChangeDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-password-change.dto';
+import { ProfileTwoFactorDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-two-factor.dto';
 import type { AuthenticatedUser } from '@/backend_superadmin/core/auth/auth.types';
 import type { Request } from 'express';
 

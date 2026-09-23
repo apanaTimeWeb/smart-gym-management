@@ -7,7 +7,7 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SystemOpsSummaryService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/services/system-ops-summary.service';
+import { SystemOpsSummaryService } from '@/backend_superadmin/modules/superadmin/system-ops/services/system-ops-summary.service';
 
 @ApiTags('systemopssummaryquery')
 @Controller()

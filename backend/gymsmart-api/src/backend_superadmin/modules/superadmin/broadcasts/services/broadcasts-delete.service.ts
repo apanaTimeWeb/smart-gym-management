@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the broadcasts feature.
 // FLOW: CommandController -> BroadcastsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { BroadcastsRepository } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.repository';
+import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';
 @Injectable()
 export class BroadcastsDeleteService {
   constructor(private readonly repository: BroadcastsRepository) {}

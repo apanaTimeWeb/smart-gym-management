@@ -7,7 +7,7 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { InvoicesRecoveryCenterService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-recovery-center.service';
+import { InvoicesRecoveryCenterService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-recovery-center.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('invoicesrecoveryquery')

@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the settings feature.
 // FLOW: QueryController -> SettingsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { SettingsRepository } from '@/backend_superadmin/modules/backend_superadmin/settings/settings.repository';
-import { SettingsMapper } from '@/backend_superadmin/modules/backend_superadmin/settings/settings.mapper';
+import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';
+import { SettingsMapper } from '@/backend_superadmin/modules/superadmin/settings/settings.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { SettingsListQuery } from '@/backend_superadmin/modules/backend_superadmin/settings/types/settings.interfaces';
+import type { SettingsListQuery } from '@/backend_superadmin/modules/superadmin/settings/types/settings.interfaces';
 
 @Injectable()
 export class SettingsListService {

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Defines domain/data transfer shapes for the integrations feature without ORM leakage.
 // FLOW: DTO -> IntegrationsInput -> service -> repository; entity -> mapper -> response DTO.
 import type { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import type { IntegrationKeyScope } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.constants';
+import type { IntegrationKeyScope } from '@/backend_superadmin/modules/superadmin/integrations/integrations.constants';
 
 export interface IntegrationsListQuery { page: number; limit: number; sortBy: string; sortOrder: 'ASC' | 'DESC'; search?: string;  status?: string; tenantId?: string;}
 export interface IntegrationsCreateInput {

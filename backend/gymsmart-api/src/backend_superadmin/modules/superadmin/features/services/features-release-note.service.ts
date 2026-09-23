@@ -2,9 +2,9 @@
 // FLOW: Controller -> FeaturesReleaseNoteService -> repository -> public response shape.
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features-release-note.repository';
-import { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-release-note-create.dto';
-import { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-release-note-update.dto';
+import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/superadmin/features/features-release-note.repository';
+import { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-create.dto';
+import { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-update.dto';
 @Injectable()
 export class FeaturesReleaseNoteService {
   constructor(private readonly repository: FeaturesReleaseNoteRepository) {}

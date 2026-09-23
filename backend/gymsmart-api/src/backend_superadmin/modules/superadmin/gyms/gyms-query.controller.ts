@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { GymsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-query.dto';
-import { GymsListService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-list.service';
-import { GymsFindService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-find.service';
-import { GymsOperationalService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-operational.service';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
+import { GymsQueryDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-query.dto';
+import { GymsListService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-list.service';
+import { GymsFindService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-find.service';
+import { GymsOperationalService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-operational.service';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
 
 @ApiTags('gyms')
 @Controller('/superadmin/gyms')

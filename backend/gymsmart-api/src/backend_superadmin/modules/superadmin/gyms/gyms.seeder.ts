@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Deterministically seeds the gyms table for local/test environments.
 // FLOW: Master seed -> GymsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
-import { GymsEntity } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.entity';
+import { GymsEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
 
 export class GymsSeeder {
   /** Ensures the seed routine is safe to invoke repeatedly; data fixtures are applied by the dedicated seed orchestrator. */

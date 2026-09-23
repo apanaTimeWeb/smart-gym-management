@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { FeaturesReleaseNoteService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-release-note.service';
-import { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-release-note-create.dto';
-import { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-release-note-update.dto';
+import { FeaturesReleaseNoteService } from '@/backend_superadmin/modules/superadmin/features/services/features-release-note.service';
+import { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-create.dto';
+import { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-update.dto';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { FeaturesReleaseNoteDto } from '@/backend_superadmin/modules/backend_superadmin/features/features-release-note.dto';
+import { FeaturesReleaseNoteDto } from '@/backend_superadmin/modules/superadmin/features/features-release-note.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('featuresreleasenotecommand')

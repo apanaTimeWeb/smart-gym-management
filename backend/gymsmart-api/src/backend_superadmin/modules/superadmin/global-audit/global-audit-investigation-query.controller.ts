@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit-investigation-response.dto';
+import { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-investigation-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GlobalAuditInvestigationService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-investigation.service';
+import { GlobalAuditInvestigationService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-investigation.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('globalauditinvestigationquery')

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds investigation data from the authoritative audit_logs table; no seeded snapshot is used.
 // FLOW: Controller -> GlobalAuditInvestigationService -> GlobalAuditRepository -> PostgreSQL audit_logs.
 import { Injectable } from '@nestjs/common';
-import { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit-investigation-response.dto';
-import { GlobalAuditRepository } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit.repository';
+import { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-investigation-response.dto';
+import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';
 
 @Injectable()
 export class GlobalAuditInvestigationService {

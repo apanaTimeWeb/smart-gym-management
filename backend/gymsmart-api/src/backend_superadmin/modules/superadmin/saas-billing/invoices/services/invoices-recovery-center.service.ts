@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds live invoice-recovery telemetry from persisted invoice state.
 // FLOW: InvoicesRecoveryQueryController -> InvoicesRecoveryCenterService -> InvoicesRepository -> saas invoices.
 import { Injectable } from '@nestjs/common';
-import { InvoicesRecoveryCenterResponseDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices-recovery-center-response.dto';
-import { InvoicesRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.repository';
+import { InvoicesRecoveryCenterResponseDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices-recovery-center-response.dto';
+import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';
 
 @Injectable()
 export class InvoicesRecoveryCenterService {

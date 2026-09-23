@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Performs status transitions for messaging records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
-import { TenantMessageStatus } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.entity';
-import { MessagingRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.repository';
-import { MessagingMapper } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.mapper';
-import { MessagingResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-response.dto';
+import { TenantMessageStatus } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';
+import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';
+import { MessagingMapper } from '@/backend_superadmin/modules/superadmin/messaging/messaging.mapper';
+import { MessagingResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-response.dto';
 @Injectable()
 export class MessagingStatusService {
   constructor(private readonly repository: MessagingRepository) {}

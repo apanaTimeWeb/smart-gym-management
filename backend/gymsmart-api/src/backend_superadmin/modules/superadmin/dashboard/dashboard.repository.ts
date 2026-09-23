@@ -5,7 +5,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { DashboardEntity } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard.entity';
+import { DashboardEntity } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.entity';
 import type {
   DashboardBusinessOverviewRow,
   DashboardCreateInput,
@@ -18,7 +18,7 @@ import type {
   DashboardRevenueChartProjection,
   DashboardUpdateInput,
   DashboardWidgetQuery,
-} from '@/backend_superadmin/modules/backend_superadmin/dashboard/types/dashboard.interfaces';
+} from '@/backend_superadmin/modules/superadmin/dashboard/types/dashboard.interfaces';
 
 interface DashboardKpiRow {
   total_gyms: string | number;

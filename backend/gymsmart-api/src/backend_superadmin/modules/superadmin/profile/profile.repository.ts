@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { ProfileEntity } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.entity';
-import type { ProfileListQuery, ProfileCreateInput, ProfileUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/profile/types/profile.interfaces';
+import { ProfileEntity } from '@/backend_superadmin/modules/superadmin/profile/profile.entity';
+import type { ProfileListQuery, ProfileCreateInput, ProfileUpdateInput } from '@/backend_superadmin/modules/superadmin/profile/types/profile.interfaces';
 
 @Injectable()
 export class ProfileRepository extends BaseRepository<ProfileEntity> {

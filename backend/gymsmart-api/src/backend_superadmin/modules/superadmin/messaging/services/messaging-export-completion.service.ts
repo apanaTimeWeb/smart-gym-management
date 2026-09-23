@@ -3,7 +3,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { EventBusService } from '@/backend_superadmin/core/events/event-bus.service';
 import { EVENT_REGISTRY } from '@/backend_superadmin/core/events/event-registry.constants';
-import { MessagingNotificationService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-notification.service';
+import { MessagingNotificationService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-notification.service';
 
 interface ExportCompletedPayload { jobId?: string; actorId?: string | null; tenantId?: string | null; downloadUrl?: string; expiresAt?: string; }
 

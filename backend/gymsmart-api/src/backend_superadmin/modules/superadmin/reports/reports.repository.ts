@@ -5,8 +5,8 @@ import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { ReportsEntity } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.entity';
-import type { ReportsListQuery, ReportsCreateInput, ReportsUpdateInput, ReportsRevenueRow, ReportsCancellationRow, ReportsHealthRow } from '@/backend_superadmin/modules/backend_superadmin/reports/types/reports.interfaces';
+import { ReportsEntity } from '@/backend_superadmin/modules/superadmin/reports/reports.entity';
+import type { ReportsListQuery, ReportsCreateInput, ReportsUpdateInput, ReportsRevenueRow, ReportsCancellationRow, ReportsHealthRow } from '@/backend_superadmin/modules/superadmin/reports/types/reports.interfaces';
 
 @Injectable()
 export class ReportsRepository extends BaseRepository<ReportsEntity> {

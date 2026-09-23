@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Projects persisted feature flags and release notes into live rollout insights.
 // FLOW: Rollout insights query -> FeaturesRolloutInsightsService -> FeaturesRepository + FeaturesReleaseNoteRepository.
 import { Injectable } from '@nestjs/common';
-import { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/features-rollout-insights-response.dto';
-import { FeaturesRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features.repository';
-import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features-release-note.repository';
+import { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/features/features-rollout-insights-response.dto';
+import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
+import { FeaturesReleaseNoteRepository } from '@/backend_superadmin/modules/superadmin/features/features-release-note.repository';
 
 @Injectable()
 export class FeaturesRolloutInsightsService {

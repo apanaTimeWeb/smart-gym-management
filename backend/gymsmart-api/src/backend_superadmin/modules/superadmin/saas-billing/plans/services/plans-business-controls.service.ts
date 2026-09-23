@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds live plan business controls from authoritative subscription plan records.
 // FLOW: Controller -> PlansBusinessControlsService -> PlansRepository -> PostgreSQL subscription_plans.
 import { Injectable } from '@nestjs/common';
-import { PlansBusinessControlsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans-business-controls-response.dto';
-import { PlansRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.repository';
+import { PlansBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-business-controls-response.dto';
+import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';
 
 @Injectable()
 export class PlansBusinessControlsService {

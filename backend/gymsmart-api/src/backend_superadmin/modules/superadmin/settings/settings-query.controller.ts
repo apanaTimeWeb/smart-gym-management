@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { SettingsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/settings/dtos/settings-query.dto';
-import { SettingsListService } from '@/backend_superadmin/modules/backend_superadmin/settings/services/settings-list.service';
-import { SettingsFindService } from '@/backend_superadmin/modules/backend_superadmin/settings/services/settings-find.service';
+import { SettingsQueryDto } from '@/backend_superadmin/modules/superadmin/settings/dtos/settings-query.dto';
+import { SettingsListService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-list.service';
+import { SettingsFindService } from '@/backend_superadmin/modules/superadmin/settings/services/settings-find.service';
 
 @ApiTags('settings')
 @Controller('/superadmin/settings')

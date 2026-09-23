@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Performs status transitions for migrations records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
-import { MigrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.repository';
-import { MigrationsMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.mapper';
-import type { MigrationsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/types/migrations.interfaces';
+import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';
+import { MigrationsMapper } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.mapper';
+import type { MigrationsDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/types/migrations.interfaces';
 @Injectable()
 export class MigrationsStatusService {
   constructor(private readonly repository: MigrationsRepository) {}

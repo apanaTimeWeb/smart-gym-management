@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Validates an existing backup before recording a restore request.
 // FLOW: Controller -> BackupsRestoreService -> BackupsRepository -> queued restore request.
 import { Injectable } from '@nestjs/common';
-import { BackupsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.repository';
+import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';
 
 @Injectable()
 export class BackupsRestoreService {

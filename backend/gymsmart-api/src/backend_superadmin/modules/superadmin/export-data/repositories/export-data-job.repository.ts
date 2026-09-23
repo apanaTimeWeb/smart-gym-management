@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { createHash, randomUUID } from 'node:crypto';
 import { DistributedJobQueueService } from '@/backend_superadmin/core/jobs/distributed-job-queue.service';
-import { EXPORT_DATA_QUEUE_NAME } from '@/backend_superadmin/modules/backend_superadmin/export-data/export-data.constants';
-import { ExportDataJobEntity, ExportDataJobStatus } from '@/backend_superadmin/modules/backend_superadmin/export-data/export-data-job.entity';
+import { EXPORT_DATA_QUEUE_NAME } from '@/backend_superadmin/modules/superadmin/export-data/export-data.constants';
+import { ExportDataJobEntity, ExportDataJobStatus } from '@/backend_superadmin/modules/superadmin/export-data/export-data-job.entity';
 
 @Injectable()
 export class ExportDataJobRepository {

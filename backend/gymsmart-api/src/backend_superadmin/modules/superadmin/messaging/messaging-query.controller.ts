@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { MessagingQueryDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-query.dto';
-import { MessagingListService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-list.service';
-import { MessagingFindService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-find.service';
-import { MessagingResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-response.dto';
+import { MessagingQueryDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-query.dto';
+import { MessagingListService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-list.service';
+import { MessagingFindService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-find.service';
+import { MessagingResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-response.dto';
 import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tenant-registry.repository';
 
 @ApiTags('messaging')

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Records manual invoice payments after validating the frontend payment contract.
 // FLOW: Controller -> InvoicesManualPaymentService -> InvoicesRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InvoicesRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.repository';
-import { InvoicesManualPaymentDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-manual-payment.dto';
+import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';
+import { InvoicesManualPaymentDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-manual-payment.dto';
 
 @Injectable()
 export class InvoicesManualPaymentService {

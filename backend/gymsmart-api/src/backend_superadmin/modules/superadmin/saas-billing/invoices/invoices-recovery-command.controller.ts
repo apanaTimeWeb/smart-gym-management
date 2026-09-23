@@ -8,9 +8,9 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { InvoicesManualPaymentDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-manual-payment.dto';
-import { InvoicesManualPaymentService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-manual-payment.service';
-import { InvoicesResendService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-resend.service';
+import { InvoicesManualPaymentDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-manual-payment.dto';
+import { InvoicesManualPaymentService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-manual-payment.service';
+import { InvoicesResendService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-resend.service';
 
 @ApiTags('invoicesrecoverycommand')
 @Controller()

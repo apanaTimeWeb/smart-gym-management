@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Validates partial updates at the broadcasts HTTP boundary.
 // FLOW: HTTP JSON -> BroadcastsUpdateDto -> Broadcasts service.
 import { Type } from 'class-transformer';
-import { BroadcastChannel } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.entity';
+import { BroadcastChannel } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.entity';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export enum BroadcastsStatus { SENT = 'SENT', SCHEDULED = 'SCHEDULED', DRAFT = 'DRAFT', }

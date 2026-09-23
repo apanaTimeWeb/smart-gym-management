@@ -2,11 +2,11 @@
 // FLOW: QueryController -> GymsListService -> repository -> mapper -> response DTO.
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsMapper } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.mapper';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsMapper } from '@/backend_superadmin/modules/superadmin/gyms/gyms.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
-import type { GymsListQuery } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
+import type { GymsListQuery } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 
 @Injectable()
 export class GymsListService {

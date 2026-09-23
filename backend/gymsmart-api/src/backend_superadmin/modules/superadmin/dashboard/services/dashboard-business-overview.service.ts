@@ -2,8 +2,8 @@
 // FLOW: Controller -> DashboardBusinessOverviewService -> DashboardRepository -> live invoice aggregate -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DashboardBusinessOverviewResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard-business-overview-response.dto';
-import { DashboardRepository } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard.repository';
+import { DashboardBusinessOverviewResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard-business-overview-response.dto';
+import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';
 
 @Injectable()
 export class DashboardBusinessOverviewService {

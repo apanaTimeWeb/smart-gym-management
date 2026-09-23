@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Performs status transitions for integrations records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
-import { IntegrationKeyStatus } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.entity';
-import { IntegrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.repository';
-import { IntegrationsMapper } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.mapper';
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
+import { IntegrationKeyStatus } from '@/backend_superadmin/modules/superadmin/integrations/integrations.entity';
+import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';
+import { IntegrationsMapper } from '@/backend_superadmin/modules/superadmin/integrations/integrations.mapper';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
 @Injectable()
 export class IntegrationsStatusService {
   constructor(private readonly repository: IntegrationsRepository) {}

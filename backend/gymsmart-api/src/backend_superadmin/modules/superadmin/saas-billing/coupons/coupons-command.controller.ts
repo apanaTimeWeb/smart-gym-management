@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the coupons-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { CouponsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/dtos/coupons-status.dto';
+import { CouponsStatusDto } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/dtos/coupons-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { CouponsCreateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/services/coupons-create.service';
-import { CouponsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/dtos/coupons-create.dto';
-import { CouponsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/services/coupons-update.service';
-import { CouponsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/dtos/coupons-update.dto';
-import { CouponsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/services/coupons-delete.service';
-import { CouponsStatusService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/services/coupons-status.service';
+import { CouponsCreateService } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/services/coupons-create.service';
+import { CouponsCreateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/dtos/coupons-create.dto';
+import { CouponsUpdateService } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/services/coupons-update.service';
+import { CouponsUpdateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/dtos/coupons-update.dto';
+import { CouponsDeleteService } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/services/coupons-delete.service';
+import { CouponsStatusService } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/services/coupons-status.service';
 
 @ApiTags('coupons')
 @Controller('/superadmin/saas-billing/coupons')

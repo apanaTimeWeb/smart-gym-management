@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes creation business flow for the compliance feature.
 // FLOW: CommandController -> ComplianceCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
-import { ComplianceRepository } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance.repository';
-import { ComplianceMapper } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance.mapper';
-import { ComplianceResponseDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/responses/compliance-response.dto';
-import type { ComplianceCreateInput } from '@/backend_superadmin/modules/backend_superadmin/compliance/types/compliance.interfaces';
+import { ComplianceRepository } from '@/backend_superadmin/modules/superadmin/compliance/compliance.repository';
+import { ComplianceMapper } from '@/backend_superadmin/modules/superadmin/compliance/compliance.mapper';
+import { ComplianceResponseDto } from '@/backend_superadmin/modules/superadmin/compliance/responses/compliance-response.dto';
+import type { ComplianceCreateInput } from '@/backend_superadmin/modules/superadmin/compliance/types/compliance.interfaces';
 @Injectable()
 export class ComplianceCreateService {
   constructor(private readonly repository: ComplianceRepository) {}

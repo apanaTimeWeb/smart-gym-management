@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Records an explicit manual backup trigger in the backup feature state.
 // FLOW: Controller -> BackupsTriggerService -> BackupsRepository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
-import { BackupsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.repository';
-import { BackupsTriggerDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-trigger.dto';
-import { BackupsStatus } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-update.dto';
+import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';
+import { BackupsTriggerDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-trigger.dto';
+import { BackupsStatus } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-update.dto';
 
 @Injectable()
 export class BackupsTriggerService {

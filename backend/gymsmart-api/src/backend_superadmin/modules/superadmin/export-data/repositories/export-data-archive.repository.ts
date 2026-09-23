@@ -2,7 +2,7 @@
 // FLOW: ExportDataArchiveService -> QueryBuilder resource projection -> bounded tenant filter -> CSV page.
 import { Injectable } from '@nestjs/common';
 import { DataSource, SelectQueryBuilder } from 'typeorm';
-import type { ExportDataResource } from '@/backend_superadmin/modules/backend_superadmin/export-data/dtos/export-data-request.dto';
+import type { ExportDataResource } from '@/backend_superadmin/modules/superadmin/export-data/dtos/export-data-request.dto';
 
 @Injectable()
 export class ExportDataArchiveRepository {

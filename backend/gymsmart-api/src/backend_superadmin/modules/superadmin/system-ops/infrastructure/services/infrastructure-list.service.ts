@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the infrastructure feature.
 // FLOW: QueryController -> InfrastructureListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { InfrastructureRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure.repository';
-import { InfrastructureMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure.mapper';
+import { InfrastructureRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.repository';
+import { InfrastructureMapper } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { InfrastructureListQuery } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
+import type { InfrastructureListQuery } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
 
 @Injectable()
 export class InfrastructureListService {

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Translates persisted report snapshot rows into the frontend report contract with request-aware filtering.
 // FLOW: Controller -> ReportsMainService -> repository query -> contract payload -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { ReportsRepository } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.repository';
+import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
 
 @Injectable()
 export class ReportsMainService {

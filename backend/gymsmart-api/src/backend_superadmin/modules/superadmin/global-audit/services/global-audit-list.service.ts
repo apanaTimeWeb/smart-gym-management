@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the global-audit feature.
 // FLOW: QueryController -> GlobalAuditListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { GlobalAuditRepository } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit.repository';
-import { GlobalAuditMapper } from '@/backend_superadmin/modules/backend_superadmin/global-audit/global-audit.mapper';
+import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';
+import { GlobalAuditMapper } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/responses/global-audit-response.dto';
-import type { GlobalAuditListQuery } from '@/backend_superadmin/modules/backend_superadmin/global-audit/types/global-audit.interfaces';
+import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/responses/global-audit-response.dto';
+import type { GlobalAuditListQuery } from '@/backend_superadmin/modules/superadmin/global-audit/types/global-audit.interfaces';
 
 @Injectable()
 export class GlobalAuditListService {

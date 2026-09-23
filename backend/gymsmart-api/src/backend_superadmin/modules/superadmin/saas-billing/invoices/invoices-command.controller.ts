@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the invoices-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { InvoicesStatusDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-status.dto';
+import { InvoicesStatusDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { InvoicesCreateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-create.service';
-import { InvoicesCreateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-create.dto';
-import { InvoicesUpdateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-update.service';
-import { InvoicesUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-update.dto';
-import { InvoicesDeleteService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-delete.service';
-import { InvoicesStatusService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-status.service';
+import { InvoicesCreateService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-create.service';
+import { InvoicesCreateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-create.dto';
+import { InvoicesUpdateService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-update.service';
+import { InvoicesUpdateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-update.dto';
+import { InvoicesDeleteService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-delete.service';
+import { InvoicesStatusService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-status.service';
 
 @ApiTags('invoices')
 @Controller('/superadmin/saas-billing/invoices')

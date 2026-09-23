@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the white-labeling-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { WhiteLabelingStatusDto } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/dtos/white-labeling-status.dto';
+import { WhiteLabelingStatusDto } from '@/backend_superadmin/modules/superadmin/white-labeling/dtos/white-labeling-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { WhiteLabelingCreateService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-create.service';
-import { WhiteLabelingCreateDto } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/dtos/white-labeling-create.dto';
-import { WhiteLabelingUpdateService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-update.service';
-import { WhiteLabelingUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/dtos/white-labeling-update.dto';
-import { WhiteLabelingDeleteService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-delete.service';
-import { WhiteLabelingStatusService } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/services/white-labeling-status.service';
+import { WhiteLabelingCreateService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-create.service';
+import { WhiteLabelingCreateDto } from '@/backend_superadmin/modules/superadmin/white-labeling/dtos/white-labeling-create.dto';
+import { WhiteLabelingUpdateService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-update.service';
+import { WhiteLabelingUpdateDto } from '@/backend_superadmin/modules/superadmin/white-labeling/dtos/white-labeling-update.dto';
+import { WhiteLabelingDeleteService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-delete.service';
+import { WhiteLabelingStatusService } from '@/backend_superadmin/modules/superadmin/white-labeling/services/white-labeling-status.service';
 
 @ApiTags('white-labeling')
 @Controller('/superadmin/white-labeling')

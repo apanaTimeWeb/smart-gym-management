@@ -4,7 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getRequestContext } from '@/backend_superadmin/core/observability/request-context';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
 
 @Injectable()
 export class GymsOperationalService {

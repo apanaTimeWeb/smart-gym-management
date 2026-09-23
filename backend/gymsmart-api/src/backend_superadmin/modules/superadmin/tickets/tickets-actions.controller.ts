@@ -7,9 +7,9 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { TicketsActionsService } from '@/backend_superadmin/modules/backend_superadmin/tickets/services/tickets-actions.service';
-import { TicketsAssignDto } from '@/backend_superadmin/modules/backend_superadmin/tickets/dtos/tickets-assign.dto';
-import { TicketsReplyDto } from '@/backend_superadmin/modules/backend_superadmin/tickets/dtos/tickets-reply.dto';
+import { TicketsActionsService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-actions.service';
+import { TicketsAssignDto } from '@/backend_superadmin/modules/superadmin/tickets/dtos/tickets-assign.dto';
+import { TicketsReplyDto } from '@/backend_superadmin/modules/superadmin/tickets/dtos/tickets-reply.dto';
 
 
 @ApiTags('tickets-actions')

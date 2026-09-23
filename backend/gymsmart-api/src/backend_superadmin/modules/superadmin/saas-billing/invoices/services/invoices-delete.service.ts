@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the invoices feature.
 // FLOW: CommandController -> InvoicesDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { InvoicesRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.repository';
+import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';
 @Injectable()
 export class InvoicesDeleteService {
   constructor(private readonly repository: InvoicesRepository) {}

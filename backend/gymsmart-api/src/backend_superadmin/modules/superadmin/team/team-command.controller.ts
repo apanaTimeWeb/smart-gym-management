@@ -8,11 +8,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { TeamCreateService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-create.service';
-import { TeamCreateDto } from '@/backend_superadmin/modules/backend_superadmin/team/dtos/team-create.dto';
-import { TeamUpdateService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-update.service';
-import { TeamUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/team/dtos/team-update.dto';
-import { TeamDeleteService } from '@/backend_superadmin/modules/backend_superadmin/team/services/team-delete.service';
+import { TeamCreateService } from '@/backend_superadmin/modules/superadmin/team/services/team-create.service';
+import { TeamCreateDto } from '@/backend_superadmin/modules/superadmin/team/dtos/team-create.dto';
+import { TeamUpdateService } from '@/backend_superadmin/modules/superadmin/team/services/team-update.service';
+import { TeamUpdateDto } from '@/backend_superadmin/modules/superadmin/team/dtos/team-update.dto';
+import { TeamDeleteService } from '@/backend_superadmin/modules/superadmin/team/services/team-delete.service';
 
 @ApiTags('team')
 @Controller('/superadmin/team')

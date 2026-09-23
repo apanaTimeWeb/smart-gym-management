@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the analytics feature.
 // FLOW: QueryController -> AnalyticsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { AnalyticsRepository } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.repository';
-import { AnalyticsMapper } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.mapper';
+import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';
+import { AnalyticsMapper } from '@/backend_superadmin/modules/superadmin/analytics/analytics.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
-import type { AnalyticsListQuery } from '@/backend_superadmin/modules/backend_superadmin/analytics/types/analytics.interfaces';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
+import type { AnalyticsListQuery } from '@/backend_superadmin/modules/superadmin/analytics/types/analytics.interfaces';
 
 @Injectable()
 export class AnalyticsListService {

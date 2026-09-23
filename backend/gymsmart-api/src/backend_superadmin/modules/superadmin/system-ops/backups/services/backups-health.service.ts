@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds live backup health from persisted backup records; no demo snapshot is used.
 // FLOW: Controller -> BackupsHealthService -> BackupsRepository -> PostgreSQL backup_records.
 import { Injectable } from '@nestjs/common';
-import { BackupsHealthResponseDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups-health-response.dto';
-import { BackupsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.repository';
+import { BackupsHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups-health-response.dto';
+import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';
 
 @Injectable()
 export class BackupsHealthService {

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Returns redemption records associated with one coupon.
 // FLOW: Controller -> CouponsRedemptionsService -> CouponsRepository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
-import { CouponsRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/coupons.repository';
+import { CouponsRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.repository';
 @Injectable()
 export class CouponsRedemptionsService {
   constructor(private readonly repository: CouponsRepository) {}

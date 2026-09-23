@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { JobsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-query.dto';
-import { JobsListService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-list.service';
-import { JobsFindService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-find.service';
+import { JobsQueryDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-query.dto';
+import { JobsListService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-list.service';
+import { JobsFindService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-find.service';
 
 @ApiTags('jobs')
 @Controller('/superadmin/system-ops/jobs')

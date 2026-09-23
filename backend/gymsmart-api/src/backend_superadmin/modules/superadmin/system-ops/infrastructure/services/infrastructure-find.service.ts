@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes single-record retrieval for the infrastructure feature.
 // FLOW: QueryController -> InfrastructureFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
-import { InfrastructureRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure.repository';
-import { InfrastructureMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure.mapper';
-import type { InfrastructureDomainModel } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
+import { InfrastructureRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.repository';
+import { InfrastructureMapper } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.mapper';
+import type { InfrastructureDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/types/infrastructure.interfaces';
 @Injectable()
 export class InfrastructureFindService {
   constructor(private readonly repository: InfrastructureRepository) {}

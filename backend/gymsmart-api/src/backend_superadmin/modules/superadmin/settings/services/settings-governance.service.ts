@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Projects live platform settings into the governance response consumed by Superadmin UI.
 // FLOW: SettingsGovernanceQueryController -> SettingsGovernanceService -> SettingsRepository -> platform settings rows.
 import { Injectable } from '@nestjs/common';
-import { SettingsGovernanceResponseDto } from '@/backend_superadmin/modules/backend_superadmin/settings/settings-governance-response.dto';
-import { SettingsRepository } from '@/backend_superadmin/modules/backend_superadmin/settings/settings.repository';
+import { SettingsGovernanceResponseDto } from '@/backend_superadmin/modules/superadmin/settings/settings-governance-response.dto';
+import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';
 
 @Injectable()
 export class SettingsGovernanceService {

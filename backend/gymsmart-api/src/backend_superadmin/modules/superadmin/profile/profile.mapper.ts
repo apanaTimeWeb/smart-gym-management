@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Maps profile persistence state into the public, credential-safe profile domain model.
 // FLOW: TypeORM profile entity -> ProfileMapper -> public profile domain object.
-import type { ProfileEntity } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.entity';
-import type { ProfileDomainModel } from '@/backend_superadmin/modules/backend_superadmin/profile/types/profile.interfaces';
+import type { ProfileEntity } from '@/backend_superadmin/modules/superadmin/profile/profile.entity';
+import type { ProfileDomainModel } from '@/backend_superadmin/modules/superadmin/profile/types/profile.interfaces';
 
 export class ProfileMapper {
   /** Excludes the password hash from public profile data while preserving frontend contract fields. */

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Changes the authenticated Superadmin password after verifying the current credential.
 // FLOW: ProfileSpecialController -> bcrypt verification -> repository update -> completion.
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
-import { ProfileRepository } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.repository';
+import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

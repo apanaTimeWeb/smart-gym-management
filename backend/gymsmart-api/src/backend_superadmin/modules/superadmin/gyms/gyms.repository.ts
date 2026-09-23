@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { GymsEntity } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.entity';
-import type { GymsListQuery, GymsCreateInput, GymsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
+import { GymsEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
+import type { GymsListQuery, GymsCreateInput, GymsUpdateInput } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 
 @Injectable()
 export class GymsRepository extends BaseRepository<GymsEntity> {

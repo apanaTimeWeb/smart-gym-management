@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { BackupsEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.entity';
-import type { BackupsListQuery, BackupsCreateInput, BackupsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/types/backups.interfaces';
+import { BackupsEntity } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.entity';
+import type { BackupsListQuery, BackupsCreateInput, BackupsUpdateInput } from '@/backend_superadmin/modules/superadmin/system-ops/backups/types/backups.interfaces';
 
 @Injectable()
 export class BackupsRepository extends BaseRepository<BackupsEntity> {

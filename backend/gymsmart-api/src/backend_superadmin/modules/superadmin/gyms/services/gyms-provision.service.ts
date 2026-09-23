@@ -10,13 +10,13 @@ import { EncryptionService } from '@/backend_superadmin/core/security/encryption
 import { TenantDatabaseProvisionerService } from '@/backend_superadmin/core/tenancy/tenant-database-provisioner.service';
 import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tenant-registry.repository';
 import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-work.service';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsMapper } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.mapper';
-import { GymsStatus } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-update.dto';
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
-import { GymsBusinessException } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.exceptions';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsMapper } from '@/backend_superadmin/modules/superadmin/gyms/gyms.mapper';
+import { GymsStatus } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-update.dto';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
+import { GymsBusinessException } from '@/backend_superadmin/modules/superadmin/gyms/gyms.exceptions';
 import * as bcrypt from 'bcrypt';
-import type { GymsProvisionInput } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
+import type { GymsProvisionInput } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 
 @Injectable()
 export class GymsProvisionService {

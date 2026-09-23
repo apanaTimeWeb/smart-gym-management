@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the migrations feature.
 // FLOW: QueryController -> MigrationsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { MigrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.repository';
-import { MigrationsMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.mapper';
+import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';
+import { MigrationsMapper } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { MigrationsListQuery } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/types/migrations.interfaces';
+import type { MigrationsListQuery } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/types/migrations.interfaces';
 
 @Injectable()
 export class MigrationsListService {

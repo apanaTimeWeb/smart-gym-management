@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Integrations ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> IntegrationsMapper -> domain model -> response DTO.
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
-import type { IntegrationsEntity } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.entity';
-import type { IntegrationsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/integrations/types/integrations.interfaces';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
+import type { IntegrationsEntity } from '@/backend_superadmin/modules/superadmin/integrations/integrations.entity';
+import type { IntegrationsDomainModel } from '@/backend_superadmin/modules/superadmin/integrations/types/integrations.interfaces';
 
 export class IntegrationsMapper {
   /** Maps a persistence entity to the domain representation. */

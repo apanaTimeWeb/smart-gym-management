@@ -2,9 +2,9 @@
 // FLOW: Controller -> GymsBusinessControlsService -> GymsRepository -> contract data -> ResponseInterceptor.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsListQuery } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
-import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms-business-controls-response.dto';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsListQuery } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
+import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-business-controls-response.dto';
 
 @Injectable()
 export class GymsBusinessControlsService {

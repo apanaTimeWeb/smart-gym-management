@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { ReportsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/reports/dtos/reports-query.dto';
-import { ReportsListService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-list.service';
-import { ReportsFindService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-find.service';
-import { ReportsDataService } from '@/backend_superadmin/modules/backend_superadmin/reports/services/reports-data.service';
-import { ReportsDataQueryDto } from '@/backend_superadmin/modules/backend_superadmin/reports/dtos/reports-data-query.dto';
+import { ReportsQueryDto } from '@/backend_superadmin/modules/superadmin/reports/dtos/reports-query.dto';
+import { ReportsListService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-list.service';
+import { ReportsFindService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-find.service';
+import { ReportsDataService } from '@/backend_superadmin/modules/superadmin/reports/services/reports-data.service';
+import { ReportsDataQueryDto } from '@/backend_superadmin/modules/superadmin/reports/dtos/reports-data-query.dto';
 
 @ApiTags('reports')
 @Controller('/superadmin/reports')

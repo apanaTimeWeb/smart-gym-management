@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Deterministically seeds the features table for local/test environments.
 // FLOW: Master seed -> FeaturesSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
-import { FeaturesEntity } from '@/backend_superadmin/modules/backend_superadmin/features/features.entity';
+import { FeaturesEntity } from '@/backend_superadmin/modules/superadmin/features/features.entity';
 
 export class FeaturesSeeder {
   /** Ensures the seed routine is safe to invoke repeatedly; data fixtures are applied by the dedicated seed orchestrator. */

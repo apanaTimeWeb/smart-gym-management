@@ -3,11 +3,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BackgroundJobStatus } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/jobs.entity';
+import { BackgroundJobStatus } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.entity';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { JobsEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/jobs.entity';
-import type { JobsListQuery, JobsCreateInput, JobsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/types/jobs.interfaces';
+import { JobsEntity } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.entity';
+import type { JobsListQuery, JobsCreateInput, JobsUpdateInput } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/types/jobs.interfaces';
 
 @Injectable()
 export class JobsRepository extends BaseRepository<JobsEntity> {

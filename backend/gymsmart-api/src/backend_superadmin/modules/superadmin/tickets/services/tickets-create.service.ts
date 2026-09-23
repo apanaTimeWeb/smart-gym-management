@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes creation business flow for the tickets feature.
 // FLOW: CommandController -> TicketsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
-import { TicketsRepository } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.repository';
-import { TicketsMapper } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.mapper';
-import type { TicketsCreateInput, TicketsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/tickets/types/tickets.interfaces';
+import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';
+import { TicketsMapper } from '@/backend_superadmin/modules/superadmin/tickets/tickets.mapper';
+import type { TicketsCreateInput, TicketsDomainModel } from '@/backend_superadmin/modules/superadmin/tickets/types/tickets.interfaces';
 @Injectable()
 export class TicketsCreateService {
   constructor(private readonly repository: TicketsRepository) {}

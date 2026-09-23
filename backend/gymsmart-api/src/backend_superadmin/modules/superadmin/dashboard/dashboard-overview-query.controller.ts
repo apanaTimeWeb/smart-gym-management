@@ -7,20 +7,20 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
-import { DashboardKpisService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-kpis.service';
-import { DashboardRevenueChartService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-revenue-chart.service';
-import { DashboardGrowthChartService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-growth-chart.service';
-import { DashboardRevenueByTierService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-revenue-by-tier.service';
-import { DashboardRevenueByGeographyService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-revenue-by-geography.service';
-import { DashboardRecentOnboardsService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-recent-onboards.service';
-import { DashboardKpisResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-kpis-response.dto';
-import { DashboardRevenueChartResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-revenue-chart-response.dto';
-import { DashboardGrowthChartResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-growth-chart-response.dto';
-import { DashboardRevenueByTierResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-revenue-by-tier-response.dto';
-import { DashboardRevenueByGeographyResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-revenue-by-geography-response.dto';
-import { DashboardRecentOnboardsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-recent-onboards-response.dto';
-import { DashboardBusinessOverviewResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dashboard-business-overview-response.dto';
-import { DashboardBusinessOverviewService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-business-overview.service';
+import { DashboardKpisService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-kpis.service';
+import { DashboardRevenueChartService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-revenue-chart.service';
+import { DashboardGrowthChartService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-growth-chart.service';
+import { DashboardRevenueByTierService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-revenue-by-tier.service';
+import { DashboardRevenueByGeographyService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-revenue-by-geography.service';
+import { DashboardRecentOnboardsService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-recent-onboards.service';
+import { DashboardKpisResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-kpis-response.dto';
+import { DashboardRevenueChartResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-revenue-chart-response.dto';
+import { DashboardGrowthChartResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-growth-chart-response.dto';
+import { DashboardRevenueByTierResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-revenue-by-tier-response.dto';
+import { DashboardRevenueByGeographyResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-revenue-by-geography-response.dto';
+import { DashboardRecentOnboardsResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-recent-onboards-response.dto';
+import { DashboardBusinessOverviewResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard-business-overview-response.dto';
+import { DashboardBusinessOverviewService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-business-overview.service';
 
 @ApiTags('dashboard')
 @Controller()

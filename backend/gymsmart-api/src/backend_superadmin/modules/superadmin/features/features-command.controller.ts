@@ -9,13 +9,13 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { FeaturesCreateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-create.dto';
-import { FeaturesUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-update.dto';
-import { FeaturesCreateService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-create.service';
-import { FeaturesUpdateService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-update.service';
-import { FeaturesDeleteService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-delete.service';
-import { FeaturesToggleService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-toggle.service';
-import { FeaturesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/responses/features-response.dto';
+import { FeaturesCreateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-create.dto';
+import { FeaturesUpdateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-update.dto';
+import { FeaturesCreateService } from '@/backend_superadmin/modules/superadmin/features/services/features-create.service';
+import { FeaturesUpdateService } from '@/backend_superadmin/modules/superadmin/features/services/features-update.service';
+import { FeaturesDeleteService } from '@/backend_superadmin/modules/superadmin/features/services/features-delete.service';
+import { FeaturesToggleService } from '@/backend_superadmin/modules/superadmin/features/services/features-toggle.service';
+import { FeaturesResponseDto } from '@/backend_superadmin/modules/superadmin/features/responses/features-response.dto';
 
 
 @ApiTags('features')

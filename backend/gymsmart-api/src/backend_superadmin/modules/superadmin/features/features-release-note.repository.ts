@@ -3,7 +3,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FeaturesReleaseNoteEntity } from '@/backend_superadmin/modules/backend_superadmin/features/features-release-note.entity';
+import { FeaturesReleaseNoteEntity } from '@/backend_superadmin/modules/superadmin/features/features-release-note.entity';
 @Injectable()
 export class FeaturesReleaseNoteRepository {
   constructor(@InjectRepository(FeaturesReleaseNoteEntity) private readonly repository: Repository<FeaturesReleaseNoteEntity>) {}

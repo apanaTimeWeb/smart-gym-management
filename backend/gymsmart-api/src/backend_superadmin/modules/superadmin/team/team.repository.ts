@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { TeamEntity } from '@/backend_superadmin/modules/backend_superadmin/team/team.entity';
-import type { TeamListQuery, TeamCreateInput, TeamUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/team/types/team.interfaces';
+import { TeamEntity } from '@/backend_superadmin/modules/superadmin/team/team.entity';
+import type { TeamListQuery, TeamCreateInput, TeamUpdateInput } from '@/backend_superadmin/modules/superadmin/team/types/team.interfaces';
 
 @Injectable()
 export class TeamRepository extends BaseRepository<TeamEntity> {

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Returns current tenant usage-meter rows from PostgreSQL.
 // FLOW: Controller -> UsageMetersMainService -> UsageMetersRepository -> response.
 import { Injectable } from '@nestjs/common';
-import { UsageMetersRepository } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/usage-meters.repository';
-import type { UsageMetersListQuery } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/types/usage-meters.interfaces';
+import { UsageMetersRepository } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.repository';
+import type { UsageMetersListQuery } from '@/backend_superadmin/modules/superadmin/usage-meters/types/usage-meters.interfaces';
 
 @Injectable()
 export class UsageMetersMainService {

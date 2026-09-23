@@ -8,11 +8,11 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { BackupsScheduleDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-schedule.dto';
-import { BackupsTriggerDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-trigger.dto';
-import { BackupsScheduleService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-schedule.service';
-import { BackupsTriggerService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-trigger.service';
-import { BackupsRestoreService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-restore.service';
+import { BackupsScheduleDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-schedule.dto';
+import { BackupsTriggerDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-trigger.dto';
+import { BackupsScheduleService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-schedule.service';
+import { BackupsTriggerService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-trigger.service';
+import { BackupsRestoreService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-restore.service';
 
 @ApiTags('backupsoperationscommand')
 @Controller()

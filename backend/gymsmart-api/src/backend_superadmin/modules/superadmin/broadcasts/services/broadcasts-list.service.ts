@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Executes paginated read logic for the broadcasts feature.
 // FLOW: QueryController -> BroadcastsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { BroadcastsRepository } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.repository';
-import { BroadcastsMapper } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.mapper';
+import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';
+import { BroadcastsMapper } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import { BroadcastsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/responses/broadcasts-response.dto';
-import type { BroadcastsListQuery } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/types/broadcasts.interfaces';
+import { BroadcastsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
+import type { BroadcastsListQuery } from '@/backend_superadmin/modules/superadmin/broadcasts/types/broadcasts.interfaces';
 
 @Injectable()
 export class BroadcastsListService {

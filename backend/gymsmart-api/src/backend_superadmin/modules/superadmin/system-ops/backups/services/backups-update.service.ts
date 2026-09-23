@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes partial update business flow for the backups feature.
 // FLOW: CommandController -> BackupsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
-import { BackupsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.repository';
-import { BackupsMapper } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/backups.mapper';
-import type { BackupsDomainModel, BackupsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/types/backups.interfaces';
+import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';
+import { BackupsMapper } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.mapper';
+import type { BackupsDomainModel, BackupsUpdateInput } from '@/backend_superadmin/modules/superadmin/system-ops/backups/types/backups.interfaces';
 @Injectable()
 export class BackupsUpdateService {
   constructor(private readonly repository: BackupsRepository) {}

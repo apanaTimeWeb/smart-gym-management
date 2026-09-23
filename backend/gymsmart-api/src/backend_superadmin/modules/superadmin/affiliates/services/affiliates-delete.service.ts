@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the affiliates feature.
 // FLOW: CommandController -> AffiliatesDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { AffiliatesRepository } from '@/backend_superadmin/modules/backend_superadmin/affiliates/affiliates.repository';
+import { AffiliatesRepository } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.repository';
 @Injectable()
 export class AffiliatesDeleteService {
   constructor(private readonly repository: AffiliatesRepository) {}

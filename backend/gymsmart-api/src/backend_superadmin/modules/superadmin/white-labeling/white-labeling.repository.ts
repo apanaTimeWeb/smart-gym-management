@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { WhiteLabelingEntity } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/white-labeling.entity';
-import type { WhiteLabelingListQuery, WhiteLabelingCreateInput, WhiteLabelingUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/types/white-labeling.interfaces';
+import { WhiteLabelingEntity } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.entity';
+import type { WhiteLabelingListQuery, WhiteLabelingCreateInput, WhiteLabelingUpdateInput } from '@/backend_superadmin/modules/superadmin/white-labeling/types/white-labeling.interfaces';
 
 @Injectable()
 export class WhiteLabelingRepository extends BaseRepository<WhiteLabelingEntity> {

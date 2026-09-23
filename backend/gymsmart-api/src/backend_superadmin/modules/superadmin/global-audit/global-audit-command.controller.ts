@@ -8,12 +8,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { GlobalAuditCreateService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-create.service';
-import { GlobalAuditCreateDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/dtos/global-audit-create.dto';
-import { GlobalAuditUpdateService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-update.service';
-import { GlobalAuditUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/dtos/global-audit-update.dto';
-import { GlobalAuditDeleteService } from '@/backend_superadmin/modules/backend_superadmin/global-audit/services/global-audit-delete.service';
-import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/backend_superadmin/global-audit/responses/global-audit-response.dto';
+import { GlobalAuditCreateService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-create.service';
+import { GlobalAuditCreateDto } from '@/backend_superadmin/modules/superadmin/global-audit/dtos/global-audit-create.dto';
+import { GlobalAuditUpdateService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-update.service';
+import { GlobalAuditUpdateDto } from '@/backend_superadmin/modules/superadmin/global-audit/dtos/global-audit-update.dto';
+import { GlobalAuditDeleteService } from '@/backend_superadmin/modules/superadmin/global-audit/services/global-audit-delete.service';
+import { GlobalAuditResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/responses/global-audit-response.dto';
 
 @ApiTags('global-audit')
 @Controller('/superadmin/global-audit')

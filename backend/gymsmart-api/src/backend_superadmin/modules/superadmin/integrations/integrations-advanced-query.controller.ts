@@ -7,8 +7,8 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IntegrationsMainService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-main.service';
-import { SuperadminIntegrationsResponseDataDto, SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response-data.dto';
+import { IntegrationsMainService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-main.service';
+import { SuperadminIntegrationsResponseDataDto, SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response-data.dto';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('integrationsadvancedquery')

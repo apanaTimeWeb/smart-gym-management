@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { MigrationsEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/migrations.entity';
-import type { MigrationsListQuery, MigrationsCreateInput, MigrationsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/types/migrations.interfaces';
+import { MigrationsEntity } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.entity';
+import type { MigrationsListQuery, MigrationsCreateInput, MigrationsUpdateInput } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/types/migrations.interfaces';
 
 @Injectable()
 export class MigrationsRepository extends BaseRepository<MigrationsEntity> {

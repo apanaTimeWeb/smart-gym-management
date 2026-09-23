@@ -5,9 +5,9 @@ import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { ComplianceEntity } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance.entity';
-import type { ComplianceListQuery, ComplianceCreateInput, ComplianceUpdateInput, ComplianceSummaryRow, ComplianceRegionRow } from '@/backend_superadmin/modules/backend_superadmin/compliance/types/compliance.interfaces';
-import { ComplianceDocumentStatus } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance-document.entity';
+import { ComplianceEntity } from '@/backend_superadmin/modules/superadmin/compliance/compliance.entity';
+import type { ComplianceListQuery, ComplianceCreateInput, ComplianceUpdateInput, ComplianceSummaryRow, ComplianceRegionRow } from '@/backend_superadmin/modules/superadmin/compliance/types/compliance.interfaces';
+import { ComplianceDocumentStatus } from '@/backend_superadmin/modules/superadmin/compliance/compliance-document.entity';
 
 interface ComplianceDocumentRow { tenant: string; document: string; status: string; expires: string | Date | null; }
 

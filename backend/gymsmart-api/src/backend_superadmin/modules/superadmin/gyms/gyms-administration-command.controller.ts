@@ -8,11 +8,11 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { GymsBusinessControlsBulkActionDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-business-controls-bulk-action.dto';
-import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms-business-controls-response.dto';
-import { GymsBulkActionService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-bulk-action.service';
-import { GymsOperationalService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-operational.service';
-import { GymsOwnerEmailDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-owner-email.dto';
+import { GymsBusinessControlsBulkActionDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-business-controls-bulk-action.dto';
+import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-business-controls-response.dto';
+import { GymsBulkActionService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-bulk-action.service';
+import { GymsOperationalService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-operational.service';
+import { GymsOwnerEmailDto } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-owner-email.dto';
 
 @ApiTags('gymsadministrationcommand')
 @Controller()

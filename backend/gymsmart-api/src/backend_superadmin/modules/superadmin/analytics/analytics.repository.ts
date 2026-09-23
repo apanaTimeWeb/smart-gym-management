@@ -5,8 +5,8 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { AnalyticsEntity } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.entity';
-import type { AnalyticsAdoptionRow, AnalyticsCancellationRow, AnalyticsCohortRow, AnalyticsConcentrationRow, AnalyticsCreateInput, AnalyticsDomainModel, AnalyticsListQuery, AnalyticsMonthlyRow, AnalyticsMovementRow, AnalyticsPlanRevenueRow, AnalyticsSourceRow, AnalyticsStatusRow, AnalyticsSummaryRow, AnalyticsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/analytics/types/analytics.interfaces';
+import { AnalyticsEntity } from '@/backend_superadmin/modules/superadmin/analytics/analytics.entity';
+import type { AnalyticsAdoptionRow, AnalyticsCancellationRow, AnalyticsCohortRow, AnalyticsConcentrationRow, AnalyticsCreateInput, AnalyticsDomainModel, AnalyticsListQuery, AnalyticsMonthlyRow, AnalyticsMovementRow, AnalyticsPlanRevenueRow, AnalyticsSourceRow, AnalyticsStatusRow, AnalyticsSummaryRow, AnalyticsUpdateInput } from '@/backend_superadmin/modules/superadmin/analytics/types/analytics.interfaces';
 
 @Injectable()
 export class AnalyticsRepository extends BaseRepository<AnalyticsEntity> {

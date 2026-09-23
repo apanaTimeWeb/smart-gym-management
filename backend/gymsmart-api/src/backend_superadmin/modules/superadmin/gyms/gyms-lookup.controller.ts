@@ -6,8 +6,8 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { GymsLookupService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-lookup.service';
-import type { GymsLookupItem } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-lookup.service';
+import { GymsLookupService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-lookup.service';
+import type { GymsLookupItem } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-lookup.service';
 @ApiTags('gyms-lookup')
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Deterministically seeds the messaging table for local/test environments.
 // FLOW: Master seed -> MessagingSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
-import { MessagingEntity } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.entity';
+import { MessagingEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';
 
 export class MessagingSeeder {
   /** Ensures the seed routine is safe to invoke repeatedly; data fixtures are applied by the dedicated seed orchestrator. */

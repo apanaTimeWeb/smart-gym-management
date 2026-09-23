@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { BackupsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/dtos/backups-query.dto';
-import { BackupsListService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-list.service';
-import { BackupsFindService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/backups/services/backups-find.service';
+import { BackupsQueryDto } from '@/backend_superadmin/modules/superadmin/system-ops/backups/dtos/backups-query.dto';
+import { BackupsListService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-list.service';
+import { BackupsFindService } from '@/backend_superadmin/modules/superadmin/system-ops/backups/services/backups-find.service';
 
 @ApiTags('backups')
 @Controller('/superadmin/system-ops/backups')

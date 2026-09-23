@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { CouponsEntity } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/coupons.entity';
-import type { CouponsListQuery, CouponsCreateInput, CouponsUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/types/coupons.interfaces';
+import { CouponsEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.entity';
+import type { CouponsListQuery, CouponsCreateInput, CouponsUpdateInput } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/types/coupons.interfaces';
 
 @Injectable()
 export class CouponsRepository extends BaseRepository<CouponsEntity> {

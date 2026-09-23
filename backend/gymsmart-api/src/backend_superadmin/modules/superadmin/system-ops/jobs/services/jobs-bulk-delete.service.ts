@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Implements the bulk-delete mutation against the jobs repository.
 // FLOW: Controller -> service -> JobsRepository -> PostgreSQL.
-import { JobsBulkActionDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-bulk-action.dto';
+import { JobsBulkActionDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-bulk-action.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JobsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/jobs.repository';
+import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';
 
 @Injectable()
 export class JobsBulkDeleteService {

@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the jobs-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { JobsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-status.dto';
+import { JobsStatusDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { JobsCreateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-create.service';
-import { JobsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-create.dto';
-import { JobsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-update.service';
-import { JobsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/dtos/jobs-update.dto';
-import { JobsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-delete.service';
-import { JobsStatusService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/services/jobs-status.service';
+import { JobsCreateService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-create.service';
+import { JobsCreateDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-create.dto';
+import { JobsUpdateService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-update.service';
+import { JobsUpdateDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/dtos/jobs-update.dto';
+import { JobsDeleteService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-delete.service';
+import { JobsStatusService } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/services/jobs-status.service';
 
 @ApiTags('jobs')
 @Controller('/superadmin/system-ops/jobs')

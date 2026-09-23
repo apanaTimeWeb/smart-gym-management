@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the analytics feature.
 // FLOW: CommandController -> AnalyticsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { AnalyticsRepository } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.repository';
+import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';
 @Injectable()
 export class AnalyticsDeleteService {
   constructor(private readonly repository: AnalyticsRepository) {}

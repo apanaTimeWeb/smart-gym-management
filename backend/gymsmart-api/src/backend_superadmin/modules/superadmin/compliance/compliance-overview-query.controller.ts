@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { ComplianceResponseDataDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/compliance-response-data.dto';
+import { ComplianceResponseDataDto } from '@/backend_superadmin/modules/superadmin/compliance/compliance-response-data.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ComplianceMainService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-main.service';
+import { ComplianceMainService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-main.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('complianceoverviewquery')

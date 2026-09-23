@@ -6,12 +6,12 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { FeaturesQueryDto } from '@/backend_superadmin/modules/backend_superadmin/features/dtos/features-query.dto';
-import { FeaturesListService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-list.service';
-import { FeaturesFindService } from '@/backend_superadmin/modules/backend_superadmin/features/services/features-find.service';
-import { FeaturesRepository } from '@/backend_superadmin/modules/backend_superadmin/features/features.repository';
-import { FeaturesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/features/responses/features-response.dto';
-import { FeaturesHistoryEntryDto } from '@/backend_superadmin/modules/backend_superadmin/features/features-history-entry.dto';
+import { FeaturesQueryDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-query.dto';
+import { FeaturesListService } from '@/backend_superadmin/modules/superadmin/features/services/features-list.service';
+import { FeaturesFindService } from '@/backend_superadmin/modules/superadmin/features/services/features-find.service';
+import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
+import { FeaturesResponseDto } from '@/backend_superadmin/modules/superadmin/features/responses/features-response.dto';
+import { FeaturesHistoryEntryDto } from '@/backend_superadmin/modules/superadmin/features/features-history-entry.dto';
 
 @ApiTags('features')
 @Controller('/superadmin/features')

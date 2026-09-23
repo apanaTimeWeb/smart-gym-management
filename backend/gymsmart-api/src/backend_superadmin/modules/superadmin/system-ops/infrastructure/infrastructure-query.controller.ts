@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { InfrastructureQueryDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/dtos/infrastructure-query.dto';
-import { InfrastructureListService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-list.service';
-import { InfrastructureFindService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-find.service';
+import { InfrastructureQueryDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/dtos/infrastructure-query.dto';
+import { InfrastructureListService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-list.service';
+import { InfrastructureFindService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-find.service';
 
 @ApiTags('infrastructure')
 @Controller('/superadmin/system-ops/infrastructure')

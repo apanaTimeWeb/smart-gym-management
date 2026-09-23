@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Applies the exact Superadmin tenant bulk actions and returns the complete business-controls contract.
 // FLOW: Controller -> GymsBulkActionService -> GymsRepository -> persisted tenant state -> contract projection.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { GymsRepository } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.repository';
-import { GymsBusinessControlsService } from '@/backend_superadmin/modules/backend_superadmin/gyms/services/gyms-business-controls.service';
-import { TenantStatus } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.entity';
+import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
+import { GymsBusinessControlsService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-business-controls.service';
+import { TenantStatus } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
 import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-work.service';
 
 @Injectable()

@@ -2,7 +2,7 @@
 // FLOW: Controller -> InfrastructureApiHealthService -> MetricsService -> live telemetry response.
 import { Injectable } from '@nestjs/common';
 import { MetricsService } from '@/backend_superadmin/core/observability/metrics.service';
-import { InfrastructureApiHealthResponseDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/infrastructure-api-health-response.dto';
+import { InfrastructureApiHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-api-health-response.dto';
 
 @Injectable()
 export class InfrastructureApiHealthService {

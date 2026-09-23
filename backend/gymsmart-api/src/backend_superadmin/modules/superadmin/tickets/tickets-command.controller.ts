@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the tickets-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { TicketsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/tickets/dtos/tickets-status.dto';
+import { TicketsStatusDto } from '@/backend_superadmin/modules/superadmin/tickets/dtos/tickets-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { TicketsCreateService } from '@/backend_superadmin/modules/backend_superadmin/tickets/services/tickets-create.service';
-import { TicketsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/tickets/dtos/tickets-create.dto';
-import { TicketsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/tickets/services/tickets-update.service';
-import { TicketsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/tickets/dtos/tickets-update.dto';
-import { TicketsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/tickets/services/tickets-delete.service';
-import { TicketsStatusService } from '@/backend_superadmin/modules/backend_superadmin/tickets/services/tickets-status.service';
+import { TicketsCreateService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-create.service';
+import { TicketsCreateDto } from '@/backend_superadmin/modules/superadmin/tickets/dtos/tickets-create.dto';
+import { TicketsUpdateService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-update.service';
+import { TicketsUpdateDto } from '@/backend_superadmin/modules/superadmin/tickets/dtos/tickets-update.dto';
+import { TicketsDeleteService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-delete.service';
+import { TicketsStatusService } from '@/backend_superadmin/modules/superadmin/tickets/services/tickets-status.service';
 
 @ApiTags('tickets')
 @Controller('/superadmin/tickets')

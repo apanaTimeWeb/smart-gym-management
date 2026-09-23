@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Maps Invoices ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> InvoicesMapper -> domain model -> response DTO.
-import type { InvoicesEntity } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/invoices.entity';
-import type { InvoicesDomainModel } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/types/invoices.interfaces';
+import type { InvoicesEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.entity';
+import type { InvoicesDomainModel } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/types/invoices.interfaces';
 
 export class InvoicesMapper {
   /** Maps a persistence entity to the domain representation. */

@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Applies the export proof-of-delivery medium contract and performs configured fallback routing.
 // FLOW: Export worker -> requested medium -> fallback medium on failure -> delivery result.
 import { Injectable } from '@nestjs/common';
-import { ExportDataDeliveryMedium } from '@/backend_superadmin/modules/backend_superadmin/export-data/dtos/export-data-request.dto';
-import { ExportDataEmailAdapter } from '@/backend_superadmin/modules/backend_superadmin/export-data/adapters/export-data-email.adapter';
-import { ExportDataWhatsappAdapter } from '@/backend_superadmin/modules/backend_superadmin/export-data/adapters/export-data-whatsapp.adapter';
-import { ExportDeliveryRecipientMissingException } from '@/backend_superadmin/modules/backend_superadmin/export-data/export-data.exceptions';
+import { ExportDataDeliveryMedium } from '@/backend_superadmin/modules/superadmin/export-data/dtos/export-data-request.dto';
+import { ExportDataEmailAdapter } from '@/backend_superadmin/modules/superadmin/export-data/adapters/export-data-email.adapter';
+import { ExportDataWhatsappAdapter } from '@/backend_superadmin/modules/superadmin/export-data/adapters/export-data-whatsapp.adapter';
+import { ExportDeliveryRecipientMissingException } from '@/backend_superadmin/modules/superadmin/export-data/export-data.exceptions';
 
 export interface ExportDataDeliveryTarget { email: string | null; phone: string | null; medium: ExportDataDeliveryMedium; }
 

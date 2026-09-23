@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { MigrationsQueryDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/dtos/migrations-query.dto';
-import { MigrationsListService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-list.service';
-import { MigrationsFindService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/migrations/services/migrations-find.service';
+import { MigrationsQueryDto } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/dtos/migrations-query.dto';
+import { MigrationsListService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-list.service';
+import { MigrationsFindService } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/services/migrations-find.service';
 
 @ApiTags('migrations')
 @Controller()

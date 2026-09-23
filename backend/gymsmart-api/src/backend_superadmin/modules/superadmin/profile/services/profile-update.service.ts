@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Handles the update endpoint for the profile feature without owning unrelated business flows.
 // FLOW: Controller -> ProfileUpdateService -> feature repository/infra dependency -> typed result.
 import { Injectable } from '@nestjs/common';
-import { ProfileRepository } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.repository';
-import { ProfileMapper } from '@/backend_superadmin/modules/backend_superadmin/profile/profile.mapper';
-import type { ProfileDomainModel, ProfileUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/profile/types/profile.interfaces';
+import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';
+import { ProfileMapper } from '@/backend_superadmin/modules/superadmin/profile/profile.mapper';
+import type { ProfileDomainModel, ProfileUpdateInput } from '@/backend_superadmin/modules/superadmin/profile/types/profile.interfaces';
 @Injectable()
 export class ProfileUpdateService {
   constructor(private readonly repository: ProfileRepository) {}

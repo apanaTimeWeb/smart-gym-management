@@ -8,7 +8,7 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { CouponsRestoreService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/services/coupons-restore.service';
+import { CouponsRestoreService } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/services/coupons-restore.service';
 
 @ApiTags('couponsrestorecommand')
 @Controller()

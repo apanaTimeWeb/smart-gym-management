@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the reports feature.
 // FLOW: CommandController -> ReportsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { ReportsRepository } from '@/backend_superadmin/modules/backend_superadmin/reports/reports.repository';
+import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
 @Injectable()
 export class ReportsDeleteService {
   constructor(private readonly repository: ReportsRepository) {}

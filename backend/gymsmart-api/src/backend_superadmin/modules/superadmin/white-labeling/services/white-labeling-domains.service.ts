@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Returns live white-label domains from the owning repository.
 // FLOW: Controller -> WhiteLabelingDomainsService -> WhiteLabelingRepository -> domain rows.
 import { Injectable } from '@nestjs/common';
-import { WhiteLabelingRepository } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/white-labeling.repository';
+import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { WhiteLabelingListQuery } from '@/backend_superadmin/modules/backend_superadmin/white-labeling/types/white-labeling.interfaces';
+import type { WhiteLabelingListQuery } from '@/backend_superadmin/modules/superadmin/white-labeling/types/white-labeling.interfaces';
 
 @Injectable()
 export class WhiteLabelingDomainsService {

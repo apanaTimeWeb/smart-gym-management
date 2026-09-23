@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { ProfileQueryDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-query.dto';
-import { ProfileListService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-list.service';
-import { ProfileFindService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-find.service';
+import { ProfileQueryDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-query.dto';
+import { ProfileListService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-list.service';
+import { ProfileFindService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-find.service';
 
 @ApiTags('profile')
 @Controller('/superadmin/profile')

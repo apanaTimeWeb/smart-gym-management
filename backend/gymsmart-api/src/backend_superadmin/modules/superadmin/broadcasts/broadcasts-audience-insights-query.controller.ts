@@ -6,9 +6,9 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts-audience-insights-response.dto';
+import { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-audience-insights.service';
+import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
 import { SuperadminQueryDto } from '@/backend_superadmin/core/pagination/superadmin-query.dto';
 
 @ApiTags('broadcastsaudienceinsightsquery')

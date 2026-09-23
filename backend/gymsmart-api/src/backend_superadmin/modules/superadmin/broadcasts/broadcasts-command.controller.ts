@@ -8,14 +8,14 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { BroadcastsCreateService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-create.service';
-import { BroadcastsCreateDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/dtos/broadcasts-create.dto';
-import { BroadcastsUpdateService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-update.service';
-import { BroadcastsUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/dtos/broadcasts-update.dto';
-import { BroadcastsDeleteService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-delete.service';
-import { BroadcastsStatusService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-status.service';
-import { BroadcastsStatusDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/dtos/broadcasts-status.dto';
-import { BroadcastsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/responses/broadcasts-response.dto';
+import { BroadcastsCreateService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-create.service';
+import { BroadcastsCreateDto } from '@/backend_superadmin/modules/superadmin/broadcasts/dtos/broadcasts-create.dto';
+import { BroadcastsUpdateService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-update.service';
+import { BroadcastsUpdateDto } from '@/backend_superadmin/modules/superadmin/broadcasts/dtos/broadcasts-update.dto';
+import { BroadcastsDeleteService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-delete.service';
+import { BroadcastsStatusService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-status.service';
+import { BroadcastsStatusDto } from '@/backend_superadmin/modules/superadmin/broadcasts/dtos/broadcasts-status.dto';
+import { BroadcastsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 
 @ApiTags('broadcasts')
 @Controller('/superadmin/broadcasts')

@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the tickets feature.
 // FLOW: QueryController -> TicketsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { TicketsRepository } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.repository';
-import { TicketsMapper } from '@/backend_superadmin/modules/backend_superadmin/tickets/tickets.mapper';
+import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';
+import { TicketsMapper } from '@/backend_superadmin/modules/superadmin/tickets/tickets.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { TicketsListQuery } from '@/backend_superadmin/modules/backend_superadmin/tickets/types/tickets.interfaces';
+import type { TicketsListQuery } from '@/backend_superadmin/modules/superadmin/tickets/types/tickets.interfaces';
 
 @Injectable()
 export class TicketsListService {

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Maps Jobs ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> JobsMapper -> domain model -> response DTO.
-import type { JobsEntity } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/jobs.entity';
-import type { JobsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/types/jobs.interfaces';
+import type { JobsEntity } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.entity';
+import type { JobsDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/types/jobs.interfaces';
 
 export class JobsMapper {
   /** Maps a persistence entity to the domain representation. */

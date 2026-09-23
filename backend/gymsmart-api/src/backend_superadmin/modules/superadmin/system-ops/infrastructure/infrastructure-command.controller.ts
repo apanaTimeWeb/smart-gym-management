@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the infrastructure-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { InfrastructureStatusDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/dtos/infrastructure-status.dto';
+import { InfrastructureStatusDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/dtos/infrastructure-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { InfrastructureCreateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-create.service';
-import { InfrastructureCreateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/dtos/infrastructure-create.dto';
-import { InfrastructureUpdateService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-update.service';
-import { InfrastructureUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/dtos/infrastructure-update.dto';
-import { InfrastructureDeleteService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-delete.service';
-import { InfrastructureStatusService } from '@/backend_superadmin/modules/backend_superadmin/system-ops/infrastructure/services/infrastructure-status.service';
+import { InfrastructureCreateService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-create.service';
+import { InfrastructureCreateDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/dtos/infrastructure-create.dto';
+import { InfrastructureUpdateService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-update.service';
+import { InfrastructureUpdateDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/dtos/infrastructure-update.dto';
+import { InfrastructureDeleteService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-delete.service';
+import { InfrastructureStatusService } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/services/infrastructure-status.service';
 
 @ApiTags('infrastructure')
 @Controller('/superadmin/system-ops/infrastructure')

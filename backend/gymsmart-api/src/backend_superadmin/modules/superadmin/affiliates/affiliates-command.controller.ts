@@ -8,15 +8,15 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { AffiliatesCreateService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-create.service';
-import { AffiliatesCreateDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/dtos/affiliates-create.dto';
-import { AffiliatesUpdateService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-update.service';
-import { AffiliatesUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/dtos/affiliates-update.dto';
-import { AffiliatesDeleteService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-delete.service';
-import { AffiliatesStatusService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-status.service';
-import { AffiliatesPayoutService } from '@/backend_superadmin/modules/backend_superadmin/affiliates/services/affiliates-payout.service';
-import { AffiliatesStatusDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/dtos/affiliates-status.dto';
-import { AffiliatesResponseDto } from '@/backend_superadmin/modules/backend_superadmin/affiliates/responses/affiliates-response.dto';
+import { AffiliatesCreateService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-create.service';
+import { AffiliatesCreateDto } from '@/backend_superadmin/modules/superadmin/affiliates/dtos/affiliates-create.dto';
+import { AffiliatesUpdateService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-update.service';
+import { AffiliatesUpdateDto } from '@/backend_superadmin/modules/superadmin/affiliates/dtos/affiliates-update.dto';
+import { AffiliatesDeleteService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-delete.service';
+import { AffiliatesStatusService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-status.service';
+import { AffiliatesPayoutService } from '@/backend_superadmin/modules/superadmin/affiliates/services/affiliates-payout.service';
+import { AffiliatesStatusDto } from '@/backend_superadmin/modules/superadmin/affiliates/dtos/affiliates-status.dto';
+import { AffiliatesResponseDto } from '@/backend_superadmin/modules/superadmin/affiliates/responses/affiliates-response.dto';
 
 @ApiTags('affiliates')
 @Controller('/superadmin/affiliates')

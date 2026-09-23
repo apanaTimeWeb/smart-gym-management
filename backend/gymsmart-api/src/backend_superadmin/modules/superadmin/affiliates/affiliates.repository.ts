@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { AffiliatesEntity } from '@/backend_superadmin/modules/backend_superadmin/affiliates/affiliates.entity';
-import type { AffiliatesListQuery, AffiliatesCreateInput, AffiliatesUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/affiliates/types/affiliates.interfaces';
+import { AffiliatesEntity } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.entity';
+import type { AffiliatesListQuery, AffiliatesCreateInput, AffiliatesUpdateInput } from '@/backend_superadmin/modules/superadmin/affiliates/types/affiliates.interfaces';
 
 @Injectable()
 export class AffiliatesRepository extends BaseRepository<AffiliatesEntity> {

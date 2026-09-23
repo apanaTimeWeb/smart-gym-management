@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { InvoicesQueryDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-query.dto';
-import { InvoicesListService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-list.service';
-import { InvoicesFindService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-find.service';
-import { InvoicesExportService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/services/invoices-export.service';
-import { InvoicesExportQueryDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/invoices/dtos/invoices-export-query.dto';
+import { InvoicesQueryDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-query.dto';
+import { InvoicesListService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-list.service';
+import { InvoicesFindService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-find.service';
+import { InvoicesExportService } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/services/invoices-export.service';
+import { InvoicesExportQueryDto } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/dtos/invoices-export-query.dto';
 
 @ApiTags('invoices')
 @Controller('/superadmin/saas-billing/invoices')

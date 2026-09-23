@@ -8,12 +8,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { ComplianceCreateService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-create.service';
-import { ComplianceCreateDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/dtos/compliance-create.dto';
-import { ComplianceUpdateService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-update.service';
-import { ComplianceUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/dtos/compliance-update.dto';
-import { ComplianceDeleteService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-delete.service';
-import { ComplianceResponseDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/responses/compliance-response.dto';
+import { ComplianceCreateService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-create.service';
+import { ComplianceCreateDto } from '@/backend_superadmin/modules/superadmin/compliance/dtos/compliance-create.dto';
+import { ComplianceUpdateService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-update.service';
+import { ComplianceUpdateDto } from '@/backend_superadmin/modules/superadmin/compliance/dtos/compliance-update.dto';
+import { ComplianceDeleteService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-delete.service';
+import { ComplianceResponseDto } from '@/backend_superadmin/modules/superadmin/compliance/responses/compliance-response.dto';
 
 @ApiTags('compliance')
 @Controller('/superadmin/compliance')

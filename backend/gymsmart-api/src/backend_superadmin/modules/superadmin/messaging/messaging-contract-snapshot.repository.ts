@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MessagingContractSnapshotEntity } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-contract-snapshot.entity';
+import { MessagingContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging-contract-snapshot.entity';
 
 @Injectable()
 export class MessagingContractSnapshotRepository {

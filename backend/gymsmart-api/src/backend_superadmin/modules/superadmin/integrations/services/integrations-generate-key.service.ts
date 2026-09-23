@@ -2,11 +2,11 @@
 // FLOW: Controller -> IntegrationsGenerateKeyService -> crypto -> IntegrationsRepository -> response.
 import { Injectable } from '@nestjs/common';
 import { randomBytes, createHash } from 'node:crypto';
-import { IntegrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.repository';
-import { IntegrationKeyStatus } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.entity';
-import { IntegrationKeyScope } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.constants';
-import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-generate-key.dto';
-import { SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response-data.dto';
+import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';
+import { IntegrationKeyStatus } from '@/backend_superadmin/modules/superadmin/integrations/integrations.entity';
+import { IntegrationKeyScope } from '@/backend_superadmin/modules/superadmin/integrations/integrations.constants';
+import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-generate-key.dto';
+import { SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response-data.dto';
 
 @Injectable()
 export class IntegrationsGenerateKeyService {

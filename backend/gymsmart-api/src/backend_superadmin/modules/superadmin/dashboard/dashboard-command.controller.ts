@@ -8,12 +8,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { DashboardCreateService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-create.service';
-import { DashboardCreateDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dtos/dashboard-create.dto';
-import { DashboardUpdateService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-update.service';
-import { DashboardUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/dtos/dashboard-update.dto';
-import { DashboardDeleteService } from '@/backend_superadmin/modules/backend_superadmin/dashboard/services/dashboard-delete.service';
-import { DashboardResponseDto } from '@/backend_superadmin/modules/backend_superadmin/dashboard/responses/dashboard-response.dto';
+import { DashboardCreateService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-create.service';
+import { DashboardCreateDto } from '@/backend_superadmin/modules/superadmin/dashboard/dtos/dashboard-create.dto';
+import { DashboardUpdateService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-update.service';
+import { DashboardUpdateDto } from '@/backend_superadmin/modules/superadmin/dashboard/dtos/dashboard-update.dto';
+import { DashboardDeleteService } from '@/backend_superadmin/modules/superadmin/dashboard/services/dashboard-delete.service';
+import { DashboardResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/responses/dashboard-response.dto';
 
 @ApiTags('dashboard')
 @Controller('/superadmin/dashboard')

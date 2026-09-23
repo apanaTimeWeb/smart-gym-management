@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { UsageMetersEntity } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/usage-meters.entity';
-import type { UsageMetersListQuery, UsageMetersCreateInput, UsageMetersUpdateInput } from '@/backend_superadmin/modules/backend_superadmin/usage-meters/types/usage-meters.interfaces';
+import { UsageMetersEntity } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.entity';
+import type { UsageMetersListQuery, UsageMetersCreateInput, UsageMetersUpdateInput } from '@/backend_superadmin/modules/superadmin/usage-meters/types/usage-meters.interfaces';
 
 @Injectable()
 export class UsageMetersRepository extends BaseRepository<UsageMetersEntity> {

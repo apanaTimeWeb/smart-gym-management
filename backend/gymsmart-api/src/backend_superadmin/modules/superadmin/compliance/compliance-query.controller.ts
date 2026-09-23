@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { ComplianceQueryDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/dtos/compliance-query.dto';
-import { ComplianceListService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-list.service';
-import { ComplianceFindService } from '@/backend_superadmin/modules/backend_superadmin/compliance/services/compliance-find.service';
-import { ComplianceResponseDto } from '@/backend_superadmin/modules/backend_superadmin/compliance/responses/compliance-response.dto';
+import { ComplianceQueryDto } from '@/backend_superadmin/modules/superadmin/compliance/dtos/compliance-query.dto';
+import { ComplianceListService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-list.service';
+import { ComplianceFindService } from '@/backend_superadmin/modules/superadmin/compliance/services/compliance-find.service';
+import { ComplianceResponseDto } from '@/backend_superadmin/modules/superadmin/compliance/responses/compliance-response.dto';
 
 @ApiTags('compliance')
 @Controller('/superadmin/compliance')

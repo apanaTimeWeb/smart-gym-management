@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Performs status transitions for coupons records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
-import { CouponsRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/coupons.repository';
-import { CouponsMapper } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/coupons.mapper';
-import type { CouponsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/coupons/types/coupons.interfaces';
+import { CouponsRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.repository';
+import { CouponsMapper } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.mapper';
+import type { CouponsDomainModel } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/types/coupons.interfaces';
 @Injectable()
 export class CouponsStatusService {
   constructor(private readonly repository: CouponsRepository) {}

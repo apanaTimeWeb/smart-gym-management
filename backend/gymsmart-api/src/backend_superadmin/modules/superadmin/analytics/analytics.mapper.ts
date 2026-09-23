@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Analytics ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> AnalyticsMapper -> domain model -> response DTO.
-import { AnalyticsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/analytics/responses/analytics-response.dto';
-import type { AnalyticsEntity } from '@/backend_superadmin/modules/backend_superadmin/analytics/analytics.entity';
-import type { AnalyticsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/analytics/types/analytics.interfaces';
+import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';
+import type { AnalyticsEntity } from '@/backend_superadmin/modules/superadmin/analytics/analytics.entity';
+import type { AnalyticsDomainModel } from '@/backend_superadmin/modules/superadmin/analytics/types/analytics.interfaces';
 
 export class AnalyticsMapper {
   /** Maps a persistence entity to the domain representation. */

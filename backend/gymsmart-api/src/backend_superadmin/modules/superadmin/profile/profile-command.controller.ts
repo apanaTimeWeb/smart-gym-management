@@ -8,11 +8,11 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { ProfileCreateService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-create.service';
-import { ProfileCreateDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-create.dto';
-import { ProfileUpdateService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-update.service';
-import { ProfileUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/profile/dtos/profile-update.dto';
-import { ProfileDeleteService } from '@/backend_superadmin/modules/backend_superadmin/profile/services/profile-delete.service';
+import { ProfileCreateService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-create.service';
+import { ProfileCreateDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-create.dto';
+import { ProfileUpdateService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-update.service';
+import { ProfileUpdateDto } from '@/backend_superadmin/modules/superadmin/profile/dtos/profile-update.dto';
+import { ProfileDeleteService } from '@/backend_superadmin/modules/superadmin/profile/services/profile-delete.service';
 
 @ApiTags('profile')
 @Controller('/superadmin/profile')

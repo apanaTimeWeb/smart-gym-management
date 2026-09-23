@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Implements the cancel mutation against the jobs repository.
 // FLOW: Controller -> JobsCancelService -> JobsRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JobsRepository } from '@/backend_superadmin/modules/backend_superadmin/system-ops/jobs/jobs.repository';
+import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';
 
 @Injectable()
 export class JobsCancelService {

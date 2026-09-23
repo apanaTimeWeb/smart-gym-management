@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/backend_superadmin/core/database/base.repository';
 import { TransactionContext } from '@/backend_superadmin/core/database/transaction-context';
-import { MessagingNotificationEntity, SuperadminNotificationType } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-notification.entity';
+import { MessagingNotificationEntity, SuperadminNotificationType } from '@/backend_superadmin/modules/superadmin/messaging/messaging-notification.entity';
 
 interface NotificationInput { recipientUserId: string; tenantId: string | null; eventName: string; title: string; body: string; type: SuperadminNotificationType; }
 

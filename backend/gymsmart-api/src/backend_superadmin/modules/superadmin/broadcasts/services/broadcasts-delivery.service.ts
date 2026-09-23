@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Applies one broadcast recipient delivery result and keeps counts consistent.
 // FLOW: delivery command -> broadcast existence -> atomic count update -> response.
 import { Injectable } from '@nestjs/common';
-import { BroadcastsRepository } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.repository';
-import { SuperadminBroadcastDeliveryResultDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/responses/broadcasts-response.dto';
+import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';
+import { SuperadminBroadcastDeliveryResultDto } from '@/backend_superadmin/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-work.service';
-import { BroadcastsMapper } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.mapper';
+import { BroadcastsMapper } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.mapper';
 
 @Injectable()
 export class BroadcastsDeliveryService {

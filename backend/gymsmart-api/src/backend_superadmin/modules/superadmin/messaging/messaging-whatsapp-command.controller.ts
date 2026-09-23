@@ -7,10 +7,10 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { MessagingWhatsappCampaignResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-whatsapp-campaign-response.dto';
+import { MessagingWhatsappCampaignResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-whatsapp-campaign-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { MessagingWhatsappCampaignService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-whatsapp-campaign.service';
-import { MessagingWhatsappCampaignCreateDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/dtos/messaging-whatsapp-campaign-create.dto';
+import { MessagingWhatsappCampaignService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-whatsapp-campaign.service';
+import { MessagingWhatsappCampaignCreateDto } from '@/backend_superadmin/modules/superadmin/messaging/dtos/messaging-whatsapp-campaign-create.dto';
 
 @ApiTags('messagingwhatsappcommand')
 @Controller()

@@ -8,9 +8,9 @@ import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/dtos/integrations-generate-key.dto';
-import { IntegrationsGenerateKeyService } from '@/backend_superadmin/modules/backend_superadmin/integrations/services/integrations-generate-key.service';
-import { SuperadminIntegrationsResponseDataDto, SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response-data.dto';
+import { IntegrationsGenerateKeyDto } from '@/backend_superadmin/modules/superadmin/integrations/dtos/integrations-generate-key.dto';
+import { IntegrationsGenerateKeyService } from '@/backend_superadmin/modules/superadmin/integrations/services/integrations-generate-key.service';
+import { SuperadminIntegrationsResponseDataDto, SuperadminGenerateApiKeyResultDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response-data.dto';
 
 @ApiTags('integrationsadvancedcommand')
 @Controller()

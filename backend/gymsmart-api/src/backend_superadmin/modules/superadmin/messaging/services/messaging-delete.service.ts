@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Executes the soft-delete flow for the messaging feature.
 // FLOW: CommandController -> MessagingDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
-import { MessagingRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.repository';
+import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';
 @Injectable()
 export class MessagingDeleteService {
   constructor(private readonly repository: MessagingRepository) {}

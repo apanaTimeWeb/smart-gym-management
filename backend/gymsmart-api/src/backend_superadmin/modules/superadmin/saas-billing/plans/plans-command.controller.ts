@@ -9,12 +9,12 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RateLimitGuard } from '@/backend_superadmin/core/cache/rate-limit.guard';
-import { PlansCreateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-create.service';
-import { PlansCreateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/dtos/plans-create.dto';
-import { PlansUpdateService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-update.service';
-import { PlansUpdateDto } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/dtos/plans-update.dto';
-import { PlansDeleteService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-delete.service';
-import { PlansArchiveService } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/services/plans-archive.service';
+import { PlansCreateService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-create.service';
+import { PlansCreateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/dtos/plans-create.dto';
+import { PlansUpdateService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-update.service';
+import { PlansUpdateDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/dtos/plans-update.dto';
+import { PlansDeleteService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-delete.service';
+import { PlansArchiveService } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/services/plans-archive.service';
 
 
 @ApiTags('plans')

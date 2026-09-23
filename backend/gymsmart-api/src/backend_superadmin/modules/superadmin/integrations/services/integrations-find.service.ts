@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Executes single-record retrieval for the integrations feature.
 // FLOW: QueryController -> IntegrationsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
-import { IntegrationsRepository } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.repository';
-import { IntegrationsMapper } from '@/backend_superadmin/modules/backend_superadmin/integrations/integrations.mapper';
-import { IntegrationsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/integrations/responses/integrations-response.dto';
+import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';
+import { IntegrationsMapper } from '@/backend_superadmin/modules/superadmin/integrations/integrations.mapper';
+import { IntegrationsResponseDto } from '@/backend_superadmin/modules/superadmin/integrations/responses/integrations-response.dto';
 @Injectable()
 export class IntegrationsFindService {
   constructor(private readonly repository: IntegrationsRepository) {}

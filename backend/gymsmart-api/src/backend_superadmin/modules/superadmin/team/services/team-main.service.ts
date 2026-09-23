@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> TeamMainService -> TeamRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable } from '@nestjs/common';
-import { TeamRepository } from '@/backend_superadmin/modules/backend_superadmin/team/team.repository';
+import { TeamRepository } from '@/backend_superadmin/modules/superadmin/team/team.repository';
 
 @Injectable()
 export class TeamMainService {

@@ -3,8 +3,8 @@
 import { Injectable } from '@nestjs/common';
 import { RealtimePublisherService } from '@/backend_superadmin/core/realtime/realtime-publisher.service';
 import { getRequestContext } from '@/backend_superadmin/core/observability/request-context';
-import { MessagingNotificationRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-notification.repository';
-import { SuperadminNotificationType } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-notification.entity';
+import { MessagingNotificationRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging-notification.repository';
+import { SuperadminNotificationType } from '@/backend_superadmin/modules/superadmin/messaging/messaging-notification.entity';
 
 @Injectable()
 export class MessagingNotificationService {

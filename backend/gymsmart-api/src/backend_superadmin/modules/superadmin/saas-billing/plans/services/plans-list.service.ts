@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Executes paginated read logic for the plans feature.
 // FLOW: QueryController -> PlansListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
-import { PlansRepository } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.repository';
-import { PlansMapper } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/plans.mapper';
+import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';
+import { PlansMapper } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.mapper';
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
-import type { PlansListQuery } from '@/backend_superadmin/modules/backend_superadmin/saas-billing/plans/types/plans.interfaces';
+import type { PlansListQuery } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/types/plans.interfaces';
 
 @Injectable()
 export class PlansListService {

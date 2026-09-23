@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Builds the WhatsApp bulk-center response from current tenants and persisted WhatsApp messages.
 // FLOW: Controller -> MessagingWhatsappBulkCenterService -> MessagingRepository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
-import { MessagingWhatsappBulkCenterResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
-import { MessagingRepository } from '@/backend_superadmin/modules/backend_superadmin/messaging/messaging.repository';
+import { MessagingWhatsappBulkCenterResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
+import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';
 
 @Injectable()
 export class MessagingWhatsappBulkCenterService {

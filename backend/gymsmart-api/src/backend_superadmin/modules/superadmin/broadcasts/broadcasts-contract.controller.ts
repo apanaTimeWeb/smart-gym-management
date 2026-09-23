@@ -7,10 +7,10 @@ import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import { BroadcastsRepository } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/broadcasts.repository';
-import { BroadcastsDeliveryService } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/services/broadcasts-delivery.service';
-import { BroadcastDeliveryDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/dtos/broadcasts-delivery.dto';
-import { SuperadminBroadcastDeliveryResultDto } from '@/backend_superadmin/modules/backend_superadmin/broadcasts/responses/broadcasts-response.dto';
+import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';
+import { BroadcastsDeliveryService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-delivery.service';
+import { BroadcastDeliveryDto } from '@/backend_superadmin/modules/superadmin/broadcasts/dtos/broadcasts-delivery.dto';
+import { SuperadminBroadcastDeliveryResultDto } from '@/backend_superadmin/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 
 
 @ApiTags('broadcasts-contract')

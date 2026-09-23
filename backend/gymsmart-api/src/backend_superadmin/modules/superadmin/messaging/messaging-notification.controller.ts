@@ -7,8 +7,8 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { MessagingNotificationService } from '@/backend_superadmin/modules/backend_superadmin/messaging/services/messaging-notification.service';
-import { MessagingNotificationResponseDto } from '@/backend_superadmin/modules/backend_superadmin/messaging/responses/messaging-notification-response.dto';
+import { MessagingNotificationService } from '@/backend_superadmin/modules/superadmin/messaging/services/messaging-notification.service';
+import { MessagingNotificationResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/responses/messaging-notification-response.dto';
 
 
 @ApiTags('messaging-notifications')

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Validates the client-owned Gym provisioning request without accepting server-managed persistence fields.
 // FLOW: HTTP POST /api/gyms/provision -> GymsProvisionDto -> provisioning service.
 import { IsEmail, IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
-import { GymsStatus } from '@/backend_superadmin/modules/backend_superadmin/gyms/dtos/gyms-update.dto';
+import { GymsStatus } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-update.dto';
 
 export class GymsProvisionDto {
   @IsString() @Length(2, 120) gymName!: string;

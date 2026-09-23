@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps Gym ORM entities into a frontend-safe domain representation without exposing encrypted sensitive persistence fields.
 // FLOW: TypeORM GymsEntity -> GymsMapper -> public Gym domain/response DTO.
-import { GymsResponseDto } from '@/backend_superadmin/modules/backend_superadmin/gyms/responses/gyms-response.dto';
-import type { GymsEntity } from '@/backend_superadmin/modules/backend_superadmin/gyms/gyms.entity';
-import type { GymsDomainModel } from '@/backend_superadmin/modules/backend_superadmin/gyms/types/gyms.interfaces';
+import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
+import type { GymsEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
+import type { GymsDomainModel } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 
 export class GymsMapper {
   /** Maps one persistence entity to the public Gym domain model and omits encrypted Aadhaar ciphertext. */
