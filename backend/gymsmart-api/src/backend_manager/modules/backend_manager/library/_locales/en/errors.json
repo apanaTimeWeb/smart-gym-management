@@ -1,0 +1,12 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Requested resource was not found.",
+    "INVALID_REQUEST": "The request is invalid.",
+    "UNAUTHORIZED": "You are not authorized to perform this action."
+  },
+  "MESSAGES": {
+    "UPDATED": "Updated successfully.",
+    "CREATED": "Created successfully.",
+    "DELETED": "Deleted successfully."
+  }
+}

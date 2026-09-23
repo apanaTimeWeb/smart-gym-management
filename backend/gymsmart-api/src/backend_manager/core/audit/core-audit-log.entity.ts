@@ -1,9 +1,9 @@
-// RESPONSIBILITY: Cross-cutting audit persistence mapping for critical state changes.
-// FLOW: Feature transaction → audit row → commit → immutable operational history.
+// RESPONSIBILITY: Owns backend core database entity boundary.
+// FLOW: Domain persistence contract → ORM metadata → tenant database table with soft-delete lifecycle.
 import { Column, Entity, Index } from 'typeorm';
 
-import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
+import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
 
 @Entity({ name: 'audit_logs' })
 @Index('IDX_audit_logs_entity', ['entityType', 'entityId'])

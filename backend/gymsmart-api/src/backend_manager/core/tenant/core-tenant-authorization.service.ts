@@ -1,6 +1,7 @@
-// RESPONSIBILITY: Verifies tenant authorization in the master DB before tenant DataSource resolution.
-// FLOW: actorId + x-tenant-id -> master membership + tenant status -> trusted databaseName context.
+// RESPONSIBILITY: Owns backend core business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
 import { ForbiddenException, Injectable } from '@nestjs/common';
+
 import { DataSource } from 'typeorm';
 
 import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';

@@ -13,7 +13,7 @@ import { CORE_PUBLIC_KEY } from '@/backend_trainer/core/security/core-public.dec
 
 @Injectable()
 export class CoreTenantAuthorizationGuard implements CanActivate {
-  constructor(@InjectRepository(CoreTenantMembershipEntity, 'master') private readonly memberships: Repository<CoreTenantMembershipEntity>, private readonly reflector: Reflector) {}
+  constructor(@InjectRepository(CoreTenantMembershipEntity) private readonly memberships: Repository<CoreTenantMembershipEntity>, private readonly reflector: Reflector) {}
   /** Validates tenant membership and stores the trusted tenant identifier. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (this.reflector.getAllAndOverride<boolean>(CORE_PUBLIC_KEY, [context.getHandler(), context.getClass()])) return true;

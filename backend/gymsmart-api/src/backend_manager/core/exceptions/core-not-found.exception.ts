@@ -1,3 +1,12 @@
-// RESPONSIBILITY: Standard not-found exception for repository OrThrow methods.
-// FLOW: Repository miss → CoreNotFoundException → global canonical error response.
-import { HttpStatus } from '@nestjs/common'; export class CoreNotFoundException extends Error{readonly status=HttpStatus.NOT_FOUND;readonly errorCode='CORE.ENTITY.NOT_FOUND';constructor(entity:string,id:string){super(`${entity} with id ${id} was not found`);this.name='CoreNotFoundException'}}
+// RESPONSIBILITY: Owns canonical not-found exception behavior for Manager backend features.
+// FLOW: Missing domain resource -> typed 404 exception -> canonical error envelope.
+import { HttpStatus } from '@nestjs/common';
+
+import { CoreBusinessException } from '@/backend_manager/core/exceptions/core-business.exception';
+
+export class CoreNotFoundException extends CoreBusinessException {
+  /** @description Creates a standard not-found error for a domain resource. @param entity - Domain entity name. @param id - Resource UUID. @returns Nothing. */
+  constructor(entity: string, id: string) {
+    super(`${entity} with id ${id} was not found`, 'CORE.ENTITY.NOT_FOUND', HttpStatus.NOT_FOUND);
+  }
+}

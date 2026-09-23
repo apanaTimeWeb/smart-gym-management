@@ -1,7 +1,9 @@
-// RESPONSIBILITY: Captures request latency/error metrics without logging sensitive payloads.
-// FLOW: HTTP boundary → timer → handler completion → CoreMetricsService.
+// RESPONSIBILITY: Owns backend core NestJS request/response cross-cutting infrastructure.
+// FLOW: Request lifecycle → cross-cutting policy → downstream handler → transformed lifecycle result.
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
+
+import type { Observable } from 'rxjs';
 
 import { CoreMetricsService } from '@/backend_manager/core/observability/core-metrics.service';
 

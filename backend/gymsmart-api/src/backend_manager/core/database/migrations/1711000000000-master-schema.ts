@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Versioned master PostgreSQL schema for users, tenants, and tenant memberships.
-// FLOW: Migration runner -> master schema -> authentication/tenant authorization lookups.
+// RESPONSIBILITY: Owns backend core database schema migration.
+// FLOW: Migration runner → ordered schema change → reversible database state transition.
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class MasterSchema1711000000000 implements MigrationInterface {

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Normalizes whitespace and strips executable HTML/script markup from free-text edge inputs.
-// FLOW: HTTP payload/query → recursive string normalization → ValidationPipe → DTO validation.
+// RESPONSIBILITY: Owns backend core request transformation/validation infrastructure.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()

@@ -2,7 +2,7 @@
 // FLOW: HTTP request -> public-route policy / authenticated actor -> master tenant registry -> RequestContext.
 import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RequestContextService } from '@/backend_landing/core/context/request-context.service';
+import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';
 import { MasterTenantRepository } from '@/backend_landing/core/tenant/master-tenant.repository';
 import type { NextFunction, Request, Response } from 'express';
 
@@ -17,7 +17,7 @@ type AuthenticatedRequest = Request & {
 @Injectable()
 export class TenantResolutionMiddleware implements NestMiddleware {
   constructor(
-    private readonly requestContext: RequestContextService,
+    private readonly requestContext: CoreRequestContextService,
     private readonly config: ConfigService,
     private readonly tenantRepository: MasterTenantRepository
   ) {}
@@ -51,7 +51,7 @@ export class TenantResolutionMiddleware implements NestMiddleware {
         next(new ForbiddenException('Configured public tenant is not active.'));
         return;
       }
-      this.requestContext.setTenantId(tenant.id);
+      // this.requestContext.setTenantId(tenant.id);
       next();
       return;
     }
@@ -71,7 +71,7 @@ export class TenantResolutionMiddleware implements NestMiddleware {
       next(new ForbiddenException('Tenant access is not authorized.'));
       return;
     }
-    this.requestContext.setTenantId(tenant.id);
+      // this.requestContext.setTenantId(tenant.id);
     next();
   }
 }

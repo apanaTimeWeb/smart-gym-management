@@ -1,9 +1,10 @@
-import { Reflector } from '@nestjs/core';
-// @ts-nocheck
-// RESPONSIBILITY: Canonical success response envelope for JSON endpoints, with explicit binary-response escape hatch.
-// FLOW: Controller result -> raw-response metadata check -> canonical ApiResponse<T>.
+// RESPONSIBILITY: Owns backend core NestJS request/response cross-cutting infrastructure.
+// FLOW: Request lifecycle → cross-cutting policy → downstream handler → transformed lifecycle result.
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { map, type Observable } from 'rxjs';
+import { Reflector } from '@nestjs/core';
+import { map } from 'rxjs';
+
+import type { Observable } from 'rxjs';
 
 import type { ApiResponse } from '@/backend_manager/core/types/api-response.types';
 import type { PaginationMeta } from '@/backend_manager/core/types/pagination.types';

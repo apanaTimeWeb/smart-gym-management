@@ -16,11 +16,11 @@ import superadminConfig from '@/backend_superadmin/core/config/configuration';
 
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { AppModule as AdminAppModule } from '@/backend_admin/app.module';
-import { CoreAppModule as AuthAppModule } from '@/backend_auth/core/app.module';
-import { AppModule as SuperadminAppModule } from '@/backend_superadmin/app.module';
-import { AppModule as LandingAppModule } from '@/backend_landing/app.module';
-import { CoreAppModule as ManagerAppModule } from '@/backend_manager/core/core-app.module';
-import { AppModule as TrainerAppModule } from '@/backend_trainer/app.module';
+import { AuthModule } from '@/backend_auth/modules/auth/auth.module';
+import { SuperadminDomainModule } from '@/backend_superadmin/core/superadmin-domain.module';
+import { LandingModule } from '@/backend_landing/modules/landing/landing.module';
+import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/manager-domain.module';
+import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
 import { CoreRateLimitGuard } from '@/backend_admin/core/auth/core-rate-limit.guard';
@@ -83,12 +83,12 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
     }),
 
     // 3. Domain Modules
-    AuthAppModule,
     AdminAppModule,
-    SuperadminAppModule,
-    LandingAppModule,
-    ManagerAppModule,
-    TrainerAppModule,
+    AuthModule,
+    SuperadminDomainModule,
+    LandingModule,
+    ManagerDomainModule,
+    TrainerDomainModule,
   ],
   providers: [
     // 4. Unified Global Guards and Interceptors

@@ -1,11 +1,12 @@
-// RESPONSIBILITY: TypeORM repository boundary for audit_logs mutations.
-// FLOW: Feature orchestrator → CoreAuditLogRepository.append → transaction context → audit_logs.
+// RESPONSIBILITY: Owns backend core persistence/query boundary.
+// FLOW: Trusted domain input → tenant-scoped query/mutation → ORM entity → mapper → domain result.
 import { Injectable } from '@nestjs/common';
 
-import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
-import type { CoreTransactionContext } from '@/backend_manager/core/database/core-unit-of-work.service';
-import { CoreContextException } from '@/backend_manager/core/exceptions/core-context.exception';
 import { CoreAuditLogEntity } from '@/backend_manager/core/audit/core-audit-log.entity';
+import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
+import { CoreContextException } from '@/backend_manager/core/exceptions/core-context.exception';
+
+import type { CoreTransactionContext } from '@/backend_manager/core/database/core-transaction-context';
 import type { CoreJsonObject } from '@/backend_manager/core/types/json-value.types';
 
 @Injectable()
@@ -34,7 +35,7 @@ export class CoreAuditLogRepository {
     const actor = this.context.get();
     if (!actor.actorId || !actor.actorRole) throw new CoreContextException('Actor context missing', 'CORE.CONTEXT.ACTOR_MISSING');
     const repository = transaction.getRepository(CoreAuditLogEntity);
-    const row = repository.create({ actorId: actor.actorId, actorRole: actor.actorRole, action, entityType, entityId, oldValue, newValue, ipAddress: null });
+    const row = repository.create({ actorId: actor.actorId, actorRole: actor.actorRole, action, entityType, entityId, oldValue, newValue });
     await repository.save(row);
   }
 }

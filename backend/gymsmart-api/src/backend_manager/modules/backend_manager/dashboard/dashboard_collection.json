@@ -1,0 +1,39 @@
+{
+  "info": {
+    "name": "Manager dashboard API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/draft-07/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET /dashboard/stats",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/dashboard/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "dashboard",
+            "stats"
+          ]
+        }
+      }
+    }
+  ]
+}

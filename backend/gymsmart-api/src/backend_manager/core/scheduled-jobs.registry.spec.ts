@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Verifies the centralized scheduled-job registry contract.
-// FLOW: Registry -> structural assertions -> CI gate.
+// RESPONSIBILITY: Owns backend core co-located unit-test verification.
+// FLOW: Arrange isolated inputs → execute target unit → assert observable behavior and failure paths.
 import { SCHEDULED_JOBS_REGISTRY } from '@/backend_manager/core/scheduled-jobs.registry';
 
 describe('scheduled jobs registry', () => {

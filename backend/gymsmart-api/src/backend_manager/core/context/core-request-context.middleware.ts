@@ -1,10 +1,12 @@
-// RESPONSIBILITY: Creates request-scoped correlation and tracing context before guards/services execute.
-// FLOW: HTTP request → UUID request/trace/span context → AsyncLocalStorage → downstream guards/controllers.
+// RESPONSIBILITY: Owns backend core request-context middleware.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { randomUUID } from 'node:crypto';
+
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
 
 import { CoreRequestContextService } from '@/backend_manager/core/context/core-request-context.service';
+
+import type { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class CoreRequestContextMiddleware implements NestMiddleware {
@@ -17,8 +19,8 @@ export class CoreRequestContextMiddleware implements NestMiddleware {
    * @param next - Next middleware.
    * @returns Nothing; execution continues through the callback context.
    */
-  use(_request: Request, _response: Response, next: NextFunction): void {
+  use(request: Request, _response: Response, next: NextFunction): void {
     const requestId = randomUUID();
-    this.context.run({ requestId, traceId: requestId, spanId: randomUUID() }, next);
+    this.context.run({ requestId, traceId: requestId, spanId: randomUUID(), ipAddress: request.ip }, next);
   }
 }

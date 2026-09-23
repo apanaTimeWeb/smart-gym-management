@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Declares controller-layer RBAC metadata using the canonical Roles decorator.
-// FLOW: @Roles(...) metadata -> CoreRolesGuard -> trusted actor role -> allow/deny.
+// RESPONSIBILITY: Owns backend core NestJS metadata/decorator contract.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { SetMetadata } from '@nestjs/common';
 
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';

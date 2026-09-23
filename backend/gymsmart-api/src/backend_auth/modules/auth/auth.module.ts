@@ -20,11 +20,12 @@ import { AuthLogoutService } from '@/backend_auth/modules/auth/services/auth-log
 import { AuthMeService } from '@/backend_auth/modules/auth/services/auth-me.service';
 import { AuthRefreshRevocationService } from '@/backend_auth/modules/auth/services/auth-refresh-revocation.service';
 import { AuthRefreshService } from '@/backend_auth/modules/auth/services/auth-refresh.service';
+import { AuthCoreModule } from '@/backend_auth/core/auth-core.module';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([AuthUserEntity, AuthRefreshSessionEntity]),
-    CoreDatabaseModule,
-    CoreAuditModule,
+    AuthCoreModule
   ],
   controllers: [AuthCommandController, AuthQueryController, AuthCompatibilityController],
   providers: [

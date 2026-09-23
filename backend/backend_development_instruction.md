@@ -55,6 +55,13 @@ A feature repair FAILS the architecture gate when the AI:
 
 **Clarification — Event-Based Runtime Dependencies:** A direct business-code import from a sibling feature is forbidden and fails this gate. A declared, runtime event-based dependency (Rule 49) is explicitly permitted — emitting or consuming a named event from `event-registry.constants.ts` is NOT a sibling-feature code dependency. The distinction is: direct business-code dependency is forbidden; declared event-based runtime dependency is allowed.
 
+### 0E. ISOLATED CONTEXT IMPLIES MODULAR MONOLITH, NOT MICROSERVICE (CRITICAL)
+
+When an AI is provided with a single feature module or domain folder in isolation (e.g., a developer zips only the `backend_manager` folder or provides only the `dashboard` module), the AI MUST assume the module operates within a **Modular Monolith architecture**, NOT as an independent Microservice.
+* **The Rule:** Never attempt to bootstrap independent database connections, independent framework `.forRoot()` / `.forRootAsync()` configurations, or isolated global infrastructure (like Config or Redis setup) within a feature module. 
+* **Implementation:** Rely on the global application monolith to provide the core infrastructure. Feature modules should strictly rely on `.forFeature()` registrations, and should bundle/export their domain-specific providers into a module so the global Monolithic App can safely consume them.
+* **Why:** If the AI assumes the folder is a standalone microservice, it will attempt to instantiate redundant database connection pools and global infrastructure inside the local module, which instantly crashes the global monolith on startup due to duplicated context boundaries.
+
 ---
 
 ## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
@@ -238,10 +245,11 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `modules/auth/auth_collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
-## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale)
-* **The Rule:** Any endpoint that returns tabular or list data (e.g., Orders, Members) MUST ALWAYS support pagination, sorting (e.g., `sortOrder=ASC/DESC`), and filtering (e.g., `startDate`, `endDate`, `search`). Never return raw, unpaginated lists if the dataset can grow large.
-* **Implementation:** Always use a standardized wrapper or query DTO (e.g., `limit/offset` based pagination extended with filtering/sorting properties) across all controllers.
-* **Why:** Returning thousands of unfiltered rows crashes browsers. If the AI is asked to add an endpoint for `MemberAnalytics` or `Orders`, it must proactively build in sorting and date filtering capabilities so the frontend can display robust table controls.
+## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale - Backend Driven)
+* **The Rule:** Any endpoint that returns tabular or list data (e.g., Orders, Members) MUST ALWAYS support backend-driven pagination, sorting (e.g., `sortOrder=ASC/DESC`), and filtering (e.g., `startDate`, `endDate`, `search`, `status`). Never return raw, unpaginated lists if the dataset can grow large.
+* **The "No Frontend In-Memory Filtering" Mandate:** The backend MUST provide dedicated query parameters for every search box, dropdown filter, and date picker on the UI. The frontend is STRICTLY FORBIDDEN from fetching a massive array of 5,000 records and using JavaScript `.filter()` or `.sort()` in memory. All searching (`ILIKE` / Full Text) and filtering (`WHERE` clauses) MUST be executed by the database via the backend API.
+* **Implementation:** Always use a standardized wrapper or query DTO (e.g., `limit/offset` based pagination extended with filtering/sorting properties) across all controllers. For example, a search box triggers `?search=john&page=1`, which the backend maps to an SQL `ILIKE '%john%'` query.
+* **Why:** Returning thousands of unfiltered rows crashes browsers and creates severe security/performance issues. If the AI is asked to add an endpoint for `MemberAnalytics` or `Orders`, it must proactively build in sorting, searching, and date filtering capabilities so the frontend can display robust, server-driven table controls.
 
 ## 18. Strict ES Modules (No `require`)
 *(Applicable to JavaScript/TypeScript Frameworks)*
@@ -1927,3 +1935,10 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ## Rule 122 — No AI Runtime Verification Requirement
 * **The Rule:** AI agents are NOT required to execute code, run servers, or perform runtime verification to validate their changes, as they often lack the necessary local environment variables, database connections, or API keys.
 * **The Expectation:** Instead of failing or complaining about missing environments, the AI MUST rely on its deep knowledge of the framework, TypeScript, and these architectural guidelines to write syntactically and logically correct code. The AI should aim to write code that is "correct by construction" so that when the human developer runs it locally, it works with zero or minimal issues. Do not attempt to spin up local servers or run `npm run start` if the environment is incomplete.
+
+## Rule 123 — Dashboard & UI Data APIs (Avoid "Mega APIs")
+* **The Rule:** Never create a single "Mega API" endpoint that fetches an entire dashboard's worth of data (e.g., all KPIs, all charts, and all recent table lists) in one massive response payload. You MUST fragment complex dashboards into **widget-based / feature-sliced APIs** (e.g., `/dashboard/kpis`, `/dashboard/charts`, `/dashboard/recent-members`).
+* **Why:**
+  1. **Fault Isolation (Debugging):** If the database query for the revenue chart fails, it should not crash the entire dashboard. The user should still see their KPIs and Tables, with only the chart showing an error state. Mega APIs make identifying the failing query extremely difficult.
+  2. **Progressive Rendering:** The frontend should be able to render fast data (KPIs) instantly while displaying skeleton loaders for slower data (complex aggregations/charts). A Mega API forces the frontend to wait for the *slowest* query before rendering *anything*.
+  3. **Caching & Scalability:** Widget-based APIs allow you to cache heavy/slow queries (like charts) in Redis for 1 hour, while keeping fast queries (like today's attendance) strictly real-time. Mega APIs force an all-or-nothing caching strategy which does not scale for Enterprise apps.

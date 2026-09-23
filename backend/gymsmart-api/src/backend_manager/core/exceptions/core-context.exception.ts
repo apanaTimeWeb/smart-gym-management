@@ -1,10 +1,12 @@
-// RESPONSIBILITY: Typed infrastructure exception for missing trusted request context.
-// FLOW: Missing actor/tenant context → CoreContextException → canonical exception filter.
+// RESPONSIBILITY: Owns canonical backend request-context exceptions.
+// FLOW: Missing/invalid trusted context -> typed exception -> canonical error envelope.
 import { HttpStatus } from '@nestjs/common';
+
 import { CoreBusinessException } from '@/backend_manager/core/exceptions/core-business.exception';
 
 export class CoreContextException extends CoreBusinessException {
-  constructor(message: string, errorCode: string, status = HttpStatus.INTERNAL_SERVER_ERROR) {
+  /** @description Creates a context error with a machine-readable code. @param message - Safe diagnostic message. @param errorCode - Machine-readable code. @param status - HTTP status. @returns Nothing. */
+  constructor(message: string, errorCode: string, status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR) {
     super(message, errorCode, status);
   }
 }

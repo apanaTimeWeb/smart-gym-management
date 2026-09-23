@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Canonical TypeORM base abstraction for UUID identity, UTC timestamps, and soft deletion.
-// FLOW: Feature entity -> CoreBaseEntity -> tenant PostgreSQL table.
+// RESPONSIBILITY: Owns backend core database entity boundary.
+// FLOW: Domain persistence contract → ORM metadata → tenant database table with soft-delete lifecycle.
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class CoreBaseEntity {

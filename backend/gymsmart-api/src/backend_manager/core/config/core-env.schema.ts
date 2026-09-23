@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Fail-fast startup configuration schema for Manager backend infrastructure.
-// FLOW: Environment -> Zod schema -> ConfigModule -> CoreConfigService.
+// RESPONSIBILITY: Owns backend core module infrastructure/code contract.
+// FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { z } from 'zod';
 
 export const CoreEnvSchema = z.object({

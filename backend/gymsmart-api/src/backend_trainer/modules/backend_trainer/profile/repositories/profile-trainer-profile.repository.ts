@@ -13,7 +13,7 @@ export interface ProfileMasterCredential { userId: string; passwordHash: string;
 
 @Injectable()
 export class ProfileTrainerProfileRepository extends CoreBaseRepository {
-  constructor(private readonly resolver: CoreTenantDataSourceResolver, @InjectRepository(CoreUserEntity, 'master') private readonly users: Repository<CoreUserEntity>) {super();}
+  constructor(private readonly resolver: CoreTenantDataSourceResolver, @InjectRepository(CoreUserEntity) private readonly users: Repository<CoreUserEntity>) {super();}
 
   /** Finds the tenant-scoped Trainer profile by authenticated master user ID. */
   async findByUserId(userId: string): Promise<ProfileTrainerProfileEntity | null> { return (await this.resolver.getRepository(ProfileTrainerProfileEntity)).findOneBy({ userId, deletedAt: IsNull() }); }

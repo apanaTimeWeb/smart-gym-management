@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Master DB membership entity proving actor authorization for a tenant.
-// FLOW: Actor + tenant -> membership -> trusted tenant database name.
+// RESPONSIBILITY: Owns backend core database entity boundary.
+// FLOW: Domain persistence contract → ORM metadata → tenant database table with soft-delete lifecycle.
 import { Column, Entity, Index, Unique } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_manager/core/database/core-base.entity';
