@@ -86,3 +86,9 @@ def test_post_finance_payments_contract():
         if response.status_code >= 400:
             assert body['data'] is None
             assert 'errorCode' in body
+
+def test_get_finance_export_artifactId_param_contract():
+    response = _call('GET', 'finance/export/:artifactId')
+    assert response.status_code not in {HTTPStatus.NOT_FOUND}
+    # This endpoint returns binary data (not the standard JSON envelope),
+    # so we just check that it doesn't 404, which validates the route exists.
