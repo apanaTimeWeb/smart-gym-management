@@ -55,6 +55,13 @@ A feature repair FAILS the architecture gate when the AI:
 
 **Clarification — Event-Based Runtime Dependencies:** A direct business-code import from a sibling feature is forbidden and fails this gate. A declared, runtime event-based dependency (Rule 49) is explicitly permitted — emitting or consuming a named event from `event-registry.constants.ts` is NOT a sibling-feature code dependency. The distinction is: direct business-code dependency is forbidden; declared event-based runtime dependency is allowed.
 
+### 0E. ISOLATED CONTEXT IMPLIES MODULAR MONOLITH, NOT MICROSERVICE (CRITICAL)
+
+When an AI is provided with a single feature module or domain folder in isolation (e.g., a developer zips only the `backend_manager` folder or provides only the `dashboard` module), the AI MUST assume the module operates within a **Modular Monolith architecture**, NOT as an independent Microservice.
+* **The Rule:** Never attempt to bootstrap independent database connections, independent framework `.forRoot()` / `.forRootAsync()` configurations, or isolated global infrastructure (like Config or Redis setup) within a feature module. 
+* **Implementation:** Rely on the global application monolith to provide the core infrastructure. Feature modules should strictly rely on `.forFeature()` registrations, and should bundle/export their domain-specific providers into a module so the global Monolithic App can safely consume them.
+* **Why:** If the AI assumes the folder is a standalone microservice, it will attempt to instantiate redundant database connection pools and global infrastructure inside the local module, which instantly crashes the global monolith on startup due to duplicated context boundaries.
+
 ---
 
 ## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
