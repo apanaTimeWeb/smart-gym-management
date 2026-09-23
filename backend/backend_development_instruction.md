@@ -1929,25 +1929,34 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ### Implementation Constraints
 
-1. **Strict Namespace Prefixing:** All test directories must be explicitly prefixed by domain and testing type.
+1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
+   - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/`
+   - **Feature Level:** `src/backend_superadmin/dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/dashboard/`
+   - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
 
-2. **WET Over DRY (No Global Shared Utilities):** Never create a global `shared/`, `utils/`, or `common/` folder for E2E or Selenium tests. If both `backend_admin_e2e` and `backend_manager_e2e` need a "login and get auth token" helper script, you MUST duplicate the script into both directories.
+2. **Strict File Naming Convention:** Just like backend development files, every E2E and Selenium test file MUST be explicitly prefixed with the role and module name to prevent any ambiguity. Since these are Python (`pytest`) tests, they must start with `test_` for test discovery.
+   - **E2E (API) Format:** `test_[role]_[module]_api.py` (e.g., `test_superadmin_dashboard_api.py`)
+   - **Selenium (UI) Format:** `test_[role]_[module]_ui.py` (e.g., `test_superadmin_dashboard_ui.py`)
+   - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
+   - ✅ **GOOD:** `test_admin_members_api.py` (lives inside `backend_e2e/backend_admin_e2e/members/`)
+
+3. **WET Over DRY (No Global Shared Utilities):** Never create a global `shared/`, `utils/`, or `common/` folder for E2E or Selenium tests. If both `backend_admin_e2e` and `backend_manager_e2e` need a "login and get auth token" helper script, you MUST duplicate the script into both directories.
    - ❌ **BAD:** `backend_e2e/shared/auth_helper.py`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/helpers/auth_helper.py` AND `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
 
-3. **No Cross-Domain Imports:** A test script in `backend_manager_selenium` MUST NOT import a fixture, constant, or helper from `backend_admin_selenium`. If tests span multiple roles, they must be orchestrated at a higher CI pipeline level, not through tightly coupled Python/TS test imports.
+4. **No Cross-Domain Imports:** A test script in `backend_manager_selenium` MUST NOT import a fixture, constant, or helper from `backend_admin_selenium`. If tests span multiple roles, they must be orchestrated at a higher CI pipeline level, not through tightly coupled Python/TS test imports.
 
-4. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
+5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
 
-5. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
+6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
-6. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
+7. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
 
-7. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
+8. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
 
-8. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
+9. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
    - ❌ **BAD:** Hardcoding a single brittle locator: `driver.find_element(By.ID, "submit-btn")`
    - ✅ **GOOD:** Writing robust selector logic that attempts a primary locator (e.g., `data-testid`), and if that fails, gracefully falls back to a secondary locator (e.g., specific CSS class, XPath, or ARIA label). The AI must ensure that if the primary locator fails, the backup locator works to complete the action.
 
