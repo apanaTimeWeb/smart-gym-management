@@ -49,3 +49,7 @@ yarn-error.log*
 # TypeORM / SQLite
 *.sqlite
 *.db
+
+# Python E2E Cache
+*.pyc
+__pycache__/
