@@ -114,7 +114,7 @@ Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Se
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
 AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
-* **The Rule:** Extract all TypeScript `Interfaces`, `Types`, or Python `TypedDicts`/`Pydantic Models` into a dedicated `[module-name].interfaces.ts` file.
+* **The Rule:** Extract all TypeScript `Interfaces` or `Types` into a dedicated file inside a prefixed types folder (e.g., `billing_types/admin-billing-payment-payload.type.ts`). Never dump them inline or use generic `interfaces.ts` files.
 * **Why?** When you want the AI to write a new function, you just feed it the `interfaces` file. The AI instantly knows exactly what properties are available without having to read 500 lines of implementation code.
 
 ## 5. Centralized Constants (Single Source of Truth)
@@ -1963,3 +1963,5 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
   1. **Fault Isolation (Debugging):** If the database query for the revenue chart fails, it should not crash the entire dashboard. The user should still see their KPIs and Tables, with only the chart showing an error state. Mega APIs make identifying the failing query extremely difficult.
   2. **Progressive Rendering:** The frontend should be able to render fast data (KPIs) instantly while displaying skeleton loaders for slower data (complex aggregations/charts). A Mega API forces the frontend to wait for the *slowest* query before rendering *anything*.
   3. **Caching & Scalability:** Widget-based APIs allow you to cache heavy/slow queries (like charts) in Redis for 1 hour, while keeping fast queries (like today's attendance) strictly real-time. Mega APIs force an all-or-nothing caching strategy which does not scale for Enterprise apps.
+
+
