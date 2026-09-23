@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "സ്ഥിരീകരണം പരാജയപ്പെട്ടു.",
+    "NOT_FOUND": "റിസോഴ്‌സ് കണ്ടെത്താനായില്ല.",
+    "FORBIDDEN": "പ്രവേശനം നിരസിച്ചു.",
+    "UNAUTHORIZED": "ആധികാരികത ആവശ്യമാണ്.",
+    "CONFLICT": "അഭ്യർത്ഥന നിലവിലെ റിസോഴ്‌സ് നിലയുമായി പൊരുത്തപ്പെടുന്നില്ല.",
+    "INTERNAL": "ആന്തരിക സെർവർ പിശക്.",
+    "BAD_REQUEST": "അസാധുവായ അഭ്യർത്ഥന.",
+    "DEPENDENCIES_UNAVAILABLE": "ആശ്രിത സേവനങ്ങൾ ലഭ്യമല്ല.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key ഹെഡർ ആവശ്യമാണ്.",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent അഭ്യർത്ഥന ഇതിനകം പ്രോസസ്സ് ചെയ്യുന്നു.",
+    "IDEMPOTENCY_INVALID": "സംഭരിച്ച idempotent പ്രതികരണം അസാധുവാണ്.",
+    "PROVISION_FAILED": "Tenant provisioning പരാജയപ്പെട്ടു.",
+    "RECIPIENT_MISSING": "ഡെലിവറി സ്വീകരിക്കുന്നയാൾ ക്രമീകരിച്ചിട്ടില്ല.",
+    "DELIVERY_FAILED": "എക്സ്പോർട്ട് ഡെലിവറി പരാജയപ്പെട്ടു.",
+    "TIMEOUT": "എക്സ്പോർട്ട് ഡെലിവറി സമയം കഴിഞ്ഞു.",
+    "FAILED": "എക്സ്പോർട്ട് ജോലി പരാജയപ്പെട്ടു."
+  }
+}

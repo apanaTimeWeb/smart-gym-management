@@ -1,0 +1,17 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "ధృవీకరణ విఫలమైంది.",
+    "NOT_FOUND": "వనరు కనుగొనబడలేదు.",
+    "FORBIDDEN": "ప్రాప్యత నిరాకరించబడింది.",
+    "UNAUTHORIZED": "ధృవీకరణ అవసరం.",
+    "CONFLICT": "అభ్యర్థన ప్రస్తుత వనరు స్థితితో విరుద్ధంగా ఉంది.",
+    "INTERNAL": "అంతర్గత సర్వర్ లోపం.",
+    "BAD_REQUEST": "చెల్లని అభ్యర్థన.",
+    "DEPENDENCIES_UNAVAILABLE": "ఆధార సేవలు అందుబాటులో లేవు.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key హెడర్ అవసరం.",
+    "IDEMPOTENCY_IN_PROGRESS": "Idempotent అభ్యర్థన ఇప్పటికే ప్రాసెస్ అవుతోంది.",
+    "IDEMPOTENCY_INVALID": "సేవ్ చేసిన idempotent ప్రతిస్పందన చెల్లదు.",
+    "PROVISION_FAILED": "Tenant provisioning విఫలమైంది.",
+    "ACCOUNT_LOCKED": "Account temporarily locked. Please try again later."
+  }
+}

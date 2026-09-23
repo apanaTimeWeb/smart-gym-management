@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Initializes request-scoped AsyncLocalStorage context at the HTTP boundary.
+// RESPONSIBILITY: Initializes request-scoped AsyncLocalStorage context at the HTTP boundary.
 // FLOW: HTTP request -> identifiers -> AsyncLocalStorage -> downstream pipeline.
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
@@ -11,6 +11,8 @@ export class RequestContextMiddleware implements NestMiddleware {
     const requestId = request.header('x-request-id') ?? randomUUID();
     const traceId = request.header('x-trace-id') ?? randomUUID();
     const spanId = request.header('x-span-id') ?? randomUUID();
-    requestContextStorage.run({ requestId, traceId, spanId, userId: request.user?.userId ?? null, tenantId: request.user?.tenantId ?? request.header('x-tenant-id') ?? null }, next);
+    const forwardedFor = request.header('x-forwarded-for')?.split(',')[0]?.trim();
+    const ipAddress = forwardedFor || request.ip || 'unknown';
+    requestContextStorage.run({ requestId, traceId, spanId, userId: (request.user as any)?.userId ?? null, userRole: (request.user as any)?.role ?? null, tenantId: (request.user as any)?.tenantId ?? request.header('x-tenant-id') ?? null, ipAddress }, next);
   }
 }

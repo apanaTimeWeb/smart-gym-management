@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Owns persistence for the Superadmin authentication profile.
+// RESPONSIBILITY: Owns persistence for the Superadmin authentication profile.
 // FLOW: AuthService -> AuthRepository -> superadmin_profiles table.
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';

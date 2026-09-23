@@ -1,14 +1,18 @@
-﻿// RESPONSIBILITY: Writes immutable audit records for critical Superadmin mutations.
-// FLOW: Mutation service -> AuditTrailService -> audit_logs repository -> PostgreSQL.
+// RESPONSIBILITY: Exposes explicit audit writing for business flows that have no entity mutation boundary (for example external side effects).
+// FLOW: Business/orchestration boundary -> AuditTrailService -> audit_logs persistence.
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { DataSource } from 'typeorm';
-import { getRequestContext } from '@/backend_superadmin/core/observability/request-context';
+import { getTenantDataSource } from '@/backend_superadmin/core/tenancy/tenant-datasource-context';
+
+export interface AuditTrailRecordInput { actorId: string; actorRole: string; action: string; entityType: string; entityId: string; oldValue: unknown; newValue: unknown; ipAddress: string; tenantId: string | null; }
+
 @Injectable()
 export class AuditTrailService {
   constructor(private readonly dataSource: DataSource) {}
-  /** Records a state-changing action with request context metadata. */
-  async record(action: string, entityType: string, entityId: string, oldValue: unknown, newValue: unknown): Promise<void> {
-    const ctx = getRequestContext();
-    await this.dataSource.query('INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, old_value, new_value, ip_address, tenant_id, created_at, updated_at) VALUES (substring(md5(random()::text || clock_timestamp()::text),1,32), $1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, $9, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)', [ctx?.userId ?? 'system', 'SUPERADMIN', action, entityType, entityId, JSON.stringify(oldValue ?? null), JSON.stringify(newValue ?? null), 'request-context', ctx?.tenantId]);
+  /** Persists a structured audit event for a non-ORM side effect boundary. */
+  async record(input: AuditTrailRecordInput): Promise<void> {
+    const dataSource = getTenantDataSource() ?? this.dataSource;
+    await dataSource.query('INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, old_value, new_value, ip_address, tenant_id, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,$9,$10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)', [randomUUID(), input.actorId, input.actorRole, input.action.slice(0, 500), input.entityType.slice(0, 500), input.entityId.slice(0, 500), JSON.stringify(input.oldValue ?? null), JSON.stringify(input.newValue ?? null), input.ipAddress.slice(0, 255), input.tenantId]);
   }
 }

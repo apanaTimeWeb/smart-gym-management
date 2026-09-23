@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Marks mutation handlers that require an Idempotency-Key according to the backend critical-mutation contract.
+// RESPONSIBILITY: Marks mutation handlers that require an Idempotency-Key according to the backend critical-mutation contract.
 // FLOW: Controller metadata -> IdempotencyInterceptor -> Redis replay/reservation.
 import { SetMetadata } from '@nestjs/common';
 export const IDEMPOTENCY_REQUIRED = 'idempotency-required';

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Stores and replays critical mutation responses using Idempotency-Key.
+// RESPONSIBILITY: Stores and replays critical mutation responses using Idempotency-Key.
 // FLOW: Controller -> IdempotencyService -> Redis -> original response replay.
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '@/backend_superadmin/core/cache/redis.service';

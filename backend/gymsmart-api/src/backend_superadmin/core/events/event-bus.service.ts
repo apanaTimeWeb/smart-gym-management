@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Provides the framework-level in-process event transport for declared cross-feature runtime events.
+// RESPONSIBILITY: Provides the framework-level in-process event transport for declared cross-feature runtime events.
 // FLOW: Feature mutation -> EventBusService -> registered event subscribers.
 import { EventEmitter } from 'node:events';
 import { Injectable } from '@nestjs/common';

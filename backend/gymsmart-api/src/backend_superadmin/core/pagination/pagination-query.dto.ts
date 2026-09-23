@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Defines the canonical pagination query contract shared by every paginated feature.
+// RESPONSIBILITY: Defines the canonical pagination query contract shared by every paginated feature.
 // FLOW: HTTP query -> PaginationQueryDto -> feature query DTO -> repository.
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';

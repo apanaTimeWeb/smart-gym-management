@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Validates and exposes strongly typed application configuration.
+// RESPONSIBILITY: Validates and exposes strongly typed application configuration.
 // FLOW: process.env -> Zod schema -> ConfigService -> infrastructure consumers.
 import { registerAs } from '@nestjs/config';
 import { z } from 'zod';
@@ -13,6 +13,7 @@ const environmentSchema = z.object({
   JWT_ACCESS_TTL: z.string().default('15m'),
   JWT_REFRESH_TTL: z.string().default('7d'),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
+  DEFAULT_CURRENCY: z.string().regex(/^[A-Z]{3}$/).default('INR'),
   LOG_LEVEL: z.string().default('info'),
   DATABASE_POOL_MAX: z.coerce.number().int().positive().max(100).default(20),
   DATABASE_ACQUIRE_TIMEOUT_MS: z.coerce.number().int().positive().default(30000),
@@ -23,12 +24,23 @@ const environmentSchema = z.object({
   MASTER_DATABASE_NAME: z.string().default('gymsmart_master'),
   TENANT_DATABASE_PREFIX: z.string().default('tenant_db_'),
   ENCRYPTION_KEY_BASE64: z.string().min(44),
-  SEED_SUPERADMIN_EMAIL: z.string().email().default('admin@gymsmart.local'),
-  SEED_SUPERADMIN_PASSWORD: z.string().min(12).default('ChangeMe123!'),
+  SEED_SUPERADMIN_EMAIL: z.string().email().optional(),
+  SEED_SUPERADMIN_PASSWORD: z.string().min(16).optional(),
+  EXPORT_STORAGE_PATH: z.string().default('/tmp/gymsmart-exports'),
+  EXPORT_DOWNLOAD_TTL_HOURS: z.coerce.number().int().min(24).max(48).default(24),
+  EXPORT_DOWNLOAD_SECRET: z.string().min(32),
+  EXPORT_EMAIL_WEBHOOK_URL: z.string().url(),
+  EXPORT_WHATSAPP_WEBHOOK_URL: z.string().url().optional(),
 });
 
 export function validateEnvironment(config: Record<string, unknown>): Record<string, unknown> {
   const parsed = environmentSchema.parse(config);
+  if (parsed.NODE_ENV === 'production' && parsed.SEED_SUPERADMIN_PASSWORD) {
+    throw new Error('SEED_SUPERADMIN_PASSWORD must not be configured in production. Provision admin access through the approved secret-management flow.');
+  }
+  if (parsed.NODE_ENV !== 'production' && !parsed.SEED_SUPERADMIN_PASSWORD) {
+    throw new Error('SEED_SUPERADMIN_PASSWORD is required for development/test seed operations.');
+  }
   return parsed;
 }
 
@@ -41,7 +53,8 @@ export default registerAs('app', () => ({
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET ?? '',
   jwtAccessTtl: process.env.JWT_ACCESS_TTL ?? '15m',
   jwtRefreshTtl: process.env.JWT_REFRESH_TTL ?? '7d',
-  corsOrigins: (process.env.CORS_ORIGINS ?? '').split(',').map((value) => value.trim()).filter((value: string) => value.length > 0),
+  defaultCurrency: (process.env.DEFAULT_CURRENCY ?? 'INR').toUpperCase(),
+  corsOrigins: (process.env.CORS_ORIGINS ?? '').split(',').map((value: string) => value.trim()).filter((value: string) => value.length > 0),
   logLevel: process.env.LOG_LEVEL ?? 'info',
   databasePoolMax: Number(process.env.DATABASE_POOL_MAX ?? 20),
   databaseAcquireTimeoutMs: Number(process.env.DATABASE_ACQUIRE_TIMEOUT_MS ?? 30000),
@@ -53,5 +66,10 @@ export default registerAs('app', () => ({
   tenantDatabasePrefix: process.env.TENANT_DATABASE_PREFIX ?? 'tenant_db_',
   encryptionKeyBase64: process.env.ENCRYPTION_KEY_BASE64 ?? '',
   seedSuperadminEmail: process.env.SEED_SUPERADMIN_EMAIL ?? 'admin@gymsmart.local',
-  seedSuperadminPassword: process.env.SEED_SUPERADMIN_PASSWORD ?? 'ChangeMe123!',
+  seedSuperadminPassword: process.env.SEED_SUPERADMIN_PASSWORD ?? '',
+  exportStoragePath: process.env.EXPORT_STORAGE_PATH ?? '/tmp/gymsmart-exports',
+  exportDownloadTtlHours: Number(process.env.EXPORT_DOWNLOAD_TTL_HOURS ?? 24),
+  exportDownloadSecret: process.env.EXPORT_DOWNLOAD_SECRET ?? '',
+  exportEmailWebhookUrl: process.env.EXPORT_EMAIL_WEBHOOK_URL ?? '',
+  exportWhatsappWebhookUrl: process.env.EXPORT_WHATSAPP_WEBHOOK_URL ?? '',
 }));

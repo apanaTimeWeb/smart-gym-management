@@ -1,0 +1,16 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "प्रमाणीकरण अयशस्वी झाले.",
+    "NOT_FOUND": "संसाधन सापडले नाही.",
+    "FORBIDDEN": "प्रवेश नाकारला आहे.",
+    "UNAUTHORIZED": "प्रमाणीकरण आवश्यक आहे.",
+    "CONFLICT": "विनंती संसाधनाच्या वर्तमान स्थितीशी विसंगत आहे.",
+    "INTERNAL": "अंतर्गत सर्व्हर त्रुटी.",
+    "BAD_REQUEST": "अवैध विनंती.",
+    "DEPENDENCIES_UNAVAILABLE": "अवलंबित्व उपलब्ध नाहीत.",
+    "IDEMPOTENCY_REQUIRED": "Idempotency-Key हेडर आवश्यक आहे.",
+    "IDEMPOTENCY_IN_PROGRESS": "आयडेम्पोटंट विनंती आधीच प्रक्रियेत आहे.",
+    "IDEMPOTENCY_INVALID": "साठवलेला आयडेम्पोटंट प्रतिसाद अवैध आहे.",
+    "PROVISION_FAILED": "टेनंट प्रोव्हिजनिंग अयशस्वी झाले."
+  }
+}

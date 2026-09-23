@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Enforces controller-layer RBAC using typed role metadata.
+// RESPONSIBILITY: Enforces controller-layer RBAC using typed role metadata.
 // FLOW: @Roles metadata -> RolesGuard -> request.user.role -> allow/deny.
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -13,7 +13,7 @@ export class RolesGuard implements CanActivate {
     const roles = this.reflector.getAllAndOverride<SuperadminRole[]>(ROLES_KEY, [context.getHandler(), context.getClass()]) ?? [];
     if (roles.length === 0) return true;
     const request = context.switchToHttp().getRequest<Request & { user?: AuthenticatedUser }>();
-    if (!request.user || !roles.includes(request.user.role)) throw new ForbiddenException('Insufficient role');
+    if (!request.user || !roles.includes(request.user.role)) throw new ForbiddenException({ error: 'FORBIDDEN', errorCode: 'AUTH.ROLE.FORBIDDEN', message: { key: 'core.ERRORS.FORBIDDEN' } });
     return true;
   }
 }

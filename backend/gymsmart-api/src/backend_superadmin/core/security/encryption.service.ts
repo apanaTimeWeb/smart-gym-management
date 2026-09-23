@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Provides application-layer AES-256-GCM encryption for sensitive fields.
+// RESPONSIBILITY: Provides application-layer AES-256-GCM encryption for sensitive fields.
 // FLOW: Service -> EncryptionService -> AES-256-GCM ciphertext -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

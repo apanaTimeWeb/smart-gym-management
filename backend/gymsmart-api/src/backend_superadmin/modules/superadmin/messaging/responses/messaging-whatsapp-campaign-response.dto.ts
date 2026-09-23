@@ -1,7 +1,0 @@
-﻿import { ApiProperty } from '@nestjs/swagger';
-
-export class MessagingWhatsAppCampaignResponseDto {
-  @ApiProperty() id!: string;
-  @ApiProperty() status!: string;
-  @ApiProperty() queuedAt!: string;
-}

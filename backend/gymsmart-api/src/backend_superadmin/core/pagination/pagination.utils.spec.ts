@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Verifies canonical pagination metadata behavior for real input cases.
+// RESPONSIBILITY: Verifies canonical pagination metadata behavior for real input cases.
 // FLOW: test -> buildPaginationMeta -> exact pagination semantics.
 import { buildPaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
 describe('buildPaginationMeta', () => {

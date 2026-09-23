@@ -1,0 +1,20 @@
+{
+  "ERRORS": {
+    "VALIDATION_FAILED": "Validierung fehlgeschlagen.",
+    "NOT_FOUND": "Ressource nicht gefunden.",
+    "FORBIDDEN": "Zugriff verweigert.",
+    "UNAUTHORIZED": "Authentifizierung erforderlich.",
+    "CONFLICT": "Die Anfrage steht im Konflikt mit dem aktuellen Ressourcenstatus.",
+    "INTERNAL": "Interner Serverfehler.",
+    "BAD_REQUEST": "Ungültige Anfrage.",
+    "DEPENDENCIES_UNAVAILABLE": "Abhängigkeiten sind nicht verfügbar.",
+    "IDEMPOTENCY_REQUIRED": "Der Header Idempotency-Key ist erforderlich.",
+    "IDEMPOTENCY_IN_PROGRESS": "Die idempotente Anfrage wird bereits verarbeitet.",
+    "IDEMPOTENCY_INVALID": "Die gespeicherte idempotente Antwort ist ungültig.",
+    "PROVISION_FAILED": "Die Tenant-Bereitstellung ist fehlgeschlagen.",
+    "RECIPIENT_MISSING": "Kein Empfänger für die Zustellung ist konfiguriert.",
+    "DELIVERY_FAILED": "Die Exportzustellung ist fehlgeschlagen.",
+    "TIMEOUT": "Zeitüberschreitung bei der Exportzustellung.",
+    "FAILED": "Der Exportauftrag ist fehlgeschlagen."
+  }
+}

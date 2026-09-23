@@ -11,11 +11,13 @@ export class RateLimitGuard implements CanActivate {
 
   /** Applies the configured public/authenticated mutation tier to the request. */
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request & { user?: unknown }>();
+    const request = context.switchToHttp().getRequest<Request & { user?: { userId?: string } }>();
+    if (request.path === '/health' || request.path === '/ping' || request.path === '/metrics') return true;
     const tier = request.path.includes('/export') ? RATE_LIMIT_TIERS.EXPORT : request.user ? (request.method === 'GET' ? RATE_LIMIT_TIERS.AUTHENTICATED_READ : RATE_LIMIT_TIERS.MUTATION) : RATE_LIMIT_TIERS.PUBLIC_AUTH;
-    const key = `rate:${request.ip}:${request.method}:${request.path}`;
+    const actor = request.user?.userId ?? 'anonymous';
+    const key = `rate:${actor}:${request.ip}:${request.method}:${request.path}`;
     const count = await this.redis.increment(key, tier.windowSeconds);
-    if (count > tier.limit) throw new HttpException('Rate limit exceeded', HttpStatus.TOO_MANY_REQUESTS);
+    if (count > tier.limit) throw new HttpException({ error: 'RATE_LIMITED', errorCode: 'RATE_LIMIT.GENERAL.EXCEEDED', message: { key: 'core.ERRORS.RATE_LIMIT_EXCEEDED' } }, HttpStatus.TOO_MANY_REQUESTS);
     return true;
   }
 }

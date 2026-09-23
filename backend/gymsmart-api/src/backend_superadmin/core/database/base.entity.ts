@@ -1,6 +1,6 @@
-﻿// RESPONSIBILITY: Provides the canonical persistence identity and lifecycle fields shared by every TypeORM entity.
+// RESPONSIBILITY: Provides the canonical persistence identity and lifecycle fields shared by every TypeORM entity.
 // FLOW: Feature entity -> BaseEntity -> PostgreSQL primary key + lifecycle columns.
-import { Column, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseEntity {
   /** Stable application identifier; deterministic seed data may preserve frontend fixture IDs. */
@@ -8,11 +8,11 @@ export abstract class BaseEntity {
   id!: string;
 
   /** Creation timestamp stored in UTC. */
-  @Column({ name: 'created_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 
   /** Update timestamp stored in UTC. */
-  @Column({ name: 'updated_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt!: Date;
 
   /** Soft-delete timestamp; null means the record is active. */
