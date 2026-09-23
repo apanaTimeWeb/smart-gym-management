@@ -1942,11 +1942,12 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
    - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
    - ✅ **GOOD:** `test_admin_members_api.py` (lives inside `backend_e2e/backend_admin_e2e/members/`)
 
-3. **WET Over DRY (No Global Shared Utilities):** Never create a global `shared/`, `utils/`, or `common/` folder for E2E or Selenium tests. If both `backend_admin_e2e` and `backend_manager_e2e` need a "login and get auth token" helper script, you MUST duplicate the script into both directories.
-   - ❌ **BAD:** `backend_e2e/shared/auth_helper.py`
-   - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/helpers/auth_helper.py` AND `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
+3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend_manager_e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
+   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend_e2e/backend_manager_e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
+   - ❌ **BAD:** `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
+   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/dashboard/auth_helper.py` AND `backend_e2e/backend_manager_e2e/billing/auth_helper.py`
 
-4. **No Cross-Domain Imports:** A test script in `backend_manager_selenium` MUST NOT import a fixture, constant, or helper from `backend_admin_selenium`. If tests span multiple roles, they must be orchestrated at a higher CI pipeline level, not through tightly coupled Python/TS test imports.
+4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
 5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
 
