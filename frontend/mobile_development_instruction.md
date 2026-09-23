@@ -572,7 +572,7 @@ visually renders with placeholder values.
 - **Integration tests:** Live inside the feature's `tests/` directory and verify
   multi-file feature flows, API/mock integration, state coordination, and critical
   feature behavior.
-- **E2E tests:** Live in the project-level E2E suite and verify complete user
+- **E2E tests:** MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders, but keep them in the project-level E2E suite to verify complete user
   journeys through the real application (e.g. Maestro or a comparable YAML/script-
   driven E2E runner works across both RN and Flutter — choose ONE tool project-wide
   and document the choice; do not mix multiple E2E tools in the same repo).

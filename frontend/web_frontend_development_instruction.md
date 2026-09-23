@@ -1136,8 +1136,8 @@ AI-generated code is not considered complete until the required tests exist.
 Approved stack:
 - Unit tests: Vitest
 - React component tests: React Testing Library
-- E2E tests: Playwright
 - API/network mocking: MSW
+- Note: Full browser E2E (Selenium) is handled externally. Do not use Playwright or Cypress here.
 
 Co-location rule:
 - `ManagerMembersTable.tsx` → `ManagerMembersTable.test.tsx`
@@ -1147,7 +1147,18 @@ Co-location rule:
 Minimum expectations:
 - Utilities: 90% branch coverage
 - Custom hooks: 80% coverage
-- Core components: interaction tests for loading, success, empty, error, and disabled states
+- Core components: interaction tests for all user events (clicks, typing, dropdowns), loading, success, empty, error, and disabled states.
+
+**Component Testing Philosophy (No Playwright):**
+1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
+2. **No Frontend E2E Suite:** Because true E2E is handled externally (e.g., Selenium via the backend QA pipeline), the frontend is responsible strictly for rigorous **Component Integration Testing**. You MUST use React Testing Library (RTL) + MSW to verify that:
+   - Buttons trigger the correct actions and loading states.
+   - Dropdowns open and select the correct values.
+   - Modals appear and close correctly.
+   - Component empty, error, and success states render properly.
+
+
+   - Core components: interaction tests for loading, success, empty, error, and disabled states
 - Critical journeys: Playwright E2E coverage
 
 Mandatory E2E flows:
@@ -1157,6 +1168,7 @@ Mandatory E2E flows:
 - Type-to-confirm destructive action flows
 - Billing or payment workflows
 - Important table filtering, pagination, and export workflows
+
 
 Testing rules:
 - Test user-visible behavior, not internal implementation details.
