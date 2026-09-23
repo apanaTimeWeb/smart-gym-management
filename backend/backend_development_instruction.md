@@ -83,8 +83,8 @@ Rename all controllers, services, and models to be extremely descriptive based o
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
 - ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
-* **The Rule:** Every file name (not just the containing folder) MUST begin with the module name as a prefix. This applies to components, hooks, utils, types, constants, services, controllers — everything.
-* **Component/Class Internal Naming:** The exported component, class, or function name inside the file MUST exactly match the filename (minus the extension) — no mismatches, no default-export-with-different-name. For example, `billing-invoice-generation.service.ts` must export `class BillingInvoiceGenerationService`. This prevents AI hallucination.
+* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
+* **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
