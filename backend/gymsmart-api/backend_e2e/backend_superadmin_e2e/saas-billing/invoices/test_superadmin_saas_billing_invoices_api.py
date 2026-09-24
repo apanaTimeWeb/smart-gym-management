@@ -44,7 +44,8 @@ def test_superadmin_saas_billing_invoices_read_contract(path: str) -> None:
     _assert_envelope(response)
 
 def test_invoice_resend_preserves_frozen_null_payload_and_exposes_job_location():
-    if not TOKEN or not INVOICE_ID:
+    INVOICE_ID = '00000000-0000-4000-8000-000000000001'
+    if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
         f"{BASE_URL}/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
@@ -61,7 +62,8 @@ def test_invoice_resend_preserves_frozen_null_payload_and_exposes_job_location()
 
 
 def test_invoice_resend_requires_idempotency_key():
-    if not TOKEN or not INVOICE_ID:
+    INVOICE_ID = '00000000-0000-4000-8000-000000000001'
+    if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
         f"{BASE_URL}/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
