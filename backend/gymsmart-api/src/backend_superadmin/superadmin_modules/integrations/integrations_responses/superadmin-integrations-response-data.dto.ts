@@ -8,7 +8,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
  * Side-Effects: None unless the construct is explicitly a persistence, adapter, queue, or event boundary.
  * AI-Note: Treat this declaration as an architectural contract; do not move business logic into generic/shared folders or introduce undocumented fields.
  */
-export class SuperadminIntegrationsResponseDataDto {
+export class SuperadminIntegrationTenantDto {
   @ApiProperty() id!: string;
   @ApiProperty() name!: string;
 }

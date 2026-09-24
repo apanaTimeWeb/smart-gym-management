@@ -41,7 +41,7 @@ export interface SuperadminAnalyticsSummaryRow { mrr: string | number; active_te
  * Side-Effects: None directly; changes can alter request/response compatibility and downstream consumers.
  * AI-Note: Treat this declaration as an explicit blueprint. Do not widen, narrow, rename, or reinterpret fields without coordinated contract review.
  */
-export interface SuperadminAnalyticsCancellationRow { cancelled: string | number; total: string | number; }
+export interface SuperadminAnalyticsCancellationRow { cancelled: string | number; total: string | number; previous_cancelled?: string | number; previous_total?: string | number; previousCancelled?: string | number; previousTotal?: string | number; }
 /**
  * Primary Intent: Defines the SuperadminAnalyticsMonthlyRow type contract for this Superadmin backend feature and its frozen API/data boundary.
  * Edge Cases: Preserve exact property names, nullability, enums, and optional-field semantics when modifying this contract.

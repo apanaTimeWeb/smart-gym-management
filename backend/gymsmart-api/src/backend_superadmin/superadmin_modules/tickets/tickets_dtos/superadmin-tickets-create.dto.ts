@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { SupportTicketStatus as TicketsStatus, SupportTicketPriority as TicketsPriority } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.constants';
+import { SupportTicketStatus as SupportTicketStatus, SupportTicketPriority as TicketsPriority } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.constants';
 /**
  * Primary Intent: Defines SuperadminTicketsCreateDto as the class-level contract for superadmin-tickets-create.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -38,11 +38,11 @@ export class SuperadminTicketsCreateDto {
   /** Primary Intent: Defines the `description` data contract for this superadmin-tickets-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   description!: string;
-  @IsEnum(TicketsStatus)
+  @IsEnum(SupportTicketStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-tickets-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: TicketsStatus;
+  status!: SupportTicketStatus;
   @IsEnum(TicketsPriority)
   @ApiProperty()
   /** Primary Intent: Defines the `priority` data contract for this superadmin-tickets-create.dto construct.

@@ -1,19 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-// RESPONSIBILITY: Validates SuperadminSystemOpsBackupsStatusDto request input at the HTTP boundary.
+// RESPONSIBILITY: Validates SuperadminSystemOpsSuperadminBackupJobStatusDto request input at the HTTP boundary.
 // FLOW: HTTP JSON -> DTO -> feature use-case service.
 import { IsEnum } from 'class-validator';
-import { BackupsStatus } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
+import { SuperadminBackupJobStatus } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
 
 /**
- * Primary Intent: Defines SuperadminSystemOpsBackupsStatusDto as the class-level contract for superadmin-system-ops-backups-status.dto.ts.
+ * Primary Intent: Defines SuperadminSystemOpsSuperadminBackupJobStatusDto as the class-level contract for superadmin-system-ops-backups-status.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
  * Side-Effects: None unless the construct is explicitly a persistence, adapter, queue, or event boundary.
  * AI-Note: Treat this declaration as an architectural contract; do not move business logic into generic/shared folders or introduce undocumented fields.
  */
-export class SuperadminSystemOpsBackupsStatusDto {
-  @IsEnum(BackupsStatus)
+export class SuperadminSystemOpsSuperadminBackupJobStatusDto {
+  @IsEnum(SuperadminBackupJobStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-system-ops-backups-status.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: BackupsStatus;
+  status!: SuperadminBackupJobStatus;
 }

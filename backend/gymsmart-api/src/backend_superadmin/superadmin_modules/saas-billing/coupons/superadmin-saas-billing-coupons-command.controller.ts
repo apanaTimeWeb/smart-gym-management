@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the coupons-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminSaasBillingCouponsStatusDto } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_dtos/superadmin-saas-billing-coupons-status.dto';
+import { SuperadminSaasBillingCouponStatusDto } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_dtos/superadmin-saas-billing-coupons-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminSaasBillingCouponsCreateDto } from '@/backend_superadmin/supe
 import { SuperadminSaasBillingCouponsUpdateService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-update.service';
 import { SuperadminSaasBillingCouponsUpdateDto } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_dtos/superadmin-saas-billing-coupons-update.dto';
 import { SuperadminSaasBillingCouponsDeleteService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-delete.service';
-import { SuperadminSaasBillingCouponsStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-status.service';
+import { SuperadminSaasBillingCouponStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-status.service';
 
 /**
  * Primary Intent: Defines SuperadminSaasBillingCouponsCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminSaasBillingCouponsStatusService } from '@/backend_superadmin/
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSaasBillingCouponsCommandController {
-  constructor(private readonly createService: SuperadminSaasBillingCouponsCreateService, private readonly updateService: SuperadminSaasBillingCouponsUpdateService, private readonly deleteService: SuperadminSaasBillingCouponsDeleteService, private readonly statusService: SuperadminSaasBillingCouponsStatusService) {}
+  constructor(private readonly createService: SuperadminSaasBillingCouponsCreateService, private readonly updateService: SuperadminSaasBillingCouponsUpdateService, private readonly deleteService: SuperadminSaasBillingCouponsDeleteService, private readonly statusService: SuperadminSaasBillingCouponStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminSaasBillingCouponsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSaasBillingCouponsStatusDto): Promise<Awaited<ReturnType<SuperadminSaasBillingCouponsStatusService['changeCouponsStatus']>>> { return this.statusService.changeCouponsStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSaasBillingCouponStatusDto): Promise<Awaited<ReturnType<SuperadminSaasBillingCouponStatusService['changeCouponStatus']>>> { return this.statusService.changeCouponStatus(id, body.status); }
 
 }

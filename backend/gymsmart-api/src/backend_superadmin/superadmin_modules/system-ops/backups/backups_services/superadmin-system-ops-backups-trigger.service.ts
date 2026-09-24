@@ -1,3 +1,4 @@
+import { SuperadminBackupJobType } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
 // RESPONSIBILITY: Creates durable backup snapshot records and queues actual backup work.
 // FLOW: Controller -> tenant registry -> backup record -> backup job -> Redis worker.
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -43,11 +44,11 @@ export class SuperadminSystemOpsBackupsTriggerService {
     const jobs:string[]=[];
     for (const tenantId of tenantIds) {
       const tenant = await this.tenants.findByIdOrThrow(tenantId);
-      const job = await this.jobs.create({ type:'SNAPSHOT', tenantId, requestedByUserId:actor, resultBackupId:null });
+      const job = await this.jobs.create({ type:SuperadminBackupJobType.SNAPSHOT, tenantId, requestedByUserId:actor, resultBackupId:null });
       const backup = await this.backups.createQueuedBackup({ tenantId, tenantName: tenant.name ?? tenantId, databaseName: tenant.databaseName, jobId:job.id });
       // Store actual result backup id on the job for deterministic status correlation.
       await this.backups.updateBackupsById(backup.id,{jobId:job.id});
-      await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_BACKUP_QUEUE, tenantId, payload:{ backupId:backup.id, type:'SNAPSHOT', requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
+      await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_BACKUP_QUEUE, tenantId, payload:{ backupId:backup.id, type:SuperadminBackupJobType.SNAPSHOT, requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
       jobs.push(job.id);
     }
     return { jobIds:jobs, statusUrl:'/superadmin/system-ops/backups/jobs' };

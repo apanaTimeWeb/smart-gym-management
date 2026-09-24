@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { IntegrationKeyStatus as IntegrationsStatus } from '@/backend_superadmin/superadmin_modules/integrations/superadmin-integrations.constants';
+import { IntegrationKeyStatus as IntegrationKeyStatus } from '@/backend_superadmin/superadmin_modules/integrations/superadmin-integrations.constants';
 /**
  * Primary Intent: Defines SuperadminIntegrationsUpdateDto as the class-level contract for superadmin-integrations-update.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -25,11 +25,11 @@ export class SuperadminIntegrationsUpdateDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   label!: string;
   @IsOptional()
-  @IsEnum(IntegrationsStatus)
+  @IsEnum(IntegrationKeyStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-integrations-update.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: IntegrationsStatus;
+  status!: IntegrationKeyStatus;
   @IsOptional()
   @Type(() => Date)
   @IsDate()

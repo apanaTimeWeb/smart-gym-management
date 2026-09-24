@@ -3,7 +3,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsISO4217CurrencyCode, IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
 
-import { TenantStatus as GymsStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
+import { TenantStatus as TenantStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
 /**
  * Primary Intent: Defines SuperadminGymsUpdateDto as the class-level contract for superadmin-gyms-update.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -20,7 +20,7 @@ export class SuperadminGymsUpdateDto {@ApiPropertyOptional()
 
   @IsOptional() @IsString() @Length(10, 20) phone?: string;@ApiPropertyOptional()
 
-  @IsOptional() @IsEnum(GymsStatus) status?: GymsStatus;@ApiPropertyOptional()
+  @IsOptional() @IsEnum(TenantStatus) status?: TenantStatus;@ApiPropertyOptional()
 
   @IsOptional() @IsString() @Length(1, 128) plan?: string;@ApiPropertyOptional()
 

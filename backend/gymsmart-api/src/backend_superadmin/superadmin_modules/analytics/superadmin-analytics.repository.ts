@@ -70,7 +70,7 @@ export class SuperadminAnalyticsRepository extends SuperadminCoreBaseRepository<
     const [summary, cancellation, monthly, planRevenue] = await Promise.all([this.getSummary(), this.getCancellation(), this.getMonthly(), this.getPlanRevenue()]);
     const mrr = Number(summary.mrr); const active = Number(summary.active_tenants); const cancelled = Number(cancellation.cancelled); const total = Number(cancellation.total);
     const cancellationRate = total ? Number(((cancelled / total) * 100).toFixed(2)) : 0;
-    const previousCancellationRate = cancellation.previousTotal ? (cancellation.previousCancelled / cancellation.previousTotal) * 100 : 0;
+    const previousCancellationRate = cancellation.previous_total ? (Number(cancellation.previous_cancelled) / Number(cancellation.previous_total)) * 100 : 0;
     const cancellationDeltaPercent = Number((cancellationRate - previousCancellationRate).toFixed(2));
     const previousMrr = this.previousMetric(monthly); const delta = previousMrr ? Number((((mrr - previousMrr) / previousMrr) * 100).toFixed(2)) : 0;
     const cac = Number(summary.acquisition_tenants) ? Math.round(Number(summary.acquisition_spend) / Number(summary.acquisition_tenants)) : 0;

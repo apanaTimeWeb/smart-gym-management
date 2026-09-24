@@ -36,7 +36,7 @@ export class SuperadminMessagingNotificationCommandController {
   @Patch('read-all')
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
-  @ApiResponse({ status: HttpStatus.OK, description: 'All notifications marked as read.', type: null })
+  @ApiResponse({ status: HttpStatus.OK, description: 'All notifications marked as read.' })
   @ApiOperation({ summary: 'markAllRead' })
   /**
    * Primary Intent: Executes the markAllRead use case within its owning backend boundary.
@@ -66,5 +66,8 @@ export class SuperadminMessagingNotificationCommandController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async markRead(@Param('id') id: string): Promise<SuperadminMessagingNotificationResponseDto> { return this.service.markRead(id); }
+  async markRead(@Param('id') id: string): Promise<SuperadminMessagingNotificationResponseDto> { 
+    const item = await this.service.markRead(id);
+    return { ...item, createdAt: item.createdAt.toISOString() } as unknown as SuperadminMessagingNotificationResponseDto; 
+  }
 }

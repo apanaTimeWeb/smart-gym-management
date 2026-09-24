@@ -27,7 +27,7 @@ export class SuperadminSaasBillingCouponsCreateService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async createCoupons(input: SuperadminCouponsCreateInput): Promise<SuperadminCouponsDomainModel> {
-    const currency = input.discountType === 'FIXED_AMOUNT' ? (input.currency ?? 'INR') : null;
+    const currency = input.discountType === 'FIXED_AMOUNT' ? (input.currency ?? 'INR') : undefined;
     return SuperadminSaasBillingCouponsMapper.toDomain(await this.repository.createCoupons({ ...input, currency }));
   }
 }

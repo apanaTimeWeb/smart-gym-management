@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the infrastructure-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminSystemOpsInfrastructureStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-status.dto';
+import { SuperadminSystemOpsInfrastructureNodeStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminSystemOpsInfrastructureCreateDto } from '@/backend_superadmin
 import { SuperadminSystemOpsInfrastructureUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-update.service';
 import { SuperadminSystemOpsInfrastructureUpdateDto } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-update.dto';
 import { SuperadminSystemOpsInfrastructureDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-delete.service';
-import { SuperadminSystemOpsInfrastructureStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-status.service';
+import { SuperadminSystemOpsInfrastructureNodeStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-status.service';
 
 /**
  * Primary Intent: Defines SuperadminSystemOpsInfrastructureCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminSystemOpsInfrastructureStatusService } from '@/backend_supera
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsInfrastructureCommandController {
-  constructor(private readonly createService: SuperadminSystemOpsInfrastructureCreateService, private readonly updateService: SuperadminSystemOpsInfrastructureUpdateService, private readonly deleteService: SuperadminSystemOpsInfrastructureDeleteService, private readonly statusService: SuperadminSystemOpsInfrastructureStatusService) {}
+  constructor(private readonly createService: SuperadminSystemOpsInfrastructureCreateService, private readonly updateService: SuperadminSystemOpsInfrastructureUpdateService, private readonly deleteService: SuperadminSystemOpsInfrastructureDeleteService, private readonly statusService: SuperadminSystemOpsInfrastructureNodeStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminSystemOpsInfrastructureCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsInfrastructureStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsInfrastructureStatusService['changeInfrastructureStatus']>>> { return this.statusService.changeInfrastructureStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsInfrastructureNodeStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsInfrastructureNodeStatusService['changeInfrastructureNodeStatus']>>> { return this.statusService.changeInfrastructureNodeStatus(id, body.status); }
 
 }

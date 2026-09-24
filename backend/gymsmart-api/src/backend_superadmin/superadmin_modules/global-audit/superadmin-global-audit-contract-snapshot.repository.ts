@@ -24,10 +24,10 @@ export class SuperadminGlobalAuditContractSnapshotRepository {
   async upsertSnapshot(id: string, kind: string, payload: unknown): Promise<void> {
     const existing = await this.repository.findOne({ where: { id } });
     if (existing) {
-      await this.repository.update({ id }, { kind, payload, deletedAt: null });
+      await this.repository.update({ id }, { kind, payload, deletedAt: null } as any);
       return;
     }
-    await this.repository.insert(this.repository.create({ id, kind, payload }));
+    await this.repository.save(this.repository.create({ id, kind, payload }));
   }
 
 }

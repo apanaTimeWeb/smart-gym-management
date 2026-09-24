@@ -14,7 +14,7 @@ import { SuperadminTicketsFindService } from '@/backend_superadmin/superadmin_mo
 import { SuperadminTicketsCreateService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-create.service';
 import { SuperadminTicketsUpdateService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-update.service';
 import { SuperadminTicketsDeleteService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-delete.service';
-import { SuperadminTicketsStatusService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-status.service';
+import { SuperadminSupportTicketStatusService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-status.service';
 import { SuperadminTicketsInsightsService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-insights.service';
 import { SuperadminTicketsActionsController } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets-actions.controller';
 import { SuperadminTicketsActionsService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-actions.service';
@@ -28,7 +28,7 @@ import { SuperadminTicketsActionsService } from '@/backend_superadmin/superadmin
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminTicketsContractSnapshotEntity, SuperadminTicketsEntity])],
   controllers: [SuperadminTicketsQueryController, SuperadminTicketsCommandController, SuperadminTicketsActionsController, SuperadminTicketsInsightsQueryController],
-  providers: [SuperadminTicketsActionsService, SuperadminTicketsContractSnapshotRepository, SuperadminTicketsInsightsService, SuperadminTicketsRepository, SuperadminTicketsListService, SuperadminTicketsFindService, SuperadminTicketsCreateService, SuperadminTicketsUpdateService, SuperadminTicketsDeleteService, SuperadminTicketsStatusService],
+  providers: [SuperadminTicketsActionsService, SuperadminTicketsContractSnapshotRepository, SuperadminTicketsInsightsService, SuperadminTicketsRepository, SuperadminTicketsListService, SuperadminTicketsFindService, SuperadminTicketsCreateService, SuperadminTicketsUpdateService, SuperadminTicketsDeleteService, SuperadminSupportTicketStatusService],
   exports: [SuperadminTicketsRepository],
 })
 /**

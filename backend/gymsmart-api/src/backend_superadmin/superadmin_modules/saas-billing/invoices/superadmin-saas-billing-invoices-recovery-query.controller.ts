@@ -1,3 +1,4 @@
+import { SuperadminSaasBillingInvoicesRecoveryCenterResponseDto } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices-recovery-center-response.dto';
 // RESPONSIBILITY: Owns the query HTTP transport for this feature; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning micro-service -> canonical response envelope.
 
@@ -45,7 +46,7 @@ export class SuperadminSaasBillingInvoicesRecoveryQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async recoveryCenter(@Query() query: SuperadminQueryDto): Promise<SuperadminSaasBillingInvoicesResendJobStatusResponseDto> { return await this.recoveryCenterService.findInvoicesRecoveryCenter({ query }); }
+  async recoveryCenter(@Query() query: SuperadminQueryDto): Promise<SuperadminSaasBillingInvoicesRecoveryCenterResponseDto> { return await this.recoveryCenterService.findInvoicesRecoveryCenter({ query }); }
 /**
  * Primary Intent: Executes the resendJobStatus use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

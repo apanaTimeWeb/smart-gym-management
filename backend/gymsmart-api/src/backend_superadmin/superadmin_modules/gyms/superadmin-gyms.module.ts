@@ -15,7 +15,7 @@ import { SuperadminGymsFindService } from '@/backend_superadmin/superadmin_modul
 import { SuperadminGymsCreateService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-create.service';
 import { SuperadminGymsUpdateService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-update.service';
 import { SuperadminGymsDeleteService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-delete.service';
-import { SuperadminGymsStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
+import { SuperadminTenantStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
 import { SuperadminGymsBusinessControlsService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-business-controls.service';
 import { SuperadminGymsBulkActionService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-bulk-action.service';
 import { SuperadminGymsDetailBusinessOverviewService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-detail-business-overview.service';
@@ -40,7 +40,7 @@ import { SuperadminGymsExportDownloadTokenService } from '@/backend_superadmin/s
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminGymsDetailContractSnapshotEntity, SuperadminGymsEntity, SuperadminGymsExportJobEntity])],
   controllers: [SuperadminGymsQueryController, SuperadminGymsCommandController, SuperadminGymsApiQueryController, SuperadminGymsApiCommandController, SuperadminGymsExportController, SuperadminGymsLookupController, SuperadminGymsAdministrationQueryController, SuperadminGymsAdministrationCommandController],
-  providers: [SuperadminGymsDetailContractSnapshotRepository, SuperadminGymsBusinessControlsService, SuperadminGymsBulkActionService, SuperadminGymsDetailBusinessOverviewService, SuperadminGymsRepository, SuperadminGymsListService, SuperadminGymsFindService, SuperadminGymsCreateService, SuperadminGymsUpdateService, SuperadminGymsDeleteService, SuperadminGymsStatusService, SuperadminGymsLookupService, SuperadminGymsProvisionService, SuperadminGymsExportJobRepository, SuperadminGymsExportWorkerService, SuperadminGymsExportDownloadTokenService, SuperadminGymsOperationalService],
+  providers: [SuperadminGymsDetailContractSnapshotRepository, SuperadminGymsBusinessControlsService, SuperadminGymsBulkActionService, SuperadminGymsDetailBusinessOverviewService, SuperadminGymsRepository, SuperadminGymsListService, SuperadminGymsFindService, SuperadminGymsCreateService, SuperadminGymsUpdateService, SuperadminGymsDeleteService, SuperadminTenantStatusService, SuperadminGymsLookupService, SuperadminGymsProvisionService, SuperadminGymsExportJobRepository, SuperadminGymsExportWorkerService, SuperadminGymsExportDownloadTokenService, SuperadminGymsOperationalService],
   exports: [SuperadminGymsRepository],
 })
 /**

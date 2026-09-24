@@ -80,6 +80,6 @@ export class SuperadminGymsExportJobRepository {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findLatestEquivalent(requestedByUserId:string,search:string|null,statusFilter:string|null,planFilter:string|null):Promise<SuperadminGymsExportJobEntity|null>{
-    return this.activeRepository.findOne({where:{requestedByUserId,search,statusFilter,planFilter,deletedAt:null} as never,order:{createdAt:'DESC'} as never});
+    return this.repository.findOne({where:{requestedByUserId,search,statusFilter,planFilter,deletedAt:null} as never,order:{createdAt:'DESC'} as never});
   }
 }

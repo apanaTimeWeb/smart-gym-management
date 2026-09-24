@@ -14,8 +14,8 @@ import { SuperadminIntegrationsCreateDto } from '@/backend_superadmin/superadmin
 import { SuperadminIntegrationsUpdateService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-update.service';
 import { SuperadminIntegrationsUpdateDto } from '@/backend_superadmin/superadmin_modules/integrations/integrations_dtos/superadmin-integrations-update.dto';
 import { SuperadminIntegrationsDeleteService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-delete.service';
-import { SuperadminIntegrationsStatusService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-status.service';
-import { SuperadminIntegrationsStatusDto } from '@/backend_superadmin/superadmin_modules/integrations/integrations_dtos/superadmin-integrations-status.dto';
+import { SuperadminIntegrationKeyStatusService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-status.service';
+import { SuperadminIntegrationKeyStatusDto } from '@/backend_superadmin/superadmin_modules/integrations/integrations_dtos/superadmin-integrations-status.dto';
 import { SuperadminIntegrationsResponseDto } from '@/backend_superadmin/superadmin_modules/integrations/integrations_responses/superadmin-integrations-response.dto';
 
 /**
@@ -29,7 +29,7 @@ import { SuperadminIntegrationsResponseDto } from '@/backend_superadmin/superadm
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminIntegrationsCommandController {
-  constructor(private readonly createService: SuperadminIntegrationsCreateService, private readonly updateService: SuperadminIntegrationsUpdateService, private readonly deleteService: SuperadminIntegrationsDeleteService, private readonly statusService: SuperadminIntegrationsStatusService) {}
+  constructor(private readonly createService: SuperadminIntegrationsCreateService, private readonly updateService: SuperadminIntegrationsUpdateService, private readonly deleteService: SuperadminIntegrationsDeleteService, private readonly statusService: SuperadminIntegrationKeyStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -119,6 +119,6 @@ export class SuperadminIntegrationsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminIntegrationsStatusDto): Promise<SuperadminIntegrationsResponseDto> { return (this.statusService.changeIntegrationsStatus(id, body.status)) as unknown as SuperadminIntegrationsResponseDto; }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminIntegrationKeyStatusDto): Promise<SuperadminIntegrationsResponseDto> { return (this.statusService.changeIntegrationKeyStatus(id, body.status)) as unknown as SuperadminIntegrationsResponseDto; }
 
 }

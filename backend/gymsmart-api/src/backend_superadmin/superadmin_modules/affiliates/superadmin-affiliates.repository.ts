@@ -7,6 +7,7 @@ import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_co
 import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminAffiliatesEntity } from '@/backend_superadmin/superadmin_modules/affiliates/superadmin-affiliates.entity';
 import type { SuperadminAffiliatesListQuery, SuperadminAffiliatesCreatePersistenceInput, SuperadminAffiliatesUpdatePersistenceInput } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_types/superadmin-affiliates.interfaces';
+import { AffiliateStatus } from '@/backend_superadmin/superadmin_modules/affiliates/superadmin-affiliates.constants';
 
 /**
  * Primary Intent: Defines SuperadminAffiliatesRepository as an explicit backend construct in its owning role/module boundary.

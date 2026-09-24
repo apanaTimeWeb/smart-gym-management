@@ -109,12 +109,12 @@ export class SuperadminCoreUuidFinancialAlignment20260924 implements MigrationIn
 
     await queryRunner.query(`ALTER TABLE superadmin_affiliates ADD COLUMN IF NOT EXISTS currency char(3) NOT NULL DEFAULT 'INR'`);
 
-    const bankColumn = await queryRunner.query<Array<{ dataType: string }>>(`SELECT data_type AS "dataType" FROM information_schema.columns WHERE table_schema='public' AND table_name='superadmin_affiliates' AND column_name='bank_details'`);
+    const bankColumn = (await queryRunner.query(`SELECT data_type AS "dataType" FROM information_schema.columns WHERE table_schema='public' AND table_name='superadmin_affiliates' AND column_name='bank_details'`)) as Array<{ dataType: string }>;
     if (!bankColumn.length) {
       await queryRunner.query(`ALTER TABLE superadmin_affiliates ADD COLUMN bank_details text NULL`);
     } else if (bankColumn[0].dataType !== 'text') {
       const key = resolveMigrationEncryptionKey();
-      const rows = await queryRunner.query<Array<{ id: string; bankDetails: string }>>(`SELECT id::text AS id, bank_details::text AS "bankDetails" FROM superadmin_affiliates WHERE bank_details IS NOT NULL AND bank_details::text <> 'null'`);
+      const rows = (await queryRunner.query(`SELECT id::text AS id, bank_details::text AS "bankDetails" FROM superadmin_affiliates WHERE bank_details IS NOT NULL AND bank_details::text <> 'null'`)) as Array<{ id: string; bankDetails: string }>;
       await queryRunner.query(`ALTER TABLE superadmin_affiliates ALTER COLUMN bank_details TYPE text USING bank_details::text`);
       for (const row of rows) {
         await queryRunner.query(`UPDATE superadmin_affiliates SET bank_details=$1 WHERE id=$2::uuid`, [encryptLegacyBankDetails(row.bankDetails, key), row.id]);
@@ -136,7 +136,7 @@ export class SuperadminCoreUuidFinancialAlignment20260924 implements MigrationIn
     await queryRunner.query(`CREATE INDEX IF NOT EXISTS IDX_superadmin_affiliate_ledger_transaction ON superadmin_affiliate_ledger_entries(transaction_id)`);
     await queryRunner.query(`CREATE INDEX IF NOT EXISTS IDX_superadmin_affiliate_ledger_affiliate_created_at ON superadmin_affiliate_ledger_entries(affiliate_id,created_at)`);
 
-    const pendingColumn = await queryRunner.query<Array<{ dataType: string }>>(`SELECT data_type AS "dataType" FROM information_schema.columns WHERE table_schema='public' AND table_name='superadmin_affiliates' AND column_name='pending_payout'`);
+    const pendingColumn = (await queryRunner.query(`SELECT data_type AS "dataType" FROM information_schema.columns WHERE table_schema='public' AND table_name='superadmin_affiliates' AND column_name='pending_payout'`)) as Array<{ dataType: string }>;
     if (pendingColumn.length) {
       await queryRunner.query(`
         WITH legacy AS (

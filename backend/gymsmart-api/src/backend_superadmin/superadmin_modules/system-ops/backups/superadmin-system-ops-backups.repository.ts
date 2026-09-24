@@ -88,7 +88,7 @@ export class SuperadminSystemOpsBackupsRepository extends SuperadminCoreBaseRepo
 
   /** Creates a durable backup record for one tenant job. */
   async createQueuedBackup(input: { tenantId: string; tenantName: string; databaseName: string; jobId: string }): Promise<SuperadminSystemOpsBackupsEntity> {
-    return this.activeRepository.save(this.activeRepository.create({ tenantId: input.tenantId, tenantName: input.tenantName, databaseName: input.databaseName, sizeMB: 0, status: 'IN_PROGRESS', timestamp: new Date(), artifactPath: null, jobId: input.jobId } as never));
+    return this.activeRepository.save(this.activeRepository.create({ tenantId: input.tenantId, tenantName: input.tenantName, databaseName: input.databaseName, sizeMB: 0, status: 'IN_PROGRESS', timestamp: new Date(), artifactPath: null, jobId: input.jobId } as unknown as SuperadminSystemOpsBackupsEntity));
   }
 
   /**

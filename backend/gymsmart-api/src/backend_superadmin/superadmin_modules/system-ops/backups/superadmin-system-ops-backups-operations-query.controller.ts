@@ -114,7 +114,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async download(@Param('id') id:string):Promise<SuperadminSystemOpsBackupsJobStatusResponseDto>{ return this.downloadService.findBackupsDownload(id); }
+  async download(@Param('id') id:string):Promise<{downloadUrl: string; expiresAt: string}>{ return this.downloadService.findBackupsDownload(id); }
 /**
  * Primary Intent: Executes the downloadFile use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

@@ -2,7 +2,7 @@
 // FLOW: Job repository -> job status DTO -> canonical response envelope.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { SuperadminBackupJobStatus } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
+import { SuperadminBackupJobStatus, SuperadminBackupJobType } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
 
 /**
  * Primary Intent: Defines SuperadminSystemOpsBackupsJobStatusResponseDto as the class-level contract for superadmin-system-ops-backups-job-status-response.dto.ts.

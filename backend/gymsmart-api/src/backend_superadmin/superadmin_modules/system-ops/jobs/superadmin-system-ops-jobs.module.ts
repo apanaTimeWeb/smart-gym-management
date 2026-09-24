@@ -13,7 +13,7 @@ import { SuperadminSystemOpsJobsFindService } from '@/backend_superadmin/superad
 import { SuperadminSystemOpsJobsCreateService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-create.service';
 import { SuperadminSystemOpsJobsUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-update.service';
 import { SuperadminSystemOpsJobsDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-delete.service';
-import { SuperadminSystemOpsJobsStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-status.service';
+import { SuperadminSystemOpsBackgroundJobStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-status.service';
 import { SuperadminSystemOpsJobsQueueHealthService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-queue-health.service';
 import { SuperadminSystemOpsJobsRetryAllService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-retry-all.service';
 import { SuperadminSystemOpsJobsRetryService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-retry.service';
@@ -30,7 +30,7 @@ import { SuperadminSystemOpsJobsBulkDeleteService } from '@/backend_superadmin/s
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSystemOpsJobsEntity])],
   controllers: [SuperadminSystemOpsJobsQueryController, SuperadminSystemOpsJobsCommandController, SuperadminSystemOpsJobsQueueHealthQueryController, SuperadminSystemOpsJobsBulkCommandController],
-  providers: [SuperadminSystemOpsJobsQueueHealthService, SuperadminSystemOpsJobsRetryAllService, SuperadminSystemOpsJobsRetryService, SuperadminSystemOpsJobsCancelService, SuperadminSystemOpsJobsClearCompletedService, SuperadminSystemOpsJobsBulkRetryService, SuperadminSystemOpsJobsBulkDeleteService, SuperadminSystemOpsJobsRepository, SuperadminSystemOpsJobsListService, SuperadminSystemOpsJobsFindService, SuperadminSystemOpsJobsCreateService, SuperadminSystemOpsJobsUpdateService, SuperadminSystemOpsJobsDeleteService, SuperadminSystemOpsJobsStatusService],
+  providers: [SuperadminSystemOpsJobsQueueHealthService, SuperadminSystemOpsJobsRetryAllService, SuperadminSystemOpsJobsRetryService, SuperadminSystemOpsJobsCancelService, SuperadminSystemOpsJobsClearCompletedService, SuperadminSystemOpsJobsBulkRetryService, SuperadminSystemOpsJobsBulkDeleteService, SuperadminSystemOpsJobsRepository, SuperadminSystemOpsJobsListService, SuperadminSystemOpsJobsFindService, SuperadminSystemOpsJobsCreateService, SuperadminSystemOpsJobsUpdateService, SuperadminSystemOpsJobsDeleteService, SuperadminSystemOpsBackgroundJobStatusService],
   exports: [SuperadminSystemOpsJobsRepository],
 })
 /**

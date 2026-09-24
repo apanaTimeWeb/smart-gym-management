@@ -38,7 +38,7 @@ export class SuperadminExportDataJobRepository {
     const id = randomUUID();
     const repository = this.dataSource.getRepository(SuperadminExportDataJobEntity);
     const job = repository.create({ id, queueName: EXPORT_DATA_QUEUE_NAME, jobName, status: ExportDataJobStatus.QUEUED, attempts: 0, errorCode: null, tenantId, payload, resultPath: null, downloadTokenHash: null, expiresAt: null, requestedByUserId });
-    await repository.insert(job);
+    await repository.save(job);
     await this.queue.enqueue({ jobId: id, queueName: EXPORT_DATA_QUEUE_NAME, tenantId, payload, enqueuedAt: new Date().toISOString() });
     return id;
   }

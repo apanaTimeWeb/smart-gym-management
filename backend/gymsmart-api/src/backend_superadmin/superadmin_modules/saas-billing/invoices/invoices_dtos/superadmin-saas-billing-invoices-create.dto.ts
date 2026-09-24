@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsISO4217CurrencyCode, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { SaasInvoiceStatus as InvoicesStatus, SaasInvoicePaymentMethod as InvoicesPaymentMethod, SaasInvoiceInvoiceType as InvoicesInvoiceType } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.constants';
+import { SaasInvoiceStatus as SaasInvoiceStatus, SaasInvoicePaymentMethod as InvoicesPaymentMethod, SaasInvoiceInvoiceType as InvoicesInvoiceType } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.constants';
 /**
  * Primary Intent: Defines SuperadminSaasBillingInvoicesCreateDto as the class-level contract for superadmin-saas-billing-invoices-create.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -33,11 +33,11 @@ export class SuperadminSaasBillingInvoicesCreateDto {
   /** Primary Intent: Defines the `currency` data contract for this superadmin-saas-billing-invoices-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   currency!: string;
-  @IsEnum(InvoicesStatus)
+  @IsEnum(SaasInvoiceStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-saas-billing-invoices-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: InvoicesStatus;
+  status!: SaasInvoiceStatus;
   @Type(() => Date)
   @IsDate()
   @ApiProperty()

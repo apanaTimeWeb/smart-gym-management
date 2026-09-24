@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { BackupRecordStatus as BackupsStatus } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
+import { BackupRecordStatus as SuperadminBackupJobStatus } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
 /**
  * Primary Intent: Defines SuperadminSystemOpsBackupsUpdateDto as the class-level contract for superadmin-system-ops-backups-update.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -32,11 +32,11 @@ export class SuperadminSystemOpsBackupsUpdateDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   sizeMB!: number;
   @IsOptional()
-  @IsEnum(BackupsStatus)
+  @IsEnum(SuperadminBackupJobStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-system-ops-backups-update.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: BackupsStatus;
+  status!: SuperadminBackupJobStatus;
   @IsOptional()
   @Type(() => Date)
   @IsDate()

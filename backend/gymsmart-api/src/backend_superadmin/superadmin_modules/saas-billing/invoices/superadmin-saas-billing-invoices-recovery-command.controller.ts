@@ -45,7 +45,7 @@ export class SuperadminSaasBillingInvoicesRecoveryCommandController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async manualPayment(@Body() body: SuperadminSaasBillingInvoicesManualPaymentDto): Promise<Awaited<ReturnType<SuperadminSaasBillingInvoicesManualPaymentService['recordManualPayment']>>> { return await this.manualPaymentService.record(body); }
+  async manualPayment(@Body() body: SuperadminSaasBillingInvoicesManualPaymentDto): Promise<Awaited<ReturnType<SuperadminSaasBillingInvoicesManualPaymentOrchestratorService['record']>>> { return await this.manualPaymentService.record(body); }
 /**
  * Primary Intent: Executes the resend use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

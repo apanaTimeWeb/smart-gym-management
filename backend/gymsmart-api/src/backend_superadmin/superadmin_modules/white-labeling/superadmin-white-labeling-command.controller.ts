@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the white-labeling-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminWhiteLabelingStatusDto } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_dtos/superadmin-white-labeling-status.dto';
+import { SuperadminWhiteLabelDomainStatusDto } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_dtos/superadmin-white-labeling-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminWhiteLabelingCreateDto } from '@/backend_superadmin/superadmi
 import { SuperadminWhiteLabelingUpdateService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-update.service';
 import { SuperadminWhiteLabelingUpdateDto } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_dtos/superadmin-white-labeling-update.dto';
 import { SuperadminWhiteLabelingDeleteService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-delete.service';
-import { SuperadminWhiteLabelingStatusService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-status.service';
+import { SuperadminWhiteLabelDomainStatusService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-status.service';
 
 /**
  * Primary Intent: Defines SuperadminWhiteLabelingCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminWhiteLabelingStatusService } from '@/backend_superadmin/super
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminWhiteLabelingCommandController {
-  constructor(private readonly createService: SuperadminWhiteLabelingCreateService, private readonly updateService: SuperadminWhiteLabelingUpdateService, private readonly deleteService: SuperadminWhiteLabelingDeleteService, private readonly statusService: SuperadminWhiteLabelingStatusService) {}
+  constructor(private readonly createService: SuperadminWhiteLabelingCreateService, private readonly updateService: SuperadminWhiteLabelingUpdateService, private readonly deleteService: SuperadminWhiteLabelingDeleteService, private readonly statusService: SuperadminWhiteLabelDomainStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminWhiteLabelingCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminWhiteLabelingStatusDto): Promise<Awaited<ReturnType<SuperadminWhiteLabelingStatusService['changeWhiteLabelingStatus']>>> { return this.statusService.changeWhiteLabelingStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminWhiteLabelDomainStatusDto): Promise<Awaited<ReturnType<SuperadminWhiteLabelDomainStatusService['changeWhiteLabelDomainStatus']>>> { return this.statusService.changeWhiteLabelDomainStatus(id, body.status); }
 
 }

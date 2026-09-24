@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the tickets-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminTicketsStatusDto } from '@/backend_superadmin/superadmin_modules/tickets/tickets_dtos/superadmin-tickets-status.dto';
+import { SuperadminSupportTicketStatusDto } from '@/backend_superadmin/superadmin_modules/tickets/tickets_dtos/superadmin-tickets-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminTicketsCreateDto } from '@/backend_superadmin/superadmin_modu
 import { SuperadminTicketsUpdateService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-update.service';
 import { SuperadminTicketsUpdateDto } from '@/backend_superadmin/superadmin_modules/tickets/tickets_dtos/superadmin-tickets-update.dto';
 import { SuperadminTicketsDeleteService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-delete.service';
-import { SuperadminTicketsStatusService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-status.service';
+import { SuperadminSupportTicketStatusService } from '@/backend_superadmin/superadmin_modules/tickets/tickets_services/superadmin-tickets-status.service';
 
 /**
  * Primary Intent: Defines SuperadminTicketsCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminTicketsStatusService } from '@/backend_superadmin/superadmin_
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminTicketsCommandController {
-  constructor(private readonly createService: SuperadminTicketsCreateService, private readonly updateService: SuperadminTicketsUpdateService, private readonly deleteService: SuperadminTicketsDeleteService, private readonly statusService: SuperadminTicketsStatusService) {}
+  constructor(private readonly createService: SuperadminTicketsCreateService, private readonly updateService: SuperadminTicketsUpdateService, private readonly deleteService: SuperadminTicketsDeleteService, private readonly statusService: SuperadminSupportTicketStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminTicketsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminTicketsStatusDto): Promise<Awaited<ReturnType<SuperadminTicketsStatusService['changeTicketsStatus']>>> { return this.statusService.changeTicketsStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSupportTicketStatusDto): Promise<Awaited<ReturnType<SuperadminSupportTicketStatusService['changeSupportTicketStatus']>>> { return this.statusService.changeSupportTicketStatus(id, body.status); }
 
 }

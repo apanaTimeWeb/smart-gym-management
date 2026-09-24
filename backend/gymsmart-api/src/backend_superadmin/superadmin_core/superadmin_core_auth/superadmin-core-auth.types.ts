@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Defines the typed authentication claims and role vocabulary used by the application.
 // FLOW: JWT claims -> SuperadminCoreJwtAuthGuard -> request.user -> SuperadminCoreRolesGuard.
+import { SuperadminRole } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-auth.constants';
 
 /**
  * Primary Intent: Defines SuperadminAuthenticatedUser as the interface-level contract for superadmin-core-auth.types.ts.

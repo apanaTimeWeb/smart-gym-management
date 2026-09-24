@@ -51,8 +51,8 @@ export class SuperadminTicketsInsightsService {
    */
   private buildInsights(rows: SuperadminTicketsServiceInsightsRow[]): SuperadminTicketsServiceInsightsResponseDto {
     const now = Date.now();
-    const openRows = rows.filter((row) => [SupportTicketStatus.OPEN, SupportTicketStatus.INPROGRESS, SupportTicketStatus.WAITING].includes(row.status));
-    const urgentRows = rows.filter((row) => [SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority));
+    const openRows = rows.filter((row) => [SupportTicketStatus.OPEN, SupportTicketStatus.INPROGRESS, SupportTicketStatus.WAITING].includes(row.status as SupportTicketStatus));
+    const urgentRows = rows.filter((row) => [SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority as SupportTicketPriority));
     const responseDurations = rows.filter((row) => row.firstResponseAt).map((row) => Math.max(0, (row.firstResponseAt!.getTime() - row.createdAt.getTime()) / 60000));
     const resolutionHours = rows.filter((row) => row.resolutionTime > 0).map((row) => row.resolutionTime / 3600000);
     const agentMap = this.buildAgents(rows, openRows, now);
@@ -119,7 +119,7 @@ export class SuperadminTicketsInsightsService {
       const name = row.assignedTo ?? 'Unassigned';
       const current = map.get(name) ?? { open: 0, urgent: 0, overTarget: 0, hours: [] };
       if (openRows.includes(row)) current.open += 1;
-      if ([SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority)) current.urgent += 1;
+      if ([SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority as SupportTicketPriority)) current.urgent += 1;
       if (row.slaDeadline && row.slaDeadline.getTime() < now && openRows.includes(row)) current.overTarget += 1;
       if (row.resolutionTime > 0) current.hours.push(row.resolutionTime / 3600000);
       map.set(name, current);

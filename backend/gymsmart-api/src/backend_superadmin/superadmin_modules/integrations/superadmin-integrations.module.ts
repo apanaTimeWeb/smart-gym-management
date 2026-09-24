@@ -13,7 +13,7 @@ import { SuperadminIntegrationsFindService } from '@/backend_superadmin/superadm
 import { SuperadminIntegrationsCreateService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-create.service';
 import { SuperadminIntegrationsUpdateService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-update.service';
 import { SuperadminIntegrationsDeleteService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-delete.service';
-import { SuperadminIntegrationsStatusService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-status.service';
+import { SuperadminIntegrationKeyStatusService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-status.service';
 import { SuperadminIntegrationsMainService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-main.service';
 import { SuperadminIntegrationsGenerateKeyService } from '@/backend_superadmin/superadmin_modules/integrations/integrations_services/superadmin-integrations-generate-key.service';
 /**
@@ -25,7 +25,7 @@ import { SuperadminIntegrationsGenerateKeyService } from '@/backend_superadmin/s
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminIntegrationsEntity])],
   controllers: [SuperadminIntegrationsQueryController, SuperadminIntegrationsCommandController, SuperadminIntegrationsAdvancedQueryController, SuperadminIntegrationsAdvancedCommandController],
-  providers: [SuperadminIntegrationsMainService, SuperadminIntegrationsGenerateKeyService, SuperadminIntegrationsRepository, SuperadminIntegrationsListService, SuperadminIntegrationsFindService, SuperadminIntegrationsCreateService, SuperadminIntegrationsUpdateService, SuperadminIntegrationsDeleteService, SuperadminIntegrationsStatusService],
+  providers: [SuperadminIntegrationsMainService, SuperadminIntegrationsGenerateKeyService, SuperadminIntegrationsRepository, SuperadminIntegrationsListService, SuperadminIntegrationsFindService, SuperadminIntegrationsCreateService, SuperadminIntegrationsUpdateService, SuperadminIntegrationsDeleteService, SuperadminIntegrationKeyStatusService],
   exports: [SuperadminIntegrationsRepository],
 })
 /**

@@ -16,7 +16,7 @@ export class SuperadminReportsAnalyticsRepository {
     const revenue = await this.getRevenueRows(query);
     const cancellations = await this.getCancellationRows(query);
     const health = await this.getHealthRows(query);
-    return { revenue: revenue.map((row) => this.toRevenueResponse(row, currency)), cancellations: cancellations.map((row) => this.toCancellationResponse(row, currency)), health: health.map((row) => this.toHealthResponse(row)), currency };
+    return { revenue: revenue.map((row) => this.toRevenueResponse(row, currency)), cancellations: cancellations.map((row) => this.toCancellationResponse(row, currency)), health: health.map((row) => this.toHealthResponse(row)), currency } as unknown as SuperadminReportsLivePayload;
   }
   /** Computes the complete period/segment comparison contract from live tenant and invoice data. */
   async getLiveComparison(query: { from?: string; to?: string; plan?: string; region?: string; period?: string; segment?: string } = {}, currency = 'INR'): Promise<SuperadminReportsComparisonPayload> {

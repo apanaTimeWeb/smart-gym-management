@@ -11,7 +11,7 @@ import type { SuperadminCouponsDomainModel } from '@/backend_superadmin/superadm
  */
 export class SuperadminSaasBillingCouponsMapper {
   /** Maps a persistence entity to the domain representation. */
-  static toDomain(entity: SuperadminSaasBillingCouponsEntity): SuperadminCouponsDomainModel { return { ...entity } as SuperadminCouponsDomainModel; }
+  static toDomain(entity: SuperadminSaasBillingCouponsEntity): SuperadminCouponsDomainModel { return { ...entity } as unknown as SuperadminCouponsDomainModel; }
 
   /** Maps persistence entities to domain representations. */
   static toDomainList(entities: SuperadminSaasBillingCouponsEntity[]): SuperadminCouponsDomainModel[] { return entities.map(SuperadminSaasBillingCouponsMapper.toDomain); }

@@ -13,7 +13,7 @@ import { SuperadminSaasBillingCouponsFindService } from '@/backend_superadmin/su
 import { SuperadminSaasBillingCouponsCreateService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-create.service';
 import { SuperadminSaasBillingCouponsUpdateService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-update.service';
 import { SuperadminSaasBillingCouponsDeleteService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-delete.service';
-import { SuperadminSaasBillingCouponsStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-status.service';
+import { SuperadminSaasBillingCouponStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-status.service';
 import { SuperadminSaasBillingCouponsRedemptionsService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-redemptions.service';
 import { SuperadminSaasBillingCouponsRestoreService } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_services/superadmin-saas-billing-coupons-restore.service';
 /**
@@ -25,7 +25,7 @@ import { SuperadminSaasBillingCouponsRestoreService } from '@/backend_superadmin
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSaasBillingCouponsEntity])],
   controllers: [SuperadminSaasBillingCouponsQueryController, SuperadminSaasBillingCouponsCommandController, SuperadminSaasBillingCouponsRedemptionsQueryController, SuperadminSaasBillingCouponsRestoreCommandController],
-  providers: [SuperadminSaasBillingCouponsRedemptionsService, SuperadminSaasBillingCouponsRestoreService, SuperadminSaasBillingCouponsRepository, SuperadminSaasBillingCouponsListService, SuperadminSaasBillingCouponsFindService, SuperadminSaasBillingCouponsCreateService, SuperadminSaasBillingCouponsUpdateService, SuperadminSaasBillingCouponsDeleteService, SuperadminSaasBillingCouponsStatusService],
+  providers: [SuperadminSaasBillingCouponsRedemptionsService, SuperadminSaasBillingCouponsRestoreService, SuperadminSaasBillingCouponsRepository, SuperadminSaasBillingCouponsListService, SuperadminSaasBillingCouponsFindService, SuperadminSaasBillingCouponsCreateService, SuperadminSaasBillingCouponsUpdateService, SuperadminSaasBillingCouponsDeleteService, SuperadminSaasBillingCouponStatusService],
   exports: [SuperadminSaasBillingCouponsRepository],
 })
 /**

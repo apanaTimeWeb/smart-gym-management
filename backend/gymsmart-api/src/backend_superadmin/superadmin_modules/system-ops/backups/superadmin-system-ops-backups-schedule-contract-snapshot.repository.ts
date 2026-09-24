@@ -22,7 +22,7 @@ export class SuperadminSystemOpsBackupsScheduleContractSnapshotRepository {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findLatest(): Promise<SuperadminBackupsSchedulePayload | null> { const row = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); return row?.payload ?? null; }
+  async findLatest(): Promise<SuperadminBackupsSchedulePayload | null> { const row = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); return (row?.payload as SuperadminBackupsSchedulePayload) ?? null; }
 
   /**
  * Primary Intent: Executes the upsert use case within its owning backend boundary.
@@ -30,5 +30,5 @@ export class SuperadminSystemOpsBackupsScheduleContractSnapshotRepository {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async upsert(payload: SuperadminBackupsSchedulePayload): Promise<void> { const existing = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); if (existing) { await this.repository.update({ id: existing.id } as never, { payload, updatedAt: new Date() } as never); return; } await this.repository.insert(this.repository.create({ kind: 'schedule', payload })); }
+  async upsert(payload: SuperadminBackupsSchedulePayload): Promise<void> { const existing = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); if (existing) { await this.repository.update({ id: existing.id } as never, { payload, updatedAt: new Date() } as any); return; } await this.repository.save(this.repository.create({ kind: 'schedule', payload })); }
 }

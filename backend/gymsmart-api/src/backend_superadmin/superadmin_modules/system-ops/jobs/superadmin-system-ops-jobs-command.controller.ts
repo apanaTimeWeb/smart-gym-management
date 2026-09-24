@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the jobs-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminSystemOpsJobsStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_dtos/superadmin-system-ops-jobs-status.dto';
+import { SuperadminSystemOpsBackgroundJobStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_dtos/superadmin-system-ops-jobs-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminSystemOpsJobsCreateDto } from '@/backend_superadmin/superadmi
 import { SuperadminSystemOpsJobsUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-update.service';
 import { SuperadminSystemOpsJobsUpdateDto } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_dtos/superadmin-system-ops-jobs-update.dto';
 import { SuperadminSystemOpsJobsDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-delete.service';
-import { SuperadminSystemOpsJobsStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-status.service';
+import { SuperadminSystemOpsBackgroundJobStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-status.service';
 
 /**
  * Primary Intent: Defines SuperadminSystemOpsJobsCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminSystemOpsJobsStatusService } from '@/backend_superadmin/super
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsJobsCommandController {
-  constructor(private readonly createService: SuperadminSystemOpsJobsCreateService, private readonly updateService: SuperadminSystemOpsJobsUpdateService, private readonly deleteService: SuperadminSystemOpsJobsDeleteService, private readonly statusService: SuperadminSystemOpsJobsStatusService) {}
+  constructor(private readonly createService: SuperadminSystemOpsJobsCreateService, private readonly updateService: SuperadminSystemOpsJobsUpdateService, private readonly deleteService: SuperadminSystemOpsJobsDeleteService, private readonly statusService: SuperadminSystemOpsBackgroundJobStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminSystemOpsJobsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsJobsStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsJobsStatusService['changeJobsStatus']>>> { return this.statusService.changeJobsStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsBackgroundJobStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsBackgroundJobStatusService['changeBackgroundJobStatus']>>> { return this.statusService.changeBackgroundJobStatus(id, body.status); }
 
 }

@@ -1,3 +1,4 @@
+import { SuperadminBackupJobType } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.constants';
 // RESPONSIBILITY: Validates a completed backup and queues a durable restore job.
 // FLOW: Controller -> completed backup -> restore job -> Redis worker -> pg_restore.
 import { Injectable } from '@nestjs/common';
@@ -34,8 +35,8 @@ export class SuperadminSystemOpsBackupsRestoreService {
     const actor=getRequestContext()?.userId;
     if(!actor) throw new SuperadminBackupsActorNotFoundException();
     const backup=await this.backups.findCompletedWithArtifactOrThrow(id);
-    const job=await this.jobs.create({ type:'RESTORE', tenantId:backup.tenantId, requestedByUserId:actor, resultBackupId:id });
-    await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_RESTORE_QUEUE, tenantId:backup.tenantId, payload:{ backupId:id, type:'RESTORE', requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
+    const job=await this.jobs.create({ type:SuperadminBackupJobType.RESTORE, tenantId:(backup.tenantId ?? 'SYSTEM'), requestedByUserId:actor, resultBackupId:id });
+    await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_RESTORE_QUEUE, tenantId:(backup.tenantId ?? 'SYSTEM'), payload:{ backupId:id, type:SuperadminBackupJobType.RESTORE, requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
     return { jobId:job.id, statusUrl:`/superadmin/system-ops/backups/jobs/${job.id}` };
   }
 }

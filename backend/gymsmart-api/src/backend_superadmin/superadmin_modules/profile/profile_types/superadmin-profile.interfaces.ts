@@ -51,5 +51,4 @@ export interface SuperadminProfileDomainModel { id: string; createdAt: Date; upd
   avatarUrl: string;
   lastLoginAt: Date | null;
   twoFactorEnabled: boolean;
-  passwordHash: string;
 }

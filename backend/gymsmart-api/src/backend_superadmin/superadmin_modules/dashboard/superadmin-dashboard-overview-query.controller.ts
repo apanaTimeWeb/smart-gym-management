@@ -22,6 +22,7 @@ import { SuperadminDashboardRecentOnboardsResponseDto } from '@/backend_superadm
 import { SuperadminDashboardBusinessOverviewResponseDto } from '@/backend_superadmin/superadmin_modules/dashboard/superadmin-dashboard-business-overview-response.dto';
 import { SuperadminDashboardBusinessOverviewService } from '@/backend_superadmin/superadmin_modules/dashboard/dashboard_services/superadmin-dashboard-business-overview.service';
 import { SuperadminDashboardApiResponseDto } from '@/backend_superadmin/superadmin_modules/dashboard/dashboard_responses/superadmin-dashboard-api-response.dto';
+import { SuperadminDashboardApiReadService } from '@/backend_superadmin/superadmin_modules/dashboard/dashboard_services/superadmin-dashboard-api-read.service';
 /**
  * Primary Intent: Defines SuperadminDashboardOverviewQueryController as an explicit backend construct in its owning role/module boundary.
  * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.

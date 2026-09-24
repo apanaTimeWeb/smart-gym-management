@@ -13,7 +13,7 @@ import { SuperadminWhiteLabelingFindService } from '@/backend_superadmin/superad
 import { SuperadminWhiteLabelingCreateService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-create.service';
 import { SuperadminWhiteLabelingUpdateService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-update.service';
 import { SuperadminWhiteLabelingDeleteService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-delete.service';
-import { SuperadminWhiteLabelingStatusService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-status.service';
+import { SuperadminWhiteLabelDomainStatusService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-status.service';
 import { SuperadminWhiteLabelingDomainsService } from '@/backend_superadmin/superadmin_modules/white-labeling/white-labeling_services/superadmin-white-labeling-domains.service';
 /**
  * Primary Intent: Defines SuperadminWhiteLabelingModule as an explicit backend construct in its owning role/module boundary.
@@ -24,7 +24,7 @@ import { SuperadminWhiteLabelingDomainsService } from '@/backend_superadmin/supe
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminWhiteLabelingEntity])],
   controllers: [SuperadminWhiteLabelingQueryController, SuperadminWhiteLabelingCommandController, SuperadminWhiteLabelingDomainsQueryController, SuperadminWhiteLabelingDomainsCommandController],
-  providers: [SuperadminWhiteLabelingDomainsService, SuperadminWhiteLabelingStatusService, SuperadminWhiteLabelingRepository, SuperadminWhiteLabelingListService, SuperadminWhiteLabelingFindService, SuperadminWhiteLabelingCreateService, SuperadminWhiteLabelingUpdateService, SuperadminWhiteLabelingDeleteService],
+  providers: [SuperadminWhiteLabelingDomainsService, SuperadminWhiteLabelDomainStatusService, SuperadminWhiteLabelingRepository, SuperadminWhiteLabelingListService, SuperadminWhiteLabelingFindService, SuperadminWhiteLabelingCreateService, SuperadminWhiteLabelingUpdateService, SuperadminWhiteLabelingDeleteService],
   exports: [SuperadminWhiteLabelingRepository],
 })
 /**

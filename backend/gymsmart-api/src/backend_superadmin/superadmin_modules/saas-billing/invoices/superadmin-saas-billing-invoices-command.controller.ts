@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the invoices-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminSaasBillingInvoicesStatusDto } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_dtos/superadmin-saas-billing-invoices-status.dto';
+import { SuperadminSaasBillingSaasInvoiceStatusDto } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_dtos/superadmin-saas-billing-invoices-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminSaasBillingInvoicesCreateDto } from '@/backend_superadmin/sup
 import { SuperadminSaasBillingInvoicesUpdateService } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_services/superadmin-saas-billing-invoices-update.service';
 import { SuperadminSaasBillingInvoicesUpdateDto } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_dtos/superadmin-saas-billing-invoices-update.dto';
 import { SuperadminSaasBillingInvoicesDeleteService } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_services/superadmin-saas-billing-invoices-delete.service';
-import { SuperadminSaasBillingInvoicesStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_services/superadmin-saas-billing-invoices-status.service';
+import { SuperadminSaasBillingSaasInvoiceStatusService } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_services/superadmin-saas-billing-invoices-status.service';
 
 /**
  * Primary Intent: Defines SuperadminSaasBillingInvoicesCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminSaasBillingInvoicesStatusService } from '@/backend_superadmin
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSaasBillingInvoicesCommandController {
-  constructor(private readonly createService: SuperadminSaasBillingInvoicesCreateService, private readonly updateService: SuperadminSaasBillingInvoicesUpdateService, private readonly deleteService: SuperadminSaasBillingInvoicesDeleteService, private readonly statusService: SuperadminSaasBillingInvoicesStatusService) {}
+  constructor(private readonly createService: SuperadminSaasBillingInvoicesCreateService, private readonly updateService: SuperadminSaasBillingInvoicesUpdateService, private readonly deleteService: SuperadminSaasBillingInvoicesDeleteService, private readonly statusService: SuperadminSaasBillingSaasInvoiceStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminSaasBillingInvoicesCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSaasBillingInvoicesStatusDto): Promise<Awaited<ReturnType<SuperadminSaasBillingInvoicesStatusService['changeInvoicesStatus']>>> { return this.statusService.changeInvoicesStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSaasBillingSaasInvoiceStatusDto): Promise<Awaited<ReturnType<SuperadminSaasBillingSaasInvoiceStatusService['changeSaasInvoiceStatus']>>> { return this.statusService.changeSaasInvoiceStatus(id, body.status); }
 
 }

@@ -14,7 +14,7 @@ import { SUPERADMIN_CORE_SUCCESS_MESSAGES } from '@/backend_superadmin/superadmi
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @Injectable()
-export class SuperadminCoreResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<unknown>> {
+export class SuperadminCoreResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<unknown> | StreamableFile | string> {
   constructor(private readonly metrics: SuperadminCoreMetricsService) {}
   /** Converts a controller result into the canonical success envelope.
    * @param _context - Nest execution context, reserved for future contract metadata.

@@ -16,7 +16,7 @@ import { SuperadminSystemOpsBackupsFindService } from '@/backend_superadmin/supe
 import { SuperadminSystemOpsBackupsCreateService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-create.service';
 import { SuperadminSystemOpsBackupsUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-update.service';
 import { SuperadminSystemOpsBackupsDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-delete.service';
-import { SuperadminSystemOpsBackupsStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-status.service';
+import { SuperadminSystemOpsSuperadminBackupJobStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-status.service';
 import { SuperadminSystemOpsBackupsHealthService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-health.service';
 import { SuperadminSystemOpsBackupsScheduleService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-schedule.service';
 import { SuperadminSystemOpsBackupsTriggerService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-trigger.service';
@@ -34,7 +34,7 @@ import { SuperadminSystemOpsBackupsWorkerService } from '@/backend_superadmin/su
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSystemOpsBackupsContractSnapshotEntity, SuperadminSystemOpsBackupsEntity, SuperadminSystemOpsBackupsScheduleContractSnapshotEntity, SuperadminSystemOpsBackupJobEntity])],
   controllers: [SuperadminSystemOpsBackupsQueryController, SuperadminSystemOpsBackupsCommandController, SuperadminSystemOpsBackupsOperationsQueryController, SuperadminSystemOpsBackupsOperationsCommandController],
-  providers: [SuperadminSystemOpsBackupsScheduleContractSnapshotRepository, SuperadminSystemOpsBackupsHealthService, SuperadminSystemOpsBackupsScheduleService, SuperadminSystemOpsBackupsTriggerService, SuperadminSystemOpsBackupsDownloadService, SuperadminSystemOpsBackupsRestoreService, SuperadminSystemOpsBackupJobRepository, SuperadminSystemOpsBackupsWorkerService, SuperadminSystemOpsBackupsRepository, SuperadminSystemOpsBackupsListService, SuperadminSystemOpsBackupsFindService, SuperadminSystemOpsBackupsCreateService, SuperadminSystemOpsBackupsUpdateService, SuperadminSystemOpsBackupsDeleteService, SuperadminSystemOpsBackupsStatusService],
+  providers: [SuperadminSystemOpsBackupsScheduleContractSnapshotRepository, SuperadminSystemOpsBackupsHealthService, SuperadminSystemOpsBackupsScheduleService, SuperadminSystemOpsBackupsTriggerService, SuperadminSystemOpsBackupsDownloadService, SuperadminSystemOpsBackupsRestoreService, SuperadminSystemOpsBackupJobRepository, SuperadminSystemOpsBackupsWorkerService, SuperadminSystemOpsBackupsRepository, SuperadminSystemOpsBackupsListService, SuperadminSystemOpsBackupsFindService, SuperadminSystemOpsBackupsCreateService, SuperadminSystemOpsBackupsUpdateService, SuperadminSystemOpsBackupsDeleteService, SuperadminSystemOpsSuperadminBackupJobStatusService],
   exports: [SuperadminSystemOpsBackupsRepository],
 })
 /**

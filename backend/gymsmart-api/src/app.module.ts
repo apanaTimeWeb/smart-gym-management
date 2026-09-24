@@ -12,7 +12,7 @@ import { CoreRuntimeConfig } from '@/backend_admin/core/config/core-runtime.conf
 import { CoreAppConfig } from '@/backend_admin/core/config/core-app.config';
 import { CoreEnvironmentConfig } from '@/backend_auth/auth_core/config/core-environment.config';
 import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
-import superadminConfig from '@/backend_superadmin/superadmin_core/config/superadmin-core-configuration';
+import superadminConfig from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
 
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { AppModule as AdminAppModule } from '@/backend_admin/app.module';

@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { MigrationLogStatus as MigrationsStatus } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/superadmin-system-ops-migrations.constants';
+import { MigrationLogStatus as MigrationLogStatus } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/superadmin-system-ops-migrations.constants';
 /**
  * Primary Intent: Defines SuperadminSystemOpsMigrationsUpdateDto as the class-level contract for superadmin-system-ops-migrations-update.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -32,11 +32,11 @@ export class SuperadminSystemOpsMigrationsUpdateDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   appliedAt!: Date;
   @IsOptional()
-  @IsEnum(MigrationsStatus)
+  @IsEnum(MigrationLogStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-system-ops-migrations-update.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: MigrationsStatus;
+  status!: MigrationLogStatus;
   @IsOptional()
   @ApiProperty()
   /** Primary Intent: Defines the `targetTenants` data contract for this superadmin-system-ops-migrations-update.dto construct.

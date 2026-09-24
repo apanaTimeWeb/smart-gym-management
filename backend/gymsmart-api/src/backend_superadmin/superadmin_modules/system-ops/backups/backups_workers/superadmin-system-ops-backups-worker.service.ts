@@ -143,7 +143,7 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
     const backup = await this.repository.findByIdOrThrow(job.payload.backupId);
     const dataSource = await this.resolver.resolve(job.payload.requestedByUserId, job.tenantId);
     try {
-      const connection = this.connectionDetails(dataSource.options.url?.toString() ?? '');
+      const connection = this.connectionDetails((dataSource.options as any).url?.toString() ?? '');
       const root = this.config.getOrThrow<string>('app.backupStoragePath');
       const path = join(root, job.tenantId, `${backup.id}.dump`);
       await fs.mkdir(dirname(path), { recursive: true, mode: 0o700 });
@@ -180,7 +180,7 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
     await this.resolver.waitForIdle(job.tenantId);
     const dataSource = await this.resolver.resolve(job.payload.requestedByUserId, job.tenantId);
     try {
-      const connection = this.connectionDetails(dataSource.options.url?.toString() ?? '');
+      const connection = this.connectionDetails((dataSource.options as any).url?.toString() ?? '');
       await this.runProcess(this.config.getOrThrow<string>('app.pgRestoreBin'), [
         '--clean', '--if-exists', '--no-owner', '--no-acl', '--host', connection.host,
         '--port', connection.port, '--username', connection.user,
@@ -221,13 +221,15 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private runProcess(binary:string,args:string,password:string):Promise<void> {
+  private runProcess(binary:string,args:string[],password:string):Promise<void> {
     return new Promise((resolve,reject)=>{
       const child=spawn(binary,args,{env:{PGPASSWORD:password},stdio:['ignore','ignore','pipe']});
       let stderr='';
-      child.stderr.on('data',(chunk:Buffer|string)=>{ stderr += String(chunk); if(stderr.length>4000) stderr=stderr.slice(-4000); });
+      if (child.stderr) {
+        child.stderr.on('data',(chunk:Buffer|string)=>{ stderr += String(chunk); if(stderr.length>4000) stderr=stderr.slice(-4000); });
+      }
       child.on('error',reject);
-      child.on('close',(code)=> code===0 ? resolve() : reject(new SuperadminBackupsProcessException(`BACKUPS.PROCESS.EXIT_${code ?? 'UNKNOWN'}:${stderr.replaceAll(/\s+/g,' ').trim()}`)));
+      child.on('close',(code: number | null)=> { if(code!==0) console.error(`BACKUPS.PROCESS.EXIT_${code ?? 'UNKNOWN'}:${stderr.replaceAll(/\s+/g,' ').trim()}`); return code===0 ? resolve() : reject(new SuperadminBackupsProcessException()); });
     });
   }
 }

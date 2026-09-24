@@ -15,3 +15,12 @@ export enum SuperadminRole {
    */
   SUPERADMIN = 'SUPERADMIN',
 }
+
+export const SUPERADMIN_CORE_SUCCESS_MESSAGES = {
+  REQUEST_SUCCESSFUL: 'Request completed successfully',
+};
+
+export const SUPERADMIN_CORE_VALIDATION_MESSAGES = {
+  VALIDATION_FAILED: 'Validation failed for the request payload.',
+  INVALID_VALUE: 'Invalid value provided',
+};

@@ -40,5 +40,8 @@ export class SuperadminMessagingNotificationQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async list(): Promise<SuperadminMessagingNotificationResponseDto[]> { return this.service.list(); }
+  async list(): Promise<SuperadminMessagingNotificationResponseDto[]> { 
+    const list = await this.service.list(); 
+    return list.map(item => ({ ...item, createdAt: item.createdAt.toISOString() }) as unknown as SuperadminMessagingNotificationResponseDto); 
+  }
 }

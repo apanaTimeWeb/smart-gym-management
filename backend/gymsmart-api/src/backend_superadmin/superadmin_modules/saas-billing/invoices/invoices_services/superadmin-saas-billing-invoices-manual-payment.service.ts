@@ -32,6 +32,6 @@ export class SuperadminSaasBillingInvoicesManualPaymentService {
     const planName = body.planName.trim();
     if (!tenantId || !planName || body.amount <= 0) throw new BadRequestException({ error: 'VALIDATION_ERROR', errorCode: 'INVOICES.MANUAL_PAYMENT.INVALID', message: { key: 'saas-billing.ERRORS.VALIDATION_FAILED' } });
     const invoice = await this.repository.createManualPaymentInvoice({ tenantId, tenantName: tenantId, amount: body.amount, currency: body.currency.toUpperCase(), planName });
-    return { id: invoice.id, amount: invoice.amount, currency: invoice.currency, tenantId: invoice.tenantId, planName: invoice.planName };
+    return invoice;
   }
 }

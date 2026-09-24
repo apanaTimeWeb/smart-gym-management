@@ -10,7 +10,7 @@ import { Roles } from '@/backend_superadmin/superadmin_core/superadmin_core_auth
 import { SuperadminRole } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-auth.constants';
 import { SuperadminGymsCreateDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-create.dto';
 import { SuperadminGymsUpdateDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-update.dto';
-import { SuperadminGymsStatusDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-status.dto';
+import { SuperadminTenantStatusDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-status.dto';
 import { SuperadminGymsProvisionDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-provision.dto';
 import { SuperadminGymsOwnerEmailDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-owner-email.dto';
 import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_responses/superadmin-gyms-response.dto';
@@ -18,7 +18,7 @@ import { SuperadminGymsExportQueuedResponseDto, SuperadminGymsExportDownloadResp
 import { SuperadminGymsCreateService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-create.service';
 import { SuperadminGymsUpdateService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-update.service';
 import { SuperadminGymsDeleteService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-delete.service';
-import { SuperadminGymsStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
+import { SuperadminTenantStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
 import { SuperadminGymsProvisionService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-provision.service';
 import { SuperadminGymsOperationalService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-operational.service';
 /**
@@ -36,7 +36,7 @@ export class SuperadminGymsApiCommandController {
     private readonly createService: SuperadminGymsCreateService,
     private readonly updateService: SuperadminGymsUpdateService,
     private readonly deleteService: SuperadminGymsDeleteService,
-    private readonly statusService: SuperadminGymsStatusService,
+    private readonly statusService: SuperadminTenantStatusService,
     private readonly provisionService: SuperadminGymsProvisionService,
     private readonly operationalService: SuperadminGymsOperationalService,
   ) {}
@@ -119,8 +119,8 @@ export class SuperadminGymsApiCommandController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async changeStatus(@Param('id') id: string, @Body() body: SuperadminGymsStatusDto): Promise<SuperadminGymsResponseDto> {
-    return this.statusService.changeGymsStatus(id, body.status);
+  async changeStatus(@Param('id') id: string, @Body() body: SuperadminTenantStatusDto): Promise<SuperadminGymsResponseDto> {
+    return this.statusService.changeTenantStatus(id, body.status);
   }
 /**
  * Primary Intent: Executes the remove use case within the owning backend feature boundary. Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

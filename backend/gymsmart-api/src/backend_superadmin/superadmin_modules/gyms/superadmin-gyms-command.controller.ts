@@ -13,11 +13,11 @@ import { SuperadminGymsCreateDto } from '@/backend_superadmin/superadmin_modules
 import { SuperadminGymsUpdateService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-update.service';
 import { SuperadminGymsUpdateDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-update.dto';
 import { SuperadminGymsDeleteService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-delete.service';
-import { SuperadminGymsStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
+import { SuperadminTenantStatusService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-status.service';
 import { SuperadminGymsProvisionService } from '@/backend_superadmin/superadmin_modules/gyms/gyms_services/superadmin-gyms-provision.service';
 import { SuperadminGymsProvisionDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-provision.dto';
 import { SuperadminGymsOwnerEmailDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-owner-email.dto';
-import { SuperadminGymsStatusDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-status.dto';
+import { SuperadminTenantStatusDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_dtos/superadmin-gyms-status.dto';
 import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_responses/superadmin-gyms-response.dto';
 
 /**
@@ -31,7 +31,7 @@ import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modul
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminGymsCommandController {
-  constructor(private readonly createService: SuperadminGymsCreateService, private readonly updateService: SuperadminGymsUpdateService, private readonly deleteService: SuperadminGymsDeleteService, private readonly statusService: SuperadminGymsStatusService, private readonly provisionService: SuperadminGymsProvisionService) {}
+  constructor(private readonly createService: SuperadminGymsCreateService, private readonly updateService: SuperadminGymsUpdateService, private readonly deleteService: SuperadminGymsDeleteService, private readonly statusService: SuperadminTenantStatusService, private readonly provisionService: SuperadminGymsProvisionService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -142,6 +142,6 @@ export class SuperadminGymsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminGymsStatusDto): Promise<SuperadminGymsResponseDto> { return (this.statusService.changeGymsStatus(id, body.status)) as unknown as SuperadminGymsResponseDto; }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminTenantStatusDto): Promise<SuperadminGymsResponseDto> { return (this.statusService.changeTenantStatus(id, body.status)) as unknown as SuperadminGymsResponseDto; }
 
 }

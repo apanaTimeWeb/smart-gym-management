@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Serves frontend-compatible read-only /api/gyms queries, statistics, and export retrieval.
 // FLOW: HTTP GET -> guards -> query service/repository -> response DTO or protected stream.
-import { Controller, Get, HttpStatus, Param, Public, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query, Res, UseGuards } from '@nestjs/common';
+import { Public } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-public.decorator';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'node:fs';
 import type { Response } from 'express';

@@ -12,7 +12,7 @@ import { SuperadminSystemOpsMigrationsFindService } from '@/backend_superadmin/s
 import { SuperadminSystemOpsMigrationsCreateService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-create.service';
 import { SuperadminSystemOpsMigrationsUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-update.service';
 import { SuperadminSystemOpsMigrationsDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-delete.service';
-import { SuperadminSystemOpsMigrationsStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-status.service';
+import { SuperadminSystemOpsMigrationLogStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-status.service';
 import { SuperadminSystemOpsMigrationsTriggerService } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/migrations_services/superadmin-system-ops-migrations-trigger.service';
 /**
  * Primary Intent: Defines SuperadminSystemOpsMigrationsModule as an explicit backend construct in its owning role/module boundary.
@@ -23,7 +23,7 @@ import { SuperadminSystemOpsMigrationsTriggerService } from '@/backend_superadmi
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSystemOpsMigrationsEntity])],
   controllers: [SuperadminSystemOpsMigrationsQueryController, SuperadminSystemOpsMigrationsCommandController, SuperadminSystemOpsMigrationsAdvancedCommandController],
-  providers: [SuperadminSystemOpsMigrationsTriggerService, SuperadminSystemOpsMigrationsRepository, SuperadminSystemOpsMigrationsListService, SuperadminSystemOpsMigrationsFindService, SuperadminSystemOpsMigrationsCreateService, SuperadminSystemOpsMigrationsUpdateService, SuperadminSystemOpsMigrationsDeleteService, SuperadminSystemOpsMigrationsStatusService],
+  providers: [SuperadminSystemOpsMigrationsTriggerService, SuperadminSystemOpsMigrationsRepository, SuperadminSystemOpsMigrationsListService, SuperadminSystemOpsMigrationsFindService, SuperadminSystemOpsMigrationsCreateService, SuperadminSystemOpsMigrationsUpdateService, SuperadminSystemOpsMigrationsDeleteService, SuperadminSystemOpsMigrationLogStatusService],
   exports: [SuperadminSystemOpsMigrationsRepository],
 })
 /**

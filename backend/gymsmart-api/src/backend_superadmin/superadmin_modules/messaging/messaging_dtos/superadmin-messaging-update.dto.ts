@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { TenantMessageChannel as MessagingChannel, TenantMessageStatus as MessagingStatus } from '@/backend_superadmin/superadmin_modules/messaging/superadmin-messaging.constants';
+import { TenantMessageChannel as MessagingChannel, TenantMessageStatus as TenantMessageStatus } from '@/backend_superadmin/superadmin_modules/messaging/superadmin-messaging.constants';
 /**
  * Primary Intent: Defines SuperadminMessagingUpdateDto as the class-level contract for superadmin-messaging-update.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -43,11 +43,11 @@ export class SuperadminMessagingUpdateDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   body!: string;
   @IsOptional()
-  @IsEnum(MessagingStatus)
+  @IsEnum(TenantMessageStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-messaging-update.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: MessagingStatus;
+  status!: TenantMessageStatus;
   @IsOptional()
   @Type(() => Date)
   @IsDate()

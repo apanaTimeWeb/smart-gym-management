@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-import { CouponDiscountType as CouponsDiscountType, CouponStatus as CouponsStatus } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.constants';
+import { CouponDiscountType as CouponsDiscountType, CouponStatus as CouponStatus } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.constants';
 /**
  * Primary Intent: Defines SuperadminSaasBillingCouponsCreateDto as the class-level contract for superadmin-saas-billing-coupons-create.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -45,11 +45,11 @@ export class SuperadminSaasBillingCouponsCreateDto {
   /** Primary Intent: Defines the `currentUses` data contract for this superadmin-saas-billing-coupons-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   currentUses!: number;
-  @IsEnum(CouponsStatus)
+  @IsEnum(CouponStatus)
   @ApiProperty()
   /** Primary Intent: Defines the `status` data contract for this superadmin-saas-billing-coupons-create.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status!: CouponsStatus;
+  status!: CouponStatus;
   @Type(() => Date)
   @IsDate()
   @ApiProperty()

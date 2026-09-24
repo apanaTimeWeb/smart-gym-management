@@ -15,6 +15,29 @@ import { SuperadminCoreDomainExceptionFilter } from '@/backend_superadmin/supera
 import configuration, { validateEnvironment } from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
 import { SuperadminCoreI18nModule } from '@/backend_superadmin/superadmin_core/superadmin_core_i18n/superadmin-core-i18n.module';
 import { SuperadminCoreRealtimeModule } from '@/backend_superadmin/superadmin_core/superadmin_core_realtime/superadmin-core-realtime.module';
+import { SuperadminCoreRedisService } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-redis.service';
+import { SuperadminCoreIdempotencyService } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.service';
+import { SuperadminCoreIdempotencyInterceptor } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.interceptor';
+import { SuperadminCoreRateLimitGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-rate-limit.guard';
+import { SuperadminCoreJwtAuthGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-jwt-auth.guard';
+import { SuperadminCoreRolesGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.guard';
+import { SuperadminCoreTenantAuthorizationService } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-authorization.service';
+import { SuperadminCoreTenantAuthorizationRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-authorization.repository';
+import { SuperadminCoreTenantDatasourceResolverService } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-datasource-resolver.service';
+import { SuperadminCoreTenantDatabaseProvisionerService } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-database-provisioner.service';
+import { SuperadminCoreTenantRegistryRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-registry.repository';
+import { SuperadminCoreTenantRegistryService } from '@/backend_superadmin/superadmin_core/superadmin_core_tenancy/superadmin-core-tenant-registry.service';
+import { SuperadminCoreEncryptionService } from '@/backend_superadmin/superadmin_core/superadmin_core_security/superadmin-core-encryption.service';
+import { SuperadminCoreMetricsService } from '@/backend_superadmin/superadmin_core/superadmin_core_observability/superadmin-core-metrics.service';
+import { SuperadminCoreAuditTrailService } from '@/backend_superadmin/superadmin_core/superadmin_core_observability/superadmin-core-audit-trail.service';
+import { SuperadminCoreEventBusService } from '@/backend_superadmin/superadmin_core/superadmin_core_events/superadmin-core-event-bus.service';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
+import { SuperadminCoreUnitOfWorkService } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-unit-of-work.service';
+import { SuperadminCoreDistributedJobQueueService } from '@/backend_superadmin/superadmin_core/superadmin_core_jobs/superadmin-core-distributed-job-queue.service';
+import { SuperadminCoreScheduledJobRegistryService } from '@/backend_superadmin/superadmin_core/superadmin_core_jobs/superadmin-core-scheduled-job-registry.service';
+import { SuperadminCoreAuditTrailSubscriber } from '@/backend_superadmin/superadmin_core/superadmin_core_observability/superadmin-core-audit-trail.subscriber';
+import { SuperadminCoreFeatureFlagService } from '@/backend_superadmin/superadmin_core/superadmin_core_feature_flags/superadmin-core-feature-flag.service';
+import { SuperadminCoreCircuitBreakerService } from '@/backend_superadmin/superadmin_core/superadmin_core_external/superadmin-core-circuit-breaker.service';
 /**
  * Primary Intent: Defines SuperadminCoreModule as an explicit backend construct in its owning role/module boundary.
  * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.

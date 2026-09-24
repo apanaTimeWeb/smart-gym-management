@@ -28,6 +28,7 @@ import { SuperadminSaasBillingInvoicesContractSnapshotEntity } from '@/backend_s
 import { SuperadminSaasBillingPlansContractSnapshotEntity } from '@/backend_superadmin/superadmin_modules/saas-billing/plans/superadmin-saas-billing-plans-contract-snapshot.entity';
 import * as bcrypt from 'bcrypt';
 import configuration from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
+import { SuperadminCoreConfigurationException } from '@/backend_superadmin/superadmin_core/superadmin-core.exceptions';
 
 function asRecord(value: unknown): Record<string, unknown> | null { return value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null; }
 
@@ -35,7 +36,7 @@ async function seedSnapshot(entity: EntityTarget<object>, id: string, kind: stri
   const repository = MasterDataSource.getRepository(entity);
   const existing = await repository.findOne({ where: { id } as never });
   if (existing) { await repository.update({ id } as never, { kind, payload, deletedAt: null, updatedAt: new Date() } as never); return; }
-  await repository.insert(repository.create({ id, kind, payload } as never));
+  await repository.save(repository.create({ id, kind, payload } as never));
 }
 
 /** Seeds deterministic master data from the extracted frontend fixture set. */
@@ -70,7 +71,7 @@ export async function seedMasterDatabase(): Promise<void> {
     const detailSubscription = detail.subscription ?? {};
     const row = { id: String(value.id), name: String(value.name ?? value.id), ownerName: String(value.ownerName ?? 'Seed Owner'), adminEmail: String(value.adminEmail ?? 'owner@gymsmart.local'), phone: String(value.phone ?? ''), status: (value.status as TenantStatus) ?? TenantStatus.ACTIVE, plan: String(value.plan ?? 'Starter'), memberCount: Number(value.memberCount ?? 0), monthlyRevenue: Number(value.monthlyRevenue ?? value.income ?? 0), databaseVersion: String(value.databaseVersion ?? 'v1.0'), city: String(value.city ?? ''), state: String(value.state ?? ''), country: String(value.country ?? 'India'), gstin: String(value.gstin ?? ''), trialEndsAt: null, lastLoginAt: null, lastActiveAt: null, staffCount: Number(value.staffCount ?? 0), databaseName: `tenant_db_${value.id}`, aadharNumberEncrypted: null, subscriptionHistory: Array.isArray(detailSubscription) ? detailSubscription : [detailSubscription], usageStats: { currency: 'INR', health: detailHealth, usage: detailUsage, billing: detailBilling, support: detailSupport, activity: detailActivity, subscription: detailSubscription, source: 'TENANT_STATE' } };
     const existing = await tenantRepository.findOne({ where: { id: row.id } });
-    if (existing) { await MasterDataSource.query(`UPDATE "tenants" SET "name" = $1, "owner_name" = $2, "admin_email" = $3, "phone" = $4, "status" = $5, "plan" = $6, "member_count" = $7, "monthly_revenue" = $8, "database_version" = $9, "city" = $10, "state" = $11, "country" = $12, "gstin" = $13, "database_name" = $14, "staff_count" = $15, "subscription_history" = $16::jsonb, "usage_stats" = $17::jsonb, "updated_at" = CURRENT_TIMESTAMP WHERE "id" = $18`, [row.name, row.ownerName, row.adminEmail, row.phone, row.status, row.plan, row.memberCount, row.monthlyRevenue, row.databaseVersion, row.city, row.state, row.country, row.gstin, row.databaseName, row.staffCount, JSON.stringify(row.subscriptionHistory), JSON.stringify(row.usageStats), row.id]); } else await tenantRepository.insert(tenantRepository.create(row));
+    if (existing) { await MasterDataSource.query(`UPDATE "tenants" SET "name" = $1, "owner_name" = $2, "admin_email" = $3, "phone" = $4, "status" = $5, "plan" = $6, "member_count" = $7, "monthly_revenue" = $8, "database_version" = $9, "city" = $10, "state" = $11, "country" = $12, "gstin" = $13, "database_name" = $14, "staff_count" = $15, "subscription_history" = $16::jsonb, "usage_stats" = $17::jsonb, "updated_at" = CURRENT_TIMESTAMP WHERE "id" = $18`, [row.name, row.ownerName, row.adminEmail, row.phone, row.status, row.plan, row.memberCount, row.monthlyRevenue, row.databaseVersion, row.city, row.state, row.country, row.gstin, row.databaseName, row.staffCount, JSON.stringify(row.subscriptionHistory), JSON.stringify(row.usageStats), row.id]); } else await tenantRepository.save(tenantRepository.create(row));
   }
   const seededProfile = await profileRepository.findOne({ where: { email } });
   if (!seededProfile) throw new SuperadminCoreConfigurationException('Seeded Superadmin profile could not be resolved.');

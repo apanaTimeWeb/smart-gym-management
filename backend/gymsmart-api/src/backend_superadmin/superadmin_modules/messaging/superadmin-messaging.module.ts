@@ -13,7 +13,7 @@ import { SuperadminMessagingFindService } from '@/backend_superadmin/superadmin_
 import { SuperadminMessagingCreateService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-create.service';
 import { SuperadminMessagingUpdateService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-update.service';
 import { SuperadminMessagingDeleteService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-delete.service';
-import { SuperadminMessagingStatusService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-status.service';
+import { SuperadminTenantMessageStatusService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-status.service';
 import { SuperadminMessagingTemplateInsightsService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-template-insights.service';
 import { SuperadminMessagingWhatsappBulkCenterService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-whatsapp-bulk-center.service';
 import { SuperadminMessagingWhatsappCampaignService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-whatsapp-campaign.service';
@@ -33,7 +33,7 @@ import { SuperadminMessagingExportCompletionService } from '@/backend_superadmin
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminMessagingEntity, SuperadminMessagingNotificationEntity])],
   controllers: [SuperadminMessagingQueryController, SuperadminMessagingCommandController, SuperadminMessagingNotificationQueryController, SuperadminMessagingNotificationCommandController, SuperadminMessagingInsightsQueryController, SuperadminMessagingWhatsappCommandController],
-  providers: [SuperadminMessagingNotificationRepository, SuperadminMessagingNotificationService, SuperadminMessagingExportCompletionService, SuperadminMessagingTemplateInsightsService, SuperadminMessagingWhatsappBulkCenterService, SuperadminMessagingWhatsappCampaignService, SuperadminMessagingRepository, SuperadminMessagingListService, SuperadminMessagingFindService, SuperadminMessagingCreateService, SuperadminMessagingUpdateService, SuperadminMessagingDeleteService, SuperadminMessagingStatusService],
+  providers: [SuperadminMessagingNotificationRepository, SuperadminMessagingNotificationService, SuperadminMessagingExportCompletionService, SuperadminMessagingTemplateInsightsService, SuperadminMessagingWhatsappBulkCenterService, SuperadminMessagingWhatsappCampaignService, SuperadminMessagingRepository, SuperadminMessagingListService, SuperadminMessagingFindService, SuperadminMessagingCreateService, SuperadminMessagingUpdateService, SuperadminMessagingDeleteService, SuperadminTenantMessageStatusService],
   exports: [SuperadminMessagingRepository],
 })
 /**

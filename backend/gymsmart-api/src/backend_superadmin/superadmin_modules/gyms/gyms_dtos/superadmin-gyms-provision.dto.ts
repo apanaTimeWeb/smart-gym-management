@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 // RESPONSIBILITY: Validates the client-owned Gym provisioning request without accepting server-managed persistence fields.
 // FLOW: HTTP POST /api/gyms/provision -> SuperadminGymsProvisionDto -> provisioning service.
 import { IsEmail, IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
-import { GymsStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
+import { TenantStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
 
 /**
  * Primary Intent: Defines SuperadminGymsProvisionDto as the class-level contract for superadmin-gyms-provision.dto.ts.
@@ -33,5 +33,5 @@ export class SuperadminGymsProvisionDto {@ApiProperty()
 
   @IsOptional() @IsString() @Length(1, 128) planId?: string;@ApiPropertyOptional()
 
-  @IsOptional() @IsEnum(GymsStatus) initialStatus?: GymsStatus;
+  @IsOptional() @IsEnum(TenantStatus) initialStatus?: TenantStatus;
 }

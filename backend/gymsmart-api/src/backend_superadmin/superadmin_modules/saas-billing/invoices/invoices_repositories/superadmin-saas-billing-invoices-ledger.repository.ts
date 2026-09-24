@@ -46,7 +46,7 @@ export class SuperadminSaasBillingInvoicesLedgerRepository {
     await this.activeRepository.insert([
       { transactionId, invoiceId, accountKey: 'ACCOUNTS_RECEIVABLE', direction: 'DEBIT', amountMinor, currency, reason },
       { transactionId, invoiceId, accountKey: 'CASH', direction: 'CREDIT', amountMinor, currency, reason },
-    ]);
+    ] as any[]);
   }
 
   /**

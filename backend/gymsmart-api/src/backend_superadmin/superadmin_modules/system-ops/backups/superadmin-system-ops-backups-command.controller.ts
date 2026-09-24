@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the backups-command.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { SuperadminSystemOpsBackupsStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_dtos/superadmin-system-ops-backups-status.dto';
+import { SuperadminSystemOpsSuperadminBackupJobStatusDto } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_dtos/superadmin-system-ops-backups-status.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireIdempotencyKey } from '@/backend_superadmin/superadmin_core/superadmin_core_cache/superadmin-core-idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { SuperadminSystemOpsBackupsCreateDto } from '@/backend_superadmin/supera
 import { SuperadminSystemOpsBackupsUpdateService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-update.service';
 import { SuperadminSystemOpsBackupsUpdateDto } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_dtos/superadmin-system-ops-backups-update.dto';
 import { SuperadminSystemOpsBackupsDeleteService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-delete.service';
-import { SuperadminSystemOpsBackupsStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-status.service';
+import { SuperadminSystemOpsSuperadminBackupJobStatusService } from '@/backend_superadmin/superadmin_modules/system-ops/backups/backups_services/superadmin-system-ops-backups-status.service';
 
 /**
  * Primary Intent: Defines SuperadminSystemOpsBackupsCommandController as an explicit backend construct in its owning role/module boundary.
@@ -27,7 +27,7 @@ import { SuperadminSystemOpsBackupsStatusService } from '@/backend_superadmin/su
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsBackupsCommandController {
-  constructor(private readonly createService: SuperadminSystemOpsBackupsCreateService, private readonly updateService: SuperadminSystemOpsBackupsUpdateService, private readonly deleteService: SuperadminSystemOpsBackupsDeleteService, private readonly statusService: SuperadminSystemOpsBackupsStatusService) {}
+  constructor(private readonly createService: SuperadminSystemOpsBackupsCreateService, private readonly updateService: SuperadminSystemOpsBackupsUpdateService, private readonly deleteService: SuperadminSystemOpsBackupsDeleteService, private readonly statusService: SuperadminSystemOpsSuperadminBackupJobStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -117,6 +117,6 @@ export class SuperadminSystemOpsBackupsCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsBackupsStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsBackupsStatusService['changeBackupsStatus']>>> { return this.statusService.changeBackupsStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminSystemOpsSuperadminBackupJobStatusDto): Promise<Awaited<ReturnType<SuperadminSystemOpsSuperadminBackupJobStatusService['changeSuperadminBackupJobStatus']>>> { return this.statusService.changeSuperadminBackupJobStatus(id, body.status); }
 
 }

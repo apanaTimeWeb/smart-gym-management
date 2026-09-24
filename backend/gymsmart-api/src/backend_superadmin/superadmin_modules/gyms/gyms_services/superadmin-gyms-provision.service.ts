@@ -12,7 +12,7 @@ import { SuperadminCoreTenantRegistryRepository } from '@/backend_superadmin/sup
 import { SuperadminCoreUnitOfWorkService } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-unit-of-work.service';
 import { SuperadminGymsRepository } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.repository';
 import { SuperadminGymsMapper } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.mapper';
-import { GymsStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
+import { TenantStatus } from '@/backend_superadmin/superadmin_modules/gyms/superadmin-gyms.constants';
 import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modules/gyms/gyms_responses/superadmin-gyms-response.dto';
 import * as bcrypt from 'bcrypt';
 import type { SuperadminGymsProvisionInput } from '@/backend_superadmin/superadmin_modules/gyms/gyms_types/superadmin-gyms.interfaces';
@@ -103,7 +103,7 @@ export class SuperadminGymsProvisionService {
    */
   private toTenantInput(tenantId: string, databaseName: string, input: SuperadminGymsProvisionInput): Record<string, unknown> {
     const plan = input.planId || input.plan;
-    return { id: tenantId, name: input.gymName, ownerName: input.ownerName, adminEmail: input.adminEmail, phone: input.phone, status: input.initialStatus ?? GymsStatus.TRIAL, plan, memberCount: 0, monthlyRevenue: 0, databaseVersion: 'v1', city: '', state: '', country: 'IN', gstin: '', trialEndsAt: null, lastLoginAt: null, lastActiveAt: null, staffCount: 0, databaseName, aadharNumberEncrypted: input.aadharNumber ? this.encryption.encrypt(input.aadharNumber) : null, subscriptionHistory: [{ action: 'PROVISIONED', at: new Date().toISOString(), status: input.initialStatus ?? GymsStatus.TRIAL, plan }], usageStats: {}, acquisitionSource: input.acquisitionSource?.trim() || 'UNKNOWN', acquisitionCostMinor: input.acquisitionCostMinor ?? 0, taxRateBasisPoints: input.taxRateBasisPoints ?? 0 };
+    return { id: tenantId, name: input.gymName, ownerName: input.ownerName, adminEmail: input.adminEmail, phone: input.phone, status: input.initialStatus ?? TenantStatus.TRIAL, plan, memberCount: 0, monthlyRevenue: 0, databaseVersion: 'v1', city: '', state: '', country: 'IN', gstin: '', trialEndsAt: null, lastLoginAt: null, lastActiveAt: null, staffCount: 0, databaseName, aadharNumberEncrypted: input.aadharNumber ? this.encryption.encrypt(input.aadharNumber) : null, subscriptionHistory: [{ action: 'PROVISIONED', at: new Date().toISOString(), status: input.initialStatus ?? TenantStatus.TRIAL, plan }], usageStats: {}, acquisitionSource: input.acquisitionSource?.trim() || 'UNKNOWN', acquisitionCostMinor: input.acquisitionCostMinor ?? 0, taxRateBasisPoints: input.taxRateBasisPoints ?? 0 };
   }
 
   /**

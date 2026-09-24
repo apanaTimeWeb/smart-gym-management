@@ -14,7 +14,7 @@ export class SuperadminProfileMapper {
   static toDomain(entity: SuperadminProfileEntity): SuperadminProfileDomainModel {
     const { passwordHash: _passwordHash, ...safe } = entity;
     void _passwordHash;
-    return safe as SuperadminProfileDomainModel;
+    return safe as unknown as SuperadminProfileDomainModel;
   }
   /** Maps a list of profile entities to public profile objects. */
   static toDomainList(entities: SuperadminProfileEntity[]): SuperadminProfileDomainModel[] { return entities.map(SuperadminProfileMapper.toDomain); }

@@ -15,7 +15,7 @@ import { SuperadminAffiliatesUpdateDto } from '@/backend_superadmin/superadmin_m
 import { SuperadminAffiliatesDeleteService } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_services/superadmin-affiliates-delete.service';
 import { SuperadminAffiliatesStatusService } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_services/superadmin-affiliates-status.service';
 import { SuperadminAffiliatesPayoutOrchestratorService } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_services/superadmin-affiliates-payout-orchestrator.service';
-import { SuperadminAffiliatesStatusDto } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_dtos/superadmin-affiliates-status.dto';
+import { SuperadminAffiliateStatusDto } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_dtos/superadmin-affiliates-status.dto';
 import { SuperadminAffiliatesResponseDto } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_responses/superadmin-affiliates-response.dto';
 
 /**
@@ -139,6 +139,6 @@ export class SuperadminAffiliatesCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminAffiliatesStatusDto): Promise<SuperadminAffiliatesResponseDto> { return this.statusService.changeAffiliatesStatus(id, body.status); }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminAffiliateStatusDto): Promise<SuperadminAffiliatesResponseDto> { return this.statusService.changeAffiliatesStatus(id, body.status); }
 
 }

@@ -13,8 +13,8 @@ import { SuperadminMessagingCreateDto } from '@/backend_superadmin/superadmin_mo
 import { SuperadminMessagingUpdateService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-update.service';
 import { SuperadminMessagingUpdateDto } from '@/backend_superadmin/superadmin_modules/messaging/messaging_dtos/superadmin-messaging-update.dto';
 import { SuperadminMessagingDeleteService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-delete.service';
-import { SuperadminMessagingStatusService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-status.service';
-import { SuperadminMessagingStatusDto } from '@/backend_superadmin/superadmin_modules/messaging/messaging_dtos/superadmin-messaging-status.dto';
+import { SuperadminTenantMessageStatusService } from '@/backend_superadmin/superadmin_modules/messaging/messaging_services/superadmin-messaging-status.service';
+import { SuperadminTenantMessageStatusDto } from '@/backend_superadmin/superadmin_modules/messaging/messaging_dtos/superadmin-messaging-status.dto';
 import { SuperadminMessagingResponseDto } from '@/backend_superadmin/superadmin_modules/messaging/messaging_responses/superadmin-messaging-response.dto';
 
 /**
@@ -28,7 +28,7 @@ import { SuperadminMessagingResponseDto } from '@/backend_superadmin/superadmin_
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminMessagingCommandController {
-  constructor(private readonly createService: SuperadminMessagingCreateService, private readonly updateService: SuperadminMessagingUpdateService, private readonly deleteService: SuperadminMessagingDeleteService, private readonly statusService: SuperadminMessagingStatusService) {}
+  constructor(private readonly createService: SuperadminMessagingCreateService, private readonly updateService: SuperadminMessagingUpdateService, private readonly deleteService: SuperadminMessagingDeleteService, private readonly statusService: SuperadminTenantMessageStatusService) {}
 /**
  * Primary Intent: Executes the create use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -143,6 +143,6 @@ export class SuperadminMessagingCommandController {
      * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
      * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
      */
-    async changeStatus(@Param('id') id: string, @Body() body: SuperadminMessagingStatusDto): Promise<SuperadminMessagingResponseDto> { return (this.statusService.changeMessagingStatus(id, body.status)) as unknown as SuperadminMessagingResponseDto; }
+    async changeStatus(@Param('id') id: string, @Body() body: SuperadminTenantMessageStatusDto): Promise<SuperadminMessagingResponseDto> { return (this.statusService.changeTenantMessageStatus(id, body.status)) as unknown as SuperadminMessagingResponseDto; }
 
 }
