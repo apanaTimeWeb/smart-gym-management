@@ -2457,3 +2457,17 @@ If the user's app is closed or loses internet connection when a WebSocket event 
 The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+
+
+## AI Introspection & Agentic Compatibility Rules
+
+### Rule 65 — AI-Testable UI (Mandatory testID)
+* **The Problem:** When an AI agent writes or executes Mobile E2E tests (using Maestro, Detox, or Appium), it cannot visually inspect the screen perfectly. Without explicit accessibility identifiers, the AI test scripts will break constantly.
+* **The Rule:** Every single interactive widget (Buttons, TextFields, Switches, Gestures) and critical state indicator (Status Badges, Empty States) MUST have a strictly formatted `testID` (in React Native) or `Key` (in Flutter).
+* **Format:** `[module]-[component]-[action/state]`. Example: `testID="members-addform-submit"` or `key=Key('billing-invoice-status-paid')`.
+* **Why:** This makes the mobile UI programmatically introspectable for autonomous AI testing agents.
+
+### Rule 66 — Component-Level AI Docstrings (JSDoc / DartDoc)
+* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
+* **The Rule:** Every Custom Hook (RN), Controller/Bloc (Flutter), complex Widget/Component, and State Store MUST have an exhaustive docstring block directly above its declaration.
+* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/// @description Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`

@@ -2537,3 +2537,17 @@ If the user's app is closed or loses internet connection when a WebSocket event 
 The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+
+
+## AI Introspection & Agentic Compatibility Rules
+
+### Rule 22 — AI-Testable UI (Mandatory data-testid)
+* **The Problem:** When an AI agent writes or executes E2E tests (using Playwright, Cypress, or Puppeteer), it cannot "see" the UI like a human. If semantic IDs are missing, the AI will fail to interact with the page.
+* **The Rule:** Every single interactive element (Buttons, Inputs, Dropdowns, Links, Checkboxes) and critical state indicator (Status Badges, Error Messages) MUST have a strictly formatted `data-testid` attribute.
+* **Format:** `data-testid="[module]-[component]-[action/state]"`. Example: `data-testid="members-addform-submit"` or `data-testid="billing-invoice-status-paid"`.
+* **Why:** This makes the entire UI programmatically introspectable for autonomous AI testing and Web-Browsing Agents.
+
+### Rule 23 — Component-Level AI Docstrings (JSDoc)
+* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
+* **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
+* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`
