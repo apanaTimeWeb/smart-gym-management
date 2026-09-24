@@ -12,8 +12,8 @@ import { json, urlencoded } from 'express';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 
-import { CoreAppModule } from '@/backend_auth/core/app.module';
-import { CoreValidationPipe } from '@/backend_auth/core/http/core-validation.pipe';
+import { CoreAppModule } from '@/backend_auth/auth_core/app.module';
+import { CoreValidationPipe } from '@/backend_auth/auth_core/http/core-validation.pipe';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(CoreAppModule, { bufferLogs: true });

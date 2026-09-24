@@ -1929,25 +1929,35 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ### Implementation Constraints
 
-1. **Strict Namespace Prefixing:** All test directories must be explicitly prefixed by domain and testing type.
+1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
+   - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/`
+   - **Feature Level:** `src/backend_superadmin/dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/dashboard/`
+   - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
 
-2. **WET Over DRY (No Global Shared Utilities):** Never create a global `shared/`, `utils/`, or `common/` folder for E2E or Selenium tests. If both `backend_admin_e2e` and `backend_manager_e2e` need a "login and get auth token" helper script, you MUST duplicate the script into both directories.
-   - ❌ **BAD:** `backend_e2e/shared/auth_helper.py`
-   - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/helpers/auth_helper.py` AND `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
+2. **Strict File Naming Convention:** Just like backend development files, every E2E and Selenium test file MUST be explicitly prefixed with the role and module name to prevent any ambiguity. Since these are Python (`pytest`) tests, they must start with `test_` for test discovery.
+   - **E2E (API) Format:** `test_[role]_[module]_api.py` (e.g., `test_superadmin_dashboard_api.py`)
+   - **Selenium (UI) Format:** `test_[role]_[module]_ui.py` (e.g., `test_superadmin_dashboard_ui.py`)
+   - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
+   - ✅ **GOOD:** `test_admin_members_api.py` (lives inside `backend_e2e/backend_admin_e2e/members/`)
 
-3. **No Cross-Domain Imports:** A test script in `backend_manager_selenium` MUST NOT import a fixture, constant, or helper from `backend_admin_selenium`. If tests span multiple roles, they must be orchestrated at a higher CI pipeline level, not through tightly coupled Python/TS test imports.
+3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend_manager_e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
+   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend_e2e/backend_manager_e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
+   - ❌ **BAD:** `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
+   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/dashboard/auth_helper.py` AND `backend_e2e/backend_manager_e2e/billing/auth_helper.py`
 
-4. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
+4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
-5. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
+5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
 
-6. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
+6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
-7. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
+7. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
 
-8. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
+8. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
+
+9. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
    - ❌ **BAD:** Hardcoding a single brittle locator: `driver.find_element(By.ID, "submit-btn")`
    - ✅ **GOOD:** Writing robust selector logic that attempts a primary locator (e.g., `data-testid`), and if that fails, gracefully falls back to a secondary locator (e.g., specific CSS class, XPath, or ARIA label). The AI must ensure that if the primary locator fails, the backup locator works to complete the action.
 
@@ -1964,4 +1974,37 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
   2. **Progressive Rendering:** The frontend should be able to render fast data (KPIs) instantly while displaying skeleton loaders for slower data (complex aggregations/charts). A Mega API forces the frontend to wait for the *slowest* query before rendering *anything*.
   3. **Caching & Scalability:** Widget-based APIs allow you to cache heavy/slow queries (like charts) in Redis for 1 hour, while keeping fast queries (like today's attendance) strictly real-time. Mega APIs force an all-or-nothing caching strategy which does not scale for Enterprise apps.
 
+
+
+## 122. Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
+* **The Rule:** EVERY single construct in the codebase—Classes, Controllers, Service Methods, DTOs, Entities, Database Columns, Enums, and Config Variables—MUST have an exhaustive, multi-line docstring. 
+* **Why:** AI agents must not guess. When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The docstring must explicitly declare it.
+* **What MUST be included:**
+  1. **Primary Intent:** Deep explanation of the business context.
+  2. **Edge Cases:** Explicit mapping of failure states and constraints.
+  3. **Side-Effects:** Mention cache invalidations, webhooks, or event emissions.
+  4. **AI-Note (Crucial):** Warnings or routing instructions for future AIs.
+
+## 123. MCP-Ready API Design & AI Introspection
+* **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
+* **Implementation:** Every REST endpoint, DTO, and Response object must be heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`). The resulting `swagger.json` must be 100% strictly typed with no missing fields.
+* **Why:** This allows an MCP Server to ingest the backend's API specification and dynamically convert all your endpoints into **LLM Tools**. An AI agent can then connect to your backend and intuitively execute commands (e.g., `create_member`, `fetch_dashboard_kpis`) natively, treating your backend as an extension of its own brain rather than just static code.
+
+## 124. RAG-Ready API Projections (LLM / Chatbot Optimization)
+* **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
+* **The Rule:** The backend must expose a dedicated `/api/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
+* **Implementation:** These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
+* **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
+
+## 125. Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
+* **The Problem:** Standard CRUD operations (like updating a subscription status from 'Active' to 'Cancelled') overwrite historical state, completely destroying the ability to perform deep, time-series analytics (e.g., "How many users cancelled exactly on day 14?").
+* **The Rule:** For any critical domain entity (Billing, Attendance, Subscription, Member Lifecycle), apply a **Zero-Overwrite** rule for analytics. 
+* **Implementation:** Every critical state change MUST publish an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`) to a message broker (Redis Streams/Kafka) and store it in an append-only `events_log` or timeseries table. 
+* **Why:** All AI Analytics engines, forecasting models, and Manager Dashboards MUST query this immutable event log (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
+
+## 126. The Double-Entry Financial Ledger (For Billing & Wallets)
+* **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
+* **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
+* **Implementation:** You must insert two rows into a `ledger_entries` table for every transaction: a Credit (+500 to Gym Revenue account) and a Debit (-500 from Member Wallet account). The current balance is always dynamically calculated as `SUM(credits) - SUM(debits)`. 
+* **Why:** This makes financial discrepancies mathematically impossible and provides a perfect, tamper-proof audit trail for accounting.
 

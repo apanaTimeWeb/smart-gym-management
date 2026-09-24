@@ -1139,15 +1139,32 @@ Approved stack:
 - E2E tests: Playwright
 - API/network mocking: MSW
 
-Co-location rule:
-- `ManagerMembersTable.tsx` → `ManagerMembersTable.test.tsx`
-- `useManagerMembersTable.ts` → `useManagerMembersTable.test.ts`
-- `ManagerMembersFormatting.ts` → `ManagerMembersFormatting.test.ts`
+Co-location rule (Unit & Component Tests ONLY):
+- ManagerMembersTable.tsx → ManagerMembersTable.test.tsx
+- useManagerMembersTable.ts → useManagerMembersTable.test.ts
+- ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
+
+**Complete Isolation for E2E Testing (The AI Zip Principle):**
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/members/members.spec.ts`).
+2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `billing` test need a login helper, duplicate it directly into BOTH the `members` and `billing` test folders.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
+3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/billing/`.
 
 Minimum expectations:
 - Utilities: 90% branch coverage
 - Custom hooks: 80% coverage
-- Core components: interaction tests for loading, success, empty, error, and disabled states
+- Core components: interaction tests for all user events (clicks, typing, dropdowns), loading, success, empty, error, and disabled states.
+
+**Component Testing Philosophy (No Playwright):**
+1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
+2. **No Frontend E2E Suite:** Because true E2E is handled externally (e.g., Selenium via the backend QA pipeline), the frontend is responsible strictly for rigorous **Component Integration Testing**. You MUST use React Testing Library (RTL) + MSW to verify that:
+   - Buttons trigger the correct actions and loading states.
+   - Dropdowns open and select the correct values.
+   - Modals appear and close correctly.
+   - Component empty, error, and success states render properly.
+
+
+   - Core components: interaction tests for loading, success, empty, error, and disabled states
 - Critical journeys: Playwright E2E coverage
 
 Mandatory E2E flows:
@@ -1157,6 +1174,7 @@ Mandatory E2E flows:
 - Type-to-confirm destructive action flows
 - Billing or payment workflows
 - Important table filtering, pagination, and export workflows
+
 
 Testing rules:
 - Test user-visible behavior, not internal implementation details.
@@ -2519,3 +2537,17 @@ If the user's app is closed or loses internet connection when a WebSocket event 
 The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+
+
+## AI Introspection & Agentic Compatibility Rules
+
+### Rule 22 — AI-Testable UI (Mandatory data-testid)
+* **The Problem:** When an AI agent writes or executes E2E tests (using Playwright, Cypress, or Puppeteer), it cannot "see" the UI like a human. If semantic IDs are missing, the AI will fail to interact with the page.
+* **The Rule:** Every single interactive element (Buttons, Inputs, Dropdowns, Links, Checkboxes) and critical state indicator (Status Badges, Error Messages) MUST have a strictly formatted `data-testid` attribute.
+* **Format:** `data-testid="[module]-[component]-[action/state]"`. Example: `data-testid="members-addform-submit"` or `data-testid="billing-invoice-status-paid"`.
+* **Why:** This makes the entire UI programmatically introspectable for autonomous AI testing and Web-Browsing Agents.
+
+### Rule 23 — Component-Level AI Docstrings (JSDoc)
+* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
+* **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
+* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`

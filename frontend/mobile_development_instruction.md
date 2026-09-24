@@ -572,10 +572,11 @@ visually renders with placeholder values.
 - **Integration tests:** Live inside the feature's `tests/` directory and verify
   multi-file feature flows, API/mock integration, state coordination, and critical
   feature behavior.
-- **E2E tests:** Live in the project-level E2E suite and verify complete user
-  journeys through the real application (e.g. Maestro or a comparable YAML/script-
-  driven E2E runner works across both RN and Flutter — choose ONE tool project-wide
-  and document the choice; do not mix multiple E2E tools in the same repo).
+- **E2E tests (Maestro / Detox) - AI Zip Principle:**
+  1. **Top-Level Mirrored Folders:** E2E tests MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders.
+  2. **WET Over DRY (Module-Level Isolation):** Mobile E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `dashboard` test need a login helper script, duplicate it directly into BOTH the `members` and `dashboard` test folders.
+     - **Why:** If a bug occurs in the Members mobile flow, a developer must be able to ZIP only the `mobile_e2e/mobile_admin_e2e/members/` folder and feed it to an AI. If the AI is missing parent helpers, it loses context and breaks the test.
+  3. **No Cross-Module Imports:** A test script in `mobile_admin_e2e/members/` MUST NOT import a fixture or helper from `mobile_admin_e2e/dashboard/`. Isolation is absolute.
 - Native modules (camera, biometrics, secure storage, notifications) are
   mocked at the test boundary — unit and component tests never touch a real
   native API.
@@ -2456,3 +2457,17 @@ If the user's app is closed or loses internet connection when a WebSocket event 
 The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+
+
+## AI Introspection & Agentic Compatibility Rules
+
+### Rule 65 — AI-Testable UI (Mandatory testID)
+* **The Problem:** When an AI agent writes or executes Mobile E2E tests (using Maestro, Detox, or Appium), it cannot visually inspect the screen perfectly. Without explicit accessibility identifiers, the AI test scripts will break constantly.
+* **The Rule:** Every single interactive widget (Buttons, TextFields, Switches, Gestures) and critical state indicator (Status Badges, Empty States) MUST have a strictly formatted `testID` (in React Native) or `Key` (in Flutter).
+* **Format:** `[module]-[component]-[action/state]`. Example: `testID="members-addform-submit"` or `key=Key('billing-invoice-status-paid')`.
+* **Why:** This makes the mobile UI programmatically introspectable for autonomous AI testing agents.
+
+### Rule 66 — Component-Level AI Docstrings (JSDoc / DartDoc)
+* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
+* **The Rule:** Every Custom Hook (RN), Controller/Bloc (Flutter), complex Widget/Component, and State Store MUST have an exhaustive docstring block directly above its declaration.
+* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/// @description Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`

@@ -20,17 +20,17 @@ import { Logger } from 'nestjs-pino';
 
 import { AppModule } from '@/backend_landing/app.module';
 
-import '@/backend_landing/core/observability/telemetry-bootstrap';
+import '@/backend_landing/landing_core/landing_observability/telemetry-bootstrap';
 
-import { ValidationExceptionFilter } from '@/backend_landing/core/http/validation-exception.filter';
+import { ValidationExceptionFilter } from '@/backend_landing/landing_core/http/validation-exception.filter';
 
-import { RequestContextMiddleware } from '@/backend_landing/core/context/request-context.middleware';
+import { RequestContextMiddleware } from '@/backend_landing/landing_core/context/request-context.middleware';
 
-import { TenantResolutionMiddleware } from '@/backend_landing/core/tenant/tenant-resolution.middleware';
+import { TenantResolutionMiddleware } from '@/backend_landing/landing_core/landing_tenant/tenant-resolution.middleware';
 
-import { MetricsMiddleware } from '@/backend_landing/core/observability/metrics.middleware';
+import { MetricsMiddleware } from '@/backend_landing/landing_core/landing_observability/metrics.middleware';
 
-import { ResponseInterceptor } from '@/backend_landing/core/http/response.interceptor';
+import { ResponseInterceptor } from '@/backend_landing/landing_core/http/response.interceptor';
 
 
 async function bootstrap(): Promise<void> {
