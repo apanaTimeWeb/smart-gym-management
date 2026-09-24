@@ -17,9 +17,13 @@ export class SuperadminCoreRedisService implements OnModuleDestroy {
 
   constructor(config: ConfigService) {
     const url = config.getOrThrow<string>('app.redisUrl');
+    console.log(`[${Date.now()}] SuperadminCoreRedisService INIT url: ${url}`);
     this.client = (url === 'mock' || url === 'redis://mock')
       ? new RedisMock() as unknown as Redis
       : new Redis(url, { maxRetriesPerRequest: 2, enableOfflineQueue: false });
+    this.client.on('connect', () => console.log(`[${Date.now()}] SuperadminCoreRedisService CONNECTED`));
+    this.client.on('ready', () => console.log(`[${Date.now()}] SuperadminCoreRedisService READY`));
+    this.client.on('error', (err) => console.log(`[${Date.now()}] SuperadminCoreRedisService ERROR:`, err));
   }
 
   /**
@@ -35,7 +39,10 @@ export class SuperadminCoreRedisService implements OnModuleDestroy {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async increment(key: string, ttlSeconds: number): Promise<number> {
+    console.log(`[${Date.now()}] REDIS INCR START key=${key}`);
+    const t0 = Date.now();
     const count = await this.client.incr(key);
+    console.log(`[${Date.now()}] REDIS INCR DONE count=${count} (took ${Date.now() - t0}ms)`);
     if (count === 1) await this.client.expire(key, ttlSeconds);
     return count;
   }
