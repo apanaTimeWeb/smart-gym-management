@@ -1,3 +1,4 @@
+import { SuperadminAuthRepository } from '@/backend_superadmin/superadmin_modules/auth/superadmin-auth.repository';
 // RESPONSIBILITY: Registers shared Superadmin framework infrastructure providers without business logic.
 // FLOW: SuperadminCoreModule -> SUPERADMIN_CORE_PROVIDERS -> NestJS dependency injection.
 import { ValidationPipe } from '@nestjs/common';
@@ -37,7 +38,7 @@ import { SuperadminCoreRequestSanitizationPipe } from '@/backend_superadmin/supe
  * AI-Note: Keep this file small and infrastructure-only; do not turn it into a shared business-logic dumping ground.
  */
 export const SUPERADMIN_CORE_PROVIDERS = [
-    SuperadminCoreRedisService, SuperadminCoreCircuitBreakerService, SuperadminCoreRequestSanitizationPipe, SuperadminCoreIdempotencyService, SuperadminCoreIdempotencyInterceptor, SuperadminCoreRateLimitGuard, SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard, SuperadminCoreTenantAuthorizationRepository, SuperadminCoreTenantAuthorizationService, SuperadminCoreTenantDatasourceResolverService, SuperadminCoreTenantDatabaseProvisionerService, SuperadminCoreTenantRegistryRepository, SuperadminCoreTenantRegistryService, SuperadminCoreEncryptionService, SuperadminCoreMetricsService,
+    SuperadminAuthRepository, SuperadminCoreRedisService, SuperadminCoreCircuitBreakerService, SuperadminCoreRequestSanitizationPipe, SuperadminCoreIdempotencyService, SuperadminCoreIdempotencyInterceptor, SuperadminCoreRateLimitGuard, SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard, SuperadminCoreTenantAuthorizationRepository, SuperadminCoreTenantAuthorizationService, SuperadminCoreTenantDatasourceResolverService, SuperadminCoreTenantDatabaseProvisionerService, SuperadminCoreTenantRegistryRepository, SuperadminCoreTenantRegistryService, SuperadminCoreEncryptionService, SuperadminCoreMetricsService,
     SuperadminCoreAuditTrailService, SuperadminCoreAuditTrailSubscriber, SuperadminCoreEventBusService, SuperadminCoreTransactionContext, SuperadminCoreUnitOfWorkService, SuperadminCoreDistributedJobQueueService, SuperadminCoreScheduledJobRegistryService, SuperadminCoreFeatureFlagService,
     { provide: APP_GUARD, useExisting: SuperadminCoreJwtAuthGuard },
     { provide: APP_GUARD, useExisting: SuperadminCoreRateLimitGuard },
