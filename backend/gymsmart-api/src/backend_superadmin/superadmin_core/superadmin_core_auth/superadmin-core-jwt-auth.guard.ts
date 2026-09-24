@@ -48,6 +48,18 @@ export class SuperadminCoreJwtAuthGuard implements CanActivate {
       const dummyTenantId = request.header('x-tenant-id')?.trim() || null;
       request.user = { userId: '00000000-0000-4000-8000-000000000001', email: 'e2e@example.com', role: SuperadminRole.SUPERADMIN, tenantId: dummyTenantId, requestId: request.headers['x-request-id']?.toString() || 'e2e-req' };
       setAuthenticatedRequestContext(request.user.userId, request.user.role, dummyTenantId);
+      if (dummyTenantId) {
+        enterTenantDataSource(await this.tenantResolver.resolve(request.user.userId, dummyTenantId));
+        let released = false;
+        const release = (): void => {
+          if (released) return;
+          released = true;
+          void this.tenantResolver.releaseRequest(dummyTenantId);
+        };
+        const response = context.switchToHttp().getResponse();
+        response.once('finish', release);
+        response.once('close', release);
+      }
       return true;
     }
     if (!authorization?.startsWith('Bearer ')) throw new UnauthorizedException({ error: 'UNAUTHORIZED', errorCode: 'AUTH.ACCESS_TOKEN.REQUIRED', message: { key: 'auth.ERRORS.UNAUTHORIZED' } });

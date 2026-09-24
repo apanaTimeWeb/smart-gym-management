@@ -24,13 +24,13 @@ import { SuperadminPaginatedResult } from '@/backend_superadmin/superadmin_core/
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminAffiliatesQueryController {
-  constructor(private readonly listService: SuperadminAffiliatesListService, private readonly findService: SuperadminAffiliatesFindService, private readonly payoutService: SuperadminAffiliatesPayoutService) {}
-/**
- * Primary Intent: Executes the payoutHistory use case within the owning backend feature boundary.
- * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
- * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
- * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
- */
+  constructor(private readonly listService: SuperadminAffiliatesListService, private readonly findService: SuperadminAffiliatesFindService, private readonly payoutService: SuperadminAffiliatesPayoutService) { }
+  /**
+   * Primary Intent: Executes the payoutHistory use case within the owning backend feature boundary.
+   * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+   * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+   * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+   */
 
   /** Returns payout history across active affiliates. */
   // SLA: FAST
@@ -44,12 +44,12 @@ export class SuperadminAffiliatesQueryController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async payoutHistory(): Promise<SuperadminAffiliatePayoutRecordDto[]> { return this.payoutService.history(); }
-/**
- * Primary Intent: Executes the findAll use case within the owning backend feature boundary.
- * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
- * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
- * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
- */
+  /**
+   * Primary Intent: Executes the findAll use case within the owning backend feature boundary.
+   * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+   * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+   * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+   */
 
   /** Returns a paginated affiliates list. */
   // SLA: FAST
@@ -63,12 +63,12 @@ export class SuperadminAffiliatesQueryController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findAll(@Query() query: SuperadminAffiliatesQueryDto): Promise<SuperadminPaginatedResult<SuperadminAffiliatesResponseDto>> { return await this.listService.findAffiliatesPage(query); }
-/**
- * Primary Intent: Executes the findOne use case within the owning backend feature boundary.
- * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
- * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
- * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
- */
+  /**
+   * Primary Intent: Executes the findOne use case within the owning backend feature boundary.
+   * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+   * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+   * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+   */
 
   /** Returns one affiliates record. */
   // SLA: FAST
