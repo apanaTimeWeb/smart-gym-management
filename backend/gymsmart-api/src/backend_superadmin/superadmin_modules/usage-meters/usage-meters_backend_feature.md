@@ -1,59 +1,59 @@
 # usage-meters Backend Feature Map
 
 ## Module Purpose
-Owns the `usage-meters` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
+This module owns the backend capability boundary for the superadmin_modules/usage-meters feature. It exposes 6 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/usage-meters-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/usage-meters-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/usage-meters-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/usage-meters-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/usage-meters-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/usage-meters-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/usage-meters-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/usage-meters-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/usage-meters-main.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/usage-meters-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/usage-meters.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/usage-meters.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `usage-meters-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `usage-meters-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `usage-meters.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `usage-meters.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `usage-meters.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `usage-meters.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `usage-meters.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `usage-meters_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `superadmin-usage-meters-analytics-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-usage-meters-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-usage-meters-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-usage-meters.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-usage-meters.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-usage-meters.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-usage-meters.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-usage-meters.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-usage-meters.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `usage-meters_dtos/superadmin-usage-meters-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `usage-meters_dtos/superadmin-usage-meters-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `usage-meters_dtos/superadmin-usage-meters-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `usage-meters_responses/superadmin-usage-meters-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `usage-meters_services/superadmin-usage-meters-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_services/superadmin-usage-meters-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_services/superadmin-usage-meters-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_services/superadmin-usage-meters-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_services/superadmin-usage-meters-main.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_services/superadmin-usage-meters-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `usage-meters_types/superadmin-usage-meters.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `usage-meters_types/superadmin-usage-meters.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `usage-meters-command.controller.ts` / `create` | POST | `/superadmin/usage-meters` | Creates a resource after DTO validation and persists it through the feature repository. | `UsageMetersCreateDto` | `unknown` |
-| `usage-meters-command.controller.ts` / `update` | PATCH | `/superadmin/usage-meters/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `UsageMetersUpdateDto` | `unknown` |
-| `usage-meters-command.controller.ts` / `remove` | DELETE | `/superadmin/usage-meters/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `usage-meters-query.controller.ts` / `findOne` | GET | `/superadmin/usage-meters/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `usage-meters-special.controller.ts` / `main` | GET | `/superadmin/usage-meters` | Returns the feature-level frontend contract projection owned by this module. | `None` | `Record<string, unknown` |
+| `superadmin-usage-meters-analytics-query.controller.ts::main` | GET | `superadmin/usage-meters` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the main operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-usage-meters-analytics-query.controller.ts::main` | GET | `api/superadmin/usage-meters` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the main operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-usage-meters-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the create operation. | `SuperadminUsageMetersCreateDto` | `See controller contract` |
+| `superadmin-usage-meters-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the update operation. | `SuperadminUsageMetersUpdateDto` | `See controller contract` |
+| `superadmin-usage-meters-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-usage-meters-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning usage-meters use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-usage-meters.entity → `superadmin_usage_meters`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/usage-meters`, `/superadmin/usage-meters/:id`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -66,9 +66,15 @@ The feature's backend route and file structure mirror the frontend feature name.
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/usage-meters/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `GET /superadmin/usage-meters` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/usage-meters` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/usage-meters` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/usage-meters/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/usage-meters/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/usage-meters/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -79,66 +85,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/usage-meters/` -> the Superadmi
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend usage-meters/superadmin_usage-meters_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Usage Meters â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The usage-meters module is responsible for the Superadmin business workflow managing Usage Meters. It enables superadmins to view, monitor, and control the lifecycle and configurations of Usage Meters across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `usage-meters_api/` | Feature-owned responsibility for usage-meters api. | `SuperadminUsageMetersApi.ts` |
-| `usage-meters_components/` | Feature-owned responsibility for usage-meters components. | `SuperadminUsageMetersClient.tsx` |
-| `usage-meters_mocks/` | Feature-owned responsibility for usage-meters mocks. | `(directory present; no direct files)` |
-| `usage-meters_tests/` | Feature-owned responsibility for usage-meters tests. | `SuperadminUsage-metersBasic.test.tsx` |
-| `usage-meters_types/` | Feature-owned responsibility for usage-meters types. | `SuperadminUsageMetersTypes.ts` |
-| `usage-meters_utils/` | Feature-owned responsibility for usage-meters utils. | `SuperadminUsageMetersConstants.ts`, `SuperadminUsageMetersUtils.ts`, `useSuperadminUsageMetersPage.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Usage Meters | `/superadmin/usage-meters` | view the module surface; use the documented filters and controls; open supported detail/edit surfaces | `SuperadminUsageMetersApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/usage-meters route to load the Usage Meters data context securely via TanStack Query.
-2. Interact with the Usage Meters dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Usage Meters status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `usage-meters`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `usage-meters_utils/useSuperadminUsageMetersPage.ts`
-- **URL state:** `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'usage-meters', params]`
-
-## API Contract
+#### Source: `usage-meters/superadmin_usage-meters_features.md`
 
 - **API files:** `usage-meters_api/SuperadminUsageMetersApi.ts`
 - **Detected API symbols:** `fetchUsageMeters` — `usage-meters_api/SuperadminUsageMetersApi.ts`
@@ -146,7 +97,9 @@ The usage-meters module is responsible for the Superadmin business workflow mana
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+### UI-Required Data Evidence
+
+#### Source: `usage-meters/superadmin_usage-meters_features.md`
 
 - **Data-bearing components:** `page.tsx`, `usage-meters_components/SuperadminUsageMetersClient.tsx`, `usage-meters_components/SuperadminUsageMetersEmptyState/SuperadminUsageMetersEmptyState.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -155,37 +108,34 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+### Static Freeze Status
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
-
-## Loading, Empty, and Error States
-
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** `usage-meters_components/SuperadminUsageMetersEmptyState/SuperadminUsageMetersEmptyState.tsx`
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
-
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Renders the page component. |
-| `usage-meters_components/SuperadminUsageMetersClient.tsx` | Renders the Superadmin feature UI for SuperadminUsageMetersClient. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer. |
-| `usage-meters_components/SuperadminUsageMetersEmptyState/SuperadminUsageMetersEmptyState.tsx` | Renders the empty state UI for the Usage Meters table when no data is available. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into usage-meters.
-- **Destructive Actions**: Any deletion or modification of usage-meters records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for usage-meters do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<UsageMeter[]>`` | `REQ-131` / ``fetchUsageMeters`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `usage-meters_components/SuperadminUsageMetersClient.tsx`, `usage-meters_components/SuperadminUsageMetersEmptyState/SuperadminUsageMetersEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

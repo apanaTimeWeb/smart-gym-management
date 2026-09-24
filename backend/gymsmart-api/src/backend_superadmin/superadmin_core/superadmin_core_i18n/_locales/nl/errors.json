@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "Het verzoek kon niet worden verwerkt.",
+      "VALIDATION_FAILED": "Een of meer velden zijn ongeldig.",
+      "INTERNAL": "Er is een interne fout opgetreden.",
+      "NOT_FOUND": "De gevraagde bron is niet gevonden.",
+      "FORBIDDEN": "U bent niet gemachtigd om deze actie uit te voeren.",
+      "IDEMPOTENCY_REQUIRED": "De Idempotency-Key-header is vereist.",
+      "IDEMPOTENCY_INVALID": "De Idempotency-Key is ongeldig.",
+      "IDEMPOTENCY_IN_PROGRESS": "Een verzoek met deze Idempotency-Key wordt al verwerkt.",
+      "RATE_LIMIT_EXCEEDED": "Te veel verzoeken. Probeer het later opnieuw.",
+      "CIRCUIT_OPEN": "De downstream-service is tijdelijk niet beschikbaar."
+    }
+  }
+}

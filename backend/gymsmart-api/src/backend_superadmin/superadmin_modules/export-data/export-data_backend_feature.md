@@ -1,42 +1,56 @@
 # Export Data Backend Feature Map
 
 ## Module Purpose
-The Export Data feature owns the Superadmin-wide asynchronous export contract consumed by Settings, Reports, Global Audit, and Gyms. It creates a durable master-database export job, publishes work to the Redis-backed `superadmin-export` queue, and never performs archive generation inside the HTTP request. Export execution produces protected ZIP output, sends the result through the requested delivery medium with a configured fallback, persists the completion notification before realtime publication, and remains subject to the 90-day offboarding cleanup contract.
+
+This module owns the backend capability boundary for the superadmin_modules/export-data feature. It exposes 3 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| export-data.controller.ts | HTTP start/status/download transport only. |
-| dtos/export-data-request.dto.ts | Validates resource, tenant, format, and delivery-medium selectors. |
-| services/export-data.service.ts | Authorizes tenant scope and creates durable jobs. |
-| services/export-data-archive.service.ts | Builds bounded CSV/ZIP archive buffers. |
-| services/export-data-delivery.service.ts | Selects primary/fallback proof-of-delivery medium. |
-| workers/export-data-worker.service.ts | Consumes Redis queue, builds archive, stores artifact, delivers it, then marks completion. |
-| repositories/export-data-job.repository.ts | Owns export job persistence. |
-| repositories/export-data-archive.repository.ts | Owns denormalized export reads. |
-| adapters/export-data-storage.adapter.ts | Owns protected local artifact storage. |
-| adapters/export-data-email.adapter.ts | External Email adapter with timeout/circuit breaker. |
-| adapters/export-data-whatsapp.adapter.ts | Optional WhatsApp adapter with timeout/circuit breaker. |
-| services/export-data-retention.service.ts | Registered 90-day distributed purge handler. |
+| `export-data_adapters/superadmin-export-data-email.adapter.ts` | Isolates an external provider boundary; MUST NOT contain feature business rules. |
+| `export-data_adapters/superadmin-export-data-storage.adapter.ts` | Isolates an external provider boundary; MUST NOT contain feature business rules. |
+| `export-data_adapters/superadmin-export-data-whatsapp.adapter.ts` | Isolates an external provider boundary; MUST NOT contain feature business rules. |
+| `export-data_dtos/superadmin-export-data-request.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `export-data_repositories/superadmin-export-data-archive.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `export-data_repositories/superadmin-export-data-job.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `export-data_responses/superadmin-export-data-accepted-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `export-data_responses/superadmin-export-data-status-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `export-data_services/superadmin-export-data-archive.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `export-data_services/superadmin-export-data-delivery.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `export-data_services/superadmin-export-data-retention.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `export-data_services/superadmin-export-data.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `export-data_workers/superadmin-export-data-worker.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `superadmin-export-data-job.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-export-data-job.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-export-data-request.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-export-data.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-export-data.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-export-data.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-export-data.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-export-data.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| ExportDataController.start | POST | /api/superadmin/export-data | Accepts a validated export request and queues a durable asynchronous export job. | ExportDataRequestDto | ExportDataAcceptedResponseDto |
-| ExportDataController.status | GET | /api/superadmin/export-data/:jobId | Returns the persisted lifecycle state and expiring download metadata for one export job. | jobId path parameter | ExportDataStatusResponseDto |
-| ExportDataController.download | GET | /api/superadmin/export-data/download/:jobId/:token | Streams a completed ZIP only after actor, tenant, signature, and expiry checks succeed. | jobId/token path parameters | Protected ZIP stream |
+| `superadmin-export-data.controller.ts::start` | POST | `api/superadmin/export-data` | This endpoint validates transport input, invokes the owning export-data use case, and returns the declared contract for the start operation. | `SuperadminExportDataRequestDto` | `SuperadminExportDataAcceptedResponseDto` |
+| `superadmin-export-data.controller.ts::status` | GET | `api/superadmin/export-data/:jobId` | This endpoint validates transport input, invokes the owning export-data use case, and returns the declared contract for the status operation. | `—` | `SuperadminExportDataStatusResponseDto` |
+| `superadmin-export-data.controller.ts::download` | GET | `api/superadmin/export-data/download/:jobId/:token` | This endpoint validates transport input, invokes the owning export-data use case, and returns the declared contract for the download operation. | `—` | `void` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None.
-- **Infrastructure Dependencies**: ConfigService, Redis, TypeORM master database, TenantRegistryRepository, Realtime event infrastructure, ScheduledJobRegistryService.
-- **Runtime/Event Dependencies**: `SUPERADMIN.EXPORT.COMPLETED`; queue `superadmin-export`; DLQ `superadmin-export:dlq`.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_config, superadmin_core_database, superadmin_core_events, superadmin_core_external, superadmin_core_jobs, superadmin_core_observability, superadmin_core_tenancy
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: `superadmin_export_jobs`; `audit_logs` and tenant registry tables are read during export.
-- Redis keys: `superadmin-export`, `superadmin-export:dlq`; idempotency keys remain global.
-- Event Emitters: `SUPERADMIN.EXPORT.COMPLETED`.
-- Background Jobs: `superadmin-export` worker; `SUPERADMIN.TENANT.OFFBOARDING_PURGE` distributed scheduled job.
-- Idempotency Keys: mandatory on POST `/api/superadmin/export-data`.
+
+- DB Entities: superadmin-export-data-job.entity → `superadmin_export_jobs`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: superadmin-export-data-job.constants.ts, superadmin-export-data-job.entity.ts, export-data_repositories/superadmin-export-data-job.repository.ts
+- Idempotency Keys: `/api/superadmin/export-data`
 
 ## Business Flow / Key Sequences
 1. POST `/api/superadmin/export-data` validates request and trusted tenant scope.
@@ -59,11 +73,12 @@ The Export Data feature owns the Superadmin-wide asynchronous export contract co
 - `export-data-worker.service.ts` — queue lifecycle only; MUST NOT implement SQL inline.
 
 ## Permissions and Security
-| Endpoint | Required Role(s) | Resource-Level Check |
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
 |---|---|---|
-| POST `/api/superadmin/export-data` | SUPERADMIN | Each requested tenant must be authorized in the master database before it is placed in the export job. |
-| GET `/api/superadmin/export-data/:jobId` | SUPERADMIN | Job owner/authorized tenant context must match. |
-| GET `/api/superadmin/export-data/download/:jobId/:token` | SUPERADMIN | Job token must match HMAC and remain unexpired. |
+| `POST /api/superadmin/export-data` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/export-data/:jobId` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/export-data/download/:jobId/:token` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Export generation MUST remain asynchronous (Rule 23); synchronous archive generation defeats the request SLA.
@@ -105,3 +120,7 @@ The Export Data feature owns the Superadmin-wide asynchronous export contract co
 - [x] Rule 119: asynchronous ZIP export, secure storage, expiring download token, delivery, completion event, and 90-day purge are implemented.
 - [x] Rule 120: completion notification is persisted before realtime publication.
 - [x] Rule 82A: shared export response contract remains `jobId/status` as required by the frontend.
+
+
+## Repair Baseline — 2026-09-24
+2026-09-24 repair: tenant export retention soft-deletes metadata before removing expired storage artifacts; permanent offboarding deletion remains an explicit lifecycle operation.

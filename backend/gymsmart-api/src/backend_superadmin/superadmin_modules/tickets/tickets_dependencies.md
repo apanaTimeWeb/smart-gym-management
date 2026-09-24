@@ -4,27 +4,27 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/tickets/dtos/tickets-create.dto`
-- `@/modules/backend_superadmin/tickets/dtos/tickets-query.dto`
-- `@/modules/backend_superadmin/tickets/dtos/tickets-update.dto`
-- `@/modules/backend_superadmin/tickets/services/tickets-create.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-delete.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-find.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-insights.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-list.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-status.service`
-- `@/modules/backend_superadmin/tickets/services/tickets-update.service`
-- `@/modules/backend_superadmin/tickets/tickets-command.controller`
-- `@/modules/backend_superadmin/tickets/tickets-contract-snapshot.entity`
-- `@/modules/backend_superadmin/tickets/tickets-contract-snapshot.repository`
-- `@/modules/backend_superadmin/tickets/tickets-query.controller`
-- `@/modules/backend_superadmin/tickets/tickets-service-insights-response.dto.ts`
-- `@/modules/backend_superadmin/tickets/tickets-special.controller`
-- `@/modules/backend_superadmin/tickets/tickets.constants`
-- `@/modules/backend_superadmin/tickets/tickets.entity`
-- `@/modules/backend_superadmin/tickets/tickets.mapper`
-- `@/modules/backend_superadmin/tickets/tickets.repository`
-- `@/modules/backend_superadmin/tickets/types/tickets.interfaces`
+- `@/backend_superadmin/tickets/dtos/tickets-create.dto`
+- `@/backend_superadmin/tickets/dtos/tickets-query.dto`
+- `@/backend_superadmin/tickets/dtos/tickets-update.dto`
+- `@/backend_superadmin/tickets/services/tickets-create.service`
+- `@/backend_superadmin/tickets/services/tickets-delete.service`
+- `@/backend_superadmin/tickets/services/tickets-find.service`
+- `@/backend_superadmin/tickets/services/tickets-insights.service`
+- `@/backend_superadmin/tickets/services/tickets-list.service`
+- `@/backend_superadmin/tickets/services/tickets-status.service`
+- `@/backend_superadmin/tickets/services/tickets-update.service`
+- `@/backend_superadmin/tickets/tickets-command.controller`
+- `@/backend_superadmin/tickets/tickets-contract-snapshot.entity`
+- `@/backend_superadmin/tickets/tickets-contract-snapshot.repository`
+- `@/backend_superadmin/tickets/tickets-query.controller`
+- `@/backend_superadmin/tickets/tickets-service-insights-response.dto.ts`
+- `@/backend_superadmin/tickets/tickets-special.controller`
+- `@/backend_superadmin/tickets/tickets.constants`
+- `@/backend_superadmin/tickets/tickets.entity`
+- `@/backend_superadmin/tickets/tickets.mapper`
+- `@/backend_superadmin/tickets/tickets.repository`
+- `@/backend_superadmin/tickets/types/tickets.interfaces`
 
 ## Infrastructure Imports
 

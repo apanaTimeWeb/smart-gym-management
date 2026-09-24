@@ -31,3 +31,14 @@ For a feature repair, default writable scope is this feature folder only; cross-
 3. Do not emit an unregistered runtime event. Consequence: consumers become invisible to the dependency graph and event contracts drift. Rule: 49 / 50.
 4. Do not return raw ORM entities from business services. Consequence: persistence metadata leaks into business code and schema changes propagate unexpectedly. Rule: 89.
 5. Do not accept unvalidated dynamic sort/filter fields. Consequence: unsafe query construction can enable injection or inconsistent results. Rule: 92.
+
+
+## 2026-09-24 Financial Safety Additions
+- Never write `pending_payout` or any mutable balance column; pending payable is derived from the immutable affiliate ledger.
+- Never persist plaintext bank details or return ciphertext as API data.
+- Never perform payout outside `SuperadminAffiliatesPayoutOrchestratorService`; the affiliate row must be locked and the payout ledger pair written atomically.
+
+## Financial Safety Additions
+- Never mutate an affiliate payable balance directly; use the immutable ledger and payout orchestrator.
+- Never persist raw bank details; use application-layer encryption and masked response projection.
+

@@ -4,25 +4,25 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/analytics/analytics-command.controller`
-- `@/modules/backend_superadmin/analytics/analytics-query.controller`
-- `@/modules/backend_superadmin/analytics/analytics-retention-insights-response.dto.ts`
-- `@/modules/backend_superadmin/analytics/analytics-special.controller`
-- `@/modules/backend_superadmin/analytics/analytics.constants`
-- `@/modules/backend_superadmin/analytics/analytics.entity`
-- `@/modules/backend_superadmin/analytics/analytics.mapper`
-- `@/modules/backend_superadmin/analytics/analytics.repository`
-- `@/modules/backend_superadmin/analytics/dtos/analytics-create.dto`
-- `@/modules/backend_superadmin/analytics/dtos/analytics-query.dto`
-- `@/modules/backend_superadmin/analytics/dtos/analytics-update.dto`
-- `@/modules/backend_superadmin/analytics/services/analytics-create.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-delete.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-find.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-list.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-main.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-retention-insights.service`
-- `@/modules/backend_superadmin/analytics/services/analytics-update.service`
-- `@/modules/backend_superadmin/analytics/types/analytics.interfaces`
+- `@/backend_superadmin/analytics/analytics-command.controller`
+- `@/backend_superadmin/analytics/analytics-query.controller`
+- `@/backend_superadmin/analytics/analytics-retention-insights-response.dto.ts`
+- `@/backend_superadmin/analytics/analytics-special.controller`
+- `@/backend_superadmin/analytics/analytics.constants`
+- `@/backend_superadmin/analytics/analytics.entity`
+- `@/backend_superadmin/analytics/analytics.mapper`
+- `@/backend_superadmin/analytics/analytics.repository`
+- `@/backend_superadmin/analytics/dtos/analytics-create.dto`
+- `@/backend_superadmin/analytics/dtos/analytics-query.dto`
+- `@/backend_superadmin/analytics/dtos/analytics-update.dto`
+- `@/backend_superadmin/analytics/services/analytics-create.service`
+- `@/backend_superadmin/analytics/services/analytics-delete.service`
+- `@/backend_superadmin/analytics/services/analytics-find.service`
+- `@/backend_superadmin/analytics/services/analytics-list.service`
+- `@/backend_superadmin/analytics/services/analytics-main.service`
+- `@/backend_superadmin/analytics/services/analytics-retention-insights.service`
+- `@/backend_superadmin/analytics/services/analytics-update.service`
+- `@/backend_superadmin/analytics/types/analytics.interfaces`
 
 ## Infrastructure Imports
 

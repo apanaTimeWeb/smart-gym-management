@@ -1,40 +1,68 @@
 # Plans Backend Feature Map
 
 ## Module Purpose
-The plans module owns the Superadmin plans business capability exposed by the corresponding frontend feature slice. All HTTP mutations are isolated into command-controller micro-services, while reads stay in a separate query-controller path. The module does not directly depend on sibling business modules and keeps PostgreSQL access inside its repository boundary.
+
+This module owns the backend capability boundary for the superadmin_modules/saas-billing/plans feature. It exposes 9 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| plans-query.controller.ts | Read-only GET endpoints for the feature. |
-| plans-command.controller.ts | Create/update/delete and status mutation endpoints. |
-| plans.repository.ts | TypeORM queries and named mutations for `subscription_plans` only. |
-| plans.entity.ts | Maps `subscription_plans` to the persistence model. |
-| plans.mapper.ts | Converts ORM entities into domain-safe data. |
-| services/ | One micro-service per use case. |
-| dtos/ | Request validation only. |
-| responses/ | Stable response DTO contract. |
+| `plans_dtos/superadmin-saas-billing-plans-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans_dtos/superadmin-saas-billing-plans-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans_dtos/superadmin-saas-billing-plans-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans_responses/superadmin-saas-billing-plans-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans_services/superadmin-saas-billing-plans-archive.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-business-controls.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_services/superadmin-saas-billing-plans-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans_types/superadmin-saas-billing-plans.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `plans_types/superadmin-saas-billing-plans.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-saas-billing-plans-api.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-saas-billing-plans-business-controls-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-saas-billing-plans-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-saas-billing-plans-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-saas-billing-plans-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-saas-billing-plans-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-saas-billing-plans.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-saas-billing-plans.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-saas-billing-plans.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-saas-billing-plans.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-saas-billing-plans.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-saas-billing-plans.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-saas-billing-plans.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
-| Endpoint | HTTP | Purpose |
-|---|---|---|
-| /superadmin/plans | GET | Returns subscription-plan records required by the Superadmin Plans feature, preserving the frontend plan-management contract. |
-| /superadmin/plans/:id | GET | Returns subscription-plan records required by the Superadmin Plans feature, preserving the frontend plan-management contract. |
-| /superadmin/plans | POST | Returns subscription-plan records required by the Superadmin Plans feature, preserving the frontend plan-management contract. |
-| /superadmin/plans/:id | PATCH | Returns subscription-plan records required by the Superadmin Plans feature, preserving the frontend plan-management contract. |
-| /superadmin/plans/:id | DELETE | Returns subscription-plan records required by the Superadmin Plans feature, preserving the frontend plan-management contract. |
+
+
+| Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
+|---|---|---|---|---|---|
+| `superadmin-saas-billing-plans-api.controller.ts::businessControls` | GET | `/api/superadmin/saas-billing/plans/business-controls` | This endpoint invokes `businessControls` on `superadmin-saas-billing-plans-api.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-command.controller.ts::create` | POST | `/superadmin/saas-billing/plans` | This endpoint invokes `create` on `superadmin-saas-billing-plans-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-command.controller.ts::update` | PATCH | `/superadmin/saas-billing/plans/:id` | This endpoint invokes `update` on `superadmin-saas-billing-plans-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-command.controller.ts::remove` | DELETE | `/superadmin/saas-billing/plans/:id` | This endpoint invokes `remove` on `superadmin-saas-billing-plans-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-command.controller.ts::archive` | PATCH | `/superadmin/saas-billing/plans/:id/archive` | This endpoint invokes `archive` on `superadmin-saas-billing-plans-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-query.controller.ts::findAll` | GET | `/superadmin/saas-billing/plans` | This endpoint invokes `findAll` on `superadmin-saas-billing-plans-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-query.controller.ts::businessControls` | GET | `/superadmin/saas-billing/plans/business-controls` | This endpoint invokes `businessControls` on `superadmin-saas-billing-plans-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-query.controller.ts::businessControls` | GET | `/superadmin/saas-billing/plans/api/superadmin/saas-billing/plans/business-controls` | This endpoint invokes `businessControls` on `superadmin-saas-billing-plans-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-saas-billing-plans-query.controller.ts::findOne` | GET | `/superadmin/saas-billing/plans/:id` | This endpoint invokes `findOne` on `superadmin-saas-billing-plans-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None.
-- **Infrastructure Dependencies**: TypeORM, PostgreSQL, Redis, auth/RBAC core.
-- **Runtime/Event Dependencies**: None declared.
+
+- **Business Feature Dependencies**: saas-billing
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: `SubscriptionPlan` -> `subscription_plans`.
-- Redis Caching Keys: rate-limit keys only; no business cache declared.
-- Event Emitters: none by default.
-- Background Jobs: none declared for the V1 core CRUD flow.
-- Idempotency Keys: required on financial/communication/resource-creation mutations where applicable.
+
+- DB Entities: superadmin-saas-billing-plans-contract-snapshot.entity → `superadmin_plans_contract_snapshots`, superadmin-saas-billing-plans.entity → `superadmin_subscription_plans`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/saas-billing/plans`, `/superadmin/saas-billing/plans/:id`, `/superadmin/saas-billing/plans/:id/archive`
 
 ## Business Flow / Key Sequences
 **Standard mutation:** Controller -> DTO validation -> micro-service -> named repository mutation -> mapper -> ResponseInterceptor.
@@ -46,7 +74,18 @@ The plans module owns the Superadmin plans business capability exposed by the co
 - `plans-*.service.ts` — one business use case each; MUST NOT call TypeORM directly.
 
 ## Permissions and Security
-All `/superadmin/plans` endpoints require `SUPERADMIN` at the controller layer. Resource-specific tenant checks are performed when tenant identifiers are present.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `GET /api/superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/plans` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/plans/:id/archive` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/api/superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Soft deletes MUST remain invisible to standard reads — violating Rule 29 can expose deleted records.
@@ -166,6 +205,36 @@ This addendum is generated from the current source tree and exists to make futur
 - **Strict Isolation**: Never import admin or manager components into plans.
 - **Destructive Actions**: Any deletion or modification of plans records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for plans do not expose cross-tenant sensitive data.
+
+### Request Shape
+No frontend-derived request shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### Response Shape
+No frontend-derived response shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `plans_components/SuperadminPlansList.tsx`, `plans_components/SuperadminPlanCreateModal.tsx`, `plans_components/SuperadminPlansClient.tsx`, `plans_components/SuperadminPlanEditModal.tsx`, `plans_components/SuperadminPlansV1HistoryAddonsAndMigrationSection.tsx`, `plans_components/SuperadminPlansV1ComparisonPanel.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `plans_components/SuperadminPlansList.tsx`, `plans_components/SuperadminPlanCreateModal.tsx`, `plans_components/SuperadminPlansClient.tsx`, `plans_components/SuperadminPlanEditModal.tsx`, `plans_components/SuperadminPlansV1HistoryAddonsAndMigrationSection.tsx`, `plans_components/SuperadminPlansV1ComparisonPanel.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

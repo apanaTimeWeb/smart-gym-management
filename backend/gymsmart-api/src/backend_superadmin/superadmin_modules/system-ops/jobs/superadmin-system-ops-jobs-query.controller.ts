@@ -1,29 +1,63 @@
 // RESPONSIBILITY: Owns HTTP transport for the jobs-query.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
 import { HttpStatus, Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SuperadminJwtAuthGuard } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-jwt-auth.guard';
-import { SuperadminRolesGuard } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-roles.guard';
-import { Roles } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-roles.decorator';
-import { SuperadminRole } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-auth.types';
-import { SuperadminJobsQueryDto } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/dtos/superadmin-system-ops-jobs-query.dto';
-import { SuperadminJobsListService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/services/superadmin-system-ops-jobs-list.service';
-import { SuperadminJobsFindService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/services/superadmin-system-ops-jobs-find.service';
+import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
+import { SuperadminCoreJwtAuthGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-jwt-auth.guard';
+import { SuperadminCoreRolesGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.guard';
+import { Roles } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.decorator';
+import { SuperadminRole } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-auth.constants';
+import { SuperadminSystemOpsJobsQueryDto } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_dtos/superadmin-system-ops-jobs-query.dto';
+import { SuperadminSystemOpsJobsListService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-list.service';
+import { SuperadminSystemOpsJobsFindService } from '@/backend_superadmin/superadmin_modules/system-ops/jobs/jobs_services/superadmin-system-ops-jobs-find.service';
 
+/**
+ * Primary Intent: Defines SuperadminSystemOpsJobsQueryController as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @ApiTags('jobs')
 @Controller('/superadmin/system-ops/jobs')
-@UseGuards(SuperadminJwtAuthGuard, SuperadminRolesGuard)
+@UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
-export class SuperadminJobsQueryController {
-  constructor(private readonly listService: SuperadminJobsListService, private readonly findService: SuperadminJobsFindService) {}
+export class SuperadminSystemOpsJobsQueryController {
+  constructor(private readonly listService: SuperadminSystemOpsJobsListService, private readonly findService: SuperadminSystemOpsJobsFindService) {}
+/**
+ * Primary Intent: Executes the findAll use case within the owning backend feature boundary.
+ * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+ * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+ * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+ */
+
   /** Returns a paginated jobs list. */
   // SLA: FAST
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
-  async findAll(@Query() query: SuperadminJobsQueryDto): Promise<unknown> { return await this.listService.findJobsPage(query); }
+  @ApiOperation({ summary: 'findAll' })
+  /**
+   * Primary Intent: Executes the findAll use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findAll(@Query() query: SuperadminSystemOpsJobsQueryDto): Promise<Awaited<ReturnType<SuperadminSystemOpsJobsListService['findJobsPage']>>> { return await this.listService.findJobsPage(query); }
+/**
+ * Primary Intent: Executes the findOne use case within the owning backend feature boundary.
+ * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+ * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+ * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+ */
+
   /** Returns one jobs record. */
   // SLA: FAST
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findJobsById(id); }
+  @ApiOperation({ summary: 'findOne' })
+  /**
+   * Primary Intent: Executes the findOne use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findOne(@Param('id') id: string): Promise<Awaited<ReturnType<SuperadminSystemOpsJobsFindService['findJobsById']>>> { return await this.findService.findJobsById(id); }
 }

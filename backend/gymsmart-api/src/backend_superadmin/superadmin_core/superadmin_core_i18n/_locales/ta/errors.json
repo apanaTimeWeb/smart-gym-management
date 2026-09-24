@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "கோரிக்கையைச் செயல்படுத்த முடியவில்லை.",
+      "VALIDATION_FAILED": "ஒன்று அல்லது அதற்கு மேற்பட்ட புலங்கள் தவறானவை.",
+      "INTERNAL": "உள் பிழை ஏற்பட்டது.",
+      "NOT_FOUND": "கோரிய வளம் கிடைக்கவில்லை.",
+      "FORBIDDEN": "இந்தச் செயலைச் செய்ய உங்களுக்கு அனுமதி இல்லை.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key header தேவை.",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key தவறானது.",
+      "IDEMPOTENCY_IN_PROGRESS": "இந்த Idempotency-Key கொண்ட கோரிக்கை ஏற்கனவே செயல்பாட்டில் உள்ளது.",
+      "RATE_LIMIT_EXCEEDED": "மிக அதிகமான கோரிக்கைகள். பின்னர் முயற்சிக்கவும்.",
+      "CIRCUIT_OPEN": "Downstream சேவை தற்காலிகமாக கிடைக்கவில்லை."
+    }
+  }
+}

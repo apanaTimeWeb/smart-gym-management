@@ -1,19 +1,30 @@
 // RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the coupons feature; no business logic.
-// FLOW: coupons service -> SuperadminCouponsRepository -> TypeORM Repository<SuperadminCouponsEntity> -> PostgreSQL `coupons`.
+// FLOW: coupons service -> SuperadminSaasBillingCouponsRepository -> TypeORM Repository<SuperadminSaasBillingCouponsEntity> -> PostgreSQL `coupons`.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
-import { SuperadminCouponsEntity } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.entity';
-import type { SuperadminCouponsListQuery, SuperadminCouponsCreateInput, SuperadminCouponsUpdateInput } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/types/superadmin-saas-billing-coupons.interfaces';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
+import { SuperadminSaasBillingCouponsEntity } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.entity';
+import type { SuperadminCouponsListQuery, SuperadminCouponsCreateInput, SuperadminCouponsUpdateInput } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_types/superadmin-saas-billing-coupons.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminSaasBillingCouponsRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminCouponsRepository extends BaseRepository<SuperadminCouponsEntity> {
-  constructor(@InjectRepository(SuperadminCouponsEntity) repository: Repository<SuperadminCouponsEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminSaasBillingCouponsRepository extends SuperadminCoreBaseRepository<SuperadminSaasBillingCouponsEntity> {
+  constructor(@InjectRepository(SuperadminSaasBillingCouponsEntity) repository: Repository<SuperadminSaasBillingCouponsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
-  async findPage(query: SuperadminCouponsListQuery): Promise<{ items: SuperadminCouponsEntity[]; total: number }> {
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findPage(query: SuperadminCouponsListQuery): Promise<{ items: SuperadminSaasBillingCouponsEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
     if (search) qb.andWhere('item.code ILIKE :search', { search: `%${search}%` });
@@ -25,26 +36,61 @@ export class SuperadminCouponsRepository extends BaseRepository<SuperadminCoupon
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
-  async findById(id: string): Promise<SuperadminCouponsEntity | null> { return super.findById(id); }
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findById(id: string): Promise<SuperadminSaasBillingCouponsEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
-  async findByIdOrThrow(id: string): Promise<SuperadminCouponsEntity> { return super.findByIdOrThrow(id, 'Coupons record not found'); }
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findByIdOrThrow(id: string): Promise<SuperadminSaasBillingCouponsEntity> { return super.findByIdOrThrow(id, 'Coupons record not found'); }
 
-  /** Creates and persists a coupons record. */
-  async createCoupons(input: SuperadminCouponsCreateInput): Promise<SuperadminCouponsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
+  /**
+ * Primary Intent: Executes the createCoupons use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async createCoupons(input: SuperadminCouponsCreateInput): Promise<SuperadminSaasBillingCouponsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a coupons record. */
-  async updateCouponsById(id: string, input: SuperadminCouponsUpdateInput): Promise<SuperadminCouponsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
+  /**
+ * Primary Intent: Executes the updateCouponsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async updateCouponsById(id: string, input: SuperadminCouponsUpdateInput): Promise<SuperadminSaasBillingCouponsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Soft-deletes one coupons record. */
+  /**
+ * Primary Intent: Executes the deleteCouponsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteCouponsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
-  /** Returns redemptions stored with the coupon contract. */
+  /**
+ * Primary Intent: Executes the findRedemptionsByCouponId use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findRedemptionsByCouponId(id: string): Promise<unknown[]> { const entity = await this.findByIdOrThrow(id); return Array.isArray(entity.redemptions) ? entity.redemptions : []; }
 
-  /** Restores a previously soft-deleted coupon. */
-  async restoreCouponsById(id: string): Promise<SuperadminCouponsEntity> { return this.restoreById(id); }
+  /**
+ * Primary Intent: Executes the restoreCouponsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async restoreCouponsById(id: string): Promise<SuperadminSaasBillingCouponsEntity> { return this.restoreById(id); }
 
   
 

@@ -1,59 +1,64 @@
 # affiliates Backend Feature Map
 
 ## Module Purpose
-Owns the `affiliates` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
+This module owns the backend capability boundary for the superadmin_modules/affiliates feature. It exposes 8 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `affiliates-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `affiliates-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `affiliates.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `affiliates.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `affiliates.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `affiliates.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `affiliates.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `affiliates.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `affiliates_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `affiliates_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `affiliates_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `affiliates_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dtos/affiliates-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/affiliates-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/affiliates-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/affiliates-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/affiliates-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/affiliates-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/affiliates-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/affiliates-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/affiliates-status.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/affiliates-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/affiliates.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/affiliates.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `affiliates_dtos/superadmin-affiliates-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_dtos/superadmin-affiliates-pay.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_dtos/superadmin-affiliates-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_dtos/superadmin-affiliates-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_dtos/superadmin-affiliates-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_responses/superadmin-affiliates-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `affiliates_services/superadmin-affiliates-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-payout.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_services/superadmin-affiliates-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `affiliates_types/superadmin-affiliates.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `affiliates_types/superadmin-affiliates.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-affiliates-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-affiliates-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-affiliates.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-affiliates.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-affiliates.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-affiliates.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-affiliates.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-affiliates.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-affiliates.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `affiliates-command.controller.ts` / `create` | POST | `/superadmin/affiliates` | Creates a resource after DTO validation and persists it through the feature repository. | `AffiliatesCreateDto` | `unknown` |
-| `affiliates-command.controller.ts` / `update` | PATCH | `/superadmin/affiliates/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `AffiliatesUpdateDto` | `unknown` |
-| `affiliates-command.controller.ts` / `remove` | DELETE | `/superadmin/affiliates/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `affiliates-command.controller.ts` / `changeStatus` | PATCH | `/superadmin/affiliates/:id/status` | Applies the requested status transition through the named repository mutation. | `None` | `unknown` |
-| `affiliates-query.controller.ts` / `findAll` | GET | `/superadmin/affiliates` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
-| `affiliates-query.controller.ts` / `findOne` | GET | `/superadmin/affiliates/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
+| `superadmin-affiliates-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the create operation. | `SuperadminAffiliatesCreateDto` | `SuperadminAffiliatesResponseDto` |
+| `superadmin-affiliates-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the update operation. | `SuperadminAffiliatesUpdateDto` | `SuperadminAffiliatesResponseDto` |
+| `superadmin-affiliates-command.controller.ts::pay` | POST | `:id/pay` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the pay operation. | `—` | `SuperadminAffiliatesResponseDto` |
+| `superadmin-affiliates-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the remove operation. | `—` | `SuperadminAffiliatesResponseDto` |
+| `superadmin-affiliates-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the changeStatus operation. | `SuperadminAffiliatesStatusDto` | `SuperadminAffiliatesResponseDto` |
+| `superadmin-affiliates-query.controller.ts::payoutHistory` | GET | `payout-history` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the payoutHistory operation. | `—` | `[SuperadminAffiliatePayoutRecordDto]` |
+| `superadmin-affiliates-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the findAll operation. | `SuperadminAffiliatesQueryDto` | `[SuperadminAffiliatesResponseDto]` |
+| `superadmin-affiliates-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning affiliates use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminAffiliatesResponseDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-affiliates.entity → `superadmin_affiliates`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/affiliates`, `/superadmin/affiliates/:id`, `/superadmin/affiliates/:id/pay`, `/superadmin/affiliates/:id/status`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -66,9 +71,17 @@ The feature's backend route and file structure mirror the frontend feature name.
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/affiliates/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/affiliates` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/affiliates/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/affiliates/:id/pay` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/affiliates/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/affiliates/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/affiliates/payout-history` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/affiliates` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/affiliates/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -79,66 +92,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/affiliates/` -> the Superadmin 
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend affiliates/superadmin_affiliates_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Affiliates â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The affiliates module is responsible for the Superadmin business workflow managing Affiliates. It enables superadmins to view, monitor, and control the lifecycle and configurations of Affiliates across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `affiliates_api/` | Feature-owned responsibility for affiliates api. | `SuperadminAffiliatesApi.ts` |
-| `affiliates_components/` | Feature-owned responsibility for affiliates components. | `SuperadminAffiliateModal.tsx`, `SuperadminAffiliatesClient.tsx` |
-| `affiliates_mocks/` | Feature-owned responsibility for affiliates mocks. | `(directory present; no direct files)` |
-| `affiliates_tests/` | Feature-owned responsibility for affiliates tests. | `SuperadminAffiliatesBasic.test.tsx` |
-| `affiliates_types/` | Feature-owned responsibility for affiliates types. | `SuperadminAffiliateModalTypes.ts`, `SuperadminAffiliateStatusBadgeTypes.ts`, `SuperadminAffiliatesClientTypes.ts`, `SuperadminAffiliatesEmptyStateTypes.ts`, `SuperadminAffiliatesHeaderTypes.ts`, `SuperadminAffiliatesStatsBarTypes.ts`, `SuperadminAffiliatesTableRowTypes.ts`, `SuperadminAffiliatesTableTypes.ts`, `SuperadminAffiliatesTypes.ts` |
-| `affiliates_utils/` | Feature-owned responsibility for affiliates utils. | `SuperadminAffiliatesQueryUtils.ts`, `useSuperadminAffiliatesMutation.ts`, `useSuperadminAffiliatesMutations.ts`, `useSuperadminAffiliatesPage.test.ts`, `useSuperadminAffiliatesPage.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Affiliates | `/superadmin/affiliates` | add affiliate; delete affiliate; edit affiliate; pay commission; submit; toggle affiliate status | `SuperadminAffiliatesApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/affiliates route to load the Affiliates data context securely via TanStack Query.
-2. Interact with the Affiliates dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Affiliates status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `affiliates`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `affiliates_utils/useSuperadminAffiliatesPage.ts`, `affiliates_utils/useSuperadminAffiliatesMutation.ts`, `affiliates_utils/useSuperadminAffiliatesMutations.ts`
-- **URL state:** `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'affiliates', 'payout-history']`
-
-## API Contract
+#### Source: `affiliates/superadmin_affiliates_features.md`
 
 - **API files:** `affiliates_api/SuperadminAffiliatesApi.ts`
 - **Detected API symbols:** `fetchAffiliates` — `affiliates_api/SuperadminAffiliatesApi.ts`; `createAffiliate` — `affiliates_api/SuperadminAffiliatesApi.ts`; `updateAffiliate` — `affiliates_api/SuperadminAffiliatesApi.ts`; `updateAffiliateStatus` — `affiliates_api/SuperadminAffiliatesApi.ts`; `deleteAffiliate` — `affiliates_api/SuperadminAffiliatesApi.ts`; `payAffiliateCommission` — `affiliates_api/SuperadminAffiliatesApi.ts`; `fetchPayoutHistory` — `affiliates_api/SuperadminAffiliatesApi.ts`
@@ -146,7 +104,9 @@ The affiliates module is responsible for the Superadmin business workflow managi
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+### UI-Required Data Evidence
+
+#### Source: `affiliates/superadmin_affiliates_features.md`
 
 - **Data-bearing components:** `page.tsx`, `affiliates_components/SuperadminAffiliatesClient.tsx`, `affiliates_components/SuperadminAffiliateModal.tsx`, `affiliates_components/SuperadminAffiliatesHeader/SuperadminAffiliatesHeader.tsx`, `affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory.tsx`, `affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge.tsx`, `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow.tsx`, `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTable.tsx`, `affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx`, `affiliates_components/SuperadminAffiliatesStatsBar/SuperadminAffiliatesStatsBar.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -155,44 +115,40 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+### Static Freeze Status
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
-
-## Loading, Empty, and Error States
-
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** `affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx`
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
-
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Pure Server Component for the affiliates page. Renders the interactive client component. |
-| `affiliates_components/SuperadminAffiliatesClient.tsx` | Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useSuperadminAffiliatesPage. No business logic here. |
-| `affiliates_components/SuperadminAffiliateModal.tsx` | Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls. |
-| `affiliates_components/SuperadminAffiliatesHeader/SuperadminAffiliatesHeader.tsx` | Renders the page title, search, status filter, date-range filter, and Add CTA for the Affiliates page. |
-| `affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory.tsx` | Renders server-backed affiliate payout history passed from the feature page query. |
-| `affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge.tsx` | Renders the status badge pill for a single affiliate. Purely presentational — maps AffiliateStatus to design system colors. |
-| `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow.tsx` | Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational. |
-| `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTable.tsx` | Renders the Affiliates data table shell (header row + rows). Delegates each row to SuperadminAffiliatesTableRow. No API calls. |
-| `affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx` | Renders the empty state UI for the Affiliates table when no affiliates exist. Shows icon, message, and CTA to add first affiliate. |
-| `affiliates_components/SuperadminAffiliatesStatsBar/SuperadminAffiliatesStatsBar.tsx` | Renders the KPI stat cards (Total Affiliates, Total Commission Paid) for the Affiliates page. Purely presentational — receives data via props. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into affiliates.
-- **Destructive Actions**: Any deletion or modification of affiliates records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for affiliates do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<Affiliate[]>`` | `REQ-001` / ``fetchAffiliates`` |
+| ``/superadmin/affiliates`` | ``ApiResponse<Affiliate>`` | `REQ-002` / ``createAffiliate`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<Affiliate>`` | `REQ-003` / ``updateAffiliate`` |
+| ``{superadmin}/{id}/status`` | ``ApiResponse<Affiliate>`` | `REQ-004` / ``updateAffiliateStatus`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<void>`` | `REQ-005` / ``deleteAffiliate`` |
+| ``{superadmin}/{id}/pay`` | ``ApiResponse<Affiliate>`` | `REQ-006` / ``payAffiliateCommission`` |
+| ``{superadmin}/payout-history`` | ``ApiResponse<AffiliatePayoutRecord[]>`` | `REQ-007` / ``fetchPayoutHistory`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `affiliates_components/SuperadminAffiliatesClient.tsx`, `affiliates_components/SuperadminAffiliateModal.tsx`, `affiliates_components/SuperadminAffiliatesHeader/SuperadminAffiliatesHeader.tsx`, `affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory.tsx`, `affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge.tsx`, `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow.tsx`, `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTable.tsx`, `affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx`, `affiliates_components/SuperadminAffiliatesStatsBar/SuperadminAffiliatesStatsBar.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.
@@ -218,4 +174,18 @@ This addendum is generated from the current source tree and exists to make futur
 - [x] Rule 89: ORM access stays behind repositories.
 - [x] Rule 92: Dynamic filtering/sorting uses server-defined allowlists.
 - [x] Rule 101: Tests must assert observable behavior; placeholder tests are not accepted.
+
+
+
+## Repair Baseline — 2026-09-24
+2026-09-24 repair: affiliate monetary truth is derived from immutable double-entry ledger rows; bank metadata is encrypted before persistence; currency is explicit; payout mutations use row locking and the UnitOfWork boundary.
+
+## Repair Addendum — Financial Safety
+
+Affiliate payable truth is now held in the immutable affiliate ledger; `pendingPayout` is no longer a mutable financial source of truth. Payouts execute through `SuperadminAffiliatesPayoutOrchestratorService`, lock the affiliate row, derive the payable balance from ledger entries, append a debit/credit pair, and update only the UI payout-history projection inside the same transaction. Bank details are encrypted before persistence and never returned in raw form.
+
+### Added Files
+- `superadmin-affiliates-ledger.entity.ts` — immutable debit/credit ledger rows.
+- `affiliates_repositories/superadmin-affiliates-ledger.repository.ts` — ledger balance and payout-pair persistence.
+- `affiliates_services/superadmin-affiliates-payout-orchestrator.service.ts` — atomic UnitOfWork boundary for payout.
 

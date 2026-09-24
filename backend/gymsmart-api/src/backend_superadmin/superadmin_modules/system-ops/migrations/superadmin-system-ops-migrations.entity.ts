@@ -1,39 +1,66 @@
 // RESPONSIBILITY: TypeORM persistence entity for migrations feature data stored in `migration_logs`.
 // FLOW: migrations repository -> MigrationLog entity -> PostgreSQL `migration_logs`.
 import { Column, Entity, Index } from 'typeorm';
-import { BaseEntity } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.entity';
+import { SuperadminCoreBaseEntity } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.entity';
+import { MigrationLogStatus } from '@/backend_superadmin/superadmin_modules/system-ops/migrations/superadmin-system-ops-migrations.constants';
 
-export enum MigrationLogStatus {
-  PENDING = 'PENDING',
-  INPROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
-  ROLLEDBACK = 'ROLLED_BACK',
-  SUCCESS = 'SUCCESS',
-  ROLLBACK = 'ROLLBACK',
-}
-
+/**
+ * Primary Intent: Defines SuperadminSystemOpsMigrationsEntity as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Entity('superadmin_migration_logs')
 @Index('IDX_migration_logs_updated_at', ['updatedAt'])
-export class SuperadminMigrationsEntity extends BaseEntity {
-  @Column({ name: 'version', type: 'varchar', length: 500 })
+export class SuperadminSystemOpsMigrationsEntity extends SuperadminCoreBaseEntity {
+  /**
+ * Primary Intent: Documents entity property version. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'version', type: 'varchar', length: 500 })
   version!: string;
-  @Column({ name: 'description', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property description. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'description', type: 'varchar', length: 500 })
   description!: string;
-  @Column({ name: 'applied_at', type: 'timestamptz', nullable: true })
+  /**
+ * Primary Intent: Documents entity property appliedAt. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'applied_at', type: 'timestamptz', nullable: true })
   appliedAt!: Date | null;
-  @Column({ name: 'status', type: 'enum', enum: MigrationLogStatus })
+  /**
+ * Primary Intent: Documents entity property status. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'status', type: 'enum', enum: MigrationLogStatus })
   status!: MigrationLogStatus;
-  @Column({ name: 'target_tenants', type: 'jsonb', default: () => "'{}'::jsonb" })
+  /**
+ * Primary Intent: Documents entity property targetTenants. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'target_tenants', type: 'jsonb', default: () => "'{}'::jsonb" })
   targetTenants!: unknown;
-  @Column({ name: 'duration_ms', type: 'integer', default: 0 })
+  /**
+ * Primary Intent: Documents entity property durationMs. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'duration_ms', type: 'integer', default: 0 })
   durationMs!: number;
-  @Column({ name: 'error_log', type: 'varchar', length: 500, nullable: true })
+  /**
+ * Primary Intent: Documents entity property errorLog. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'error_log', type: 'varchar', length: 500, nullable: true })
   errorLog!: string | null;
-  @Column({ name: 'executed_at', type: 'timestamptz', nullable: true })
+  /**
+ * Primary Intent: Documents entity property executedAt. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'executed_at', type: 'timestamptz', nullable: true })
   executedAt!: Date | null;
-  @Column({ name: 'executed_by', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property executedBy. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'executed_by', type: 'varchar', length: 500 })
   executedBy!: string;
-  @Column({ name: 'error_details', type: 'varchar', length: 500, nullable: true })
+  /**
+ * Primary Intent: Documents entity property errorDetails. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'error_details', type: 'varchar', length: 500, nullable: true })
   errorDetails!: string | null;
 }

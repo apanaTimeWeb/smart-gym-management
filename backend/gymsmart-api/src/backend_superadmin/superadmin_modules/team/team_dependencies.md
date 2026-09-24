@@ -4,24 +4,24 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/team/dtos/team-create.dto`
-- `@/modules/backend_superadmin/team/dtos/team-query.dto`
-- `@/modules/backend_superadmin/team/dtos/team-update.dto`
-- `@/modules/backend_superadmin/team/services/team-alerts.service`
-- `@/modules/backend_superadmin/team/services/team-create.service`
-- `@/modules/backend_superadmin/team/services/team-delete.service`
-- `@/modules/backend_superadmin/team/services/team-find.service`
-- `@/modules/backend_superadmin/team/services/team-list.service`
-- `@/modules/backend_superadmin/team/services/team-main.service`
-- `@/modules/backend_superadmin/team/services/team-update.service`
-- `@/modules/backend_superadmin/team/team-command.controller`
-- `@/modules/backend_superadmin/team/team-query.controller`
-- `@/modules/backend_superadmin/team/team-special.controller`
-- `@/modules/backend_superadmin/team/team.constants`
-- `@/modules/backend_superadmin/team/team.entity`
-- `@/modules/backend_superadmin/team/team.mapper`
-- `@/modules/backend_superadmin/team/team.repository`
-- `@/modules/backend_superadmin/team/types/team.interfaces`
+- `@/backend_superadmin/team/dtos/team-create.dto`
+- `@/backend_superadmin/team/dtos/team-query.dto`
+- `@/backend_superadmin/team/dtos/team-update.dto`
+- `@/backend_superadmin/team/services/team-alerts.service`
+- `@/backend_superadmin/team/services/team-create.service`
+- `@/backend_superadmin/team/services/team-delete.service`
+- `@/backend_superadmin/team/services/team-find.service`
+- `@/backend_superadmin/team/services/team-list.service`
+- `@/backend_superadmin/team/services/team-main.service`
+- `@/backend_superadmin/team/services/team-update.service`
+- `@/backend_superadmin/team/team-command.controller`
+- `@/backend_superadmin/team/team-query.controller`
+- `@/backend_superadmin/team/team-special.controller`
+- `@/backend_superadmin/team/team.constants`
+- `@/backend_superadmin/team/team.entity`
+- `@/backend_superadmin/team/team.mapper`
+- `@/backend_superadmin/team/team.repository`
+- `@/backend_superadmin/team/types/team.interfaces`
 
 ## Infrastructure Imports
 

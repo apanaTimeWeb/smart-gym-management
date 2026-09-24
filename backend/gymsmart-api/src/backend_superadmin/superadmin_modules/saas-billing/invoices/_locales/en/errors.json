@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "The Idempotency-Key header is required.",
     "IDEMPOTENCY_IN_PROGRESS": "The idempotent request is already being processed.",
     "IDEMPOTENCY_INVALID": "The stored idempotency response is invalid.",
-    "PROVISION_FAILED": "Tenant provisioning failed."
+    "PROVISION_FAILED": "Tenant provisioning failed.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

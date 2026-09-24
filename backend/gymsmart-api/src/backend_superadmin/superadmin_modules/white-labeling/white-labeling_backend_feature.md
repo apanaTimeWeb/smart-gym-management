@@ -1,67 +1,67 @@
 # white-labeling Backend Feature Map
 
 ## Module Purpose
-Owns the `white-labeling` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
-
-
-## Repair Synchronization
-The frontend contract `/api/superadmin/white-labeling/domainssuffix` remains available as an explicit compatibility route and resolves to the owning domain query service; `/api/superadmin/white-labeling/domains` remains the canonical semantic route.
+This module owns the backend capability boundary for the superadmin_modules/white-labeling feature. It exposes 10 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/white-labeling-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/white-labeling-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/white-labeling-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/white-labeling-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/white-labeling-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-domains.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-status.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/white-labeling-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/white-labeling.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/white-labeling.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `white-labeling-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `white-labeling-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `white-labeling.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `white-labeling.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `white-labeling.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `white-labeling.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `white-labeling.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `white-labeling_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `superadmin-white-labeling-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-white-labeling-domains-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-white-labeling-domains-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-white-labeling-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-white-labeling.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-white-labeling.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-white-labeling.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-white-labeling.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-white-labeling.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-white-labeling.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-white-labeling.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `white-labeling_dtos/superadmin-white-labeling-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `white-labeling_dtos/superadmin-white-labeling-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `white-labeling_dtos/superadmin-white-labeling-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `white-labeling_dtos/superadmin-white-labeling-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `white-labeling_responses/superadmin-white-labeling-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `white-labeling_services/superadmin-white-labeling-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-domains.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_services/superadmin-white-labeling-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `white-labeling_types/superadmin-white-labeling.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `white-labeling_types/superadmin-white-labeling.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `white-labeling-command.controller.ts` / `create` | POST | `/superadmin/white-labeling` | Creates a resource after DTO validation and persists it through the feature repository. | `WhiteLabelingCreateDto` | `unknown` |
-| `white-labeling-command.controller.ts` / `update` | PATCH | `/superadmin/white-labeling/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `WhiteLabelingUpdateDto` | `unknown` |
-| `white-labeling-command.controller.ts` / `remove` | DELETE | `/superadmin/white-labeling/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `white-labeling-command.controller.ts` / `changeStatus` | PATCH | `/superadmin/white-labeling/:id/status` | Applies the requested status transition through the named repository mutation. | `None` | `unknown` |
-| `white-labeling-query.controller.ts` / `findAll` | GET | `/superadmin/white-labeling` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
-| `white-labeling-query.controller.ts` / `findOne` | GET | `/superadmin/white-labeling/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `white-labeling-special.controller.ts` / `domains` | GET | `/superadmin/white-labeling/domains` | Returns the Superadmin data required by the ``/superadmin/white-labeling/domains`` frontend contract, with filtering or lookup semantics defined by that feature contract. |
-| `white-labeling-special.controller.ts` / `status` | PATCH | `/superadmin/white-labeling/domains/:id/status` | Applies the partial update or state transition exposed by ``/superadmin/white-labeling/domains/:id/status`` after validation, authorization, and named repository mutation. |
+| `superadmin-white-labeling-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the create operation. | `SuperadminWhiteLabelingCreateDto` | `See controller contract` |
+| `superadmin-white-labeling-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the update operation. | `SuperadminWhiteLabelingUpdateDto` | `See controller contract` |
+| `superadmin-white-labeling-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-white-labeling-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the changeStatus operation. | `SuperadminWhiteLabelingStatusDto` | `See controller contract` |
+| `superadmin-white-labeling-domains-command.controller.ts::status` | PATCH | `superadmin/white-labeling/domains/:id/status` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the status operation. | `SuperadminWhiteLabelingStatusDto` | `See controller contract` |
+| `superadmin-white-labeling-domains-command.controller.ts::status` | PATCH | `api/superadmin/white-labeling/domains/:id/status` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the status operation. | `SuperadminWhiteLabelingStatusDto` | `See controller contract` |
+| `superadmin-white-labeling-domains-query.controller.ts::domains` | GET | `superadmin/white-labeling/domains` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the domains operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-white-labeling-domains-query.controller.ts::domains` | GET | `api/superadmin/white-labeling/domains` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the domains operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-white-labeling-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the findAll operation. | `SuperadminWhiteLabelingQueryDto` | `See controller contract` |
+| `superadmin-white-labeling-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning white-labeling use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-white-labeling.entity → `superadmin_white_label_domains`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/api/superadmin/white-labeling/domains/:id/status`, `/superadmin/white-labeling`, `/superadmin/white-labeling/:id`, `/superadmin/white-labeling/:id/status`, `/superadmin/white-labeling/domains/:id/status`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -74,9 +74,19 @@ The frontend contract `/api/superadmin/white-labeling/domainssuffix` remains ava
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/white-labeling/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/white-labeling` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/white-labeling/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/white-labeling/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/white-labeling/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/white-labeling/domains/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /api/superadmin/white-labeling/domains/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/white-labeling/domains` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/white-labeling/domains` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/white-labeling` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/white-labeling/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -87,72 +97,12 @@ CODEOWNERS path: `src/modules/backend_superadmin/white-labeling/` -> the Superad
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend white-labeling/superadmin_white-labeling_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-# Superadmin White-labeling — Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The White-labeling feature lets Superadmins inspect tenant domain/branding configuration and change supported domain lifecycle status through a controlled drawer. The module owns list search, status filtering, selected-record state, mutation orchestration, and the feature-owned MSW contract. It is strictly limited to the documented white-labeling domain workflow; it does not own tenant billing, authentication, or unrelated branding logic.
+#### Source: `white-labeling/superadmin_white-labeling_features.md`
 
-## Directory Structure
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `white-labeling_components/` | Renders the list page, status badges, empty/error/loading UI, and status-edit drawer. | `SuperadminWhiteLabelingMain.tsx`, `SuperadminWhiteLabelingTable.tsx`, `SuperadminWhiteLabelingDrawer.tsx`, `SuperadminWhiteLabelingStatusBadge.tsx` |
-| `white-labeling_hooks/` | Owns query/mutation orchestration and URL-driven list behavior. | `useSuperadminWhiteLabeling.ts` |
-| `white-labeling_store/` | Owns UI-only selection and filter state. | `useSuperadminWhiteLabelingStore.ts` |
-| `white-labeling_api/` | Owns white-labeling API calls and URL configuration. | `SuperadminWhiteLabelingApi.ts`, `superadmin_white_labeling_url_config.ts` |
-| `white-labeling_types/` | Owns API/domain types and request/response shapes. | module type files |
-| `white-labeling_schemas/` | Owns runtime response validation. | module schema files |
-| `white-labeling_mocks/fixtures/` | Owns realistic white-labeling server records. | `SuperadminWhiteLabelingMockFixtures.ts` |
-| `white-labeling_mocks/handlers/` | Owns GET/update MSW behavior and mutable in-memory state. | `SuperadminWhiteLabelingMockHandlers.ts` |
-| `white-labeling_tests/` | Owns feature contract/interaction verification. | `SuperadminWhiteLabelingContract.test.ts` |
-| `loading.tsx`, `error.tsx`, `page.tsx` | Framework route boundary. | reserved Next.js files |
-
-## Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api` — global HTTP transport only.
-- `@/lib/formatters` — approved formatting infrastructure only when consumed.
-- `@/components/ui/*` — zero-business UI primitives only.
-- `@/hooks/useUnsavedChangesGuard` — approved generic browser/navigation safety utility.
-
-### Business Feature Dependencies
-- None.
-
-### Role-Level Business Dependencies
-- None.
-
-## Feature Inventory
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| White-label domain list | `/superadmin/white-labeling` | Search and filter tenant domain configurations; inspect status | `SuperadminWhiteLabelingMain`, `SuperadminWhiteLabelingTable`, `SuperadminWhiteLabelingStatusBadge` | `getDomains` | Implemented with module MSW |
-| Domain status management | `/superadmin/white-labeling` | Open the selected domain drawer and change supported status with confirmation | `SuperadminWhiteLabelingDrawer` | `updateDomainStatus` | Implemented with mutable module MSW |
-
-## User Flows & Interactions
-### Flow 1: Search / Filter Domains
-1. User changes Search or Status Filter in `SuperadminWhiteLabelingMain`.
-2. UI state is serialized into the documented query parameters.
-3. `useSuperadminWhiteLabeling` derives the query key from the normalized query state.
-4. `getDomains` requests the filtered result set.
-5. MSW returns the matching fixture subset.
-6. The table updates; zero matches render the empty state.
-
-### Flow 2: Update Domain Status
-1. User selects a domain row.
-2. `SuperadminWhiteLabelingDrawer` opens with that domain.
-3. User chooses a supported status.
-4. Destructive/critical status changes use the documented confirmation path.
-5. `updateDomainStatus` runs through TanStack Query mutation state.
-6. On success, the mutation reconciles/invalidate the affected list query and shows the backend response message.
-7. The drawer closes only after confirmed success; the updated status is visible in the list.
-
-## Data and State Architecture
-- **Server state:** TanStack Query only.
-- **UI state:** `white-labeling_store/useSuperadminWhiteLabelingStore.ts` for selected domain and local UI state.
-- **URL state:** Search/filter values are query-state driven; do not keep the authoritative list filter only in Zustand.
-- **Query key:** list query is namespaced to the White-labeling feature and includes normalized filter state.
-- **Mock state:** `white-labeling_mocks/handlers/SuperadminWhiteLabelingMockHandlers.ts` maintains mutable session/in-memory state for status mutation verification.
-
-## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
 | `getDomains` | GET | configured White-labeling domains endpoint | normalized search/filter params | domain list + pagination metadata |
@@ -160,7 +110,10 @@ The White-labeling feature lets Superadmins inspect tenant domain/branding confi
 
 All responses are runtime-validated at the module API boundary before application consumption.
 
-## UI Data Requirements
+### UI-Required Data Evidence
+
+#### Source: `white-labeling/superadmin_white-labeling_features.md`
+
 | UI Element | Required Field(s) | API Endpoint | Nullable? | Mocked? |
 |---|---|---|---|---|
 | Domain table identifier | domain/tenant identifier + domain name | `getDomains` | Per schema | Yes |
@@ -170,40 +123,37 @@ All responses are runtime-validated at the module API boundary before applicatio
 | Search result count | pagination/result metadata | `getDomains` | Per schema | Yes |
 | Selected drawer status | selected domain status | `getDomains`, `updateDomainStatus` | No | Yes |
 
-## Permissions and Security
-- Required role: `SUPERADMIN` through the host role/session boundary.
-- Status-changing controls are feature-protected and must remain hidden/disabled when the documented capability is unavailable.
-- Destructive/critical changes must use `useConfirm()`; never use `window.confirm()`.
-- API responses must never expose raw internal errors in the UI.
-- There are no sibling business-feature dependencies.
+### Static Freeze Status
 
-## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full route | `loading.tsx` structural skeleton matching toolbar + table | N/A | `error.tsx` route-level branded recovery state with Retry |
-| Domain table | `SuperadminWhiteLabelingLoadingState.tsx` table-shaped skeleton | `SuperadminWhiteLabelingEmptyState.tsx` explains no matching domains | `SuperadminWhiteLabelingErrorState.tsx` provides retry |
-| Status drawer | mutation-driven disabled/loading controls | N/A | backend-safe inline mutation error |
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
-## Edge Cases and AI Warnings
-1. **Never move filter authority back into Zustand only:** the URL/query contract is part of the list interaction and must remain shareable and back/forward compatible.
-2. **Never update only the toast:** status mutation success must update or invalidate the list data so the visible row reflects the new status.
-3. **Never change the selected domain identity during a refetch:** the drawer must continue to represent the same domain until the user closes it or the selected resource becomes invalid.
-4. **Never import branding/billing/tenant business logic from another feature:** duplicate the small amount of feature-specific logic when necessary for isolation.
-5. **Never bypass the confirmation flow for restricted status changes:** a critical status action must have an explicit documented terminal state.
-6. **Do not introduce browser-native confirmation dialogs:** use the approved design-system confirmation mechanism.
-7. **Do not treat browser refresh as persistence:** current module mock state is session/in-memory unless a persistence contract is explicitly documented.
 
-## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| `page.tsx` | Server route entry only; no client business orchestration. |
-| `SuperadminWhiteLabelingMain.tsx` | Client view/orchestrator for search/filter/table/drawer composition. |
-| `SuperadminWhiteLabelingTable.tsx` | Renders accessible clickable table rows and mobile card-stack representation. |
-| `SuperadminWhiteLabelingStatusBadge.tsx` | Renders feature-owned status mapping using semantic tokens. |
-| `SuperadminWhiteLabelingDrawer.tsx` | Renders selected-domain status-edit workflow and consumes mutation hook state. |
-| `SuperadminWhiteLabelingEmptyState.tsx` | Renders zero-result state and documented contextual action. |
-| `SuperadminWhiteLabelingErrorState.tsx` | Renders feature-level query recovery UI. |
-| `SuperadminWhiteLabelingLoadingState.tsx` | Renders structural loading skeleton. |
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{api}{suffix}`` | ``WhiteLabelDomainsListResponse`` | `REQ-132` / ``getDomains`` |
+| ``/api/superadmin/white-labeling/domains/{id}/status(id)`` | ``UpdateDomainStatusResponse`` | `REQ-133` / ``updateDomainStatus`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+| UI Element | Required Field(s) | API Endpoint | Nullable? | Mocked? |
+|---|---|---|---|---|
+| Domain table identifier | domain/tenant identifier + domain name | `getDomains` | Per schema | Yes |
+| Domain status badge | domain status | `getDomains`, `updateDomainStatus` | No | Yes |
+| SSL status | SSL/domain health status | `getDomains` | Per schema | Yes |
+| Tenant name | tenant name | `getDomains` | Per schema | Yes |
+| Search result count | pagination/result metadata | `getDomains` | Per schema | Yes |
+| Selected drawer status | selected domain status | `getDomains`, `updateDomainStatus` | No | Yes |
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Feature-owned components/hooks/store/API/types/schemas/mocks/tests/docs are contained in the feature.

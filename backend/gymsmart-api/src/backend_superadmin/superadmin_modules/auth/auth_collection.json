@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "Superadmin auth module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /auth/login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/auth/login",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /auth/refresh",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/auth/refresh",
+          "path": [
+            "auth",
+            "refresh"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /auth/logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/auth/logout",
+          "path": [
+            "auth",
+            "logout"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /auth/set-cookie",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/auth/set-cookie",
+          "path": [
+            "auth",
+            "set-cookie"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /auth/exit-ghost-login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/auth/exit-ghost-login",
+          "path": [
+            "auth",
+            "exit-ghost-login"
+          ]
+        }
+      }
+    }
+  ]
+}

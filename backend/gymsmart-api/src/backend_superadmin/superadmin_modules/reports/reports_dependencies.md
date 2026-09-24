@@ -4,25 +4,25 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/reports/dtos/reports-create.dto`
-- `@/modules/backend_superadmin/reports/dtos/reports-query.dto`
-- `@/modules/backend_superadmin/reports/dtos/reports-update.dto`
-- `@/modules/backend_superadmin/reports/reports-command.controller`
-- `@/modules/backend_superadmin/reports/reports-comparison-response.dto.ts`
-- `@/modules/backend_superadmin/reports/reports-query.controller`
-- `@/modules/backend_superadmin/reports/reports-special.controller`
-- `@/modules/backend_superadmin/reports/reports.constants`
-- `@/modules/backend_superadmin/reports/reports.entity`
-- `@/modules/backend_superadmin/reports/reports.mapper`
-- `@/modules/backend_superadmin/reports/reports.repository`
-- `@/modules/backend_superadmin/reports/services/reports-comparison.service`
-- `@/modules/backend_superadmin/reports/services/reports-create.service`
-- `@/modules/backend_superadmin/reports/services/reports-delete.service`
-- `@/modules/backend_superadmin/reports/services/reports-find.service`
-- `@/modules/backend_superadmin/reports/services/reports-list.service`
-- `@/modules/backend_superadmin/reports/services/reports-main.service`
-- `@/modules/backend_superadmin/reports/services/reports-update.service`
-- `@/modules/backend_superadmin/reports/types/reports.interfaces`
+- `@/backend_superadmin/reports/dtos/reports-create.dto`
+- `@/backend_superadmin/reports/dtos/reports-query.dto`
+- `@/backend_superadmin/reports/dtos/reports-update.dto`
+- `@/backend_superadmin/reports/reports-command.controller`
+- `@/backend_superadmin/reports/reports-comparison-response.dto.ts`
+- `@/backend_superadmin/reports/reports-query.controller`
+- `@/backend_superadmin/reports/reports-special.controller`
+- `@/backend_superadmin/reports/reports.constants`
+- `@/backend_superadmin/reports/reports.entity`
+- `@/backend_superadmin/reports/reports.mapper`
+- `@/backend_superadmin/reports/reports.repository`
+- `@/backend_superadmin/reports/services/reports-comparison.service`
+- `@/backend_superadmin/reports/services/reports-create.service`
+- `@/backend_superadmin/reports/services/reports-delete.service`
+- `@/backend_superadmin/reports/services/reports-find.service`
+- `@/backend_superadmin/reports/services/reports-list.service`
+- `@/backend_superadmin/reports/services/reports-main.service`
+- `@/backend_superadmin/reports/services/reports-update.service`
+- `@/backend_superadmin/reports/types/reports.interfaces`
 
 ## Infrastructure Imports
 

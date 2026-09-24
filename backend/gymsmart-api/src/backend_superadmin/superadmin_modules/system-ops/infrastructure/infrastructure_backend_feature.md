@@ -1,36 +1,41 @@
 # infrastructure Backend Feature Map
 
 ## Module Purpose
-This feature owns the Superadmin backend capability represented by the matching frontend route slice.
-This child feature is nested under the frontend-mirrored `system-ops` container and is an independent AI repair unit. It must not absorb `backups`, `infrastructure`, `jobs`, or `migrations` sibling behavior. All persistence stays behind its TypeORM repositories.
+
+This module owns the backend capability boundary for the superadmin_modules/system-ops/infrastructure feature. It exposes 13 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Feature Inventory
+
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `infrastructure-command.controller.ts` | POST | `/superadmin/system-ops/infrastructure` | Implements the POST /superadmin/system-ops/infrastructure contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-command.controller.ts` | PATCH | `/superadmin/system-ops/infrastructure:id` | Implements the PATCH /superadmin/system-ops/infrastructure:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-command.controller.ts` | DELETE | `/superadmin/system-ops/infrastructure:id` | Implements the DELETE /superadmin/system-ops/infrastructure:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-command.controller.ts` | PATCH | `/superadmin/system-ops/infrastructure:id/status` | Implements the PATCH /superadmin/system-ops/infrastructure:id/status contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-query.controller.ts` | GET | `/superadmin/system-ops/infrastructure` | Implements the GET /superadmin/system-ops/infrastructure contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-query.controller.ts` | GET | `/superadmin/system-ops/infrastructure:id` | Implements the GET /superadmin/system-ops/infrastructure:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/redis` | Implements the GET superadmin/system-ops/infrastructure/redis contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/uptime` | Implements the GET superadmin/system-ops/infrastructure/uptime contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | POST | `superadmin/system-ops/infrastructure/redis/flush-global` | Implements the POST superadmin/system-ops/infrastructure/redis/flush-global contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | POST | `superadmin/system-ops/infrastructure/redis/flush-tenant` | Implements the POST superadmin/system-ops/infrastructure/redis/flush-tenant contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/api-health` | Implements the GET superadmin/system-ops/infrastructure/api-health contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `infrastructure-special.controller.ts` | GET | `gyms` | Implements the GET gyms contract and preserves the child feature boundary. | DTO | Contract DTO |
+| `superadmin-system-ops-infrastructure-cache-command.controller.ts::flushGlobal` | POST | `/superadmin/system-ops/infrastructure/redis/flush-global` | This endpoint invokes `flushGlobal` on `superadmin-system-ops-infrastructure-cache-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `Promise<unknown` |
+| `superadmin-system-ops-infrastructure-cache-command.controller.ts::flushTenant` | POST | `/superadmin/system-ops/infrastructure/redis/flush-tenant` | This endpoint invokes `flushTenant` on `superadmin-system-ops-infrastructure-cache-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::create` | POST | `/superadmin/system-ops/infrastructure` | This endpoint invokes `create` on `superadmin-system-ops-infrastructure-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::update` | PATCH | `/superadmin/system-ops/infrastructure/:id` | This endpoint invokes `update` on `superadmin-system-ops-infrastructure-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::remove` | DELETE | `/superadmin/system-ops/infrastructure/:id` | This endpoint invokes `remove` on `superadmin-system-ops-infrastructure-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::changeStatus` | PATCH | `/superadmin/system-ops/infrastructure/:id/status` | This endpoint invokes `changeStatus` on `superadmin-system-ops-infrastructure-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-query.controller.ts::findAll` | GET | `/superadmin/system-ops/infrastructure` | This endpoint invokes `findAll` on `superadmin-system-ops-infrastructure-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-query.controller.ts::findOne` | GET | `/superadmin/system-ops/infrastructure/:id` | This endpoint invokes `findOne` on `superadmin-system-ops-infrastructure-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::redis` | GET | `/superadmin/system-ops/infrastructure/redis` | This endpoint invokes `redis` on `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::uptime` | GET | `/superadmin/system-ops/infrastructure/uptime` | This endpoint invokes `uptime` on `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::uptime` | GET | `/superadmin/system-ops/infrastructure/uptime-history` | This endpoint invokes `uptime` on `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::apiHealth` | GET | `/superadmin/system-ops/infrastructure/api-health` | This endpoint invokes `apiHealth` on `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::apiHealth` | GET | `/api/superadmin/system-ops/infrastructure/api-health` | This endpoint invokes `apiHealth` on `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct import.
-- **Infrastructure Dependencies**: Authentication, configuration, TypeORM/PostgreSQL; Redis/queue adapters only where this child requires them.
-- **Runtime/Event Dependencies**: Only declared registry events.
+
+- **Business Feature Dependencies**: system-ops
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_observability, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Exact entities registered by `infrastructure.module.ts`.
-- Redis Caching Keys: Only feature-prefixed keys.
-- Event Emitters: Only centralized registry events.
-- Background Jobs: Queue work described by the feature implementation and job registry.
-- Idempotency Keys: Required on applicable critical mutations.
+
+- DB Entities: superadmin-system-ops-infrastructure-contract-snapshot.entity → `superadmin_infrastructure_contract_snapshots`, superadmin-system-ops-infrastructure.entity → `superadmin_infrastructure_nodes`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/system-ops/infrastructure`, `/superadmin/system-ops/infrastructure/:id`, `/superadmin/system-ops/infrastructure/:id/status`, `/superadmin/system-ops/infrastructure/redis/flush-global`, `/superadmin/system-ops/infrastructure/redis/flush-tenant`
 
 ## Business Flow / Key Sequences
 Controller -> DTO validation -> use-case service -> named repository method -> PostgreSQL -> mapper/contract response. Heavy work is asynchronous where required.
@@ -39,7 +44,22 @@ Controller -> DTO validation -> use-case service -> named repository method -> P
 Every source file is feature-scoped and has one reason to change. Controllers do not contain business rules; repositories do not call sibling repositories.
 
 ## Permissions and Security
-Superadmin role is enforced in the controller layer. Resource-level checks apply to IDs and tenant-scoped resources before repository mutation.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/system-ops/infrastructure/redis/flush-global` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/infrastructure/redis/flush-tenant` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/infrastructure` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/infrastructure/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/redis` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/uptime` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/uptime-history` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/api-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/infrastructure/api-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never directly import sibling system-ops business logic — Rule 0C/49.
@@ -58,25 +78,42 @@ The infrastructure module is responsible for the Superadmin business workflow ma
 
 ## Directory Structure
 
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `infrastructure_api/` | Feature-owned responsibility for infrastructure api. | `SuperadminInfrastructureApi.ts`, `SuperadminInfrastructureApiHealthApi.ts` |
-| `infrastructure_mocks/` | Feature-owned responsibility for infrastructure mocks. | `(directory present; no direct files)` |
-| `infrastructure_tests/` | Feature-owned responsibility for infrastructure tests. | `SuperadminInfrastructureApiHealth.test.ts`, `SuperadminInfrastructureBasic.test.tsx` |
-| `infrastructure_types/` | Feature-owned responsibility for infrastructure types. | `SuperadminFlushTenantModalTypes.ts`, `SuperadminInfrastructureMutationTypes.ts`, `SuperadminInfrastructureTypes.ts`, `SuperadminInfrastructureUptimeTypes.ts`, `SuperadminInfrastructureV1Types.ts` |
-| `infrastructure_utils/` | Feature-owned responsibility for infrastructure utils. | `SuperadminInfrastructureConstants.ts`, `SuperadminInfrastructureStatusBadgeConfig.ts`, `useSuperadminInfrastructureActions.ts`, `useSuperadminInfrastructureData.ts`, `useSuperadminInfrastructureTenants.ts`, `useSuperadminInfrastructureUptime.ts`, `useSuperadminInfrastructureV1.ts` |
 
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
+| File | Responsibility |
+|---|---|
+| `infrastructure_dtos/superadmin-system-ops-infrastructure-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_dtos/superadmin-system-ops-infrastructure-flush-tenant.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_dtos/superadmin-system-ops-infrastructure-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_dtos/superadmin-system-ops-infrastructure-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_dtos/superadmin-system-ops-infrastructure-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_responses/superadmin-system-ops-infrastructure-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-api-health.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-flush-global.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-flush-tenant.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-redis.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_services/superadmin-system-ops-infrastructure-uptime.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure_types/superadmin-system-ops-infrastructure.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `infrastructure_types/superadmin-system-ops-infrastructure.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops-infrastructure-api-health-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-system-ops-infrastructure-cache-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-infrastructure-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-infrastructure-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-infrastructure-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-infrastructure-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-infrastructure.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops-infrastructure.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-infrastructure.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-system-ops-infrastructure.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-system-ops-infrastructure.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-system-ops-infrastructure.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-infrastructure.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
 
@@ -159,6 +196,36 @@ This addendum is generated from the current source tree and exists to make futur
 - **Strict Isolation**: Never import admin or manager components into infrastructure.
 - **Destructive Actions**: Any deletion or modification of infrastructure records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for infrastructure do not expose cross-tenant sensitive data.
+
+### Request Shape
+No frontend-derived request shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### Response Shape
+No frontend-derived response shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

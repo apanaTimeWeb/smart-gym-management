@@ -1,151 +1,139 @@
-# dashboard Backend Feature Map
+# Dashboard Backend Feature Map
 
 ## Module Purpose
-Owns the Superadmin dashboard read projections and business overview metrics. Dashboard values are sourced from persisted snapshot state, with the V1 business-overview response retaining every frontend KPI, alert, leaderboard, and waterfall field. The feature is read-oriented and does not become a shared analytics service for sibling modules.
 
-
-## Repair Synchronization
-The dashboard API is widget-fragmented to comply with Rule 123. Business overview, KPIs, revenue chart, growth chart, revenue-by-tier, revenue-by-geography, and recent-onboard projections are exposed as separate query capabilities; no single mega-response is used by the frontend repair snapshot.
+This module owns the backend capability boundary for the superadmin_modules/dashboard feature. It exposes 13 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dashboard-business-overview-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `dashboard-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `dashboard-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `dashboard-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `dashboard.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `dashboard.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `dashboard.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `dashboard.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `dashboard.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dashboard_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dtos/dashboard-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/dashboard-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/dashboard-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/dashboard-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/dashboard-business-overview.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-main.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-metrics.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/dashboard-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/dashboard.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/dashboard.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `dashboard_dtos/superadmin-dashboard-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_dtos/superadmin-dashboard-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_dtos/superadmin-dashboard-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-growth-chart-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-kpis-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-recent-onboards-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-revenue-by-geography-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-revenue-by-tier-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_responses/superadmin-dashboard-revenue-chart-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `dashboard_services/superadmin-dashboard-business-overview.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-growth-chart.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-kpis.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-recent-onboards.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-revenue-by-geography.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-revenue-by-tier.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-revenue-chart.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_services/superadmin-dashboard-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `dashboard_types/superadmin-dashboard.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `dashboard_types/superadmin-dashboard.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-dashboard-business-overview-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-dashboard-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-dashboard-overview-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-dashboard-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-dashboard-response-data.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-dashboard.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-dashboard.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-dashboard.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-dashboard.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-dashboard.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-dashboard.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-dashboard.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `dashboard-command.controller.ts` / `create` | POST | `/superadmin/dashboard` | Creates a resource after DTO validation and persists it through the feature repository. | `DashboardCreateDto` | `unknown` |
-| `dashboard-command.controller.ts` / `update` | PATCH | `/superadmin/dashboard/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `DashboardUpdateDto` | `unknown` |
-| `dashboard-command.controller.ts` / `remove` | DELETE | `/superadmin/dashboard/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `dashboard-query.controller.ts` / `findOne` | GET | `/superadmin/dashboard/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `dashboard-special.controller.ts` / `businessOverview` | GET | `/superadmin/dashboard/business-overview` | Returns the Superadmin data required by the ``/superadmin/dashboard/business-overview`` frontend contract, with filtering or lookup semantics defined by that feature contract. |
-| `dashboard-special.controller.ts` / `main` | GET | `/superadmin/dashboard` | Returns the feature-level frontend contract projection owned by this module. | `None` | `Record<string, unknown` |
-| `dashboard-special.controller.ts` / `metrics` | GET | `/superadmin/dashboard/metrics` | Returns the feature metrics projection used by the Superadmin dashboard. | `None` | `Record<string, unknown` |
+| `superadmin-dashboard-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the create operation. | `SuperadminDashboardCreateDto` | `SuperadminDashboardResponseDto` |
+| `superadmin-dashboard-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the update operation. | `SuperadminDashboardUpdateDto` | `SuperadminDashboardResponseDto` |
+| `superadmin-dashboard-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-dashboard-overview-query.controller.ts::businessOverview` | GET | `superadmin/dashboard/business-overview` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the businessOverview operation. | `SuperadminQueryDto` | `SuperadminDashboardBusinessOverviewResponseDto` |
+| `superadmin-dashboard-overview-query.controller.ts::businessOverview` | GET | `api/superadmin/dashboard/business-overview` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the businessOverview operation. | `SuperadminQueryDto` | `SuperadminDashboardBusinessOverviewResponseDto` |
+| `superadmin-dashboard-overview-query.controller.ts::kpis` | GET | `superadmin/dashboard/kpis` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the kpis operation. | `SuperadminQueryDto` | `SuperadminDashboardKpisResponseDto` |
+| `superadmin-dashboard-overview-query.controller.ts::kpis` | GET | `superadmin/dashboard/metrics` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the kpis operation. | `SuperadminQueryDto` | `SuperadminDashboardKpisResponseDto` |
+| `superadmin-dashboard-overview-query.controller.ts::revenueChart` | GET | `superadmin/dashboard/revenue-chart` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the revenueChart operation. | `SuperadminQueryDto` | `[SuperadminDashboardRevenueChartResponseDto]` |
+| `superadmin-dashboard-overview-query.controller.ts::growthChart` | GET | `superadmin/dashboard/growth-chart` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the growthChart operation. | `SuperadminQueryDto` | `[SuperadminDashboardGrowthChartResponseDto]` |
+| `superadmin-dashboard-overview-query.controller.ts::revenueByTier` | GET | `superadmin/dashboard/revenue-by-tier` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the revenueByTier operation. | `—` | `[SuperadminDashboardRevenueByTierResponseDto]` |
+| `superadmin-dashboard-overview-query.controller.ts::revenueByGeography` | GET | `superadmin/dashboard/revenue-by-geography` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the revenueByGeography operation. | `—` | `[SuperadminDashboardRevenueByGeographyResponseDto]` |
+| `superadmin-dashboard-overview-query.controller.ts::recentOnboards` | GET | `superadmin/dashboard/recent-onboards` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the recentOnboards operation. | `—` | `[SuperadminDashboardRecentOnboardsResponseDto]` |
+| `superadmin-dashboard-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning dashboard use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminDashboardResponseDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-dashboard.entity → `superadmin_dashboard_snapshots`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/dashboard`, `/superadmin/dashboard/:id`
 
 ## Business Flow / Key Sequences
-1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
-2. Controller forwards the validated input to the single owning use-case service.
-3. The service performs business decisions and calls named repository operations; ORM details stay behind the repository.
-4. Multi-step mutations use the UnitOfWork transaction context, and critical duplicate-prone mutations use Idempotency-Key.
-5. The canonical response interceptor wraps successful results; exception filters produce the stable error envelope.
+**Dashboard KPI read**
+1. `SuperadminDashboardOverviewQueryController` receives the GET request.
+2. `SuperadminQueryDto` validates query parameters.
+3. `SuperadminDashboardKpisService` executes the KPI use case.
+4. The repository/query layer reads the required persisted data.
+5. The service returns `SuperadminDashboardKpisResponseDto`.
+6. The global response interceptor applies the canonical response envelope.
+
+**Dashboard update**
+1. `SuperadminDashboardCommandController` receives PATCH `/superadmin/dashboard/:id`.
+2. `SuperadminDashboardUpdateDto` validates the request body.
+3. `@RequireIdempotencyKey()` protects duplicate mutation execution.
+4. `SuperadminDashboardUpdateService` validates the target resource and performs the business operation.
+5. The repository performs the persistence mutation.
+6. The controller returns the typed response and the global response infrastructure shapes the canonical envelope.
 
 ## File Responsibility Map
-Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
+- `superadmin-dashboard-overview-query.controller.ts` — Dashboard widget HTTP transport only; MUST NOT contain dashboard query logic.
+- `superadmin-dashboard-query.controller.ts` — Single-resource read transport only; MUST NOT contain persistence logic.
+- `superadmin-dashboard-command.controller.ts` — Dashboard mutation transport only; MUST NOT contain business rules or ORM queries.
+- `services/superadmin-dashboard-*-service.ts` — One focused dashboard use case per service; MUST NOT construct TypeORM queries.
+- `superadmin-dashboard.repository.ts` — Dashboard persistence/query boundary only; MUST NOT own HTTP transport or unrelated feature queries.
+- `superadmin-dashboard.mapper.ts` — Maps persistence/domain values to API-safe values; MUST NOT issue database queries.
+- `superadmin-dashboard.entity.ts` — Persistence mapping only; MUST NOT contain controller/service orchestration.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/dashboard/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/dashboard` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/dashboard/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/dashboard/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/business-overview` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/dashboard/business-overview` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/kpis` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/metrics` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/revenue-chart` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/growth-chart` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/revenue-by-tier` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/revenue-by-geography` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/recent-onboards` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/dashboard/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
-- Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
-- Never replace the complete frontend V1 response with a minimal entity DTO; Rule 82A requires every UI-consumed field and semantic grouping to remain intact.
-- Never query through a raw TypeORM repository from a service or mutate an ORM entity directly; repository mutation methods are the persistence boundary.
-- Never allow a client-supplied tenant ID to select a database before master-database tenant authorization succeeds; Rule 39 requires trusted tenant context first.
-- Critical retries, payments, communication sends, and resource-creation mutations must preserve Idempotency-Key behavior when the frontend contract exposes it.
+- **Never create `/superadmin/dashboard` as a Mega API** that aggregates every KPI, chart, and recent-onboard widget into one response — this violates Rule 123 and destroys widget-level fault isolation.
+- **Do not bypass `@RequireIdempotencyKey()` on dashboard POST/PATCH/DELETE mutations** — duplicate requests can repeat state-changing operations; see Rule 112.
+- **Do not move TypeORM access into dashboard services** — persistence must remain behind the repository boundary, otherwise ORM concerns leak into business logic; see Rule 7 and Rule 89.
+- **Do not trust frontend role visibility as authorization** — every dashboard endpoint must continue to enforce backend authentication and Superadmin RBAC at the controller boundary; see Rule 83.
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend dashboard/superadmin_dashboard_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Dashboard â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The dashboard module is responsible for the Superadmin business workflow managing Dashboard. It enables superadmins to view, monitor, and control the lifecycle and configurations of Dashboard across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `dashboard_api/` | Feature-owned responsibility for dashboard api. | `SuperadminDashboardApi.ts`, `SuperadminDashboardBusinessOverviewApi.ts` |
-| `dashboard_mocks/` | Feature-owned responsibility for dashboard mocks. | `(directory present; no direct files)` |
-| `dashboard_tests/` | Feature-owned responsibility for dashboard tests. | `SuperadminDashboardBasic.test.tsx`, `SuperadminDashboardBusinessOverview.test.ts` |
-| `dashboard_types/` | Feature-owned responsibility for dashboard types. | `SuperadminDashboardTypes.ts`, `SuperadminDashboardV1Types.ts` |
-| `dashboard_utils/` | Feature-owned responsibility for dashboard utils. | `SuperadminDashboardConstants.ts`, `useSuperadminDashboardV1.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Dashboard | `/superadmin/dashboard` | custom date change; preset change | `SuperadminDashboardBusinessOverviewApi.ts`, `SuperadminDashboardApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/dashboard route to load the Dashboard data context securely via TanStack Query.
-2. Interact with the Dashboard dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Dashboard status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `dashboard`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `dashboard_utils/useSuperadminDashboardV1.ts`, `dashboard_components/SuperadminDashboardDateFilterDropdown/useSuperadminDashboardDateFilter.ts`, `dashboard_components/SuperadminDashboardView/useSuperadminDashboardView.ts`, `dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix.ts`
-- **URL state:** No `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'dashboard_business_overview']`, `['superadmin', 'dashboard', timeRange, startDate, endDate]`
-
-## API Contract
+#### Source: `dashboard/superadmin_dashboard_business_overview_features.md`
 
 - **API files:** `dashboard_api/SuperadminDashboardApi.ts`, `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
 - **Detected API symbols:** `fetchDashboard` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardMetrics` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardBusinessOverview` — `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
@@ -153,7 +141,17 @@ The dashboard module is responsible for the Superadmin business workflow managin
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `dashboard/superadmin_dashboard_features.md`
+
+- **API files:** `dashboard_api/SuperadminDashboardApi.ts`, `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
+- **Detected API symbols:** `fetchDashboard` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardMetrics` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardBusinessOverview` — `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `dashboard/superadmin_dashboard_business_overview_features.md`
 
 - **Data-bearing components:** `page.tsx`, `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`, `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx`, `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx`, `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -162,67 +160,68 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `dashboard/superadmin_dashboard_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`, `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx`, `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx`, `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** None detected.
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+### Static Freeze Status
 
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Server Component entry point for the Dashboard page. Delegates rendering to SuperadminDashboardView. |
-| `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx` | Renders the Superadmin dashboard V1 Why monthly income changed, Top & at-risk gyms, Critical platform alerts view. |
-| `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx` | Renders the Superadmin dashboard V1 DashboardRetentionSummary summary cards. |
-| `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx` | Renders the Superadmin dashboard V1 DashboardBusinessOverviewHeader. |
-| `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx` | Pure View component for the Dashboard date filter dropdown, consuming its local hook. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx` | Renders the recent tenant onboarding records and navigates to the tenant detail page. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx` | Pure View component for the Dashboard. Renders KPI cards, charts, and recent onboards by consuming useSuperadminDashboardView. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx` | Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx` | Renders the Dashboard KPI cards. No API calls. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx` | Renders the Dashboard header with the local date filter. No API calls. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into dashboard.
-- **Destructive Actions**: Any deletion or modification of dashboard records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for dashboard do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<SuperadminDashboardApiData>`` | `REQ-019` / ``fetchDashboard`` |
+| ``{superadmin}/metrics`` | ``ApiResponse<SuperadminDashboardApiData>`` | `REQ-020` / ``fetchDashboardMetrics`` |
+| ``/api/superadmin/dashboard/business-overview`` | ``ApiResponse<SuperadminDashboardV1Data>`` | `REQ-021` / ``fetchDashboardBusinessOverview`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`, `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx`, `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx`, `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`, `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx`, `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx`, `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
-- [x] Canonical feature-owned API/type directories are used.
-- [x] No active route page mounts a parallel `V1Client` tree.
-- [x] Module-owned mock reset coverage is present where mutable handlers exist.
-- [x] Feature docs contain a concrete directory map and compliance checklist.
-- [x] No marker-only or JSON-stringify tautology test remains.
-- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+- [x] Rule 7: TypeORM access remains in the repository boundary.
+- [x] Rule 19: This feature documentation is synchronized with the current dashboard source tree.
+- [x] Rule 28: Responses rely on the global canonical response envelope.
+- [x] Rule 29: Dashboard record deletion uses soft-delete semantics.
+- [x] Rule 48: Query and command controllers are separated.
+- [x] Rule 62: Service and repository methods use explicit return types.
+- [x] Rule 76/79: Authored source files contain responsibility/flow markers.
+- [x] Rule 83: Superadmin RBAC is enforced at the controller layer.
+- [x] Rule 89: ORM entities remain behind the repository boundary.
+- [x] Rule 92: User-controlled query fields must use repository/service allowlists.
+- [x] Rule 112: Dashboard mutations are protected by `@RequireIdempotencyKey()`.
+- [x] Rule 123: Dashboard read capabilities are fragmented into widget-specific APIs.
+- [ ] Complete runtime contract verification — blocked by the supplied role-only scope and absent host runtime configuration.
 
-## Rule Compliance Checklist
 
-
-- [x] Rule 7: TypeORM is the only approved ORM in this backend.
-- [x] Rule 19: This feature document contains concrete endpoints, state, flows, permissions, edge cases, and contract evidence.
-- [x] Rule 28: Successful responses are wrapped by the global response interceptor.
-- [x] Rule 29: Delete paths use soft-delete semantics.
-- [x] Rule 31: Frontend-exposed critical mutations use `RequireIdempotencyKey`.
-- [x] Rule 48: Query and command controllers are physically separated where CRUD endpoints exist.
-- [x] Rule 62: Service/repository return types are explicit.
-- [x] Rule 76/79: Responsibility/Flow headers exist on authored source files.
-- [x] Rule 82A: V1 response classes preserve the complete frontend contract.
-- [x] Rule 83: RBAC is enforced at the controller boundary.
-- [x] Rule 89: ORM access stays behind repositories.
-- [x] Rule 92: Dynamic filtering/sorting uses server-defined allowlists.
-- [x] Rule 101: Tests must assert observable behavior; placeholder tests are not accepted.
-
+## Repair Baseline — 2026-09-24
+2026-09-24 repair: base dashboard GET contract is backed by an isolated aggregate read service while widget-specific read services remain independently owned.

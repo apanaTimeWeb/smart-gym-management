@@ -3,16 +3,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminIntegrationsEntity } from '@/backend_superadmin/superadmin_modules/integrations/superadmin-integrations.entity';
-import type { SuperadminIntegrationsListQuery, SuperadminIntegrationsCreateInput, SuperadminIntegrationsUpdateInput } from '@/backend_superadmin/superadmin_modules/integrations/types/superadmin-integrations.interfaces';
+import type { SuperadminIntegrationsListQuery, SuperadminIntegrationsCreateInput, SuperadminIntegrationsUpdateInput } from '@/backend_superadmin/superadmin_modules/integrations/integrations_types/superadmin-integrations.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminIntegrationsRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminIntegrationsRepository extends BaseRepository<SuperadminIntegrationsEntity> {
-  constructor(@InjectRepository(SuperadminIntegrationsEntity) repository: Repository<SuperadminIntegrationsEntity>, transactionContext: SuperadminTransactionContext, @InjectDataSource() private readonly dataSource: DataSource) { super(repository, transactionContext); }
+export class SuperadminIntegrationsRepository extends SuperadminCoreBaseRepository<SuperadminIntegrationsEntity> {
+  constructor(@InjectRepository(SuperadminIntegrationsEntity) repository: Repository<SuperadminIntegrationsEntity>, transactionContext: SuperadminCoreTransactionContext, @InjectDataSource() private readonly dataSource: DataSource) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminIntegrationsListQuery): Promise<{ items: SuperadminIntegrationsEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -26,7 +37,12 @@ export class SuperadminIntegrationsRepository extends BaseRepository<SuperadminI
     return { items, total };
   }
 
-  /** Builds the integrations overview from real tenant and API-key state. */
+  /**
+ * Primary Intent: Executes the getLiveOverview use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async getLiveOverview(): Promise<{ tenants: Array<{ id: string; name: string }>; integrations: Array<{ name: string; type: string; status: string; lastEvent: string | null; failedEvents: number; health: number }>; webhooks: Array<{ id: string; event: string; integration: string; status: string; attempts: number; latency: number; time: string }>; keys: Array<{ id: string; tenant: string; label: string; status: string; lastUsed: string | null; rateLimit: string }> }> {
     const tenants = await this.dataSource.query(`SELECT id,name FROM tenants WHERE deleted_at IS NULL ORDER BY name ASC LIMIT 500`) as Array<{ id: string; name: string }>;
     const keys = await this.findPage({ page: 1, limit: 500, sortBy: 'updatedAt', sortOrder: 'DESC' });
@@ -39,19 +55,44 @@ export class SuperadminIntegrationsRepository extends BaseRepository<SuperadminI
     };
   }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminIntegrationsEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminIntegrationsEntity> { return super.findByIdOrThrow(id, 'Integrations record not found'); }
 
-  /** Creates and persists a integrations record. */
+  /**
+ * Primary Intent: Executes the createIntegrations use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async createIntegrations(input: SuperadminIntegrationsCreateInput): Promise<SuperadminIntegrationsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a integrations record. */
+  /**
+ * Primary Intent: Executes the updateIntegrationsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateIntegrationsById(id: string, input: SuperadminIntegrationsUpdateInput): Promise<SuperadminIntegrationsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Soft-deletes one integrations record. */
+  /**
+ * Primary Intent: Executes the deleteIntegrationsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteIntegrationsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
 }

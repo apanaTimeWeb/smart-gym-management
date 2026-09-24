@@ -4,21 +4,21 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/affiliates/affiliates-command.controller`
-- `@/modules/backend_superadmin/affiliates/affiliates-query.controller`
-- `@/modules/backend_superadmin/affiliates/affiliates.entity`
-- `@/modules/backend_superadmin/affiliates/affiliates.mapper`
-- `@/modules/backend_superadmin/affiliates/affiliates.repository`
-- `@/modules/backend_superadmin/affiliates/dtos/affiliates-create.dto`
-- `@/modules/backend_superadmin/affiliates/dtos/affiliates-query.dto`
-- `@/modules/backend_superadmin/affiliates/dtos/affiliates-update.dto`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-create.service`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-delete.service`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-find.service`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-list.service`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-status.service`
-- `@/modules/backend_superadmin/affiliates/services/affiliates-update.service`
-- `@/modules/backend_superadmin/affiliates/types/affiliates.interfaces`
+- `@/backend_superadmin/affiliates/affiliates-command.controller`
+- `@/backend_superadmin/affiliates/affiliates-query.controller`
+- `@/backend_superadmin/affiliates/affiliates.entity`
+- `@/backend_superadmin/affiliates/affiliates.mapper`
+- `@/backend_superadmin/affiliates/affiliates.repository`
+- `@/backend_superadmin/affiliates/dtos/affiliates-create.dto`
+- `@/backend_superadmin/affiliates/dtos/affiliates-query.dto`
+- `@/backend_superadmin/affiliates/dtos/affiliates-update.dto`
+- `@/backend_superadmin/affiliates/services/affiliates-create.service`
+- `@/backend_superadmin/affiliates/services/affiliates-delete.service`
+- `@/backend_superadmin/affiliates/services/affiliates-find.service`
+- `@/backend_superadmin/affiliates/services/affiliates-list.service`
+- `@/backend_superadmin/affiliates/services/affiliates-status.service`
+- `@/backend_superadmin/affiliates/services/affiliates-update.service`
+- `@/backend_superadmin/affiliates/types/affiliates.interfaces`
 
 ## Infrastructure Imports
 

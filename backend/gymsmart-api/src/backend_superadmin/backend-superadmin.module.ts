@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { SuperadminCoreModule } from '@/backend_superadmin/superadmin_core/superadmin-core.module';
 import { SuperadminExportDataModule } from '@/backend_superadmin/superadmin_modules/export-data/superadmin-export-data.module';
 import { SuperadminAuthModule } from '@/backend_superadmin/superadmin_modules/auth/superadmin-auth.module';
-import { SuperadminHealthModule } from '@/backend_superadmin/superadmin_core/health/superadmin-health.module';
+import { SuperadminHealthModule } from '@/backend_superadmin/superadmin_core/superadmin_core_health/superadmin-health.module';
 import { SuperadminAffiliatesModule } from '@/backend_superadmin/superadmin_modules/affiliates/superadmin-affiliates.module';
 import { SuperadminAnalyticsModule } from '@/backend_superadmin/superadmin_modules/analytics/superadmin-analytics.module';
 import { SuperadminBroadcastsModule } from '@/backend_superadmin/superadmin_modules/broadcasts/superadmin-broadcasts.module';
@@ -25,8 +25,19 @@ import { SuperadminTicketsModule } from '@/backend_superadmin/superadmin_modules
 import { SuperadminUsageMetersModule } from '@/backend_superadmin/superadmin_modules/usage-meters/superadmin-usage-meters.module';
 import { SuperadminWhiteLabelingModule } from '@/backend_superadmin/superadmin_modules/white-labeling/superadmin-white-labeling.module';
 
+/**
+ * Primary Intent: Defines BackendSuperadminModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
   imports: [SuperadminCoreModule, SuperadminExportDataModule, SuperadminAuthModule, SuperadminHealthModule, SuperadminAffiliatesModule, SuperadminAnalyticsModule, SuperadminBroadcastsModule, SuperadminComplianceModule, SuperadminDashboardModule, SuperadminFeaturesModule, SuperadminGlobalAuditModule, SuperadminGymsModule, SuperadminIntegrationsModule, SuperadminMessagingModule, SuperadminProfileModule, SuperadminReportsModule, SuperadminSaasBillingModule, SuperadminSettingsModule, SuperadminSystemOpsContainerModule, SuperadminTeamModule, SuperadminTicketsModule, SuperadminUsageMetersModule, SuperadminWhiteLabelingModule],
   exports: [SuperadminCoreModule],
 })
+/**
+ * Primary Intent: Defines BackendSuperadminModule, the focused backend component for its owning feature or infrastructure boundary.
+ * Edge Cases: Preserve validation/tenant/transaction/authorization invariants. Side-Effects: Only documented effects are permitted.
+ * AI-Note: Keep this class isolated, dependency-injected, explicitly typed, and aligned with the frozen contract.
+ */
 export class BackendSuperadminModule {}

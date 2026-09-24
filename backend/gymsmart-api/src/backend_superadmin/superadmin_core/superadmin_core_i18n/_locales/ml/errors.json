@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "അഭ്യർത്ഥന പ്രോസസ്സ് ചെയ്യാനായില്ല.",
+      "VALIDATION_FAILED": "ഒന്നോ അതിലധികമോ ഫീൽഡുകൾ അസാധുവാണ്.",
+      "INTERNAL": "ആന്തരിക പിശക് സംഭവിച്ചു.",
+      "NOT_FOUND": "ആവശ്യപ്പെട്ട വിഭവം കണ്ടെത്താനായില്ല.",
+      "FORBIDDEN": "ഈ പ്രവർത്തനം നടത്താൻ നിങ്ങൾക്ക് അനുമതിയില്ല.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key ഹെഡർ ആവശ്യമാണ്.",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key അസാധുവാണ്.",
+      "IDEMPOTENCY_IN_PROGRESS": "ഈ Idempotency-Key ഉള്ള അഭ്യർത്ഥന ഇതിനകം പ്രോസസിലാണ്.",
+      "RATE_LIMIT_EXCEEDED": "വളരെയധികം അഭ്യർത്ഥനകൾ. പിന്നീട് വീണ്ടും ശ്രമിക്കുക.",
+      "CIRCUIT_OPEN": "ഡൗൺസ്ട്രീം സേവനം താൽക്കാലികമായി ലഭ്യമല്ല."
+    }
+  }
+}

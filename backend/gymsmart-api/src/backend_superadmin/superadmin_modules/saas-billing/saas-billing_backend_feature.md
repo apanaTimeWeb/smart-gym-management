@@ -1,124 +1,153 @@
 # saas-billing Backend Feature Map
 
 ## Module Purpose
-The SaaS Billing container coordinates the Superadmin billing feature family. Coupons, invoices, and plans remain separate AI repair units and expose their own persistence, validation, and API contracts. The container must not absorb child feature business logic.
+
+This module owns the backend capability boundary for the superadmin_modules/saas-billing feature. It exposes 30 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `coupons/coupons-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/coupons.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/dtos/coupons-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/dtos/coupons-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/dtos/coupons-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/responses/coupons-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-redemptions.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-restore.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/services/coupons-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/types/coupons.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `coupons/types/coupons.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/dtos/invoices-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/dtos/invoices-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/dtos/invoices-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/invoices.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/responses/invoices-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-manual-payment.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-recovery-center.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-resend.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/services/invoices-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/types/invoices.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `invoices/types/invoices.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/dtos/plans-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/dtos/plans-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/dtos/plans-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/responses/plans-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-business-controls.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/services/plans-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/types/plans.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/types/plans.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `saas-billing.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
+| `coupons/coupons_dtos/superadmin-saas-billing-coupons-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `coupons/coupons_dtos/superadmin-saas-billing-coupons-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `coupons/coupons_dtos/superadmin-saas-billing-coupons-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `coupons/coupons_dtos/superadmin-saas-billing-coupons-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `coupons/coupons_responses/superadmin-saas-billing-coupons-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-redemptions.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-restore.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_services/superadmin-saas-billing-coupons-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `coupons/coupons_types/superadmin-saas-billing-coupons.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `coupons/coupons_types/superadmin-saas-billing-coupons.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `coupons/superadmin-saas-billing-coupons-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `coupons/superadmin-saas-billing-coupons-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `coupons/superadmin-saas-billing-coupons-redemptions-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `coupons/superadmin-saas-billing-coupons-restore-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `coupons/superadmin-saas-billing-coupons.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `coupons/superadmin-saas-billing-coupons.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `coupons/superadmin-saas-billing-coupons.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `coupons/superadmin-saas-billing-coupons.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `coupons/superadmin-saas-billing-coupons.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `coupons/superadmin-saas-billing-coupons.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `coupons/superadmin-saas-billing-coupons.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `invoices/invoices_adapters/superadmin-saas-billing-invoices-email.adapter.ts` | Isolates an external provider boundary; MUST NOT contain feature business rules. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-export-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-manual-payment.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_dtos/superadmin-saas-billing-invoices-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_repositories/superadmin-saas-billing-invoices-resend-job.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `invoices/invoices_responses/superadmin-saas-billing-invoices-resend-job-status-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_responses/superadmin-saas-billing-invoices-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-export.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-manual-payment.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-recovery-center.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-resend.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_services/superadmin-saas-billing-invoices-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/invoices_types/superadmin-saas-billing-invoices.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `invoices/invoices_types/superadmin-saas-billing-invoices.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `invoices/invoices_workers/superadmin-saas-billing-invoices-resend-worker.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `invoices/superadmin-saas-billing-invoices-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `invoices/superadmin-saas-billing-invoices-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `invoices/superadmin-saas-billing-invoices-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `invoices/superadmin-saas-billing-invoices-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `invoices/superadmin-saas-billing-invoices-recovery-center-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `invoices/superadmin-saas-billing-invoices-recovery-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `invoices/superadmin-saas-billing-invoices-recovery-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `invoices/superadmin-saas-billing-invoices-resend-job.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `invoices/superadmin-saas-billing-invoices.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `invoices/superadmin-saas-billing-invoices.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `invoices/superadmin-saas-billing-invoices.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `invoices/superadmin-saas-billing-invoices.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `invoices/superadmin-saas-billing-invoices.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `invoices/superadmin-saas-billing-invoices.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `invoices/superadmin-saas-billing-invoices.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `plans/plans_dtos/superadmin-saas-billing-plans-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans/plans_dtos/superadmin-saas-billing-plans-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans/plans_dtos/superadmin-saas-billing-plans-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans/plans_responses/superadmin-saas-billing-plans-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans/plans_services/superadmin-saas-billing-plans-archive.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-business-controls.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_services/superadmin-saas-billing-plans-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `plans/plans_types/superadmin-saas-billing-plans.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `plans/plans_types/superadmin-saas-billing-plans.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `plans/superadmin-saas-billing-plans-api.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `plans/superadmin-saas-billing-plans-business-controls-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `plans/superadmin-saas-billing-plans-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `plans/superadmin-saas-billing-plans-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `plans/superadmin-saas-billing-plans-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `plans/superadmin-saas-billing-plans-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `plans/superadmin-saas-billing-plans.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `plans/superadmin-saas-billing-plans.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `plans/superadmin-saas-billing-plans.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `plans/superadmin-saas-billing-plans.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `plans/superadmin-saas-billing-plans.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `plans/superadmin-saas-billing-plans.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `plans/superadmin-saas-billing-plans.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-saas-billing.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `coupons-command.controller.ts` | POST | `/superadmin/saas-billing/coupons` | Implements the `POST /superadmin/saas-billing/coupons` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-command.controller.ts` | PATCH | `/superadmin/saas-billing/coupons:id` | Implements the `PATCH /superadmin/saas-billing/coupons:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-command.controller.ts` | DELETE | `/superadmin/saas-billing/coupons:id` | Implements the `DELETE /superadmin/saas-billing/coupons:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-command.controller.ts` | PATCH | `/superadmin/saas-billing/coupons:id/status` | Implements the `PATCH /superadmin/saas-billing/coupons:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-query.controller.ts` | GET | `/superadmin/saas-billing/coupons` | Implements the `GET /superadmin/saas-billing/coupons` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-query.controller.ts` | GET | `/superadmin/saas-billing/coupons:id` | Implements the `GET /superadmin/saas-billing/coupons:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-special.controller.ts` | GET | `superadmin/saas-billing/coupons/:id/redemptions` | Implements the `GET superadmin/saas-billing/coupons/:id/redemptions` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `coupons-special.controller.ts` | POST | `superadmin/saas-billing/coupons/:id/restore` | Implements the `POST superadmin/saas-billing/coupons/:id/restore` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-command.controller.ts` | POST | `/superadmin/saas-billing/invoices` | Implements the `POST /superadmin/saas-billing/invoices` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-command.controller.ts` | PATCH | `/superadmin/saas-billing/invoices:id` | Implements the `PATCH /superadmin/saas-billing/invoices:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-command.controller.ts` | DELETE | `/superadmin/saas-billing/invoices:id` | Implements the `DELETE /superadmin/saas-billing/invoices:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-command.controller.ts` | PATCH | `/superadmin/saas-billing/invoices:id/status` | Implements the `PATCH /superadmin/saas-billing/invoices:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-query.controller.ts` | GET | `/superadmin/saas-billing/invoices` | Implements the `GET /superadmin/saas-billing/invoices` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-query.controller.ts` | GET | `/superadmin/saas-billing/invoices:id` | Implements the `GET /superadmin/saas-billing/invoices:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-special.controller.ts` | POST | `superadmin/saas-billing/invoices/manual-payment` | Implements the `POST superadmin/saas-billing/invoices/manual-payment` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-special.controller.ts` | GET | `superadmin/saas-billing/invoices/recovery-center` | Implements the `GET superadmin/saas-billing/invoices/recovery-center` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `invoices-special.controller.ts` | POST | `superadmin/saas-billing/invoices/:id/resend` | Implements the `POST superadmin/saas-billing/invoices/:id/resend` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-command.controller.ts` | POST | `/superadmin/saas-billing/plans` | Implements the `POST /superadmin/saas-billing/plans` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-command.controller.ts` | PATCH | `/superadmin/saas-billing/plans:id` | Implements the `PATCH /superadmin/saas-billing/plans:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-command.controller.ts` | DELETE | `/superadmin/saas-billing/plans:id` | Implements the `DELETE /superadmin/saas-billing/plans:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-query.controller.ts` | GET | `/superadmin/saas-billing/plans` | Implements the `GET /superadmin/saas-billing/plans` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-query.controller.ts` | GET | `/superadmin/saas-billing/plans:id` | Implements the `GET /superadmin/saas-billing/plans:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-query.controller.ts` | GET | `superadmin/saas-billing/plans/business-controls` | Implements the `GET superadmin/saas-billing/plans/business-controls` contract for this feature. | DTO validated at controller boundary | Feature response contract |
+| `superadmin-saas-billing-coupons-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the create operation. | `SuperadminSaasBillingCouponsCreateDto` | `See controller contract` |
+| `superadmin-saas-billing-coupons-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the update operation. | `SuperadminSaasBillingCouponsUpdateDto` | `See controller contract` |
+| `superadmin-saas-billing-coupons-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-saas-billing-coupons-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the changeStatus operation. | `SuperadminSaasBillingCouponsStatusDto` | `See controller contract` |
+| `superadmin-saas-billing-coupons-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findAll operation. | `SuperadminSaasBillingCouponsQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-coupons-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-coupons-redemptions-query.controller.ts::redemptions` | GET | `superadmin/saas-billing/coupons/:id/redemptions` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the redemptions operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-coupons-restore-command.controller.ts::restore` | POST | `superadmin/saas-billing/coupons/:id/restore` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the restore operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-invoices-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the create operation. | `SuperadminSaasBillingInvoicesCreateDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the update operation. | `SuperadminSaasBillingInvoicesUpdateDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-saas-billing-invoices-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the changeStatus operation. | `SuperadminSaasBillingInvoicesStatusDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findAll operation. | `SuperadminSaasBillingInvoicesQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-query.controller.ts::export` | GET | `export` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the export operation. | `SuperadminSaasBillingInvoicesExportQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-query.controller.ts::download` | GET | `:id/download` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the download operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-invoices-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-invoices-recovery-command.controller.ts::manualPayment` | POST | `superadmin/saas-billing/invoices/manual-payment` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the manualPayment operation. | `SuperadminSaasBillingInvoicesManualPaymentDto` | `See controller contract` |
+| `superadmin-saas-billing-invoices-recovery-command.controller.ts::resend` | POST | `superadmin/saas-billing/invoices/:id/resend` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the resend operation. | `—` | `null` |
+| `superadmin-saas-billing-invoices-recovery-query.controller.ts::recoveryCenter` | GET | `superadmin/saas-billing/invoices/recovery-center` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the recoveryCenter operation. | `SuperadminQueryDto` | `SuperadminSaasBillingInvoicesResendJobStatusResponseDto` |
+| `superadmin-saas-billing-invoices-recovery-query.controller.ts::recoveryCenter` | GET | `api/superadmin/saas-billing/invoices/recovery-center` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the recoveryCenter operation. | `SuperadminQueryDto` | `SuperadminSaasBillingInvoicesResendJobStatusResponseDto` |
+| `superadmin-saas-billing-invoices-recovery-query.controller.ts::resendJobStatus` | GET | `superadmin/saas-billing/invoices/resend-jobs/:jobId` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the resendJobStatus operation. | `—` | `SuperadminSaasBillingInvoicesResendJobStatusResponseDto` |
+| `superadmin-saas-billing-plans-api.controller.ts::businessControls` | GET | `api/superadmin/saas-billing/plans/business-controls` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the businessControls operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the create operation. | `SuperadminSaasBillingPlansCreateDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the update operation. | `SuperadminSaasBillingPlansUpdateDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-saas-billing-plans-command.controller.ts::archive` | PATCH | `:id/archive` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the archive operation. | `—` | `See controller contract` |
+| `superadmin-saas-billing-plans-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findAll operation. | `SuperadminSaasBillingPlansQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-query.controller.ts::businessControls` | GET | `business-controls` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the businessControls operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-query.controller.ts::businessControls` | GET | `api/superadmin/saas-billing/plans/business-controls` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the businessControls operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-saas-billing-plans-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning saas-billing use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct import. Cross-feature runtime coupling must use registered events.
-- **Infrastructure Dependencies**: Core configuration, authentication/authorization, PostgreSQL/TypeORM, Redis where applicable, canonical response/error infrastructure.
-- **Runtime/Event Dependencies**: Only events explicitly listed in this feature's dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_config, superadmin_core_database, superadmin_core_external, superadmin_core_jobs, superadmin_core_pagination, superadmin_core_tenancy
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Listed directly by the feature module and TypeORM registration.
-- Redis Caching Keys: Feature-specific keys only; no global business cache helper.
-- Event Emitters: Only centralized registry names.
-- Background Jobs: Only named queue work documented by this feature.
-- Idempotency Keys: Required for applicable resource/financial/communication mutations.
+
+- DB Entities: superadmin-saas-billing-coupons.entity → `superadmin_coupons`, superadmin-saas-billing-invoices-contract-snapshot.entity → `superadmin_invoices_contract_snapshots`, superadmin-saas-billing-invoices-resend-job.entity → `superadmin_saas_invoice_resend_jobs`, superadmin-saas-billing-invoices.entity → `superadmin_saas_invoices`, superadmin-saas-billing-plans-contract-snapshot.entity → `superadmin_plans_contract_snapshots`, superadmin-saas-billing-plans.entity → `superadmin_subscription_plans`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: invoices/superadmin-saas-billing-invoices-resend-job.entity.ts, invoices/invoices_responses/superadmin-saas-billing-invoices-resend-job-status-response.dto.ts, invoices/invoices_repositories/superadmin-saas-billing-invoices-resend-job.repository.ts
+- Idempotency Keys: `/superadmin/saas-billing/coupons`, `/superadmin/saas-billing/coupons/:id`, `/superadmin/saas-billing/coupons/:id/restore`, `/superadmin/saas-billing/coupons/:id/status`, `/superadmin/saas-billing/invoices`, `/superadmin/saas-billing/invoices/:id`, `/superadmin/saas-billing/invoices/:id/resend`, `/superadmin/saas-billing/invoices/:id/status`, `/superadmin/saas-billing/invoices/manual-payment`, `/superadmin/saas-billing/plans`, `/superadmin/saas-billing/plans/:id`, `/superadmin/saas-billing/plans/:id/archive`
 
 ## Business Flow / Key Sequences
 For each mutation, the controller validates the request, the use-case service applies business rules, the repository owns PostgreSQL mutation/query details, and the mapper/response DTO exposes only contract-approved fields. Heavy work is queued rather than performed in the HTTP request.
@@ -127,7 +156,39 @@ For each mutation, the controller validates the request, the use-case service ap
 Every file has one responsibility. Controllers own HTTP wiring only; DTOs own edge validation; services own use-case decisions; repositories own ORM access; mappers own domain/response translation; adapters own external APIs.
 
 ## Permissions and Security
-All Superadmin endpoints require the Superadmin role at the controller boundary. Resource-specific operations must additionally verify the requested resource belongs to the authorized scope before performing mutations.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/saas-billing/coupons` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/coupons/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/saas-billing/coupons/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/coupons/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/coupons` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/coupons/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/coupons/:id/redemptions` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/coupons/:id/restore` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/invoices` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/invoices/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/saas-billing/invoices/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/invoices/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices/export` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices/:id/download` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/invoices/manual-payment` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/invoices/:id/resend` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices/recovery-center` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/saas-billing/invoices/recovery-center` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/invoices/resend-jobs/:jobId` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/saas-billing/plans` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/saas-billing/plans/:id/archive` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/api/superadmin/saas-billing/plans/business-controls` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/saas-billing/plans/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Cross-feature direct business imports violate the feature write boundary and can introduce hidden coupling — see Rules 0B/0C and Rule 49.
@@ -136,27 +197,138 @@ All Superadmin endpoints require the Superadmin role at the controller boundary.
 - User-controlled sorting/filtering must resolve only through allowlists — see Rule 92.
 
 ## Frozen API Contract
-The following frontend contract evidence is copied from the corresponding frontend V1 type definitions where they exist. The backend response DTO/service must preserve the complete shape and semantics rather than reconstructing data on the client.
 
-### Request Shape
-| Endpoint | Method | Request DTO fields |
-|---|---|---|
-| See Feature Inventory above | — | Derived from the exact frontend API client and DTO files. |
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
+
+### Request Shape / API Operations
+
+#### Source: `saas-billing/coupons/superadmin_coupons_features.md`
+
+- **API files:** `coupons_api/SuperadminCouponsApi.ts`
+- **Detected API symbols:** `fetchCoupons` — `coupons_api/SuperadminCouponsApi.ts`; `createCoupon` — `coupons_api/SuperadminCouponsApi.ts`; `updateCoupon` — `coupons_api/SuperadminCouponsApi.ts`; `deleteCoupon` — `coupons_api/SuperadminCouponsApi.ts`; `restoreCoupon` — `coupons_api/SuperadminCouponsApi.ts`; `updateCouponStatus` — `coupons_api/SuperadminCouponsApi.ts`; `fetchRedemptions` — `coupons_api/SuperadminCouponsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `saas-billing/invoices/superadmin_invoices_features.md`
+
+- **API files:** `invoices_api/SuperadminInvoicesRecoveryCenterApi.ts`, `invoices_api/SuperadminInvoicesApi.ts`
+- **Detected API symbols:** `fetchInvoiceRecoveryCenter` — `invoices_api/SuperadminInvoicesRecoveryCenterApi.ts`; `fetchInvoices` — `invoices_api/SuperadminInvoicesApi.ts`; `createManualPayment` — `invoices_api/SuperadminInvoicesApi.ts`; `fetchInvoiceDownloadUrl` — `invoices_api/SuperadminInvoicesApi.ts`; `exportInvoiceReport` — `invoices_api/SuperadminInvoicesApi.ts`; `resendInvoiceEmail` — `invoices_api/SuperadminInvoicesApi.ts`; `fetchTenants` — `invoices_api/SuperadminInvoicesApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `saas-billing/invoices/superadmin_invoices_recovery_center_features.md`
+
+- **API files:** `invoices_api/SuperadminInvoicesRecoveryCenterApi.ts`, `invoices_api/SuperadminInvoicesApi.ts`
+- **Detected API symbols:** `fetchInvoiceRecoveryCenter` — `invoices_api/SuperadminInvoicesRecoveryCenterApi.ts`; `fetchInvoices` — `invoices_api/SuperadminInvoicesApi.ts`; `createManualPayment` — `invoices_api/SuperadminInvoicesApi.ts`; `fetchInvoiceDownloadUrl` — `invoices_api/SuperadminInvoicesApi.ts`; `exportInvoiceReport` — `invoices_api/SuperadminInvoicesApi.ts`; `resendInvoiceEmail` — `invoices_api/SuperadminInvoicesApi.ts`; `fetchTenants` — `invoices_api/SuperadminInvoicesApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `saas-billing/plans/superadmin_plans_business_controls_features.md`
+
+- **API files:** `plans_api/SuperadminPlansBusinessControlsApi.ts`, `plans_api/SuperadminPlansApi.ts`
+- **Detected API symbols:** `fetchPlansBusinessControls` — `plans_api/SuperadminPlansBusinessControlsApi.ts`; `fetchPlans` — `plans_api/SuperadminPlansApi.ts`; `fetchPlanById` — `plans_api/SuperadminPlansApi.ts`; `createPlan` — `plans_api/SuperadminPlansApi.ts`; `updatePlan` — `plans_api/SuperadminPlansApi.ts`; `deletePlan` — `plans_api/SuperadminPlansApi.ts`; `archivePlan` — `plans_api/SuperadminPlansApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `saas-billing/plans/superadmin_plans_features.md`
+
+- **API files:** `plans_api/SuperadminPlansBusinessControlsApi.ts`, `plans_api/SuperadminPlansApi.ts`
+- **Detected API symbols:** `fetchPlansBusinessControls` — `plans_api/SuperadminPlansBusinessControlsApi.ts`; `fetchPlans` — `plans_api/SuperadminPlansApi.ts`; `fetchPlanById` — `plans_api/SuperadminPlansApi.ts`; `createPlan` — `plans_api/SuperadminPlansApi.ts`; `updatePlan` — `plans_api/SuperadminPlansApi.ts`; `deletePlan` — `plans_api/SuperadminPlansApi.ts`; `archivePlan` — `plans_api/SuperadminPlansApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `saas-billing/coupons/superadmin_coupons_features.md`
+
+- **Data-bearing components:** `page.tsx`, `coupons_components/SuperadminCouponModal.tsx`, `coupons_components/SuperadminCouponEditModal.tsx`, `coupons_components/SuperadminCouponsRedemptionDrawer.tsx`, `coupons_components/SuperadminCouponsDateFilterDropdown.tsx`, `coupons_components/SuperadminCouponsClient.tsx`, `coupons_components/SuperadminCouponsStatsBar/SuperadminCouponsStatsBar.tsx`, `coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState.tsx`, `coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge.tsx`, `coupons_components/SuperadminCouponsHeader/SuperadminCouponsHeader.tsx`, `coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow.tsx`, `coupons_components/SuperadminCouponsTable/SuperadminCouponsTable.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `saas-billing/invoices/superadmin_invoices_features.md`
+
+- **Data-bearing components:** `page.tsx`, `invoices_components/SuperadminInvoicesDateFilterDropdown.tsx`, `invoices_components/SuperadminInvoicesV1PaymentRecoveryQueuePanel.tsx`, `invoices_components/SuperadminInvoicesV1RecoverySummaryCards.tsx`, `invoices_components/SuperadminInvoicesClient.tsx`, `invoices_components/SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSection.tsx`, `invoices_components/SuperadminInvoicesHeader/SuperadminInvoicesHeader.tsx`, `invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState.tsx`, `invoices_components/SuperadminInvoicesStatsBar/SuperadminInvoicesStatsBar.tsx`, `invoices_components/SuperadminInvoicesAgingReport/SuperadminInvoicesAgingReport.tsx`, `invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal.tsx`, `invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow.tsx`, `invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTable.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `saas-billing/invoices/superadmin_invoices_recovery_center_features.md`
+
+- **Data-bearing components:** `page.tsx`, `invoices_components/SuperadminInvoicesDateFilterDropdown.tsx`, `invoices_components/SuperadminInvoicesV1PaymentRecoveryQueuePanel.tsx`, `invoices_components/SuperadminInvoicesV1RecoverySummaryCards.tsx`, `invoices_components/SuperadminInvoicesClient.tsx`, `invoices_components/SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSection.tsx`, `invoices_components/SuperadminInvoicesHeader/SuperadminInvoicesHeader.tsx`, `invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState.tsx`, `invoices_components/SuperadminInvoicesStatsBar/SuperadminInvoicesStatsBar.tsx`, `invoices_components/SuperadminInvoicesAgingReport/SuperadminInvoicesAgingReport.tsx`, `invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal.tsx`, `invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow.tsx`, `invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTable.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `saas-billing/plans/superadmin_plans_business_controls_features.md`
+
+- **Data-bearing components:** `page.tsx`, `plans_components/SuperadminPlansList.tsx`, `plans_components/SuperadminPlanCreateModal.tsx`, `plans_components/SuperadminPlansClient.tsx`, `plans_components/SuperadminPlanEditModal.tsx`, `plans_components/SuperadminPlansV1HistoryAddonsAndMigrationSection.tsx`, `plans_components/SuperadminPlansV1ComparisonPanel.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `saas-billing/plans/superadmin_plans_features.md`
+
+- **Data-bearing components:** `page.tsx`, `plans_components/SuperadminPlansList.tsx`, `plans_components/SuperadminPlanCreateModal.tsx`, `plans_components/SuperadminPlansClient.tsx`, `plans_components/SuperadminPlanEditModal.tsx`, `plans_components/SuperadminPlansV1HistoryAddonsAndMigrationSection.tsx`, `plans_components/SuperadminPlansV1ComparisonPanel.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+### Static Freeze Status
+
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
+
 
 ### Response Shape
-| Endpoint | Response DTO fields | Notes |
+| Endpoint | Response DTO / shape | Requirement |
 |---|---|---|
-| See Feature Inventory above | Complete frontend-consumed data shape | No minimal DTO shortcut is permitted. |
+| ``{superadmin}{q}`` | ``ApiResponse<Coupon[]>`` | `REQ-072` / ``fetchCoupons`` |
+| ``/superadmin/saas-billing/coupons`` | ``ApiResponse<Coupon>`` | `REQ-073` / ``createCoupon`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<Coupon>`` | `REQ-074` / ``updateCoupon`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<void>`` | `REQ-075` / ``deleteCoupon`` |
+| ``{superadmin}/{id}/restore`` | ``ApiResponse<Coupon>`` | `REQ-076` / ``restoreCoupon`` |
+| ``{superadmin}/{id}/status`` | ``ApiResponse<Coupon>`` | `REQ-077` / ``updateCouponStatus`` |
+| ``{superadmin}/{id}/redemptions`` | ``ApiResponse<RedemptionRecord[]>`` | `REQ-078` / ``fetchRedemptions`` |
+| ``{superadmin}{q}`` | ``ApiResponse<SaaSInvoice[]>`` | `REQ-079` / ``fetchInvoices`` |
+| ``/superadmin/saas-billing/invoices/manual-payment`` | ``ApiResponse<SaaSInvoice>`` | `REQ-080` / ``createManualPayment`` |
+| ``{superadmin}/{id}/download`` | ``ApiResponse<{` | `REQ-081` / ``fetchInvoiceDownloadUrl`` |
+| ``{superadmin}/export{q}`` | ``ApiResponse<{` | `REQ-082` / ``exportInvoiceReport`` |
+| ``{superadmin}/{id}/resend`` | ``ApiResponse<null>`` | `REQ-083` / ``resendInvoiceEmail`` |
+| ``/api/gyms`` | ``ApiResponse<SuperadminInvoicesTenant[]>`` | `REQ-084` / ``fetchTenants`` |
+| ``/api/superadmin/saas-billing/invoices/recovery-center`` | ``ApiResponse<SuperadminInvoicesV1Data>`` | `REQ-085` / ``fetchInvoiceRecoveryCenter`` |
+| ``{superadmin}{q}`` | ``ApiResponse<SubscriptionPlan[]>`` | `REQ-086` / ``fetchPlans`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<SubscriptionPlan>`` | `REQ-087` / ``fetchPlanById`` |
+| ``/superadmin/saas-billing/plans`` | ``ApiResponse<SubscriptionPlan>`` | `REQ-088` / ``createPlan`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<SubscriptionPlan>`` | `REQ-089` / ``updatePlan`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<void>`` | `REQ-090` / ``deletePlan`` |
+| ``{superadmin}/{id}/archive`` | ``ApiResponse<void>`` | `REQ-091` / ``archivePlan`` |
+| ``/api/superadmin/saas-billing/plans/business-controls`` | ``ApiResponse<SuperadminPlansV1Data>`` | `REQ-092` / ``fetchPlansBusinessControls`` |
 
 ### UI-Required Fields
-- Frontend schema declarations:
-{frozen}
-- Table/KPI/chart/detail fields must remain complete with their frontend semantics.
+No dedicated frontend UI Data Requirements section was supplied for this module. The frozen Stage 1 requirement IDs remain the authoritative frontend-derived evidence; no additional fields are invented here.
 
 ### Pagination / Error Contract
-- Pagination: List endpoints use the canonical pagination wrapper where applicable.
-- Validation errors: `400`, `VALIDATION.DTO.FAILED`, `validationErrors[]`.
-- Business errors: `DOMAIN.ENTITY.REASON` machine-readable codes.
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [ ] Rule 7: TypeORM is the sole approved ORM.

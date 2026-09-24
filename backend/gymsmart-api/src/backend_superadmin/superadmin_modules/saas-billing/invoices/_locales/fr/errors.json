@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "L’en-tête Idempotency-Key est requis.",
     "IDEMPOTENCY_IN_PROGRESS": "La requête idempotente est déjà en cours de traitement.",
     "IDEMPOTENCY_INVALID": "La réponse idempotente enregistrée est invalide.",
-    "PROVISION_FAILED": "Le provisionnement du tenant a échoué."
+    "PROVISION_FAILED": "Le provisionnement du tenant a échoué.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

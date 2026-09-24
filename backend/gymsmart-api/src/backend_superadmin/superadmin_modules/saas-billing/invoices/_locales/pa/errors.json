@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "Idempotency-Key ਹੈਡਰ ਲੋੜੀਂਦਾ ਹੈ।",
     "IDEMPOTENCY_IN_PROGRESS": "Idempotent ਬੇਨਤੀ ਪਹਿਲਾਂ ਹੀ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਹੈ।",
     "IDEMPOTENCY_INVALID": "ਸੰਭਾਲਿਆ idempotent ਜਵਾਬ ਅਵੈਧ ਹੈ।",
-    "PROVISION_FAILED": "Tenant provisioning ਅਸਫਲ ਰਹੀ।"
+    "PROVISION_FAILED": "Tenant provisioning ਅਸਫਲ ਰਹੀ।",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

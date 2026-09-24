@@ -4,23 +4,23 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/white-labeling/dtos/white-labeling-create.dto`
-- `@/modules/backend_superadmin/white-labeling/dtos/white-labeling-query.dto`
-- `@/modules/backend_superadmin/white-labeling/dtos/white-labeling-update.dto`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-create.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-delete.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-domains.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-find.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-list.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-status.service`
-- `@/modules/backend_superadmin/white-labeling/services/white-labeling-update.service`
-- `@/modules/backend_superadmin/white-labeling/types/white-labeling.interfaces`
-- `@/modules/backend_superadmin/white-labeling/white-labeling-command.controller`
-- `@/modules/backend_superadmin/white-labeling/white-labeling-query.controller`
-- `@/modules/backend_superadmin/white-labeling/white-labeling-special.controller`
-- `@/modules/backend_superadmin/white-labeling/white-labeling.entity`
-- `@/modules/backend_superadmin/white-labeling/white-labeling.mapper`
-- `@/modules/backend_superadmin/white-labeling/white-labeling.repository`
+- `@/backend_superadmin/white-labeling/dtos/white-labeling-create.dto`
+- `@/backend_superadmin/white-labeling/dtos/white-labeling-query.dto`
+- `@/backend_superadmin/white-labeling/dtos/white-labeling-update.dto`
+- `@/backend_superadmin/white-labeling/services/white-labeling-create.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-delete.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-domains.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-find.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-list.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-status.service`
+- `@/backend_superadmin/white-labeling/services/white-labeling-update.service`
+- `@/backend_superadmin/white-labeling/types/white-labeling.interfaces`
+- `@/backend_superadmin/white-labeling/white-labeling-command.controller`
+- `@/backend_superadmin/white-labeling/white-labeling-query.controller`
+- `@/backend_superadmin/white-labeling/white-labeling-special.controller`
+- `@/backend_superadmin/white-labeling/white-labeling.entity`
+- `@/backend_superadmin/white-labeling/white-labeling.mapper`
+- `@/backend_superadmin/white-labeling/white-labeling.repository`
 
 ## Infrastructure Imports
 

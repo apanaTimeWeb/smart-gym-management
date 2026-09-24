@@ -3,16 +3,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminAffiliatesEntity } from '@/backend_superadmin/superadmin_modules/affiliates/superadmin-affiliates.entity';
-import type { SuperadminAffiliatesListQuery, SuperadminAffiliatesCreateInput, SuperadminAffiliatesUpdateInput } from '@/backend_superadmin/superadmin_modules/affiliates/types/superadmin-affiliates.interfaces';
+import type { SuperadminAffiliatesListQuery, SuperadminAffiliatesCreatePersistenceInput, SuperadminAffiliatesUpdatePersistenceInput } from '@/backend_superadmin/superadmin_modules/affiliates/affiliates_types/superadmin-affiliates.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminAffiliatesRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminAffiliatesRepository extends BaseRepository<SuperadminAffiliatesEntity> {
-  constructor(@InjectRepository(SuperadminAffiliatesEntity) repository: Repository<SuperadminAffiliatesEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminAffiliatesRepository extends SuperadminCoreBaseRepository<SuperadminAffiliatesEntity> {
+  constructor(@InjectRepository(SuperadminAffiliatesEntity) repository: Repository<SuperadminAffiliatesEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminAffiliatesListQuery): Promise<{ items: SuperadminAffiliatesEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -25,25 +36,72 @@ export class SuperadminAffiliatesRepository extends BaseRepository<SuperadminAff
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminAffiliatesEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminAffiliatesEntity> { return super.findByIdOrThrow(id, 'Affiliates record not found'); }
 
-  /** Creates and persists a affiliates record. */
-  async createAffiliates(input: SuperadminAffiliatesCreateInput): Promise<SuperadminAffiliatesEntity> { const entity = this.activeRepository.create({ name: input.name ?? '', email: input.email ?? '', phone: input.phone ?? '', referralCode: input.referralCode ?? '', totalReferred: 0, commissionEarned: 0, commissionRate: 0, pendingPayout: 0, bankDetails: {}, status: 'ACTIVE', joinedAt: input.joinedAt ?? new Date(), referralCount: 0, conversionRate: 0, payoutHistory: [] } as never); return this.activeRepository.save(entity as any); }
+  /**
+ * Primary Intent: Executes the createAffiliates use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async createAffiliates(input: SuperadminAffiliatesCreatePersistenceInput): Promise<SuperadminAffiliatesEntity> { const entity = this.activeRepository.create({ name: input.name, email: input.email, phone: input.phone ?? '', referralCode: input.referralCode, totalReferred: 0, commissionEarned: 0, commissionRate: 0, bankDetails: input.bankDetails ?? null, currency: input.currency ?? 'INR', status: AffiliateStatus.ACTIVE, joinedAt: input.joinedAt ?? new Date(), referralCount: 0, conversionRate: 0, payoutHistory: [] }); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a affiliates record. */
-  async updateAffiliatesById(id: string, input: SuperadminAffiliatesUpdateInput): Promise<SuperadminAffiliatesEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
+  /**
+ * Primary Intent: Executes the updateAffiliatesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async updateAffiliatesById(id: string, input: SuperadminAffiliatesUpdatePersistenceInput): Promise<SuperadminAffiliatesEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Records a completed commission payout and zeroes the pending balance atomically within the repository boundary. */
-  async payPendingPayout(id: string, entry: unknown): Promise<void> { const current = await this.findByIdOrThrow(id); const history = Array.isArray(current.payoutHistory) ? current.payoutHistory : []; await this.activeRepository.update({ id } as never, { pendingPayout: 0, payoutHistory: [...history, entry] } as never); }
+  /**
+ * Primary Intent: Executes the findByIdForPayout use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findByIdForPayout(id:string):Promise<SuperadminAffiliatesEntity>{ return this.findByIdForUpdateOrThrow(id,'AFFILIATES.RECORD.NOT_FOUND'); }
 
-  /** Returns every recorded payout entry across active affiliate records. */
+  /**
+ * Primary Intent: Executes the appendPayoutHistory use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async appendPayoutHistory(id: string, entry: unknown): Promise<void> {
+    const current = await this.findByIdForUpdateOrThrow(id, 'AFFILIATES.RECORD.NOT_FOUND');
+    const history = Array.isArray(current.payoutHistory) ? current.payoutHistory : [];
+    await this.activeRepository.update({ id } as never, { payoutHistory: [...history, entry] } as never);
+  }
+
+  /**
+ * Primary Intent: Executes the findPayoutHistory use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPayoutHistory(): Promise<unknown[]> { const rows = await this.activeRepository.find({ where: { deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); return rows.flatMap((item: SuperadminAffiliatesEntity) => Array.isArray(item.payoutHistory) ? item.payoutHistory : []); }
 
-  /** Soft-deletes one affiliates record. */
+  /**
+ * Primary Intent: Executes the deleteAffiliatesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteAffiliatesById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
 }

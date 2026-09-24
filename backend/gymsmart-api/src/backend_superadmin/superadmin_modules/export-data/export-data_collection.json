@@ -1,0 +1,57 @@
+{
+  "info": {
+    "name": "Superadmin export-data module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /api/superadmin/export-data",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "/api/superadmin/export-data",
+          "path": [
+            "api",
+            "superadmin",
+            "export-data"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/superadmin/export-data/:jobId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "/api/superadmin/export-data/:jobId",
+          "path": [
+            "api",
+            "superadmin",
+            "export-data",
+            ":jobId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/superadmin/export-data/download/:jobId/:token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "/api/superadmin/export-data/download/:jobId/:token",
+          "path": [
+            "api",
+            "superadmin",
+            "export-data",
+            "download",
+            ":jobId",
+            ":token"
+          ]
+        }
+      }
+    }
+  ]
+}

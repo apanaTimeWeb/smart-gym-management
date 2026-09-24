@@ -1,7 +1,24 @@
 # Backend Superadmin Forbidden Changes
 
-- Do not move feature business logic into the role container; violating Rules 0A-0C expands the repair boundary.
-- Do not create `common/` or `shared/` business logic under the role container; violating Rule 8C creates cross-feature blast radius.
-- Do not create direct sibling feature imports; violating Rule 49 breaks the declared dependency graph.
-- Do not register duplicate HTTP controllers for the same method/path; violating the endpoint ownership boundary creates ambiguous routing.
-- Do not bypass the global response/validation/idempotency infrastructure; violating Rules 28, 31 and 37 breaks canonical API behavior.
+## What is NEVER allowed in this scope
+
+1. **Never move feature business logic into the role container.**
+   Consequence: The AI repair boundary expands from a feature to the whole role and unrelated modules become vulnerable to collateral changes.
+   Rule: 0A-0C
+
+2. **Never create global business helpers under `common/`, `shared/`, or `_shared/`.**
+   Consequence: A bug fix in one feature can silently alter another feature through shared business behavior.
+   Rule: 8C / 49
+
+3. **Never add a direct sibling-feature business import.**
+   Consequence: Feature isolation is bypassed and a local repair can create an undeclared runtime dependency.
+   Rule: 0C / 49
+
+4. **Never register duplicate method/path controllers.**
+   Consequence: Ambiguous ownership makes route resolution non-deterministic and breaks endpoint parity.
+   Rule: 25 / 48
+
+5. **Never bypass canonical response, validation, or mutation infrastructure.**
+   Consequence: Frontend contracts, validation error mapping, or duplicate-request protection can diverge from the frozen contract.
+   Rule: 28 / 31 / 37 / 98
+

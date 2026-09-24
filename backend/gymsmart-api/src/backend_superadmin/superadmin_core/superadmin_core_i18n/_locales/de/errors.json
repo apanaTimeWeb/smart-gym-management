@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "Die Anfrage konnte nicht verarbeitet werden.",
+      "VALIDATION_FAILED": "Ein oder mehrere Felder sind ungültig.",
+      "INTERNAL": "Ein interner Fehler ist aufgetreten.",
+      "NOT_FOUND": "Die angeforderte Ressource wurde nicht gefunden.",
+      "FORBIDDEN": "Sie sind nicht berechtigt, diese Aktion auszuführen.",
+      "IDEMPOTENCY_REQUIRED": "Der Idempotency-Key-Header ist erforderlich.",
+      "IDEMPOTENCY_INVALID": "Der Idempotency-Key ist ungültig.",
+      "IDEMPOTENCY_IN_PROGRESS": "Eine Anfrage mit diesem Idempotency-Key wird bereits verarbeitet.",
+      "RATE_LIMIT_EXCEEDED": "Zu viele Anfragen. Bitte später erneut versuchen.",
+      "CIRCUIT_OPEN": "Der nachgelagerte Dienst ist vorübergehend nicht verfügbar."
+    }
+  }
+}
