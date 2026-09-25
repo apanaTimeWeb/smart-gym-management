@@ -194,6 +194,7 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private downloadUrl(jobId: string, token: string): string { return `/superadmin/export-data/download/${jobId}/${token}`; }
+  private downloadUrl(jobId: string, token: string): string { return `${process.env.API_URL || 'http://localhost:5000'}/superadmin/export-data/download/${jobId}/${token}`; }
 }
+
 

@@ -28,7 +28,7 @@ export class AdminDataExportQueryService {
       const response = this.presenter.toResponse(entity as any);
       const domain = entity as any;
       const reference = typeof domain.data?.downloadReference === 'string' ? domain.data.downloadReference : null;
-      return reference && entity.status === ('completed' as any) ? { ...response, downloadUrl: `/admin/data-export/download?reference=${encodeURIComponent(reference)}`, downloadExpiresAt: typeof domain.data?.downloadExpiresAt === 'string' ? domain.data.downloadExpiresAt : undefined } : response;
+      return reference && entity.status === ('completed' as any) ? { ...response, downloadUrl: `${process.env.API_URL || 'http://localhost:5000'}/admin/data-export/download?reference=${encodeURIComponent(reference)}`, downloadExpiresAt: typeof domain.data?.downloadExpiresAt === 'string' ? domain.data.downloadExpiresAt : undefined } : response;
     });
     return { items: items as any, meta: result.meta };
   }

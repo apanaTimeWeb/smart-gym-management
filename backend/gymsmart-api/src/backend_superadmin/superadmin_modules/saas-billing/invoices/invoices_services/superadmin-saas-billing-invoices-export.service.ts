@@ -24,7 +24,7 @@ export class SuperadminSaasBillingInvoicesExportService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findDownload(id: string): Promise<{ downloadUrl: string }> { await this.repository.findByIdOrThrow(id); return { downloadUrl: `/superadmin/saas-billing/invoices/${encodeURIComponent(id)}/download/file` }; }
+  async findDownload(id: string): Promise<{ downloadUrl: string }> { await this.repository.findByIdOrThrow(id); return { downloadUrl: `${process.env.API_URL || 'http://localhost:5000'}/superadmin/saas-billing/invoices/${encodeURIComponent(id)}/download/file` }; }
 /**
  * Primary Intent: Executes the export use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -38,6 +38,7 @@ export class SuperadminSaasBillingInvoicesExportService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async export(tenantId?: string, status?: string): Promise<{ downloadUrl: string }> { const query = new URLSearchParams(); if (tenantId) query.set('tenantId', tenantId); if (status) query.set('status', status); const suffix = query.toString() ? `?${query.toString()}` : ''; return { downloadUrl: `/superadmin/saas-billing/invoices/export/file${suffix}` }; }
+  async export(tenantId?: string, status?: string): Promise<{ downloadUrl: string }> { const query = new URLSearchParams(); if (tenantId) query.set('tenantId', tenantId); if (status) query.set('status', status); const suffix = query.toString() ? `?${query.toString()}` : ''; return { downloadUrl: `${process.env.API_URL || 'http://localhost:5000'}/superadmin/saas-billing/invoices/export/file${suffix}` }; }
 }
+
 
