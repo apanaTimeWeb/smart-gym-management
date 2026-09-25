@@ -2,8 +2,8 @@
 // FLOW: Repository domain â†’ Subscriptions response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminSubscriptionsStatus } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants.js';
-import { AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants.js';
+import { AdminSubscriptionsStatus } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants'
+import { AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants'
 
 /**
  * @description Defines the AdminCurrentSubscriptionDto boundary for the admin_subscriptions backend feature.

@@ -2,9 +2,9 @@
 // FLOW: Domain object -> AdminHrResponsePresenter -> typed response DTO -> canonical response envelope.
 import { Injectable } from '@nestjs/common';
 
-import { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain.js';
+import { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain'
 
-import { AdminHrStaffDto, AdminHrPayrollListResponseDto, AdminHrStaffListResponseDto, AdminHrSummaryDto, AdminHrLedgerEntryDto, AdminHrStaffPerformanceRecordDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto.js';
+import { AdminHrStaffDto, AdminHrPayrollListResponseDto, AdminHrStaffListResponseDto, AdminHrSummaryDto, AdminHrLedgerEntryDto, AdminHrStaffPerformanceRecordDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto'
 
 
 /**

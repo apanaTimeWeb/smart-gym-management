@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-coupons.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity.js';
-import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper.js';
+import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity'
+import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper'
 
 describe('AdminCouponsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

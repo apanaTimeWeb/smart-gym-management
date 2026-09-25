@@ -2,9 +2,9 @@
 // FLOW: Settings Repository â†’ AdminSettingsEntity â†’ PostgreSQL admin_settings table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminSettingsStatus } from '@/backend_admin/admin_modules/admin_settings/admin-settings.constants.js';
+import { AdminSettingsStatus } from '@/backend_admin/admin_modules/admin_settings/admin-settings.constants'
 
 @Entity('admin_settings')
 @Index('IDX_admin_settings_created_at', ['createdAt'])

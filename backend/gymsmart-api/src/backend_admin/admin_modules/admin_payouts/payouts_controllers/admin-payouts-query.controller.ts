@@ -3,14 +3,14 @@
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminPayoutsQueryDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-query.dto.js';
-import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto.js';
-import { AdminPayoutsQueryService } from '@/backend_admin/admin_modules/admin_payouts/payouts_services/admin-payouts-query.service.js';
+import { AdminPayoutsQueryDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-query.dto'
+import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto'
+import { AdminPayoutsQueryService } from '@/backend_admin/admin_modules/admin_payouts/payouts_services/admin-payouts-query.service'
 
 @ApiTags('Admin / payouts')
 @Controller('admin/payouts')

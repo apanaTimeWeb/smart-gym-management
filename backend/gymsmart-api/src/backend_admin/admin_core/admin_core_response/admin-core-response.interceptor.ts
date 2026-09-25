@@ -5,7 +5,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor, StreamableF
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

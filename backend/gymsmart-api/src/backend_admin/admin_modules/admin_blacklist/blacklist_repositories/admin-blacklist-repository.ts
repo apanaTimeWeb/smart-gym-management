@@ -2,16 +2,16 @@
 // FLOW: AdminBlacklistService â†’ AdminBlacklistRepository â†’ TypeORM â†’ PostgreSQL blacklisted_members.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminBlacklistMutationDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-mutation.dto.js';
-import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto.js';
-import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity.js';
-import { AdminBlacklistMapper } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.mapper.js';
-import type { AdminBlacklistDomainModel } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_domain/admin-blacklist.domain.js';
+import { AdminBlacklistMutationDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-mutation.dto'
+import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto'
+import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity'
+import { AdminBlacklistMapper } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.mapper'
+import type { AdminBlacklistDomainModel } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_domain/admin-blacklist.domain'
 
 @Injectable()
 /**

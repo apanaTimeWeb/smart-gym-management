@@ -2,12 +2,12 @@
 // FLOW: AdminHrCommandController -> AdminHrCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
-import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto.js';
-import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter.js';
-import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository.js';
+import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto'
+import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter'
+import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository'
 
 @Injectable()
 /**

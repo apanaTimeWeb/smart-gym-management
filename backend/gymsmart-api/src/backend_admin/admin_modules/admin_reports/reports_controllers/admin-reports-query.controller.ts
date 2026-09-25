@@ -3,14 +3,14 @@
 import { Controller, Get, HttpStatus, Param, Query, StreamableFile, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto.js';
-import { AdminReportsDataResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto.js';
-import { AdminReportsQueryService } from '@/backend_admin/admin_modules/admin_reports/reports_services/admin-reports-query.service.js';
+import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto'
+import { AdminReportsDataResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto'
+import { AdminReportsQueryService } from '@/backend_admin/admin_modules/admin_reports/reports_services/admin-reports-query.service'
 
 @ApiTags('Admin / reports')
 @Controller('admin/reports')

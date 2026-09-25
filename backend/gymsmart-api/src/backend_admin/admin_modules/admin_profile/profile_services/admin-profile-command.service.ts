@@ -4,15 +4,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import argon2 from 'argon2';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
-import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
+import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
 
-import { AdminProfileMutationDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-mutation.dto.js';
-import { AdminProfileDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-response.dto.js';
-import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter.js';
-import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository.js';
+import { AdminProfileMutationDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-mutation.dto'
+import { AdminProfileDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-response.dto'
+import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter'
+import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository'
 
 @Injectable()
 /**

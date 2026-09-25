@@ -2,12 +2,12 @@
 // FLOW: AdminNotificationsQueryController â†’ AdminNotificationsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 import { Injectable } from '@nestjs/common';
 
-import { AdminNotificationsQueryDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-query.dto.js';
-import { AdminNotificationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-response.dto.js';
-import { AdminNotificationsResponsePresenter } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.response.presenter.js';
-import { AdminNotificationsRepository } from '@/backend_admin/admin_modules/admin_notifications/notifications_repositories/admin-notifications-repository.js';
+import { AdminNotificationsQueryDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-query.dto'
+import { AdminNotificationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-response.dto'
+import { AdminNotificationsResponsePresenter } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.response.presenter'
+import { AdminNotificationsRepository } from '@/backend_admin/admin_modules/admin_notifications/notifications_repositories/admin-notifications-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

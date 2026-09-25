@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminDataExport domain data as the frontend response contract.
 // FLOW: Domain object -> AdminDataExportResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain.js';
+import { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain'
 
 
 /**

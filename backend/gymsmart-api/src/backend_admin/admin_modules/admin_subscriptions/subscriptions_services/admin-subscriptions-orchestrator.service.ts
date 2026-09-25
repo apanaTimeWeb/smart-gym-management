@@ -2,9 +2,9 @@
 // FLOW: Subscription command controller -> AdminSubscriptionsOrchestratorService -> Master UnitOfWork -> command service -> repository/audit.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service.js';
+import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service'
 
-import { AdminSubscriptionsCommandService } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_services/admin-subscriptions-command.service.js';
+import { AdminSubscriptionsCommandService } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_services/admin-subscriptions-command.service'
 
 @Injectable()
 /**

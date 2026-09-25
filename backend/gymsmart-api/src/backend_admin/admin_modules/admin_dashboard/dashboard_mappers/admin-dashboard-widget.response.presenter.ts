@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Maps dashboard chart, leaderboard, and alert read-model data into typed widget contracts.
 // FLOW: AdminDashboardDomainModel -> AdminDashboardWidgetResponsePresenter -> widget response DTO.
-import { AdminDashboardChartsResponseDto, AdminDashboardLeaderboardResponseDto, AdminDashboardAlertsResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto.js';
+import { AdminDashboardChartsResponseDto, AdminDashboardLeaderboardResponseDto, AdminDashboardAlertsResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto'
 
-import type { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain.js';
+import type { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain'
 
 /**
  * @description Defines the isolated widget mapping boundary for the Admin dashboard feature.

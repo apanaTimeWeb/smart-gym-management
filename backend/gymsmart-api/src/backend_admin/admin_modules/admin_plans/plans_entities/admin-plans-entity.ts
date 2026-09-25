@@ -2,10 +2,10 @@
 // FLOW: Plans Repository â†’ AdminPlansEntity â†’ PostgreSQL admin_plans table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminPlansStatus } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants.js';
-import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants.js';
+import { AdminPlansStatus } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants'
+import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants'
 
 @Entity('admin_plans')
 @Index('IDX_admin_plans_created_at', ['createdAt'])

@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminCouponsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity.js';
+import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity'
 
 /**
  * @description Defines the AdminCouponsSeeder boundary for the admin_coupons backend feature.

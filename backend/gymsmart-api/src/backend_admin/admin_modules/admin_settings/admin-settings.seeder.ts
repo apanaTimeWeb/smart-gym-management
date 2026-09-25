@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminSettingsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity.js';
+import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity'
 
 /**
  * @description Defines the AdminSettingsSeeder boundary for the admin_settings backend feature.

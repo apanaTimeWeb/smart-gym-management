@@ -9,9 +9,9 @@ import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInte
 import { Observable, from, throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service'
 
 @Injectable()
 /**

@@ -2,7 +2,7 @@
 // FLOW: Master DB â†’ AdminCoreMasterAdminEntity â†’ AdminCoreAuthService â†’ access/refresh tokens.
 import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
 
-import { AdminCoreMasterAdminRole } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-role.enum.js';
+import { AdminCoreMasterAdminRole } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-role.enum'
 
 @Entity('admins')
 @Index('UQ_admins_email', ['email'], { unique: true })

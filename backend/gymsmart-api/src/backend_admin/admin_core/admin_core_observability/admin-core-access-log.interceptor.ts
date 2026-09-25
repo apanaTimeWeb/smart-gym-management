@@ -6,7 +6,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
 
 /**
  * @description Logs only low-cardinality request metadata after a response completes; request and response bodies are never recorded.

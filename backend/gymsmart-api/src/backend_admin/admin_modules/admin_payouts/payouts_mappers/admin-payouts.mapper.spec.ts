@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-payouts.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity.js';
-import { AdminPayoutsMapper } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.mapper.js';
+import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity'
+import { AdminPayoutsMapper } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.mapper'
 
 describe('AdminPayoutsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

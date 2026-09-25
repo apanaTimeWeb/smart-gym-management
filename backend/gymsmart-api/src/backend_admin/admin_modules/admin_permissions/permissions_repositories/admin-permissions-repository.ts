@@ -2,16 +2,16 @@
 // FLOW: AdminPermissionsService â†’ AdminPermissionsRepository â†’ TypeORM â†’ PostgreSQL permission_overrides.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminPermissionsMutationDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-mutation.dto.js';
-import { AdminPermissionsQueryDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-query.dto.js';
-import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity.js';
-import { AdminPermissionsMapper } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.mapper.js';
-import type { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain.js';
+import { AdminPermissionsMutationDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-mutation.dto'
+import { AdminPermissionsQueryDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-query.dto'
+import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity'
+import { AdminPermissionsMapper } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.mapper'
+import type { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain'
 
 @Injectable()
 /**

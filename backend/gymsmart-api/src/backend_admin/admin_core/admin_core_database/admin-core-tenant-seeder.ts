@@ -3,33 +3,33 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
-import tenantDataSource from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.js';
+import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
+import tenantDataSource from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source'
 
-import { AdminAnnouncementsSeeder } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.seeder.js';
-import { AdminAttendanceSeeder } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.seeder.js';
-import { AdminAuditLogsSeeder } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.seeder.js';
-import { AdminBlacklistSeeder } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.seeder.js';
-import { AdminBranchesSeeder } from '@/backend_admin/admin_modules/admin_branches/admin-branches.seeder.js';
-import { AdminCampaignsSeeder } from '@/backend_admin/admin_modules/admin_campaigns/admin-campaigns.seeder.js';
-import { AdminCouponsSeeder } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.seeder.js';
-import { AdminDashboardSeeder } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.seeder.js';
-import { AdminDataExportSeeder } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.seeder.js';
-import { AdminFinanceSeeder } from '@/backend_admin/admin_modules/admin_finance/admin-finance.seeder.js';
-import { AdminGymHealthAlertsSeeder } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.seeder.js';
-import { AdminHrSeeder } from '@/backend_admin/admin_modules/admin_hr/admin-hr.seeder.js';
-import { AdminMembersSeeder } from '@/backend_admin/admin_modules/admin_members/admin-members.seeder.js';
-import { AdminNotificationsSeeder } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.seeder.js';
-import { AdminPayoutsSeeder } from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.seeder.js';
-import { AdminPermissionsSeeder } from '@/backend_admin/admin_modules/admin_permissions/admin-permissions.seeder.js';
-import { AdminPlansSeeder } from '@/backend_admin/admin_modules/admin_plans/admin-plans.seeder.js';
-import { AdminProfileSeeder } from '@/backend_admin/admin_modules/admin_profile/admin-profile.seeder.js';
-import { AdminReportsSeeder } from '@/backend_admin/admin_modules/admin_reports/admin-reports.seeder.js';
-import { AdminSalesSeeder } from '@/backend_admin/admin_modules/admin_sales/admin-sales.seeder.js';
-import { AdminSettingsSeeder } from '@/backend_admin/admin_modules/admin_settings/admin-settings.seeder.js';
-import { AdminSubscriptionsSeeder } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.seeder.js';
-import { AdminUsageSeeder } from '@/backend_admin/admin_modules/admin_usage/admin-usage.seeder.js';
+import { AdminAnnouncementsSeeder } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.seeder'
+import { AdminAttendanceSeeder } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.seeder'
+import { AdminAuditLogsSeeder } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.seeder'
+import { AdminBlacklistSeeder } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.seeder'
+import { AdminBranchesSeeder } from '@/backend_admin/admin_modules/admin_branches/admin-branches.seeder'
+import { AdminCampaignsSeeder } from '@/backend_admin/admin_modules/admin_campaigns/admin-campaigns.seeder'
+import { AdminCouponsSeeder } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.seeder'
+import { AdminDashboardSeeder } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.seeder'
+import { AdminDataExportSeeder } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.seeder'
+import { AdminFinanceSeeder } from '@/backend_admin/admin_modules/admin_finance/admin-finance.seeder'
+import { AdminGymHealthAlertsSeeder } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.seeder'
+import { AdminHrSeeder } from '@/backend_admin/admin_modules/admin_hr/admin-hr.seeder'
+import { AdminMembersSeeder } from '@/backend_admin/admin_modules/admin_members/admin-members.seeder'
+import { AdminNotificationsSeeder } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.seeder'
+import { AdminPayoutsSeeder } from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.seeder'
+import { AdminPermissionsSeeder } from '@/backend_admin/admin_modules/admin_permissions/admin-permissions.seeder'
+import { AdminPlansSeeder } from '@/backend_admin/admin_modules/admin_plans/admin-plans.seeder'
+import { AdminProfileSeeder } from '@/backend_admin/admin_modules/admin_profile/admin-profile.seeder'
+import { AdminReportsSeeder } from '@/backend_admin/admin_modules/admin_reports/admin-reports.seeder'
+import { AdminSalesSeeder } from '@/backend_admin/admin_modules/admin_sales/admin-sales.seeder'
+import { AdminSettingsSeeder } from '@/backend_admin/admin_modules/admin_settings/admin-settings.seeder'
+import { AdminSubscriptionsSeeder } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.seeder'
+import { AdminUsageSeeder } from '@/backend_admin/admin_modules/admin_usage/admin-usage.seeder'
 
 async function seedTenant(): Promise<void> {
   await tenantDataSource.initialize();

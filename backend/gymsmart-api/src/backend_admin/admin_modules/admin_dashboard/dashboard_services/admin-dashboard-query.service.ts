@@ -2,11 +2,11 @@
 // FLOW: DashboardQueryController -> widget use case -> repository read model -> feature mapper -> ApiResponse.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminDashboardQueryDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-query.dto.js';
-import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto, AdminDashboardChartsResponseDto, AdminDashboardLeaderboardResponseDto, AdminDashboardAlertsResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto.js';
-import { AdminDashboardResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.response.presenter.js';
-import { AdminDashboardWidgetResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard-widget.response.presenter.js';
-import { AdminDashboardRepository } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_repositories/admin-dashboard-repository.js';
+import { AdminDashboardQueryDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-query.dto'
+import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto, AdminDashboardChartsResponseDto, AdminDashboardLeaderboardResponseDto, AdminDashboardAlertsResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto'
+import { AdminDashboardResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.response.presenter'
+import { AdminDashboardWidgetResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard-widget.response.presenter'
+import { AdminDashboardRepository } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_repositories/admin-dashboard-repository'
 
 @Injectable()
 /**

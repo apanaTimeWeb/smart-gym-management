@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-permissions.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity.js';
-import { AdminPermissionsMapper } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.mapper.js';
+import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity'
+import { AdminPermissionsMapper } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.mapper'
 
 describe('AdminPermissionsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

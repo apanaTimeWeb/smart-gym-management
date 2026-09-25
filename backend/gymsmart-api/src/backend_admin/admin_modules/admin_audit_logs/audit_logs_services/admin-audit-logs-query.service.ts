@@ -2,13 +2,13 @@
 // FLOW: AdminAuditLogsQueryController â†’ service â†’ repository â†’ mapper â†’ canonical envelope.
 import { Injectable } from '@nestjs/common';
 
-import { AdminAuditLogsQueryDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-query.dto.js';
-import { AdminAuditLogDto, AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto.js';
-import { AdminAuditLogsResponsePresenter } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_mappers/admin-audit-logs.response.presenter.js';
-import { AdminAuditLogsRepository } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_repositories/admin-audit-logs-repository.js';
+import { AdminAuditLogsQueryDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-query.dto'
+import { AdminAuditLogDto, AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto'
+import { AdminAuditLogsResponsePresenter } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_mappers/admin-audit-logs.response.presenter'
+import { AdminAuditLogsRepository } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_repositories/admin-audit-logs-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
-import type { AdminCorePaginationMeta } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
+import type { AdminCorePaginationMeta } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Branches response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminBranchesStatus } from '@/backend_admin/admin_modules/admin_branches/admin-branches.constants.js';
+import { AdminBranchesStatus } from '@/backend_admin/admin_modules/admin_branches/admin-branches.constants'
 
 /**
  * @description Defines the AdminBranchExpenseItemDto boundary for the admin_branches backend feature.

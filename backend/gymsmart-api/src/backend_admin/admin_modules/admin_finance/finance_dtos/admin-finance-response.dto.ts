@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Finance response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminFinanceStatus } from '@/backend_admin/admin_modules/admin_finance/admin-finance.constants.js';
+import { AdminFinanceStatus } from '@/backend_admin/admin_modules/admin_finance/admin-finance.constants'
 
 class AdminPaymentMemberDto {
   @ApiProperty() name!: string;

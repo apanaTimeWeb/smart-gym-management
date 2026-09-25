@@ -5,18 +5,18 @@ import { InjectDataSource } from '@nestjs/typeorm';
 
 import { DataSource, EntityManager } from 'typeorm';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity.js';
-import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity.js';
-import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity.js';
-import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity'
+import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity'
+import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity'
+import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminSubscriptionsQueryDto } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-query.dto.js';
-import { AdminSubscriptionsMapper } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_mappers/admin-subscriptions.mapper.js';
-import type { AdminSubscriptionsDomainModel } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain.js';
+import { AdminSubscriptionsQueryDto } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-query.dto'
+import { AdminSubscriptionsMapper } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_mappers/admin-subscriptions.mapper'
+import type { AdminSubscriptionsDomainModel } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain'
 
-import type { AdminSubscriptionDomain, AdminSubscriptionInvoiceDomain, AdminSubscriptionPaymentMethodDomain, AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain.js';
+import type { AdminSubscriptionDomain, AdminSubscriptionInvoiceDomain, AdminSubscriptionPaymentMethodDomain, AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain'
 
 @Injectable()
 /**

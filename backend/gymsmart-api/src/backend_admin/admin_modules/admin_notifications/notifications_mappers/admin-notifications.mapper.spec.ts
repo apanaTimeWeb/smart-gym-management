@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-notifications.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity.js';
-import { AdminNotificationsMapper } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.mapper.js';
+import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity'
+import { AdminNotificationsMapper } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.mapper'
 
 describe('AdminNotificationsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

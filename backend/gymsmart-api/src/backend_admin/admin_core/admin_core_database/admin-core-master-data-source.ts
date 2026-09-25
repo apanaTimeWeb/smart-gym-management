@@ -7,17 +7,17 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
-import { AdminCoreMasterAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-master-audit-log.entity.js';
-import { AdminCoreMasterAdminEntity } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin.entity.js';
-import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment.js';
-import { AdminCoreMasterFeatureFlagEntity } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-feature-flag.entity.js';
-import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity.js';
-import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity.js';
-import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity.js';
-import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity.js';
-import { AdminCoreMasterUpgradeRequestEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-upgrade-request.entity.js';
-import { AdminCoreMasterTenantMembershipEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-membership.entity.js';
-import { AdminCoreMasterTenantEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant.entity.js';
+import { AdminCoreMasterAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-master-audit-log.entity'
+import { AdminCoreMasterAdminEntity } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin.entity'
+import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment'
+import { AdminCoreMasterFeatureFlagEntity } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-feature-flag.entity'
+import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity'
+import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity'
+import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity'
+import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity'
+import { AdminCoreMasterUpgradeRequestEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-upgrade-request.entity'
+import { AdminCoreMasterTenantMembershipEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-membership.entity'
+import { AdminCoreMasterTenantEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant.entity'
 
 const env = readAdminCoreEnvironment();
 

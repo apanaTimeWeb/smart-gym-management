@@ -2,13 +2,13 @@
 // FLOW: AdminHrEntity â†’ AdminHrMapper â†’ domain/response object.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service.js';
+import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service'
 
-import { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain.js';
+import { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain'
 
-import { AdminHrStaffDto, AdminHrPayrollListResponseDto, AdminHrStaffListResponseDto, AdminHrSummaryDto, AdminHrLedgerEntryDto, AdminHrStaffPerformanceRecordDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto.js';
+import { AdminHrStaffDto, AdminHrPayrollListResponseDto, AdminHrStaffListResponseDto, AdminHrSummaryDto, AdminHrLedgerEntryDto, AdminHrStaffPerformanceRecordDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto'
 
-import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity.js';
+import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminHr.

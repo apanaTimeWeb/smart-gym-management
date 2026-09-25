@@ -2,10 +2,10 @@
 // FLOW: Command controller â†’ command service â†’ master repository â†’ audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
-import { AdminSubscriptionsRepository } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_repositories/admin-subscriptions-repository.js';
+import { AdminSubscriptionsRepository } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_repositories/admin-subscriptions-repository'
 
 @Injectable()
 /**

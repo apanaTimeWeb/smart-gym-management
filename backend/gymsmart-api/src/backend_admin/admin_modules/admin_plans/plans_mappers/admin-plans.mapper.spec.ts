@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-plans.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity.js';
-import { AdminPlansMapper } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.mapper.js';
+import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity'
+import { AdminPlansMapper } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.mapper'
 
 describe('AdminPlansMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

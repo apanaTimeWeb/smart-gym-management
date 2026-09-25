@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-data-export-zip.utils.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminDataExportZipUtils } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-zip.utils.js';
+import { AdminDataExportZipUtils } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-zip.utils'
 
 describe('AdminDataExportZipUtils', () => {
   it('quotes CSV cells containing commas, quotes, or newlines', () => {

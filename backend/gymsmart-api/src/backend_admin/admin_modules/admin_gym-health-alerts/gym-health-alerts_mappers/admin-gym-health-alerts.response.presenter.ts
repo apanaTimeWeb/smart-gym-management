@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminGymHealthAlerts domain data as the frontend response contract.
 // FLOW: Domain object -> AdminGymHealthAlertsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminGymHealthAlertsDomainModel } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_domain/admin-gym-health-alerts.domain.js';
+import { AdminGymHealthAlertsDomainModel } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_domain/admin-gym-health-alerts.domain'
 
-import { AdminGymHealthKPIDataDto } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_dtos/admin-gym-health-alerts-response.dto.js';
+import { AdminGymHealthKPIDataDto } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_dtos/admin-gym-health-alerts-response.dto'
 
 
 /**

@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminPayoutsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity.js';
+import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity'
 
 /**
  * @description Defines the AdminPayoutsSeeder boundary for the admin_payouts backend feature.

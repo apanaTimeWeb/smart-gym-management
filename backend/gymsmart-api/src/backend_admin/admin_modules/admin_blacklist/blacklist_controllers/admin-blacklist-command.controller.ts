@@ -3,16 +3,16 @@
 import { Body, Controller, Delete, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminBlacklistIdDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-id.dto.js';
-import { AdminBlacklistMutationDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-mutation.dto.js';
-import { AdminBlacklistedMemberDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto.js';
-import { AdminBlacklistCommandService } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_services/admin-blacklist-command.service.js';
+import { AdminBlacklistIdDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-id.dto'
+import { AdminBlacklistMutationDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-mutation.dto'
+import { AdminBlacklistedMemberDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto'
+import { AdminBlacklistCommandService } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_services/admin-blacklist-command.service'
 
 @ApiTags('Admin / blacklist')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

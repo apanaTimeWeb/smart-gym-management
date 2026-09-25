@@ -2,7 +2,7 @@
 // FLOW: AppModule -> AdminCoreModule -> AdminCoreInfrastructureModule -> global guards/interceptors/services.
 import { Global, Module } from '@nestjs/common';
 
-import { AdminCoreInfrastructureModule } from '@/backend_admin/admin_core/admin-core-infrastructure.module.js';
+import { AdminCoreInfrastructureModule } from '@/backend_admin/admin_core/admin-core-infrastructure.module'
 
 @Global()
 @Module({ imports: [AdminCoreInfrastructureModule] })

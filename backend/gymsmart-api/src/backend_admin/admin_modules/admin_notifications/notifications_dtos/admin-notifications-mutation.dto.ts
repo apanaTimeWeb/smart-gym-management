@@ -5,7 +5,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID, IsEnum } from 'class-validator';
 
-import { AdminNotificationsSeverity } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants.js';
+import { AdminNotificationsSeverity } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants'
 
 /**
  * @description Defines the AdminNotificationsMutationDto boundary for the admin_notifications backend feature.

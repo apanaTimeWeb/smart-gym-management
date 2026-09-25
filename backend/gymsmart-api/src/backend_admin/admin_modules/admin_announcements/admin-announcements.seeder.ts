@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminAnnouncementsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminAnnouncementsEntity } from '@/backend_admin/admin_modules/admin_announcements/announcements_entities/admin-announcements-entity.js';
+import { AdminAnnouncementsEntity } from '@/backend_admin/admin_modules/admin_announcements/announcements_entities/admin-announcements-entity'
 
 /**
  * @description Defines the AdminAnnouncementsSeeder boundary for the admin_announcements backend feature.

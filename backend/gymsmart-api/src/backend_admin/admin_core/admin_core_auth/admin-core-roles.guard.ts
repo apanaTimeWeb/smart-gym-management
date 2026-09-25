@@ -3,8 +3,8 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { CORE_ROLES_KEY } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { CORE_ROLES_KEY } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
 @Injectable()
 /**

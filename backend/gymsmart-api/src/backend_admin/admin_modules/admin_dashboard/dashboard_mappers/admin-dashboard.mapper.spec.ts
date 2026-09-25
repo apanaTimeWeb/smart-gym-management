@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-dashboard.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity.js';
-import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper.js';
+import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity'
+import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper'
 
 describe('AdminDashboardMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

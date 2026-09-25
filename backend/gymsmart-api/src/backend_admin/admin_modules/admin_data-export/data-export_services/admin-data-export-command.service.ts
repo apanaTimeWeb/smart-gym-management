@@ -2,16 +2,16 @@
 // FLOW: AdminDataExportCommandController -> AdminDataExportCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service.js';
-import { CORE_EVENT_REGISTRY } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants.js';
-import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service'
+import { CORE_EVENT_REGISTRY } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants'
+import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service'
 
-import { AdminDataExportMutationDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-mutation.dto.js';
-import { AdminDataExportResponsePresenter } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.response.presenter.js';
-import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository.js';
+import { AdminDataExportMutationDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-mutation.dto'
+import { AdminDataExportResponsePresenter } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.response.presenter'
+import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository'
 
 @Injectable()
 /**

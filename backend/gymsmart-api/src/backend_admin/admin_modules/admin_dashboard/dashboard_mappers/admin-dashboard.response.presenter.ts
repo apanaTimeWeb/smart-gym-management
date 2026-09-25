@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminDashboard domain data as the frontend response contract.
 // FLOW: Domain object -> AdminDashboardResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain.js';
+import { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain'
 
-import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto.js';
+import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto'
 
 
 /**

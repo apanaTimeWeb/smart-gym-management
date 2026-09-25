@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminPermissionsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity.js';
+import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity'
 
 /**
  * @description Defines the AdminPermissionsSeeder boundary for the admin_permissions backend feature.

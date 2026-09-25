@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin announcements entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminAnnouncementsEntity â†’ AdminAnnouncementsMapper â†’ domain/response object.
-import { AdminAnnouncementsDomainModel } from '@/backend_admin/admin_modules/admin_announcements/announcements_domain/admin-announcements.domain.js';
+import { AdminAnnouncementsDomainModel } from '@/backend_admin/admin_modules/admin_announcements/announcements_domain/admin-announcements.domain'
 
-import { AdminAnnouncementsEntity } from '@/backend_admin/admin_modules/admin_announcements/announcements_entities/admin-announcements-entity.js';
+import { AdminAnnouncementsEntity } from '@/backend_admin/admin_modules/admin_announcements/announcements_entities/admin-announcements-entity'
 
-import { AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto.js';
+import { AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminAnnouncements.

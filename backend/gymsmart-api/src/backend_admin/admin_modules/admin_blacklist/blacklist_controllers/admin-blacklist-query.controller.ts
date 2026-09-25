@@ -3,16 +3,16 @@
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto.js';
-import { AdminBlacklistedMemberDto, AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto.js';
-import { AdminBlacklistQueryService } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_services/admin-blacklist-query.service.js';
+import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto'
+import { AdminBlacklistedMemberDto, AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto'
+import { AdminBlacklistQueryService } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_services/admin-blacklist-query.service'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @ApiTags('Admin / blacklist')
 @Controller('admin/blacklist')

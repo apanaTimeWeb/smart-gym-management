@@ -3,16 +3,16 @@
 import { Controller, Get, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto.js';
-import { AdminBranchDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-response.dto.js';
-import { AdminBranchesQueryService } from '@/backend_admin/admin_modules/admin_branches/branches_services/admin-branches-query.service.js';
+import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto'
+import { AdminBranchDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-response.dto'
+import { AdminBranchesQueryService } from '@/backend_admin/admin_modules/admin_branches/branches_services/admin-branches-query.service'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @ApiTags('Admin / branches')
 @Controller('admin/branches')

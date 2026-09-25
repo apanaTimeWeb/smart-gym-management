@@ -2,13 +2,13 @@
 // FLOW: AdminPermissionsCommandController -> AdminPermissionsCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
-import { AdminPermissionsMutationDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-mutation.dto.js';
-import { AdminPermissionsDataDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-response.dto.js';
-import { AdminPermissionsResponsePresenter } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.response.presenter.js';
-import { AdminPermissionsRepository } from '@/backend_admin/admin_modules/admin_permissions/permissions_repositories/admin-permissions-repository.js';
+import { AdminPermissionsMutationDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-mutation.dto'
+import { AdminPermissionsDataDto } from '@/backend_admin/admin_modules/admin_permissions/permissions_dtos/admin-permissions-response.dto'
+import { AdminPermissionsResponsePresenter } from '@/backend_admin/admin_modules/admin_permissions/permissions_mappers/admin-permissions.response.presenter'
+import { AdminPermissionsRepository } from '@/backend_admin/admin_modules/admin_permissions/permissions_repositories/admin-permissions-repository'
 
 @Injectable()
 /**

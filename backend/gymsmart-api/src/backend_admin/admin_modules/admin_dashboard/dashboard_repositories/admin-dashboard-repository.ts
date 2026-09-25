@@ -2,17 +2,17 @@
 // FLOW: AdminDashboardService â†’ AdminDashboardRepository â†’ TypeORM â†’ PostgreSQL dashboard_snapshots.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminDashboardQueryDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-query.dto.js';
-import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity.js';
-import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper.js';
-import { resolveDashboardAdminQueryWindow } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_utils/admin-dashboard-query-window.utils.js';
+import { AdminDashboardQueryDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-query.dto'
+import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity'
+import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper'
+import { resolveDashboardAdminQueryWindow } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_utils/admin-dashboard-query-window.utils'
 
-import type { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain.js';
+import type { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain'
 
 @Injectable()
 /**

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-blacklist.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity.js';
-import { AdminBlacklistMapper } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.mapper.js';
+import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity'
+import { AdminBlacklistMapper } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.mapper'
 
 describe('AdminBlacklistMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Translates the TypeORM Admin data-export entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminDataExportEntity â†’ AdminDataExportMapper â†’ domain/response object.
-import { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain.js';
+import { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain'
 
-import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity.js';
+import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminDataExport.

@@ -2,9 +2,9 @@
 // FLOW: Notifications Repository â†’ AdminNotificationsEntity â†’ PostgreSQL admin_notifications table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminNotificationsStatus } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants.js';
+import { AdminNotificationsStatus } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants'
 
 @Entity('admin_notifications')
 @Index('IDX_admin_notifications_created_at', ['createdAt'])

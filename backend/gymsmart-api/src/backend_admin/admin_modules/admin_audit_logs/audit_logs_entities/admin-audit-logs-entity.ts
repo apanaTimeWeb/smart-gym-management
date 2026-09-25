@@ -2,9 +2,9 @@
 // FLOW: AuditLogs Repository â†’ AdminAuditLogsEntity â†’ PostgreSQL admin_audit_log_views table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminAuditLogsStatus } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants.js';
+import { AdminAuditLogsStatus } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants'
 
 @Entity('admin_audit_log_views')
 @Index('IDX_admin_audit_log_views_created_at', ['createdAt'])

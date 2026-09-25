@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-profile.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity.js';
-import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper.js';
+import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity'
+import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper'
 
 describe('AdminProfileMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

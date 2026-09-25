@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminReportsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity.js';
+import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity'
 
 /**
  * @description Defines the AdminReportsSeeder boundary for the admin_reports backend feature.

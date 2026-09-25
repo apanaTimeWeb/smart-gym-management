@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Usage response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminUsageStatus } from '@/backend_admin/admin_modules/admin_usage/admin-usage.constants.js';
+import { AdminUsageStatus } from '@/backend_admin/admin_modules/admin_usage/admin-usage.constants'
 
 /**
  * @description Defines the AdminUsageHistoryPointDto boundary for the admin_usage backend feature.

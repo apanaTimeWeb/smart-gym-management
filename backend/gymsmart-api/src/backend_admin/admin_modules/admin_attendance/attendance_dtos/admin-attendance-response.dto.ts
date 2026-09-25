@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Attendance response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminAttendanceStatus } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.constants.js';
+import { AdminAttendanceStatus } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.constants'
 
 /**
  * @description Defines the AdminAttendanceRecordDto boundary for the admin_attendance backend feature.

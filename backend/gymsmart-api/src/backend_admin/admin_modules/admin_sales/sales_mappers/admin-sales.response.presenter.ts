@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminSales domain data as the frontend response contract.
 // FLOW: Domain object -> AdminSalesResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain.js';
+import { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain'
 
-import { AdminSalesOverviewResponseDto, ReferralDataPointDto, AdminSalesMembershipReportResponseDto, AdminSalesPendingPaymentsResponseDto, AdminSalesAllMembershipsResponseDto, AdminSalesStoreOrdersResponseDto, AdminSalesStoreSummaryResponseDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto.js';
+import { AdminSalesOverviewResponseDto, ReferralDataPointDto, AdminSalesMembershipReportResponseDto, AdminSalesPendingPaymentsResponseDto, AdminSalesAllMembershipsResponseDto, AdminSalesStoreOrdersResponseDto, AdminSalesStoreSummaryResponseDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto'
 
 
 /**

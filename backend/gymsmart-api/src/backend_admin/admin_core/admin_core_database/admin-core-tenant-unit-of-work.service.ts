@@ -3,9 +3,9 @@
 import { Injectable } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
-import { AdminCoreTimeoutConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-timeout.config.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
+import { AdminCoreTimeoutConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-timeout.config'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
 
 import type { EntityManager, QueryRunner } from 'typeorm';
 

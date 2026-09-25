@@ -2,14 +2,14 @@
 // FLOW: Admin audit query service â†’ tenant DataSource â†’ AdminCoreAuditLogEntity â†’ pagination metadata.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { buildPaginationMeta } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { buildPaginationMeta } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminAuditLogsQueryDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-query.dto.js';
-import { AdminAuditLogsMapper } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_mappers/admin-audit-logs.mapper.js';
-import type { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain.js';
+import { AdminAuditLogsQueryDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-query.dto'
+import { AdminAuditLogsMapper } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_mappers/admin-audit-logs.mapper'
+import type { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain'
 
 @Injectable()
 /**

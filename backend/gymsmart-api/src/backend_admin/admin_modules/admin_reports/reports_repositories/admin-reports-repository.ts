@@ -2,18 +2,18 @@
 // FLOW: AdminReportsService â†’ AdminReportsRepository â†’ TypeORM â†’ PostgreSQL report_snapshots.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminReportsMutationDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-mutation.dto.js';
-import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto.js';
-import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity.js';
-import { AdminReportsMapper } from '@/backend_admin/admin_modules/admin_reports/reports_mappers/admin-reports.mapper.js';
-import { resolveReportsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-query-window.utils.js';
+import { AdminReportsMutationDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-mutation.dto'
+import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto'
+import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity'
+import { AdminReportsMapper } from '@/backend_admin/admin_modules/admin_reports/reports_mappers/admin-reports.mapper'
+import { resolveReportsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-query-window.utils'
 
-import type { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain.js';
+import type { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain'
 
 @Injectable()
 /**

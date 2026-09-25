@@ -2,12 +2,12 @@
 // FLOW: AdminMembersQueryController â†’ AdminMembersQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminMembersQueryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-query.dto.js';
-import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto.js';
-import { AdminMembersResponsePresenter } from '@/backend_admin/admin_modules/admin_members/members_mappers/admin-members.response.presenter.js';
-import { AdminMembersRepository } from '@/backend_admin/admin_modules/admin_members/members_repositories/admin-members-repository.js';
+import { AdminMembersQueryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-query.dto'
+import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto'
+import { AdminMembersResponsePresenter } from '@/backend_admin/admin_modules/admin_members/members_mappers/admin-members.response.presenter'
+import { AdminMembersRepository } from '@/backend_admin/admin_modules/admin_members/members_repositories/admin-members-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

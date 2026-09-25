@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin members entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminMembersEntity â†’ AdminMembersMapper â†’ domain/response object.
-import { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain.js';
+import { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain'
 
-import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto.js';
+import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto'
 
-import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity.js';
+import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminMembers.

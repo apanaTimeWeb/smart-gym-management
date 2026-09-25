@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminAnnouncements domain data as the frontend response contract.
 // FLOW: Domain object -> AdminAnnouncementsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminAnnouncementsDomainModel } from '@/backend_admin/admin_modules/admin_announcements/announcements_domain/admin-announcements.domain.js';
+import { AdminAnnouncementsDomainModel } from '@/backend_admin/admin_modules/admin_announcements/announcements_domain/admin-announcements.domain'
 
-import { AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto.js';
+import { AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto'
 
 
 /**

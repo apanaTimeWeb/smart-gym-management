@@ -3,12 +3,12 @@
 import { Controller, Get, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto.js';
+import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto'
 import { 
   AdminHrStaffListResponseDto, 
   AdminHrStaffDto, 
@@ -16,8 +16,8 @@ import {
   AdminHrSummaryDto, 
   AdminHrLedgerEntryDto, 
   AdminHrStaffPerformanceRecordDto 
-} from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto.js';
-import { AdminHrQueryService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-query.service.js';
+} from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto'
+import { AdminHrQueryService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-query.service'
 
 @ApiTags('Admin / hr')
 @Controller('admin/hr')

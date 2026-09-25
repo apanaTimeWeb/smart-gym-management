@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto.js';
-import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto, AdminFinanceExpenseResponseDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto.js';
-import { AdminFinanceResponsePresenter } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.response.presenter.js';
-import { AdminFinanceRepository } from '@/backend_admin/admin_modules/admin_finance/finance_repositories/admin-finance-repository.js';
+import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto'
+import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto, AdminFinanceExpenseResponseDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto'
+import { AdminFinanceResponsePresenter } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.response.presenter'
+import { AdminFinanceRepository } from '@/backend_admin/admin_modules/admin_finance/finance_repositories/admin-finance-repository'
 
 @Injectable()
 /**

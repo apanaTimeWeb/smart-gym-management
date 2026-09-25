@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminAuditLogsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminAuditLogsEntity } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_entities/admin-audit-logs-entity.js';
+import { AdminAuditLogsEntity } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_entities/admin-audit-logs-entity'
 
 /**
  * @description Defines the AdminAuditLogsSeeder boundary for the admin_audit_logs backend feature.

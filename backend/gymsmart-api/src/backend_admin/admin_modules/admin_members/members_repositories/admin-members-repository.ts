@@ -2,17 +2,17 @@
 // FLOW: AdminMembersService â†’ AdminMembersRepository â†’ TypeORM â†’ PostgreSQL members.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminMembersQueryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-query.dto.js';
-import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity.js';
-import { AdminMembersMapper } from '@/backend_admin/admin_modules/admin_members/members_mappers/admin-members.mapper.js';
-import { resolveMembersAdminQueryWindow } from '@/backend_admin/admin_modules/admin_members/members_utils/admin-members-query-window.utils.js';
+import { AdminMembersQueryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-query.dto'
+import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity'
+import { AdminMembersMapper } from '@/backend_admin/admin_modules/admin_members/members_mappers/admin-members.mapper'
+import { resolveMembersAdminQueryWindow } from '@/backend_admin/admin_modules/admin_members/members_utils/admin-members-query-window.utils'
 
-import type { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain.js';
+import type { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain'
 
 @Injectable()
 /**

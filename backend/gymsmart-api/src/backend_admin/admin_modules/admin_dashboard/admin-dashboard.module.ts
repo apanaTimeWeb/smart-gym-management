@@ -2,12 +2,12 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminDashboardQueryController } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_controllers/admin-dashboard-query.controller.js';
-import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper.js';
-import { AdminDashboardResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.response.presenter.js';
-import { AdminDashboardWidgetResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard-widget.response.presenter.js';
-import { AdminDashboardRepository } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_repositories/admin-dashboard-repository.js';
-import { AdminDashboardQueryService } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_services/admin-dashboard-query.service.js';
+import { AdminDashboardQueryController } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_controllers/admin-dashboard-query.controller'
+import { AdminDashboardMapper } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.mapper'
+import { AdminDashboardResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard.response.presenter'
+import { AdminDashboardWidgetResponsePresenter } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_mappers/admin-dashboard-widget.response.presenter'
+import { AdminDashboardRepository } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_repositories/admin-dashboard-repository'
+import { AdminDashboardQueryService } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_services/admin-dashboard-query.service'
 
 @Module({
   controllers: [AdminDashboardQueryController],

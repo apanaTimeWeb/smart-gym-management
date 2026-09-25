@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminBranchesSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity.js';
+import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity'
 
 /**
  * @description Defines the AdminBranchesSeeder boundary for the admin_branches backend feature.

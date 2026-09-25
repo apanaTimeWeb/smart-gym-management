@@ -2,17 +2,17 @@
 // FLOW: AdminGymHealthAlertsService â†’ AdminGymHealthAlertsRepository â†’ TypeORM â†’ PostgreSQL gym_health_alerts.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminGymHealthAlertsQueryDto } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_dtos/admin-gym-health-alerts-query.dto.js';
-import { AdminGymHealthAlertsEntity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_entities/admin-gym-health-alerts-entity.js';
-import { AdminGymHealthAlertsMapper } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.mapper.js';
-import { resolveGymHealthAlertsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_utils/admin-gym-health-alerts-query-window.utils.js';
+import { AdminGymHealthAlertsQueryDto } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_dtos/admin-gym-health-alerts-query.dto'
+import { AdminGymHealthAlertsEntity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_entities/admin-gym-health-alerts-entity'
+import { AdminGymHealthAlertsMapper } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.mapper'
+import { resolveGymHealthAlertsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_utils/admin-gym-health-alerts-query-window.utils'
 
-import type { AdminGymHealthAlertsDomainModel } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_domain/admin-gym-health-alerts.domain.js';
+import type { AdminGymHealthAlertsDomainModel } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_domain/admin-gym-health-alerts.domain'
 
 @Injectable()
 /**

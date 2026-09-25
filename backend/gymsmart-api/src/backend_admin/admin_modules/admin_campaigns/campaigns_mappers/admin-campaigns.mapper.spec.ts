@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-campaigns.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity.js';
-import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper.js';
+import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity'
+import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper'
 
 describe('AdminCampaignsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

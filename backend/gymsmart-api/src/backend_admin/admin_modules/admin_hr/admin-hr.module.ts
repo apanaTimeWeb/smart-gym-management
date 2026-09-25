@@ -2,13 +2,13 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminHrCommandController } from '@/backend_admin/admin_modules/admin_hr/hr_controllers/admin-hr-command.controller.js';
-import { AdminHrQueryController } from '@/backend_admin/admin_modules/admin_hr/hr_controllers/admin-hr-query.controller.js';
-import { AdminHrMapper } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.mapper.js';
-import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter.js';
-import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository.js';
-import { AdminHrCommandService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-command.service.js';
-import { AdminHrQueryService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-query.service.js';
+import { AdminHrCommandController } from '@/backend_admin/admin_modules/admin_hr/hr_controllers/admin-hr-command.controller'
+import { AdminHrQueryController } from '@/backend_admin/admin_modules/admin_hr/hr_controllers/admin-hr-query.controller'
+import { AdminHrMapper } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.mapper'
+import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter'
+import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository'
+import { AdminHrCommandService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-command.service'
+import { AdminHrQueryService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-query.service'
 
 @Module({
   controllers: [AdminHrQueryController, AdminHrCommandController],

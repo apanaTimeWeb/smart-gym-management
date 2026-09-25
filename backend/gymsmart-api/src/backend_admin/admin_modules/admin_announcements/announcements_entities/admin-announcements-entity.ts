@@ -2,9 +2,9 @@
 // FLOW: Announcements Repository â†’ AdminAnnouncementsEntity â†’ PostgreSQL admin_announcements table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminAnnouncementsStatus } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.constants.js';
+import { AdminAnnouncementsStatus } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.constants'
 
 @Entity('admin_announcements')
 @Index('IDX_admin_announcements_created_at', ['createdAt'])

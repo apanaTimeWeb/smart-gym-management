@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminReports domain data as the frontend response contract.
 // FLOW: Domain object -> AdminReportsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain.js';
+import { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain'
 
 
 /**

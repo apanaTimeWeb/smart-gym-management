@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminBlacklist domain data as the frontend response contract.
 // FLOW: Domain object -> AdminBlacklistResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminBlacklistDomainModel } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_domain/admin-blacklist.domain.js';
+import { AdminBlacklistDomainModel } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_domain/admin-blacklist.domain'
 
-import { AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto.js';
+import { AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto'
 
 
 /**

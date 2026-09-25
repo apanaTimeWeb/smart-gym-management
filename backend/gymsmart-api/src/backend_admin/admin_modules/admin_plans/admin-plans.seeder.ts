@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminPlansSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity.js';
+import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity'
 
 /**
  * @description Defines the AdminPlansSeeder boundary for the admin_plans backend feature.

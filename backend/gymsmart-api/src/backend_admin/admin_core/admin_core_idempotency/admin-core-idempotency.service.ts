@@ -4,8 +4,8 @@ import { createHash } from 'node:crypto';
 
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
 
 interface AdminCoreIdempotencyRecord<T> {
   state: 'IN_FLIGHT' | 'COMPLETE';

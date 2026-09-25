@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminMembersSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity.js';
+import { AdminMembersEntity } from '@/backend_admin/admin_modules/admin_members/members_entities/admin-members-entity'
 
 /**
  * @description Defines the AdminMembersSeeder boundary for the admin_members backend feature.

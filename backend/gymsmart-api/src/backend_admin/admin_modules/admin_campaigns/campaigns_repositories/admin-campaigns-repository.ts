@@ -2,15 +2,15 @@
 // FLOW: AdminCampaignsService â†’ AdminCampaignsRepository â†’ TypeORM â†’ PostgreSQL campaigns.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminCampaignsQueryDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-query.dto.js';
-import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity.js';
-import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper.js';
-import type { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain.js';
+import { AdminCampaignsQueryDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-query.dto'
+import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity'
+import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper'
+import type { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain'
 
 @Injectable()
 /**

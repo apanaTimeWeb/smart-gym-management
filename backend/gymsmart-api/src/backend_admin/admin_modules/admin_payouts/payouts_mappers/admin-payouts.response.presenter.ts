@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminPayouts domain data as the frontend response contract.
 // FLOW: Domain object -> AdminPayoutsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminPayoutsDomainModel } from '@/backend_admin/admin_modules/admin_payouts/payouts_domain/admin-payouts.domain.js';
+import { AdminPayoutsDomainModel } from '@/backend_admin/admin_modules/admin_payouts/payouts_domain/admin-payouts.domain'
 
-import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto.js';
+import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto'
 
 
 /**

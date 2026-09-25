@@ -3,16 +3,16 @@
 import { BadRequestException, Body, Controller, Delete, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminAnnouncementsIdDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-id.dto.js';
-import { AdminAnnouncementsMutationDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-mutation.dto.js';
-import { AdminAnnouncementDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto.js';
-import { AdminAnnouncementsCommandService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-command.service.js';
+import { AdminAnnouncementsIdDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-id.dto'
+import { AdminAnnouncementsMutationDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-mutation.dto'
+import { AdminAnnouncementDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto'
+import { AdminAnnouncementsCommandService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-command.service'
 
 @ApiTags('Admin / announcements')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

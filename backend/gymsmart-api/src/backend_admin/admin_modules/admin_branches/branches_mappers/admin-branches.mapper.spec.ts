@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-branches.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity.js';
-import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper.js';
+import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity'
+import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper'
 
 describe('AdminBranchesMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

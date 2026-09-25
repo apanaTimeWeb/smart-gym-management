@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminPayoutsQueryDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-query.dto.js';
-import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto.js';
-import { AdminPayoutsResponsePresenter } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.response.presenter.js';
-import { AdminPayoutsRepository } from '@/backend_admin/admin_modules/admin_payouts/payouts_repositories/admin-payouts-repository.js';
+import { AdminPayoutsQueryDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-query.dto'
+import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto'
+import { AdminPayoutsResponsePresenter } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.response.presenter'
+import { AdminPayoutsRepository } from '@/backend_admin/admin_modules/admin_payouts/payouts_repositories/admin-payouts-repository'
 
 @Injectable()
 /**

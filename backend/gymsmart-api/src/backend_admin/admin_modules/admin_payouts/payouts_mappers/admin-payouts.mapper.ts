@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin payouts entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminPayoutsEntity â†’ AdminPayoutsMapper â†’ domain/response object.
-import { AdminPayoutsDomainModel } from '@/backend_admin/admin_modules/admin_payouts/payouts_domain/admin-payouts.domain.js';
+import { AdminPayoutsDomainModel } from '@/backend_admin/admin_modules/admin_payouts/payouts_domain/admin-payouts.domain'
 
-import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity.js';
+import { AdminPayoutsEntity } from '@/backend_admin/admin_modules/admin_payouts/payouts_entities/admin-payouts-entity'
 
-import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto.js';
+import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/backend_admin/admin_modules/admin_payouts/payouts_dtos/admin-payouts-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminPayouts.

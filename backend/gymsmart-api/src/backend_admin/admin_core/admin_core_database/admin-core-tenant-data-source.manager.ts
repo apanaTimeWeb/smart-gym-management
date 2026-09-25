@@ -8,9 +8,9 @@ import { ConfigService } from '@nestjs/config';
 
 import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantEntityRegistry } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-entity-registry.js';
-import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantEntityRegistry } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-entity-registry'
+import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service'
 
 const POOL_BUDGET_ERROR = 'TENANT.DATASOURCE.POOL_BUDGET_EXHAUSTED';
 

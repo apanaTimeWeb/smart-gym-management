@@ -2,9 +2,9 @@
 // FLOW: Profile Repository â†’ AdminProfileEntity â†’ PostgreSQL admin_profiles table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminProfileStatus } from '@/backend_admin/admin_modules/admin_profile/admin-profile.constants.js';
+import { AdminProfileStatus } from '@/backend_admin/admin_modules/admin_profile/admin-profile.constants'
 
 @Entity('admin_profiles')
 @Index('IDX_admin_profiles_created_at', ['createdAt'])

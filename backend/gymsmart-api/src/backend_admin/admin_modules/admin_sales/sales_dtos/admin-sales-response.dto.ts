@@ -2,7 +2,7 @@
 // FLOW: Sales mapper -> endpoint envelope -> canonical ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { OverviewDataPointDto, ReferralDataPointDto, MembershipReportItemDto, MembershipTotalsDto, PendingPaymentMemberDto, MemberDto, StoreOrderDto, StoreSummaryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-nested-response.dto.js';
+import { OverviewDataPointDto, ReferralDataPointDto, MembershipReportItemDto, MembershipTotalsDto, PendingPaymentMemberDto, MemberDto, StoreOrderDto, StoreSummaryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-nested-response.dto'
 
 export { OverviewDataPointDto, ReferralDataPointDto, MembershipReportItemDto, MembershipTotalsDto, PendingPaymentMemberDto, MemberDto, StoreOrderDto, StoreSummaryDto };
 

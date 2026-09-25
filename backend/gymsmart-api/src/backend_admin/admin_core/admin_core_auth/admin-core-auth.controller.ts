@@ -4,9 +4,9 @@ import { BadRequestException, Body, Controller, HttpStatus, Post, Req, Res } fro
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreAuthLoginDto, AdminCoreAuthLoginResponseDto, AdminCoreAuthRefreshResponseDto } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.dto.js';
-import { AdminCoreAuthService } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.service.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
+import { AdminCoreAuthLoginDto, AdminCoreAuthLoginResponseDto, AdminCoreAuthRefreshResponseDto } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.dto'
+import { AdminCoreAuthService } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.service'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
 
 import type { Request, Response } from 'express';
 

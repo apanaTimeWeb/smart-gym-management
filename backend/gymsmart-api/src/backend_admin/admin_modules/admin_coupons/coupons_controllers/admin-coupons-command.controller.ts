@@ -3,16 +3,16 @@
 import { BadRequestException, Body, Controller, Delete, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminCouponsIdDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-id.dto.js';
-import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto.js';
-import { AdminCouponDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto.js';
-import { AdminCouponsCommandService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-command.service.js';
+import { AdminCouponsIdDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-id.dto'
+import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto'
+import { AdminCouponDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto'
+import { AdminCouponsCommandService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-command.service'
 
 @ApiTags('Admin / coupons')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

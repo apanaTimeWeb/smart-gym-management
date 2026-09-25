@@ -2,13 +2,13 @@
 // FLOW: AdminReportsCommandController -> AdminReportsCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
-import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
+import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service'
 
-import { AdminReportsMutationDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-mutation.dto.js';
-import { AdminReportsExportResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto.js';
-import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository.js';
+import { AdminReportsMutationDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-mutation.dto'
+import { AdminReportsExportResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto'
+import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository'
 
 @Injectable()
 /**

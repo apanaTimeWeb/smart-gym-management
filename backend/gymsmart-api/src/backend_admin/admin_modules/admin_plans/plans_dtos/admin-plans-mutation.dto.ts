@@ -5,9 +5,9 @@ import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsEnum } from 'class-validator';
 
-import { AdminCoreIsISO4217CurrencyCode } from '@/backend_admin/admin_core/admin_core_currency/admin-core-is-iso4217-currency-code.decorator.js';
+import { AdminCoreIsISO4217CurrencyCode } from '@/backend_admin/admin_core/admin_core_currency/admin-core-is-iso4217-currency-code.decorator'
 
-import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants.js';
+import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants'
 
 /**
  * @description Defines the AdminPlansMutationDto boundary for the admin_plans backend feature.

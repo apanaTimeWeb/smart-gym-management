@@ -2,9 +2,9 @@
 // FLOW: Attendance Repository â†’ AdminAttendanceEntity â†’ PostgreSQL admin_attendance_records table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminAttendanceStatus } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.constants.js';
+import { AdminAttendanceStatus } from '@/backend_admin/admin_modules/admin_attendance/admin-attendance.constants'
 
 @Entity('admin_attendance_records')
 @Index('IDX_admin_attendance_records_created_at', ['createdAt'])

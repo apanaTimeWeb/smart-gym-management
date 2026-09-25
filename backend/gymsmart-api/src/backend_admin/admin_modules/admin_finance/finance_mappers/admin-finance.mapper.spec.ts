@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-finance.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity.js';
-import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper.js';
+import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity'
+import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper'
 
 describe('AdminFinanceMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

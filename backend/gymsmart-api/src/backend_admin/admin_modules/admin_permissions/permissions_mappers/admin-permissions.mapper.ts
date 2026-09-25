@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Translates the TypeORM Admin permissions entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminPermissionsEntity â†’ AdminPermissionsMapper â†’ domain/response object.
-import { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain.js';
+import { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain'
 
-import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity.js';
+import { AdminPermissionsEntity } from '@/backend_admin/admin_modules/admin_permissions/permissions_entities/admin-permissions-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminPermissions.

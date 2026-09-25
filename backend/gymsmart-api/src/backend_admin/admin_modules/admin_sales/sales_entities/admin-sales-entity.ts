@@ -2,9 +2,9 @@
 // FLOW: Sales Repository â†’ AdminSalesEntity â†’ PostgreSQL admin_sales_snapshots table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminSalesStatus } from '@/backend_admin/admin_modules/admin_sales/admin-sales.constants.js';
+import { AdminSalesStatus } from '@/backend_admin/admin_modules/admin_sales/admin-sales.constants'
 
 @Entity('admin_sales_snapshots')
 @Index('IDX_admin_sales_snapshots_created_at', ['createdAt'])

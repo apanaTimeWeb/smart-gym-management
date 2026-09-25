@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminMembers domain data as the frontend response contract.
 // FLOW: Domain object -> AdminMembersResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain.js';
+import { AdminMembersDomainModel } from '@/backend_admin/admin_modules/admin_members/members_domain/admin-members.domain'
 
-import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto.js';
+import { AdminMemberDto, AdminMembersSummaryDto } from '@/backend_admin/admin_modules/admin_members/members_dtos/admin-members-response.dto'
 
 
 /**

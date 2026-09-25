@@ -2,7 +2,7 @@
 // FLOW: Dashboard query -> mapper -> response DTO nested fields.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminDashboardSeverity } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants.js';
+import { AdminDashboardSeverity } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants'
 
 /**
  * @description Defines the DashboardMemberGrowth boundary for the admin_dashboard backend feature.

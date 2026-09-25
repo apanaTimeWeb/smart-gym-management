@@ -2,7 +2,7 @@
 // FLOW: Centralized environment reader -> ConfigModule validation -> app namespace -> bootstrap.
 import { registerAs } from '@nestjs/config';
 
-import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment.js';
+import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment'
 
 /**
  * @description Registers HTTP process settings for the Admin application.

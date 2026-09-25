@@ -2,9 +2,9 @@
 // FLOW: Campaigns Repository â†’ AdminCampaignsEntity â†’ PostgreSQL admin_campaigns table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminCampaignsStatus } from '@/backend_admin/admin_modules/admin_campaigns/admin-campaigns.constants.js';
+import { AdminCampaignsStatus } from '@/backend_admin/admin_modules/admin_campaigns/admin-campaigns.constants'
 
 @Entity('admin_campaigns')
 @Index('IDX_admin_campaigns_created_at', ['createdAt'])

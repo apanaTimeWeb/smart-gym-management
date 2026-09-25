@@ -2,12 +2,12 @@
 // FLOW: AdminCouponsCommandController -> AdminCouponsCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
-import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto.js';
-import { AdminCouponsResponsePresenter } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.response.presenter.js';
-import { AdminCouponsRepository } from '@/backend_admin/admin_modules/admin_coupons/coupons_repositories/admin-coupons-repository.js';
+import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto'
+import { AdminCouponsResponsePresenter } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.response.presenter'
+import { AdminCouponsRepository } from '@/backend_admin/admin_modules/admin_coupons/coupons_repositories/admin-coupons-repository'
 
 @Injectable()
 /**

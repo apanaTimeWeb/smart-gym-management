@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminUsageSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminUsageEntity } from '@/backend_admin/admin_modules/admin_usage/usage_entities/admin-usage-entity.js';
+import { AdminUsageEntity } from '@/backend_admin/admin_modules/admin_usage/usage_entities/admin-usage-entity'
 
 /**
  * @description Defines the AdminUsageSeeder boundary for the admin_usage backend feature.

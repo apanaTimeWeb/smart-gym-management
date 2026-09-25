@@ -2,9 +2,9 @@
 // FLOW: Branches Repository â†’ AdminBranchesEntity â†’ PostgreSQL admin_branches table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminBranchesStatus } from '@/backend_admin/admin_modules/admin_branches/admin-branches.constants.js';
+import { AdminBranchesStatus } from '@/backend_admin/admin_modules/admin_branches/admin-branches.constants'
 
 @Entity('admin_branches')
 @Index('IDX_admin_branches_created_at', ['createdAt'])

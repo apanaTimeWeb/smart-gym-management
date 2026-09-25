@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Coupons response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants.js';
+import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants'
 
 /**
  * @description Defines the AdminCouponDto boundary for the admin_coupons backend feature.

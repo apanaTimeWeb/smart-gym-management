@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ GymHealthAlerts response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminGymHealthAlertsSeverity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants.js';
+import { AdminGymHealthAlertsSeverity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants'
 
 /**
  * @description Defines the AdminGymHealthAlertDto boundary for the admin_gym-health-alerts backend feature.

@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminNotificationsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity.js';
+import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity'
 
 /**
  * @description Defines the AdminNotificationsSeeder boundary for the admin_notifications backend feature.

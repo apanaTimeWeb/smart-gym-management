@@ -2,7 +2,7 @@
 // FLOW: Exception â†’ AdminCoreHttpExceptionFilter â†’ errorCode/statusCode/message â†’ frontend.
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 
-import { normalizeCoreErrorCode } from '@/backend_admin/admin_core/admin_core_response/admin-core-error-code.js';
+import { normalizeCoreErrorCode } from '@/backend_admin/admin_core/admin_core_response/admin-core-error-code'
 
 import type { Response } from 'express';
 

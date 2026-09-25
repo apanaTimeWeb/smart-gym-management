@@ -4,14 +4,14 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 
 import argon2 from 'argon2';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
-import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
+import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
 
-import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto.js';
-import { AdminSettingsResponsePresenter } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.response.presenter.js';
-import { AdminSettingsRepository } from '@/backend_admin/admin_modules/admin_settings/settings_repositories/admin-settings-repository.js';
+import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto'
+import { AdminSettingsResponsePresenter } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.response.presenter'
+import { AdminSettingsRepository } from '@/backend_admin/admin_modules/admin_settings/settings_repositories/admin-settings-repository'
 
 @Injectable()
 /**

@@ -2,12 +2,12 @@
 // FLOW: AdminCampaignsQueryController â†’ AdminCampaignsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCampaignsQueryDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-query.dto.js';
-import { AdminCampaignsAudienceDto, AdminCampaignsTemplateDto, AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto.js';
-import { AdminCampaignsResponsePresenter } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.response.presenter.js';
-import { AdminCampaignsRepository } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_repositories/admin-campaigns-repository.js';
+import { AdminCampaignsQueryDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-query.dto'
+import { AdminCampaignsAudienceDto, AdminCampaignsTemplateDto, AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto'
+import { AdminCampaignsResponsePresenter } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.response.presenter'
+import { AdminCampaignsRepository } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_repositories/admin-campaigns-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

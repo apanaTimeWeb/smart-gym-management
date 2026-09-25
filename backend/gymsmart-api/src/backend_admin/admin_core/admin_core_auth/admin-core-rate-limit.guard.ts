@@ -2,8 +2,8 @@
 // FLOW: Request â†’ AdminCoreRateLimitGuard â†’ AdminCoreRateLimitConfig â†’ Redis window counter.
 import { CanActivate, ExecutionContext, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
-import { AdminCoreRateLimitConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-rate-limit.config.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
+import { AdminCoreRateLimitConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-rate-limit.config'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
 
 @Injectable()
 /**

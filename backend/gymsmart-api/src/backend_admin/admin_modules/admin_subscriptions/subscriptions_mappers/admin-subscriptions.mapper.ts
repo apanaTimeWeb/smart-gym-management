@@ -1,16 +1,16 @@
 // RESPONSIBILITY: Translates subscription persistence entities into ORM-independent Admin subscription domain contracts.
 // FLOW: TypeORM master/tenant entity -> AdminSubscriptionsMapper -> domain object -> service.
-import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity.js';
+import { AdminCoreMasterInvoiceEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-invoice.entity'
 
-import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity.js';
+import { AdminCoreMasterPaymentMethodEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-payment-method.entity'
 
-import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity.js';
+import { AdminCoreMasterPlanEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-plan.entity'
 
-import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity.js';
+import { AdminCoreMasterSubscriptionEntity } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-subscription.entity'
 
-import { AdminSubscriptionsDomainModel, AdminSubscriptionDomain, AdminSubscriptionInvoiceDomain, AdminSubscriptionPaymentMethodDomain, AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain.js';
+import { AdminSubscriptionsDomainModel, AdminSubscriptionDomain, AdminSubscriptionInvoiceDomain, AdminSubscriptionPaymentMethodDomain, AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain'
 
-import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity.js';
+import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminSubscriptions.

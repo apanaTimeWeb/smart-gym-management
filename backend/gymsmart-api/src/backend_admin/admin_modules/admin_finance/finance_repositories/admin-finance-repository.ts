@@ -2,17 +2,17 @@
 // FLOW: AdminFinanceService â†’ AdminFinanceRepository â†’ TypeORM â†’ PostgreSQL payment_transactions.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto.js';
-import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity.js';
-import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper.js';
-import { resolveFinanceAdminQueryWindow } from '@/backend_admin/admin_modules/admin_finance/finance_utils/admin-finance-query-window.utils.js';
+import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto'
+import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity'
+import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper'
+import { resolveFinanceAdminQueryWindow } from '@/backend_admin/admin_modules/admin_finance/finance_utils/admin-finance-query-window.utils'
 
-import type { AdminFinanceDomainModel } from '@/backend_admin/admin_modules/admin_finance/finance_domain/admin-finance.domain.js';
+import type { AdminFinanceDomainModel } from '@/backend_admin/admin_modules/admin_finance/finance_domain/admin-finance.domain'
 
 @Injectable()
 /**

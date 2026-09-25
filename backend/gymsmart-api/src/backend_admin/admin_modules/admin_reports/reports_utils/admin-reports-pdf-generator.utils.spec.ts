@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-reports-pdf-generator.utils.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminReportsPdfGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-pdf-generator.utils.js';
+import { AdminReportsPdfGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-pdf-generator.utils'
 
 describe('AdminReportsPdfGeneratorUtils', () => {
   it('generates a PDF artifact with the required signature and report title', () => {

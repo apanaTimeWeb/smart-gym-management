@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminBranches domain data as the frontend response contract.
 // FLOW: Domain object -> AdminBranchesResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain.js';
+import { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain'
 
 
 /**

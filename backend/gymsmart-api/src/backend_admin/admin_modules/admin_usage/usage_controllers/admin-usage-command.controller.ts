@@ -3,16 +3,16 @@
 import { Body, Controller, Delete, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminUsageIdDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-id.dto.js';
-import { AdminUsageMutationDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-mutation.dto.js';
-import { AdminUsageUpgradeRequestDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-response.dto.js';
-import { AdminUsageOrchestratorService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-orchestrator.service.js';
+import { AdminUsageIdDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-id.dto'
+import { AdminUsageMutationDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-mutation.dto'
+import { AdminUsageUpgradeRequestDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-response.dto'
+import { AdminUsageOrchestratorService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-orchestrator.service'
 
 @ApiTags('Admin / usage')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

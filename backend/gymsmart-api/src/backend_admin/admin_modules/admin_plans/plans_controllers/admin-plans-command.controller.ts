@@ -3,16 +3,16 @@
 import { BadRequestException, Body, Controller, Delete, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminPlansIdDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-id.dto.js';
-import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto.js';
-import { AdminPlanDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto.js';
-import { AdminPlansCommandService } from '@/backend_admin/admin_modules/admin_plans/plans_services/admin-plans-command.service.js';
+import { AdminPlansIdDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-id.dto'
+import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto'
+import { AdminPlanDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto'
+import { AdminPlansCommandService } from '@/backend_admin/admin_modules/admin_plans/plans_services/admin-plans-command.service'
 
 @ApiTags('Admin / plans')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

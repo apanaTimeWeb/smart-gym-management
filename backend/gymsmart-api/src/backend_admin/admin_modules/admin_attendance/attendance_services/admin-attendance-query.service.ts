@@ -3,12 +3,12 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminAttendanceQueryDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-query.dto.js';
-import { AdminAttendanceRecordDto, AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto.js';
-import { AdminAttendanceResponsePresenter } from '@/backend_admin/admin_modules/admin_attendance/attendance_mappers/admin-attendance.response.presenter.js';
-import { AdminAttendanceRepository } from '@/backend_admin/admin_modules/admin_attendance/attendance_repositories/admin-attendance-repository.js';
+import { AdminAttendanceQueryDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-query.dto'
+import { AdminAttendanceRecordDto, AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto'
+import { AdminAttendanceResponsePresenter } from '@/backend_admin/admin_modules/admin_attendance/attendance_mappers/admin-attendance.response.presenter'
+import { AdminAttendanceRepository } from '@/backend_admin/admin_modules/admin_attendance/attendance_repositories/admin-attendance-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

@@ -5,9 +5,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto.js';
+import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
-import { AdminBlacklistStatus } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants.js';
+import { AdminBlacklistStatus } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants'
 
 /**
  * @description Defines the AdminBlacklistQueryDto boundary for the admin_blacklist backend feature.

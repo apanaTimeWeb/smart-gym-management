@@ -2,16 +2,16 @@
 // FLOW: AdminProfileService â†’ AdminProfileRepository â†’ TypeORM â†’ PostgreSQL admin_profiles.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminProfileMutationDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-mutation.dto.js';
-import { AdminProfileQueryDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-query.dto.js';
-import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity.js';
-import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper.js';
-import type { AdminProfileDomainModel } from '@/backend_admin/admin_modules/admin_profile/profile_domain/admin-profile.domain.js';
+import { AdminProfileMutationDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-mutation.dto'
+import { AdminProfileQueryDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-query.dto'
+import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity'
+import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper'
+import type { AdminProfileDomainModel } from '@/backend_admin/admin_modules/admin_profile/profile_domain/admin-profile.domain'
 
 @Injectable()
 /**

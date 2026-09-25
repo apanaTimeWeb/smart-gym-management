@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Hr response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants.js';
+import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
 
 /**
  * @description Defines the AdminHrStaffDto boundary for the admin_hr backend feature.

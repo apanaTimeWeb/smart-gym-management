@@ -2,10 +2,10 @@
 // FLOW: Feature mutation -> AdminCoreJobQueueService -> post-commit callback -> Redis queue.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message.js';
-import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message'
+import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
 
 @Injectable()
 /**

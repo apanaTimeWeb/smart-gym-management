@@ -5,7 +5,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID, IsEnum } from 'class-validator';
 
-import { AdminAuditLogsSeverity } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants.js';
+import { AdminAuditLogsSeverity } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants'
 
 /**
  * @description Defines the AdminAuditLogsMutationDto boundary for the admin_audit_logs backend feature.

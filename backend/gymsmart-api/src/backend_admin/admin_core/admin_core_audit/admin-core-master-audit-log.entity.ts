@@ -2,7 +2,7 @@
 // FLOW: Master transaction -> AdminCoreAuditTrailService -> master audit_logs.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
 @Entity('audit_logs')
 @Index('IDX_audit_logs_timestamp', ['timestamp'])

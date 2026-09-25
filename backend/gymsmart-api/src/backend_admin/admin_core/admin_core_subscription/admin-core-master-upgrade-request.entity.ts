@@ -2,7 +2,7 @@
 // FLOW: Master DB â†’ entity â†’ Admin subscription/plan services â†’ canonical API response.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-import { AdminCoreMasterUpgradeRequestStatus } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-upgrade-request-status.enum.js';
+import { AdminCoreMasterUpgradeRequestStatus } from '@/backend_admin/admin_core/admin_core_subscription/admin-core-master-upgrade-request-status.enum'
 
 @Entity('upgrade_requests_master')
 @Index('IDX_upgrade_requests_master_tenant_id', ['tenantId'])

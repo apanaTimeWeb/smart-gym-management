@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminNotifications domain data as the frontend response contract.
 // FLOW: Domain object -> AdminNotificationsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminNotificationsDomainModel } from '@/backend_admin/admin_modules/admin_notifications/notifications_domain/admin-notifications.domain.js';
+import { AdminNotificationsDomainModel } from '@/backend_admin/admin_modules/admin_notifications/notifications_domain/admin-notifications.domain'
 
 
 /**

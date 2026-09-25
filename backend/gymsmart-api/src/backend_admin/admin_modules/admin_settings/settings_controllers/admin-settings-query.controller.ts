@@ -3,14 +3,14 @@
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto.js';
-import { AdminSettingsResponseDto, AdminNotificationsSettingsDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto.js';
-import { AdminSettingsQueryService } from '@/backend_admin/admin_modules/admin_settings/settings_services/admin-settings-query.service.js';
+import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto'
+import { AdminSettingsResponseDto, AdminNotificationsSettingsDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto'
+import { AdminSettingsQueryService } from '@/backend_admin/admin_modules/admin_settings/settings_services/admin-settings-query.service'
 
 @ApiTags('Admin / settings')
 @Controller('admin/settings')

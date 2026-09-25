@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminProfileSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity.js';
+import { AdminProfileEntity } from '@/backend_admin/admin_modules/admin_profile/profile_entities/admin-profile-entity'
 
 /**
  * @description Defines the AdminProfileSeeder boundary for the admin_profile backend feature.

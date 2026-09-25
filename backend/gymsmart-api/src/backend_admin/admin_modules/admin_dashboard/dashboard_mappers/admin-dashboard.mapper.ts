@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin dashboard entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminDashboardEntity â†’ AdminDashboardMapper â†’ domain/response object.
-import { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain.js';
+import { AdminDashboardDomainModel } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_domain/admin-dashboard.domain'
 
-import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto.js';
+import { AdminDashboardResponseDto, AdminDashboardKpisResponseDto } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-response.dto'
 
-import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity.js';
+import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminDashboard.

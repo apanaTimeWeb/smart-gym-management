@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminFinanceSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity.js';
+import { AdminFinanceEntity } from '@/backend_admin/admin_modules/admin_finance/finance_entities/admin-finance-entity'
 
 /**
  * @description Defines the AdminFinanceSeeder boundary for the admin_finance backend feature.

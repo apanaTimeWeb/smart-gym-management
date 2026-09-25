@@ -3,16 +3,16 @@
 import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminHrIdDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-id.dto.js';
-import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto.js';
-import { AdminHrStaffDto, AdminHrPayrollDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto.js';
-import { AdminHrCommandService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-command.service.js';
+import { AdminHrIdDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-id.dto'
+import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto'
+import { AdminHrStaffDto, AdminHrPayrollDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto'
+import { AdminHrCommandService } from '@/backend_admin/admin_modules/admin_hr/hr_services/admin-hr-command.service'
 
 @ApiTags('Admin / hr')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

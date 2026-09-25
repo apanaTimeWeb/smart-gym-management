@@ -2,16 +2,16 @@
 // FLOW: AdminSettingsService â†’ AdminSettingsRepository â†’ TypeORM â†’ PostgreSQL admin_settings.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto.js';
-import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto.js';
-import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity.js';
-import { AdminSettingsMapper } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.mapper.js';
-import type { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain.js';
+import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto'
+import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto'
+import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity'
+import { AdminSettingsMapper } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.mapper'
+import type { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain'
 
 @Injectable()
 /**

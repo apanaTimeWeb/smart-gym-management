@@ -2,19 +2,19 @@
 // FLOW: AdminHrService â†’ AdminHrRepository â†’ TypeORM â†’ PostgreSQL staff.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto.js';
-import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto.js';
-import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity.js';
-import { AdminHrMapper } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.mapper.js';
-import { resolveHrAdminQueryWindow } from '@/backend_admin/admin_modules/admin_hr/hr_utils/admin-hr-query-window.utils.js';
+import { AdminHrMutationDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation.dto'
+import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto'
+import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity'
+import { AdminHrMapper } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.mapper'
+import { resolveHrAdminQueryWindow } from '@/backend_admin/admin_modules/admin_hr/hr_utils/admin-hr-query-window.utils'
 
-import type { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain.js';
+import type { AdminHrDomainModel } from '@/backend_admin/admin_modules/admin_hr/hr_domain/admin-hr.domain'
 
 @Injectable()
 /**

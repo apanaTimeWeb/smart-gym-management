@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminSalesQueryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-query.dto.js';
+import { AdminSalesQueryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-query.dto'
 import { AdminSalesOverviewResponseDto,
   ReferralDataPointDto,
   AdminSalesMembershipReportResponseDto,
@@ -11,9 +11,9 @@ import { AdminSalesOverviewResponseDto,
   AdminSalesAllMembershipsResponseDto,
   AdminSalesStoreOrdersResponseDto,
   AdminSalesStoreSummaryResponseDto
-} from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto.js';
-import { AdminSalesResponsePresenter } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.response.presenter.js';
-import { AdminSalesRepository } from '@/backend_admin/admin_modules/admin_sales/sales_repositories/admin-sales-repository.js';
+} from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto'
+import { AdminSalesResponsePresenter } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.response.presenter'
+import { AdminSalesRepository } from '@/backend_admin/admin_modules/admin_sales/sales_repositories/admin-sales-repository'
 
 @Injectable()
 /**

@@ -2,13 +2,13 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminGymHealthAlertsCommandController } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_controllers/admin-gym-health-alerts-command.controller.js';
-import { AdminGymHealthAlertsQueryController } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_controllers/admin-gym-health-alerts-query.controller.js';
-import { AdminGymHealthAlertsMapper } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.mapper.js';
-import { AdminGymHealthAlertsResponsePresenter } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.response.presenter.js';
-import { AdminGymHealthAlertsRepository } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_repositories/admin-gym-health-alerts-repository.js';
-import { AdminGymHealthAlertsCommandService } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_services/admin-gym-health-alerts-command.service.js';
-import { AdminGymHealthAlertsQueryService } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_services/admin-gym-health-alerts-query.service.js';
+import { AdminGymHealthAlertsCommandController } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_controllers/admin-gym-health-alerts-command.controller'
+import { AdminGymHealthAlertsQueryController } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_controllers/admin-gym-health-alerts-query.controller'
+import { AdminGymHealthAlertsMapper } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.mapper'
+import { AdminGymHealthAlertsResponsePresenter } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_mappers/admin-gym-health-alerts.response.presenter'
+import { AdminGymHealthAlertsRepository } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_repositories/admin-gym-health-alerts-repository'
+import { AdminGymHealthAlertsCommandService } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_services/admin-gym-health-alerts-command.service'
+import { AdminGymHealthAlertsQueryService } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_services/admin-gym-health-alerts-query.service'
 
 @Module({
   controllers: [AdminGymHealthAlertsQueryController, AdminGymHealthAlertsCommandController],

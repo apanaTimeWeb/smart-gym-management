@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin attendance entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminAttendanceEntity â†’ AdminAttendanceMapper â†’ domain/response object.
-import { AdminAttendanceDomainModel } from '@/backend_admin/admin_modules/admin_attendance/attendance_domain/admin-attendance.domain.js';
+import { AdminAttendanceDomainModel } from '@/backend_admin/admin_modules/admin_attendance/attendance_domain/admin-attendance.domain'
 
-import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity.js';
+import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity'
 
-import { AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto.js';
+import { AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminAttendance.

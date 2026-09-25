@@ -2,9 +2,9 @@
 // FLOW: Blacklist Repository â†’ AdminBlacklistEntity â†’ PostgreSQL admin_blacklisted_members table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminBlacklistStatus } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants.js';
+import { AdminBlacklistStatus } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants'
 
 @Entity('admin_blacklisted_members')
 @Index('IDX_admin_blacklisted_members_created_at', ['createdAt'])

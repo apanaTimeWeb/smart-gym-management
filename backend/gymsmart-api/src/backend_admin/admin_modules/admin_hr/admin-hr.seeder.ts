@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminHrSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity.js';
+import { AdminHrEntity } from '@/backend_admin/admin_modules/admin_hr/hr_entities/admin-hr-entity'
 
 /**
  * @description Defines the AdminHrSeeder boundary for the admin_hr backend feature.

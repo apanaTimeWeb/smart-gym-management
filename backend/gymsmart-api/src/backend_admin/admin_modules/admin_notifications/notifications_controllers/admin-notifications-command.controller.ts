@@ -3,16 +3,16 @@
 import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminNotificationsIdDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-id.dto.js';
-import { AdminNotificationsMutationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-mutation.dto.js';
-import { AdminNotificationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-response.dto.js';
-import { AdminNotificationsCommandService } from '@/backend_admin/admin_modules/admin_notifications/notifications_services/admin-notifications-command.service.js';
+import { AdminNotificationsIdDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-id.dto'
+import { AdminNotificationsMutationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-mutation.dto'
+import { AdminNotificationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-response.dto'
+import { AdminNotificationsCommandService } from '@/backend_admin/admin_modules/admin_notifications/notifications_services/admin-notifications-command.service'
 
 @ApiTags('Admin / notifications')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

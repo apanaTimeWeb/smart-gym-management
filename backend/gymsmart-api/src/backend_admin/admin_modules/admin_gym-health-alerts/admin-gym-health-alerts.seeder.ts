@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminGymHealthAlertsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminGymHealthAlertsEntity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_entities/admin-gym-health-alerts-entity.js';
+import { AdminGymHealthAlertsEntity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/gym-health-alerts_entities/admin-gym-health-alerts-entity'
 
 /**
  * @description Defines the AdminGymHealthAlertsSeeder boundary for the admin_gym-health-alerts backend feature.

@@ -3,12 +3,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
 
-import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto.js';
-import { AdminReportsDataResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto.js';
-import { AdminReportsResponsePresenter } from '@/backend_admin/admin_modules/admin_reports/reports_mappers/admin-reports.response.presenter.js';
-import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository.js';
+import { AdminReportsQueryDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-query.dto'
+import { AdminReportsDataResponseDto } from '@/backend_admin/admin_modules/admin_reports/reports_dtos/admin-reports-response.dto'
+import { AdminReportsResponsePresenter } from '@/backend_admin/admin_modules/admin_reports/reports_mappers/admin-reports.response.presenter'
+import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository'
 
 @Injectable()
 /**

@@ -3,12 +3,12 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminAnnouncementsQueryDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-query.dto.js';
-import { AdminAnnouncementDto, AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto.js';
-import { AdminAnnouncementsResponsePresenter } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.response.presenter.js';
-import { AdminAnnouncementsRepository } from '@/backend_admin/admin_modules/admin_announcements/announcements_repositories/admin-announcements-repository.js';
+import { AdminAnnouncementsQueryDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-query.dto'
+import { AdminAnnouncementDto, AdminAnnouncementKPIDataDto } from '@/backend_admin/admin_modules/admin_announcements/announcements_dtos/admin-announcements-response.dto'
+import { AdminAnnouncementsResponsePresenter } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.response.presenter'
+import { AdminAnnouncementsRepository } from '@/backend_admin/admin_modules/admin_announcements/announcements_repositories/admin-announcements-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

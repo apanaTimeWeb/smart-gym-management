@@ -5,8 +5,8 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { firstValueFrom } from 'rxjs';
 import { from, Observable } from 'rxjs';
 
-import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service.js';
-import { AdminCoreTenantUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-unit-of-work.service.js';
+import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service'
+import { AdminCoreTenantUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-unit-of-work.service'
 
 @Injectable()
 /**

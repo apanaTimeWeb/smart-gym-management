@@ -2,17 +2,17 @@
 // FLOW: AdminSalesService â†’ AdminSalesRepository â†’ TypeORM â†’ PostgreSQL sales_snapshots.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminSalesQueryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-query.dto.js';
-import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity.js';
-import { AdminSalesMapper } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.mapper.js';
-import { resolveSalesAdminQueryWindow } from '@/backend_admin/admin_modules/admin_sales/sales_utils/admin-sales-query-window.utils.js';
+import { AdminSalesQueryDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-query.dto'
+import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity'
+import { AdminSalesMapper } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.mapper'
+import { resolveSalesAdminQueryWindow } from '@/backend_admin/admin_modules/admin_sales/sales_utils/admin-sales-query-window.utils'
 
-import type { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain.js';
+import type { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain'
 
 @Injectable()
 /**

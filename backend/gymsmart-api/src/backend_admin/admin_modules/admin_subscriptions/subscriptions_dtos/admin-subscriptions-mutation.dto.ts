@@ -5,7 +5,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID, IsEnum, IsInt } from 'class-validator';
 
-import { AdminSubscriptionsStatus, AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants.js';
+import { AdminSubscriptionsStatus, AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants'
 
 /**
  * @description Defines the AdminSubscriptionsMutationDto boundary for the admin_subscriptions backend feature.

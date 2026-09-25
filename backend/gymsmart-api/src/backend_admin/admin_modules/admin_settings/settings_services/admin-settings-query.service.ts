@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto.js';
-import { AdminSettingsResponseDto, AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto.js';
-import { AdminSettingsResponsePresenter } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.response.presenter.js';
-import { AdminSettingsRepository } from '@/backend_admin/admin_modules/admin_settings/settings_repositories/admin-settings-repository.js';
+import { AdminSettingsQueryDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-query.dto'
+import { AdminSettingsResponseDto, AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto'
+import { AdminSettingsResponsePresenter } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.response.presenter'
+import { AdminSettingsRepository } from '@/backend_admin/admin_modules/admin_settings/settings_repositories/admin-settings-repository'
 
 @Injectable()
 /**

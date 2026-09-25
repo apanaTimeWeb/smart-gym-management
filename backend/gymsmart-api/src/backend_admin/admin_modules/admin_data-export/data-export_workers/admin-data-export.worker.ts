@@ -8,18 +8,18 @@ import { join } from 'node:path';
 
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service.js';
-import { CORE_EVENT_REGISTRY } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants.js';
-import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message.js';
-import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service'
+import { CORE_EVENT_REGISTRY } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants'
+import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message'
+import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
 
-import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository.js';
-import { AdminDataExportStreamingZipUtils } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-streaming-zip.utils.js';
+import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository'
+import { AdminDataExportStreamingZipUtils } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-streaming-zip.utils'
 
 export interface AdminDataExportJobPayload { dataType?: string; format?: string; gymIds?: string[]; dateFrom?: string; dateTo?: string; }
 type ExportRow = Record<string, unknown>;

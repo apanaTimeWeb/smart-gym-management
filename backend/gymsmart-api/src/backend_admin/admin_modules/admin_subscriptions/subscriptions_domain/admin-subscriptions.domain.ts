@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-subscriptions.domain.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminSubscriptionsStatus, AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants.js';
+import { AdminSubscriptionsStatus, AdminSubscriptionsTier } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants'
 
 // RESPONSIBILITY: Defines ORM-independent domain contracts for Admin subscription, plan, invoice, and payment-method flows.
 // FLOW: Master ORM entities -> AdminSubscriptionsMapper -> domain objects -> services -> response DTOs.

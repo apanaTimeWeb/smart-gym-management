@@ -2,19 +2,19 @@
 // FLOW: AdminSubscriptionsQueryController â†’ AdminSubscriptionsQueryService â†’ repository â†’ frontend contract.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminSubscriptionsQueryDto } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-query.dto.js';
+import { AdminSubscriptionsQueryDto } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-query.dto'
 import { 
   AdminCurrentSubscriptionDto, 
   AdminSaaSPlanDto, 
   AdminInvoiceDto, 
   AdminPaymentMethodDto, 
   AdminSubscriptionKPIDataDto 
-} from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-response.dto.js';
-import { AdminSubscriptionsRepository } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_repositories/admin-subscriptions-repository.js';
+} from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_dtos/admin-subscriptions-response.dto'
+import { AdminSubscriptionsRepository } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_repositories/admin-subscriptions-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import type { AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain.js';
+import type { AdminSubscriptionPlanDomain } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_domain/admin-subscriptions.domain'
 
 @Injectable()
 /**

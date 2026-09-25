@@ -4,14 +4,14 @@ import type { ReadStream } from 'node:fs';
 
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
 
-import { AdminDataExportQueryDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-query.dto.js';
-import { AdminExportJobDto, AdminDataExportKPIDataDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-response.dto.js';
-import { AdminDataExportResponsePresenter } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.response.presenter.js';
-import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository.js';
+import { AdminDataExportQueryDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-query.dto'
+import { AdminExportJobDto, AdminDataExportKPIDataDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-response.dto'
+import { AdminDataExportResponsePresenter } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.response.presenter'
+import { AdminDataExportRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

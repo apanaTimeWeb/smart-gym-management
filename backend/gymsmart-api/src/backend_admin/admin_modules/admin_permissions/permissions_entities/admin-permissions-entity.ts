@@ -2,9 +2,9 @@
 // FLOW: Permissions Repository â†’ AdminPermissionsEntity â†’ PostgreSQL admin_permission_overrides table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminPermissionsStatus } from '@/backend_admin/admin_modules/admin_permissions/admin-permissions.constants.js';
+import { AdminPermissionsStatus } from '@/backend_admin/admin_modules/admin_permissions/admin-permissions.constants'
 
 @Entity('admin_permission_overrides')
 @Index('IDX_admin_permission_overrides_created_at', ['createdAt'])

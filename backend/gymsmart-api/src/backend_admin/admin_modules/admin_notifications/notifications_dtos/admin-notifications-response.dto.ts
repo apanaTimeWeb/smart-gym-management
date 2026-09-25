@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Notifications response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminNotificationsSeverity } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants.js';
+import { AdminNotificationsSeverity } from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants'
 
 /**
  * @description Defines the AdminNotificationDto boundary for the admin_notifications backend feature.

@@ -2,18 +2,18 @@
 // FLOW: AdminCouponsService â†’ AdminCouponsRepository â†’ TypeORM â†’ PostgreSQL coupons.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto.js';
-import { AdminCouponsQueryDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-query.dto.js';
-import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity.js';
-import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper.js';
-import { resolveCouponsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_coupons/coupons_utils/admin-coupons-query-window.utils.js';
+import { AdminCouponsMutationDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-mutation.dto'
+import { AdminCouponsQueryDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-query.dto'
+import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity'
+import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper'
+import { resolveCouponsAdminQueryWindow } from '@/backend_admin/admin_modules/admin_coupons/coupons_utils/admin-coupons-query-window.utils'
 
-import type { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain.js';
+import type { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain'
 
 @Injectable()
 /**

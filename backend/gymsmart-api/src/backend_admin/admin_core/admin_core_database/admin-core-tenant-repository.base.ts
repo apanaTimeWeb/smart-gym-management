@@ -3,8 +3,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
 
 /**
  * @description Defines the AdminCoreTenantRepositoryBase boundary for the admin_core_database backend feature.

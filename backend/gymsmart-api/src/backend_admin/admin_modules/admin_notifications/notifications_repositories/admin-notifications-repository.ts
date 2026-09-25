@@ -2,16 +2,16 @@
 // FLOW: AdminNotificationsService â†’ AdminNotificationsRepository â†’ TypeORM â†’ PostgreSQL notifications.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminNotificationsMutationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-mutation.dto.js';
-import { AdminNotificationsQueryDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-query.dto.js';
-import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity.js';
-import { AdminNotificationsMapper } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.mapper.js';
-import type { AdminNotificationsDomainModel } from '@/backend_admin/admin_modules/admin_notifications/notifications_domain/admin-notifications.domain.js';
+import { AdminNotificationsMutationDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-mutation.dto'
+import { AdminNotificationsQueryDto } from '@/backend_admin/admin_modules/admin_notifications/notifications_dtos/admin-notifications-query.dto'
+import { AdminNotificationsEntity } from '@/backend_admin/admin_modules/admin_notifications/notifications_entities/admin-notifications-entity'
+import { AdminNotificationsMapper } from '@/backend_admin/admin_modules/admin_notifications/notifications_mappers/admin-notifications.mapper'
+import type { AdminNotificationsDomainModel } from '@/backend_admin/admin_modules/admin_notifications/notifications_domain/admin-notifications.domain'
 
 @Injectable()
 /**

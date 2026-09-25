@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Members response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminMembersStatus } from '@/backend_admin/admin_modules/admin_members/admin-members.constants.js';
+import { AdminMembersStatus } from '@/backend_admin/admin_modules/admin_members/admin-members.constants'
 
 /**
  * @description Defines the AdminMemberDto boundary for the admin_members backend feature.

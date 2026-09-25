@@ -2,18 +2,18 @@
 // FLOW: AdminPlansService â†’ AdminPlansRepository â†’ TypeORM â†’ PostgreSQL plans.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto.js';
-import { AdminPlansQueryDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-query.dto.js';
-import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity.js';
-import { AdminPlansMapper } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.mapper.js';
-import { resolvePlansAdminQueryWindow } from '@/backend_admin/admin_modules/admin_plans/plans_utils/admin-plans-query-window.utils.js';
+import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto'
+import { AdminPlansQueryDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-query.dto'
+import { AdminPlansEntity } from '@/backend_admin/admin_modules/admin_plans/plans_entities/admin-plans-entity'
+import { AdminPlansMapper } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.mapper'
+import { resolvePlansAdminQueryWindow } from '@/backend_admin/admin_modules/admin_plans/plans_utils/admin-plans-query-window.utils'
 
-import type { AdminPlansDomainModel } from '@/backend_admin/admin_modules/admin_plans/plans_domain/admin-plans.domain.js';
+import type { AdminPlansDomainModel } from '@/backend_admin/admin_modules/admin_plans/plans_domain/admin-plans.domain'
 
 @Injectable()
 /**

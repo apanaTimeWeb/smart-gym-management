@@ -2,13 +2,13 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminAnnouncementsCommandController } from '@/backend_admin/admin_modules/admin_announcements/announcements_controllers/admin-announcements-command.controller.js';
-import { AdminAnnouncementsQueryController } from '@/backend_admin/admin_modules/admin_announcements/announcements_controllers/admin-announcements-query.controller.js';
-import { AdminAnnouncementsMapper } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.mapper.js';
-import { AdminAnnouncementsResponsePresenter } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.response.presenter.js';
-import { AdminAnnouncementsRepository } from '@/backend_admin/admin_modules/admin_announcements/announcements_repositories/admin-announcements-repository.js';
-import { AdminAnnouncementsCommandService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-command.service.js';
-import { AdminAnnouncementsQueryService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-query.service.js';
+import { AdminAnnouncementsCommandController } from '@/backend_admin/admin_modules/admin_announcements/announcements_controllers/admin-announcements-command.controller'
+import { AdminAnnouncementsQueryController } from '@/backend_admin/admin_modules/admin_announcements/announcements_controllers/admin-announcements-query.controller'
+import { AdminAnnouncementsMapper } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.mapper'
+import { AdminAnnouncementsResponsePresenter } from '@/backend_admin/admin_modules/admin_announcements/announcements_mappers/admin-announcements.response.presenter'
+import { AdminAnnouncementsRepository } from '@/backend_admin/admin_modules/admin_announcements/announcements_repositories/admin-announcements-repository'
+import { AdminAnnouncementsCommandService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-command.service'
+import { AdminAnnouncementsQueryService } from '@/backend_admin/admin_modules/admin_announcements/announcements_services/admin-announcements-query.service'
 
 @Module({
   controllers: [AdminAnnouncementsQueryController, AdminAnnouncementsCommandController],

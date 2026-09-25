@@ -2,11 +2,11 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminPayoutsQueryController } from '@/backend_admin/admin_modules/admin_payouts/payouts_controllers/admin-payouts-query.controller.js';
-import { AdminPayoutsMapper } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.mapper.js';
-import { AdminPayoutsResponsePresenter } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.response.presenter.js';
-import { AdminPayoutsRepository } from '@/backend_admin/admin_modules/admin_payouts/payouts_repositories/admin-payouts-repository.js';
-import { AdminPayoutsQueryService } from '@/backend_admin/admin_modules/admin_payouts/payouts_services/admin-payouts-query.service.js';
+import { AdminPayoutsQueryController } from '@/backend_admin/admin_modules/admin_payouts/payouts_controllers/admin-payouts-query.controller'
+import { AdminPayoutsMapper } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.mapper'
+import { AdminPayoutsResponsePresenter } from '@/backend_admin/admin_modules/admin_payouts/payouts_mappers/admin-payouts.response.presenter'
+import { AdminPayoutsRepository } from '@/backend_admin/admin_modules/admin_payouts/payouts_repositories/admin-payouts-repository'
+import { AdminPayoutsQueryService } from '@/backend_admin/admin_modules/admin_payouts/payouts_services/admin-payouts-query.service'
 
 @Module({
   controllers: [AdminPayoutsQueryController],

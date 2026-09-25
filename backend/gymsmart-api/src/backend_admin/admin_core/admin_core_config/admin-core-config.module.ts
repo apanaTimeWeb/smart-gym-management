@@ -11,10 +11,10 @@ import Joi from 'joi';
 import { AcceptLanguageResolver, I18nModule, I18nJsonLoader } from 'nestjs-i18n';
 import { LoggerModule } from 'nestjs-pino';
 
-import { AdminCoreAppConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-app.config.js';
-import { AdminCoreDatabaseConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-database.config.js';
-import { AdminCoreMasterEntities } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-entities.js';
-import { AdminCoreRuntimeConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-runtime.config.js';
+import { AdminCoreAppConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-app.config'
+import { AdminCoreDatabaseConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-database.config'
+import { AdminCoreMasterEntities } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-entities'
+import { AdminCoreRuntimeConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-runtime.config'
 
 const coreDir = __dirname;
 

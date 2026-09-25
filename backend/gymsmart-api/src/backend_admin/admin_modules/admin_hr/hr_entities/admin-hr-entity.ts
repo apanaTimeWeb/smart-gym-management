@@ -2,9 +2,9 @@
 // FLOW: Hr Repository â†’ AdminHrEntity â†’ PostgreSQL admin_staff table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants.js';
+import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
 
 @Entity('admin_staff')
 @Index('IDX_admin_staff_created_at', ['createdAt'])

@@ -2,7 +2,7 @@
 // FLOW: Sales mapper -> nested data objects -> endpoint response DTOs.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminSalesStatus } from '@/backend_admin/admin_modules/admin_sales/admin-sales.constants.js';
+import { AdminSalesStatus } from '@/backend_admin/admin_modules/admin_sales/admin-sales.constants'
 
 /**
  * @description Defines the OverviewDataPointDto boundary for the admin_sales backend feature.

@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminAttendanceSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity.js';
+import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity'
 
 /**
  * @description Defines the AdminAttendanceSeeder boundary for the admin_attendance backend feature.

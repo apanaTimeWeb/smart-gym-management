@@ -2,14 +2,14 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminUsageCommandController } from '@/backend_admin/admin_modules/admin_usage/usage_controllers/admin-usage-command.controller.js';
-import { AdminUsageQueryController } from '@/backend_admin/admin_modules/admin_usage/usage_controllers/admin-usage-query.controller.js';
-import { AdminUsageMapper } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.mapper.js';
-import { AdminUsageResponsePresenter } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.response.presenter.js';
-import { AdminUsageRepository } from '@/backend_admin/admin_modules/admin_usage/usage_repositories/admin-usage-repository.js';
-import { AdminUsageCommandService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-command.service.js';
-import { AdminUsageOrchestratorService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-orchestrator.service.js';
-import { AdminUsageQueryService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-query.service.js';
+import { AdminUsageCommandController } from '@/backend_admin/admin_modules/admin_usage/usage_controllers/admin-usage-command.controller'
+import { AdminUsageQueryController } from '@/backend_admin/admin_modules/admin_usage/usage_controllers/admin-usage-query.controller'
+import { AdminUsageMapper } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.mapper'
+import { AdminUsageResponsePresenter } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.response.presenter'
+import { AdminUsageRepository } from '@/backend_admin/admin_modules/admin_usage/usage_repositories/admin-usage-repository'
+import { AdminUsageCommandService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-command.service'
+import { AdminUsageOrchestratorService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-orchestrator.service'
+import { AdminUsageQueryService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-query.service'
 
 @Module({
   controllers: [AdminUsageQueryController, AdminUsageCommandController],

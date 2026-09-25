@@ -2,10 +2,10 @@
 // FLOW: GymHealthAlerts Repository â†’ AdminGymHealthAlertsEntity â†’ PostgreSQL admin_gym_health_alerts table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminGymHealthAlertsSeverity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants.js';
-import { AdminGymHealthAlertsStatus } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants.js';
+import { AdminGymHealthAlertsSeverity } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants'
+import { AdminGymHealthAlertsStatus } from '@/backend_admin/admin_modules/admin_gym-health-alerts/admin-gym-health-alerts.constants'
 
 @Entity('admin_gym_health_alerts')
 @Index('IDX_admin_gym_health_alerts_created_at', ['createdAt'])

@@ -2,9 +2,9 @@
 // FLOW: Members Repository â†’ AdminMembersEntity â†’ PostgreSQL admin_members table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminMembersStatus } from '@/backend_admin/admin_modules/admin_members/admin-members.constants.js';
+import { AdminMembersStatus } from '@/backend_admin/admin_modules/admin_members/admin-members.constants'
 
 @Entity('admin_members')
 @Index('IDX_admin_members_created_at', ['createdAt'])

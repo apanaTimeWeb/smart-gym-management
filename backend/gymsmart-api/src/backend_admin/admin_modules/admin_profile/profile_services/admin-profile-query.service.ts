@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminProfileQueryDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-query.dto.js';
-import { AdminProfileDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-response.dto.js';
-import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter.js';
-import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository.js';
+import { AdminProfileQueryDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-query.dto'
+import { AdminProfileDto } from '@/backend_admin/admin_modules/admin_profile/profile_dtos/admin-profile-response.dto'
+import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter'
+import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository'
 
 @Injectable()
 /**

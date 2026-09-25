@@ -3,12 +3,12 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto.js';
-import { AdminBlacklistedMemberDto, AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto.js';
-import { AdminBlacklistResponsePresenter } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.response.presenter.js';
-import { AdminBlacklistRepository } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_repositories/admin-blacklist-repository.js';
+import { AdminBlacklistQueryDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-query.dto'
+import { AdminBlacklistedMemberDto, AdminBlacklistKPIDataDto } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_dtos/admin-blacklist-response.dto'
+import { AdminBlacklistResponsePresenter } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_mappers/admin-blacklist.response.presenter'
+import { AdminBlacklistRepository } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_repositories/admin-blacklist-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

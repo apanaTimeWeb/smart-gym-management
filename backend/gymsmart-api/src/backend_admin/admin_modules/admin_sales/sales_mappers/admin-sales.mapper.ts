@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin sales entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminSalesEntity â†’ AdminSalesMapper â†’ domain/response object.
-import { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain.js';
+import { AdminSalesDomainModel } from '@/backend_admin/admin_modules/admin_sales/sales_domain/admin-sales.domain'
 
-import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity.js';
+import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity'
 
-import { AdminSalesOverviewResponseDto, ReferralDataPointDto, AdminSalesMembershipReportResponseDto, AdminSalesPendingPaymentsResponseDto, AdminSalesAllMembershipsResponseDto, AdminSalesStoreOrdersResponseDto, AdminSalesStoreSummaryResponseDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto.js';
+import { AdminSalesOverviewResponseDto, ReferralDataPointDto, AdminSalesMembershipReportResponseDto, AdminSalesPendingPaymentsResponseDto, AdminSalesAllMembershipsResponseDto, AdminSalesStoreOrdersResponseDto, AdminSalesStoreSummaryResponseDto } from '@/backend_admin/admin_modules/admin_sales/sales_dtos/admin-sales-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminSales.

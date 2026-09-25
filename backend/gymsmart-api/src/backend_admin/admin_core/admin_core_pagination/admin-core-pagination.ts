@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Builds canonical pagination metadata and resolves only explicitly allowlisted sorting fields.
 // FLOW: Repository count/page â†’ buildPaginationMeta() â†’ AdminCorePaginatedResult.
-import type { AdminCorePaginationMeta } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginationMeta } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 export function buildPaginationMeta(total: number, page: number, limit: number): AdminCorePaginationMeta {
   const totalPages = total === 0 ? 0 : Math.ceil(total / limit);

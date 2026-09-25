@@ -2,11 +2,11 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminBranchesQueryController } from '@/backend_admin/admin_modules/admin_branches/branches_controllers/admin-branches-query.controller.js';
-import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper.js';
-import { AdminBranchesResponsePresenter } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.response.presenter.js';
-import { AdminBranchesRepository } from '@/backend_admin/admin_modules/admin_branches/branches_repositories/admin-branches-repository.js';
-import { AdminBranchesQueryService } from '@/backend_admin/admin_modules/admin_branches/branches_services/admin-branches-query.service.js';
+import { AdminBranchesQueryController } from '@/backend_admin/admin_modules/admin_branches/branches_controllers/admin-branches-query.controller'
+import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper'
+import { AdminBranchesResponsePresenter } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.response.presenter'
+import { AdminBranchesRepository } from '@/backend_admin/admin_modules/admin_branches/branches_repositories/admin-branches-repository'
+import { AdminBranchesQueryService } from '@/backend_admin/admin_modules/admin_branches/branches_services/admin-branches-query.service'
 
 @Module({
   controllers: [AdminBranchesQueryController],

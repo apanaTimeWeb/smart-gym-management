@@ -2,12 +2,12 @@
 // FLOW: AdminPlansCommandController -> AdminPlansCommandService -> named repository mutation -> audit trail.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants.js';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuditSeverity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit.constants'
 
-import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto.js';
-import { AdminPlansResponsePresenter } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.response.presenter.js';
-import { AdminPlansRepository } from '@/backend_admin/admin_modules/admin_plans/plans_repositories/admin-plans-repository.js';
+import { AdminPlansMutationDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-mutation.dto'
+import { AdminPlansResponsePresenter } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.response.presenter'
+import { AdminPlansRepository } from '@/backend_admin/admin_modules/admin_plans/plans_repositories/admin-plans-repository'
 
 @Injectable()
 /**

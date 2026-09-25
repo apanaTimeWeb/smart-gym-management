@@ -2,12 +2,12 @@
 // FLOW: AdminBranchesQueryController â†’ AdminBranchesQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 import { Injectable } from '@nestjs/common';
 
-import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto.js';
-import { AdminBranchDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-response.dto.js';
-import { AdminBranchesResponsePresenter } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.response.presenter.js';
-import { AdminBranchesRepository } from '@/backend_admin/admin_modules/admin_branches/branches_repositories/admin-branches-repository.js';
+import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto'
+import { AdminBranchDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-response.dto'
+import { AdminBranchesResponsePresenter } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.response.presenter'
+import { AdminBranchesRepository } from '@/backend_admin/admin_modules/admin_branches/branches_repositories/admin-branches-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

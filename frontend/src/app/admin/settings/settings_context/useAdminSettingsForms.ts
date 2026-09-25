@@ -34,7 +34,7 @@ function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
 ) {
   const queryClient = useQueryClient();
   const form = useForm<TFormValues>({
-    resolver: zodResolver(schema as ZodType<FieldValues>) as Resolver<TFormValues>,
+    resolver: zodResolver(schema as any) as Resolver<TFormValues>,
     defaultValues: initialData as DefaultValues<TFormValues>,
   });
   const formValues = useWatch({ control: form.control });

@@ -5,9 +5,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto.js';
+import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
-import { AdminDataExportStatus } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.constants.js';
+import { AdminDataExportStatus } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.constants'
 
 /**
  * @description Defines the AdminDataExportQueryDto boundary for the admin_data-export backend feature.

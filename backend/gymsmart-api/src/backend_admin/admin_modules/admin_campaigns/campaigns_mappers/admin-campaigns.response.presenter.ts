@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminCampaigns domain data as the frontend response contract.
 // FLOW: Domain object -> AdminCampaignsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain.js';
+import { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain'
 
-import { AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto.js';
+import { AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto'
 
 
 /**

@@ -2,17 +2,17 @@
 // FLOW: AdminBranchesService â†’ AdminBranchesRepository â†’ TypeORM â†’ PostgreSQL branches.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto.js';
-import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity.js';
-import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper.js';
-import { resolveBranchesAdminQueryWindow } from '@/backend_admin/admin_modules/admin_branches/branches_utils/admin-branches-query-window.utils.js';
+import { AdminBranchesQueryDto } from '@/backend_admin/admin_modules/admin_branches/branches_dtos/admin-branches-query.dto'
+import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity'
+import { AdminBranchesMapper } from '@/backend_admin/admin_modules/admin_branches/branches_mappers/admin-branches.mapper'
+import { resolveBranchesAdminQueryWindow } from '@/backend_admin/admin_modules/admin_branches/branches_utils/admin-branches-query-window.utils'
 
-import type { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain.js';
+import type { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain'
 
 @Injectable()
 /**

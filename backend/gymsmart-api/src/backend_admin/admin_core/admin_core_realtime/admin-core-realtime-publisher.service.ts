@@ -2,13 +2,13 @@
 // FLOW: Feature mutation -> AdminCoreRealtimePublisherService -> realtime event persistence -> transaction commit -> Redis Pub/Sub.
 import { Injectable } from '@nestjs/common';
 
-import type { AdminCoreRegisteredEventName } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreRealtimeEventEntity } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-event.entity.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
+import type { AdminCoreRegisteredEventName } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreRealtimeEventEntity } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-event.entity'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
 
-import type { AdminCoreRealtimeEnvelope } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-envelope.js';
+import type { AdminCoreRealtimeEnvelope } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-envelope'
 
 @Injectable()
 /**

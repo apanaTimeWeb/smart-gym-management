@@ -2,9 +2,9 @@
 // FLOW: Dashboard Repository â†’ AdminDashboardEntity â†’ PostgreSQL admin_dashboard_snapshots table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminDashboardStatus } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants.js';
+import { AdminDashboardStatus } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants'
 
 @Entity('admin_dashboard_snapshots')
 @Index('IDX_admin_dashboard_snapshots_created_at', ['createdAt'])

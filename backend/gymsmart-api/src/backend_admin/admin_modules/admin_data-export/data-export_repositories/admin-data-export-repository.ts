@@ -2,19 +2,19 @@
 // FLOW: AdminDataExportService â†’ AdminDataExportRepository â†’ TypeORM â†’ PostgreSQL data_export_jobs.
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantEntityRegistry } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-entity-registry.js';
-import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base.js';
-import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination.js';
-import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantEntityRegistry } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-entity-registry'
+import { AdminCoreTenantRepositoryBase } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-repository.base'
+import { buildPaginationMeta, resolveSafeSort } from '@/backend_admin/admin_core/admin_core_pagination/admin-core-pagination'
+import { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
-import { AdminDataExportMutationDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-mutation.dto.js';
-import { AdminDataExportQueryDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-query.dto.js';
-import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity.js';
-import { AdminDataExportMapper } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.mapper.js';
-import { flattenAdminDataExportRow } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-flatten-row.utils.js';
+import { AdminDataExportMutationDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-mutation.dto'
+import { AdminDataExportQueryDto } from '@/backend_admin/admin_modules/admin_data-export/data-export_dtos/admin-data-export-query.dto'
+import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity'
+import { AdminDataExportMapper } from '@/backend_admin/admin_modules/admin_data-export/data-export_mappers/admin-data-export.mapper'
+import { flattenAdminDataExportRow } from '@/backend_admin/admin_modules/admin_data-export/data-export_utils/admin-data-export-flatten-row.utils'
 
-import type { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain.js';
+import type { AdminDataExportDomainModel } from '@/backend_admin/admin_modules/admin_data-export/data-export_domain/admin-data-export.domain'
 
 @Injectable()
 /**

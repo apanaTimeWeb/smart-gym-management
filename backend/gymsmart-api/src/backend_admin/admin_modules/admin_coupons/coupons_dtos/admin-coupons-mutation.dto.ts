@@ -5,7 +5,7 @@ import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
-import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants.js';
+import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants'
 
 /**
  * @description Defines the AdminCouponsMutationDto boundary for the admin_coupons backend feature.

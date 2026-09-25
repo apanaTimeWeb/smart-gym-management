@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminDashboardSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity.js';
+import { AdminDashboardEntity } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_entities/admin-dashboard-entity'
 
 /**
  * @description Defines the AdminDashboardSeeder boundary for the admin_dashboard backend feature.

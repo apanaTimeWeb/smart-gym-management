@@ -2,7 +2,7 @@
 // FLOW: Centralized environment reader -> ConfigModule -> runtime namespace -> core infrastructure/services.
 import { registerAs } from '@nestjs/config';
 
-import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment.js';
+import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment'
 
 /**
  * @description Registers runtime configuration values used by the Admin application.

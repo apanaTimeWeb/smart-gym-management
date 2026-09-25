@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminSettings domain data as the frontend response contract.
 // FLOW: Domain object -> AdminSettingsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain.js';
+import { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain'
 
-import { AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto.js';
+import { AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto'
 
 
 /**

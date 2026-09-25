@@ -2,9 +2,9 @@
 // FLOW: Finance Repository â†’ AdminFinanceEntity â†’ PostgreSQL admin_payment_transactions table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminFinanceStatus } from '@/backend_admin/admin_modules/admin_finance/admin-finance.constants.js';
+import { AdminFinanceStatus } from '@/backend_admin/admin_modules/admin_finance/admin-finance.constants'
 
 @Entity('admin_payment_transactions')
 @Index('IDX_admin_payment_transactions_created_at', ['createdAt'])

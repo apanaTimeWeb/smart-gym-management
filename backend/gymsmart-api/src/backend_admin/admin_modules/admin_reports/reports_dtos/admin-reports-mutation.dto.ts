@@ -4,7 +4,7 @@ import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 
 import { IsEnum, IsOptional } from 'class-validator';
 
-import { AdminReportsFormat, AdminReportsTab } from '@/backend_admin/admin_modules/admin_reports/admin-reports.constants.js';
+import { AdminReportsFormat, AdminReportsTab } from '@/backend_admin/admin_modules/admin_reports/admin-reports.constants'
 
 /**
  * @description Defines the AdminReportsMutationDto boundary for the admin_reports backend feature.

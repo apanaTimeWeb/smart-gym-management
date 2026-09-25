@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-usage.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminUsageEntity } from '@/backend_admin/admin_modules/admin_usage/usage_entities/admin-usage-entity.js';
-import { AdminUsageMapper } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.mapper.js';
+import { AdminUsageEntity } from '@/backend_admin/admin_modules/admin_usage/usage_entities/admin-usage-entity'
+import { AdminUsageMapper } from '@/backend_admin/admin_modules/admin_usage/usage_mappers/admin-usage.mapper'
 
 describe('AdminUsageMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

@@ -2,8 +2,8 @@
 // FLOW: Dashboard query service → response mapper → canonical ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminDashboardSeverity } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants.js';
-import { DashboardAttendanceTrendPoint, DashboardBranchPerformance, DashboardExpiringMembership, DashboardMemberGrowth, DashboardMembersByPlan, DashboardMembersByStatus, DashboardRevenueTrend, DashboardSystemAlert } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-chart.dto.js';
+import { AdminDashboardSeverity } from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants'
+import { DashboardAttendanceTrendPoint, DashboardBranchPerformance, DashboardExpiringMembership, DashboardMemberGrowth, DashboardMembersByPlan, DashboardMembersByStatus, DashboardRevenueTrend, DashboardSystemAlert } from '@/backend_admin/admin_modules/admin_dashboard/dashboard_dtos/admin-dashboard-chart.dto'
 
 /**
  * @description Defines the AdminDashboardResponseDto boundary for the admin_dashboard backend feature.

@@ -2,13 +2,13 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminCouponsCommandController } from '@/backend_admin/admin_modules/admin_coupons/coupons_controllers/admin-coupons-command.controller.js';
-import { AdminCouponsQueryController } from '@/backend_admin/admin_modules/admin_coupons/coupons_controllers/admin-coupons-query.controller.js';
-import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper.js';
-import { AdminCouponsResponsePresenter } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.response.presenter.js';
-import { AdminCouponsRepository } from '@/backend_admin/admin_modules/admin_coupons/coupons_repositories/admin-coupons-repository.js';
-import { AdminCouponsCommandService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-command.service.js';
-import { AdminCouponsQueryService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-query.service.js';
+import { AdminCouponsCommandController } from '@/backend_admin/admin_modules/admin_coupons/coupons_controllers/admin-coupons-command.controller'
+import { AdminCouponsQueryController } from '@/backend_admin/admin_modules/admin_coupons/coupons_controllers/admin-coupons-query.controller'
+import { AdminCouponsMapper } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.mapper'
+import { AdminCouponsResponsePresenter } from '@/backend_admin/admin_modules/admin_coupons/coupons_mappers/admin-coupons.response.presenter'
+import { AdminCouponsRepository } from '@/backend_admin/admin_modules/admin_coupons/coupons_repositories/admin-coupons-repository'
+import { AdminCouponsCommandService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-command.service'
+import { AdminCouponsQueryService } from '@/backend_admin/admin_modules/admin_coupons/coupons_services/admin-coupons-query.service'
 
 @Module({
   controllers: [AdminCouponsQueryController, AdminCouponsCommandController],

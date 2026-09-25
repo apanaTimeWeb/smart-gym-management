@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminFinance domain data as the frontend response contract.
 // FLOW: Domain object -> AdminFinanceResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminFinanceDomainModel } from '@/backend_admin/admin_modules/admin_finance/finance_domain/admin-finance.domain.js';
+import { AdminFinanceDomainModel } from '@/backend_admin/admin_modules/admin_finance/finance_domain/admin-finance.domain'
 
-import { AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto.js';
+import { AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto'
 
 
 /**

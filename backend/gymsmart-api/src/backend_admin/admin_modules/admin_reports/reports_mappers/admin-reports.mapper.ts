@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Translates the TypeORM Admin reports entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminReportsEntity â†’ AdminReportsMapper â†’ domain/response object.
-import { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain.js';
+import { AdminReportsDomainModel } from '@/backend_admin/admin_modules/admin_reports/reports_domain/admin-reports.domain'
 
-import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity.js';
+import { AdminReportsEntity } from '@/backend_admin/admin_modules/admin_reports/reports_entities/admin-reports-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminReports.

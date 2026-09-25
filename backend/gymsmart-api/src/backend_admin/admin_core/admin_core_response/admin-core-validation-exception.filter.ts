@@ -4,7 +4,7 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from
 
 import { PinoLogger } from 'nestjs-pino';
 
-import { normalizeCoreErrorCode } from '@/backend_admin/admin_core/admin_core_response/admin-core-error-code.js';
+import { normalizeCoreErrorCode } from '@/backend_admin/admin_core/admin_core_response/admin-core-error-code'
 
 import type { Response } from 'express';
 

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminPlans domain data as the frontend response contract.
 // FLOW: Domain object -> AdminPlansResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminPlansDomainModel } from '@/backend_admin/admin_modules/admin_plans/plans_domain/admin-plans.domain.js';
+import { AdminPlansDomainModel } from '@/backend_admin/admin_modules/admin_plans/plans_domain/admin-plans.domain'
 
-import type { AdminPlanRevenueRecordDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto.js';
+import type { AdminPlanRevenueRecordDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto'
 
 
 /**

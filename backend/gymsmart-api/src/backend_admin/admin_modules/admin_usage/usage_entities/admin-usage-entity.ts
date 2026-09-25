@@ -2,9 +2,9 @@
 // FLOW: Usage Repository â†’ AdminUsageEntity â†’ PostgreSQL admin_usage_snapshots table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminUsageStatus } from '@/backend_admin/admin_modules/admin_usage/admin-usage.constants.js';
+import { AdminUsageStatus } from '@/backend_admin/admin_modules/admin_usage/admin-usage.constants'
 
 @Entity('admin_usage_snapshots')
 @Index('IDX_admin_usage_snapshots_created_at', ['createdAt'])

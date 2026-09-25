@@ -5,10 +5,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto.js';
+import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
-import { AdminHrPerformancePeriod } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants.js';
-import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants.js';
+import { AdminHrPerformancePeriod } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
+import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
 
 /**
  * @description Defines the AdminHrQueryDto boundary for the admin_hr backend feature.

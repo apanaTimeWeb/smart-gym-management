@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminAttendance domain data as the frontend response contract.
 // FLOW: Domain object -> AdminAttendanceResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminAttendanceDomainModel } from '@/backend_admin/admin_modules/admin_attendance/attendance_domain/admin-attendance.domain.js';
+import { AdminAttendanceDomainModel } from '@/backend_admin/admin_modules/admin_attendance/attendance_domain/admin-attendance.domain'
 
-import { AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto.js';
+import { AdminAttendanceSummaryDto, AdminAttendanceTrendPointDto } from '@/backend_admin/admin_modules/admin_attendance/attendance_dtos/admin-attendance-response.dto'
 
 
 /**

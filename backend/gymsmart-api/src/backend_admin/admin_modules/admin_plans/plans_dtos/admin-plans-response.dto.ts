@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Plans response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants.js';
+import { AdminPlansTier } from '@/backend_admin/admin_modules/admin_plans/admin-plans.constants'
 
 /**
  * @description Defines the AdminPlanDto boundary for the admin_plans backend feature.

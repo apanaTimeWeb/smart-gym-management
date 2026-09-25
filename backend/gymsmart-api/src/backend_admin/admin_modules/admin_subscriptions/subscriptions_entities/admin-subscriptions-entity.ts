@@ -2,9 +2,9 @@
 // FLOW: Subscriptions Repository â†’ AdminSubscriptionsEntity â†’ PostgreSQL admin_subscriptions table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminSubscriptionsStatus } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants.js';
+import { AdminSubscriptionsStatus } from '@/backend_admin/admin_modules/admin_subscriptions/admin-subscriptions.constants'
 
 @Entity('admin_subscriptions')
 @Index('IDX_admin_subscriptions_created_at', ['createdAt'])

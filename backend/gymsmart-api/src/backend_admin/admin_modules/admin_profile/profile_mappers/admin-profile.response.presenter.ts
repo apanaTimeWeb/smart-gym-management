@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminProfile domain data as the frontend response contract.
 // FLOW: Domain object -> AdminProfileResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminProfileDomainModel } from '@/backend_admin/admin_modules/admin_profile/profile_domain/admin-profile.domain.js';
+import { AdminProfileDomainModel } from '@/backend_admin/admin_modules/admin_profile/profile_domain/admin-profile.domain'
 
 
 /**

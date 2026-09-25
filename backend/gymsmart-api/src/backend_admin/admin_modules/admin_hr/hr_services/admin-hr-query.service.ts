@@ -3,16 +3,16 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto.js';
+import { AdminHrQueryDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-query.dto'
 import { AdminHrStaffListResponseDto,
   AdminHrStaffDto,
   AdminHrPayrollListResponseDto,
   AdminHrSummaryDto,
   AdminHrLedgerEntryDto,
   AdminHrStaffPerformanceRecordDto
-} from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto.js';
-import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter.js';
-import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository.js';
+} from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-response.dto'
+import { AdminHrResponsePresenter } from '@/backend_admin/admin_modules/admin_hr/hr_mappers/admin-hr.response.presenter'
+import { AdminHrRepository } from '@/backend_admin/admin_modules/admin_hr/hr_repositories/admin-hr-repository'
 
 @Injectable()
 /**

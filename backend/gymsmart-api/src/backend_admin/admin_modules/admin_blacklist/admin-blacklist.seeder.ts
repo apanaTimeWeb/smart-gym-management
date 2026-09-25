@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminBlacklistSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity.js';
+import { AdminBlacklistEntity } from '@/backend_admin/admin_modules/admin_blacklist/blacklist_entities/admin-blacklist-entity'
 
 /**
  * @description Defines the AdminBlacklistSeeder boundary for the admin_blacklist backend feature.

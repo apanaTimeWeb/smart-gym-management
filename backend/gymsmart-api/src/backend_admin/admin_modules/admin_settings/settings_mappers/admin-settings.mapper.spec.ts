@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-settings.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity.js';
-import { AdminSettingsMapper } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.mapper.js';
+import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity'
+import { AdminSettingsMapper } from '@/backend_admin/admin_modules/admin_settings/settings_mappers/admin-settings.mapper'
 
 describe('AdminSettingsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

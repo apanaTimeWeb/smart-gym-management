@@ -2,9 +2,9 @@
 // FLOW: Payouts Repository â†’ AdminPayoutsEntity â†’ PostgreSQL admin_gym_payouts table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminPayoutsStatus } from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.constants.js';
+import { AdminPayoutsStatus } from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.constants'
 
 @Entity('admin_gym_payouts')
 @Index('IDX_admin_gym_payouts_created_at', ['createdAt'])

@@ -2,13 +2,13 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminProfileCommandController } from '@/backend_admin/admin_modules/admin_profile/profile_controllers/admin-profile-command.controller.js';
-import { AdminProfileQueryController } from '@/backend_admin/admin_modules/admin_profile/profile_controllers/admin-profile-query.controller.js';
-import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper.js';
-import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter.js';
-import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository.js';
-import { AdminProfileCommandService } from '@/backend_admin/admin_modules/admin_profile/profile_services/admin-profile-command.service.js';
-import { AdminProfileQueryService } from '@/backend_admin/admin_modules/admin_profile/profile_services/admin-profile-query.service.js';
+import { AdminProfileCommandController } from '@/backend_admin/admin_modules/admin_profile/profile_controllers/admin-profile-command.controller'
+import { AdminProfileQueryController } from '@/backend_admin/admin_modules/admin_profile/profile_controllers/admin-profile-query.controller'
+import { AdminProfileMapper } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.mapper'
+import { AdminProfileResponsePresenter } from '@/backend_admin/admin_modules/admin_profile/profile_mappers/admin-profile.response.presenter'
+import { AdminProfileRepository } from '@/backend_admin/admin_modules/admin_profile/profile_repositories/admin-profile-repository'
+import { AdminProfileCommandService } from '@/backend_admin/admin_modules/admin_profile/profile_services/admin-profile-command.service'
+import { AdminProfileQueryService } from '@/backend_admin/admin_modules/admin_profile/profile_services/admin-profile-query.service'
 
 @Module({
   controllers: [AdminProfileQueryController, AdminProfileCommandController],

@@ -3,11 +3,11 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreRealtimeEventEntity } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-event.entity.js';
-import { AdminCoreRealtimeReplayEventDto } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay-event.dto.js';
-import { AdminCoreRealtimeReplayQueryDto } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay-query.dto.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreRealtimeEventEntity } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-event.entity'
+import { AdminCoreRealtimeReplayEventDto } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay-event.dto'
+import { AdminCoreRealtimeReplayQueryDto } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay-query.dto'
 
 @ApiTags('Admin Realtime')
 @Controller('admin/realtime')

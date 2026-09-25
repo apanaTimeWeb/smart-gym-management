@@ -2,11 +2,11 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminFinanceQueryController } from '@/backend_admin/admin_modules/admin_finance/finance_controllers/admin-finance-query.controller.js';
-import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper.js';
-import { AdminFinanceResponsePresenter } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.response.presenter.js';
-import { AdminFinanceRepository } from '@/backend_admin/admin_modules/admin_finance/finance_repositories/admin-finance-repository.js';
-import { AdminFinanceQueryService } from '@/backend_admin/admin_modules/admin_finance/finance_services/admin-finance-query.service.js';
+import { AdminFinanceQueryController } from '@/backend_admin/admin_modules/admin_finance/finance_controllers/admin-finance-query.controller'
+import { AdminFinanceMapper } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.mapper'
+import { AdminFinanceResponsePresenter } from '@/backend_admin/admin_modules/admin_finance/finance_mappers/admin-finance.response.presenter'
+import { AdminFinanceRepository } from '@/backend_admin/admin_modules/admin_finance/finance_repositories/admin-finance-repository'
+import { AdminFinanceQueryService } from '@/backend_admin/admin_modules/admin_finance/finance_services/admin-finance-query.service'
 
 @Module({
   controllers: [AdminFinanceQueryController],

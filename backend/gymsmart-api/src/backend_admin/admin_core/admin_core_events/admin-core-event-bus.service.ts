@@ -2,7 +2,7 @@
 // FLOW: Feature service â†’ AdminCoreEventBus â†’ registered event name â†’ subscribers.
 import { Injectable } from '@nestjs/common';
 
-import type { AdminCoreRegisteredEventName } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants.js';
+import type { AdminCoreRegisteredEventName } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-registry.constants'
 
 /**
  * @description Defines the AdminCoreEventBus boundary for the admin_core_events backend feature.

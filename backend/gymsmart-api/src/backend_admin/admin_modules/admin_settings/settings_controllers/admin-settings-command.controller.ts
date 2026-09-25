@@ -3,16 +3,16 @@
 import { Body, Controller, Delete, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminSettingsIdDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-id.dto.js';
-import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto.js';
-import { AdminSettingsResponseDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto.js';
-import { AdminSettingsCommandService } from '@/backend_admin/admin_modules/admin_settings/settings_services/admin-settings-command.service.js';
+import { AdminSettingsIdDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-id.dto'
+import { AdminSettingsMutationDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-mutation.dto'
+import { AdminSettingsResponseDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto'
+import { AdminSettingsCommandService } from '@/backend_admin/admin_modules/admin_settings/settings_services/admin-settings-command.service'
 
 @ApiTags('Admin / settings')
 @UseGuards(AdminCoreJwtAuthGuard, AdminCoreRolesGuard)

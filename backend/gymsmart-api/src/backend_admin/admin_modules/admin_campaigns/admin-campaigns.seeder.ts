@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminCampaignsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity.js';
+import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity'
 
 /**
  * @description Defines the AdminCampaignsSeeder boundary for the admin_campaigns backend feature.

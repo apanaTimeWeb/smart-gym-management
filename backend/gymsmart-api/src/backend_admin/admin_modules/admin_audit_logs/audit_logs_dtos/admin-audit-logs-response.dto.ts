@@ -2,7 +2,7 @@
 // FLOW: Audit repository/domain â†’ response mapper â†’ canonical ApiResponse envelope.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminAuditLogsSeverity } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants.js';
+import { AdminAuditLogsSeverity } from '@/backend_admin/admin_modules/admin_audit_logs/admin-audit-logs.constants'
 
 /**
  * @description Defines the AdminAuditLogDto boundary for the admin_audit_logs backend feature.

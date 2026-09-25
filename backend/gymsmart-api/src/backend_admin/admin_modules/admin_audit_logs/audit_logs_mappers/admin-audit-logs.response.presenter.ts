@@ -2,9 +2,9 @@
 // FLOW: Domain object -> AdminAuditLogsResponsePresenter -> typed response DTO -> canonical response envelope.
 import { Injectable } from '@nestjs/common';
 
-import { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain.js';
+import { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain'
 
-import type { AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto.js';
+import type { AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto'
 
 
 /**

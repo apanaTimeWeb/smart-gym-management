@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminSubscriptionsSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity.js';
+import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity'
 
 /**
  * @description Defines the AdminSubscriptionsSeeder boundary for the admin_subscriptions backend feature.

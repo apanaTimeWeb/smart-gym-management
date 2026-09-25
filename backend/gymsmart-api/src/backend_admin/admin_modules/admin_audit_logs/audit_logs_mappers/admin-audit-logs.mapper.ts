@@ -2,11 +2,11 @@
 // FLOW: AdminCoreAuditLogEntity â†’ AdminAuditLogsMapper â†’ domain/response object.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity.js';
+import { AdminCoreAuditLogEntity } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-log.entity'
 
-import { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain.js';
+import { AdminAuditLogsDomainModel } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_domain/admin-audit-logs.domain'
 
-import type { AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto.js';
+import type { AdminAuditLogsKpiDto } from '@/backend_admin/admin_modules/admin_audit_logs/audit_logs_dtos/admin-audit-logs-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminAuditLogs.

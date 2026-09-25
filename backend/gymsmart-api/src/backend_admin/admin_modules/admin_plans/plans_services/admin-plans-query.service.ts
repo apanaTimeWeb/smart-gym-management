@@ -2,12 +2,12 @@
 // FLOW: AdminPlansQueryController â†’ AdminPlansQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 import { Injectable } from '@nestjs/common';
 
-import { AdminPlansQueryDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-query.dto.js';
-import { AdminPlanDto, AdminPlanRevenueRecordDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto.js';
-import { AdminPlansResponsePresenter } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.response.presenter.js';
-import { AdminPlansRepository } from '@/backend_admin/admin_modules/admin_plans/plans_repositories/admin-plans-repository.js';
+import { AdminPlansQueryDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-query.dto'
+import { AdminPlanDto, AdminPlanRevenueRecordDto } from '@/backend_admin/admin_modules/admin_plans/plans_dtos/admin-plans-response.dto'
+import { AdminPlansResponsePresenter } from '@/backend_admin/admin_modules/admin_plans/plans_mappers/admin-plans.response.presenter'
+import { AdminPlansRepository } from '@/backend_admin/admin_modules/admin_plans/plans_repositories/admin-plans-repository'
 
-import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types.js';
+import type { AdminCorePaginatedResult } from '@/backend_admin/admin_core/admin_core_types/admin-core-api-response.types'
 
 @Injectable()
 /**

@@ -2,11 +2,11 @@
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 import { Module } from '@nestjs/common';
 
-import { AdminCampaignsQueryController } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_controllers/admin-campaigns-query.controller.js';
-import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper.js';
-import { AdminCampaignsResponsePresenter } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.response.presenter.js';
-import { AdminCampaignsRepository } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_repositories/admin-campaigns-repository.js';
-import { AdminCampaignsQueryService } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_services/admin-campaigns-query.service.js';
+import { AdminCampaignsQueryController } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_controllers/admin-campaigns-query.controller'
+import { AdminCampaignsMapper } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.mapper'
+import { AdminCampaignsResponsePresenter } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_mappers/admin-campaigns.response.presenter'
+import { AdminCampaignsRepository } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_repositories/admin-campaigns-repository'
+import { AdminCampaignsQueryService } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_services/admin-campaigns-query.service'
 
 @Module({
   controllers: [AdminCampaignsQueryController],

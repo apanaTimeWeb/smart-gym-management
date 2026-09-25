@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin settings entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminSettingsEntity â†’ AdminSettingsMapper â†’ domain/response object.
-import { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain.js';
+import { AdminSettingsDomainModel } from '@/backend_admin/admin_modules/admin_settings/settings_domain/admin-settings.domain'
 
-import { AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto.js';
+import { AdminNotificationsSettingsDto, AdminTwoFactorStatusDto } from '@/backend_admin/admin_modules/admin_settings/settings_dtos/admin-settings-response.dto'
 
-import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity.js';
+import { AdminSettingsEntity } from '@/backend_admin/admin_modules/admin_settings/settings_entities/admin-settings-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminSettings.

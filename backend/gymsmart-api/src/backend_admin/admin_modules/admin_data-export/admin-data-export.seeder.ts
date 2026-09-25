@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminDataExportSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity.js';
+import { AdminDataExportEntity } from '@/backend_admin/admin_modules/admin_data-export/data-export_entities/admin-data-export-entity'
 
 /**
  * @description Defines the AdminDataExportSeeder boundary for the admin_data-export backend feature.

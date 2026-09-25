@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminUsage domain data as the frontend response contract.
 // FLOW: Domain object -> AdminUsageResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminUsageDomainModel } from '@/backend_admin/admin_modules/admin_usage/usage_domain/admin-usage.domain.js';
+import { AdminUsageDomainModel } from '@/backend_admin/admin_modules/admin_usage/usage_domain/admin-usage.domain'
 
 
 /**

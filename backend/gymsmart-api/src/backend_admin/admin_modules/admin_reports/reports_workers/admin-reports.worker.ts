@@ -2,17 +2,17 @@
 // FLOW: Redis job -> trusted tenant context -> report snapshot -> format generator -> object storage -> completed/failed state.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message.js';
-import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreJobMessage } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-message'
+import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
 
-import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository.js';
-import { AdminReportsPdfGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-pdf-generator.utils.js';
-import { AdminReportsXlsxGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-xlsx-generator.utils.js';
+import { AdminReportsRepository } from '@/backend_admin/admin_modules/admin_reports/reports_repositories/admin-reports-repository'
+import { AdminReportsPdfGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-pdf-generator.utils'
+import { AdminReportsXlsxGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-xlsx-generator.utils'
 
-import { AdminReportsFormat } from '@/backend_admin/admin_modules/admin_reports/admin-reports.constants.js';
+import { AdminReportsFormat } from '@/backend_admin/admin_modules/admin_reports/admin-reports.constants'
 
 export interface AdminReportsJobPayload { tab?: string; format?: AdminReportsFormat; }
 

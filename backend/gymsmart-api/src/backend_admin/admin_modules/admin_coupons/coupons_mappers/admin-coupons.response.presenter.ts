@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Presents ORM-independent AdminCoupons domain data as the frontend response contract.
 // FLOW: Domain object -> AdminCouponsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain.js';
+import { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain'
 
-import { AdminCouponsKPIDataDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto.js';
+import { AdminCouponsKPIDataDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto'
 
 
 /**

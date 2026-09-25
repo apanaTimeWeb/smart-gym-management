@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin campaigns entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminCampaignsEntity â†’ AdminCampaignsMapper â†’ domain/response object.
-import { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain.js';
+import { AdminCampaignsDomainModel } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_domain/admin-campaigns.domain'
 
-import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity.js';
+import { AdminCampaignsEntity } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_entities/admin-campaigns-entity'
 
-import { AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto.js';
+import { AdminCampaignsRecipientsDataDto } from '@/backend_admin/admin_modules/admin_campaigns/campaigns_dtos/admin-campaigns-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminCampaigns.

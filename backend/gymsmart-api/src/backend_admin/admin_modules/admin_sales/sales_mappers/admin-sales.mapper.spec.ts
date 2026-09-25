@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-sales.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity.js';
-import { AdminSalesMapper } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.mapper.js';
+import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity'
+import { AdminSalesMapper } from '@/backend_admin/admin_modules/admin_sales/sales_mappers/admin-sales.mapper'
 
 describe('AdminSalesMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

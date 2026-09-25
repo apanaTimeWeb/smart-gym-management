@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ DataExport response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminDataExportStatus } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.constants.js';
+import { AdminDataExportStatus } from '@/backend_admin/admin_modules/admin_data-export/admin-data-export.constants'
 
 /**
  * @description Defines the AdminExportJobDto boundary for the admin_data-export backend feature.

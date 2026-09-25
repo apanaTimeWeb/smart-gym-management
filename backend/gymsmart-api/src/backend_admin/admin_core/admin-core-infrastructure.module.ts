@@ -3,38 +3,38 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
-import { AdminCoreAccessLogInterceptor } from '@/backend_admin/admin_core/admin_core_observability/admin-core-access-log.interceptor.js';
-import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service.js';
-import { AdminCoreAuthController } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.controller.js';
-import { AdminCoreAuthService } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.service.js';
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository.js';
-import { AdminCoreRateLimitGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-rate-limit.guard.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreConfigModule } from '@/backend_admin/admin_core/admin_core_config/admin-core-config.module.js';
-import { AdminCoreFeatureFlagService } from '@/backend_admin/admin_core/admin_core_config/admin-core-feature-flag.service.js';
-import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service.js';
-import { AdminCoreTenantContextInterceptor } from '@/backend_admin/admin_core/admin_core_context/admin-core-tenant-context.interceptor.js';
-import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service.js';
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreTenantUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-unit-of-work.service.js';
-import { AdminCoreTransactionInterceptor } from '@/backend_admin/admin_core/admin_core_database/admin-core-transaction.interceptor.js';
-import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service.js';
-import { AdminCoreHealthController } from '@/backend_admin/admin_core/admin_core_health/admin-core-health.controller.js';
-import { AdminCoreIdempotencyInterceptor } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.interceptor.js';
-import { AdminCoreIdempotencyService } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.service.js';
-import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service.js';
-import { AdminCoreMetricsController } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.controller.js';
-import { AdminCoreMetricsInterceptor } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.interceptor.js';
-import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service.js';
-import { AdminCoreRealtimePublisherService } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-publisher.service.js';
-import { AdminCoreRealtimeReplayController } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay.controller.js';
-import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service.js';
-import { AdminCoreResponseInterceptor } from '@/backend_admin/admin_core/admin_core_response/admin-core-response.interceptor.js';
-import { AdminCoreValidationExceptionFilter } from '@/backend_admin/admin_core/admin_core_response/admin-core-validation-exception.filter.js';
-import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service.js';
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
-import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service.js';
+import { AdminCoreAccessLogInterceptor } from '@/backend_admin/admin_core/admin_core_observability/admin-core-access-log.interceptor';
+import { AdminCoreAuditTrailService } from '@/backend_admin/admin_core/admin_core_audit/admin-core-audit-trail.service'
+import { AdminCoreAuthController } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.controller'
+import { AdminCoreAuthService } from '@/backend_admin/admin_core/admin_core_auth/admin-core-auth.service'
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreMasterAdminRepository } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin-repository'
+import { AdminCoreRateLimitGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-rate-limit.guard'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreConfigModule } from '@/backend_admin/admin_core/admin_core_config/admin-core-config.module'
+import { AdminCoreFeatureFlagService } from '@/backend_admin/admin_core/admin_core_config/admin-core-feature-flag.service'
+import { AdminCoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service'
+import { AdminCoreTenantContextInterceptor } from '@/backend_admin/admin_core/admin_core_context/admin-core-tenant-context.interceptor'
+import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service'
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreTenantUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-unit-of-work.service'
+import { AdminCoreTransactionInterceptor } from '@/backend_admin/admin_core/admin_core_database/admin-core-transaction.interceptor'
+import { AdminCoreEventBusService } from '@/backend_admin/admin_core/admin_core_events/admin-core-event-bus.service'
+import { AdminCoreHealthController } from '@/backend_admin/admin_core/admin_core_health/admin-core-health.controller'
+import { AdminCoreIdempotencyInterceptor } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.interceptor'
+import { AdminCoreIdempotencyService } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.service'
+import { AdminCoreJobQueueService } from '@/backend_admin/admin_core/admin_core_jobs/admin-core-job-queue.service'
+import { AdminCoreMetricsController } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.controller'
+import { AdminCoreMetricsInterceptor } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.interceptor'
+import { AdminCoreMetricsService } from '@/backend_admin/admin_core/admin_core_metrics/admin-core-metrics.service'
+import { AdminCoreRealtimePublisherService } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-publisher.service'
+import { AdminCoreRealtimeReplayController } from '@/backend_admin/admin_core/admin_core_realtime/admin-core-realtime-replay.controller'
+import { AdminCoreRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service'
+import { AdminCoreResponseInterceptor } from '@/backend_admin/admin_core/admin_core_response/admin-core-response.interceptor'
+import { AdminCoreValidationExceptionFilter } from '@/backend_admin/admin_core/admin_core_response/admin-core-validation-exception.filter'
+import { AdminCoreEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service'
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
+import { AdminCoreMasterTenantLookupService } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-lookup.service'
 
 const coreProviders = [
   AdminCoreRequestContextService,

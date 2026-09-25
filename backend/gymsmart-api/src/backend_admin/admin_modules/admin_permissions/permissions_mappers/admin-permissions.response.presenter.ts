@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Presents ORM-independent AdminPermissions domain data as the frontend response contract.
 // FLOW: Domain object -> AdminPermissionsResponsePresenter -> typed response DTO -> canonical response envelope.
-import { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain.js';
+import { AdminPermissionsDomainModel } from '@/backend_admin/admin_modules/admin_permissions/permissions_domain/admin-permissions.domain'
 
 
 /**

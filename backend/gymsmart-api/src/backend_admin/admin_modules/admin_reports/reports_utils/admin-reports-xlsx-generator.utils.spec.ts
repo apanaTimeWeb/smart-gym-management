@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-reports-xlsx-generator.utils.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminReportsXlsxGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-xlsx-generator.utils.js';
+import { AdminReportsXlsxGeneratorUtils } from '@/backend_admin/admin_modules/admin_reports/reports_utils/admin-reports-xlsx-generator.utils'
 
 describe('AdminReportsXlsxGeneratorUtils', () => {
   it('generates a ZIP-backed XLSX package', () => {

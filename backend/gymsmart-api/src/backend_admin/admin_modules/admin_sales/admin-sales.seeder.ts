@@ -2,7 +2,7 @@
 // FLOW: AdminCoreTenantSeeder -> AdminSalesSeeder -> TypeORM -> usage_snapshots.
 import { DataSource } from 'typeorm';
 
-import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity.js';
+import { AdminSalesEntity } from '@/backend_admin/admin_modules/admin_sales/sales_entities/admin-sales-entity'
 
 /**
  * @description Defines the AdminSalesSeeder boundary for the admin_sales backend feature.

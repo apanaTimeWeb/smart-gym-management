@@ -2,10 +2,10 @@
 // FLOW: Usage command controller -> AdminUsageOrchestratorService -> Master UnitOfWork -> command service/repository -> audit.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service.js';
+import { AdminCoreMasterUnitOfWorkService } from '@/backend_admin/admin_core/admin_core_database/admin-core-master-unit-of-work.service'
 
-import { AdminUsageMutationDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-mutation.dto.js';
-import { AdminUsageCommandService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-command.service.js';
+import { AdminUsageMutationDto } from '@/backend_admin/admin_modules/admin_usage/usage_dtos/admin-usage-mutation.dto'
+import { AdminUsageCommandService } from '@/backend_admin/admin_modules/admin_usage/usage_services/admin-usage-command.service'
 
 @Injectable()
 /**

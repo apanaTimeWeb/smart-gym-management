@@ -2,9 +2,9 @@
 // FLOW: Coupons Repository â†’ AdminCouponsEntity â†’ PostgreSQL admin_coupons table.
 import { PrimaryGeneratedColumn, Column, Entity, Index } from 'typeorm';
 
-import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity.js';
+import { AdminCoreBaseEntity } from '@/backend_admin/admin_core/admin_core_database/admin-core-base.entity'
 
-import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants.js';
+import { AdminCouponsStatus } from '@/backend_admin/admin_modules/admin_coupons/admin-coupons.constants'
 
 @Entity('admin_coupons')
 @Index('IDX_admin_coupons_created_at', ['createdAt'])

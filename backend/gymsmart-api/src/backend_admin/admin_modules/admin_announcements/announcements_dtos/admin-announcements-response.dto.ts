@@ -2,7 +2,7 @@
 // FLOW: Repository domain â†’ Announcements response mapper â†’ ApiResponse<T>.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { AdminAnnouncementsStatus } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.constants.js';
+import { AdminAnnouncementsStatus } from '@/backend_admin/admin_modules/admin_announcements/admin-announcements.constants'
 
 /**
  * @description Defines the AdminAnnouncementViewsByBranchDto boundary for the admin_announcements backend feature.

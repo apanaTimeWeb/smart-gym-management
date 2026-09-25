@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-attendance.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity.js';
-import { AdminAttendanceMapper } from '@/backend_admin/admin_modules/admin_attendance/attendance_mappers/admin-attendance.mapper.js';
+import { AdminAttendanceEntity } from '@/backend_admin/admin_modules/admin_attendance/attendance_entities/admin-attendance-entity'
+import { AdminAttendanceMapper } from '@/backend_admin/admin_modules/admin_attendance/attendance_mappers/admin-attendance.mapper'
 
 describe('AdminAttendanceMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

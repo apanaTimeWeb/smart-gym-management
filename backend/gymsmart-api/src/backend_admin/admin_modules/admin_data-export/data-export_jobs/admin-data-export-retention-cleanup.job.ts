@@ -2,10 +2,10 @@
 // FLOW: Scheduled registry -> tenant context -> retention repository -> object storage delete -> status transition.
 import { Injectable } from '@nestjs/common';
 
-import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager.js';
-import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service.js';
+import { AdminCoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager'
+import { AdminCoreObjectStorageService } from '@/backend_admin/admin_core/admin_core_storage/admin-core-object-storage.service'
 
-import { AdminDataExportRetentionRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-retention.repository.js';
+import { AdminDataExportRetentionRepository } from '@/backend_admin/admin_modules/admin_data-export/data-export_repositories/admin-data-export-retention.repository'
 
 @Injectable()
 /**

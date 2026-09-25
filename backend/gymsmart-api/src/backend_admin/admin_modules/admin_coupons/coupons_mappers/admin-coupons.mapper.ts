@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Translates the TypeORM Admin coupons entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminCouponsEntity â†’ AdminCouponsMapper â†’ domain/response object.
-import { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain.js';
+import { AdminCouponsDomainModel } from '@/backend_admin/admin_modules/admin_coupons/coupons_domain/admin-coupons.domain'
 
-import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity.js';
+import { AdminCouponsEntity } from '@/backend_admin/admin_modules/admin_coupons/coupons_entities/admin-coupons-entity'
 
-import { AdminCouponsKPIDataDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto.js';
+import { AdminCouponsKPIDataDto } from '@/backend_admin/admin_modules/admin_coupons/coupons_dtos/admin-coupons-response.dto'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminCoupons.

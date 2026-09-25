@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Translates the TypeORM Admin branches entity into an ORM-independent domain model and frontend response.
 // FLOW: AdminBranchesEntity â†’ AdminBranchesMapper â†’ domain/response object.
-import { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain.js';
+import { AdminBranchesDomainModel } from '@/backend_admin/admin_modules/admin_branches/branches_domain/admin-branches.domain'
 
-import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity.js';
+import { AdminBranchesEntity } from '@/backend_admin/admin_modules/admin_branches/branches_entities/admin-branches-entity'
 
 /**
  * @description Owns the ORM-to-domain translation boundary for AdminBranches.

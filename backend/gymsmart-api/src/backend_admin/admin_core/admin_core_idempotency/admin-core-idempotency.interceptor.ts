@@ -5,8 +5,8 @@ import { Reflector } from '@nestjs/core';
 
 import { firstValueFrom, from, Observable } from 'rxjs';
 
-import { AdminCoreIdempotencyService } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.service.js';
-import { CORE_REQUIRE_IDEMPOTENCY_KEY } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator.js';
+import { AdminCoreIdempotencyService } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-idempotency.service'
+import { CORE_REQUIRE_IDEMPOTENCY_KEY } from '@/backend_admin/admin_core/admin_core_idempotency/admin-core-require-idempotency-key.decorator'
 
 @Injectable()
 /**

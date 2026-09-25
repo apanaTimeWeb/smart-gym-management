@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns the single implementation responsibility represented by admin-subscriptions.mapper.spec.
 // FLOW: Owning boundary -> implementation -> approved dependencies -> caller.
-import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity.js';
-import { AdminSubscriptionsMapper } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_mappers/admin-subscriptions.mapper.js';
+import { AdminSubscriptionsEntity } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_entities/admin-subscriptions-entity'
+import { AdminSubscriptionsMapper } from '@/backend_admin/admin_modules/admin_subscriptions/subscriptions_mappers/admin-subscriptions.mapper'
 
 describe('AdminSubscriptionsMapper', () => {
   it('preserves identity, timestamps, and frontend payload fields', () => {

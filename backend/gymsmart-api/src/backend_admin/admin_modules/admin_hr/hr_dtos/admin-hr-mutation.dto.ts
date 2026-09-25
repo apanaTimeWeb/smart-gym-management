@@ -4,9 +4,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { AdminCoreIsISO4217CurrencyCode } from '@/backend_admin/admin_core/admin_core_currency/admin-core-is-iso4217-currency-code.decorator.js';
-import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants.js';
-import { AdminHrMutationFieldsDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation-fields.dto.js';
+import { AdminCoreIsISO4217CurrencyCode } from '@/backend_admin/admin_core/admin_core_currency/admin-core-is-iso4217-currency-code.decorator'
+import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
+import { AdminHrMutationFieldsDto } from '@/backend_admin/admin_modules/admin_hr/hr_dtos/admin-hr-mutation-fields.dto'
 
 /**
  * @description Defines the transport-level status and currency contract for Admin HR mutations on top of the isolated field set.

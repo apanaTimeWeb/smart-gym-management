@@ -3,14 +3,14 @@
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard.js';
-import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator.js';
-import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard.js';
-import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants.js';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard'
+import { AdminCoreRoles } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.decorator'
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard'
+import { AdminCoreAdminRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-tenant.constants'
 
-import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto.js';
-import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto, AdminFinanceExpenseResponseDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto.js';
-import { AdminFinanceQueryService } from '@/backend_admin/admin_modules/admin_finance/finance_services/admin-finance-query.service.js';
+import { AdminFinanceQueryDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-query.dto'
+import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto, AdminFinanceExpenseResponseDto } from '@/backend_admin/admin_modules/admin_finance/finance_dtos/admin-finance-response.dto'
+import { AdminFinanceQueryService } from '@/backend_admin/admin_modules/admin_finance/finance_services/admin-finance-query.service'
 
 @ApiTags('Admin / finance')
 @Controller('admin/finance')

@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { Client } from 'pg';
 import 'reflect-metadata';
 
-import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment.js';
+import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment'
 
 function safeDatabaseIdentifier(value: string): string {
   if (!/^[a-zA-Z0-9_]+$/.test(value)) throw new Error('INVALID_TENANT_DATABASE_NAME');

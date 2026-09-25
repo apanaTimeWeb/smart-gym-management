@@ -2,7 +2,7 @@
 // FLOW: Master DB â†’ admin_membership query â†’ trusted tenant context â†’ tenant DataSource.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-import { AdminCoreMasterMembershipRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-membership-role.enum.js';
+import { AdminCoreMasterMembershipRole } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-membership-role.enum'
 
 @Entity('tenant_memberships')
 @Index('IDX_tenant_memberships_actor', ['actorId'])
