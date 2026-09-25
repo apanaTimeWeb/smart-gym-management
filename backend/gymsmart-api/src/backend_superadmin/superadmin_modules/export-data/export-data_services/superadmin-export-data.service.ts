@@ -66,7 +66,7 @@ export class SuperadminExportDataService {
     await this.authorizeJobAccess(job);
     const expired = Boolean(job.expiresAt && job.expiresAt.getTime() <= Date.now());
     const token = !expired && job.expiresAt ? this.downloadToken(job.id, job.expiresAt) : null;
-    return { jobId: job.id, status: String(job.status), ...(job.resultPath && token && job.downloadTokenHash ? { downloadUrl: `/api/superadmin/export-data/download/${job.id}/${token}`, expiresAt: job.expiresAt!.toISOString() } : {}), ...(job.errorCode ? { errorCode: job.errorCode } : {}) };
+    return { jobId: job.id, status: String(job.status), ...(job.resultPath && token && job.downloadTokenHash ? { downloadUrl: `/superadmin/export-data/download/${job.id}/${token}`, expiresAt: job.expiresAt!.toISOString() } : {}), ...(job.errorCode ? { errorCode: job.errorCode } : {}) };
   }
 
   /**
@@ -131,3 +131,4 @@ export class SuperadminExportDataService {
    */
   private safeEqual(a: string, b: string): boolean { const aa = Buffer.from(a); const bb = Buffer.from(b); return aa.length === bb.length && timingSafeEqual(aa, bb); }
 }
+

@@ -98,7 +98,7 @@ export class SuperadminAuthController {
    */
   async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response): Promise<void> {
     await this.service.logout(request.cookies?.refresh_token ?? '');
-    response.clearCookie('refresh_token', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/api/v1/auth' });
+    response.clearCookie('refresh_token', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/auth' });
     response.clearCookie('ghost_session', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/' });
   }
 /**
@@ -150,7 +150,7 @@ export class SuperadminAuthController {
    */
   async exitGhostLogin(@Res({ passthrough: true }) response: Response): Promise<null> {
     response.clearCookie('ghost_session', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/' });
-    response.clearCookie('refresh_token', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/api/v1/auth' });
+    response.clearCookie('refresh_token', { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/auth' });
     return null;
   }
 /**
@@ -167,7 +167,7 @@ export class SuperadminAuthController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private setRefreshCookie(response: Response, token: string): void {
-    response.cookie('refresh_token', token, { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/api/v1/auth', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    response.cookie('refresh_token', token, { httpOnly: true, sameSite: 'lax', secure: this.isProduction(), path: '/auth', maxAge: 7 * 24 * 60 * 60 * 1000 });
   }
 /**
  * Primary Intent: Executes the isProduction use case within the owning backend feature boundary.

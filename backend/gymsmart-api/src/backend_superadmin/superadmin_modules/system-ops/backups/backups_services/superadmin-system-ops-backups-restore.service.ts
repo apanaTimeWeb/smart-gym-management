@@ -37,6 +37,7 @@ export class SuperadminSystemOpsBackupsRestoreService {
     const backup=await this.backups.findCompletedWithArtifactOrThrow(id);
     const job=await this.jobs.create({ type:SuperadminBackupJobType.RESTORE, tenantId:(backup.tenantId ?? 'SYSTEM'), requestedByUserId:actor, resultBackupId:id });
     await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_RESTORE_QUEUE, tenantId:(backup.tenantId ?? 'SYSTEM'), payload:{ backupId:id, type:SuperadminBackupJobType.RESTORE, requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
-    return { jobId:job.id, statusUrl:`/api/superadmin/system-ops/backups/jobs/${job.id}` };
+    return { jobId:job.id, statusUrl:`/superadmin/system-ops/backups/jobs/${job.id}` };
   }
 }
+

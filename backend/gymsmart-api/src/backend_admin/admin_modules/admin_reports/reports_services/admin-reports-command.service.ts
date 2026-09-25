@@ -32,7 +32,7 @@ export class AdminReportsCommandService {
     await this.jobQueue.enqueue('admin-reports', 'ADMIN.REPORTS.GENERATE', entity.id, input as any);
     await this.createAudit(entity.id, 'CREATED', { status: 'processing', tab: input.tab ?? null, format: input.format ?? null });
     const extension = input.format === 'excel' ? 'xlsx' : 'pdf';
-    return { url: `/api/v1/admin/reports/export/${entity.id}/download`, fileName: `report-${entity.id}.${extension}` };
+    return { url: `/admin/reports/export/${entity.id}/download`, fileName: `report-${entity.id}.${extension}` };
   }
 
   /**
@@ -46,3 +46,4 @@ export class AdminReportsCommandService {
     return this.auditTrail.record({ action: `ADMIN_${action}`, entityType: 'AdminFeature', entityId, newValue, severity: AdminCoreAuditSeverity.LOW, module: 'reports' });
   }
 }
+
