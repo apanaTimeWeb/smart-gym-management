@@ -51,8 +51,9 @@ export class AdminSubscriptionsQueryController {
   @Get('fetchInvoices')
   @ApiOperation({ summary: 'Execute fetchInvoices' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminInvoiceDto] })
-  async findAllInvoices(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminCorePaginatedResult<AdminInvoiceDto>> {
-    return this.service.findAllInvoices(query);
+  async findAllInvoices(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminInvoiceDto[]> {
+    const result = await this.service.findAllInvoices(query);
+    return result.items;
   }
 
   // SLA: STANDARD

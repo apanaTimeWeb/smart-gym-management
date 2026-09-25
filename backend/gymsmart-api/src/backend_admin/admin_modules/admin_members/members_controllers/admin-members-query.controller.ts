@@ -29,8 +29,9 @@ export class AdminMembersQueryController {
   @Get()
   @ApiOperation({ summary: 'Execute listMembers' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminMemberDto] })
-  async findAllMembers(@Query() query: AdminMembersQueryDto): Promise<AdminCorePaginatedResult<AdminMemberDto>> {
-    return this.service.findAllMembers(query);
+  async findAllMembers(@Query() query: AdminMembersQueryDto): Promise<AdminMemberDto[]> {
+    const result = await this.service.findAllMembers(query);
+    return result.items;
   }
 
   // SLA: STANDARD

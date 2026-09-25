@@ -29,8 +29,9 @@ export class AdminNotificationsQueryController {
   @Get()
   @ApiOperation({ summary: 'Execute listNotifications' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminNotificationDto] })
-  async findAllNotifications(@Query() query: AdminNotificationsQueryDto): Promise<AdminCorePaginatedResult<AdminNotificationDto>> {
-    return this.service.findAllNotifications(query);
+  async findAllNotifications(@Query() query: AdminNotificationsQueryDto): Promise<AdminNotificationDto[]> {
+    const result = await this.service.findAllNotifications(query);
+    return result.items;
   }
 
 }

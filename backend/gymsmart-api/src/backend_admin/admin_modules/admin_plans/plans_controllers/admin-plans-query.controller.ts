@@ -30,16 +30,18 @@ export class AdminPlansQueryController {
   @Get()
   @ApiOperation({ summary: 'Execute fetchAllPlans' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminPlanDto] })
-  async findAllPlans(@Query() query: AdminPlansQueryDto): Promise<AdminCorePaginatedResult<AdminPlanDto>> {
-    return this.service.findAllPlans(query);
+  async findAllPlans(@Query() query: AdminPlansQueryDto): Promise<AdminPlanDto[]> {
+    const result = await this.service.findAllPlans(query);
+    return result.items;
   }
 
   // SLA: STANDARD
   @Get('fetchAllPlans')
   @ApiOperation({ summary: 'Execute frontend fetchAllPlans contract' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminPlanDto] })
-  async fetchAllPlansAlias(@Query() query: AdminPlansQueryDto): Promise<AdminCorePaginatedResult<AdminPlanDto>> {
-    return this.service.findAllPlans(query);
+  async fetchAllPlansAlias(@Query() query: AdminPlansQueryDto): Promise<AdminPlanDto[]> {
+    const result = await this.service.findAllPlans(query);
+    return result.items;
   }
 
   // SLA: STANDARD
