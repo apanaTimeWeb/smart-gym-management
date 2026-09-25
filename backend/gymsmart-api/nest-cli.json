@@ -5,7 +5,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      { "include": "backend_superadmin/i18n/**/*", "outDir": "dist" }
+      { "include": "**/*_locales/**/*", "outDir": "dist" }
     ],
     "watchAssets": true
   }

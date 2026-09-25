@@ -3,16 +3,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminSettingsEntity } from '@/backend_superadmin/superadmin_modules/settings/superadmin-settings.entity';
-import type { SuperadminSettingsListQuery, SuperadminSettingsCreateInput, SuperadminSettingsUpdateInput } from '@/backend_superadmin/superadmin_modules/settings/types/superadmin-settings.interfaces';
+import type { SuperadminSettingsListQuery, SuperadminSettingsCreateInput, SuperadminSettingsUpdateInput } from '@/backend_superadmin/superadmin_modules/settings/settings_types/superadmin-settings.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminSettingsRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminSettingsRepository extends BaseRepository<SuperadminSettingsEntity> {
-  constructor(@InjectRepository(SuperadminSettingsEntity) repository: Repository<SuperadminSettingsEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminSettingsRepository extends SuperadminCoreBaseRepository<SuperadminSettingsEntity> {
+  constructor(@InjectRepository(SuperadminSettingsEntity) repository: Repository<SuperadminSettingsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminSettingsListQuery): Promise<{ items: SuperadminSettingsEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -24,20 +35,44 @@ export class SuperadminSettingsRepository extends BaseRepository<SuperadminSetti
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminSettingsEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminSettingsEntity> { return super.findByIdOrThrow(id, 'Settings record not found'); }
 
-  /** Creates and persists a settings record. */
+  /**
+ * Primary Intent: Executes the createSettings use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async createSettings(input: SuperadminSettingsCreateInput): Promise<SuperadminSettingsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a settings record. */
+  /**
+ * Primary Intent: Executes the updateSettingsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateSettingsById(id: string, input: SuperadminSettingsUpdateInput): Promise<SuperadminSettingsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-
-  /** Returns current settings grouped into the governance categories consumed by the frontend. */
+  /**
+ * Primary Intent: Executes the findGovernanceGroups use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findGovernanceGroups(): Promise<Record<string, Array<{ label: string; value: string }>>> {
     const rows = await this.activeRepository.find({ where: { deletedAt: null } as never, order: { category: 'ASC', key: 'ASC' } as never });
     const groups: Record<string, Array<{ label: string; value: string }>> = { billing: [], security: [], data: [], communication: [] };
@@ -49,7 +84,12 @@ export class SuperadminSettingsRepository extends BaseRepository<SuperadminSetti
     return groups;
   }
 
-  /** Soft-deletes one settings record. */
+  /**
+ * Primary Intent: Executes the deleteSettingsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteSettingsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
 }

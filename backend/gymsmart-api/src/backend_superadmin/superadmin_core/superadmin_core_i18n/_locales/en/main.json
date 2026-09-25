@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "The request could not be processed.",
+      "VALIDATION_FAILED": "One or more fields are invalid.",
+      "INTERNAL": "An internal error occurred.",
+      "NOT_FOUND": "The requested resource was not found.",
+      "FORBIDDEN": "You are not authorized to perform this action.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key header is required.",
+      "IDEMPOTENCY_INVALID": "The Idempotency-Key is invalid.",
+      "IDEMPOTENCY_IN_PROGRESS": "A request with this Idempotency-Key is already in progress.",
+      "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later.",
+      "CIRCUIT_OPEN": "The downstream service is temporarily unavailable."
+    }
+  }
+}

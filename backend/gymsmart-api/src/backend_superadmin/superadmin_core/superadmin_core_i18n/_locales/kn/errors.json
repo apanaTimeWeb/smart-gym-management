@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "ವಿನಂತಿಯನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಲಿಲ್ಲ.",
+      "VALIDATION_FAILED": "ಒಂದು ಅಥವಾ ಹೆಚ್ಚು ಕ್ಷೇತ್ರಗಳು ಅಮಾನ್ಯವಾಗಿವೆ.",
+      "INTERNAL": "ಆಂತರಿಕ ದೋಷ ಉಂಟಾಗಿದೆ.",
+      "NOT_FOUND": "ಕೋರಿದ ಸಂಪನ್ಮೂಲ ಕಂಡುಬಂದಿಲ್ಲ.",
+      "FORBIDDEN": "ಈ ಕ್ರಿಯೆಯನ್ನು ಮಾಡಲು ನಿಮಗೆ ಅನುಮತಿ ಇಲ್ಲ.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key ಹೆಡರ್ ಅಗತ್ಯವಿದೆ.",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key ಅಮಾನ್ಯವಾಗಿದೆ.",
+      "IDEMPOTENCY_IN_PROGRESS": "ಈ Idempotency-Key ಹೊಂದಿರುವ ವಿನಂತಿ ಈಗಾಗಲೇ ಪ್ರಗತಿಯಲ್ಲಿದೆ.",
+      "RATE_LIMIT_EXCEEDED": "ಹೆಚ್ಚಿನ ವಿನಂತಿಗಳು. ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+      "CIRCUIT_OPEN": "Downstream ಸೇವೆ ತಾತ್ಕಾಲಿಕವಾಗಿ ಲಭ್ಯವಿಲ್ಲ."
+    }
+  }
+}

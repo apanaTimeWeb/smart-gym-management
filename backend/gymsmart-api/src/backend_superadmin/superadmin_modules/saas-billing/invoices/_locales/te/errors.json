@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "Idempotency-Key హెడర్ అవసరం.",
     "IDEMPOTENCY_IN_PROGRESS": "Idempotent అభ్యర్థన ఇప్పటికే ప్రాసెస్ అవుతోంది.",
     "IDEMPOTENCY_INVALID": "సేవ్ చేసిన idempotent ప్రతిస్పందన చెల్లదు.",
-    "PROVISION_FAILED": "Tenant provisioning విఫలమైంది."
+    "PROVISION_FAILED": "Tenant provisioning విఫలమైంది.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

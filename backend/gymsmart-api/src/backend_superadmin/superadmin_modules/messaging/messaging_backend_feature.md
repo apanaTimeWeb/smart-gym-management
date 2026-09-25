@@ -1,75 +1,87 @@
 # messaging Backend Feature Map
 
 ## Module Purpose
-Owns the `messaging` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
-
-
-## Repair Synchronization
-The frontend-required message list and tenant lookup contracts are exposed at `/superadmin/messaging/messages` and `/superadmin/messaging/tenants`, while the legacy base collection remains separate. Export completion uses save-first notification persistence followed by Redis-backed authenticated realtime publication.
+This module owns the backend capability boundary for the superadmin_modules/messaging feature. It exposes 16 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/messaging-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/messaging-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/messaging-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `messaging-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `messaging-contract-snapshot.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `messaging-contract-snapshot.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `messaging-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `messaging-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `messaging-template-insights-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `messaging-whatsapp-bulk-center-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `messaging.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `messaging.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `messaging.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `messaging.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `messaging.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `messaging_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `responses/messaging-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/messaging-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-status.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-template-insights.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-whatsapp-bulk-center.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/messaging-whatsapp-campaign.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/messaging.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/messaging.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `messaging_dtos/superadmin-messaging-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_dtos/superadmin-messaging-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_dtos/superadmin-messaging-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_dtos/superadmin-messaging-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_dtos/superadmin-messaging-whatsapp-campaign-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_responses/superadmin-messaging-notification-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_responses/superadmin-messaging-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_responses/superadmin-messaging-whatsapp-campaign-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `messaging_services/superadmin-messaging-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-export-completion.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-notification.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-template-insights.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-whatsapp-bulk-center.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_services/superadmin-messaging-whatsapp-campaign.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `messaging_types/superadmin-messaging.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `messaging_types/superadmin-messaging.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-messaging-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-messaging-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-messaging-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-messaging-insights-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-messaging-notification.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-messaging-notification.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-messaging-notification.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-messaging-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-messaging-template-insights-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-messaging-whatsapp-bulk-center-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-messaging-whatsapp-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-messaging.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-messaging.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-messaging.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-messaging.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-messaging.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-messaging.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-messaging.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `messaging-command.controller.ts` / `create` | POST | `/superadmin/messaging` | Creates a resource after DTO validation and persists it through the feature repository. | `MessagingCreateDto` | `unknown` |
-| `messaging-command.controller.ts` / `update` | PATCH | `/superadmin/messaging/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `MessagingUpdateDto` | `unknown` |
-| `messaging-command.controller.ts` / `remove` | DELETE | `/superadmin/messaging/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `messaging-command.controller.ts` / `changeStatus` | PATCH | `/superadmin/messaging/:id/status` | Applies the requested status transition through the named repository mutation. | `None` | `unknown` |
-| `messaging-query.controller.ts` / `findAll` | GET | `/superadmin/messaging` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
-| `messaging-query.controller.ts` / `findOne` | GET | `/superadmin/messaging/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `messaging-special.controller.ts` / `templateInsights` | GET | `/superadmin/messaging/template-insights` | Returns message-template usage, campaign engagement, and channel summary data. | `None` | `Record<string, unknown` |
-| `messaging-special.controller.ts` / `whatsappBulkCenter` | GET | `/superadmin/messaging/whatsapp/bulk-center` | Returns the WhatsApp bulk-center templates, audiences, recipients, campaigns, and variables. | `None` | `Record<string, unknown` |
-| `messaging-special.controller.ts` / `whatsappCampaign` | POST | `/superadmin/messaging/whatsapp/campaigns` | Creates a WhatsApp campaign request and persists its outbound job/campaign state. | `Record` | `Record<string, unknown` |
+| `superadmin-messaging-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the create operation. | `SuperadminMessagingCreateDto` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-command.controller.ts::createMessage` | POST | `messages` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the createMessage operation. | `SuperadminMessagingCreateDto` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the update operation. | `SuperadminMessagingUpdateDto` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the remove operation. | `—` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the changeStatus operation. | `SuperadminMessagingStatusDto` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-insights-query.controller.ts::templateInsights` | GET | `superadmin/messaging/template-insights` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the templateInsights operation. | `SuperadminQueryDto` | `SuperadminMessagingTemplateInsightsResponseDto` |
+| `superadmin-messaging-insights-query.controller.ts::templateInsights` | GET | `api/superadmin/messaging/template-insights` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the templateInsights operation. | `SuperadminQueryDto` | `SuperadminMessagingTemplateInsightsResponseDto` |
+| `superadmin-messaging-insights-query.controller.ts::whatsappBulkCenter` | GET | `superadmin/messaging/whatsapp/bulk-center` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the whatsappBulkCenter operation. | `SuperadminQueryDto` | `SuperadminMessagingWhatsappBulkCenterResponseDto` |
+| `superadmin-messaging-notification.controller.ts::list` | GET | `/` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the list operation. | `—` | `[SuperadminMessagingNotificationResponseDto]` |
+| `superadmin-messaging-notification.controller.ts::markAllRead` | PATCH | `read-all` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the markAllRead operation. | `—` | `null` |
+| `superadmin-messaging-notification.controller.ts::markRead` | PATCH | `:id/read` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the markRead operation. | `—` | `SuperadminMessagingNotificationResponseDto` |
+| `superadmin-messaging-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the findAll operation. | `SuperadminMessagingQueryDto` | `See controller contract` |
+| `superadmin-messaging-query.controller.ts::findTenants` | GET | `tenants` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the findTenants operation. | `—` | `Array<` |
+| `superadmin-messaging-query.controller.ts::findMessages` | GET | `messages` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the findMessages operation. | `SuperadminMessagingQueryDto` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminMessagingResponseDto` |
+| `superadmin-messaging-whatsapp-command.controller.ts::whatsappCampaign` | POST | `superadmin/messaging/whatsapp/campaigns` | This endpoint validates transport input, invokes the owning messaging use case, and returns the declared contract for the whatsappCampaign operation. | `SuperadminMessagingWhatsappCampaignCreateDto` | `SuperadminMessagingWhatsappCampaignResponseDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_events, superadmin_core_observability, superadmin_core_pagination, superadmin_core_realtime, superadmin_core_tenancy
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-messaging-contract-snapshot.entity → `superadmin_messaging_contract_snapshots`, superadmin-messaging-notification.entity → `superadmin_notifications`, superadmin-messaging.entity → `superadmin_tenant_messages`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: SUPERADMIN.EXPORT.COMPLETED
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/messaging`, `/superadmin/messaging/:id`, `/superadmin/messaging/:id/status`, `/superadmin/messaging/messages`, `/superadmin/messaging/notifications/:id/read`, `/superadmin/messaging/notifications/read-all`, `/superadmin/messaging/whatsapp/campaigns`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -82,9 +94,25 @@ The frontend-required message list and tenant lookup contracts are exposed at `/
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/messaging/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/messaging` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/messaging/messages` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/messaging/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/messaging/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/messaging/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/template-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/messaging/template-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/whatsapp/bulk-center` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/notifications` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/messaging/notifications/read-all` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/messaging/notifications/:id/read` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/tenants` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/messages` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/messaging/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/messaging/whatsapp/campaigns` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -95,72 +123,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/messaging/` -> the Superadmin r
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend messaging/superadmin_messaging_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Messaging â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The messaging module is responsible for the Superadmin business workflow managing Messaging. It enables superadmins to view, monitor, and control the lifecycle and configurations of Messaging across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `messaging_api/` | Feature-owned responsibility for messaging api. | `SuperadminMessagingApi.ts`, `SuperadminMessagingTemplateInsightsApi.ts` |
-| `messaging_mocks/` | Feature-owned responsibility for messaging mocks. | `(directory present; no direct files)` |
-| `messaging_schemas/` | Feature-owned responsibility for messaging schemas. | `SuperadminMessagingComposeSchema.test.ts`, `SuperadminMessagingComposeSchema.ts` |
-| `messaging_tests/` | Feature-owned responsibility for messaging tests. | `SuperadminMessagingBasic.test.tsx`, `SuperadminMessagingTemplateInsights.test.ts` |
-| `messaging_types/` | Feature-owned responsibility for messaging types. | `SuperadminMessagingComposeModalTypes.ts`, `SuperadminMessagingConstants.ts`, `SuperadminMessagingMessagesTabTypes.ts`, `SuperadminMessagingNotificationIconTypes.ts`, `SuperadminMessagingNotificationsTabTypes.ts`, `SuperadminMessagingTenantDropdownTypes.ts`, `SuperadminMessagingTypes.ts`, `SuperadminMessagingV1Types.ts`, `SuperadminMessagingV1WhatsAppAudiencePanelTypes.ts`, `SuperadminMessagingV1WhatsAppCampaignHistoryPanelTypes.ts`, `SuperadminMessagingV1WhatsAppCampaignSummaryCardsTypes.ts`, `SuperadminMessagingV1WhatsAppComposerPanelTypes.ts` |
-| `messaging_utils/` | Feature-owned responsibility for messaging utils. | `SuperadminMessagingStatusBadgeConfig.ts`, `useSuperadminMessaging.test.tsx`, `useSuperadminMessaging.ts`, `useSuperadminMessagingNotificationMutations.ts`, `useSuperadminMessagingNotifications.ts`, `useSuperadminMessagingV1.ts` |
-| `messaging_whatsapp_api/` | Feature-owned responsibility for messaging whatsapp api. | `SuperadminMessagingWhatsappApi.ts` |
-| `messaging_whatsapp_components/` | Feature-owned responsibility for messaging whatsapp components. | `SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `SuperadminMessagingV1WhatsAppTemplatePicker.tsx` |
-| `messaging_whatsapp_mocks/` | Feature-owned responsibility for messaging whatsapp mocks. | `(directory present; no direct files)` |
-| `messaging_whatsapp_tests/` | Feature-owned responsibility for messaging whatsapp tests. | `SuperadminMessagingV1WhatsAppBulkCenter.test.tsx`, `SuperadminMessagingV1WhatsAppSchema.test.ts` |
-| `messaging_whatsapp_types/` | Feature-owned responsibility for messaging whatsapp types. | `SuperadminMessagingV1WhatsAppTypes.ts`, `SuperadminMessagingWhatsAppTypes.ts` |
-| `messaging_whatsapp_utils/` | Feature-owned responsibility for messaging whatsapp utils. | `SuperadminMessagingV1WhatsApp.test.ts`, `SuperadminMessagingV1WhatsAppUtils.ts`, `useSuperadminMessagingV1WhatsApp.test.tsx`, `useSuperadminMessagingV1WhatsApp.ts`, `useSuperadminMessagingV1WhatsAppCampaign.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Messaging | `/superadmin/messaging` | clear queue; click outside; complete; mark all read; mark read; open; select; send | `SuperadminMessagingTemplateInsightsApi.ts`, `SuperadminMessagingApi.ts`, `SuperadminMessagingWhatsappApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/messaging route to load the Messaging data context securely via TanStack Query.
-2. Interact with the Messaging dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Messaging status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `messaging`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `messaging_whatsapp_utils/useSuperadminMessagingV1WhatsApp.ts`, `messaging_whatsapp_utils/useSuperadminMessagingV1WhatsAppCampaign.ts`, `messaging_components/useSuperadminMessagingDateRangePicker.ts`, `messaging_utils/useSuperadminMessagingNotifications.ts`, `messaging_utils/useSuperadminMessagingV1.ts`, `messaging_utils/useSuperadminMessaging.ts`, `messaging_utils/useSuperadminMessagingNotificationMutations.ts`
-- **URL state:** `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'messaging', 'whatsapp-bulk-center']`, `['superadmin', 'messaging_template_insights']`, `[...MESSAGE_QUERY_KEY, queryParams]`
-
-## API Contract
+#### Source: `messaging/superadmin_messaging_features.md`
 
 - **API files:** `messaging_api/SuperadminMessagingApi.ts`, `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
 - **Detected API symbols:** `fetchMessages` — `messaging_api/SuperadminMessagingApi.ts`; `fetchNotifications` — `messaging_api/SuperadminMessagingApi.ts`; `fetchTenants` — `messaging_api/SuperadminMessagingApi.ts`; `markNotificationRead` — `messaging_api/SuperadminMessagingApi.ts`; `markAllNotificationsRead` — `messaging_api/SuperadminMessagingApi.ts`; `sendMessage` — `messaging_api/SuperadminMessagingApi.ts`; `fetchMessagingTemplateInsights` — `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`; `fetchWhatsAppBulkCenter` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`; `createWhatsAppCampaign` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
@@ -168,7 +135,25 @@ The messaging module is responsible for the Superadmin business workflow managin
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `messaging/superadmin_messaging_template_insights_features.md`
+
+- **API files:** `messaging_api/SuperadminMessagingApi.ts`, `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
+- **Detected API symbols:** `fetchMessages` — `messaging_api/SuperadminMessagingApi.ts`; `fetchNotifications` — `messaging_api/SuperadminMessagingApi.ts`; `fetchTenants` — `messaging_api/SuperadminMessagingApi.ts`; `markNotificationRead` — `messaging_api/SuperadminMessagingApi.ts`; `markAllNotificationsRead` — `messaging_api/SuperadminMessagingApi.ts`; `sendMessage` — `messaging_api/SuperadminMessagingApi.ts`; `fetchMessagingTemplateInsights` — `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`; `fetchWhatsAppBulkCenter` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`; `createWhatsAppCampaign` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `messaging/superadmin_messaging_whatsapp_features.md`
+
+- **API files:** `messaging_api/SuperadminMessagingApi.ts`, `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
+- **Detected API symbols:** `fetchMessages` — `messaging_api/SuperadminMessagingApi.ts`; `fetchNotifications` — `messaging_api/SuperadminMessagingApi.ts`; `fetchTenants` — `messaging_api/SuperadminMessagingApi.ts`; `markNotificationRead` — `messaging_api/SuperadminMessagingApi.ts`; `markAllNotificationsRead` — `messaging_api/SuperadminMessagingApi.ts`; `sendMessage` — `messaging_api/SuperadminMessagingApi.ts`; `fetchMessagingTemplateInsights` — `messaging_api/SuperadminMessagingTemplateInsightsApi.ts`; `fetchWhatsAppBulkCenter` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`; `createWhatsAppCampaign` — `messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `messaging/superadmin_messaging_features.md`
 
 - **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -177,53 +162,74 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `messaging/superadmin_messaging_template_insights_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** None detected.
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+#### Source: `messaging/superadmin_messaging_whatsapp_features.md`
 
-## Component Responsibility Map
+- **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Renders the page component and its associated UI logic. |
-| `messaging_components/SuperadminMessagingNotificationsTab.tsx` | Renders notification state and delegates read mutations to the Superadmin Messaging hook. |
-| `messaging_components/SuperadminMessagingDateRangePicker.tsx` | Renders the SuperadminMessagingDateRangePicker control; date calculation and state are isolated in the adjacent hook/utility. |
-| `messaging_components/SuperadminMessagingComposeModal.tsx` | Owns Superadmin Messaging form presentation and client-side Zod validation. |
-| `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx` | Renders the Superadmin messaging V1 Campaign engagement view. |
-| `messaging_components/SuperadminMessagingTenantDropdown.tsx` | Renders the Messaging Tenant Dropdown component and its associated UI logic. |
-| `messaging_components/SuperadminMessagingMessagesTab.tsx` | Renders the searchable, filterable, URL-backed Superadmin tenant message table. |
-| `messaging_components/SuperadminMessagingClient.tsx` | Renders the Superadmin tenant messaging workspace using the module's URL-backed query state. |
-| `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx` | Renders the Superadmin messaging V1 Template library view. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppQueuePanel responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppTemplatePicker responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppPreviewPanel responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppAudiencePanel responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppCampaignHistoryPanel responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppComposerPanel responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppCampaignSummaryCards responsibility defined by this module feature. |
-| `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx` | Renders or orchestrates the Superadmin MessagingV1WhatsAppBulkCenter responsibility defined by this module feature. |
-| `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx` | Renders the Superadmin notification bell UI. Notification business data access is isolated in useSuperadminMessagingNotifications. |
-| `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx` | Renders the semantic icon for one Superadmin notification severity. |
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Repository-Verified Repair Notes
+### Static Freeze Status
 
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into messaging.
-- **Destructive Actions**: Any deletion or modification of messaging records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for messaging do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``withQuery({superadmin}/messages, params)`` | ``ApiResponse<TenantMessage[]>`` | `REQ-055` / ``fetchMessages`` |
+| ``{superadmin}/notifications`` | ``ApiResponse<SuperadminNotification[]>`` | `REQ-056` / ``fetchNotifications`` |
+| ``{superadmin}/tenants`` | ``ApiResponse<MessagingTenant[]>`` | `REQ-057` / ``fetchTenants`` |
+| ``{superadmin}/notifications/{id}/read`` | ``ApiResponse<SuperadminNotification>`` | `REQ-058` / ``markNotificationRead`` |
+| ``{superadmin}/notifications/read-all`` | ``ApiResponse<SuperadminNotification[]>`` | `REQ-059` / ``markAllNotificationsRead`` |
+| ``{superadmin}/messages`` | ``ApiResponse<TenantMessage>`` | `REQ-060` / ``sendMessage`` |
+| ``/api/superadmin/messaging/template-insights`` | ``ApiResponse<SuperadminMessagingV1Data>`` | `REQ-061` / ``fetchMessagingTemplateInsights`` |
+| ``/superadmin/messaging/whatsapp/bulk-center`` | ``ApiResponse<SuperadminWhatsAppBulkCenterData>`` | `REQ-062` / ``fetchWhatsAppBulkCenter`` |
+| ``/superadmin/messaging/whatsapp/campaigns`` | ``ApiResponse<SuperadminWhatsAppCampaign>`` | `REQ-063` / ``createWhatsAppCampaign`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `messaging_components/SuperadminMessagingNotificationsTab.tsx`, `messaging_components/SuperadminMessagingDateRangePicker.tsx`, `messaging_components/SuperadminMessagingComposeModal.tsx`, `messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx`, `messaging_components/SuperadminMessagingTenantDropdown.tsx`, `messaging_components/SuperadminMessagingMessagesTab.tsx`, `messaging_components/SuperadminMessagingClient.tsx`, `messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppTemplatePicker.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell.tsx`, `messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationIcon.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

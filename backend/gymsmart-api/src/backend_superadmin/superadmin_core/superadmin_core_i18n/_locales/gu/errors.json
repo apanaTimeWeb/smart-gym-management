@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "વિનંતી પર પ્રક્રિયા કરી શકાઈ નથી.",
+      "VALIDATION_FAILED": "એક અથવા વધુ ફીલ્ડ અમાન્ય છે.",
+      "INTERNAL": "આંતરિક ભૂલ થઈ.",
+      "NOT_FOUND": "વિનંતી કરેલ સ્રોત મળ્યો નથી.",
+      "FORBIDDEN": "આ ક્રિયા કરવાની તમને પરવાનગી નથી.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key હેડર આવશ્યક છે.",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key અમાન્ય છે.",
+      "IDEMPOTENCY_IN_PROGRESS": "આ Idempotency-Key વાળી વિનંતી પહેલેથી પ્રક્રિયામાં છે.",
+      "RATE_LIMIT_EXCEEDED": "ઘણી વધુ વિનંતીઓ. કૃપા કરીને પછી ફરી પ્રયાસ કરો.",
+      "CIRCUIT_OPEN": "ડાઉનસ્ટ્રીમ સેવા અસ્થાયી રીતે અનુપલબ્ધ છે."
+    }
+  }
+}

@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "Idempotency-Key ഹെഡർ ആവശ്യമാണ്.",
     "IDEMPOTENCY_IN_PROGRESS": "Idempotent അഭ്യർത്ഥന ഇതിനകം പ്രോസസ്സ് ചെയ്യുന്നു.",
     "IDEMPOTENCY_INVALID": "സംഭരിച്ച idempotent പ്രതികരണം അസാധുവാണ്.",
-    "PROVISION_FAILED": "Tenant provisioning പരാജയപ്പെട്ടു."
+    "PROVISION_FAILED": "Tenant provisioning പരാജയപ്പെട്ടു.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

@@ -1,65 +1,63 @@
 # analytics Backend Feature Map
 
 ## Module Purpose
-Owns Superadmin retention and growth analytics views and their persisted contract snapshots. Query behavior remains behind AnalyticsRepository and frontend contract snapshots are represented by an explicit response DTO. The feature does not import sibling business modules directly.
 
-
-## Repair Synchronization
-As of the current repair snapshot, frontend-critical analytics responses are computed from authoritative tenants, invoices, feature flags, and persisted acquisition fields. Cohort, movement, adoption, source, and concentration outputs are repository-derived; no frontend-critical response is intentionally sourced from a contract snapshot table.
+This module owns the backend capability boundary for the superadmin_modules/analytics feature. It exposes 7 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `analytics-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `analytics-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `analytics-retention-insights-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `analytics-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `analytics.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `analytics.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `analytics.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `analytics.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `analytics.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `analytics_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dtos/analytics-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/analytics-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/analytics-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/analytics-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/analytics-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-main.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-retention-insights.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/analytics-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/analytics.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/analytics.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `analytics_dtos/superadmin-analytics-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `analytics_dtos/superadmin-analytics-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `analytics_dtos/superadmin-analytics-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `analytics_responses/superadmin-analytics-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `analytics_services/superadmin-analytics-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-main.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-retention-insights.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_services/superadmin-analytics-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `analytics_types/superadmin-analytics.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `analytics_types/superadmin-analytics.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-analytics-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-analytics-insights-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-analytics-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-analytics-retention-insights-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-analytics.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-analytics.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-analytics.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-analytics.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-analytics.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-analytics.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-analytics.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `analytics-command.controller.ts` / `create` | POST | `/superadmin/analytics` | Creates a resource after DTO validation and persists it through the feature repository. | `AnalyticsCreateDto` | `unknown` |
-| `analytics-command.controller.ts` / `update` | PATCH | `/superadmin/analytics/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `AnalyticsUpdateDto` | `unknown` |
-| `analytics-command.controller.ts` / `remove` | DELETE | `/superadmin/analytics/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `analytics-query.controller.ts` / `findOne` | GET | `/superadmin/analytics/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `analytics-special.controller.ts` / `main` | GET | `/superadmin/analytics` | Returns the feature-level frontend contract projection owned by this module. | `None` | `Record<string, unknown` |
-| `analytics-special.controller.ts` / `retentionInsights` | GET | `/superadmin/analytics/retention-insights` | Returns the complete retention/growth analytics contract consumed by the frontend charts and KPI panels. | `None` | `Record<string, unknown` |
+| `superadmin-analytics-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the create operation. | `SuperadminAnalyticsCreateDto` | `SuperadminAnalyticsResponseDto` |
+| `superadmin-analytics-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the update operation. | `SuperadminAnalyticsUpdateDto` | `SuperadminAnalyticsResponseDto` |
+| `superadmin-analytics-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-analytics-insights-query.controller.ts::main` | GET | `superadmin/analytics` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the main operation. | `SuperadminQueryDto` | `SuperadminAnalyticsResponseDto` |
+| `superadmin-analytics-insights-query.controller.ts::retentionInsights` | GET | `superadmin/analytics/retention-insights` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the retentionInsights operation. | `SuperadminQueryDto` | `SuperadminAnalyticsRetentionInsightsResponseDto` |
+| `superadmin-analytics-insights-query.controller.ts::retentionInsights` | GET | `api/superadmin/analytics/retention-insights` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the retentionInsights operation. | `SuperadminQueryDto` | `SuperadminAnalyticsRetentionInsightsResponseDto` |
+| `superadmin-analytics-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning analytics use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminAnalyticsResponseDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-analytics.entity → `superadmin_analytics_snapshots`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/analytics`, `/superadmin/analytics/:id`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -72,9 +70,16 @@ As of the current repair snapshot, frontend-critical analytics responses are com
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/analytics/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/analytics` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/analytics/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/analytics/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/analytics` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/analytics/retention-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/analytics/retention-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/analytics/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -85,65 +90,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/analytics/` -> the Superadmin r
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend analytics/superadmin_analytics_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Analytics â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The analytics module is responsible for the Superadmin business workflow managing Analytics. It enables superadmins to view, monitor, and control the lifecycle and configurations of Analytics across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `analytics_api/` | Feature-owned responsibility for analytics api. | `SuperadminAnalyticsApi.ts`, `SuperadminAnalyticsRetentionInsightsApi.ts` |
-| `analytics_mocks/` | Feature-owned responsibility for analytics mocks. | `(directory present; no direct files)` |
-| `analytics_tests/` | Feature-owned responsibility for analytics tests. | `SuperadminAnalyticsBasic.test.tsx`, `SuperadminAnalyticsRetentionInsights.test.ts` |
-| `analytics_types/` | Feature-owned responsibility for analytics types. | `SuperadminAnalyticsTypes.ts`, `SuperadminAnalyticsV1Types.ts` |
-| `analytics_utils/` | Feature-owned responsibility for analytics utils. | `useSuperadminAnalyticsPage.ts`, `useSuperadminAnalyticsV1.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Analytics | `/superadmin/analytics` | view the module surface; use the documented filters and controls; open supported detail/edit surfaces | `SuperadminAnalyticsRetentionInsightsApi.ts`, `SuperadminAnalyticsApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/analytics route to load the Analytics data context securely via TanStack Query.
-2. Interact with the Analytics dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Analytics status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `analytics`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `analytics_utils/useSuperadminAnalyticsPage.ts`, `analytics_utils/useSuperadminAnalyticsV1.ts`
-- **URL state:** No `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'analytics', timeRange, customStart, customEnd]`, `['superadmin', 'analytics_retention_insights']`
-
-## API Contract
+#### Source: `analytics/superadmin_analytics_features.md`
 
 - **API files:** `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`, `analytics_api/SuperadminAnalyticsApi.ts`
 - **Detected API symbols:** `fetchAnalyticsRetentionInsights` — `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`; `fetchRevenueMetrics` — `analytics_api/SuperadminAnalyticsApi.ts`
@@ -151,7 +102,17 @@ The analytics module is responsible for the Superadmin business workflow managin
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `analytics/superadmin_analytics_retention_insights_features.md`
+
+- **API files:** `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`, `analytics_api/SuperadminAnalyticsApi.ts`
+- **Detected API symbols:** `fetchAnalyticsRetentionInsights` — `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`; `fetchRevenueMetrics` — `analytics_api/SuperadminAnalyticsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `analytics/superadmin_analytics_features.md`
 
 - **Data-bearing components:** `page.tsx`, `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx`, `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx`, `analytics_components/SuperadminAnalyticsClient.tsx`, `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx`, `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx`, `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -160,41 +121,51 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `analytics/superadmin_analytics_retention_insights_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx`, `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx`, `analytics_components/SuperadminAnalyticsClient.tsx`, `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx`, `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx`, `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** None detected.
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+### Static Freeze Status
 
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Renders the page component. |
-| `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx` | Renders the Superadmin analytics V1 Cohort retention view. |
-| `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx` | Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards. |
-| `analytics_components/SuperadminAnalyticsClient.tsx` | Renders the Revenue Analytics dashboard â€” KPI cards + ApexCharts area/bar charts. |
-| `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx` | A unified Date Filter dropdown used across Superadmin pages (Dashboard, Analytics, Invoices, Coupons, Onboarding, Reports). |
-| `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx` | Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view. |
-| `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx` | Renders the Superadmin analytics V1 Income movement, Revenue share concentration view. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into analytics.
-- **Destructive Actions**: Any deletion or modification of analytics records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for analytics do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<AnalyticsApiData>`` | `REQ-008` / ``fetchRevenueMetrics`` |
+| ``/api/superadmin/analytics/retention-insights`` | ``ApiResponse<SuperadminAnalyticsV1Data>`` | `REQ-009` / ``fetchAnalyticsRetentionInsights`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx`, `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx`, `analytics_components/SuperadminAnalyticsClient.tsx`, `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx`, `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx`, `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx`, `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx`, `analytics_components/SuperadminAnalyticsClient.tsx`, `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx`, `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx`, `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

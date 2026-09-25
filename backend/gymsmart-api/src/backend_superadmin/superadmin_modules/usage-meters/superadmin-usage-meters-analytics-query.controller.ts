@@ -2,28 +2,46 @@
 // FLOW: HTTP request -> DTO/query -> owning micro-service -> canonical response envelope.
 
 import { Controller, UseGuards, HttpStatus, Body, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { SuperadminJwtAuthGuard } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-jwt-auth.guard';
-import { SuperadminRolesGuard } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-roles.guard';
-import { Roles } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-roles.decorator';
-import { SuperadminRole } from '@/backend_superadmin/superadmin_core/auth/superadmin-core-auth.types';
+import { SuperadminCoreJwtAuthGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-jwt-auth.guard';
+import { SuperadminCoreRolesGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.guard';
+import { Roles } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.decorator';
+import { SuperadminRole } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-auth.constants';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SuperadminUsageMetersMainService } from '@/backend_superadmin/superadmin_modules/usage-meters/services/superadmin-usage-meters-main.service';
-import { SuperadminQueryDto } from '@/backend_superadmin/superadmin_core/pagination/superadmin-query.dto';
+import { SuperadminUsageMetersMainService } from '@/backend_superadmin/superadmin_modules/usage-meters/usage-meters_services/superadmin-usage-meters-main.service';
+import { SuperadminQueryDto } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-query.dto';
 
+/**
+ * Primary Intent: Defines SuperadminUsageMetersAnalyticsQueryController as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @ApiTags('usagemetersanalyticsquery')
 @Controller()
-@UseGuards(SuperadminJwtAuthGuard, SuperadminRolesGuard)
+@UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminUsageMetersAnalyticsQueryController {
   constructor(private readonly mainService: SuperadminUsageMetersMainService) {}
-
+/**
+ * Primary Intent: Executes the main use case within the owning backend feature boundary.
+ * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+ * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+ * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+ */
 
   /** Executes GET /superadmin/usage-meters. */
-  @ApiOperation({ summary: 'GET /superadmin/usage-meters' })
   // SLA: FAST
-  @Get('superadmin/usage-meters')
-  @Get('api/superadmin/usage-meters')
+    @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
+  // SLA: FAST
+@Get(['api/superadmin/usage-meters', 'api/superadmin/usage-meters'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
-  async main(@Query() query: SuperadminQueryDto): Promise<unknown> { return await this.mainService.findUsageMetersData({ query }); }
+  @ApiOperation({ summary: 'main' })
+  /**
+   * Primary Intent: Executes the main use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async main(@Query() query: SuperadminQueryDto): Promise<Awaited<ReturnType<SuperadminUsageMetersMainService['findUsageMetersData']>>> { return await this.mainService.findUsageMetersData({ query }); }
 
 }

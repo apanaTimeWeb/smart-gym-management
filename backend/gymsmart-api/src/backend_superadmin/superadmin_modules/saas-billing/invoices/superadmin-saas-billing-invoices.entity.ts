@@ -1,52 +1,76 @@
 // RESPONSIBILITY: TypeORM persistence entity for invoices feature data stored in `saas_invoices`.
 // FLOW: invoices repository -> SaasInvoice entity -> PostgreSQL `saas_invoices`.
 import { Column, Entity, Index } from 'typeorm';
-import { BaseEntity } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.entity';
+import { SuperadminCoreBaseEntity } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.entity';
 
-export enum SaasInvoiceStatus {
-  FAILED = 'FAILED',
-  OVERDUE = 'OVERDUE',
-  PAID = 'PAID',
-  PENDING = 'PENDING',
-}
-
-export enum SaasInvoicePaymentMethod {
-  BankTransfer = 'Bank Transfer',
-  CreditCard = 'Credit Card',
-  UPI = 'UPI',
-}
-
-export enum SaasInvoiceInvoiceType {
-  ONETIME = 'ONE_TIME',
-  RECURRING = 'RECURRING',
-  SETUPFEE = 'SETUP_FEE',
-}
-
+import { SaasInvoiceInvoiceType, SaasInvoicePaymentMethod, SaasInvoiceStatus } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.constants';
+/**
+ * Primary Intent: Defines SuperadminSaasBillingInvoicesEntity as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Entity('superadmin_saas_invoices')
 @Index('IDX_saas_invoices_updated_at', ['updatedAt'])
-export class SuperadminInvoicesEntity extends BaseEntity {
-  @Column({ name: 'tenant_id', type: 'varchar', length: 500 })
+export class SuperadminSaasBillingInvoicesEntity extends SuperadminCoreBaseEntity {
+  /**
+ * Primary Intent: Documents entity property tenantId. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'tenant_id', type: 'char', length: 3 })
   tenantId!: string;
-  @Column({ name: 'tenant_name', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property tenantName. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'tenant_name', type: 'varchar', length: 500 })
   tenantName!: string;
-  @Column({ name: 'amount', type: 'integer', default: 0 })
+  /**
+ * Primary Intent: Documents entity property amount. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'amount', type: 'integer', default: 0 })
   amount!: number;
-  @Column({ name: 'currency', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property currency. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'currency', type: 'char', length: 3 })
   currency!: string;
-  @Column({ name: 'status', type: 'enum', enum: SaasInvoiceStatus })
+  /**
+ * Primary Intent: Documents entity property status. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'status', type: 'enum', enum: SaasInvoiceStatus })
   status!: SaasInvoiceStatus;
-  @Column({ name: 'issued_at', type: 'timestamptz' })
+  /**
+ * Primary Intent: Documents entity property issuedAt. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'issued_at', type: 'timestamptz' })
   issuedAt!: Date;
-  @Column({ name: 'due_date', type: 'timestamptz' })
+  /**
+ * Primary Intent: Documents entity property dueDate. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'due_date', type: 'timestamptz' })
   dueDate!: Date;
-  @Column({ name: 'paid_at', type: 'timestamptz', nullable: true })
+  /**
+ * Primary Intent: Documents entity property paidAt. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'paid_at', type: 'timestamptz', nullable: true })
   paidAt!: Date | null;
-  @Column({ name: 'payment_method', type: 'enum', enum: SaasInvoicePaymentMethod })
+  /**
+ * Primary Intent: Documents entity property paymentMethod. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'payment_method', type: 'enum', enum: SaasInvoicePaymentMethod })
   paymentMethod!: SaasInvoicePaymentMethod;
-  @Column({ name: 'invoice_type', type: 'enum', enum: SaasInvoiceInvoiceType })
+  /**
+ * Primary Intent: Documents entity property invoiceType. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'invoice_type', type: 'enum', enum: SaasInvoiceInvoiceType })
   invoiceType!: SaasInvoiceInvoiceType;
-  @Column({ name: 'plan_name', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property planName. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'plan_name', type: 'varchar', length: 500 })
   planName!: string;
-  @Column({ name: 'tax_id', type: 'varchar', length: 500 })
+  /**
+ * Primary Intent: Documents entity property taxId. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'tax_id', type: 'varchar', length: 500 })
   taxId!: string;
 }

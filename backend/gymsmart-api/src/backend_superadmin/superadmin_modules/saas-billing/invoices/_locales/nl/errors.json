@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "De header Idempotency-Key is vereist.",
     "IDEMPOTENCY_IN_PROGRESS": "Het idempotente verzoek wordt al verwerkt.",
     "IDEMPOTENCY_INVALID": "De opgeslagen idempotente respons is ongeldig.",
-    "PROVISION_FAILED": "Het provisioneren van de tenant is mislukt."
+    "PROVISION_FAILED": "Het provisioneren van de tenant is mislukt.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

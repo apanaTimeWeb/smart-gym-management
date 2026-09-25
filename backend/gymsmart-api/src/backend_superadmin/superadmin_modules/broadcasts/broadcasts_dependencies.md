@@ -4,27 +4,27 @@
 None. This feature must not import sibling business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/broadcasts/broadcasts-audience-insights-response.dto.ts`
-- `@/modules/backend_superadmin/broadcasts/broadcasts-command.controller`
-- `@/modules/backend_superadmin/broadcasts/broadcasts-contract-snapshot.entity`
-- `@/modules/backend_superadmin/broadcasts/broadcasts-contract-snapshot.repository`
-- `@/modules/backend_superadmin/broadcasts/broadcasts-query.controller`
-- `@/modules/backend_superadmin/broadcasts/broadcasts-special.controller`
-- `@/modules/backend_superadmin/broadcasts/broadcasts.constants`
-- `@/modules/backend_superadmin/broadcasts/broadcasts.entity`
-- `@/modules/backend_superadmin/broadcasts/broadcasts.mapper`
-- `@/modules/backend_superadmin/broadcasts/broadcasts.repository`
-- `@/modules/backend_superadmin/broadcasts/dtos/broadcasts-create.dto`
-- `@/modules/backend_superadmin/broadcasts/dtos/broadcasts-query.dto`
-- `@/modules/backend_superadmin/broadcasts/dtos/broadcasts-update.dto`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-audience-insights.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-create.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-delete.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-find.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-list.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-status.service`
-- `@/modules/backend_superadmin/broadcasts/services/broadcasts-update.service`
-- `@/modules/backend_superadmin/broadcasts/types/broadcasts.interfaces`
+- `@/backend_superadmin/broadcasts/broadcasts-audience-insights-response.dto.ts`
+- `@/backend_superadmin/broadcasts/broadcasts-command.controller`
+- `@/backend_superadmin/broadcasts/broadcasts-contract-snapshot.entity`
+- `@/backend_superadmin/broadcasts/broadcasts-contract-snapshot.repository`
+- `@/backend_superadmin/broadcasts/broadcasts-query.controller`
+- `@/backend_superadmin/broadcasts/broadcasts-special.controller`
+- `@/backend_superadmin/broadcasts/broadcasts.constants`
+- `@/backend_superadmin/broadcasts/broadcasts.entity`
+- `@/backend_superadmin/broadcasts/broadcasts.mapper`
+- `@/backend_superadmin/broadcasts/broadcasts.repository`
+- `@/backend_superadmin/broadcasts/dtos/broadcasts-create.dto`
+- `@/backend_superadmin/broadcasts/dtos/broadcasts-query.dto`
+- `@/backend_superadmin/broadcasts/dtos/broadcasts-update.dto`
+- `@/backend_superadmin/broadcasts/services/broadcasts-audience-insights.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-create.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-delete.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-find.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-list.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-status.service`
+- `@/backend_superadmin/broadcasts/services/broadcasts-update.service`
+- `@/backend_superadmin/broadcasts/types/broadcasts.interfaces`
 
 ## Infrastructure Imports
 

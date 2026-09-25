@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "La requête n’a pas pu être traitée.",
+      "VALIDATION_FAILED": "Un ou plusieurs champs sont invalides.",
+      "INTERNAL": "Une erreur interne est survenue.",
+      "NOT_FOUND": "La ressource demandée est introuvable.",
+      "FORBIDDEN": "Vous n’êtes pas autorisé à effectuer cette action.",
+      "IDEMPOTENCY_REQUIRED": "L’en-tête Idempotency-Key est requis.",
+      "IDEMPOTENCY_INVALID": "La clé Idempotency-Key est invalide.",
+      "IDEMPOTENCY_IN_PROGRESS": "Une requête avec cette Idempotency-Key est déjà en cours.",
+      "RATE_LIMIT_EXCEEDED": "Trop de requêtes. Réessayez plus tard.",
+      "CIRCUIT_OPEN": "Le service en aval est temporairement indisponible."
+    }
+  }
+}

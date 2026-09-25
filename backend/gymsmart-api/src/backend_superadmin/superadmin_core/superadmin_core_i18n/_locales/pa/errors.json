@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "ਬੇਨਤੀ ਦੀ ਪ੍ਰਕਿਰਿਆ ਨਹੀਂ ਹੋ ਸਕੀ।",
+      "VALIDATION_FAILED": "ਇੱਕ ਜਾਂ ਵੱਧ ਖੇਤਰ ਅਵੈਧ ਹਨ।",
+      "INTERNAL": "ਅੰਦਰੂਨੀ ਗਲਤੀ ਹੋਈ ਹੈ।",
+      "NOT_FOUND": "ਮੰਗਿਆ ਸਰੋਤ ਨਹੀਂ ਮਿਲਿਆ।",
+      "FORBIDDEN": "ਤੁਹਾਨੂੰ ਇਹ ਕਾਰਵਾਈ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ।",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key ਹੈਡਰ ਲਾਜ਼ਮੀ ਹੈ।",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key ਅਵੈਧ ਹੈ।",
+      "IDEMPOTENCY_IN_PROGRESS": "ਇਸ Idempotency-Key ਵਾਲੀ ਬੇਨਤੀ ਪਹਿਲਾਂ ਹੀ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਹੈ।",
+      "RATE_LIMIT_EXCEEDED": "ਬਹੁਤ ਜ਼ਿਆਦਾ ਬੇਨਤੀਆਂ। ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "CIRCUIT_OPEN": "ਡਾਊਨਸਟ੍ਰੀਮ ਸੇਵਾ ਅਸਥਾਈ ਤੌਰ ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।"
+    }
+  }
+}

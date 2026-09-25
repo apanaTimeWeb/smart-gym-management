@@ -1,35 +1,43 @@
 # backups Backend Feature Map
 
 ## Module Purpose
-This feature owns the Superadmin backend capability represented by the matching frontend route slice.
-This child feature is nested under the frontend-mirrored `system-ops` container and is an independent AI repair unit. It must not absorb `backups`, `infrastructure`, `jobs`, or `migrations` sibling behavior. All persistence stays behind its TypeORM repositories.
+
+This module owns the backend capability boundary for the superadmin_modules/system-ops/backups feature. It exposes 15 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Feature Inventory
+
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `backups-command.controller.ts` | POST | `/superadmin/system-ops/backups` | Implements the POST /superadmin/system-ops/backups contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-command.controller.ts` | PATCH | `/superadmin/system-ops/backups:id` | Implements the PATCH /superadmin/system-ops/backups:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-command.controller.ts` | DELETE | `/superadmin/system-ops/backups:id` | Implements the DELETE /superadmin/system-ops/backups:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-command.controller.ts` | PATCH | `/superadmin/system-ops/backups:id/status` | Implements the PATCH /superadmin/system-ops/backups:id/status contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-query.controller.ts` | GET | `/superadmin/system-ops/backups` | Implements the GET /superadmin/system-ops/backups contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-query.controller.ts` | GET | `/superadmin/system-ops/backups:id` | Implements the GET /superadmin/system-ops/backups:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-special.controller.ts` | GET | `superadmin/system-ops/backups/health` | Implements the GET superadmin/system-ops/backups/health contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/schedule` | Implements the POST superadmin/system-ops/backups/schedule contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/trigger` | Implements the POST superadmin/system-ops/backups/trigger contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-special.controller.ts` | GET | `superadmin/system-ops/backups/:id/download` | Implements the GET superadmin/system-ops/backups/:id/download contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/:id/restore` | Implements the POST superadmin/system-ops/backups/:id/restore contract and preserves the child feature boundary. | DTO | Contract DTO |
+| `superadmin-system-ops-backups-command.controller.ts::create` | POST | `/superadmin/system-ops/backups` | This endpoint invokes `create` on `superadmin-system-ops-backups-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-command.controller.ts::update` | PATCH | `/superadmin/system-ops/backups/:id` | This endpoint invokes `update` on `superadmin-system-ops-backups-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-command.controller.ts::remove` | DELETE | `/superadmin/system-ops/backups/:id` | This endpoint invokes `remove` on `superadmin-system-ops-backups-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-command.controller.ts::changeStatus` | PATCH | `/superadmin/system-ops/backups/:id/status` | This endpoint invokes `changeStatus` on `superadmin-system-ops-backups-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::patchSchedule` | PATCH | `/superadmin/system-ops/backups/schedule` | This endpoint invokes `patchSchedule` on `superadmin-system-ops-backups-operations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::trigger` | POST | `/superadmin/system-ops/backups/trigger` | This endpoint invokes `trigger` on `superadmin-system-ops-backups-operations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::restore` | POST | `/superadmin/system-ops/backups/:id/restore` | This endpoint invokes `restore` on `superadmin-system-ops-backups-operations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::schedule` | GET | `/superadmin/system-ops/backups/schedule` | This endpoint invokes `schedule` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `Promise<unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::health` | GET | `/superadmin/system-ops/backups/health` | This endpoint invokes `health` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::health` | GET | `/api/superadmin/system-ops/backups/health` | This endpoint invokes `health` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::jobStatus` | GET | `/superadmin/system-ops/backups/jobs/:jobId` | This endpoint invokes `jobStatus` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::download` | GET | `/superadmin/system-ops/backups/:id/download` | This endpoint invokes `download` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::downloadFile` | GET | `/superadmin/system-ops/backups/:id/download/file` | This endpoint invokes `downloadFile` on `superadmin-system-ops-backups-operations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-query.controller.ts::findAll` | GET | `/superadmin/system-ops/backups` | This endpoint invokes `findAll` on `superadmin-system-ops-backups-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-backups-query.controller.ts::findOne` | GET | `/superadmin/system-ops/backups/:id` | This endpoint invokes `findOne` on `superadmin-system-ops-backups-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct import.
-- **Infrastructure Dependencies**: Authentication, configuration, TypeORM/PostgreSQL; Redis/queue adapters only where this child requires them.
-- **Runtime/Event Dependencies**: Only declared registry events.
+
+- **Business Feature Dependencies**: system-ops
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_jobs, superadmin_core_observability, superadmin_core_pagination, superadmin_core_tenancy
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Exact entities registered by `backups.module.ts`.
-- Redis Caching Keys: Only feature-prefixed keys.
-- Event Emitters: Only centralized registry events.
-- Background Jobs: Queue work described by the feature implementation and job registry.
-- Idempotency Keys: Required on applicable critical mutations.
+
+- DB Entities: superadmin-system-ops-backup-job.entity → `superadmin_backup_jobs`, superadmin-system-ops-backups-contract-snapshot.entity → `superadmin_backups_contract_snapshots`, superadmin-system-ops-backups-schedule-contract-snapshot.entity → `superadmin_backup_schedule_contract_snapshots`, superadmin-system-ops-backups.entity → `superadmin_backup_records`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: superadmin-system-ops-backup-job.entity.ts, backups_repositories/superadmin-system-ops-backup-job.repository.ts, backups_responses/superadmin-system-ops-backups-job-status-response.dto.ts
+- Idempotency Keys: `/superadmin/system-ops/backups`, `/superadmin/system-ops/backups/:id`, `/superadmin/system-ops/backups/:id/restore`, `/superadmin/system-ops/backups/:id/status`, `/superadmin/system-ops/backups/schedule`, `/superadmin/system-ops/backups/trigger`
 
 ## Business Flow / Key Sequences
 Controller -> DTO validation -> use-case service -> named repository method -> PostgreSQL -> mapper/contract response. Heavy work is asynchronous where required.
@@ -38,7 +46,24 @@ Controller -> DTO validation -> use-case service -> named repository method -> P
 Every source file is feature-scoped and has one reason to change. Controllers do not contain business rules; repositories do not call sibling repositories.
 
 ## Permissions and Security
-Superadmin role is enforced in the controller layer. Resource-level checks apply to IDs and tenant-scoped resources before repository mutation.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/system-ops/backups` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/schedule` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/backups/trigger` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/backups/:id/restore` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/schedule` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/backups/health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/jobs/:jobId` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id/download` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id/download/file` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never directly import sibling system-ops business logic — Rule 0C/49.
@@ -57,25 +82,50 @@ The backups module is responsible for the Superadmin business workflow managing 
 
 ## Directory Structure
 
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `backups_api/` | Feature-owned responsibility for backups api. | `SuperadminBackupsApi.ts`, `SuperadminBackupsHealthApi.ts` |
-| `backups_mocks/` | Feature-owned responsibility for backups mocks. | `(directory present; no direct files)` |
-| `backups_tests/` | Feature-owned responsibility for backups tests. | `SuperadminBackupsBasic.test.tsx`, `SuperadminBackupsHealth.test.ts` |
-| `backups_types/` | Feature-owned responsibility for backups types. | `SuperadminBackupsRestoreModalTypes.ts`, `SuperadminBackupsScheduleModalTypes.ts`, `SuperadminBackupsScheduleTypes.ts`, `SuperadminBackupsTableTypes.ts`, `SuperadminBackupsTriggerModalTypes.ts`, `SuperadminBackupsTypes.ts`, `SuperadminBackupsV1Types.ts` |
-| `backups_utils/` | Feature-owned responsibility for backups utils. | `SuperadminBackupsConstants.ts`, `SuperadminBackupsScheduleConstants.ts`, `SuperadminBackupsStatusBadgeConfig.ts`, `useSuperadminBackupsActions.ts`, `useSuperadminBackupsData.test.ts`, `useSuperadminBackupsData.test.tsx`, `useSuperadminBackupsData.ts`, `useSuperadminBackupsSchedule.ts`, `useSuperadminBackupsV1.ts` |
 
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
+| File | Responsibility |
+|---|---|
+| `backups_dtos/superadmin-system-ops-backups-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_dtos/superadmin-system-ops-backups-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_dtos/superadmin-system-ops-backups-schedule.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_dtos/superadmin-system-ops-backups-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_dtos/superadmin-system-ops-backups-trigger.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_dtos/superadmin-system-ops-backups-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_repositories/superadmin-system-ops-backup-job.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `backups_responses/superadmin-system-ops-backups-job-status-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_responses/superadmin-system-ops-backups-queued-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_responses/superadmin-system-ops-backups-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups_services/superadmin-system-ops-backups-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-download.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-health.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-restore.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-schedule.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-trigger.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_services/superadmin-system-ops-backups-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups_types/superadmin-system-ops-backups.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `backups_types/superadmin-system-ops-backups.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `backups_workers/superadmin-system-ops-backups-worker.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `superadmin-system-ops-backup-job.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-backups-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-backups-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-backups-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-backups-health-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-system-ops-backups-operations-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-backups-operations-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-backups-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-backups-schedule-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-backups-schedule-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-backups.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops-backups.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-backups.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-system-ops-backups.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-system-ops-backups.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-system-ops-backups.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-backups.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
 
@@ -162,6 +212,36 @@ This addendum is generated from the current source tree and exists to make futur
 - **Destructive Actions**: Any deletion or modification of backups records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for backups do not expose cross-tenant sensitive data.
 
+### Request Shape
+No frontend-derived request shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### Response Shape
+No frontend-derived response shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `backups_components/SuperadminBackupsTriggerModal.tsx`, `backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups_components/SuperadminBackupsTable.tsx`, `backups_components/SuperadminBackupsScheduleModal.tsx`, `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups_components/SuperadminBackupsClient.tsx`, `backups_components/SuperadminBackupsRestoreModal.tsx`, `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `backups_components/SuperadminBackupsTriggerModal.tsx`, `backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups_components/SuperadminBackupsTable.tsx`, `backups_components/SuperadminBackupsScheduleModal.tsx`, `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups_components/SuperadminBackupsClient.tsx`, `backups_components/SuperadminBackupsRestoreModal.tsx`, `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
+
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.
 - [x] No active route page mounts a parallel `V1Client` tree.
@@ -175,3 +255,24 @@ This addendum is generated from the current source tree and exists to make futur
 
 - [ ] Rules 7, 19, 23, 28, 29, 31, 34, 36, 41, 48, 62, 76, 79, 80, 82A, 83, 86, 87, 89, 92, 93.
 
+
+
+### Repair Contract Notes
+- Backup trigger is asynchronous and returns durable job IDs with `202 Accepted`; the worker executes real `pg_dump`.
+- Restore is asynchronous and enters a Redis-backed tenant maintenance window before real `pg_restore`; in-flight tenant leases are drained before restore.
+- Completed artifacts are stored under the protected backup storage path and downloaded through an authenticated same-origin route.
+
+## Repair Addendum — Durable Backup/Restore Lifecycle
+
+Backup snapshots and restores are queue-backed operations. Trigger and restore commands return durable job identifiers with `202 Accepted`; workers perform `pg_dump`/`pg_restore`, persist terminal state, retry transient failures up to three attempts, and route terminal failures to queue-specific DLQs.
+
+| Endpoint | HTTP | Purpose | Response |
+|---|---|---|---|
+| `/superadmin/system-ops/backups/trigger` | POST | Enqueues snapshot work for one tenant or all active tenants without blocking the request. | `SuperadminSystemOpsBackupsQueuedResponseDto` |
+| `/superadmin/system-ops/backups/:id/restore` | POST | Enqueues a destructive restore after validating a completed artifact. | `SuperadminSystemOpsBackupsRestoreQueuedResponseDto` |
+| `/superadmin/system-ops/backups/jobs/:jobId` | GET | Returns durable job lifecycle state for polling. | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `/superadmin/system-ops/backups/:id/download/file` | GET | Streams a completed backup artifact after controller authorization. | binary dump |
+
+- Queues: `superadmin:backups`, `superadmin:backups-restore`; DLQs use the `:dlq` suffix.
+- Restore sets a tenant maintenance key, prevents new tenant requests through the auth guard, waits for in-flight leases to drain, performs `pg_restore`, and only then releases the tenant DataSource.
+- Backup artifacts are stored in the protected backup storage path with restrictive filesystem permissions.

@@ -1,66 +1,74 @@
 # tickets Backend Feature Map
 
 ## Module Purpose
-Owns the `tickets` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
+This module owns the backend capability boundary for the superadmin_modules/tickets feature. It exposes 11 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/tickets-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/tickets-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/tickets-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/tickets-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/tickets-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-insights.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-status.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/tickets-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `tickets-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `tickets-contract-snapshot.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `tickets-contract-snapshot.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `tickets-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `tickets-service-insights-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `tickets-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `tickets.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `tickets.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `tickets.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `tickets.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `tickets.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `tickets_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/tickets.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/tickets.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `superadmin-tickets-actions.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-tickets-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-tickets-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-tickets-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-tickets-insights-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-tickets-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-tickets-service-insights-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-tickets.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-tickets.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-tickets.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-tickets.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-tickets.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-tickets.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-tickets.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `tickets_dtos/superadmin-tickets-assign.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_dtos/superadmin-tickets-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_dtos/superadmin-tickets-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_dtos/superadmin-tickets-reply.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_dtos/superadmin-tickets-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_dtos/superadmin-tickets-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_responses/superadmin-tickets-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `tickets_services/superadmin-tickets-actions.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-insights.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_services/superadmin-tickets-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `tickets_types/superadmin-tickets.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `tickets_types/superadmin-tickets.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `tickets-command.controller.ts` / `create` | POST | `/superadmin/tickets` | Creates a resource after DTO validation and persists it through the feature repository. | `TicketsCreateDto` | `unknown` |
-| `tickets-command.controller.ts` / `update` | PATCH | `/superadmin/tickets/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `TicketsUpdateDto` | `unknown` |
-| `tickets-command.controller.ts` / `remove` | DELETE | `/superadmin/tickets/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `tickets-command.controller.ts` / `changeStatus` | PATCH | `/superadmin/tickets/:id/status` | Applies the requested status transition through the named repository mutation. | `None` | `unknown` |
-| `tickets-query.controller.ts` / `findAll` | GET | `/superadmin/tickets` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
-| `tickets-query.controller.ts` / `findOne` | GET | `/superadmin/tickets/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `tickets-special.controller.ts` / `insights` | GET | `/superadmin/tickets/service-insights` | Returns support service-level metrics, agent performance, aging buckets, and category counts. | `None` | `Record<string, unknown` |
+| `superadmin-tickets-actions.controller.ts::close` | POST | `:id/close` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the close operation. | `—` | `See controller contract` |
+| `superadmin-tickets-actions.controller.ts::assign` | POST | `:id/assign` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the assign operation. | `SuperadminTicketsAssignDto` | `See controller contract` |
+| `superadmin-tickets-actions.controller.ts::reply` | POST | `:id/reply` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the reply operation. | `SuperadminTicketsReplyDto` | `See controller contract` |
+| `superadmin-tickets-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the create operation. | `SuperadminTicketsCreateDto` | `See controller contract` |
+| `superadmin-tickets-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the update operation. | `SuperadminTicketsUpdateDto` | `See controller contract` |
+| `superadmin-tickets-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-tickets-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the changeStatus operation. | `SuperadminTicketsStatusDto` | `See controller contract` |
+| `superadmin-tickets-insights-query.controller.ts::insights` | GET | `superadmin/tickets/service-insights` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the insights operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-tickets-insights-query.controller.ts::insights` | GET | `api/superadmin/tickets/service-insights` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the insights operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-tickets-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the findAll operation. | `SuperadminTicketsQueryDto` | `See controller contract` |
+| `superadmin-tickets-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning tickets use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-tickets-contract-snapshot.entity → `superadmin_tickets_contract_snapshots`, superadmin-tickets.entity → `superadmin_support_tickets`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/tickets`, `/superadmin/tickets/:id`, `/superadmin/tickets/:id/assign`, `/superadmin/tickets/:id/close`, `/superadmin/tickets/:id/reply`, `/superadmin/tickets/:id/status`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -73,9 +81,20 @@ The feature's backend route and file structure mirror the frontend feature name.
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/tickets/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/tickets/:id/close` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/tickets/:id/assign` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/tickets/:id/reply` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/tickets` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/tickets/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/tickets/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/tickets/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/tickets/service-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/tickets/service-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/tickets` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/tickets/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -86,66 +105,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/tickets/` -> the Superadmin rev
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend tickets/superadmin_tickets_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Tickets â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The tickets module is responsible for the Superadmin business workflow managing Tickets. It enables superadmins to view, monitor, and control the lifecycle and configurations of Tickets across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `tickets_api/` | Feature-owned responsibility for tickets api. | `SuperadminTicketsApi.ts`, `SuperadminTicketsServiceInsightsApi.ts` |
-| `tickets_mocks/` | Feature-owned responsibility for tickets mocks. | `(directory present; no direct files)` |
-| `tickets_store/` | Feature-owned responsibility for tickets store. | `useSuperadminTicketsStore.ts` |
-| `tickets_tests/` | Feature-owned responsibility for tickets tests. | `SuperadminTicketsBasic.test.tsx`, `SuperadminTicketsServiceInsights.test.ts` |
-| `tickets_types/` | Feature-owned responsibility for tickets types. | `SuperadminTicketsHeaderTypes.ts`, `SuperadminTicketsReplyFormTypes.ts`, `SuperadminTicketsReplyModalTypes.ts`, `SuperadminTicketsTableTypes.ts`, `SuperadminTicketsTypes.ts`, `SuperadminTicketsV1Types.ts` |
-| `tickets_utils/` | Feature-owned responsibility for tickets utils. | `SuperadminTicketsConstants.ts`, `useSuperadminTicketMutations.ts`, `useSuperadminTicketReply.ts`, `useSuperadminTickets.ts`, `useSuperadminTicketsV1.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Tickets | `/superadmin/tickets` | close; close ticket; confirm assign; open assign; submit | `SuperadminTicketsApi.ts`, `SuperadminTicketsServiceInsightsApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/tickets route to load the Tickets data context securely via TanStack Query.
-2. Interact with the Tickets dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Tickets status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `tickets`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** `tickets_store/useSuperadminTicketsStore.ts`
-- **Context files:** None detected.
-- **Custom hooks:** `tickets_utils/useSuperadminTicketMutations.ts`, `tickets_utils/useSuperadminTickets.ts`, `tickets_utils/useSuperadminTicketReply.ts`, `tickets_utils/useSuperadminTicketsV1.ts`, `tickets_store/useSuperadminTicketsStore.ts`
-- **URL state:** No `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'tickets']`, `['superadmin', 'tickets', 'detail', ticketId]`, `['superadmin', 'tickets', queryParams]`, `['superadmin', 'tickets', 'detail', variables.ticketId]`, `['superadmin', 'tickets_service_insights']`
-
-## API Contract
+#### Source: `tickets/superadmin_tickets_features.md`
 
 - **API files:** `tickets_api/SuperadminTicketsApi.ts`, `tickets_api/SuperadminTicketsServiceInsightsApi.ts`
 - **Detected API symbols:** `fetchTickets` — `tickets_api/SuperadminTicketsApi.ts`; `fetchTicketById` — `tickets_api/SuperadminTicketsApi.ts`; `updateTicket` — `tickets_api/SuperadminTicketsApi.ts`; `closeTicket` — `tickets_api/SuperadminTicketsApi.ts`; `assignTicket` — `tickets_api/SuperadminTicketsApi.ts`; `replyToTicket` — `tickets_api/SuperadminTicketsApi.ts`; `fetchTicketServiceInsights` — `tickets_api/SuperadminTicketsServiceInsightsApi.ts`
@@ -153,7 +117,17 @@ The tickets module is responsible for the Superadmin business workflow managing 
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `tickets/superadmin_tickets_service_insights_features.md`
+
+- **API files:** `tickets_api/SuperadminTicketsApi.ts`, `tickets_api/SuperadminTicketsServiceInsightsApi.ts`
+- **Detected API symbols:** `fetchTickets` — `tickets_api/SuperadminTicketsApi.ts`; `fetchTicketById` — `tickets_api/SuperadminTicketsApi.ts`; `updateTicket` — `tickets_api/SuperadminTicketsApi.ts`; `closeTicket` — `tickets_api/SuperadminTicketsApi.ts`; `assignTicket` — `tickets_api/SuperadminTicketsApi.ts`; `replyToTicket` — `tickets_api/SuperadminTicketsApi.ts`; `fetchTicketServiceInsights` — `tickets_api/SuperadminTicketsServiceInsightsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `tickets/superadmin_tickets_features.md`
 
 - **Data-bearing components:** `page.tsx`, `tickets_components/SuperadminTicketsClient.tsx`, `tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx`, `tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx`, `tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx`, `tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader.tsx`, `tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal.tsx`, `tickets_components/SuperadminTicketsTable/SuperadminTicketsTable.tsx`, `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -162,43 +136,56 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `tickets/superadmin_tickets_service_insights_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `tickets_components/SuperadminTicketsClient.tsx`, `tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx`, `tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx`, `tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx`, `tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader.tsx`, `tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal.tsx`, `tickets_components/SuperadminTicketsTable/SuperadminTicketsTable.tsx`, `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx`
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+### Static Freeze Status
 
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Pure Server Component for the tickets page. Renders the interactive client component. |
-| `tickets_components/SuperadminTicketsClient.tsx` | Root view for the Tickets page. Query/mutation orchestration stays in feature hooks; this file composes UI only. |
-| `tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx` | Renders the Superadmin tickets V1 Support categories view. |
-| `tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx` | Renders the Superadmin tickets V1 TicketsSupportSummary summary cards. |
-| `tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx` | Renders the Superadmin tickets V1 Operator workload, Backlog age view. |
-| `tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader.tsx` | Renders the header and filter/search controls for Support Tickets |
-| `tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal.tsx` | Renders the Superadmin ticket reply form. Submission state and API behavior are owned by useSuperadminTicketReply. |
-| `tickets_components/SuperadminTicketsTable/SuperadminTicketsTable.tsx` | Renders the data table for Support Tickets |
-| `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx` | Renders the SuperadminTicketsEmptyState component. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into tickets.
-- **Destructive Actions**: Any deletion or modification of tickets records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for tickets do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<SupportTicket[]>`` | `REQ-124` / ``fetchTickets`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<SupportTicket>`` | `REQ-125` / ``fetchTicketById`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<SupportTicket>`` | `REQ-126` / ``updateTicket`` |
+| ``/superadmin/tickets/{encodeURIComponent}/close(id)`` | ``ApiResponse<SupportTicket>`` | `REQ-127` / ``closeTicket`` |
+| ``/superadmin/tickets/{encodeURIComponent}/assign(id)`` | ``ApiResponse<SupportTicket>`` | `REQ-128` / ``assignTicket`` |
+| ``{superadmin}/{id}/reply`` | ``ApiResponse<SupportTicket>`` | `REQ-129` / ``replyToTicket`` |
+| ``/api/superadmin/tickets/service-insights`` | ``ApiResponse<SuperadminTicketsV1Data>`` | `REQ-130` / ``fetchTicketServiceInsights`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `tickets_components/SuperadminTicketsClient.tsx`, `tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx`, `tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx`, `tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx`, `tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader.tsx`, `tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal.tsx`, `tickets_components/SuperadminTicketsTable/SuperadminTicketsTable.tsx`, `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `tickets_components/SuperadminTicketsClient.tsx`, `tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx`, `tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx`, `tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx`, `tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader.tsx`, `tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal.tsx`, `tickets_components/SuperadminTicketsTable/SuperadminTicketsTable.tsx`, `tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.
@@ -224,4 +211,13 @@ This addendum is generated from the current source tree and exists to make futur
 - [x] Rule 89: ORM access stays behind repositories.
 - [x] Rule 92: Dynamic filtering/sorting uses server-defined allowlists.
 - [x] Rule 101: Tests must assert observable behavior; placeholder tests are not accepted.
+
+
+
+## Repair Baseline — 2026-09-24
+2026-09-24 repair: ticket satisfaction is derived from persisted satisfactionScore rather than a constant placeholder.
+
+## Repair Addendum — Satisfaction Metric
+
+Service insights now calculate customer satisfaction from persisted `satisfactionScore` values for the selected tenant scope. A zero placeholder is no longer emitted when survey data exists; an empty population remains explicitly represented by the service's aggregate semantics.
 

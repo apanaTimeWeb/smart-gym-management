@@ -1,35 +1,45 @@
-# dashboard Backend Dependency Graph
+# Dashboard Backend Dependency Graph
 
 ## Direct Business Imports
-None. This feature must not import sibling business modules directly.
+None. This feature must not import sibling Superadmin business modules directly.
 
 ## Local Feature Imports
-- `@/modules/backend_superadmin/dashboard/dashboard-business-overview-response.dto.ts`
-- `@/modules/backend_superadmin/dashboard/dashboard-command.controller`
-- `@/modules/backend_superadmin/dashboard/dashboard-query.controller`
-- `@/modules/backend_superadmin/dashboard/dashboard-special.controller`
-- `@/modules/backend_superadmin/dashboard/dashboard.constants`
-- `@/modules/backend_superadmin/dashboard/dashboard.entity`
-- `@/modules/backend_superadmin/dashboard/dashboard.mapper`
-- `@/modules/backend_superadmin/dashboard/dashboard.repository`
-- `@/modules/backend_superadmin/dashboard/dtos/dashboard-create.dto`
-- `@/modules/backend_superadmin/dashboard/dtos/dashboard-query.dto`
-- `@/modules/backend_superadmin/dashboard/dtos/dashboard-update.dto`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-business-overview.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-create.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-delete.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-find.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-list.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-main.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-metrics.service`
-- `@/modules/backend_superadmin/dashboard/services/dashboard-update.service`
-- `@/modules/backend_superadmin/dashboard/types/dashboard.interfaces`
+- `superadmin-dashboard-overview-query.controller.ts`
+- `superadmin-dashboard-query.controller.ts`
+- `superadmin-dashboard-command.controller.ts`
+- `superadmin-dashboard.entity.ts`
+- `superadmin-dashboard.repository.ts`
+- `superadmin-dashboard.mapper.ts`
+- `dtos/superadmin-dashboard-create.dto.ts`
+- `dtos/superadmin-dashboard-query.dto.ts`
+- `dtos/superadmin-dashboard-update.dto.ts`
+- `responses/superadmin-dashboard-response.dto.ts`
+- `responses/superadmin-dashboard-kpis-response.dto.ts`
+- `responses/superadmin-dashboard-growth-chart-response.dto.ts`
+- `responses/superadmin-dashboard-recent-onboards-response.dto.ts`
+- `responses/superadmin-dashboard-revenue-by-geography-response.dto.ts`
+- `responses/superadmin-dashboard-revenue-by-tier-response.dto.ts`
+- `responses/superadmin-dashboard-revenue-chart-response.dto.ts`
+- `services/superadmin-dashboard-business-overview.service.ts`
+- `services/superadmin-dashboard-create.service.ts`
+- `services/superadmin-dashboard-delete.service.ts`
+- `services/superadmin-dashboard-find.service.ts`
+- `services/superadmin-dashboard-growth-chart.service.ts`
+- `services/superadmin-dashboard-kpis.service.ts`
+- `services/superadmin-dashboard-list.service.ts`
+- `services/superadmin-dashboard-recent-onboards.service.ts`
+- `services/superadmin-dashboard-revenue-by-geography.service.ts`
+- `services/superadmin-dashboard-revenue-by-tier.service.ts`
+- `services/superadmin-dashboard-revenue-chart.service.ts`
+- `services/superadmin-dashboard-update.service.ts`
 
 ## Infrastructure Imports
-
+- `@/backend_superadmin/superadmin_core/superadmin_core_auth/*` for authentication and role guards.
+- `@/backend_superadmin/superadmin_core/superadmin_core_pagination/*` for standardized query contracts.
+- `@nestjs/typeorm` feature registration for this module's entity.
 
 ## Runtime Event Dependencies
-Any event emitted or consumed by this feature must appear here by exact `DOMAIN.ENTITY.ACTION` name and be registered in `event-registry.constants.ts`. Undeclared subscriptions are forbidden.
+None currently declared.
 
 ## Dependency Direction
-Controller -> DTO -> service/use case -> repository/adapter -> infrastructure. Parent role/domain containers may compose child feature modules but must not absorb their business logic.
+Controller -> DTO -> focused service -> repository/mapper -> infrastructure. The dashboard module must not import sibling business services or repositories directly.

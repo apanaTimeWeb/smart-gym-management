@@ -1,20 +1,31 @@
 // RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the invoices feature; no business logic.
-// FLOW: invoices service -> SuperadminInvoicesRepository -> TypeORM Repository<SuperadminInvoicesEntity> -> PostgreSQL `saas_invoices`.
+// FLOW: invoices service -> SuperadminSaasBillingInvoicesRepository -> TypeORM Repository<SuperadminSaasBillingInvoicesEntity> -> PostgreSQL `saas_invoices`.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SaasInvoiceStatus } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.entity';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
-import { SuperadminInvoicesEntity } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.entity';
-import type { SuperadminInvoicesListQuery, SuperadminInvoicesCreateInput, SuperadminInvoicesUpdateInput } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/types/superadmin-saas-billing-invoices.interfaces';
+import { SaasInvoiceInvoiceType, SaasInvoicePaymentMethod, SaasInvoiceStatus } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.constants';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
+import { SuperadminSaasBillingInvoicesEntity } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/superadmin-saas-billing-invoices.entity';
+import type { SuperadminInvoicesListQuery, SuperadminInvoicesCreateInput, SuperadminInvoicesUpdateInput } from '@/backend_superadmin/superadmin_modules/saas-billing/invoices/invoices_types/superadmin-saas-billing-invoices.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminSaasBillingInvoicesRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminInvoicesRepository extends BaseRepository<SuperadminInvoicesEntity> {
-  constructor(@InjectRepository(SuperadminInvoicesEntity) repository: Repository<SuperadminInvoicesEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminSaasBillingInvoicesRepository extends SuperadminCoreBaseRepository<SuperadminSaasBillingInvoicesEntity> {
+  constructor(@InjectRepository(SuperadminSaasBillingInvoicesEntity) repository: Repository<SuperadminSaasBillingInvoicesEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
-  async findPage(query: SuperadminInvoicesListQuery): Promise<{ items: SuperadminInvoicesEntity[]; total: number }> {
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findPage(query: SuperadminInvoicesListQuery): Promise<{ items: SuperadminSaasBillingInvoicesEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
     if (search) qb.andWhere('item.tenant_id ILIKE :search OR item.tenant_name ILIKE :search OR item.currency ILIKE :search OR item.plan_name ILIKE :search', { search: `%${search}%` });
@@ -27,23 +38,52 @@ export class SuperadminInvoicesRepository extends BaseRepository<SuperadminInvoi
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
-  async findById(id: string): Promise<SuperadminInvoicesEntity | null> { return super.findById(id); }
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findById(id: string): Promise<SuperadminSaasBillingInvoicesEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
-  async findByIdOrThrow(id: string): Promise<SuperadminInvoicesEntity> { return super.findByIdOrThrow(id, 'Invoices record not found'); }
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findByIdOrThrow(id: string): Promise<SuperadminSaasBillingInvoicesEntity> { return super.findByIdOrThrow(id, 'Invoices record not found'); }
 
-  /** Creates and persists a invoices record. */
-  async createInvoices(input: SuperadminInvoicesCreateInput): Promise<SuperadminInvoicesEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
+  /**
+ * Primary Intent: Executes the createInvoices use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async createInvoices(input: SuperadminInvoicesCreateInput): Promise<SuperadminSaasBillingInvoicesEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a invoices record. */
-  async updateInvoicesById(id: string, input: SuperadminInvoicesUpdateInput): Promise<SuperadminInvoicesEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
+  /**
+ * Primary Intent: Executes the updateInvoicesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async updateInvoicesById(id: string, input: SuperadminInvoicesUpdateInput): Promise<SuperadminSaasBillingInvoicesEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Soft-deletes one invoices record. */
+  /**
+ * Primary Intent: Executes the deleteInvoicesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteInvoicesById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
-
-  /** Returns recovery telemetry derived from persisted invoice status and due dates. */
+  /**
+ * Primary Intent: Executes the getRecoveryCenter use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async getRecoveryCenter(_query: Record<string, unknown> = {}): Promise<{ summary: { failed: number; inRecovery: number; recoveredIncome: number; unrecoveredIncome: number; currency: string }; recovery: Array<{ gym: string; invoice: string; amount: number; currency: string; attempts: number; nextRetry: string; daysLate: number; reason: string }>; reconciliation: Array<{ type: string; gym: string; amount: number; currency: string; status: string }>; policy: { firstRetry: string; secondRetry: string; finalRetry: string; gracePeriod: string; autoSuspend: string }; currency: string }> {
     const rows = await this.activeRepository.find({ where: { deletedAt: null } as never, order: { dueDate: 'ASC' } as never });
     const now = Date.now();
@@ -57,7 +97,7 @@ export class SuperadminInvoicesRepository extends BaseRepository<SuperadminInvoi
   }
 
   /** Marks an invoice as paid inside the repository boundary. */
-  async createManualPaymentInvoice(input: { tenantId: string; tenantName: string; amount: number; currency: string; planName: string }): Promise<SuperadminInvoicesEntity> { const now = new Date(); const invoice = this.activeRepository.create({ tenantId: input.tenantId, tenantName: input.tenantName, amount: input.amount, currency: input.currency, status: 'PAID', issuedAt: now, dueDate: now, paidAt: now, paymentMethod: 'Bank Transfer', invoiceType: 'ONE_TIME', planName: input.planName, taxId: '' } as any); return this.activeRepository.save(invoice as any); }
+  async createManualPaymentInvoice(input: { tenantId: string; tenantName: string; amount: number; currency: string; planName: string }): Promise<SuperadminSaasBillingInvoicesEntity> { const now = new Date(); const invoice = this.activeRepository.create({ tenantId: input.tenantId, tenantName: input.tenantName, amount: input.amount, currency: input.currency, status: SaasInvoiceStatus.PAID, issuedAt: now, dueDate: now, paidAt: now, paymentMethod: SaasInvoicePaymentMethod.BankTransfer, invoiceType: SaasInvoiceInvoiceType.ONETIME, planName: input.planName, taxId: '' }); return this.activeRepository.save(invoice); }
 
   
 

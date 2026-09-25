@@ -1,64 +1,72 @@
 # broadcasts Backend Feature Map
 
 ## Module Purpose
-Owns Superadmin broadcast lifecycle management and audience insights. Broadcast creation, status changes, deletion, and delivery are controlled mutations and use Idempotency-Key where the frontend provides it. Audience analytics is exposed as a complete nested response contract.
+
+This module owns the backend capability boundary for the superadmin_modules/broadcasts feature. It exposes 10 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `broadcasts-audience-insights-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `broadcasts-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `broadcasts-contract-snapshot.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `broadcasts-contract-snapshot.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `broadcasts-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `broadcasts-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `broadcasts.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `broadcasts.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `broadcasts.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `broadcasts.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `broadcasts.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `broadcasts_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `dtos/broadcasts-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/broadcasts-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/broadcasts-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `responses/broadcasts-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/broadcasts-audience-insights.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-status.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/broadcasts-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/broadcasts.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/broadcasts.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `broadcasts_dtos/superadmin-broadcasts-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_dtos/superadmin-broadcasts-delivery.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_dtos/superadmin-broadcasts-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_dtos/superadmin-broadcasts-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_dtos/superadmin-broadcasts-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_responses/superadmin-broadcasts-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `broadcasts_services/superadmin-broadcasts-audience-insights.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-delivery.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_services/superadmin-broadcasts-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `broadcasts_types/superadmin-broadcasts.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `broadcasts_types/superadmin-broadcasts.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-broadcasts-audience-insights-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-broadcasts-audience-insights-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-broadcasts-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-broadcasts-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-broadcasts-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-broadcasts-contract.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-broadcasts-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-broadcasts.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-broadcasts.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-broadcasts.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-broadcasts.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-broadcasts.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-broadcasts.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-broadcasts.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `broadcasts-command.controller.ts` / `create` | POST | `/superadmin/broadcasts` | Creates a resource after DTO validation and persists it through the feature repository. | `BroadcastsCreateDto` | `unknown` |
-| `broadcasts-command.controller.ts` / `update` | PATCH | `/superadmin/broadcasts/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `BroadcastsUpdateDto` | `unknown` |
-| `broadcasts-command.controller.ts` / `remove` | DELETE | `/superadmin/broadcasts/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `broadcasts-command.controller.ts` / `changeStatus` | PATCH | `/superadmin/broadcasts/:id/status` | Applies the requested status transition through the named repository mutation. | `None` | `unknown` |
-| `broadcasts-query.controller.ts` / `findAll` | GET | `/superadmin/broadcasts` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
-| `broadcasts-query.controller.ts` / `findOne` | GET | `/superadmin/broadcasts/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `broadcasts-special.controller.ts` / `audienceInsights` | GET | `/superadmin/broadcasts/audience-insights` | Returns the complete broadcast audience-segmentation contract consumed by the frontend. | `None` | `Record<string, unknown` |
+| `superadmin-broadcasts-audience-insights-query.controller.ts::audienceInsights` | GET | `superadmin/broadcasts/audience-insights` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the audienceInsights operation. | `SuperadminQueryDto` | `SuperadminBroadcastsAudienceInsightsResponseDto` |
+| `superadmin-broadcasts-audience-insights-query.controller.ts::audienceInsights` | GET | `api/superadmin/broadcasts/audience-insights` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the audienceInsights operation. | `SuperadminQueryDto` | `SuperadminBroadcastsAudienceInsightsResponseDto` |
+| `superadmin-broadcasts-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the create operation. | `SuperadminBroadcastsCreateDto` | `SuperadminBroadcastsResponseDto` |
+| `superadmin-broadcasts-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the update operation. | `SuperadminBroadcastsUpdateDto` | `SuperadminBroadcastsResponseDto` |
+| `superadmin-broadcasts-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the remove operation. | `—` | `SuperadminBroadcastsResponseDto` |
+| `superadmin-broadcasts-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the changeStatus operation. | `SuperadminBroadcastsStatusDto` | `SuperadminBroadcastsResponseDto` |
+| `superadmin-broadcasts-contract.controller.ts::recipientCount` | GET | `recipient-count` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the recipientCount operation. | `—` | `SuperadminBroadcastDeliveryResultDto` |
+| `superadmin-broadcasts-contract.controller.ts::deliver` | POST | `:broadcastId/deliveries/:recipientId` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the deliver operation. | `SuperadminBroadcastsDeliveryDto` | `SuperadminBroadcastDeliveryResultDto` |
+| `superadmin-broadcasts-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the findAll operation. | `SuperadminBroadcastsQueryDto` | `[SuperadminBroadcastsResponseDto]` |
+| `superadmin-broadcasts-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning broadcasts use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminBroadcastsResponseDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-broadcasts-contract-snapshot.entity → `superadmin_broadcasts_contract_snapshots`, superadmin-broadcasts.entity → `superadmin_broadcasts`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/broadcasts`, `/superadmin/broadcasts/:broadcastId/deliveries/:recipientId`, `/superadmin/broadcasts/:id`, `/superadmin/broadcasts/:id/status`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -71,9 +79,19 @@ Owns Superadmin broadcast lifecycle management and audience insights. Broadcast 
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/broadcasts/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `GET /superadmin/broadcasts/audience-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/broadcasts/audience-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/broadcasts` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/broadcasts/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/broadcasts/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/broadcasts/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/broadcasts/recipient-count` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/broadcasts/:broadcastId/deliveries/:recipientId` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/broadcasts` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/broadcasts/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -84,65 +102,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/broadcasts/` -> the Superadmin 
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend broadcasts/superadmin_broadcasts_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Broadcasts â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The broadcasts module is responsible for the Superadmin business workflow managing Broadcasts. It enables superadmins to view, monitor, and control the lifecycle and configurations of Broadcasts across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `broadcasts_api/` | Feature-owned responsibility for broadcasts api. | `SuperadminBroadcastsApi.ts`, `SuperadminBroadcastsAudienceInsightsApi.ts` |
-| `broadcasts_mocks/` | Feature-owned responsibility for broadcasts mocks. | `(directory present; no direct files)` |
-| `broadcasts_tests/` | Feature-owned responsibility for broadcasts tests. | `SuperadminBroadcastsAudienceInsights.test.ts`, `SuperadminBroadcastsBasic.test.tsx` |
-| `broadcasts_types/` | Feature-owned responsibility for broadcasts types. | `SuperadminBroadcastDeliveryTypes.ts`, `SuperadminBroadcastModalTypes.ts`, `SuperadminBroadcastQueueModalTypes.ts`, `SuperadminBroadcastsTypes.ts`, `SuperadminBroadcastsV1Types.ts` |
-| `broadcasts_utils/` | Feature-owned responsibility for broadcasts utils. | `SuperadminBroadcastConstants.ts`, `SuperadminBroadcastQueueStateTypes.ts`, `SuperadminBroadcastScheduleUtils.ts`, `SuperadminBroadcastsSchemas.ts`, `useSuperadminBroadcastDelivery.ts`, `useSuperadminBroadcastModalData.ts`, `useSuperadminBroadcastQueueState.ts`, `useSuperadminBroadcastsData.ts`, `useSuperadminBroadcastsMutations.ts`, `useSuperadminBroadcastsPage.test.ts`, `useSuperadminBroadcastsPage.ts`, `useSuperadminBroadcastsV1.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Broadcasts | `/superadmin/broadcasts` | create broadcast; delete broadcast; select all; send broadcast; submit; toggle gym | `SuperadminBroadcastsAudienceInsightsApi.ts`, `SuperadminBroadcastsApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/broadcasts route to load the Broadcasts data context securely via TanStack Query.
-2. Interact with the Broadcasts dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Broadcasts status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `broadcasts`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `broadcasts_utils/useSuperadminBroadcastsData.ts`, `broadcasts_utils/useSuperadminBroadcastDelivery.ts`, `broadcasts_utils/useSuperadminBroadcastsV1.ts`, `broadcasts_utils/useSuperadminBroadcastsPage.ts`, `broadcasts_utils/useSuperadminBroadcastQueueState.ts`, `broadcasts_utils/useSuperadminBroadcastModalData.ts`, `broadcasts_utils/useSuperadminBroadcastsMutations.ts`
-- **URL state:** `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'broadcasts', 'tenants']`, `['superadmin', 'broadcasts']`, `['superadmin', 'broadcasts', 'detail', variables.broadcastId]`, `['superadmin', 'broadcasts_audience_insights']`, `['superadmin', 'broadcasts', 'modal-tenants']`, `['superadmin', 'broadcasts', 'modal-recipient-count']`
-
-## API Contract
+#### Source: `broadcasts/superadmin_broadcasts_audience_insights_features.md`
 
 - **API files:** `broadcasts_api/SuperadminBroadcastsApi.ts`, `broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
 - **Detected API symbols:** `fetchBroadcasts` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `createBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `deleteBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `updateBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchTenants` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchRecipientCount` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `deliverBroadcastToRecipient` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchBroadcastAudienceInsights` — `broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
@@ -150,7 +114,17 @@ The broadcasts module is responsible for the Superadmin business workflow managi
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `broadcasts/superadmin_broadcasts_features.md`
+
+- **API files:** `broadcasts_api/SuperadminBroadcastsApi.ts`, `broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
+- **Detected API symbols:** `fetchBroadcasts` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `createBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `deleteBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `updateBroadcast` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchTenants` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchRecipientCount` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `deliverBroadcastToRecipient` — `broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchBroadcastAudienceInsights` — `broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `broadcasts/superadmin_broadcasts_audience_insights_features.md`
 
 - **Data-bearing components:** `page.tsx`, `broadcasts_components/SuperadminBroadcastsClient.tsx`, `broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx`, `broadcasts_components/SuperadminBroadcastModal.tsx`, `broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx`, `broadcasts_components/SuperadminBroadcastQueueModal.tsx`, `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx`, `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx`, `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx`, `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -159,44 +133,57 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `broadcasts/superadmin_broadcasts_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `broadcasts_components/SuperadminBroadcastsClient.tsx`, `broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx`, `broadcasts_components/SuperadminBroadcastModal.tsx`, `broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx`, `broadcasts_components/SuperadminBroadcastQueueModal.tsx`, `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx`, `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx`, `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx`, `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx`
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+### Static Freeze Status
 
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Pure Server Component for the broadcasts page. Renders the interactive client component. |
-| `broadcasts_components/SuperadminBroadcastsClient.tsx` | Root orchestrator for the Broadcasts page. Composes isolated sub-components and passes state from useSuperadminBroadcastsPage. No business logic here. |
-| `broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx` | Lets a Superadmin select an audience insight and exposes the selected audience for the downstream broadcast workflow. |
-| `broadcasts_components/SuperadminBroadcastModal.tsx` | Renders the Create/Edit Broadcast modal form. Receives form state via props and server-state preview data from useSuperadminBroadcastModalData. |
-| `broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx` | Renders the Superadmin broadcasts V1 Channel results, Reusable templates view. |
-| `broadcasts_components/SuperadminBroadcastQueueModal.tsx` | Renders the Superadmin broadcast delivery queue. Delivery state comes from the feature API/MSW contract; this component contains no delivery simulation or notification persistence. |
-| `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx` | Renders the empty state UI for the Broadcasts table when no broadcasts exist. Shows icon, message, and CTA to create first broadcast. |
-| `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx` | Renders the page title, search input, and "New Broadcast" CTA for the Broadcasts page. Receives all state via props — no API calls. |
-| `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx` | Renders the Broadcasts data table shell (header + rows). Delegates row rendering to BroadcastsTableRow. No API calls. |
-| `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx` | Renders the status badge pill for a single broadcast. Purely presentational — maps BroadcastStatus to design system colors. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into broadcasts.
-- **Destructive Actions**: Any deletion or modification of broadcasts records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for broadcasts do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``{superadmin}{q}`` | ``ApiResponse<Broadcast[]>`` | `REQ-010` / ``fetchBroadcasts`` |
+| ``/superadmin/broadcasts`` | ``ApiResponse<Broadcast>`` | `REQ-011` / ``createBroadcast`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<void>`` | `REQ-012` / ``deleteBroadcast`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<Broadcast>`` | `REQ-013` / ``updateBroadcast`` |
+| ``/api/gyms`` | ``ApiResponse<SuperadminBroadcastsTenant[]>`` | `REQ-014` / ``fetchTenants`` |
+| ``{superadmin}/recipient-count`` | ``ApiResponse<{` | `REQ-015` / ``fetchRecipientCount`` |
+| ``/superadmin/broadcasts/{encodeURIComponent}/deliveries/{encodeURIComponent}(broadcastId, recipientId)`` | ``ApiResponse<SuperadminBroadcastDeliveryResult>`` | `REQ-016` / ``deliverBroadcastToRecipient`` |
+| ``/api/superadmin/broadcasts/audience-insights`` | ``ApiResponse<SuperadminBroadcastsV1Data>`` | `REQ-017` / ``fetchBroadcastAudienceInsights`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `broadcasts_components/SuperadminBroadcastsClient.tsx`, `broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx`, `broadcasts_components/SuperadminBroadcastModal.tsx`, `broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx`, `broadcasts_components/SuperadminBroadcastQueueModal.tsx`, `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx`, `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx`, `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx`, `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `broadcasts_components/SuperadminBroadcastsClient.tsx`, `broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx`, `broadcasts_components/SuperadminBroadcastModal.tsx`, `broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx`, `broadcasts_components/SuperadminBroadcastQueueModal.tsx`, `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx`, `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx`, `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx`, `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

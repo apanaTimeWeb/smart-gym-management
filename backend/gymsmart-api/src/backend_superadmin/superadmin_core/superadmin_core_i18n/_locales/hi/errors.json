@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "अनुरोध संसाधित नहीं किया जा सका।",
+      "VALIDATION_FAILED": "एक या अधिक फ़ील्ड अमान्य हैं।",
+      "INTERNAL": "आंतरिक त्रुटि हुई।",
+      "NOT_FOUND": "मांगा गया संसाधन नहीं मिला।",
+      "FORBIDDEN": "आपको यह कार्रवाई करने की अनुमति नहीं है।",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key हेडर आवश्यक है।",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key अमान्य है।",
+      "IDEMPOTENCY_IN_PROGRESS": "इस Idempotency-Key वाला अनुरोध पहले से चल रहा है।",
+      "RATE_LIMIT_EXCEEDED": "बहुत अधिक अनुरोध। कृपया बाद में फिर प्रयास करें।",
+      "CIRCUIT_OPEN": "डाउनस्ट्रीम सेवा अस्थायी रूप से अनुपलब्ध है।"
+    }
+  }
+}

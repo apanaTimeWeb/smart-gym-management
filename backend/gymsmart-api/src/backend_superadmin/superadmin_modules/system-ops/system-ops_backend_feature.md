@@ -1,197 +1,226 @@
 # system-ops Backend Feature Map
 
 ## Module Purpose
-The System Ops container groups Superadmin operational business features. Backups, infrastructure, jobs, and migrations are independent feature units nested under this container, while the container itself owns only the landing summary contract. It must not absorb child feature business logic.
+
+This module owns the backend capability boundary for the superadmin_modules/system-ops feature. It exposes 51 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `backups/backups-schedule-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-schedule-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/backups.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/dtos/backups-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/dtos/backups-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/dtos/backups-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/responses/backups-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-download.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-health.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-restore.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-schedule.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-trigger.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/services/backups-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/types/backups.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `backups/types/backups.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/dtos/infrastructure-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/dtos/infrastructure-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/dtos/infrastructure-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/infrastructure.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/responses/infrastructure-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-api-health.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-flush-global.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-flush-tenant.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-redis.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-tenants.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/services/infrastructure-uptime.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/types/infrastructure.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `infrastructure/types/infrastructure.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/dtos/jobs-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/dtos/jobs-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/dtos/jobs-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/jobs.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/responses/jobs-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-bulk-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-bulk-retry.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-cancel.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-clear-completed.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-queue-health.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-retry-all.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-retry.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/services/jobs-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/types/jobs.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `jobs/types/jobs.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/dtos/migrations-create.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/dtos/migrations-query.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/dtos/migrations-update.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations-command.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.mapper.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/migrations.seeder.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/responses/migrations-response.dto.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-create.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-delete.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-find.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-list.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-status.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-trigger.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/services/migrations-update.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/types/migrations.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `migrations/types/migrations.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `services/system-ops-summary.service.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops-container.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops.module.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `system-ops.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `types/system-ops.enums.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `types/system-ops.interfaces.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-
-
-## Repair Synchronization
-The current repaired routes include `GET /superadmin/system-ops/backups/schedule`, `PATCH /superadmin/system-ops/backups/schedule`, and `GET /superadmin/system-ops/migrationssearch`. Child-module responsibilities remain isolated under `backups`, `infrastructure`, `jobs`, and `migrations`; no sibling business logic is moved into the parent container.
+| `backups/backups_dtos/superadmin-system-ops-backups-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_dtos/superadmin-system-ops-backups-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_dtos/superadmin-system-ops-backups-schedule.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_dtos/superadmin-system-ops-backups-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_dtos/superadmin-system-ops-backups-trigger.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_dtos/superadmin-system-ops-backups-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_repositories/superadmin-system-ops-backup-job.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `backups/backups_responses/superadmin-system-ops-backups-job-status-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_responses/superadmin-system-ops-backups-queued-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_responses/superadmin-system-ops-backups-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/backups_services/superadmin-system-ops-backups-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-download.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-health.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-restore.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-schedule.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-trigger.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_services/superadmin-system-ops-backups-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/backups_types/superadmin-system-ops-backups.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `backups/backups_types/superadmin-system-ops-backups.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `backups/backups_workers/superadmin-system-ops-backups-worker.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `backups/superadmin-system-ops-backup-job.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `backups/superadmin-system-ops-backups-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `backups/superadmin-system-ops-backups-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `backups/superadmin-system-ops-backups-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `backups/superadmin-system-ops-backups-health-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `backups/superadmin-system-ops-backups-operations-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `backups/superadmin-system-ops-backups-operations-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `backups/superadmin-system-ops-backups-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `backups/superadmin-system-ops-backups-schedule-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `backups/superadmin-system-ops-backups-schedule-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `backups/superadmin-system-ops-backups.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `backups/superadmin-system-ops-backups.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `backups/superadmin-system-ops-backups.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `backups/superadmin-system-ops-backups.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `backups/superadmin-system-ops-backups.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `backups/superadmin-system-ops-backups.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `backups/superadmin-system-ops-backups.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-flush-tenant.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_dtos/superadmin-system-ops-infrastructure-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_responses/superadmin-system-ops-infrastructure-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-api-health.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-flush-global.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-flush-tenant.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-redis.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_services/superadmin-system-ops-infrastructure-uptime.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `infrastructure/infrastructure_types/superadmin-system-ops-infrastructure.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `infrastructure/infrastructure_types/superadmin-system-ops-infrastructure.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `infrastructure/superadmin-system-ops-infrastructure-api-health-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `infrastructure/superadmin-system-ops-infrastructure-cache-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `infrastructure/superadmin-system-ops-infrastructure-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `infrastructure/superadmin-system-ops-infrastructure-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `infrastructure/superadmin-system-ops-infrastructure-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `infrastructure/superadmin-system-ops-infrastructure-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `infrastructure/superadmin-system-ops-infrastructure-telemetry-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `infrastructure/superadmin-system-ops-infrastructure.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `infrastructure/superadmin-system-ops-infrastructure.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `infrastructure/superadmin-system-ops-infrastructure.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `infrastructure/superadmin-system-ops-infrastructure.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `infrastructure/superadmin-system-ops-infrastructure.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `infrastructure/superadmin-system-ops-infrastructure.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `infrastructure/superadmin-system-ops-infrastructure.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `jobs/jobs_dtos/superadmin-system-ops-jobs-bulk-action.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_dtos/superadmin-system-ops-jobs-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_dtos/superadmin-system-ops-jobs-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_dtos/superadmin-system-ops-jobs-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_dtos/superadmin-system-ops-jobs-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_responses/superadmin-system-ops-jobs-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-bulk-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-bulk-retry.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-cancel.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-clear-completed.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-queue-health.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-retry-all.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-retry.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_services/superadmin-system-ops-jobs-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `jobs/jobs_types/superadmin-system-ops-jobs.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `jobs/jobs_types/superadmin-system-ops-jobs.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `jobs/superadmin-system-ops-jobs-bulk-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `jobs/superadmin-system-ops-jobs-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `jobs/superadmin-system-ops-jobs-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `jobs/superadmin-system-ops-jobs-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `jobs/superadmin-system-ops-jobs-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `jobs/superadmin-system-ops-jobs-queue-health-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `jobs/superadmin-system-ops-jobs-queue-health-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `jobs/superadmin-system-ops-jobs.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `jobs/superadmin-system-ops-jobs.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `jobs/superadmin-system-ops-jobs.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `jobs/superadmin-system-ops-jobs.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `jobs/superadmin-system-ops-jobs.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `jobs/superadmin-system-ops-jobs.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `jobs/superadmin-system-ops-jobs.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `migrations/migrations_dtos/superadmin-system-ops-migrations-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_dtos/superadmin-system-ops-migrations-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_dtos/superadmin-system-ops-migrations-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_dtos/superadmin-system-ops-migrations-trigger.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_dtos/superadmin-system-ops-migrations-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_responses/superadmin-system-ops-migrations-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-trigger.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_services/superadmin-system-ops-migrations-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations/migrations_types/superadmin-system-ops-migrations.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `migrations/migrations_types/superadmin-system-ops-migrations.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `migrations/superadmin-system-ops-migrations-advanced-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `migrations/superadmin-system-ops-migrations-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `migrations/superadmin-system-ops-migrations-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `migrations/superadmin-system-ops-migrations.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `migrations/superadmin-system-ops-migrations.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `migrations/superadmin-system-ops-migrations.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `migrations/superadmin-system-ops-migrations.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `migrations/superadmin-system-ops-migrations.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `migrations/superadmin-system-ops-migrations.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `migrations/superadmin-system-ops-migrations.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-system-ops-container.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-system-ops-summary-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-system-ops.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `system-ops_services/superadmin-system-ops-summary.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `system-ops_types/superadmin-system-ops.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `system-ops_types/superadmin-system-ops.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `backups-command.controller.ts` | POST | `/superadmin/system-ops/backups` | Implements the `POST /superadmin/system-ops/backups` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-command.controller.ts` | PATCH | `/superadmin/system-ops/backups:id` | Implements the `PATCH /superadmin/system-ops/backups:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-command.controller.ts` | DELETE | `/superadmin/system-ops/backups:id` | Implements the `DELETE /superadmin/system-ops/backups:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-command.controller.ts` | PATCH | `/superadmin/system-ops/backups:id/status` | Implements the `PATCH /superadmin/system-ops/backups:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-query.controller.ts` | GET | `/superadmin/system-ops/backups` | Implements the `GET /superadmin/system-ops/backups` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-query.controller.ts` | GET | `/superadmin/system-ops/backups:id` | Implements the `GET /superadmin/system-ops/backups:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-special.controller.ts` | GET | `superadmin/system-ops/backups/health` | Implements the `GET superadmin/system-ops/backups/health` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/schedule` | Implements the `POST superadmin/system-ops/backups/schedule` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/trigger` | Implements the `POST superadmin/system-ops/backups/trigger` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-special.controller.ts` | GET | `superadmin/system-ops/backups/:id/download` | Implements the `GET superadmin/system-ops/backups/:id/download` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `backups-special.controller.ts` | POST | `superadmin/system-ops/backups/:id/restore` | Implements the `POST superadmin/system-ops/backups/:id/restore` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-command.controller.ts` | POST | `/superadmin/system-ops/infrastructure` | Implements the `POST /superadmin/system-ops/infrastructure` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-command.controller.ts` | PATCH | `/superadmin/system-ops/infrastructure:id` | Implements the `PATCH /superadmin/system-ops/infrastructure:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-command.controller.ts` | DELETE | `/superadmin/system-ops/infrastructure:id` | Implements the `DELETE /superadmin/system-ops/infrastructure:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-command.controller.ts` | PATCH | `/superadmin/system-ops/infrastructure:id/status` | Implements the `PATCH /superadmin/system-ops/infrastructure:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-query.controller.ts` | GET | `/superadmin/system-ops/infrastructure` | Implements the `GET /superadmin/system-ops/infrastructure` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-query.controller.ts` | GET | `/superadmin/system-ops/infrastructure:id` | Implements the `GET /superadmin/system-ops/infrastructure:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/redis` | Implements the `GET superadmin/system-ops/infrastructure/redis` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/uptime` | Implements the `GET superadmin/system-ops/infrastructure/uptime` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | POST | `superadmin/system-ops/infrastructure/redis/flush-global` | Implements the `POST superadmin/system-ops/infrastructure/redis/flush-global` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | POST | `superadmin/system-ops/infrastructure/redis/flush-tenant` | Implements the `POST superadmin/system-ops/infrastructure/redis/flush-tenant` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | GET | `superadmin/system-ops/infrastructure/api-health` | Implements the `GET superadmin/system-ops/infrastructure/api-health` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `infrastructure-special.controller.ts` | GET | `gyms` | Implements the `GET gyms` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-command.controller.ts` | POST | `/superadmin/system-ops/jobs` | Implements the `POST /superadmin/system-ops/jobs` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-command.controller.ts` | PATCH | `/superadmin/system-ops/jobs:id` | Implements the `PATCH /superadmin/system-ops/jobs:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-command.controller.ts` | DELETE | `/superadmin/system-ops/jobs:id` | Implements the `DELETE /superadmin/system-ops/jobs:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-command.controller.ts` | PATCH | `/superadmin/system-ops/jobs:id/status` | Implements the `PATCH /superadmin/system-ops/jobs:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-query.controller.ts` | GET | `/superadmin/system-ops/jobs` | Implements the `GET /superadmin/system-ops/jobs` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-query.controller.ts` | GET | `/superadmin/system-ops/jobs:id` | Implements the `GET /superadmin/system-ops/jobs:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | GET | `superadmin/system-ops/jobs/queue-health` | Implements the `GET superadmin/system-ops/jobs/queue-health` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/retry-all` | Implements the `POST superadmin/system-ops/jobs/retry-all` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/:id/retry` | Implements the `POST superadmin/system-ops/jobs/:id/retry` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/:id/cancel` | Implements the `POST superadmin/system-ops/jobs/:id/cancel` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/clear-completed` | Implements the `POST superadmin/system-ops/jobs/clear-completed` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/bulk-retry` | Implements the `POST superadmin/system-ops/jobs/bulk-retry` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `jobs-special.controller.ts` | POST | `superadmin/system-ops/jobs/bulk-delete` | Implements the `POST superadmin/system-ops/jobs/bulk-delete` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-command.controller.ts` | POST | `/superadmin/system-ops/migrations` | Implements the `POST /superadmin/system-ops/migrations` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-command.controller.ts` | PATCH | `/superadmin/system-ops/migrations:id` | Implements the `PATCH /superadmin/system-ops/migrations:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-command.controller.ts` | DELETE | `/superadmin/system-ops/migrations:id` | Implements the `DELETE /superadmin/system-ops/migrations:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-command.controller.ts` | PATCH | `/superadmin/system-ops/migrations:id/status` | Implements the `PATCH /superadmin/system-ops/migrations:id/status` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-query.controller.ts` | GET | `/superadmin/system-ops/migrations` | Implements the `GET /superadmin/system-ops/migrations` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-query.controller.ts` | GET | `/superadmin/system-ops/migrations:id` | Implements the `GET /superadmin/system-ops/migrations:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `migrations-special.controller.ts` | POST | `superadmin/system-ops/migrations/trigger` | Implements the `POST superadmin/system-ops/migrations/trigger` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `system-ops-special.controller.ts` | GET | `superadmin/system-ops/summary` | Implements the `GET superadmin/system-ops/summary` contract for this feature. | DTO validated at controller boundary | Feature response contract |
+| `superadmin-system-ops-backups-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the create operation. | `SuperadminSystemOpsBackupsCreateDto` | `See controller contract` |
+| `superadmin-system-ops-backups-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the update operation. | `SuperadminSystemOpsBackupsUpdateDto` | `See controller contract` |
+| `superadmin-system-ops-backups-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-system-ops-backups-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the changeStatus operation. | `SuperadminSystemOpsBackupsStatusDto` | `See controller contract` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::patchSchedule` | PATCH | `superadmin/system-ops/backups/schedule` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the patchSchedule operation. | `SuperadminSystemOpsBackupsScheduleDto` | `See controller contract` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::trigger` | POST | `superadmin/system-ops/backups/trigger` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the trigger operation. | `SuperadminSystemOpsBackupsTriggerDto` | `null` |
+| `superadmin-system-ops-backups-operations-command.controller.ts::restore` | POST | `superadmin/system-ops/backups/:id/restore` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the restore operation. | `—` | `null` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::schedule` | GET | `superadmin/system-ops/backups/schedule` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the schedule operation. | `—` | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::health` | GET | `superadmin/system-ops/backups/health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the health operation. | `Record` | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::health` | GET | `api/superadmin/system-ops/backups/health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the health operation. | `Record` | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::jobStatus` | GET | `superadmin/system-ops/backups/jobs/:jobId` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the jobStatus operation. | `—` | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::download` | GET | `superadmin/system-ops/backups/:id/download` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the download operation. | `—` | `SuperadminSystemOpsBackupsJobStatusResponseDto` |
+| `superadmin-system-ops-backups-operations-query.controller.ts::downloadFile` | GET | `superadmin/system-ops/backups/:id/download/file` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the downloadFile operation. | `—` | `void` |
+| `superadmin-system-ops-backups-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findAll operation. | `SuperadminSystemOpsBackupsQueryDto` | `See controller contract` |
+| `superadmin-system-ops-backups-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-cache-command.controller.ts::flushGlobal` | POST | `superadmin/system-ops/infrastructure/redis/flush-global` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the flushGlobal operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-cache-command.controller.ts::flushTenant` | POST | `superadmin/system-ops/infrastructure/redis/flush-tenant` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the flushTenant operation. | `SuperadminSystemOpsInfrastructureFlushTenantDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the create operation. | `SuperadminSystemOpsInfrastructureCreateDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the update operation. | `SuperadminSystemOpsInfrastructureUpdateDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-system-ops-infrastructure-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the changeStatus operation. | `SuperadminSystemOpsInfrastructureStatusDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findAll operation. | `SuperadminSystemOpsInfrastructureQueryDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::redis` | GET | `superadmin/system-ops/infrastructure/redis` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the redis operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::uptime` | GET | `superadmin/system-ops/infrastructure/uptime` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the uptime operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::uptime` | GET | `superadmin/system-ops/infrastructure/uptime-history` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the uptime operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::apiHealth` | GET | `superadmin/system-ops/infrastructure/api-health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the apiHealth operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-infrastructure-telemetry-query.controller.ts::apiHealth` | GET | `api/superadmin/system-ops/infrastructure/api-health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the apiHealth operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::retryAll` | POST | `superadmin/system-ops/jobs/retry-all` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the retryAll operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::retry` | POST | `superadmin/system-ops/jobs/:id/retry` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the retry operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::cancel` | POST | `superadmin/system-ops/jobs/:id/cancel` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the cancel operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::clearCompleted` | POST | `superadmin/system-ops/jobs/clear-completed` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the clearCompleted operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::bulkRetry` | POST | `superadmin/system-ops/jobs/bulk-retry` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the bulkRetry operation. | `SuperadminSystemOpsJobsBulkActionDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-bulk-command.controller.ts::bulkDelete` | POST | `superadmin/system-ops/jobs/bulk-delete` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the bulkDelete operation. | `SuperadminSystemOpsJobsBulkActionDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the create operation. | `SuperadminSystemOpsJobsCreateDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the update operation. | `SuperadminSystemOpsJobsUpdateDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-system-ops-jobs-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the changeStatus operation. | `SuperadminSystemOpsJobsStatusDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-query.controller.ts::findAll` | GET | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findAll operation. | `SuperadminSystemOpsJobsQueryDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-jobs-queue-health-query.controller.ts::queueHealth` | GET | `superadmin/system-ops/jobs/queue-health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the queueHealth operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-jobs-queue-health-query.controller.ts::queueHealth` | GET | `api/superadmin/system-ops/jobs/queue-health` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the queueHealth operation. | `SuperadminQueryDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-advanced-command.controller.ts::trigger` | POST | `superadmin/system-ops/migrations/trigger` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the trigger operation. | `SuperadminSystemOpsMigrationsTriggerDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the create operation. | `SuperadminSystemOpsMigrationsCreateDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the update operation. | `SuperadminSystemOpsMigrationsUpdateDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-system-ops-migrations-command.controller.ts::changeStatus` | PATCH | `:id/status` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the changeStatus operation. | `SuperadminSystemOpsMigrationsStatusDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-query.controller.ts::findAll` | GET | `superadmin/system-ops/migrations` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findAll operation. | `SuperadminSystemOpsMigrationsQueryDto` | `See controller contract` |
+| `superadmin-system-ops-migrations-query.controller.ts::findOne` | GET | `superadmin/system-ops/migrations/:id` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-summary-query.controller.ts::findSystemOpsSummary` | GET | `superadmin/system-ops/summary` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findSystemOpsSummary operation. | `—` | `See controller contract` |
+| `superadmin-system-ops-summary-query.controller.ts::findSystemOpsSummary` | GET | `api/superadmin/system-ops/summary` | This endpoint validates transport input, invokes the owning system-ops use case, and returns the declared contract for the findSystemOpsSummary operation. | `—` | `See controller contract` |
+
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct import. Cross-feature runtime coupling must use registered events.
-- **Infrastructure Dependencies**: Core configuration, authentication/authorization, PostgreSQL/TypeORM, Redis where applicable, canonical response/error infrastructure.
-- **Runtime/Event Dependencies**: Only events explicitly listed in this feature's dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_jobs, superadmin_core_observability, superadmin_core_pagination, superadmin_core_tenancy
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Listed directly by the feature module and TypeORM registration.
-- Redis Caching Keys: Feature-specific keys only; no global business cache helper.
-- Event Emitters: Only centralized registry names.
-- Background Jobs: Only named queue work documented by this feature.
-- Idempotency Keys: Required for applicable resource/financial/communication mutations.
+
+- DB Entities: superadmin-system-ops-backup-job.entity → `superadmin_backup_jobs`, superadmin-system-ops-backups-contract-snapshot.entity → `superadmin_backups_contract_snapshots`, superadmin-system-ops-backups-schedule-contract-snapshot.entity → `superadmin_backup_schedule_contract_snapshots`, superadmin-system-ops-backups.entity → `superadmin_backup_records`, superadmin-system-ops-infrastructure-contract-snapshot.entity → `superadmin_infrastructure_contract_snapshots`, superadmin-system-ops-infrastructure.entity → `superadmin_infrastructure_nodes`, superadmin-system-ops-jobs-contract-snapshot.entity → `superadmin_jobs_contract_snapshots`, superadmin-system-ops-jobs.entity → `superadmin_background_jobs`, superadmin-system-ops-migrations.entity → `superadmin_migration_logs`, superadmin-system-ops.entity → `superadmin_system_ops_snapshots`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: backups/superadmin-system-ops-backup-job.entity.ts, jobs/superadmin-system-ops-jobs-query.controller.ts, jobs/superadmin-system-ops-jobs.constants.ts, jobs/superadmin-system-ops-jobs.repository.ts, jobs/superadmin-system-ops-jobs-command.controller.ts, jobs/superadmin-system-ops-jobs.module.ts, jobs/superadmin-system-ops-jobs-bulk-command.controller.ts, jobs/superadmin-system-ops-jobs-queue-health-response.dto.ts, jobs/superadmin-system-ops-jobs.seeder.ts, jobs/superadmin-system-ops-jobs-queue-health-query.controller.ts, jobs/superadmin-system-ops-jobs-contract-snapshot.repository.ts, jobs/superadmin-system-ops-jobs.entity.ts, jobs/superadmin-system-ops-jobs-contract-snapshot.entity.ts, jobs/superadmin-system-ops-jobs.mapper.ts, jobs/superadmin-system-ops-jobs.exceptions.ts, jobs/jobs_types/superadmin-system-ops-jobs.interfaces.ts, jobs/jobs_types/superadmin-system-ops-jobs.enums.ts, jobs/jobs_responses/superadmin-system-ops-jobs-response.dto.ts, jobs/jobs_services/superadmin-system-ops-jobs-bulk-retry.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-bulk-delete.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-find.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-update.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-retry.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-create.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-queue-health.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-status.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-retry-all.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-cancel.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-clear-completed.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-delete.service.ts, jobs/jobs_services/superadmin-system-ops-jobs-list.service.ts, jobs/jobs_dtos/superadmin-system-ops-jobs-status.dto.ts, jobs/jobs_dtos/superadmin-system-ops-jobs-bulk-action.dto.ts, jobs/jobs_dtos/superadmin-system-ops-jobs-query.dto.ts, jobs/jobs_dtos/superadmin-system-ops-jobs-create.dto.ts, jobs/jobs_dtos/superadmin-system-ops-jobs-update.dto.ts, backups/backups_repositories/superadmin-system-ops-backup-job.repository.ts, backups/backups_responses/superadmin-system-ops-backups-job-status-response.dto.ts
+- Idempotency Keys: `/superadmin/system-ops/backups`, `/superadmin/system-ops/backups/:id`, `/superadmin/system-ops/backups/:id/restore`, `/superadmin/system-ops/backups/:id/status`, `/superadmin/system-ops/backups/schedule`, `/superadmin/system-ops/backups/trigger`, `/superadmin/system-ops/infrastructure`, `/superadmin/system-ops/infrastructure/:id`, `/superadmin/system-ops/infrastructure/:id/status`, `/superadmin/system-ops/infrastructure/redis/flush-global`, `/superadmin/system-ops/infrastructure/redis/flush-tenant`, `/superadmin/system-ops/jobs`, `/superadmin/system-ops/jobs/:id`, `/superadmin/system-ops/jobs/:id/cancel`, `/superadmin/system-ops/jobs/:id/retry`, `/superadmin/system-ops/jobs/:id/status`, `/superadmin/system-ops/jobs/bulk-delete`, `/superadmin/system-ops/jobs/bulk-retry`, `/superadmin/system-ops/jobs/clear-completed`, `/superadmin/system-ops/jobs/retry-all`, `/superadmin/system-ops/migrations`, `/superadmin/system-ops/migrations/:id`, `/superadmin/system-ops/migrations/:id/status`, `/superadmin/system-ops/migrations/trigger`
 
 ## Business Flow / Key Sequences
 For each mutation, the controller validates the request, the use-case service applies business rules, the repository owns PostgreSQL mutation/query details, and the mapper/response DTO exposes only contract-approved fields. Heavy work is queued rather than performed in the HTTP request.
@@ -200,7 +229,60 @@ For each mutation, the controller validates the request, the use-case service ap
 Every file has one responsibility. Controllers own HTTP wiring only; DTOs own edge validation; services own use-case decisions; repositories own ORM access; mappers own domain/response translation; adapters own external APIs.
 
 ## Permissions and Security
-All Superadmin endpoints require the Superadmin role at the controller boundary. Resource-specific operations must additionally verify the requested resource belongs to the authorized scope before performing mutations.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/system-ops/backups` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/backups/schedule` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/backups/trigger` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/backups/:id/restore` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/schedule` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/backups/health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/jobs/:jobId` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id/download` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id/download/file` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/backups/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/infrastructure/redis/flush-global` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/infrastructure/redis/flush-tenant` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/infrastructure` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/infrastructure/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/redis` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/uptime` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/uptime-history` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/infrastructure/api-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/infrastructure/api-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/retry-all` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/:id/retry` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/:id/cancel` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/clear-completed` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/bulk-retry` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs/bulk-delete` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/jobs` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/jobs/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/jobs/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/jobs/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/jobs` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/jobs/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/jobs/queue-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/jobs/queue-health` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/migrations/trigger` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/migrations` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/migrations/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/migrations` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/summary` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/system-ops/summary` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Cross-feature direct business imports violate the feature write boundary and can introduce hidden coupling — see Rules 0B/0C and Rule 49.
@@ -210,37 +292,201 @@ All Superadmin endpoints require the Superadmin role at the controller boundary.
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend system-ops/superadmin_system_ops_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-# Superadmin System Ops — Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The System Ops container groups Superadmin operational business features. Backups, infrastructure, jobs, and migrations are independent feature units nested under this container, while the container itself owns only the landing summary contract. It must not absorb child feature business logic.
+#### Source: `system-ops/backups/superadmin_backups_features.md`
 
-## Directory Structure
-| Folder | Responsibility | Key Files |
+- **API files:** `backups_api/SuperadminBackupsHealthApi.ts`, `backups_api/SuperadminBackupsApi.ts`
+- **Detected API symbols:** `fetchBackupsHealth` — `backups_api/SuperadminBackupsHealthApi.ts`; `fetchBackups` — `backups_api/SuperadminBackupsApi.ts`; `createBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `restoreBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupDownloadUrl` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`; `updateBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/backups/superadmin_backups_health_features.md`
+
+- **API files:** `backups_api/SuperadminBackupsHealthApi.ts`, `backups_api/SuperadminBackupsApi.ts`
+- **Detected API symbols:** `fetchBackupsHealth` — `backups_api/SuperadminBackupsHealthApi.ts`; `fetchBackups` — `backups_api/SuperadminBackupsApi.ts`; `createBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `restoreBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupDownloadUrl` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`; `updateBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/infrastructure/superadmin_infrastructure_api_health_features.md`
+
+- **API files:** `infrastructure_api/SuperadminInfrastructureApi.ts`, `infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`
+- **Detected API symbols:** `fetchInfrastructureNodes` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchRedisTelemetry` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchUptimeHistory` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `flushGlobalCache` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `flushTenantCache` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchTenants` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchInfrastructureApiHealth` — `infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/infrastructure/superadmin_infrastructure_features.md`
+
+- **API files:** `infrastructure_api/SuperadminInfrastructureApi.ts`, `infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`
+- **Detected API symbols:** `fetchInfrastructureNodes` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchRedisTelemetry` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchUptimeHistory` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `flushGlobalCache` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `flushTenantCache` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchTenants` — `infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchInfrastructureApiHealth` — `infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/jobs/superadmin_jobs_features.md`
+
+- **API files:** `jobs_api/SuperadminJobsQueueHealthApi.ts`, `jobs_api/SuperadminJobsApi.ts`
+- **Detected API symbols:** `fetchJobsQueueHealth` — `jobs_api/SuperadminJobsQueueHealthApi.ts`; `fetchJobs` — `jobs_api/SuperadminJobsApi.ts`; `retryAllJobs` — `jobs_api/SuperadminJobsApi.ts`; `retryJob` — `jobs_api/SuperadminJobsApi.ts`; `cancelJob` — `jobs_api/SuperadminJobsApi.ts`; `deleteJob` — `jobs_api/SuperadminJobsApi.ts`; `clearCompletedJobs` — `jobs_api/SuperadminJobsApi.ts`; `bulkRetryJobs` — `jobs_api/SuperadminJobsApi.ts`; `bulkDeleteJobs` — `jobs_api/SuperadminJobsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/jobs/superadmin_jobs_queue_health_features.md`
+
+- **API files:** `jobs_api/SuperadminJobsQueueHealthApi.ts`, `jobs_api/SuperadminJobsApi.ts`
+- **Detected API symbols:** `fetchJobsQueueHealth` — `jobs_api/SuperadminJobsQueueHealthApi.ts`; `fetchJobs` — `jobs_api/SuperadminJobsApi.ts`; `retryAllJobs` — `jobs_api/SuperadminJobsApi.ts`; `retryJob` — `jobs_api/SuperadminJobsApi.ts`; `cancelJob` — `jobs_api/SuperadminJobsApi.ts`; `deleteJob` — `jobs_api/SuperadminJobsApi.ts`; `clearCompletedJobs` — `jobs_api/SuperadminJobsApi.ts`; `bulkRetryJobs` — `jobs_api/SuperadminJobsApi.ts`; `bulkDeleteJobs` — `jobs_api/SuperadminJobsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/migrations/superadmin_migrations_features.md`
+
+- **API files:** `migrations_api/SuperadminMigrationsApi.ts`
+- **Detected API symbols:** `fetchMigrations` — `migrations_api/SuperadminMigrationsApi.ts`; `startMigration` — `migrations_api/SuperadminMigrationsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+#### Source: `system-ops/superadmin_system_ops_features.md`
+
+- **API files:** `system-ops_api/SuperadminSystemOpsApi.ts`, `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`, `infrastructure/infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`, `jobs/jobs_api/SuperadminJobsQueueHealthApi.ts`, `jobs/jobs_api/SuperadminJobsApi.ts`, `backups/backups_api/SuperadminBackupsHealthApi.ts`, `backups/backups_api/SuperadminBackupsApi.ts`, `migrations/migrations_api/SuperadminMigrationsApi.ts`
+- **Detected API symbols:** `fetchSuperadminSystemOpsSummary` — `system-ops_api/SuperadminSystemOpsApi.ts`; `fetchInfrastructureNodes` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchRedisTelemetry` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchUptimeHistory` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `flushGlobalCache` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `flushTenantCache` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchTenants` — `infrastructure/infrastructure_api/SuperadminInfrastructureApi.ts`; `fetchInfrastructureApiHealth` — `infrastructure/infrastructure_api/SuperadminInfrastructureApiHealthApi.ts`; `fetchJobsQueueHealth` — `jobs/jobs_api/SuperadminJobsQueueHealthApi.ts`; `fetchJobs` — `jobs/jobs_api/SuperadminJobsApi.ts`; `retryAllJobs` — `jobs/jobs_api/SuperadminJobsApi.ts`; `retryJob` — `jobs/jobs_api/SuperadminJobsApi.ts`; `cancelJob` — `jobs/jobs_api/SuperadminJobsApi.ts`; `deleteJob` — `jobs/jobs_api/SuperadminJobsApi.ts`; `clearCompletedJobs` — `jobs/jobs_api/SuperadminJobsApi.ts`; `bulkRetryJobs` — `jobs/jobs_api/SuperadminJobsApi.ts`; `bulkDeleteJobs` — `jobs/jobs_api/SuperadminJobsApi.ts`; `fetchBackupsHealth` — `backups/backups_api/SuperadminBackupsHealthApi.ts`; `fetchBackups` — `backups/backups_api/SuperadminBackupsApi.ts`; `createBackupSnapshot` — `backups/backups_api/SuperadminBackupsApi.ts`; `restoreBackupSnapshot` — `backups/backups_api/SuperadminBackupsApi.ts`; `fetchBackupDownloadUrl` — `backups/backups_api/SuperadminBackupsApi.ts`; `fetchBackupSchedule` — `backups/backups_api/SuperadminBackupsApi.ts`; `updateBackupSchedule` — `backups/backups_api/SuperadminBackupsApi.ts`; `fetchMigrations` — `migrations/migrations_api/SuperadminMigrationsApi.ts`; `startMigration` — `migrations/migrations_api/SuperadminMigrationsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `system-ops/backups/superadmin_backups_features.md`
+
+- **Data-bearing components:** `page.tsx`, `backups_components/SuperadminBackupsTriggerModal.tsx`, `backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups_components/SuperadminBackupsTable.tsx`, `backups_components/SuperadminBackupsScheduleModal.tsx`, `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups_components/SuperadminBackupsClient.tsx`, `backups_components/SuperadminBackupsRestoreModal.tsx`, `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/backups/superadmin_backups_health_features.md`
+
+- **Data-bearing components:** `page.tsx`, `backups_components/SuperadminBackupsTriggerModal.tsx`, `backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups_components/SuperadminBackupsTable.tsx`, `backups_components/SuperadminBackupsScheduleModal.tsx`, `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups_components/SuperadminBackupsClient.tsx`, `backups_components/SuperadminBackupsRestoreModal.tsx`, `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/infrastructure/superadmin_infrastructure_api_health_features.md`
+
+- **Data-bearing components:** `page.tsx`, `infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/infrastructure/superadmin_infrastructure_features.md`
+
+- **Data-bearing components:** `page.tsx`, `infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/jobs/superadmin_jobs_features.md`
+
+- **Data-bearing components:** `page.tsx`, `jobs_components/SuperadminJobsV1QueueSummaryCards.tsx`, `jobs_components/SuperadminJobsV1QueueHealthTable.tsx`, `jobs_components/SuperadminJobsView.tsx`, `jobs_components/SuperadminJobsV1RecentFailuresPanel.tsx`, `jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx`, `jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx`, `jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx`, `jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx`, `jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/jobs/superadmin_jobs_queue_health_features.md`
+
+- **Data-bearing components:** `page.tsx`, `jobs_components/SuperadminJobsV1QueueSummaryCards.tsx`, `jobs_components/SuperadminJobsV1QueueHealthTable.tsx`, `jobs_components/SuperadminJobsView.tsx`, `jobs_components/SuperadminJobsV1RecentFailuresPanel.tsx`, `jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx`, `jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx`, `jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx`, `jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx`, `jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/migrations/superadmin_migrations_features.md`
+
+- **Data-bearing components:** `page.tsx`, `migrations_components/SuperadminMigrationStatusBadge.tsx`, `migrations_components/SuperadminMigrationsEmptyState.tsx`, `migrations_components/SuperadminMigrationsClient.tsx`
+- **Approved formatting evidence:** No approved global formatting helper detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+#### Source: `system-ops/superadmin_system_ops_features.md`
+
+- **Data-bearing components:** `page.tsx`, `migrations/page.tsx`, `backups/page.tsx`, `jobs/page.tsx`, `infrastructure/page.tsx`, `system-ops_components/SuperadminSystemOpsDashboardClient.tsx`, `system-ops_components/SuperadminSystemOpsDashboardSkeleton.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure/infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`, `jobs/jobs_components/SuperadminJobsV1QueueSummaryCards.tsx`, `jobs/jobs_components/SuperadminJobsV1QueueHealthTable.tsx`, `jobs/jobs_components/SuperadminJobsView.tsx`, `jobs/jobs_components/SuperadminJobsV1RecentFailuresPanel.tsx`, `jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx`, `jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx`, `jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx`, `jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx`, `jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx`, `backups/backups_components/SuperadminBackupsTriggerModal.tsx`, `backups/backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups/backups_components/SuperadminBackupsTable.tsx`, `backups/backups_components/SuperadminBackupsScheduleModal.tsx`, `backups/backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups/backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups/backups_components/SuperadminBackupsClient.tsx`, `backups/backups_components/SuperadminBackupsRestoreModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+### Static Freeze Status
+
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
+
+
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
 |---|---|---|
-| `system-ops_components/` | Renders the route UI, skeleton, and interactive links to operational detail modules. | `SuperadminSystemOpsDashboardClient.tsx`, `SuperadminSystemOpsDashboardSkeleton.tsx` |
-| `system-ops_api/` | Performs the System Ops summary request through the global API transport. | `SuperadminSystemOpsApi.ts` |
-| `system-ops_types/` | Runtime-validated summary schema and inferred types. | `SuperadminSystemOpsTypes.ts` |
-| `system-ops_constants/` and `system-ops_utils/` | TanStack Query hook and presentation-only card definitions. | `SuperadminSystemOpsDashboardConstants.ts`, `useSuperadminSystemOpsSummary.ts` |
-| `system-ops_mocks/fixtures/` | Holds realistic server data for the summary. | `SuperadminSystemOpsMockFixtures.ts` |
-| `system-ops_mocks/handlers/` | Provides MSW response behavior and resettable state. | `SuperadminSystemOpsMockHandlers.ts` |
+| ``{superadmin}{query}`` | ``ApiResponse<BackupRecord[]>`` | `REQ-096` / ``fetchBackups`` |
+| ``/superadmin/system-ops/backups/trigger`` | ``ApiResponse<null>`` | `REQ-097` / ``createBackupSnapshot`` |
+| ``/superadmin/system-ops/backups/{encodeURIComponent}/restore(id)`` | ``ApiResponse<null>`` | `REQ-098` / ``restoreBackupSnapshot`` |
+| ``/superadmin/system-ops/backups/{encodeURIComponent}/download(id)`` | ``ApiResponse<{ downloadUrl: string }>`` | `REQ-099` / ``fetchBackupDownloadUrl`` |
+| ``/superadmin/system-ops/backups/schedule`` | ``ApiResponse<SuperadminBackupsSchedule>`` | `REQ-100` / ``fetchBackupSchedule`` |
+| ``/superadmin/system-ops/backups/schedule`` | ``ApiResponse<SuperadminBackupsSchedule>`` | `REQ-101` / ``updateBackupSchedule`` |
+| ``/api/superadmin/system-ops/backups/health`` | ``ApiResponse<SuperadminBackupsV1Data>`` | `REQ-102` / ``fetchBackupsHealth`` |
+| ``{superadmin}{q}`` | ``ApiResponse<InfrastructureNode[]>`` | `REQ-103` / ``fetchInfrastructureNodes`` |
+| ``/superadmin/system-ops/infrastructure/redis`` | ``ApiResponse<RedisTelemetry>`` | `REQ-104` / ``fetchRedisTelemetry`` |
+| ``{superadmin}/uptime-history`` | ``ApiResponse<SuperadminInfrastructureUptimePoint[]>`` | `REQ-105` / ``fetchUptimeHistory`` |
+| ``/superadmin/system-ops/infrastructure/redis/flush-global`` | ``ApiResponse<void>`` | `REQ-106` / ``flushGlobalCache`` |
+| ``/superadmin/system-ops/infrastructure/redis/flush-tenant`` | ``ApiResponse<void>`` | `REQ-107` / ``flushTenantCache`` |
+| ``/api/gyms`` | ``ApiResponse<SuperadminInfrastructureTenant[]>`` | `REQ-108` / ``fetchTenants`` |
+| ``/api/superadmin/system-ops/infrastructure/api-health`` | ``ApiResponse<SuperadminInfrastructureV1Data>`` | `REQ-109` / ``fetchInfrastructureApiHealth`` |
+| ``{superadmin}{query}`` | ``ApiResponse<BackgroundJob[]>`` | `REQ-110` / ``fetchJobs`` |
+| ``{superadmin}/retry-all`` | ``ApiResponse<{ queuedCount: number }>`` | `REQ-111` / ``retryAllJobs`` |
+| ``{superadmin}/{id}/retry`` | ``ApiResponse<BackgroundJob>`` | `REQ-112` / ``retryJob`` |
+| ``{superadmin}/{id}/cancel`` | ``ApiResponse<BackgroundJob>`` | `REQ-113` / ``cancelJob`` |
+| ``{superadmin}/{id}`` | ``ApiResponse<null>`` | `REQ-114` / ``deleteJob`` |
+| ``{superadmin}/clear-completed`` | ``ApiResponse<CountResponse>`` | `REQ-115` / ``clearCompletedJobs`` |
+| ``{superadmin}/bulk-retry`` | ``ApiResponse<CountResponse>`` | `REQ-116` / ``bulkRetryJobs`` |
+| ``{superadmin}/bulk-delete`` | ``ApiResponse<CountResponse>`` | `REQ-117` / ``bulkDeleteJobs`` |
+| ``/api/superadmin/system-ops/jobs/queue-health`` | ``ApiResponse<SuperadminJobsV1Data>`` | `REQ-118` / ``fetchJobsQueueHealth`` |
+| ``{superadmin}{search}`` | ``ApiResponse<MigrationLog[]>`` | `REQ-119` / ``fetchMigrations`` |
+| ``/superadmin/system-ops/migrations/trigger`` | ``ApiResponse<z.infer<typeof MigrationTriggerResponseSchema>>`` | `REQ-120` / ``startMigration`` |
+| ``/api/superadmin/system-ops/summary`` | ``ApiResponse<SuperadminSystemOpsSummary>`` | `REQ-121` / ``fetchSuperadminSystemOpsSummary`` |
 
-## Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api` — global API transport only.
-- `@/lib/formatters` — global formatting infrastructure only.
-- `@/app/superadmin/system-ops/*_url_config.ts` — owning detail-module navigation contracts only.
-### Business Feature Dependencies
-- None.
-### Role-Level Business Dependencies
-- None.
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
 
-## Feature Inventory
-| Feature | Route | What the User Can Do | API | Status |
-|---|---|---|---|---|
-| System Ops Summary | `/superadmin/system-ops` | Review summary state and open Infrastructure, Jobs, Backups, or Migrations | `GET /api/superadmin/system-ops/summary` | Implemented with MSW |
+- **Data-bearing components:** `page.tsx`, `migrations/page.tsx`, `backups/page.tsx`, `jobs/page.tsx`, `infrastructure/page.tsx`, `system-ops_components/SuperadminSystemOpsDashboardClient.tsx`, `system-ops_components/SuperadminSystemOpsDashboardSkeleton.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1RecentIncidentsPanel.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1EndpointHealthTable.tsx`, `infrastructure/infrastructure_components/SuperadminFlushTenantModal.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureClient.tsx`, `infrastructure/infrastructure_components/SuperadminInfrastructureV1ServiceHealthSummaryCards.tsx`, `infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx`, `jobs/jobs_components/SuperadminJobsV1QueueSummaryCards.tsx`, `jobs/jobs_components/SuperadminJobsV1QueueHealthTable.tsx`, `jobs/jobs_components/SuperadminJobsView.tsx`, `jobs/jobs_components/SuperadminJobsV1RecentFailuresPanel.tsx`, `jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx`, `jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx`, `jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx`, `jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx`, `jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx`, `backups/backups_components/SuperadminBackupsTriggerModal.tsx`, `backups/backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups/backups_components/SuperadminBackupsTable.tsx`, `backups/backups_components/SuperadminBackupsScheduleModal.tsx`, `backups/backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups/backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups/backups_components/SuperadminBackupsClient.tsx`, `backups/backups_components/SuperadminBackupsRestoreModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] No fake operational status literals remain in the component.

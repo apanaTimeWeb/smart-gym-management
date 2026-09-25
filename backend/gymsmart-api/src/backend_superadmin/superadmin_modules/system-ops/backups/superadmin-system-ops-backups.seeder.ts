@@ -1,12 +1,23 @@
 // RESPONSIBILITY: Deterministically seeds the backups table for local/test environments.
-// FLOW: Master seed -> SuperadminBackupsSeeder -> PostgreSQL repository.
+// FLOW: Master seed -> SuperadminSystemOpsBackupsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
-import { SuperadminBackupsEntity } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.entity';
+import { SuperadminSystemOpsBackupsEntity } from '@/backend_superadmin/superadmin_modules/system-ops/backups/superadmin-system-ops-backups.entity';
 
-export class SuperadminBackupsSeeder {
-  /** Ensures the seed routine is safe to invoke repeatedly; data fixtures are applied by the dedicated seed orchestrator. */
+/**
+ * Primary Intent: Defines SuperadminSystemOpsBackupsSeeder as the class-level contract for superadmin-system-ops-backups.seeder.ts.
+ * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
+ * Side-Effects: None unless the construct is explicitly a persistence, adapter, queue, or event boundary.
+ * AI-Note: Treat this declaration as an architectural contract; do not move business logic into generic/shared folders or introduce undocumented fields.
+ */
+export class SuperadminSystemOpsBackupsSeeder {
+  /**
+ * Primary Intent: Executes the seed use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async seed(dataSource: DataSource): Promise<void> {
-    const repository = dataSource.getRepository(SuperadminBackupsEntity);
+    const repository = dataSource.getRepository(SuperadminSystemOpsBackupsEntity);
     await repository.count();
   }
 }

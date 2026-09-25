@@ -3,16 +3,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminFeaturesEntity } from '@/backend_superadmin/superadmin_modules/features/superadmin-features.entity';
-import type { SuperadminFeaturesListQuery, SuperadminFeaturesCreateInput, SuperadminFeaturesUpdateInput } from '@/backend_superadmin/superadmin_modules/features/types/superadmin-features.interfaces';
+import type { SuperadminFeaturesListQuery, SuperadminFeaturesCreateInput, SuperadminFeaturesUpdateInput } from '@/backend_superadmin/superadmin_modules/features/features_types/superadmin-features.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminFeaturesRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminFeaturesRepository extends BaseRepository<SuperadminFeaturesEntity> {
-  constructor(@InjectRepository(SuperadminFeaturesEntity) repository: Repository<SuperadminFeaturesEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminFeaturesRepository extends SuperadminCoreBaseRepository<SuperadminFeaturesEntity> {
+  constructor(@InjectRepository(SuperadminFeaturesEntity) repository: Repository<SuperadminFeaturesEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminFeaturesListQuery): Promise<{ items: SuperadminFeaturesEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -24,33 +35,72 @@ export class SuperadminFeaturesRepository extends BaseRepository<SuperadminFeatu
     return { items, total };
   }
 
-
-  /** Returns active feature flags for rollout projection. */
+  /**
+ * Primary Intent: Executes the findActiveFeatureFlags use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findActiveFeatureFlags(): Promise<SuperadminFeaturesEntity[]> { return this.activeRepository.find({ where: { deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminFeaturesEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminFeaturesEntity> { return super.findByIdOrThrow(id, 'Features record not found'); }
 
-  /** Creates and persists a features record. */
+  /**
+ * Primary Intent: Executes the createFeatures use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async createFeatures(input: SuperadminFeaturesCreateInput): Promise<SuperadminFeaturesEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a features record. */
+  /**
+ * Primary Intent: Executes the updateFeaturesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateFeaturesById(id: string, input: SuperadminFeaturesUpdateInput): Promise<SuperadminFeaturesEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Returns one active feature flag while holding a pessimistic row lock. */
+  /**
+ * Primary Intent: Executes the findByIdForUpdateOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdForUpdateOrThrow(id: string): Promise<SuperadminFeaturesEntity> { return super.findByIdForUpdateOrThrow(id, 'Features record not found'); }
 
-  /** Updates one feature flag after acquiring a pessimistic row lock. */
+  /**
+ * Primary Intent: Executes the updateFeatureWithLock use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateFeatureWithLock(id: string, input: SuperadminFeaturesUpdateInput): Promise<SuperadminFeaturesEntity> {
     await this.findByIdForUpdateOrThrow(id);
     await this.activeRepository.update({ id } as never, input as never);
     return this.findByIdOrThrow(id);
   }
 
-  /** Soft-deletes one features record. */
+  /**
+ * Primary Intent: Executes the deleteFeaturesById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteFeaturesById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
 }

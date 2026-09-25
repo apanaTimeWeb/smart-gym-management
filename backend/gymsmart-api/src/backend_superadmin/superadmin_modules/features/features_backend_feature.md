@@ -1,65 +1,82 @@
 # features Backend Feature Map
 
 ## Module Purpose
-Owns the `features` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
+This module owns the backend capability boundary for the superadmin_modules/features feature. It exposes 12 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/features-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/features-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/features-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `features-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `features-contract-snapshot.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `features-contract-snapshot.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `features-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `features-rollout-insights-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `features-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `features.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `features.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `features.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `features.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `features.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `features_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `responses/features-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/features-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-main.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-rollout-insights.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/features-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/features.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/features.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `features_dtos/superadmin-features-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_dtos/superadmin-features-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_dtos/superadmin-features-release-note-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_dtos/superadmin-features-release-note-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_dtos/superadmin-features-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_responses/superadmin-features-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `features_services/superadmin-features-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-main.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-release-note.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-rollout-insights.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-toggle.service.spec.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `features_services/superadmin-features-toggle.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_services/superadmin-features-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `features_types/superadmin-features.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `features_types/superadmin-features.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-features-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-features-contract-snapshot.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-features-contract-snapshot.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-features-feature-flag.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-features-history-entry.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-features-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-features-release-note-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-features-release-note.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-features-release-note.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-features-release-note.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-features-response-data.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-features-rollout-insights-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-features-rollout-insights-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `superadmin-features.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-features.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-features.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-features.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-features.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-features.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-features.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `features-command.controller.ts` / `create` | POST | `/superadmin/features` | Creates a resource after DTO validation and persists it through the feature repository. | `FeaturesCreateDto` | `unknown` |
-| `features-command.controller.ts` / `update` | PATCH | `/superadmin/features/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `FeaturesUpdateDto` | `unknown` |
-| `features-command.controller.ts` / `remove` | DELETE | `/superadmin/features/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `features-query.controller.ts` / `findOne` | GET | `/superadmin/features/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `features-special.controller.ts` / `findFeaturesRolloutInsights` | GET | `/superadmin/features/rollout-insights` | Returns feature rollout, release history, rollback, and health data. | `None` | `FeaturesRolloutInsightsResponseDto` |
-| `features-special.controller.ts` / `findFeaturesData` | GET | `/superadmin/features` | Returns the Superadmin data required by the ``/superadmin/features`` frontend contract, with filtering or lookup semantics defined by that feature contract. |
+| `superadmin-features-command.controller.ts::createFlag` | POST | `flags` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the createFlag operation. | `SuperadminFeaturesCreateDto` | `SuperadminFeaturesResponseDto` |
+| `superadmin-features-command.controller.ts::updateFlag` | PATCH | `flags/:id` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the updateFlag operation. | `SuperadminFeaturesUpdateDto` | `SuperadminFeaturesResponseDto` |
+| `superadmin-features-command.controller.ts::toggleFlag` | POST | `flags/:id/toggle` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the toggleFlag operation. | `—` | `SuperadminFeaturesResponseDto` |
+| `superadmin-features-command.controller.ts::deleteFlag` | DELETE | `flags/:id` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the deleteFlag operation. | `—` | `void` |
+| `superadmin-features-query.controller.ts::history` | GET | `flags/:id/history` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the history operation. | `—` | `[SuperadminFeaturesHistoryEntryDto]` |
+| `superadmin-features-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the findOne operation. | `—` | `SuperadminFeaturesResponseDto` |
+| `superadmin-features-release-note-command.controller.ts::createReleaseNote` | POST | `superadmin/features/notes` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the createReleaseNote operation. | `SuperadminFeaturesReleaseNoteCreateDto` | `SuperadminFeaturesReleaseNoteDto` |
+| `superadmin-features-release-note-command.controller.ts::updateReleaseNote` | PATCH | `superadmin/features/notes/:id` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the updateReleaseNote operation. | `SuperadminFeaturesReleaseNoteUpdateDto` | `SuperadminFeaturesReleaseNoteDto` |
+| `superadmin-features-release-note-command.controller.ts::deleteReleaseNote` | DELETE | `superadmin/features/notes/:id` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the deleteReleaseNote operation. | `—` | `null` |
+| `superadmin-features-rollout-insights-query.controller.ts::findFeaturesRolloutInsights` | GET | `superadmin/features/rollout-insights` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the findFeaturesRolloutInsights operation. | `—` | `SuperadminFeaturesRolloutInsightsResponseDto` |
+| `superadmin-features-rollout-insights-query.controller.ts::findFeaturesRolloutInsights` | GET | `api/superadmin/features/rollout-insights` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the findFeaturesRolloutInsights operation. | `—` | `SuperadminFeaturesRolloutInsightsResponseDto` |
+| `superadmin-features-rollout-insights-query.controller.ts::findFeaturesData` | GET | `superadmin/features` | This endpoint validates transport input, invokes the owning features use case, and returns the declared contract for the findFeaturesData operation. | `—` | `SuperadminFeaturesResponseDataDto` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-features-contract-snapshot.entity → `superadmin_features_contract_snapshots`, superadmin-features-release-note.entity → `superadmin_feature_release_notes`, superadmin-features.entity → `superadmin_feature_flags`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/features/flags`, `/superadmin/features/flags/:id`, `/superadmin/features/flags/:id/toggle`, `/superadmin/features/notes`, `/superadmin/features/notes/:id`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -72,9 +89,21 @@ The feature's backend route and file structure mirror the frontend feature name.
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/features/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/features/flags` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/features/flags/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/features/flags/:id/toggle` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/features/flags/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/features/flags/:id/history` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/features/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/features/notes` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/features/notes/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/features/notes/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/features/rollout-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /api/superadmin/features/rollout-insights` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/features` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -85,65 +114,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/features/` -> the Superadmin re
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend features/superadmin_features_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Features â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The features module is responsible for the Superadmin business workflow managing Features. It enables superadmins to view, monitor, and control the lifecycle and configurations of Features across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `features_api/` | Feature-owned responsibility for features api. | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` |
-| `features_mocks/` | Feature-owned responsibility for features mocks. | `(directory present; no direct files)` |
-| `features_tests/` | Feature-owned responsibility for features tests. | `SuperadminFeaturesBasic.test.tsx`, `SuperadminFeaturesRolloutInsights.test.ts` |
-| `features_types/` | Feature-owned responsibility for features types. | `SuperadminFeatureHistoryModalTypes.ts`, `SuperadminFeaturesMutationTypes.ts`, `SuperadminFeaturesTypes.ts`, `SuperadminFeaturesUiTypes.ts`, `SuperadminFeaturesV1Types.ts` |
-| `features_utils/` | Feature-owned responsibility for features utils. | `useSuperadminFeatureHistory.ts`, `useSuperadminFeatureRolloutData.ts`, `useSuperadminFeaturesData.ts`, `useSuperadminFeaturesV1.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Features | `/superadmin/features` | save; save rollout; show flags tab; show notes tab; submit; toggle | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/features route to load the Features data context securely via TanStack Query.
-2. Interact with the Features dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Features status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `features`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `features_utils/useSuperadminFeaturesV1.ts`, `features_utils/useSuperadminFeatureRolloutData.ts`, `features_utils/useSuperadminFeatureHistory.ts`, `features_utils/useSuperadminFeaturesData.ts`
-- **URL state:** No `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'features_rollout_insights']`, `['superadmin', 'features', 'tenants']`, `['superadmin', 'features', 'history', flagId]`
-
-## API Contract
+#### Source: `features/superadmin_features_features.md`
 
 - **API files:** `features_api/SuperadminFeaturesRolloutInsightsApi.ts`, `features_api/SuperadminFeaturesApi.ts`
 - **Detected API symbols:** `fetchFeatureRolloutInsights` — `features_api/SuperadminFeaturesRolloutInsightsApi.ts`; `fetchTenants` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatures` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatureFlagHistory` — `features_api/SuperadminFeaturesApi.ts`; `createFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `updateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `activateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `suspendFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `deleteFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `createReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `updateReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `deleteReleaseNote` — `features_api/SuperadminFeaturesApi.ts`
@@ -151,7 +126,17 @@ The features module is responsible for the Superadmin business workflow managing
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+#### Source: `features/superadmin_features_rollout_insights_features.md`
+
+- **API files:** `features_api/SuperadminFeaturesRolloutInsightsApi.ts`, `features_api/SuperadminFeaturesApi.ts`
+- **Detected API symbols:** `fetchFeatureRolloutInsights` — `features_api/SuperadminFeaturesRolloutInsightsApi.ts`; `fetchTenants` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatures` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatureFlagHistory` — `features_api/SuperadminFeaturesApi.ts`; `createFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `updateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `activateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `suspendFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `deleteFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `createReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `updateReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `deleteReleaseNote` — `features_api/SuperadminFeaturesApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+### UI-Required Data Evidence
+
+#### Source: `features/superadmin_features_features.md`
 
 - **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
 - **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
@@ -160,41 +145,61 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+#### Source: `features/superadmin_features_rollout_insights_features.md`
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+- **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-## Loading, Empty, and Error States
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** None detected.
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+### Static Freeze Status
 
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Pure Server Component for the features page. Renders the interactive client component. |
-| `features_components/SuperadminFeaturesTierMatrix.tsx` | Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations. |
-| `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx` | Renders the Superadmin features V1 Platform release log, Rollback readiness view. |
-| `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx` | Renders the Superadmin features V1 Rollout control view. |
-| `features_components/SuperadminFeatureRolloutModal.tsx` | Renders the SuperadminFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary. |
-| `features_components/SuperadminFeaturesClient.tsx` | Renders the Product Management page — feature flag toggles and release note publishing. |
-| `features_components/SuperadminFeatureHistoryModal.tsx` | Renders one feature flag's change history from the feature-owned API/query boundary. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into features.
-- **Destructive Actions**: Any deletion or modification of features records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for features do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``/api/gyms`` | ``ApiResponse<SuperadminFeaturesTenant[]>`` | `REQ-022` / ``fetchTenants`` |
+| ``/superadmin/features`` | ``ApiResponse<{` | `REQ-023` / ``fetchFeatures`` |
+| ``{superadmin}/flags/{id}/history`` | ``ApiResponse<SuperadminFeatureHistoryEntry[]>`` | `REQ-024` / ``fetchFeatureFlagHistory`` |
+| ``{superadmin}/flags`` | ``ApiResponse<FeatureFlag>`` | `REQ-025` / ``createFeatureFlag`` |
+| ``{superadmin}/flags/{id}`` | ``ApiResponse<FeatureFlag>`` | `REQ-026` / ``updateFeatureFlag`` |
+| ``{superadmin}/flags/{id}/toggle`` | ``ApiResponse<FeatureFlag>`` | `REQ-027` / ``activateFeatureFlag`` |
+| ``{superadmin}/flags/{id}/toggle`` | ``ApiResponse<FeatureFlag>`` | `REQ-028` / ``suspendFeatureFlag`` |
+| ``{superadmin}/flags/{id}`` | ``ApiResponse<void>`` | `REQ-029` / ``deleteFeatureFlag`` |
+| ``{superadmin}/notes`` | ``ApiResponse<ReleaseNote>`` | `REQ-030` / ``createReleaseNote`` |
+| ``{superadmin}/notes/{id}`` | ``ApiResponse<ReleaseNote>`` | `REQ-031` / ``updateReleaseNote`` |
+| ``{superadmin}/notes/{id}`` | ``ApiResponse<void>`` | `REQ-032` / ``deleteReleaseNote`` |
+| ``/api/superadmin/features/rollout-insights`` | ``ApiResponse<SuperadminFeaturesV1Data>`` | `REQ-033` / ``fetchFeatureRolloutInsights`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+- **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

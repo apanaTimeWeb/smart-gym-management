@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "అభ్యర్థనను ప్రాసెస్ చేయడం సాధ్యం కాలేదు.",
+      "VALIDATION_FAILED": "ఒకటి లేదా అంతకంటే ఎక్కువ ఫీల్డ్‌లు చెల్లుబాటు కావు.",
+      "INTERNAL": "అంతర్గత లోపం సంభవించింది.",
+      "NOT_FOUND": "అభ్యర్థించిన వనరు కనుగొనబడలేదు.",
+      "FORBIDDEN": "ఈ చర్యను చేయడానికి మీకు అనుమతి లేదు.",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key హెడర్ అవసరం.",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key చెల్లదు.",
+      "IDEMPOTENCY_IN_PROGRESS": "ఈ Idempotency-Key తో అభ్యర్థన ఇప్పటికే ప్రాసెస్‌లో ఉంది.",
+      "RATE_LIMIT_EXCEEDED": "చాలా అభ్యర్థనలు. తర్వాత మళ్లీ ప్రయత్నించండి.",
+      "CIRCUIT_OPEN": "డౌన్‌స్ట్రీమ్ సేవ తాత్కాలికంగా అందుబాటులో లేదు."
+    }
+  }
+}

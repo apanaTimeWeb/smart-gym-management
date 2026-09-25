@@ -12,12 +12,12 @@ import { CoreRuntimeConfig } from '@/backend_admin/core/config/core-runtime.conf
 import { CoreAppConfig } from '@/backend_admin/core/config/core-app.config';
 import { CoreEnvironmentConfig } from '@/backend_auth/auth_core/config/core-environment.config';
 import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
-import superadminConfig from '@/backend_superadmin/superadmin_core/config/superadmin-core-configuration';
+import superadminConfig from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
 
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { AppModule as AdminAppModule } from '@/backend_admin/app.module';
 import { AuthModule } from '@/backend_auth/auth_modules/auth/auth.module';
-import { SuperadminCoreModule as SuperadminDomainModule } from '@/backend_superadmin/superadmin_core/superadmin-core.module';
+import { BackendSuperadminModule as SuperadminDomainModule } from '@/backend_superadmin/backend-superadmin.module';
 import { LandingModule } from '@/backend_landing/landing_modules/landing/landing.module';
 import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/manager-domain.module';
 import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
@@ -72,7 +72,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
         password: config.getOrThrow<string>('MASTER_DB_PASSWORD'),
         database: config.getOrThrow<string>('MASTER_DB_NAME'),
         autoLoadEntities: true, // MAGIC: Automatically registers any entity provided by feature modules!
-        synchronize: process.env.NODE_ENV !== 'production',
+        synchronize: false, // Schema managed via migrations to avoid multi-entity sync conflicts on shared tables (e.g. tenants)
         extra: {
           max: 20,
           connectionTimeoutMillis: 30000,

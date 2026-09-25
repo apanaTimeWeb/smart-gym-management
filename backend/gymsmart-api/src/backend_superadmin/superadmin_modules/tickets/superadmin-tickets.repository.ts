@@ -3,19 +3,30 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SupportTicketPriority } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.entity';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SupportTicketPriority } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.constants';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { randomUUID } from 'node:crypto';
-import { SuperadminTicketsEntity, SupportTicketStatus } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.entity';
-import type { SuperadminTicketsListQuery, SuperadminTicketsCreateInput, SuperadminTicketsUpdateInput } from '@/backend_superadmin/superadmin_modules/tickets/types/superadmin-tickets.interfaces';
+import { SuperadminTicketsEntity } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.entity';
+import { SupportTicketStatus } from '@/backend_superadmin/superadmin_modules/tickets/superadmin-tickets.constants';
+import type { SuperadminTicketsListQuery, SuperadminTicketsCreateInput, SuperadminTicketsUpdateInput, SuperadminTicketsServiceInsightsRow } from '@/backend_superadmin/superadmin_modules/tickets/tickets_types/superadmin-tickets.interfaces';
 
-
+/**
+ * Primary Intent: Defines SuperadminTicketsRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminTicketsRepository extends BaseRepository<SuperadminTicketsEntity> {
-  constructor(@InjectRepository(SuperadminTicketsEntity) repository: Repository<SuperadminTicketsEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext, true); }
+export class SuperadminTicketsRepository extends SuperadminCoreBaseRepository<SuperadminTicketsEntity> {
+  constructor(@InjectRepository(SuperadminTicketsEntity) repository: Repository<SuperadminTicketsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminTicketsListQuery): Promise<{ items: SuperadminTicketsEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -29,58 +40,77 @@ export class SuperadminTicketsRepository extends BaseRepository<SuperadminTicket
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminTicketsEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminTicketsEntity> { return super.findByIdOrThrow(id, 'Tickets record not found'); }
 
-  /** Creates and persists a tickets record. */
+  /**
+ * Primary Intent: Executes the createTickets use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async createTickets(input: SuperadminTicketsCreateInput): Promise<SuperadminTicketsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a tickets record. */
+  /**
+ * Primary Intent: Executes the updateTicketsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateTicketsById(id: string, input: SuperadminTicketsUpdateInput): Promise<SuperadminTicketsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Soft-deletes one tickets record. */
+  /**
+ * Primary Intent: Executes the deleteTicketsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteTicketsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
-  /** Changes the ticket status through an intention-revealing repository method. */
+  /**
+ * Primary Intent: Executes the setStatus use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async setStatus(id: string, status: SupportTicketStatus): Promise<SuperadminTicketsEntity> { await this.findByIdOrThrow(id); await this.activeRepository.update({ id } as never, { status } as never); return this.findByIdOrThrow(id); }
 
+  /** Returns all active tickets required by the service-insights computation. */
+  /**
+ * Primary Intent: Executes the findAllForServiceInsights use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async findAllForServiceInsights(): Promise<SuperadminTicketsServiceInsightsRow[]> { const rows=await this.activeRepository.find({ where: { deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); return rows.map((row)=>({id:row.id,createdAt:row.createdAt,status:row.status,priority:row.priority,assignedTo:row.assignedTo,slaDeadline:row.slaDeadline,firstResponseAt:row.firstResponseAt,resolutionTime:row.resolutionTime,satisfactionScore:row.satisfactionScore,subject:row.subject,description:row.description})); }
 
-  /** Returns persisted ticket telemetry projected into the service-insights contract. */
-  async getServiceInsights(): Promise<{ summary: { open: number; urgent: number; nearTarget: number; overTarget: number; averageFirstResponseMinutes: number; averageResolutionHours: number; satisfaction: number }; agents: Array<{ name: string; open: number; urgent: number; overTarget: number; averageHours: number }>; aging: Array<{ bucket: string; count: number }>; categories: Array<{ name: string; count: number }> }> {
-    const rows = await this.activeRepository.find({ where: { deletedAt: null } as never, order: { updatedAt: 'DESC' } as never });
-    const now = Date.now();
-    const openRows = rows.filter((row) => [SupportTicketStatus.OPEN, SupportTicketStatus.INPROGRESS, SupportTicketStatus.WAITING].includes(row.status));
-    const urgentRows = rows.filter((row) => [SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority));
-    const responseDurations = rows.filter((row) => row.firstResponseAt).map((row) => Math.max(0, (row.firstResponseAt!.getTime() - row.createdAt.getTime()) / 60_000));
-    const resolutionHours = rows.filter((row) => row.resolutionTime > 0).map((row) => row.resolutionTime / 60_000);
-    const agentMap = new Map<string, { open: number; urgent: number; overTarget: number; hours: number[] }>();
-    for (const row of rows) {
-      const name = row.assignedTo ?? 'Unassigned';
-      const current = agentMap.get(name) ?? { open: 0, urgent: 0, overTarget: 0, hours: [] };
-      if (openRows.includes(row)) current.open += 1;
-      if ([SupportTicketPriority.URGENT, SupportTicketPriority.CRITICAL].includes(row.priority)) current.urgent += 1;
-      if (row.slaDeadline && row.slaDeadline.getTime() < now && openRows.includes(row)) current.overTarget += 1;
-      if (row.resolutionTime > 0) current.hours.push(row.resolutionTime / 3_600_000);
-      agentMap.set(name, current);
-    }
-    const agents = [...agentMap.entries()].map(([name, value]) => ({ name, open: value.open, urgent: value.urgent, overTarget: value.overTarget, averageHours: value.hours.length ? Number((value.hours.reduce((a, b) => a + b, 0) / value.hours.length).toFixed(2)) : 0 }));
-    const aging = [
-      { bucket: '0-1 day', count: openRows.filter((row) => now - row.createdAt.getTime() < 86_400_000).length },
-      { bucket: '2-3 days', count: openRows.filter((row) => now - row.createdAt.getTime() >= 86_400_000 && now - row.createdAt.getTime() < 3 * 86_400_000).length },
-      { bucket: '4-7 days', count: openRows.filter((row) => now - row.createdAt.getTime() >= 3 * 86_400_000 && now - row.createdAt.getTime() < 7 * 86_400_000).length },
-      { bucket: '8+ days', count: openRows.filter((row) => now - row.createdAt.getTime() >= 7 * 86_400_000).length },
-    ];
-    const categories = [{ name: 'Billing', count: rows.filter((row) => /bill|invoice|payment/i.test(row.subject + ' ' + row.description)).length }, { name: 'Technical', count: rows.filter((row) => /bug|error|login|api|technical/i.test(row.subject + ' ' + row.description)).length }, { name: 'Feature request', count: rows.filter((row) => /feature|request/i.test(row.subject + ' ' + row.description)).length }, { name: 'Account', count: rows.filter((row) => /account|access|profile/i.test(row.subject + ' ' + row.description)).length }];
-    return { summary: { open: openRows.length, urgent: urgentRows.length, nearTarget: openRows.filter((row) => row.slaDeadline && row.slaDeadline.getTime() >= now && row.slaDeadline.getTime() - now <= 3_600_000).length, overTarget: openRows.filter((row) => row.slaDeadline && row.slaDeadline.getTime() < now).length, averageFirstResponseMinutes: responseDurations.length ? Number((responseDurations.reduce((a, b) => a + b, 0) / responseDurations.length).toFixed(2)) : 0, averageResolutionHours: resolutionHours.length ? Number((resolutionHours.reduce((a, b) => a + b, 0) / resolutionHours.length).toFixed(2)) : 0, satisfaction: 0 }, agents, aging, categories };
-  }
-
-  /** Stores an assignment target on the ticket. */
+  /**
+ * Primary Intent: Executes the assignById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async assignById(id: string, assignee: string): Promise<SuperadminTicketsEntity> { if (!assignee.trim()) throw new BadRequestException({ error: 'BAD_REQUEST', errorCode: 'TICKETS.ASSIGNEE.REQUIRED', message: { key: 'tickets.ERRORS.BAD_REQUEST' } }); await this.findByIdOrThrow(id); await this.activeRepository.update({ id } as never, { assignedTo: assignee } as never); return this.findByIdOrThrow(id); }
 
-  /** Stores the latest reply content as an immutable message entry. */
+  /**
+ * Primary Intent: Executes the replyById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async replyById(id: string, replyText: string): Promise<SuperadminTicketsEntity> {
     if (!replyText.trim()) throw new BadRequestException({ error: 'BAD_REQUEST', errorCode: 'TICKETS.REPLY.REQUIRED', message: { key: 'tickets.ERRORS.BAD_REQUEST' } });
     const current = await this.findByIdOrThrow(id);

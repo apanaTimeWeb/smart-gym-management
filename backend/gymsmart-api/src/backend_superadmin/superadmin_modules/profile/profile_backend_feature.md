@@ -1,64 +1,67 @@
 # profile Backend Feature Map
 
 ## Module Purpose
-Owns the `profile` Superadmin feature and its frontend-aligned API contract. It keeps validation, business decisions, persistence, and response mapping in separate files so an AI can repair the feature without loading unrelated business modules. All data access uses the project-approved PostgreSQL/TypeORM repository boundary.
 
-The feature's backend route and file structure mirror the frontend feature name. Business logic must remain local to this feature, while only explicitly approved core infrastructure may cross the boundary. Any new endpoint or response field must be reflected in this document in the same change.
+This module owns the backend capability boundary for the superadmin_modules/profile feature. It exposes 8 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Directory Structure
+
 | File | Responsibility |
 |---|---|
-| `dtos/profile-create.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/profile-query.dto.ts` | Validates one request or response contract at the module edge. |
-| `dtos/profile-update.dto.ts` | Validates one request or response contract at the module edge. |
-| `profile-command.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `profile-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `profile-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `profile.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
-| `profile.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `profile.mapper.ts` | Translates persistence entities to domain-safe values without leaking ORM concerns. |
-| `profile.module.ts` | Registers this feature's controllers, providers, repositories, and TypeORM entities. |
-| `profile.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
-| `profile.seeder.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `profile_backend_feature.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `profile_collection.json` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `profile_dependencies.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `profile_forbidden.md` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `responses/profile-response.dto.ts` | Validates one request or response contract at the module edge. |
-| `services/profile-create.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-delete.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-find.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-list.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-main.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-password.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-two-factor.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `services/profile-update.service.ts` | Owns one focused business use case and contains no ORM query construction. |
-| `types/profile.enums.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
-| `types/profile.interfaces.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
+| `profile_dtos/superadmin-profile-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_dtos/superadmin-profile-password-change.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_dtos/superadmin-profile-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_dtos/superadmin-profile-two-factor.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_dtos/superadmin-profile-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_responses/superadmin-profile-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `profile_services/superadmin-profile-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-main.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-password.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-two-factor.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_services/superadmin-profile-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `profile_types/superadmin-profile.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `profile_types/superadmin-profile.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-profile-advanced-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-profile-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-profile-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-profile-security-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-profile.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-profile.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-profile.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-profile.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-profile.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-profile.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-profile.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `profile-command.controller.ts` / `create` | POST | `/superadmin/profile` | Creates a resource after DTO validation and persists it through the feature repository. | `ProfileCreateDto` | `unknown` |
-| `profile-command.controller.ts` / `update` | PATCH | `/superadmin/profile/:id` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `ProfileUpdateDto` | `unknown` |
-| `profile-command.controller.ts` / `remove` | DELETE | `/superadmin/profile/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
-| `profile-query.controller.ts` / `findOne` | GET | `/superadmin/profile/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `profile-special.controller.ts` / `main` | GET | `/superadmin/profile` | Returns the feature-level frontend contract projection owned by this module. | `None` | `unknown` |
-| `profile-special.controller.ts` / `update` | PATCH | `/superadmin/profile` | Updates only the fields permitted by the feature DTO and returns the refreshed resource. | `Record` | `unknown` |
-| `profile-special.controller.ts` / `password` | PATCH | `/superadmin/profile/password` | Applies the partial update or state transition exposed by ``/superadmin/profile/password`` after validation, authorization, and named repository mutation. |
-| `profile-special.controller.ts` / `twoFactor` | PATCH | `/superadmin/profile/2fa` | Applies the partial update or state transition exposed by ``/superadmin/profile/2fa`` after validation, authorization, and named repository mutation. |
+| `superadmin-profile-advanced-query.controller.ts::main` | GET | `superadmin/profile` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the main operation. | `—` | `See controller contract` |
+| `superadmin-profile-command.controller.ts::create` | POST | `/` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the create operation. | `SuperadminProfileCreateDto` | `See controller contract` |
+| `superadmin-profile-command.controller.ts::update` | PATCH | `:id` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the update operation. | `SuperadminProfileUpdateDto` | `See controller contract` |
+| `superadmin-profile-command.controller.ts::remove` | DELETE | `:id` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the remove operation. | `—` | `void` |
+| `superadmin-profile-query.controller.ts::findOne` | GET | `:id` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the findOne operation. | `—` | `See controller contract` |
+| `superadmin-profile-security-command.controller.ts::update` | PATCH | `superadmin/profile` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the update operation. | `SuperadminProfileUpdateDto` | `See controller contract` |
+| `superadmin-profile-security-command.controller.ts::password` | PATCH | `superadmin/profile/password` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the password operation. | `SuperadminProfilePasswordChangeDto` | `null` |
+| `superadmin-profile-security-command.controller.ts::twoFactor` | PATCH | `superadmin/profile/2fa` | This endpoint validates transport input, invokes the owning profile use case, and returns the declared contract for the twoFactor operation. | `SuperadminProfileTwoFactorDto` | `See controller contract` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.
-- **Infrastructure Dependencies**: Core authentication/authorization, configuration, PostgreSQL/TypeORM repository infrastructure, Redis, response/error infrastructure, observability, and tenant resolution where applicable.
-- **Runtime/Event Dependencies**: None unless an event appears in this module's source and dependency document.
+
+- **Business Feature Dependencies**: None
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Every TypeORM entity registered by this module; contract snapshots are stored in explicit PostgreSQL JSONB tables when the frontend contract is snapshot-backed.
-- Redis Caching Keys: Only feature-owned operational keys; Idempotency-Key reservations use the core idempotency namespace.
-- Event Emitters: Only event names from the centralized registry are permitted.
-- Background Jobs: Heavy exports, messaging, backups, migrations, and bulk work are queued where applicable; scheduled work is recorded in the central registry.
-- Idempotency Keys: All mutations for which the frontend API exposes `idempotencyKey` are protected by `RequireIdempotencyKey`.
+
+- DB Entities: superadmin-profile.entity → `superadmin_profiles`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/profile`, `/superadmin/profile/2fa`, `/superadmin/profile/:id`, `/superadmin/profile/password`
 
 ## Business Flow / Key Sequences
 1. Controller receives the versioned HTTP request and DTO validation occurs at the global boundary.
@@ -71,9 +74,17 @@ The feature's backend route and file structure mirror the frontend feature name.
 Controllers own HTTP wiring only; DTOs own edge validation; services own focused business flows; repositories own PostgreSQL queries/mutations; mappers own persistence/domain translation; entities own table mapping; adapters and core services own external/infrastructure integrations. No file may absorb an unrelated feature responsibility.
 
 ## Permissions and Security
-Every Superadmin business endpoint is protected at controller level with `JwtAuthGuard`, `RolesGuard`, and the `SUPERADMIN` role. Resource-specific endpoints must additionally fail closed when the requested resource is missing, soft-deleted, outside the trusted tenant/resource scope, or otherwise unauthorized.
 
-CODEOWNERS path: `src/modules/backend_superadmin/profile/` -> the Superadmin reviewers defined by `CODEOWNERS`.
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `GET /superadmin/profile` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/profile` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/profile/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/profile/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/profile/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/profile` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/profile/password` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/profile/2fa` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never add a sibling-feature business import; doing so crosses the AI repair boundary and violates Rules 0B/0C/49.
@@ -84,66 +95,11 @@ CODEOWNERS path: `src/modules/backend_superadmin/profile/` -> the Superadmin rev
 
 ## Frozen API Contract
 
-<!-- Exact source: frontend profile/superadmin_profile_features.md -->
+This section is a source snapshot derived from the supplied frontend feature documentation. It is not inferred from backend implementation and must be re-reviewed when the frontend contract changes.
 
-﻿# Superadmin Profile â€” Feature Map
+### Request Shape / API Operations
 
-## Module Purpose
-The profile module is responsible for the Superadmin business workflow managing Profile. It enables superadmins to view, monitor, and control the lifecycle and configurations of Profile across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
-
-## Directory Structure
-
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `profile_api/` | Feature-owned responsibility for profile api. | `SuperadminProfileApi.ts` |
-| `profile_components/` | Feature-owned responsibility for profile components. | `(directory present; no direct files)` |
-| `profile_mocks/` | Feature-owned responsibility for profile mocks. | `(directory present; no direct files)` |
-| `profile_tests/` | Feature-owned responsibility for profile tests. | `SuperadminProfileBasic.test.tsx` |
-| `profile_types/` | Feature-owned responsibility for profile types. | `SuperadminProfileAvatarCardTypes.ts`, `SuperadminProfilePersonalFormTypes.ts`, `SuperadminProfileSecurityFormTypes.ts`, `SuperadminProfileTypes.ts` |
-| `profile_utils/` | Feature-owned responsibility for profile utils. | `SuperadminProfileConstants.ts`, `SuperadminProfilePersonalFormSchema.ts`, `SuperadminProfileSecurityFormSchema.ts`, `useSuperadminProfilePage.test.tsx`, `useSuperadminProfilePage.ts` |
-
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-
-## Feature Inventory
-
-| Surface | Route | Implemented User Actions | API Boundary | Status |
-|---|---|---|---|---|
-| Superadmin Profile | `/superadmin/profile` | password submit; submit; toggle2 f a | `SuperadminProfileApi.ts` | Source-verified; host runtime pending |
-
-## User Flows & Interactions
-
-1. Open the /superadmin/profile route to load the Profile data context securely via TanStack Query.
-2. Interact with the Profile dashboard using available search, filter, and pagination controls.
-3. Execute module-specific CRUD or business mutations (like updating Profile status) through feature-owned API contracts.
-4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
-
-## Verification Notes
-- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
-- Mutable mock-state handlers have reset functions covered by tests where present.
-- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
-- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
-
-## Data and State Architecture
-
-- **Actual feature root:** `profile`
-- **Server state:** TanStack Query `useQuery` detected.
-- **Zustand stores:** None detected.
-- **Context files:** None detected.
-- **Custom hooks:** `profile_utils/useSuperadminProfilePage.ts`
-- **URL state:** No `useUrlState` detected.
-- **Observed query keys:** `['superadmin', 'profile']`
-
-## API Contract
+#### Source: `profile/superadmin_profile_features.md`
 
 - **API files:** `profile_api/SuperadminProfileApi.ts`
 - **Detected API symbols:** `fetchProfile` — `profile_api/SuperadminProfileApi.ts`; `updateProfile` — `profile_api/SuperadminProfileApi.ts`; `updatePassword` — `profile_api/SuperadminProfileApi.ts`; `updateTwoFactor` — `profile_api/SuperadminProfileApi.ts`
@@ -151,7 +107,9 @@ The profile module is responsible for the Superadmin business workflow managing 
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
-## UI Data Requirements
+### UI-Required Data Evidence
+
+#### Source: `profile/superadmin_profile_features.md`
 
 - **Data-bearing components:** `page.tsx`, `profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm.tsx`, `profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard.tsx`, `profile_components/SuperadminProfileMain/SuperadminProfileMain.tsx`, `profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm.tsx`
 - **Approved formatting evidence:** No approved global formatting helper detected.
@@ -160,39 +118,37 @@ No API field/method is invented where static source did not expose it; missing r
 
 Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
-## Permissions and Security
+### Static Freeze Status
 
-- **Permission symbols detected:** No explicit module permission symbols detected.
-- **Destructive-confirmation evidence:** No `useConfirm` detected.
-- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
-- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
-
-## Loading, Empty, and Error States
-
-- **`loading.tsx`:** `loading.tsx`
-- **`error.tsx`:** `error.tsx`
-- **Empty-state components:** None detected.
-- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
-
-## Component Responsibility Map
-
-| Component File | Responsibility evidence |
-|---|---|
-| `page.tsx` | Pure Server Component entry point for /superadmin/profile. |
-| `profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm.tsx` | Security settings form — change password and toggle 2FA. |
-| `profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard.tsx` | Displays the superadmin's avatar, name, role badge, and last login info. |
-| `profile_components/SuperadminProfileMain/SuperadminProfileMain.tsx` | Root client orchestrator for the Superadmin Profile page. |
-| `profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm.tsx` | Form for updating the superadmin's personal profile fields. |
-
-## Repository-Verified Repair Notes
-
-This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+- Frontend source/API contract evidence has been copied into this backend-local document.
+- Runtime contract verification remains `NOT VERIFIED` where the host application is unavailable.
+- The frontend is read-only for this repair; backend changes must conform to the supplied frontend contract unless a documented source conflict exists.
 
 
-## Edge Cases and AI Warnings
-- **Strict Isolation**: Never import admin or manager components into profile.
-- **Destructive Actions**: Any deletion or modification of profile records must use the Superadmin confirmation provider.
-- **Data Leakage**: Ensure API payloads for profile do not expose cross-tenant sensitive data.
+### Response Shape
+| Endpoint | Response DTO / shape | Requirement |
+|---|---|---|
+| ``/superadmin/profile`` | ``ApiResponse<SuperadminProfileData>`` | `REQ-064` / ``fetchProfile`` |
+| ``/superadmin/profile`` | ``ApiResponse<SuperadminProfileData>`` | `REQ-065` / ``updateProfile`` |
+| ``/superadmin/profile/password`` | ``ApiResponse<void>`` | `REQ-066` / ``updatePassword`` |
+| ``/superadmin/profile/2fa`` | ``ApiResponse<SuperadminProfileData>`` | `REQ-067` / ``updateTwoFactor`` |
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm.tsx`, `profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard.tsx`, `profile_components/SuperadminProfileMain/SuperadminProfileMain.tsx`, `profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm.tsx`
+- **Approved formatting evidence:** No approved global formatting helper detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 2
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

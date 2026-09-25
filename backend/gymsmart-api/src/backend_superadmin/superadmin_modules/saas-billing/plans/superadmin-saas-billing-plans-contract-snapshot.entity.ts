@@ -1,14 +1,26 @@
 // RESPONSIBILITY: Stores the module-owned frontend contract state used by specialized Superadmin read flows.
-// FLOW: SuperadminPlansContractSnapshotRepository -> SuperadminPlansContractSnapshotEntity -> PostgreSQL `plans_contract_snapshots`.
+// FLOW: SuperadminSaasBillingPlansContractSnapshotRepository -> SuperadminSaasBillingPlansContractSnapshotEntity -> PostgreSQL `plans_contract_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
-import { BaseEntity } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.entity';
+import { SuperadminCoreBaseEntity } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.entity';
 
+/**
+ * Primary Intent: Defines SuperadminSaasBillingPlansContractSnapshotEntity as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Entity('superadmin_plans_contract_snapshots')
 @Index('IDX_plans_contract_snapshots_kind', ['kind'])
-export class SuperadminPlansContractSnapshotEntity extends BaseEntity {
-  @Column({ name: 'kind', type: 'varchar', length: 500 })
+export class SuperadminSaasBillingPlansContractSnapshotEntity extends SuperadminCoreBaseEntity {
+  /**
+ * Primary Intent: Documents entity property kind. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'kind', type: 'varchar', length: 500 })
   kind!: string;
 
-  @Column({ name: 'payload', type: 'jsonb' })
+  /**
+ * Primary Intent: Documents entity property payload. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
+ */
+@Column({ name: 'payload', type: 'jsonb' })
   payload!: unknown;
 }

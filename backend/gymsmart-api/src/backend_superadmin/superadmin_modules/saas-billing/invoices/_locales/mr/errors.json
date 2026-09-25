@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "Idempotency-Key हेडर आवश्यक आहे.",
     "IDEMPOTENCY_IN_PROGRESS": "आयडेम्पोटंट विनंती आधीच प्रक्रियेत आहे.",
     "IDEMPOTENCY_INVALID": "साठवलेला आयडेम्पोटंट प्रतिसाद अवैध आहे.",
-    "PROVISION_FAILED": "टेनंट प्रोव्हिजनिंग अयशस्वी झाले."
+    "PROVISION_FAILED": "टेनंट प्रोव्हिजनिंग अयशस्वी झाले.",
+    "RECIPIENT_MISSING": "The invoice recipient email is not configured.",
+    "DELIVERY_FAILED": "Invoice email delivery failed.",
+    "TIMEOUT": "The invoice email provider timed out."
   }
 }

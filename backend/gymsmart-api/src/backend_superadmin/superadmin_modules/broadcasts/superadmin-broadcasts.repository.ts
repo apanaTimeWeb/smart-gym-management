@@ -3,16 +3,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseRepository } from '@/backend_superadmin/superadmin_core/database/superadmin-core-base.repository';
-import { SuperadminTransactionContext } from '@/backend_superadmin/superadmin_core/database/superadmin-core-transaction-context';
+import { SuperadminCoreBaseRepository } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-base.repository';
+import { SuperadminCoreTransactionContext } from '@/backend_superadmin/superadmin_core/superadmin_core_database/superadmin-core-transaction-context';
 import { SuperadminBroadcastsEntity } from '@/backend_superadmin/superadmin_modules/broadcasts/superadmin-broadcasts.entity';
-import type { SuperadminBroadcastsListQuery, SuperadminBroadcastsCreateInput, SuperadminBroadcastsUpdateInput } from '@/backend_superadmin/superadmin_modules/broadcasts/types/superadmin-broadcasts.interfaces';
+import type { SuperadminBroadcastsListQuery, SuperadminBroadcastsCreateInput, SuperadminBroadcastsUpdateInput } from '@/backend_superadmin/superadmin_modules/broadcasts/broadcasts_types/superadmin-broadcasts.interfaces';
 
+/**
+ * Primary Intent: Defines SuperadminBroadcastsRepository as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Injectable()
-export class SuperadminBroadcastsRepository extends BaseRepository<SuperadminBroadcastsEntity> {
-  constructor(@InjectRepository(SuperadminBroadcastsEntity) repository: Repository<SuperadminBroadcastsEntity>, transactionContext: SuperadminTransactionContext) { super(repository, transactionContext); }
+export class SuperadminBroadcastsRepository extends SuperadminCoreBaseRepository<SuperadminBroadcastsEntity> {
+  constructor(@InjectRepository(SuperadminBroadcastsEntity) repository: Repository<SuperadminBroadcastsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
-  /** Returns a validated, ordered, filtered page of active feature records. */
+  /**
+ * Primary Intent: Executes the findPage use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findPage(query: SuperadminBroadcastsListQuery): Promise<{ items: SuperadminBroadcastsEntity[]; total: number }> {
     const qb = this.createActiveQuery('item');
     const search = query.search?.trim();
@@ -25,23 +36,52 @@ export class SuperadminBroadcastsRepository extends BaseRepository<SuperadminBro
     return { items, total };
   }
 
-  /** Returns one active record by id or null when absent. */
+  /**
+ * Primary Intent: Executes the findById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findById(id: string): Promise<SuperadminBroadcastsEntity | null> { return super.findById(id); }
 
-  /** Returns one active record by id and throws when absent. */
+  /**
+ * Primary Intent: Executes the findByIdOrThrow use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async findByIdOrThrow(id: string): Promise<SuperadminBroadcastsEntity> { return super.findByIdOrThrow(id, 'Broadcasts record not found'); }
 
-  /** Creates and persists a broadcasts record. */
+  /**
+ * Primary Intent: Executes the createBroadcasts use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async createBroadcasts(input: SuperadminBroadcastsCreateInput): Promise<SuperadminBroadcastsEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity); }
 
-  /** Applies an intention-revealing update to a broadcasts record. */
+  /**
+ * Primary Intent: Executes the updateBroadcastsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async updateBroadcastsById(id: string, input: SuperadminBroadcastsUpdateInput): Promise<SuperadminBroadcastsEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
-  /** Soft-deletes one broadcasts record. */
+  /**
+ * Primary Intent: Executes the deleteBroadcastsById use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async deleteBroadcastsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
-
-  /** Returns audience and channel delivery aggregates from persisted broadcasts. */
+  /**
+ * Primary Intent: Executes the getAudienceInsights use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async getAudienceInsights(): Promise<{ segments: Array<{ name: string; count: number; description: string }>; channels: Array<{ name: string; sent: number; delivered: number; opened: number; clicked: number }>; templates: string[] }> {
     const rows = await this.activeRepository.find({ where: { deletedAt: null } as never, order: { createdAt: 'DESC' } as never });
     const segmentMap = new Map<string, number>();
@@ -61,13 +101,23 @@ export class SuperadminBroadcastsRepository extends BaseRepository<SuperadminBro
     return { segments, channels, templates };
   }
 
-  /** Counts current broadcast recipients from the target tenant IDs. */
+  /**
+ * Primary Intent: Executes the countRecipients use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async countRecipients(): Promise<number> {
     const rows = await this.activeRepository.createQueryBuilder('item').select('COALESCE(SUM(item.total_recipients), 0)', 'count').getRawOne<{ count: string }>();
     return Number(rows?.count ?? 0);
   }
 
-  /** Updates one broadcast delivery counter inside a pessimistic row lock. */
+  /**
+ * Primary Intent: Executes the recordDeliveryWithLock use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
   async recordDeliveryWithLock(id: string, delivered: boolean): Promise<void> {
     await this.findByIdForUpdateOrThrow(id, 'Broadcasts record not found');
     if (delivered) await this.activeRepository.increment({ id } as never, 'deliveredCount', 1);

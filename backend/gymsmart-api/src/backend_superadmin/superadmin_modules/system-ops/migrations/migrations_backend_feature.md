@@ -1,31 +1,35 @@
 # migrations Backend Feature Map
 
 ## Module Purpose
-This feature owns the Superadmin backend capability represented by the matching frontend route slice.
-This child feature is nested under the frontend-mirrored `system-ops` container and is an independent AI repair unit. It must not absorb `backups`, `infrastructure`, `jobs`, or `migrations` sibling behavior. All persistence stays behind its TypeORM repositories.
+
+This module owns the backend capability boundary for the superadmin_modules/system-ops/migrations feature. It exposes 7 HTTP operations in the supplied source scope and keeps transport, validation, use-case, and persistence responsibilities separated across feature-local files. Mutations, authorization, persistence, and side effects must continue to respect the applicable backend architecture rules and the frontend contract frozen for this feature.
 
 ## Feature Inventory
+
+
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
-| `migrations-command.controller.ts` | POST | `/superadmin/system-ops/migrations` | Implements the POST /superadmin/system-ops/migrations contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-command.controller.ts` | PATCH | `/superadmin/system-ops/migrations:id` | Implements the PATCH /superadmin/system-ops/migrations:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-command.controller.ts` | DELETE | `/superadmin/system-ops/migrations:id` | Implements the DELETE /superadmin/system-ops/migrations:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-command.controller.ts` | PATCH | `/superadmin/system-ops/migrations:id/status` | Implements the PATCH /superadmin/system-ops/migrations:id/status contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-query.controller.ts` | GET | `/superadmin/system-ops/migrations` | Implements the GET /superadmin/system-ops/migrations contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-query.controller.ts` | GET | `/superadmin/system-ops/migrations:id` | Implements the GET /superadmin/system-ops/migrations:id contract and preserves the child feature boundary. | DTO | Contract DTO |
-| `migrations-special.controller.ts` | POST | `superadmin/system-ops/migrations/trigger` | Implements the POST superadmin/system-ops/migrations/trigger contract and preserves the child feature boundary. | DTO | Contract DTO |
+| `superadmin-system-ops-migrations-advanced-command.controller.ts::trigger` | POST | `/superadmin/system-ops/migrations/trigger` | This endpoint invokes `trigger` on `superadmin-system-ops-migrations-advanced-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-command.controller.ts::create` | POST | `/superadmin/system-ops/migrations` | This endpoint invokes `create` on `superadmin-system-ops-migrations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-command.controller.ts::update` | PATCH | `/superadmin/system-ops/migrations/:id` | This endpoint invokes `update` on `superadmin-system-ops-migrations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-command.controller.ts::remove` | DELETE | `/superadmin/system-ops/migrations/:id` | This endpoint invokes `remove` on `superadmin-system-ops-migrations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-command.controller.ts::changeStatus` | PATCH | `/superadmin/system-ops/migrations/:id/status` | This endpoint invokes `changeStatus` on `superadmin-system-ops-migrations-command.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-query.controller.ts::findAll` | GET | `/superadmin/system-ops/migrations` | This endpoint invokes `findAll` on `superadmin-system-ops-migrations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
+| `superadmin-system-ops-migrations-query.controller.ts::findOne` | GET | `/superadmin/system-ops/migrations/:id` | This endpoint invokes `findOne` on `superadmin-system-ops-migrations-query.controller.ts` and returns the feature contract for its requested operation. | `—` | `unknown` |
 
 ## Approved External Dependencies
-- **Business Feature Dependencies**: None by direct import.
-- **Infrastructure Dependencies**: Authentication, configuration, TypeORM/PostgreSQL; Redis/queue adapters only where this child requires them.
-- **Runtime/Event Dependencies**: Only declared registry events.
+
+- **Business Feature Dependencies**: system-ops
+- **Infrastructure Dependencies**: superadmin_core_auth, superadmin_core_cache, superadmin_core_database, superadmin_core_pagination
+- **External/Other Dependencies**: None
 
 ## Data and State Architecture
-- DB Entities: Exact entities registered by `migrations.module.ts`.
-- Redis Caching Keys: Only feature-prefixed keys.
-- Event Emitters: Only centralized registry events.
-- Background Jobs: Queue work described by the feature implementation and job registry.
-- Idempotency Keys: Required on applicable critical mutations.
+
+- DB Entities: superadmin-system-ops-migrations.entity → `superadmin_migration_logs`
+- Redis Caching Keys: see code-defined cache keys; no undocumented keys are invented by this refresh.
+- Event Emitters: none statically identified
+- Background Jobs: none statically identified
+- Idempotency Keys: `/superadmin/system-ops/migrations`, `/superadmin/system-ops/migrations/:id`, `/superadmin/system-ops/migrations/:id/status`, `/superadmin/system-ops/migrations/trigger`
 
 ## Business Flow / Key Sequences
 Controller -> DTO validation -> use-case service -> named repository method -> PostgreSQL -> mapper/contract response. Heavy work is asynchronous where required.
@@ -34,7 +38,16 @@ Controller -> DTO validation -> use-case service -> named repository method -> P
 Every source file is feature-scoped and has one reason to change. Controllers do not contain business rules; repositories do not call sibling repositories.
 
 ## Permissions and Security
-Superadmin role is enforced in the controller layer. Resource-level checks apply to IDs and tenant-scoped resources before repository mutation.
+
+| Endpoint | Controller Role Metadata | Resource-Level Check |
+|---|---|---|
+| `POST /superadmin/system-ops/migrations/trigger` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `POST /superadmin/system-ops/migrations` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `DELETE /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `PATCH /superadmin/system-ops/migrations/:id/status` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/migrations` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
+| `GET /superadmin/system-ops/migrations/:id` | `SuperadminRole.SUPERADMIN` | Static resource-level enforcement requires endpoint-specific verification. |
 
 ## Edge Cases / AI Warnings
 - Never directly import sibling system-ops business logic — Rule 0C/49.
@@ -53,26 +66,34 @@ The migrations module is responsible for the Superadmin business workflow managi
 
 ## Directory Structure
 
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `migrations_api/` | Feature-owned responsibility for migrations api. | `SuperadminMigrationsApi.ts`, `migrations_\1.test.ts` |
-| `migrations_components/` | Feature-owned responsibility for migrations components. | `SuperadminMigrationStatusBadge.tsx`, `SuperadminMigrationsClient.tsx`, `SuperadminMigrationsEmptyState.tsx` |
-| `migrations_mocks/` | Feature-owned responsibility for migrations mocks. | `(directory present; no direct files)` |
-| `migrations_tests/` | Feature-owned responsibility for migrations tests. | `SuperadminMigrationsBasic.test.tsx` |
-| `migrations_types/` | Feature-owned responsibility for migrations types. | `SuperadminMigrationStatusBadgeTypes.ts`, `SuperadminMigrationsTypes.ts` |
-| `migrations_utils/` | Feature-owned responsibility for migrations utils. | `SuperadminMigrationsConstants.ts`, `useSuperadminMigrationsPage.ts` |
 
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
-- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
+| File | Responsibility |
+|---|---|
+| `migrations_dtos/superadmin-system-ops-migrations-create.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_dtos/superadmin-system-ops-migrations-query.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_dtos/superadmin-system-ops-migrations-status.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_dtos/superadmin-system-ops-migrations-trigger.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_dtos/superadmin-system-ops-migrations-update.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_responses/superadmin-system-ops-migrations-response.dto.ts` | Validates and documents the transport shape; MUST NOT persist data or contain business workflows. |
+| `migrations_services/superadmin-system-ops-migrations-create.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-delete.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-find.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-list.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-status.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-trigger.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_services/superadmin-system-ops-migrations-update.service.ts` | Owns one business/use-case flow; MUST NOT expose HTTP concerns or ORM-specific entities outside the repository boundary. |
+| `migrations_types/superadmin-system-ops-migrations.enums.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `migrations_types/superadmin-system-ops-migrations.interfaces.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops-migrations-advanced-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-migrations-command.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-migrations-query.controller.ts` | HTTP transport only; MUST NOT contain business logic or direct ORM access. |
+| `superadmin-system-ops-migrations.constants.ts` | Owns module constants/types; MUST remain free of side-effectful business workflows. |
+| `superadmin-system-ops-migrations.entity.ts` | Maps persistence state to the approved ORM model; MUST NOT be returned directly as an API contract. |
+| `superadmin-system-ops-migrations.exceptions.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
+| `superadmin-system-ops-migrations.mapper.ts` | Transforms persistence/domain data into contract DTOs; MUST NOT execute database queries. |
+| `superadmin-system-ops-migrations.module.ts` | Registers feature dependencies and providers; MUST NOT bootstrap duplicate global infrastructure. |
+| `superadmin-system-ops-migrations.repository.ts` | Owns database queries/mutations for this feature; MUST NOT contain controller or UI logic. |
+| `superadmin-system-ops-migrations.seeder.ts` | Owns the narrowly scoped responsibility implied by its filename; MUST remain within the feature boundary. |
 
 ## Feature Inventory
 
@@ -152,6 +173,29 @@ This addendum is generated from the current source tree and exists to make futur
 - **Strict Isolation**: Never import admin or manager components into migrations.
 - **Destructive Actions**: Any deletion or modification of migrations records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for migrations do not expose cross-tenant sensitive data.
+
+### Request Shape
+No frontend-derived request shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### Response Shape
+No frontend-derived response shape is assigned to this module root; the module is an infrastructure/container boundary.
+
+### UI-Required Fields
+The following evidence is copied from the supplied frontend feature documentation and is treated as read-only contract evidence:
+
+- **Data-bearing components:** `page.tsx`, `migrations_components/SuperadminMigrationStatusBadge.tsx`, `migrations_components/SuperadminMigrationsEmptyState.tsx`, `migrations_components/SuperadminMigrationsClient.tsx`
+- **Approved formatting evidence:** No approved global formatting helper detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+
+### Pagination / Error Contract
+- Pagination: list endpoints use backend-driven pagination, sorting, and filtering where their frontend contract requires it; non-paginated responses omit `meta`.
+- Success envelope: global response infrastructure returns `success`, `message`, and `data`; paginated responses also include the canonical `meta`.
+- Error envelope: `data` is `null`; validation failures use `VALIDATION.DTO.FAILED` with field-level `validationErrors`; business errors use machine-readable domain error codes.
+
 
 ## Rule Compliance Checklist
 - [x] Canonical feature-owned API/type directories are used.

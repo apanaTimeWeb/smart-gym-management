@@ -1,0 +1,33 @@
+// RESPONSIBILITY: Executes creation business flow for the coupons feature.
+// FLOW: CommandController -> SuperadminSaasBillingCouponsCreateService -> named repository mutation -> mapper.
+import { Injectable } from '@nestjs/common';
+import { SuperadminSaasBillingCouponsRepository } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.repository';
+import { SuperadminSaasBillingCouponsMapper } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/superadmin-saas-billing-coupons.mapper';
+import type { SuperadminCouponsCreateInput, SuperadminCouponsDomainModel } from '@/backend_superadmin/superadmin_modules/saas-billing/coupons/coupons_types/superadmin-saas-billing-coupons.interfaces';
+/**
+ * Primary Intent: Defines SuperadminSaasBillingCouponsCreateService as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants when modifying this class.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
+@Injectable()
+export class SuperadminSaasBillingCouponsCreateService {
+  constructor(private readonly repository: SuperadminSaasBillingCouponsRepository) {}
+/**
+ * Primary Intent: Executes the createCoupons use case within the owning backend feature boundary.
+ * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
+ * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
+ * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
+ */
+
+  /**
+ * Primary Intent: Executes the createCoupons use case within its owning backend boundary.
+   * Edge Cases: Invalid input, missing resources, authorization failures, tenant mismatches, retries, and concurrency are handled according to the owning contract.
+   * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
+   * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
+   */
+  async createCoupons(input: SuperadminCouponsCreateInput): Promise<SuperadminCouponsDomainModel> {
+    const currency = input.discountType === 'FIXED_AMOUNT' ? (input.currency ?? 'INR') : undefined;
+    return SuperadminSaasBillingCouponsMapper.toDomain(await this.repository.createCoupons({ ...input, currency }));
+  }
+}

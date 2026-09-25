@@ -11,6 +11,9 @@
     "IDEMPOTENCY_REQUIRED": "Idempotency-Key हेडर आवश्यक है।",
     "IDEMPOTENCY_IN_PROGRESS": "आइडेम्पोटेंट अनुरोध पहले से संसाधित हो रहा है।",
     "IDEMPOTENCY_INVALID": "संग्रहीत आइडेम्पोटेंट प्रतिक्रिया अमान्य है।",
-    "PROVISION_FAILED": "टेनेंट प्रावधान विफल हुआ।"
+    "PROVISION_FAILED": "टेनेंट प्रावधान विफल हुआ।",
+    "RECIPIENT_MISSING": "इनवॉइस प्राप्तकर्ता ईमेल कॉन्फ़िगर नहीं है।",
+    "DELIVERY_FAILED": "इनवॉइस ईमेल भेजना विफल हुआ।",
+    "TIMEOUT": "इनवॉइस ईमेल प्रदाता का समय समाप्त हो गया।"
   }
 }

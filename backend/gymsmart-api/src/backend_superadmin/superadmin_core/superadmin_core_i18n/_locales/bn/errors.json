@@ -1,0 +1,16 @@
+{
+  "core": {
+    "ERRORS": {
+      "BAD_REQUEST": "অনুরোধটি প্রক্রিয়া করা যায়নি।",
+      "VALIDATION_FAILED": "এক বা একাধিক ফিল্ড অবৈধ।",
+      "INTERNAL": "একটি অভ্যন্তরীণ ত্রুটি ঘটেছে।",
+      "NOT_FOUND": "অনুরোধ করা রিসোর্স পাওয়া যায়নি।",
+      "FORBIDDEN": "এই কাজটি করার অনুমতি আপনার নেই।",
+      "IDEMPOTENCY_REQUIRED": "Idempotency-Key হেডার প্রয়োজন।",
+      "IDEMPOTENCY_INVALID": "Idempotency-Key অবৈধ।",
+      "IDEMPOTENCY_IN_PROGRESS": "এই Idempotency-Key সহ একটি অনুরোধ ইতিমধ্যে চলছে।",
+      "RATE_LIMIT_EXCEEDED": "অনেক বেশি অনুরোধ। পরে আবার চেষ্টা করুন।",
+      "CIRCUIT_OPEN": "ডাউনস্ট্রিম পরিষেবা সাময়িকভাবে অনুপলব্ধ।"
+    }
+  }
+}
