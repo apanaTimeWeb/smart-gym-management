@@ -30,7 +30,7 @@ export const AffiliateSchema = z.object({
   email: z.string().min(1, 'Email is required.').email('Enter a valid email address.'),
   referralCode: z.string().min(4, 'Referral code must be at least 4 characters.').max(16, 'Referral code cannot exceed 16 characters.').regex(/^[A-Za-z0-9]+$/, 'Referral code must be alphanumeric only.'),
   currency: z.string().optional(),
-  bankDetails: z.record(z.unknown()).nullable().optional(),
+  bankDetails: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 export type AffiliateFormData = z.infer<typeof AffiliateSchema>;
 

@@ -9,12 +9,10 @@ import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliat
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
-import { useSuperadminMetrics } from '@/app/superadmin/analytics/analytics_utils/useSuperadminMetrics';
 import type { AffiliatesTab } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesClientTypes';
 
 export default function SuperadminAffiliatesClient() {
     const [activeTab, setActiveTab] = useState<AffiliatesTab>('AFFILIATES');
-    const { data: metrics } = useSuperadminMetrics();
     const { affiliates, searchQuery, setSearchQuery, statusFilter, setStatusFilter, isModalOpen, setIsModalOpen, form, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, openEditModal, editingAffiliate, setEditingAffiliate, totalAffiliates, totalCommission, payoutHistory, payoutHistoryLoading, payoutHistoryError, retryPayoutHistory, fetchState, error, isMutating, startDate, setStartDate, endDate, setEndDate, currentPage, totalPages, setPage, } = useSuperadminAffiliatesPage();
     if (fetchState === 'pending')
         return (<div className="space-y-6 motion-safe:animate-pulse">
@@ -29,7 +27,7 @@ export default function SuperadminAffiliatesClient() {
     return (<div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
       <SuperadminAffiliatesHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} statusFilter={statusFilter} onStatusFilterChange={setStatusFilter} onAddClick={() => setIsModalOpen(true)} startDate={startDate ?? ''} onStartDateChange={(value) => setStartDate(value)} endDate={endDate ?? ''} onEndDateChange={(value) => setEndDate(value)}/>
 
-      <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission} currency={metrics?.currency || 'INR'}/>
+      <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission} currency={affiliates[0]?.currency || 'INR'}/>
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input">

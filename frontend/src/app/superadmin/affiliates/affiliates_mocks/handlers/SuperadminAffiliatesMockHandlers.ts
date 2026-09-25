@@ -46,8 +46,9 @@ export const superadminAffiliatesHandlers = [
     const raw = await request.json();
     const parsed = AffiliateSchema.safeParse(raw);
     if (!parsed.success) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Invalid affiliate payload', data: null }, { status: StatusCodes.BAD_REQUEST });
+    const { bankDetails, ...restParsedData } = parsed.data;
     const newAffiliate: Affiliate = {
-      ...parsed.data,
+      ...restParsedData,
       id: `a${Date.now()}`,
       totalReferred: 0,
       commissionEarned: 0,
@@ -59,6 +60,7 @@ export const superadminAffiliatesHandlers = [
       commissionRate: 10,
       referralCount: 0,
       conversionRate: 0,
+      bankDetails: bankDetails ? JSON.stringify(bankDetails) : undefined,
     };
     mockAffiliates = [newAffiliate, ...mockAffiliates];
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Affiliate created successfully', data: newAffiliate });
@@ -71,7 +73,20 @@ export const superadminAffiliatesHandlers = [
     if (!parsed.success) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Invalid affiliate payload', data: null }, { status: StatusCodes.BAD_REQUEST });
     const id = String(params.id);
     let updatedAffiliate: Affiliate | null = null;
-    mockAffiliates = mockAffiliates.map((affiliate) => affiliate.id === id ? (updatedAffiliate = { ...affiliate, ...parsed.data }) : affiliate);
+    mockAffiliates = mockAffiliates.map((affiliate) => {
+      if (affiliate.id === id) {
+        const { bankDetails, ...restParsedData } = parsed.data;
+        updatedAffiliate = {
+          ...affiliate,
+          ...restParsedData,
+        };
+        if (bankDetails !== undefined) {
+          updatedAffiliate.bankDetails = bankDetails ? JSON.stringify(bankDetails) : undefined;
+        }
+        return updatedAffiliate;
+      }
+      return affiliate;
+    });
     if (!updatedAffiliate) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Affiliate updated', data: updatedAffiliate });
   }),

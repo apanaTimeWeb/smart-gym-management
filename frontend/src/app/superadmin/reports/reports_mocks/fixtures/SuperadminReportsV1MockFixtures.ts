@@ -7,7 +7,6 @@ const base = {
     { name: 'Gym retention', current: 94.8, previous: 93.9, change: 1.0 },
     { name: 'Customer churn', current: 5.2, previous: 6.1, change: -14.8 },
   ],
-  currency: 'INR',
     planComparison: [
     { name: 'Starter', income: 22000000, gyms: 92 }, { name: 'Professional', income: 61000000, gyms: 318 }, { name: 'Business', income: 41000000, gyms: 154 }, { name: 'Enterprise', income: 15500000, gyms: 41 },
   ],

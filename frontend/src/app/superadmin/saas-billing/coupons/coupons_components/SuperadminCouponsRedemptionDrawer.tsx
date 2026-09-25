@@ -51,7 +51,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
             <div className="space-y-3">
               {redemptions.map((redemption) => (
                 <div key={redemption.id} className="rounded-lg border border-border bg-card p-4 shadow-card">
-                  <div className="flex items-start justify-between gap-3"><div><p className="font-medium text-primary">{redemption.tenantName}</p><p className="mt-1 text-xs text-secondary">{redemption.planName}</p></div><p className="font-semibold text-success">{formatCurrency(redemption.discountApplied, redemption.currency || 'INR', locale)}</p></div>
+                  <div className="flex items-start justify-between gap-3"><div><p className="font-medium text-primary">{redemption.tenantName}</p><p className="mt-1 text-xs text-secondary">{redemption.planName}</p></div><p className="font-semibold text-success">{formatCurrency(redemption.discountApplied, 'INR', locale)}</p></div>
                   <time className="mt-3 block text-xs text-secondary">Redeemed {formatDate(redemption.redeemedAt)}</time>
                 </div>
               ))}

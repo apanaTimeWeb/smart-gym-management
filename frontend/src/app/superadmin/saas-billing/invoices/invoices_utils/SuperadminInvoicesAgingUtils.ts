@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Calculates invoice aging buckets from API-provided invoice data. No JSX or network calls.
 import type { SaaSInvoice } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTypes';
 
-export interface SuperadminInvoicesAgingBucket { amount: number; count: number; invoices: SaaSInvoice[]; }
+export interface SuperadminInvoicesAgingBucket { amount: number; count: number; currency?: string; invoices: SaaSInvoice[]; }
 export type SuperadminInvoicesAgingBuckets = Record<'Not Yet Due' | '0-30 Days' | '31-60 Days' | '60+ Days', SuperadminInvoicesAgingBucket>;
 
 /** Groups unpaid invoices into documented aging buckets using minor-unit monetary values. */
