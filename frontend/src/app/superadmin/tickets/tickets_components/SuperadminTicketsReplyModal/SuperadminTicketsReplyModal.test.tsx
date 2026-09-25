@@ -42,7 +42,7 @@ describe('SuperadminTicketsReplyModal', () => {
     fireEvent.change(screen.getByLabelText('Your Message'), { target: { value: 'Retry this response.' } });
     fireEvent.click(screen.getByRole('button', { name: 'Send Reply' }));
 
-    await waitFor(() => expect(mockedToast.error).toHaveBeenCalledWith('Ticket reply failed'));
+    await waitFor(() => expect(mockedToast.error).toHaveBeenCalledWith('Ticket reply failed', { id: 'superadmin-ticket-reply-error-TKT-001' }));
     expect(onClose).not.toHaveBeenCalled();
   });
 });

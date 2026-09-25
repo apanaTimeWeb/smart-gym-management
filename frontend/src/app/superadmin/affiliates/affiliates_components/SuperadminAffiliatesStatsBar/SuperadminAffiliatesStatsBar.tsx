@@ -28,7 +28,7 @@ export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCom
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">Total Commission Paid</span>
         </div>
         <div className="text-3xl font-bold text-primary mt-1">
-          {formatCurrency(totalCommission, 'INR', locale)}
+          {formatCurrency(totalCommission, currency, locale)}
         </div>
       </div>
     </div>);

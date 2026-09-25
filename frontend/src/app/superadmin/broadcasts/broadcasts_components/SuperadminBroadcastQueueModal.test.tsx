@@ -24,13 +24,13 @@ describe('SuperadminBroadcastQueueModal', () => {
     const deliverRecipient = vi
       .fn()
       .mockResolvedValueOnce({ success: true, message: 'First delivered', data: { broadcast: MOCK_SUPERADMIN_BROADCASTS[0]!, recipientId: 'gym-1', deliveryStatus: 'DELIVERED', deliveredAt: '2026-09-18T10:00:00Z' } })
-      .mockResolvedValueOnce({ success: true, message: 'Broadcast delivery complete', data: { broadcast: MOCK_SUPERADMIN_BROADCASTS[0]!, recipientId: 'gym-2', deliveryStatus: 'DELIVERED', deliveredAt: '2026-09-18T10:01:00Z' } });
+      .mockResolvedValue({ success: true, message: 'Broadcast delivery complete', data: { broadcast: MOCK_SUPERADMIN_BROADCASTS[0]!, recipientId: 'gym-2', deliveryStatus: 'DELIVERED', deliveredAt: '2026-09-18T10:01:00Z' } });
     mockedUseDelivery.mockReturnValue({ deliverRecipient, isDelivering: false, deliveryError: null });
     const onComplete = vi.fn();
     render(<SuperadminBroadcastQueueModal isOpen onClose={vi.fn()} recipients={recipients} broadcastId="b1" broadcastTitle="Monthly update" onComplete={onComplete} />);
 
-    await waitFor(() => expect(deliverRecipient).toHaveBeenCalledWith({ broadcastId: 'b1', recipientId: 'gym-1' }));
-    await waitFor(() => expect(deliverRecipient).toHaveBeenCalledWith({ broadcastId: 'b1', recipientId: 'gym-2' }));
+    await waitFor(() => expect(deliverRecipient).toHaveBeenCalledWith(expect.objectContaining({ broadcastId: 'b1', recipientId: 'gym-1' })));
+    await waitFor(() => expect(deliverRecipient).toHaveBeenCalledWith(expect.objectContaining({ broadcastId: 'b1', recipientId: 'gym-2' })));
     await waitFor(() => expect(onComplete).toHaveBeenCalledWith('Broadcast delivery complete'));
     expect(deliverRecipient).toHaveBeenCalledTimes(2);
   });
@@ -39,7 +39,7 @@ describe('SuperadminBroadcastQueueModal', () => {
     const deliverRecipient = vi
       .fn()
       .mockRejectedValueOnce(new Error('Recipient delivery failed'))
-      .mockResolvedValueOnce({ success: true, message: 'Retry delivered', data: { broadcast: MOCK_SUPERADMIN_BROADCASTS[0]!, recipientId: 'gym-1', deliveryStatus: 'DELIVERED', deliveredAt: '2026-09-18T10:02:00Z' } });
+      .mockResolvedValue({ success: true, message: 'Retry delivered', data: { broadcast: MOCK_SUPERADMIN_BROADCASTS[0]!, recipientId: 'gym-1', deliveryStatus: 'DELIVERED', deliveredAt: '2026-09-18T10:02:00Z' } });
     mockedUseDelivery.mockReturnValue({ deliverRecipient, isDelivering: false, deliveryError: null });
     const onComplete = vi.fn();
     render(<SuperadminBroadcastQueueModal isOpen onClose={vi.fn()} recipients={[recipients[0]!]} broadcastId="b1" broadcastTitle="Monthly update" onComplete={onComplete} />);

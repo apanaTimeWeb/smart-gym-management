@@ -54,10 +54,10 @@ export function SuperadminReportsRevenueTab({ revenueData }: SuperadminReportsRe
             <tbody className="divide-y divide-border">
               {revenueData.map((row) => (<tr key={row.month} className="hover:bg-input motion-safe:transition-colors">
                   <td className="px-4 py-3 font-medium text-primary">{row.month}</td>
-                  <td className="px-4 py-3 text-primary">{formatCurrency(row.mrr, 'INR', locale)}</td>
-                  <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue, 'INR', locale)}</td>
-                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancelledRevenue, 'INR', locale)}</td>
-                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrency(row.netRevenue, 'INR', locale)}</td>
+                  <td className="px-4 py-3 text-primary">{formatCurrency(row.mrr, metrics?.currency || 'INR', locale)}</td>
+                  <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue, metrics?.currency || 'INR', locale)}</td>
+                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancelledRevenue, metrics?.currency || 'INR', locale)}</td>
+                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrency(row.netRevenue, metrics?.currency || 'INR', locale)}</td>
                   <td className="px-4 py-3 text-secondary">{row.tenantCount}</td>
                 </tr>))}
             </tbody>

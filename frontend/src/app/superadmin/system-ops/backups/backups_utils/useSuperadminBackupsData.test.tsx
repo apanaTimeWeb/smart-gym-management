@@ -4,9 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useSuperadminBackupsData } from '@/app/superadmin/system-ops/backups/backups_utils/useSuperadminBackupsData';
-import { backupsApi } from '@/app/superadmin/system-ops/backups/backups_api/SuperadminBackupsApi';
+import * as backupsApi from '@/app/superadmin/system-ops/backups/backups_api/SuperadminBackupsApi';
 import toast from 'react-hot-toast';
-vi.mock('@/app/superadmin/system-ops/backups/backups_api/SuperadminBackupsApi');
+vi.mock('@/app/superadmin/system-ops/backups/backups_api/SuperadminBackupsApi', () => ({
+    fetchBackups: vi.fn(),
+}));
 vi.mock('react-hot-toast');
 beforeEach(() => {
   resetSuperadminBackupsMockState();
@@ -24,7 +26,7 @@ describe('useSuperadminBackupsData', () => {
         expect(result.current.data).toBeUndefined();
     });
     it('fetches backups and sets state to success', async () => {
-        const mockBackups = { data: [{ id: '1', tenantName: 'Gym A' }] };
+        const mockBackups = { success: true, data: [{ id: '1', tenantName: 'Gym A' }] };
         vi.mocked(backupsApi.fetchBackups).mockResolvedValue(mockBackups as never);
         const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
         const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });

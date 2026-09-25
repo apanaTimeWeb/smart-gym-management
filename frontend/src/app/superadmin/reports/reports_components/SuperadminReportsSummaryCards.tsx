@@ -16,7 +16,7 @@ export function SuperadminReportsSummaryCards({ totalMRR, totalCancelledRevenue,
           <IndianRupee size={18} className="w-5 text-primary" strokeWidth={2}/>
           <span className="text-xs text-secondary uppercase tracking-wider">Current Monthly Income{suffix}</span>
         </div>
-        <p className="text-3xl font-bold text-primary">{formatCurrency(totalMRR, 'INR', locale)}</p>
+        <p className="text-3xl font-bold text-primary">{formatCurrency(totalMRR, metrics?.currency || 'INR', locale)}</p>
         <p className="mt-1 text-xs text-success">{incomeChangePercent === null ? 'No prior-period comparison' : `↑ ${incomeChangePercent > 0 ? '+' : ''}${incomeChangePercent}% vs prior month`}</p>
       </div>
       <div className="bg-card border border-border rounded-xl p-5 shadow-card motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card motion-safe:transition-all motion-safe:duration-base">
@@ -24,7 +24,7 @@ export function SuperadminReportsSummaryCards({ totalMRR, totalCancelledRevenue,
           <TrendingDown size={18} className="w-5 text-danger" strokeWidth={2}/>
           <span className="text-xs text-secondary uppercase tracking-wider">Lost Income{suffix}</span>
         </div>
-        <p className="text-3xl font-bold text-primary">{formatCurrency(totalCancelledRevenue, 'INR', locale)}</p>
+        <p className="text-3xl font-bold text-primary">{formatCurrency(totalCancelledRevenue, metrics?.currency || 'INR', locale)}</p>
         <p className="mt-1 text-xs text-danger">{cancellationsCount} tenants cancelled</p>
       </div>
       <div className="bg-card border border-border rounded-xl p-5 shadow-card motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card motion-safe:transition-all motion-safe:duration-base">

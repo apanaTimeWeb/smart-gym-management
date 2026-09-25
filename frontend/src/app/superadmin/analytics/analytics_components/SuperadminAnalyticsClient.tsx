@@ -55,7 +55,7 @@ export default function SuperadminAnalyticsClient() {
     const kpiCards = [
         {
             label: 'Monthly Income' + dateSuffix,
-            value: formatCurrency(metrics.mrr, 'INR', locale),
+            value: formatCurrency(metrics.mrr, metrics.currency || 'INR', locale),
             delta: mrrDelta,
             deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
             icon: IndianRupee,
@@ -64,7 +64,7 @@ export default function SuperadminAnalyticsClient() {
         },
         {
             label: 'ARR' + dateSuffix,
-            value: formatCurrency(metrics.arr, 'INR', locale),
+            value: formatCurrency(metrics.arr, metrics.currency || 'INR', locale),
             delta: arrDelta,
             deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
             icon: TrendingUp,
@@ -92,7 +92,7 @@ export default function SuperadminAnalyticsClient() {
         {
             label: 'Avg. Income per Gym' + dateSuffix,
             // Design Â§21: Indian currency â€” â‚¹1,24,500
-            value: formatCurrency(arpu, 'INR', locale),
+            value: formatCurrency(arpu, metrics.currency || 'INR', locale),
             delta: 'Avg revenue per gym',
             deltaUp: true,
             icon: DollarSign,
@@ -211,7 +211,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.ltv, 'INR', locale)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.ltv, metrics.currency || 'INR', locale)}</p>
           <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
@@ -222,7 +222,7 @@ export default function SuperadminAnalyticsClient() {
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.cac, 'INR', locale)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.cac, metrics.currency || 'INR', locale)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>

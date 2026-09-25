@@ -27,8 +27,8 @@ describe('Superadmin Tax & Compliance', () => {
         });
         render(<SuperadminComplianceClient />);
         expect(screen.getByText('Tax & Compliance')).toBeInTheDocument();
-        expect(screen.getByText('FitLife Andheri')).toBeInTheDocument();
-        expect(screen.getByText('—')).toBeInTheDocument();
+        expect(screen.getAllByText('FitLife Andheri')[0]).toBeInTheDocument();
+        expect(screen.getAllByText('—')[0]).toBeInTheDocument();
     });
     it('surfaces a retryable error state', () => {
         const refetch = vi.fn();

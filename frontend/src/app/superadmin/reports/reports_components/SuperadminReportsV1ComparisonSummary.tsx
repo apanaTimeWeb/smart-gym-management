@@ -10,6 +10,6 @@ export default function SuperadminReportsV1ComparisonSummary({ data }: Superadmi
     const locale = useLocale();
 
     return <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-  {data.metrics.map((m) => <MetricCard key={m.name} label={m.name} value={m.name.includes('income') ? formatCurrency(m.current, 'INR', locale) : m.name.includes('churn') || m.name.includes('retention') ? formatPercent1dp(m.current) : formatNumber(m.current)} helper={`Previous: ${m.name.includes('income') ? formatCurrency(m.previous, 'INR', locale) : m.name.includes('churn') || m.name.includes('retention') ? formatPercent1dp(m.previous) : formatNumber(m.previous)}`} tone={m.change < 0 ? (m.name.includes('churn') ? 'success' : 'danger') : 'success'}/>)}
+  {data.metrics.map((m) => <MetricCard key={m.name} label={m.name} value={m.name.includes('income') ? formatCurrency(m.current, data.currency || 'INR', locale) : m.name.includes('churn') || m.name.includes('retention') ? formatPercent1dp(m.current) : formatNumber(m.current)} helper={`Previous: ${m.name.includes('income') ? formatCurrency(m.previous, data.currency || 'INR', locale) : m.name.includes('churn') || m.name.includes('retention') ? formatPercent1dp(m.previous) : formatNumber(m.previous)}`} tone={m.change < 0 ? (m.name.includes('churn') ? 'success' : 'danger') : 'success'}/>)}
     </div>;
 }

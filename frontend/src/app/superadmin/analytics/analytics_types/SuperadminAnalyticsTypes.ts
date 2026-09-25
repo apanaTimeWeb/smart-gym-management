@@ -7,6 +7,7 @@ export interface RevenueMetrics {
     cancellationRate: number;
     ltv: number;
     cac: number;
+    currency?: string;
     activeTenants: number;
     arpu: number;
     mrrDeltaPercent: number;
@@ -50,6 +51,7 @@ export const AnalyticsApiDataSchema = z.object({
         cancellationRate: z.number(),
         ltv: z.number(),
         cac: z.number(),
+        currency: z.string().optional(),
         activeTenants: z.number(),
         arpu: z.number(),
         mrrDeltaPercent: z.number(),

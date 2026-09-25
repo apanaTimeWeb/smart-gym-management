@@ -2,6 +2,9 @@ import { resetSuperadminTeamMockState } from '@/app/superadmin/team/team_mocks/h
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import SuperadminTeamClient from '@/app/superadmin/team/team_components/SuperadminTeamClient';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const createTestQueryClient = () => new QueryClient({ defaultOptions: { queries: { retry: false } } });
 import { SUPERADMIN_TEAM_MOCK_FIXTURE } from '@/app/superadmin/team/team_mocks/fixtures/SuperadminTeamMockFixtures';
 import { useSuperadminTeamPage } from '@/app/superadmin/team/team_utils/useSuperadminTeamPage';
 vi.mock('@/app/superadmin/team/team_utils/useSuperadminTeamPage', () => ({ useSuperadminTeamPage: vi.fn() }));
@@ -21,7 +24,8 @@ describe('Superadmin Platform Team', () => {
             isError: false,
             refetch: vi.fn(),
         });
-        const { unmount } = render(<SuperadminTeamClient />);
+        const queryClient = createTestQueryClient();
+        const { unmount } = render(<QueryClientProvider client={queryClient}><SuperadminTeamClient /></QueryClientProvider>);
         expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
         unmount();
         mockedUsePage.mockReturnValue({
@@ -30,10 +34,10 @@ describe('Superadmin Platform Team', () => {
             isError: false,
             refetch: vi.fn(),
         });
-        render(<SuperadminTeamClient />);
+        render(<QueryClientProvider client={createTestQueryClient()}><SuperadminTeamClient /></QueryClientProvider>);
         expect(screen.getByText('Platform Team')).toBeInTheDocument();
-        expect(screen.getByText('Aarav Mehta')).toBeInTheDocument();
-        expect(screen.getByText('—')).toBeInTheDocument();
+        expect(screen.getAllByText('Aarav Mehta')[0]).toBeInTheDocument();
+        expect(screen.getAllByText('—')[0]).toBeInTheDocument();
     });
     it('surfaces a retryable error state', () => {
         const refetch = vi.fn();
@@ -43,7 +47,7 @@ describe('Superadmin Platform Team', () => {
             isError: true,
             refetch,
         });
-        render(<SuperadminTeamClient />);
+        render(<QueryClientProvider client={createTestQueryClient()}><SuperadminTeamClient /></QueryClientProvider>);
         expect(screen.getByRole('alert')).toHaveTextContent('Platform team data could not be loaded.');
         fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
         expect(refetch).toHaveBeenCalledTimes(1);
@@ -55,7 +59,7 @@ describe('Superadmin Platform Team', () => {
             isError: false,
             refetch: vi.fn(),
         });
-        render(<SuperadminTeamClient />);
+        render(<QueryClientProvider client={createTestQueryClient()}><SuperadminTeamClient /></QueryClientProvider>);
         expect(screen.getByText('Team members')).toBeInTheDocument();
         expect(screen.getByText('Role groups')).toBeInTheDocument();
         expect(screen.getByText('Alert preferences')).toBeInTheDocument();

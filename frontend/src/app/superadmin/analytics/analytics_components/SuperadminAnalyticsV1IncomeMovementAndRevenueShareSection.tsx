@@ -13,7 +13,7 @@ export default function SuperadminAnalyticsV1IncomeMovementAndRevenueShareSectio
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Income movement" description="Where monthly income moved during the period.">
     <div className="h-72">
-      <ApexBarChart categories={data.movement.map((x) => x.label)} series={[{ name: 'Monthly income change', data: data.movement.map((x) => x.value) }]} horizontal valueFormatter={(v) => formatCurrency(v, 'INR', locale)}/>
+      <ApexBarChart categories={data.movement.map((x) => x.label)} series={[{ name: 'Monthly income change', data: data.movement.map((x) => x.value) }]} horizontal valueFormatter={(v) => formatCurrency(v, data.metrics.currency || 'INR', locale)}/>
     </div>
   </Panel>
   <Panel title="Revenue share concentration" description="Shows how dependent the platform is on a few groups.">

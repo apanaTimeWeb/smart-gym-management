@@ -62,7 +62,7 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </div>
         <div className="mt-2 flex items-center justify-between text-xs text-secondary">
           <span>
-            {formatCurrency(s.monthlyIncome, 'INR', locale)}
+            {formatCurrency(s.monthlyIncome, data.metrics.currency || 'INR', locale)}
           </span>
           <span>
             {formatPercent1dp(s.churn)}
