@@ -1,13 +1,73 @@
 // RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin payouts.
 // FLOW: HTTP query â†’ AdminPayoutsQueryDto â†’ repository allowlists â†’ PostgreSQL query.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
 
-import { Type, Transform } from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
+  @IsOptional()
+  customStart?: string;
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+  @IsOptional()
+  customEnd?: string;
 
-import { AdminPayoutsStatus } from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.constants'
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+
+import { Type, Transform 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-transformer';
+import { IsOptional, IsString, IsIn, IsNumber, IsEnum 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+
+import { AdminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+
+import { AdminPayoutsStatus 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_modules/admin_payouts/admin-payouts.constants'
 
 /**
  * @description Defines the AdminPayoutsQueryDto boundary for the admin_payouts backend feature.
@@ -35,7 +95,19 @@ export class AdminPayoutsQueryDto extends AdminCorePaginationQueryDto {
   endDate?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminPayoutsStatus)
   status?: AdminPayoutsStatus;
 
@@ -62,4 +134,17 @@ export class AdminPayoutsQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @IsString()
   consumer?: string;
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

@@ -1,10 +1,46 @@
 // RESPONSIBILITY: Validates and normalizes frontend filters for Admin audit logs.
 // FLOW: HTTP query â†’ AdminAuditLogsQueryDto â†’ repository allowlists â†’ tenant audit_logs query.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
 
-import { IsIn, IsISO8601, IsOptional, IsString, IsUUID } from 'class-validator';
+  @IsOptional()
+  customStart?: string;
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+
+import { IsIn, IsISO8601, IsOptional, IsString, IsUUID 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+
+import { AdminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
 /**
  * @description Defines the AdminAuditLogsQueryDto boundary for the admin_audit_logs backend feature.
@@ -30,4 +66,17 @@ export class AdminAuditLogsQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @IsISO8601()
   dateTo?: string;
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

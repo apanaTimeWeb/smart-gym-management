@@ -1,7 +1,31 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
 // RESPONSIBILITY: Validates optional filters used by the report list endpoints.
 // FLOW: HTTP query -> DTO validation -> report data service.
-import { IsISO8601, IsOptional, IsString } from 'class-validator';
+import { IsISO8601, IsOptional, IsString 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
 
 /**
  * Primary Intent: Defines SuperadminReportsDataQueryDto as the class-level contract for superadmin-reports-data-query.dto.ts.
@@ -12,29 +36,90 @@ import { IsISO8601, IsOptional, IsString } from 'class-validator';
 export class SuperadminReportsDataQueryDto {
   @IsOptional()
   @IsISO8601()
-  @ApiPropertyOptional({ required: false })
+  @ApiPropertyOptional({ required: false 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+})
   /** Primary Intent: Defines the `from` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   from?: string;
 
   @IsOptional()
   @IsISO8601()
-  @ApiPropertyOptional({ required: false })
+  @ApiPropertyOptional({ required: false 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+})
   /** Primary Intent: Defines the `to` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   to?: string;
 
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional({ required: false })
+  @ApiPropertyOptional({ required: false 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+})
   /** Primary Intent: Defines the `plan` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   plan?: string;
 
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional({ required: false })
+  @ApiPropertyOptional({ required: false 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+})
   /** Primary Intent: Defines the `region` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   region?: string;
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

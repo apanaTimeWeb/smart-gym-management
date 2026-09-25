@@ -1,8 +1,44 @@
 // RESPONSIBILITY: Validates pagination, search, and sorting inputs for the profile feature.
 // FLOW: HTTP query -> class-validator -> SuperadminProfileListQuery.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+import { SuperadminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
 
 /**
  * Primary Intent: Defines SuperadminProfileQueryDto as the class-level contract for superadmin-profile-query.dto.ts.
@@ -17,4 +53,17 @@ export class SuperadminProfileQueryDto extends SuperadminCorePaginationQueryDto 
 
   /** Allowlisted sort field. */
   @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

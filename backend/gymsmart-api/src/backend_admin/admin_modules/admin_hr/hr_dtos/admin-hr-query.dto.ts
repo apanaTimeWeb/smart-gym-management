@@ -1,14 +1,86 @@
 // RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin hr.
 // FLOW: HTTP query â†’ AdminHrQueryDto â†’ repository allowlists â†’ PostgreSQL query.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
 
-import { Type, Transform } from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
+  @IsOptional()
+  customStart?: string;
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+  @IsOptional()
+  customEnd?: string;
 
-import { AdminHrPerformancePeriod } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
-import { AdminHrStatus } from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+
+import { Type, Transform 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-transformer';
+import { IsOptional, IsString, IsIn, IsNumber, IsEnum 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+
+import { AdminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+
+import { AdminHrPerformancePeriod 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
+import { AdminHrStatus 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_modules/admin_hr/admin-hr.constants'
 
 /**
  * @description Defines the AdminHrQueryDto boundary for the admin_hr backend feature.
@@ -36,7 +108,19 @@ export class AdminHrQueryDto extends AdminCorePaginationQueryDto {
   endDate?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminHrStatus)
   status?: AdminHrStatus;
 
@@ -63,4 +147,17 @@ export class AdminHrQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @IsString()
   consumer?: string;
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

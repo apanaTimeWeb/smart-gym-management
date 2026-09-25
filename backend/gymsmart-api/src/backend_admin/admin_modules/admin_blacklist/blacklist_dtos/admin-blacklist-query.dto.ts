@@ -1,13 +1,73 @@
 // RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin blacklist.
 // FLOW: HTTP query â†’ AdminBlacklistQueryDto â†’ repository allowlists â†’ PostgreSQL query.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
 
-import { Type, Transform } from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber, IsEnum } from 'class-validator';
+  @IsOptional()
+  customStart?: string;
 
-import { AdminCorePaginationQueryDto } from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+  @IsOptional()
+  customEnd?: string;
 
-import { AdminBlacklistStatus } from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants'
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+
+import { Type, Transform 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-transformer';
+import { IsOptional, IsString, IsIn, IsNumber, IsEnum 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+
+import { AdminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
+
+import { AdminBlacklistStatus 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_admin/admin_modules/admin_blacklist/admin-blacklist.constants'
 
 /**
  * @description Defines the AdminBlacklistQueryDto boundary for the admin_blacklist backend feature.
@@ -35,7 +95,19 @@ export class AdminBlacklistQueryDto extends AdminCorePaginationQueryDto {
   endDate?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminBlacklistStatus)
   status?: AdminBlacklistStatus;
 
@@ -62,4 +134,17 @@ export class AdminBlacklistQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @IsString()
   consumer?: string;
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+

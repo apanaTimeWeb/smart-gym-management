@@ -1,8 +1,44 @@
 // RESPONSIBILITY: Validates pagination, search, and sorting inputs for the gyms feature.
 // FLOW: HTTP query -> class-validator -> SuperadminGymsListQuery.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString } from 'class-validator';
-import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+import { IsIn, IsOptional, IsString 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
+import { SuperadminCorePaginationQueryDto 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
 
 /**
  * Primary Intent: Defines SuperadminGymsQueryDto as the class-level contract for superadmin-gyms-query.dto.ts.
@@ -20,5 +56,18 @@ export class SuperadminGymsQueryDto extends SuperadminCorePaginationQueryDto {@A
 
   /** Frontend-compatible lowercase sort direction alias. */
   @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order?: 'asc' | 'desc';
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+
 
