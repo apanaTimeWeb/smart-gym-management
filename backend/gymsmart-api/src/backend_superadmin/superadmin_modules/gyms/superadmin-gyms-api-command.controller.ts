@@ -47,7 +47,7 @@ export class SuperadminGymsApiCommandController {
   /** Provisions a new isolated tenant. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/gyms/provision')
+  @Post('superadmin/gyms/provision')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.CREATED, type: SuperadminGymsResponseDto })
@@ -68,7 +68,7 @@ export class SuperadminGymsApiCommandController {
   /** Creates a tenant through the canonical service. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/gyms')
+  @Post('superadmin/gyms')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.CREATED, type: SuperadminGymsResponseDto })
@@ -89,7 +89,7 @@ export class SuperadminGymsApiCommandController {
   /** Updates a tenant through the canonical service. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('api/gyms/:id')
+  @Patch('superadmin/gyms/:id')
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -109,7 +109,7 @@ export class SuperadminGymsApiCommandController {
   /** Changes tenant lifecycle status. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('api/gyms/:id/status')
+  @Patch('superadmin/gyms/:id/status')
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })
@@ -129,7 +129,7 @@ export class SuperadminGymsApiCommandController {
   /** Soft-deletes a tenant. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete('api/gyms/:id')
+  @Delete('superadmin/gyms/:id')
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Tenant soft-deleted.' })
@@ -148,7 +148,7 @@ export class SuperadminGymsApiCommandController {
   /** Sends an owner email command through the operational service. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/gyms/:id/email')
+  @Post('superadmin/gyms/:id/email')
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Owner message accepted.' })
   @ApiOperation({ summary: 'emailOwner' })
@@ -168,7 +168,7 @@ export class SuperadminGymsApiCommandController {
   /** Issues a short-lived impersonation artifact tied to the authenticated actor and tenant. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/gyms/:id/impersonate')
+  @Post('superadmin/gyms/:id/impersonate')
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Impersonation artifact issued.' })
   @ApiOperation({ summary: 'impersonate' })

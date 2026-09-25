@@ -39,6 +39,7 @@ export class SuperadminGymsExportQueuedResponseDto {
  */
 export class SuperadminGymsExportDownloadResponseDto {
   /** Primary Intent: Protected download URL for the asynchronously generated Gym export. Edge Cases: URL is short-lived. Side-Effects: None. AI-Note: Do not expose storage paths. */
-  @ApiProperty({ example: '/api/gyms/export/uuid/download?token=...' })
+  @ApiProperty({ example: '/superadmin/gyms/export/uuid/download?token=...' })
   downloadUrl!: string;
 }
+

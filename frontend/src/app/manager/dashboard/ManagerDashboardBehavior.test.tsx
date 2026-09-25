@@ -25,7 +25,7 @@ describe('Manager Dashboard user-visible behavior', () => {
 it('renders dashboard empty collection states from an MSW empty response', async () => {
     const { MOCK_DASHBOARD_STATS } = await import('@/app/manager/dashboard/dashboard_fixtures/ManagerDashboardMockData');
     managerMswServer.use(
-      http.get('/api/v1/manager/dashboard/stats', () => HttpResponse.json({
+      http.get('/manager/dashboard/stats', () => HttpResponse.json({
         success: true,
         message: 'Empty dashboard collections',
         data: { ...MOCK_DASHBOARD_STATS, recentMembers: [], recentPayments: [], pendingPaymentsList: [], expiringMemberships: [], memberGrowth: [], revenueChart: [], membersByPlan: [] } }))
@@ -36,7 +36,7 @@ it('renders dashboard empty collection states from an MSW empty response', async
 
   it('renders the dashboard error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/dashboard/stats', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/dashboard/stats', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerDashboardMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load dashboard')).toBeInTheDocument();

@@ -18,7 +18,7 @@ def _headers() -> dict[str, str]:
     if TENANT_ID: headers["x-tenant-id"] = TENANT_ID
     return headers
 
-MUTATION_ROUTES = [('POST', '/api/superadmin/features/flags', 'REQ-025'), ('PATCH', '/api/superadmin/features/flags/00000000-0000-4000-8000-000000000001', 'REQ-026'), ('POST', '/api/superadmin/features/flags/00000000-0000-4000-8000-000000000001/toggle', 'REQ-027'), ('DELETE', '/api/superadmin/features/flags/00000000-0000-4000-8000-000000000001', 'REQ-029'), ('POST', '/api/superadmin/features/notes', 'REQ-030'), ('PATCH', '/api/superadmin/features/notes/00000000-0000-4000-8000-000000000001', 'REQ-031'), ('DELETE', '/api/superadmin/features/notes/00000000-0000-4000-8000-000000000001', 'REQ-032')]
+MUTATION_ROUTES = [('POST', '/superadmin/features/flags', 'REQ-025'), ('PATCH', '/superadmin/features/flags/00000000-0000-4000-8000-000000000001', 'REQ-026'), ('POST', '/superadmin/features/flags/00000000-0000-4000-8000-000000000001/toggle', 'REQ-027'), ('DELETE', '/superadmin/features/flags/00000000-0000-4000-8000-000000000001', 'REQ-029'), ('POST', '/superadmin/features/notes', 'REQ-030'), ('PATCH', '/superadmin/features/notes/00000000-0000-4000-8000-000000000001', 'REQ-031'), ('DELETE', '/superadmin/features/notes/00000000-0000-4000-8000-000000000001', 'REQ-032')]
 
 
 @pytest.mark.parametrize("method,path,requirement", MUTATION_ROUTES)

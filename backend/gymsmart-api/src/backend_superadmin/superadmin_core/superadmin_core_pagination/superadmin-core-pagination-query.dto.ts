@@ -2,7 +2,7 @@
 // FLOW: HTTP query -> SuperadminCorePaginationQueryDto -> feature query DTO -> repository.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 /**
  * Primary Intent: Defines SuperadminCorePaginationQueryDto as the class-level contract for superadmin-core-pagination-query.dto.ts.
@@ -26,7 +26,7 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
   limit = 20;
 
   @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiProperty()
   /** Primary Intent: Defines the `sortOrder` data contract for this superadmin-core-pagination-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
@@ -34,4 +34,40 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   @IsOptional()
   sortBy = 'createdAt';
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string = undefined;
+
+  @IsOptional()
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
+  order?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  plan?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  region?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  type?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  sort?: string = undefined;
 }
+

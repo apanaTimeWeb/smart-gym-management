@@ -31,7 +31,7 @@ export class SuperadminTeamQueryController {
 
   /** Returns one team record. */
   // SLA: FAST
-  @Get(['api/superadmin/team/:id', 'api/superadmin/team/:id'])
+  @Get(['superadmin/team/:id', 'superadmin/team/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -31,7 +31,7 @@ export class SuperadminSaasBillingCouponsQueryController {
 
   /** Returns a paginated coupons list. */
   // SLA: FAST
-  @Get(['api/superadmin/saas-billing/coupons', 'api/superadmin/saas-billing/coupons'])
+  @Get(['superadmin/saas-billing/coupons', 'superadmin/saas-billing/coupons'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSaasBillingCouponsQueryController {
 
   /** Returns one coupons record. */
   // SLA: FAST
-  @Get(['api/superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
+  @Get(['superadmin/saas-billing/coupons/:id', 'superadmin/saas-billing/coupons/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -33,6 +33,7 @@ export const AuthBackendTransport = {
       throw new AuthApiError('Authentication service is not configured.');
     }
 
+    console.log(`[AuthBackendTransport] POST ${baseUrl}${endpoint}`);
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method: 'POST',
       headers: {

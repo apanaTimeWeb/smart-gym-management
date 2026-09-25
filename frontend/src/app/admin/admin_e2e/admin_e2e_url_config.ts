@@ -8,6 +8,6 @@ export const ADMIN_ADMIN_E2E_URLS = {
         ROOT: '/admin/admin_e2e',
     },
     API: {
-        BASE: '/api/v1/admin/admin_e2e',
+        BASE: '/admin/admin_e2e',
     }
 } as const;

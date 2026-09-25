@@ -12,10 +12,11 @@ export async function GET(request: NextRequest) {
   const token = request.cookies.get(AuthSessionConstants.COOKIES.ACCESS_TOKEN)?.value;
   const userCookie = request.cookies.get(AuthSessionConstants.COOKIES.USER)?.value;
   const user = await AuthSessionServerUtils.resolveUser(token, userCookie);
-  const payload = AuthTokenStatusSchema.parse({
+  const payload = {
     authenticated: Boolean(user),
     user,
-  });
+    token, // Include token for apiFetch
+  };
 
   return AuthApiResponseUtils.success('Session status', payload);
 }

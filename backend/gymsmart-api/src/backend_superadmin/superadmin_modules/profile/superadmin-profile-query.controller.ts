@@ -31,7 +31,7 @@ export class SuperadminProfileQueryController {
 
   /** Returns one profile record. */
   // SLA: FAST
-  @Get(['api/superadmin/profile/:id', 'api/superadmin/profile/:id'])
+  @Get(['superadmin/profile/:id', 'superadmin/profile/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -79,7 +79,7 @@ describe('useAdminUsageLogic upgrade workflow', () => {
 
     expect(confirm).toHaveBeenCalledOnce();
     expect(adminUsageApi.requestUpgrade).toHaveBeenCalledWith('Pro');
-    expect(showToast).toHaveBeenCalledWith('Upgrade request sent.', 'success');
+    expect(showToast).toHaveBeenCalledWith('Upgrade request sent.', 'success', 'usage-upgrade-success-Pro');
     expect(result.current.pendingUpgradePlan).toBeNull();
   });
 
@@ -105,7 +105,7 @@ describe('useAdminUsageLogic upgrade workflow', () => {
       await result.current.requestUpgrade('Pro');
     });
 
-    expect(showToast).toHaveBeenCalledWith('Upgrade service unavailable.', 'error');
+    expect(showToast).toHaveBeenCalledWith('Upgrade service unavailable.', 'error', 'usage-upgrade-error-Pro');
     expect(result.current.pendingUpgradePlan).toBeNull();
   });
 });

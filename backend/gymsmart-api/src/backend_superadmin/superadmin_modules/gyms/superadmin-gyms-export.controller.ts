@@ -28,7 +28,7 @@ export class SuperadminGymsExportController {
    * AI-Note: Keep this compatibility route read-compatible with the existing frontend while retaining the versioned POST command as the canonical mutation.
    */
   // SLA: HEAVY
-  @Get(['api/v1/gyms/export', 'api/gyms/export'])
+  @Get(['superadmin/gyms/export', 'superadmin/gyms/export'])
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGymsExportDownloadResponseDto })
   @ApiOperation({ summary: 'exportGet' })
   /**
@@ -48,7 +48,7 @@ export class SuperadminGymsExportController {
   /** Starts an asynchronous Gym CSV export job using the architecture-mandated POST command contract. */
   @RequireIdempotencyKey()
   // SLA: HEAVY
-  @Post(['api/v1/gyms/export', 'api/gyms/export'])
+  @Post(['superadmin/gyms/export', 'superadmin/gyms/export'])
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'Start asynchronous gym CSV export' })

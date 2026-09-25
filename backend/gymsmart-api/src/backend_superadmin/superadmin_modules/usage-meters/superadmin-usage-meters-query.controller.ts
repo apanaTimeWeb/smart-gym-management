@@ -31,7 +31,7 @@ export class SuperadminUsageMetersQueryController {
 
   /** Returns one usage-meters record. */
   // SLA: FAST
-  @Get(['api/superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
+  @Get(['superadmin/usage-meters/:id', 'superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

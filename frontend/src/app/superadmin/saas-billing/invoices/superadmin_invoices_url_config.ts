@@ -6,6 +6,7 @@ export const InvoicesUrlConfig = {
     BACKEND_API: {
         BASE: "/superadmin/saas-billing/invoices",
         MANUAL_PAYMENT: "/superadmin/saas-billing/invoices/manual-payment",
-        TENANTS: "/api/gyms"
+        TENANTS: "/superadmin/gyms"
     }
 };
+

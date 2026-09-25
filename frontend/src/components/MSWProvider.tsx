@@ -15,9 +15,7 @@ async function enableMocking() {
   if (typeof window === 'undefined') return;
 
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
-  const isDev = process.env.NODE_ENV === 'development';
-
-  if (!isDemoMode && !isDev) return;
+  if (!isDemoMode) return;
 
   const { worker } = await import('@/mocks/browser');
 

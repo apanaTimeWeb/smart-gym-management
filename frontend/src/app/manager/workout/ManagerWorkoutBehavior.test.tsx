@@ -24,7 +24,7 @@ describe('Manager Workout user-visible behavior', () => {
   });
 it('renders the workout empty search state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/workouts', () => HttpResponse.json({ success: true, message: 'Empty result', data: { workouts: [], total: 0, page: 1, limit: 12 } }))
+      http.get('/manager/workouts', () => HttpResponse.json({ success: true, message: 'Empty result', data: { workouts: [], total: 0, page: 1, limit: 12 } }))
     );
     render(<ManagerTestProviders><ManagerWorkoutMain /></ManagerTestProviders>);
     expect(await screen.findByText(/No workout plans found matching/)).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the workout empty search state from an MSW response', async () => {
 
   it('renders the workout error state for assignment data from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/workout/assignments', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/workout/assignments', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerWorkoutMain /></ManagerTestProviders>);
     expect(await screen.findByText('Unable to load assigned workout plans.')).toBeInTheDocument();

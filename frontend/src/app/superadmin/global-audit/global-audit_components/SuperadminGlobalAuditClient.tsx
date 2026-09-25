@@ -48,7 +48,7 @@ export default function SuperadminGlobalAuditClient() {
     };
     const exportLogs = async () => {
         try {
-          const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+          const response = await fetch('/superadmin/export-data', { method: 'POST' });
           if (response.status === 202) {
             toast.success('Export started. A secure download link will be sent to your email.');
           } else {
@@ -165,3 +165,4 @@ export default function SuperadminGlobalAuditClient() {
       </div>
     </div>);
 }
+

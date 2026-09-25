@@ -47,6 +47,6 @@ export const ManagerEnvConfig = {
   gymAddress: parsedManagerPublicEnv.NEXT_PUBLIC_GYM_ADDRESS,
   currencyCode: parsedManagerPublicEnv.NEXT_PUBLIC_CURRENCY_CODE,
   demoMode: parsedManagerPublicEnv.NEXT_PUBLIC_MANAGER_DEMO_MODE === 'true',
-  apiBaseUrl: parsedManagerPublicEnv.NEXT_PUBLIC_API_URL ?? '/api/v1',
+  apiBaseUrl: parsedManagerPublicEnv.NEXT_PUBLIC_API_URL ?? '',
   isProduction: managerRuntimeProduction,
 } as const;

@@ -34,7 +34,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns a paginated messaging list. */
   // SLA: FAST
-  @Get(['api/superadmin/messaging', 'api/superadmin/messaging'])
+  @Get(['superadmin/messaging', 'superadmin/messaging'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns the frontend-required tenant lookup for message recipients. */
   // SLA: FAST
-  @Get(['api/superadmin/messaging/tenants', 'api/superadmin/messaging/tenants'])
+  @Get(['superadmin/messaging/tenants', 'superadmin/messaging/tenants'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findTenants' })
   /**
@@ -74,7 +74,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns messages through the explicit frontend /messages resource contract. */
   // SLA: FAST
-  @Get(['api/superadmin/messaging/messages', 'api/superadmin/messaging/messages'])
+  @Get(['superadmin/messaging/messages', 'superadmin/messaging/messages'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findMessages' })
   /**
@@ -95,7 +95,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns one messaging record. */
   // SLA: FAST
-  @Get(['api/superadmin/messaging/:id', 'api/superadmin/messaging/:id'])
+  @Get(['superadmin/messaging/:id', 'superadmin/messaging/:id'])
   @ApiResponse({ type: SuperadminMessagingResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

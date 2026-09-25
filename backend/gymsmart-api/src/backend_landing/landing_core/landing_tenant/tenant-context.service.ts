@@ -2,7 +2,7 @@
 // FLOW: RequestContext â†’ MasterTenantRepository â†’ TenantContextService â†’ TenantDataSourceManager.
 import { ForbiddenException, Injectable } from '@nestjs/common';
 
-import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';
+import { AdminCoreRequestContextService as CoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service';
 
 import { MasterTenantRepository } from '@/backend_landing/landing_core/landing_tenant/master-tenant.repository';
 

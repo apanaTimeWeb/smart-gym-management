@@ -39,7 +39,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'create backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/system-ops/backups', 'api/superadmin/system-ops/backups'])
+  @Post(['superadmin/system-ops/backups', 'superadmin/system-ops/backups'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'update backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
+  @Patch(['superadmin/system-ops/backups/:id', 'superadmin/system-ops/backups/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'remove backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['api/superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
+  @Delete(['superadmin/system-ops/backups/:id', 'superadmin/system-ops/backups/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'changeStatus backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['api/superadmin/system-ops/backups/:id/status', 'api/superadmin/system-ops/backups/:id/status'])
+@Patch(['superadmin/system-ops/backups/:id/status', 'superadmin/system-ops/backups/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

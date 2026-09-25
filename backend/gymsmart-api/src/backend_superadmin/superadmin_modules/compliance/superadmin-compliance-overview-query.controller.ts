@@ -32,7 +32,7 @@ export class SuperadminComplianceOverviewQueryController {
 
   /** Executes GET /superadmin/compliance. */
   // SLA: FAST
-  @Get('api/superadmin/compliance')
+  @Get('superadmin/compliance')
   @ApiResponse({ type: SuperadminComplianceResponseDataDto })
   @ApiOperation({ summary: 'main' })
   /**

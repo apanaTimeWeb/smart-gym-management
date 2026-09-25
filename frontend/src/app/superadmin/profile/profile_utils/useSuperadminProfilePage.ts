@@ -24,7 +24,7 @@ export function useSuperadminProfilePage() {
     });
     const profile = profileRes?.data || null;
     const updatePersonalMutation = useMutation({
-        mutationFn: (payload: UpdateSuperadminProfilePayload) => superadminProfileApi.updateProfile(payload),
+        mutationFn: (payload: UpdateSuperadminProfilePayload) => superadminProfileApi.updateProfile(payload, crypto.randomUUID()),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
             toast.success(res.message, { id: 'superadmin-toast-2b82cf8178' });
@@ -34,7 +34,7 @@ export function useSuperadminProfilePage() {
         }
     });
     const updatePasswordMutation = useMutation({
-        mutationFn: (payload: UpdateSuperadminPasswordPayload) => superadminProfileApi.updatePassword(payload),
+        mutationFn: (payload: UpdateSuperadminPasswordPayload) => superadminProfileApi.updatePassword(payload, crypto.randomUUID()),
         onSuccess: (res) => {
             toast.success(res.message, { id: 'superadmin-toast-3cd3251f3d' });
         },
@@ -43,7 +43,7 @@ export function useSuperadminProfilePage() {
         }
     });
     const toggle2FAMutation = useMutation({
-        mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.updateTwoFactor(payload),
+        mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.updateTwoFactor(payload, crypto.randomUUID()),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
             toast.success(res.message, { id: 'superadmin-toast-770426e425' });

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Validates pagination, search, and sorting inputs for the features feature.
 // FLOW: HTTP query -> class-validator -> SuperadminFeaturesListQuery.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min} from 'class-validator';
+import { SuperadminCorePaginationQueryDto} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
 
 /**
  * Primary Intent: Defines SuperadminFeaturesQueryDto as the class-level contract for superadmin-features-query.dto.ts.
@@ -13,8 +13,8 @@ import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmi
 export class SuperadminFeaturesQueryDto extends SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   /** Optional case-insensitive search text. */
-  @IsOptional() @IsString() search?: string;@ApiPropertyOptional()
+  @IsOptional() @IsString() search?: string = undefined;@ApiPropertyOptional()
 
   /** Allowlisted sort field. */
-  @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';
-}
+  @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';}
+

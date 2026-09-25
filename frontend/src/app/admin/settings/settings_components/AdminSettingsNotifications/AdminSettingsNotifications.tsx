@@ -116,3 +116,4 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
     </form>
   );
 }
+

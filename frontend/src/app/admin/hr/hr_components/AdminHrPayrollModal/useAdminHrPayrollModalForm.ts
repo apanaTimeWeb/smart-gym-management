@@ -5,17 +5,25 @@
 import React, { useCallback, useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { useUnsavedChangesGuard } from '@/app/admin/admin_layout/admin_utils/useAdminUnsavedChangesGuard';
 import { EMPTY_PAYROLL_FORM } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { payrollSchema } from '@/app/admin/hr/hr_types/AdminHrSchemas';
 import type { PayrollFormValues } from '@/app/admin/hr/hr_types/AdminHrTypes';
+
+const payrollFormSchema = z.object({
+  staffId: z.string().min(1),
+  month: z.string().min(1),
+  amount: z.number().min(0),
+  paidAmount: z.number().min(0),
+  notes: z.string().optional(),
+});
 
 /** Owns payroll form state and derives the read-only amount from the selected staff record. */
 export function useAdminHrPayrollModalForm() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
   const [calculationInfo, setCalculationInfo] = React.useState('');
-  const form = useForm<PayrollFormValues>({    resolver: zodResolver(payrollSchema) as any, defaultValues: EMPTY_PAYROLL_FORM });
+  const form = useForm<PayrollFormValues>({    resolver: zodResolver(payrollFormSchema), defaultValues: EMPTY_PAYROLL_FORM });
   const { register, handleSubmit, reset, setValue, control, formState: { errors, isDirty } } = form;
   const { confirmDiscardIfDirty } = useUnsavedChangesGuard(isDirty);
   const formValues = useWatch({ control });

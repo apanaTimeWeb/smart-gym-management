@@ -24,7 +24,7 @@ describe('Manager Schedule user-visible behavior', () => {
   });
 it('renders the schedule empty search state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/schedule', () => HttpResponse.json({ success: true, message: 'Empty result', data: { trainers: [], kpis: { totalTrainers: 0, trainersOnDutyToday: 0, trainersOnLeaveToday: 0, totalShiftsThisWeek: 0, totalClassesThisWeek: 0, avgOccupancyRate: 0, totalEnrolledMembers: 0 } } }))
+      http.get('/manager/schedule', () => HttpResponse.json({ success: true, message: 'Empty result', data: { trainers: [], kpis: { totalTrainers: 0, trainersOnDutyToday: 0, trainersOnLeaveToday: 0, totalShiftsThisWeek: 0, totalClassesThisWeek: 0, avgOccupancyRate: 0, totalEnrolledMembers: 0 } } }))
     );
     render(<ManagerTestProviders><ManagerScheduleMain /></ManagerTestProviders>);
     expect(await screen.findByText('No trainers found')).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the schedule empty search state from an MSW response', async () => {
 
   it('renders the schedule error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/schedule', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/schedule', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerScheduleMain /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load schedule')).toBeInTheDocument();

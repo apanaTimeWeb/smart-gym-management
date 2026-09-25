@@ -18,7 +18,7 @@ def _headers() -> dict[str, str]:
     if TENANT_ID: headers["x-tenant-id"] = TENANT_ID
     return headers
 
-MUTATION_ROUTES = [('POST', '/api/gyms', 'REQ-040'), ('PATCH', '/api/gyms/00000000-0000-4000-8000-000000000001', 'REQ-041'), ('PATCH', '/api/gyms/00000000-0000-4000-8000-000000000001/status', 'REQ-042'), ('POST', '/api/gyms/00000000-0000-4000-8000-000000000001/impersonate', 'REQ-043'), ('DELETE', '/api/gyms/00000000-0000-4000-8000-000000000001', 'REQ-044'), ('POST', '/api/gyms/00000000-0000-4000-8000-000000000001/email', 'REQ-046'), ('POST', '/api/gyms/provision', 'REQ-048'), ('POST', '/auth/exit-ghost-login', 'REQ-049'), ('POST', '/auth/set-cookie', 'REQ-050'), ('POST', '/api/superadmin/gyms/business-controls', 'REQ-052')]
+MUTATION_ROUTES = [('POST', '/superadmin/gyms', 'REQ-040'), ('PATCH', '/superadmin/gyms/00000000-0000-4000-8000-000000000001', 'REQ-041'), ('PATCH', '/superadmin/gyms/00000000-0000-4000-8000-000000000001/status', 'REQ-042'), ('POST', '/superadmin/gyms/00000000-0000-4000-8000-000000000001/impersonate', 'REQ-043'), ('DELETE', '/superadmin/gyms/00000000-0000-4000-8000-000000000001', 'REQ-044'), ('POST', '/superadmin/gyms/00000000-0000-4000-8000-000000000001/email', 'REQ-046'), ('POST', '/superadmin/gyms/provision', 'REQ-048'), ('POST', '/superadmin/auth/exit-ghost-login', 'REQ-049'), ('POST', '/superadmin/auth/set-cookie', 'REQ-050'), ('POST', '/superadmin/gyms/business-controls', 'REQ-052')]
 
 
 @pytest.mark.parametrize("method,path,requirement", MUTATION_ROUTES)

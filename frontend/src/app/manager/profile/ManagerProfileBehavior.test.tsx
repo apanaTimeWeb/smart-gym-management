@@ -36,7 +36,7 @@ describe('Manager Profile user-visible behavior', () => {
   it('renders the module error state from an MSW failure', async () => {
     const { http, HttpResponse } = await import('msw');
     managerMswServer.use(
-      http.get('/api/v1/manager/profile', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/profile', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerProfileMain /></ManagerTestProviders>);
     expect(await screen.findByRole('alert')).toHaveTextContent('Unable to load profile.');

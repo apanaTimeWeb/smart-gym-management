@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_landing/landing_core/database/base.repository';
 
-import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';
+import { AdminCoreRequestContextService as CoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service';
 
 import { LandingAuditLogEntity } from '@/backend_landing/landing_modules/landing/landing_entities/landing-audit-log.entity';
 

@@ -13,7 +13,7 @@ BASE_URL = os.environ.get("SUPERADMIN_E2E_BASE_URL", "http://localhost:3000").rs
 TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 
-ROUTES = ['/api/superadmin/system-ops/backups', '/api/superadmin/system-ops/backups/health']
+ROUTES = ['/superadmin/system-ops/backups', '/superadmin/system-ops/backups/health']
 
 def _headers() -> dict[str, str]:
     if not TOKEN:
@@ -45,7 +45,7 @@ def test_superadmin_system_ops_backups_read_contract(path: str) -> None:
 def test_backup_trigger_is_async_and_preserves_frontend_null_payload():
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
-    response = httpx.post(f"{BASE_URL}/api/superadmin/system-ops/backups/trigger", headers={**_headers(), "Idempotency-Key": str(uuid.uuid4())}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/system-ops/backups/trigger", headers={**_headers(), "Idempotency-Key": str(uuid.uuid4())}, timeout=10)
     assert response.status_code == HTTPStatus.ACCEPTED
     payload = response.json()
     assert payload["success"] is True
@@ -59,19 +59,19 @@ def test_backup_restore_is_async_and_preserves_frontend_null_payload():
     BACKUP_ID = '00000000-0000-4000-8000-000000000001'
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
-    response = httpx.post(f"{BASE_URL}/api/superadmin/system-ops/backups/{BACKUP_ID}/restore", headers={**_headers(), "Idempotency-Key": str(uuid.uuid4())}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/system-ops/backups/{BACKUP_ID}/restore", headers={**_headers(), "Idempotency-Key": str(uuid.uuid4())}, timeout=10)
     assert response.status_code == HTTPStatus.ACCEPTED
     payload = response.json()
     assert payload["success"] is True
     assert payload["data"] is None
-    assert "/api/superadmin/system-ops/backups/jobs/" in response.headers.get("location", "")
+    assert "/superadmin/system-ops/backups/jobs/" in response.headers.get("location", "")
 
 
 
 def test_backup_trigger_requires_idempotency_key():
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
-    response = httpx.post(f"{BASE_URL}/api/superadmin/system-ops/backups/trigger", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/system-ops/backups/trigger", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=10)
     assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json()["data"] is None
 

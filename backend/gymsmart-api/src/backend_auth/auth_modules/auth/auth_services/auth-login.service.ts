@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Authenticates credentials, enforces Redis lockout, creates refresh sessions and records login audits.
+// RESPONSIBILITY: Authenticates credentials, enforces Redis lockout, creates refresh sessions and records login audits.
 // FLOW: AuthSessionOrchestrator -> AuthLoginService -> Redis/UserRepository -> token/session/audit boundaries.
 
 import { randomUUID } from 'node:crypto';
@@ -84,7 +84,7 @@ export class AuthLoginService {
     const expiresAt = new Date(Date.now() + this.refreshTtlMs());
     await this.sessionRepository.createRefreshSession(credentials.id, sessionId, this.tokenUtils.hashRefreshToken(refreshToken), expiresAt);
     const user: AuthUserDomain = { id: credentials.id, name: credentials.name, email: credentials.email, role: credentials.role, ...(credentials.tenantId ? { tenantId: credentials.tenantId } : {}) };
-    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.LOGIN_SUCCESS, entityType: 'auth_user', entityId: user.id, oldValue: null, newValue: { sessionId }, ipAddress: this.audit.getRequestMetadata().ipAddress });
+    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.LOGIN_SUCCESS, entityType: 'auth_user', entityId: user.id, oldValue: {}, newValue: { sessionId }, ipAddress: this.audit.getRequestMetadata().ipAddress });
     return { accessToken, refreshToken, user };
   }
 

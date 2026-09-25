@@ -31,7 +31,7 @@ export class SuperadminTicketsQueryController {
 
   /** Returns a paginated tickets list. */
   // SLA: FAST
-  @Get(['api/superadmin/tickets', 'api/superadmin/tickets'])
+  @Get(['superadmin/tickets', 'superadmin/tickets'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminTicketsQueryController {
 
   /** Returns one tickets record. */
   // SLA: FAST
-  @Get(['api/superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
+  @Get(['superadmin/tickets/:id', 'superadmin/tickets/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

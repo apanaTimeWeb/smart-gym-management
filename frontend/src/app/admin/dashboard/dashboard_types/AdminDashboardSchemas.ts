@@ -89,5 +89,18 @@ export const dashboardStatsSchema = z.object({
     expiringThisWeek: z.number().optional(),
     totalInquiriesOpen: z.number().optional(),
     avgAttendance: z.number().optional(),
-    renewalsPending: z.number().optional()
+    renewalsPending: z.number().optional(),
+    currency: z.string(),
+    expiringMemberships: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        branch: z.string(),
+        plan: z.string(),
+        expiryDate: z.string(),
+        daysLeft: z.number()
+    })).optional(),
+    attendanceTrend: z.array(z.object({
+        date: z.string(),
+        count: z.number()
+    })).optional()
 });

@@ -16,11 +16,18 @@ vi.mock('@/app/admin/blacklist/blacklist_api/AdminBlacklistApi', () => ({
     propagateToAllBranches: vi.fn(),
   },
 }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  usePathname: () => '/admin/blacklist',
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 function wrapper({ children }: { children: React.ReactNode }) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
+
+import { waitFor } from '@testing-library/react';
 
 describe('useAdminBlacklistLogic confirmation contract', () => {
   const confirm = vi.fn();
@@ -32,16 +39,18 @@ describe('useAdminBlacklistLogic confirmation contract', () => {
 
   it('requires confirmation before toggling blacklist status', async () => {
     const { result } = renderHook(() => useAdminBlacklistLogic(), { wrapper });
+    await waitFor(() => expect(result.current.status).toBe('success'));
     await act(async () => {
       await result.current.toggleBlacklist('m1');
     });
     expect(confirm).toHaveBeenCalledOnce();
-    expect(blacklistApi.toggleBlacklist).toHaveBeenCalledWith('m1');
+    expect(blacklistApi.toggleBlacklist).toHaveBeenCalledWith('m1', expect.any(String));
   });
 
   it('does not toggle when confirmation is declined', async () => {
     confirm.mockResolvedValueOnce(false);
     const { result } = renderHook(() => useAdminBlacklistLogic(), { wrapper });
+    await waitFor(() => expect(result.current.status).toBe('success'));
     await act(async () => {
       await result.current.toggleBlacklist('m1');
     });

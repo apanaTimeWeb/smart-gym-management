@@ -24,7 +24,7 @@ describe('Manager Referrals user-visible behavior', () => {
   });
 it('renders the referrals empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/referrals', () => HttpResponse.json({ success: true, message: 'Empty result', data: [], meta: { totalPages: 1, total: 0 } }))
+      http.get('/manager/referrals', () => HttpResponse.json({ success: true, message: 'Empty result', data: [], meta: { totalPages: 1, total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerReferralsMain /></ManagerTestProviders>);
     expect(await screen.findByText('No referrals found')).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the referrals empty state from an MSW response', async () => {
 
   it('renders the referrals error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/referrals', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/referrals', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerReferralsMain /></ManagerTestProviders>);
     expect(await screen.findByText(/Unable to load|Failed to load/i)).toBeInTheDocument();

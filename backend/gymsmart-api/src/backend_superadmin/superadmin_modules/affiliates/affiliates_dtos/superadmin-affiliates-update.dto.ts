@@ -26,7 +26,7 @@ export class SuperadminAffiliatesUpdateDto {
   /** Primary Intent: ISO 4217 currency override for future affiliate financial events. Edge Cases: Exactly three uppercase letters. Side-Effects: Changes currency provenance for future events. AI-Note: Do not alter historical ledger rows. */
   @ApiPropertyOptional({ example: 'INR' }) @IsOptional() @IsString() @Length(3, 3) @Matches(/^[A-Z]{3}$/) currency?: string;
   /** Primary Intent: Affiliate lifecycle status when explicitly changed by an authorized action. Edge Cases: Must match the domain enum. Side-Effects: Controls referral activity. AI-Note: Keep status transitions audited. */
-  @ApiPropertyOptional({ enum: AffiliateStatus }) @IsOptional() @IsEnum(AffiliateStatus) status?: AffiliateStatus;
+  @ApiPropertyOptional({ enum: AffiliateStatus }) @IsOptional() @IsEnum(AffiliateStatus) status?: AffiliateStatus = undefined;
   /** Primary Intent: Optional join date correction. Edge Cases: Parsed to UTC Date before persistence. Side-Effects: Reporting only. AI-Note: Do not use for payout accounting. */
   @ApiPropertyOptional({ type: String, format: 'date-time' }) @IsOptional() @Type(() => Date) @IsDate() joinedAt?: Date;
 }

@@ -24,3 +24,4 @@ export function AdminSettingsToggleSwitch({ checked, onChange, label }: AdminSet
     </div>
   );
 }
+

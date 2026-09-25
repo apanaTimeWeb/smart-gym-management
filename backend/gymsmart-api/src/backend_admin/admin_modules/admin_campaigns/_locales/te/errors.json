@@ -1,0 +1,7 @@
+{
+  "campaigns.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "campaigns.ERRORS.INVALID": "The request is invalid.",
+  "campaigns.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "campaigns.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "campaigns.ERRORS.REVOKED": "The refresh token has been revoked."
+}

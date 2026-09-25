@@ -43,7 +43,7 @@ describe('Manager Library user-visible flows', () => {
   });
 
   it('renders a real query error with a retry affordance', async () => {
-    managerMswServer.use(http.get('/api/v1/manager/library/diet-plans', () => HttpResponse.json({ success: false, message: 'Library temporarily unavailable', data: null }, { status: 500 })));
+    managerMswServer.use(http.get('/manager/library/diet-plans', () => HttpResponse.json({ success: false, message: 'Library temporarily unavailable', data: null }, { status: 500 })));
     render(<ManagerTestProviders><ManagerLibraryMain /></ManagerTestProviders>);
     expect(await screen.findByRole('alert')).toHaveTextContent('Library temporarily unavailable');
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();

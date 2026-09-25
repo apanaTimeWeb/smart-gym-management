@@ -36,7 +36,7 @@ export class SuperadminWhiteLabelingDomainsCommandController {
   // SLA: STANDARD
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: STANDARD
-@Patch(['api/superadmin/white-labeling/domains/:id/status', 'api/superadmin/white-labeling/domains/:id/status'])
+@Patch(['superadmin/white-labeling/domains/:id/status', 'superadmin/white-labeling/domains/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'status' })
   /**

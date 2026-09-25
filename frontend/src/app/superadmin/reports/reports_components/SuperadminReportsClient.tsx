@@ -46,7 +46,7 @@ export default function SuperadminReportsClient() {
   };
   const handleExportCSV = async () => {
     try {
-      const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+      const response = await fetch('/superadmin/export-data', { method: 'POST' });
       if (response.status === 202) {
         toast.success('Export started. A secure download link will be sent to your email.');
       } else {
@@ -71,3 +71,4 @@ export default function SuperadminReportsClient() {
     {tab==='revenue'?<SuperadminReportsRevenueTab revenueData={revenueData}/>:tab==='cancellations'?<SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={cancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={cancellationsData.length?Math.round(cancellationsData.reduce((sum,row)=>sum+row.daysActive,0)/cancellationsData.length):0}/>:<SuperadminReportsHealthTab sortedHealthData={healthData}/>}
   </div>);
 }
+

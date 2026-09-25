@@ -16,14 +16,14 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
   @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `search` data contract for this superadmin-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  search?: string;
+  search?: string = undefined;
 
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `status` data contract for this superadmin-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  status?: string;
+  status?: string = undefined;
 
   @IsOptional()
   @IsString()
@@ -81,12 +81,8 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   range?: string;
 
-  @IsOptional()
-  @IsString()
-  @ApiPropertyOptional({ required: false })
-  /** Primary Intent: Defines the `timeRange` data contract for this superadmin-query.dto construct.
- * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  timeRange?: string;
+
+
 
   @IsOptional()
   @IsString()
@@ -123,11 +119,12 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   targetVersion?: string;
 
+
   @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `order` data contract for this superadmin-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  order?: 'ASC' | 'DESC';
+  order?: 'ASC' | 'DESC' | 'asc' | 'desc' = undefined;
 
 }

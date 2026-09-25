@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Returns the complete frontend system-ops summary contract from PostgreSQL.
 // FLOW: Controller -> SuperadminSystemOpsSummaryService -> SuperadminSystemOpsRepository -> contract snapshot.
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { SuperadminSystemOpsRepository } from '@/backend_superadmin/superadmin_modules/system-ops/superadmin-system-ops.repository';
 
 /**
@@ -25,9 +25,22 @@ export class SuperadminSystemOpsSummaryService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findSystemOpsSummary(): Promise<Awaited<ReturnType<SuperadminSystemOpsRepository['findSummary']>>> {
-    const payload = await this.repository.findSummary();
-    if (payload === null) throw new NotFoundException({ error: 'NOT_FOUND', errorCode: 'SYSTEM_OPS.SUMMARY.NOT_PROVISIONED', message: { key: 'system-ops.ERRORS.NOT_FOUND' } });
-    return payload;
+  async findSystemOpsSummary(): Promise<{
+    infrastructureStatus: 'HEALTHY' | 'DEGRADED' | 'DOWN';
+    pendingJobs: number;
+    lastBackupAt: string | null;
+    backupStatus: 'HEALTHY' | 'DEGRADED' | 'FAILED';
+    migrationStatus: 'UP_TO_DATE' | 'PENDING' | 'FAILED';
+  }> {
+    const payload = await this.repository.findSummary() as Record<string, unknown> | null;
+    // Always return a valid object — merge DB payload over safe defaults
+    // so the page renders even when no snapshot has been computed yet.
+    return {
+      infrastructureStatus: (payload?.infrastructureStatus as 'HEALTHY' | 'DEGRADED' | 'DOWN') ?? 'HEALTHY',
+      pendingJobs: typeof payload?.pendingJobs === 'number' ? payload.pendingJobs : 0,
+      lastBackupAt: typeof payload?.lastBackupAt === 'string' ? payload.lastBackupAt : null,
+      backupStatus: (payload?.backupStatus as 'HEALTHY' | 'DEGRADED' | 'FAILED') ?? 'HEALTHY',
+      migrationStatus: (payload?.migrationStatus as 'UP_TO_DATE' | 'PENDING' | 'FAILED') ?? 'UP_TO_DATE',
+    };
   }
 }

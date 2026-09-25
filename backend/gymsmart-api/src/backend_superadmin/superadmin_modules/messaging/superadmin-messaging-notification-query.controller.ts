@@ -31,7 +31,7 @@ export class SuperadminMessagingNotificationQueryController {
   /** Lists notifications for the current Superadmin. */
   // SLA: STANDARD
   // SLA: FAST
-  @Get(['api/superadmin/messaging/notifications', 'api/superadmin/messaging/notifications'])
+  @Get(['superadmin/messaging/notifications', 'superadmin/messaging/notifications'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminMessagingNotificationResponseDto] })
   @ApiOperation({ summary: 'list' })
   /**

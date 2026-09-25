@@ -7,15 +7,15 @@ import { LoggerModule } from 'nestjs-pino';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 // Config Loaders
-import { CoreDatabaseConfig } from '@/backend_admin/core/config/core-database.config';
-import { CoreRuntimeConfig } from '@/backend_admin/core/config/core-runtime.config';
-import { CoreAppConfig } from '@/backend_admin/core/config/core-app.config';
+import { AdminCoreDatabaseConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-database.config';
+import { AdminCoreRuntimeConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-runtime.config';
+import { AdminCoreAppConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-app.config';
+import { AdminCoreMasterEntities } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-entities';
 import { CoreEnvironmentConfig } from '@/backend_auth/auth_core/config/core-environment.config';
 import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
 import superadminConfig from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
-
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
-import { AppModule as AdminAppModule } from '@/backend_admin/app.module';
+import { BackendAdminModule as AdminDomainModule } from '@/backend_admin/backend-admin.module';
 import { AuthModule } from '@/backend_auth/auth_modules/auth/auth.module';
 import { BackendSuperadminModule as SuperadminDomainModule } from '@/backend_superadmin/backend-superadmin.module';
 import { LandingModule } from '@/backend_landing/landing_modules/landing/landing.module';
@@ -23,11 +23,12 @@ import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/m
 import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
-import { CoreRateLimitGuard } from '@/backend_admin/core/auth/core-rate-limit.guard';
-import { CoreTenantContextInterceptor } from '@/backend_admin/core/context/core-tenant-context.interceptor';
-import { CoreResponseInterceptor } from '@/backend_admin/core/response/core-response.interceptor';
-import { CoreValidationExceptionFilter } from '@/backend_admin/core/response/core-validation-exception.filter';
-import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard';
+import { AdminCoreRateLimitGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-rate-limit.guard';
+import { AdminCoreTenantContextInterceptor } from '@/backend_admin/admin_core/admin_core_context/admin-core-tenant-context.interceptor';
+import { AdminCoreResponseInterceptor } from '@/backend_admin/admin_core/admin_core_response/admin-core-response.interceptor';
+import { AdminCoreValidationExceptionFilter } from '@/backend_admin/admin_core/admin_core_response/admin-core-validation-exception.filter';
+import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-roles.guard';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
     // 1. Unified Config
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [CoreDatabaseConfig, CoreRuntimeConfig, CoreAppConfig, CoreEnvironmentConfig, buildValidatedConfig, superadminConfig],
+      load: [AdminCoreDatabaseConfig, AdminCoreRuntimeConfig, AdminCoreAppConfig, CoreEnvironmentConfig, buildValidatedConfig, superadminConfig],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'test', 'staging', 'production').default('development'),
         PORT: Joi.number().port().default(5000),
@@ -72,6 +73,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
         password: config.getOrThrow<string>('MASTER_DB_PASSWORD'),
         database: config.getOrThrow<string>('MASTER_DB_NAME'),
         autoLoadEntities: true, // MAGIC: Automatically registers any entity provided by feature modules!
+        entities: AdminCoreMasterEntities, // Add master entities
         synchronize: false, // Schema managed via migrations to avoid multi-entity sync conflicts on shared tables (e.g. tenants)
         extra: {
           max: 20,
@@ -83,7 +85,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
     }),
 
     // 3. Domain Modules
-    AdminAppModule,
+    AdminDomainModule,
     AuthModule,
     SuperadminDomainModule,
     LandingModule,
@@ -92,11 +94,12 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
   ],
   providers: [
     // 4. Unified Global Guards and Interceptors
-    { provide: APP_GUARD, useClass: CoreRolesGuard },
-    { provide: APP_GUARD, useClass: CoreRateLimitGuard },
-    { provide: APP_INTERCEPTOR, useClass: CoreTenantContextInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: CoreResponseInterceptor },
-    { provide: APP_FILTER, useClass: CoreValidationExceptionFilter },
+    { provide: APP_GUARD, useClass: AdminCoreJwtAuthGuard },
+    { provide: APP_GUARD, useClass: AdminCoreRolesGuard },
+    { provide: APP_GUARD, useClass: AdminCoreRateLimitGuard },
+    { provide: APP_INTERCEPTOR, useClass: AdminCoreTenantContextInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: AdminCoreResponseInterceptor },
+    { provide: APP_FILTER, useClass: AdminCoreValidationExceptionFilter },
     { provide: 'CONFIG_PORT', useFactory: (config: ConfigService) => config.get<number>('PORT', 3000), inject: [ConfigService] },
     { provide: 'CONFIG_CORS_ALLOWED_ORIGINS', useFactory: (config: ConfigService) => config.get<string>('CORS_ALLOWED_ORIGINS', '').split(',').map((v: string) => v.trim()).filter(Boolean), inject: [ConfigService] },
   ],

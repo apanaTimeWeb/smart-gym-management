@@ -33,7 +33,7 @@ export class SuperadminUsageMetersAnalyticsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/usage-meters', 'api/superadmin/usage-meters'])
+@Get(['superadmin/usage-meters', 'superadmin/usage-meters'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'main' })
   /**

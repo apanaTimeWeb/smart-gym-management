@@ -67,7 +67,7 @@ export class SuperadminGymsOperationalService {
    * Side-Effects: Only the documented persistence, cache, queue, event, or adapter effects of this method are allowed.
    * AI-Note: Preserve the explicit return type, single responsibility, dependency boundary, and repository/service separation when repairing this method.
    */
-  async exportGyms(input:{search?:string;status?:string;plan?:string}={}):Promise<{jobId:string;statusUrl:string;downloadUrl:string}>{ const actor=getRequestContext()?.userId; if(!actor) throw new BadRequestException({error:'BAD_REQUEST',errorCode:'GYMS.EXPORT.ACTOR_REQUIRED',message:{key:'gyms.ERRORS.BAD_REQUEST'}}); const job=await this.jobs.create({requestedByUserId:actor,search:input.search?.trim()||null,statusFilter:input.status?.trim()||null,planFilter:input.plan?.trim()||null}); await this.queue.enqueue({jobId:job.id,queueName:SUPERADMIN_GYMS_EXPORT_QUEUE,tenantId:null,payload:{search:job.search??undefined,status:job.statusFilter??undefined,plan:job.planFilter??undefined},enqueuedAt:new Date().toISOString()}); return {jobId:job.id,statusUrl:`/api/gyms/export/${job.id}`,downloadUrl:`/api/gyms/export/${job.id}/download?token=${encodeURIComponent(this.downloadTokens.create(job.id))}`}; }
+  async exportGyms(input:{search?:string;status?:string;plan?:string}={}):Promise<{jobId:string;statusUrl:string;downloadUrl:string}>{ const actor=getRequestContext()?.userId; if(!actor) throw new BadRequestException({error:'BAD_REQUEST',errorCode:'GYMS.EXPORT.ACTOR_REQUIRED',message:{key:'gyms.ERRORS.BAD_REQUEST'}}); const job=await this.jobs.create({requestedByUserId:actor,search:input.search?.trim()||null,statusFilter:input.status?.trim()||null,planFilter:input.plan?.trim()||null}); await this.queue.enqueue({jobId:job.id,queueName:SUPERADMIN_GYMS_EXPORT_QUEUE,tenantId:null,payload:{search:job.search??undefined,status:job.statusFilter??undefined,plan:job.planFilter??undefined},enqueuedAt:new Date().toISOString()});         return {jobId:job.id,statusUrl:`/superadmin/gyms/export/${job.id}`,downloadUrl:`${process.env.API_URL || 'http://localhost:5000'}/superadmin/gyms/export/${job.id}/download?token=${encodeURIComponent(this.downloadTokens.create(job.id))}`}; }
 
   /**
    * Primary Intent: Serves the legacy frontend GET export contract by reusing an existing equivalent active job when possible, otherwise queueing a new async job.
@@ -79,7 +79,9 @@ export class SuperadminGymsOperationalService {
     const actor=getRequestContext()?.userId;
     if(!actor) throw new BadRequestException({error:'BAD_REQUEST',errorCode:'GYMS.EXPORT.ACTOR_REQUIRED',message:{key:'gyms.ERRORS.BAD_REQUEST'}});
     const existing=await this.jobs.findLatestEquivalent(actor,input.search?.trim()||null,input.status?.trim()||null,input.plan?.trim()||null);
-    if(existing) return {jobId:existing.id,statusUrl:`/api/gyms/export/${existing.id}`,downloadUrl:`/api/gyms/export/${existing.id}/download?token=${encodeURIComponent(this.downloadTokens.create(existing.id))}`};
+    if(existing) return {jobId:existing.id,statusUrl:`/superadmin/gyms/export/${existing.id}`,downloadUrl:`${process.env.API_URL || 'http://localhost:5000'}/superadmin/gyms/export/${existing.id}/download?token=${encodeURIComponent(this.downloadTokens.create(existing.id))}`};
     return this.exportGyms(input);
   }
 }
+
+

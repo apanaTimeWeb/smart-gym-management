@@ -15,7 +15,7 @@ TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 def test_export_requires_idempotency_key() -> None:
     if not TOKEN:
         pytest.skip("SUPERADMIN_E2E_ACCESS_TOKEN is required for live API verification")
-    response = httpx.post(f"{BASE_URL}/api/superadmin/export-data", headers={"Authorization": f"Bearer {TOKEN}"}, json={}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/export-data", headers={"Authorization": f"Bearer {TOKEN}"}, json={}, timeout=10)
     assert response.status_code == HTTPStatus.BAD_REQUEST, response.text
     payload = response.json()
     assert payload["success"] is False
@@ -24,7 +24,7 @@ def test_export_requires_idempotency_key() -> None:
 def test_export_starts_asynchronously() -> None:
     if not TOKEN:
         pytest.skip("SUPERADMIN_E2E_ACCESS_TOKEN is required for live API verification")
-    response = httpx.post(f"{BASE_URL}/api/superadmin/export-data", headers={"Authorization": f"Bearer {TOKEN}", "Idempotency-Key": str(uuid.uuid4())}, json={}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/export-data", headers={"Authorization": f"Bearer {TOKEN}", "Idempotency-Key": str(uuid.uuid4())}, json={}, timeout=10)
     assert response.status_code == HTTPStatus.ACCEPTED, response.text
     payload = response.json()
     assert payload["success"] is True

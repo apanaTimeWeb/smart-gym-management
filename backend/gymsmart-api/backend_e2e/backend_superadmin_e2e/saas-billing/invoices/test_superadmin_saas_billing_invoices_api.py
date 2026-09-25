@@ -14,7 +14,7 @@ TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 INVOICE_ID = os.environ.get("SUPERADMIN_E2E_INVOICE_ID")
 
-ROUTES = ['/api/superadmin/saas-billing/invoices', '/api/superadmin/saas-billing/invoices/recovery-center']
+ROUTES = ['/superadmin/saas-billing/invoices', '/superadmin/saas-billing/invoices/recovery-center']
 
 def _headers() -> dict[str, str]:
     if not TOKEN:
@@ -48,7 +48,7 @@ def test_invoice_resend_preserves_frozen_null_payload_and_exposes_job_location()
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
-        f"{BASE_URL}/api/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
+        f"{BASE_URL}/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
         headers={"Authorization": f"Bearer {TOKEN}", "Idempotency-Key": str(uuid.uuid4())},
         timeout=10,
     )
@@ -66,7 +66,7 @@ def test_invoice_resend_requires_idempotency_key():
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
-        f"{BASE_URL}/api/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
+        f"{BASE_URL}/superadmin/saas-billing/invoices/{INVOICE_ID}/resend",
         headers={"Authorization": f"Bearer {TOKEN}"},
         timeout=10,
     )

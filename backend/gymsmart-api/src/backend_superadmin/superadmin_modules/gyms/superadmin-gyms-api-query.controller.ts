@@ -48,7 +48,7 @@ export class SuperadminGymsApiQueryController {
   /** Returns the tenant collection consumed by frontend /api/gyms callers. */
   // SLA: STANDARD
   // SLA: FAST
-  @Get('api/gyms')
+  @Get('superadmin/gyms')
   @ApiOperation({ summary: 'List gyms via frontend-compatible /api path' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Paginated gym response.' })
   /**
@@ -70,7 +70,7 @@ export class SuperadminGymsApiQueryController {
   /** Returns fixed aggregate statistics for the gyms landing page. */
   // SLA: STANDARD
   // SLA: FAST
-  @Get('api/gyms/stats')
+  @Get('superadmin/gyms/stats')
   @ApiOperation({ summary: 'Return gym aggregate statistics' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Tenant statistics.' })
   /**
@@ -91,7 +91,7 @@ export class SuperadminGymsApiQueryController {
 
   /** Returns durable export job status. */
   // SLA: HEAVY
-  @Get('api/gyms/export/:jobId')
+  @Get('superadmin/gyms/export/:jobId')
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGymsExportJobStatusResponseDto, description: 'Gym export job status.' })
   @ApiOperation({ summary: 'exportStatus' })
   /**
@@ -113,7 +113,7 @@ export class SuperadminGymsApiQueryController {
   /** Streams a completed protected Gym CSV export artifact after token verification. */
   @Public()
   // SLA: HEAVY
-  @Get('api/gyms/export/:jobId/download')
+  @Get('superadmin/gyms/export/:jobId/download')
   @ApiResponse({ status: HttpStatus.OK, description: 'Gym CSV export. Requires a short-lived signed download token.' })
   @ApiOperation({ summary: 'exportDownload' })
   /**
@@ -140,7 +140,7 @@ export class SuperadminGymsApiQueryController {
   /** Returns one tenant by identifier through the frontend-compatible alias. */
   // SLA: STANDARD
   // SLA: FAST
-  @Get('api/gyms/:id')
+  @Get('superadmin/gyms/:id')
   @ApiOperation({ summary: 'Find one gym via frontend-compatible /api path' })
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGymsResponseDto })
   /**

@@ -38,7 +38,7 @@ export class SuperadminAnalyticsCommandController {
   @ApiOperation({ summary: 'create analytics' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/analytics', 'api/superadmin/analytics'])
+  @Post(['superadmin/analytics', 'superadmin/analytics'])
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminAnalyticsResponseDto })
@@ -61,7 +61,7 @@ export class SuperadminAnalyticsCommandController {
   @ApiOperation({ summary: 'update analytics' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/analytics/:id', 'api/superadmin/analytics/:id'])
+  @Patch(['superadmin/analytics/:id', 'superadmin/analytics/:id'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminAnalyticsResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -83,7 +83,7 @@ export class SuperadminAnalyticsCommandController {
   @ApiOperation({ summary: 'remove analytics' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['api/superadmin/analytics/:id', 'api/superadmin/analytics/:id'])
+@Delete(['superadmin/analytics/:id', 'superadmin/analytics/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

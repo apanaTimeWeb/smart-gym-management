@@ -86,7 +86,7 @@ export class SuperadminCoreAuditTrailSubscriber implements EntitySubscriberInter
     if (event.metadata.tableName === 'audit_logs') return;
     const context = getRequestContext();
     await event.manager.query('INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, old_value, new_value, ip_address, tenant_id, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,$9,$10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)', [
-      randomUUID(), context?.userId ?? 'SYSTEM', context?.userRole ?? 'SYSTEM', action, event.metadata.tableName, this.entityId(event), JSON.stringify(oldValue ?? null), JSON.stringify(newValue ?? null), context?.ipAddress ?? 'worker', context?.tenantId ?? null,
+      randomUUID(), context?.userId ?? 'SYSTEM', context?.userRole ?? 'SYSTEM', action, event.metadata.tableName, this.entityId(event), JSON.stringify(oldValue ?? {}), JSON.stringify(newValue ?? {}), context?.ipAddress ?? 'worker', context?.tenantId ?? null,
     ]);
   }
 

@@ -80,4 +80,5 @@ export interface DashboardStats {
   renewalsPending?: number;
   expiringMemberships?: ExpiringMembership[];
   attendanceTrend?: AttendanceTrendPoint[];
+  currency: string;
 }

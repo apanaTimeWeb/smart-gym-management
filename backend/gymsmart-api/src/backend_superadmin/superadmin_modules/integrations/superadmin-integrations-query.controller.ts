@@ -32,7 +32,7 @@ export class SuperadminIntegrationsQueryController {
 
   /** Returns one integrations record. */
   // SLA: FAST
-  @Get(['api/superadmin/integrations/:id', 'api/superadmin/integrations/:id'])
+  @Get(['superadmin/integrations/:id', 'superadmin/integrations/:id'])
   @ApiResponse({ type: SuperadminIntegrationsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

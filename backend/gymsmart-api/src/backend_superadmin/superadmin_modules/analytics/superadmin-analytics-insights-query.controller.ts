@@ -34,7 +34,7 @@ export class SuperadminAnalyticsInsightsQueryController {
 
   /** Executes GET /superadmin/analytics. */
   // SLA: FAST
-  @Get('api/superadmin/analytics')
+  @Get('superadmin/analytics')
   @ApiResponse({ type: SuperadminAnalyticsResponseDto })
   @ApiOperation({ summary: 'main' })
   /**
@@ -55,7 +55,7 @@ export class SuperadminAnalyticsInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/analytics/retention-insights', 'api/superadmin/analytics/retention-insights'])
+@Get(['superadmin/analytics/retention-insights', 'superadmin/analytics/retention-insights'])
   @ApiResponse({ type: SuperadminAnalyticsRetentionInsightsResponseDto })
   @ApiOperation({ summary: 'retentionInsights' })
   /**

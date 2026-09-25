@@ -25,7 +25,7 @@ describe('Manager Inquiries user-visible behavior', () => {
 
   it('renders the module empty state from an MSW empty response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/inquiries', () => HttpResponse.json({ success: true, message: 'Empty result', data: { inquiries : [], total: 0 } }))
+      http.get('/manager/inquiries', () => HttpResponse.json({ success: true, message: 'Empty result', data: { inquiries : [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
     expect(await screen.findByText('No inquiries yet. Add your first inquiry!')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('Manager Inquiries user-visible behavior', () => {
 
   it('renders a user-facing error state when the module API fails', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/inquiries', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/inquiries', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
     const errorText = await screen.findByText(/Failed to load/i);

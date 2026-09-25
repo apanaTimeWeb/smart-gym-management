@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoreRequestContextService as GlobalContextService } from '@/backend_admin/core/context/core-request-context.service';
+import { AdminCoreRequestContextService as GlobalContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service';
 import type { CoreRequestContext } from '@/backend_manager/core/context/core-request-context.types';
 import { CoreRole } from '@/backend_manager/core/auth/core-role.constants';
 

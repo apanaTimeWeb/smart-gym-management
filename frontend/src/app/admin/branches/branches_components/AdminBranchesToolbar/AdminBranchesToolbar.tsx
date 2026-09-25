@@ -30,11 +30,11 @@ export default function AdminBranchesToolbar() {
           </div>
           <div className="w-full sm:w-44">
             <label htmlFor="admin-branches-status" className="sr-only">Filter branch status</label>
-            <AdminSearchableDropdown options={BRANCH_STATUS_OPTIONS as any} value={statusFilter} onChange={(value) => setStatusFilter(value as typeof statusFilter)} placeholder="All Statuses" />
+            <AdminSearchableDropdown options={BRANCH_STATUS_OPTIONS as {value: string; label: string}[]} value={statusFilter} onChange={(value) => setStatusFilter(value as typeof statusFilter)} placeholder="All Statuses" />
           </div>
           <div className="w-full sm:w-44">
             <label htmlFor="admin-branches-range" className="sr-only">Select date range</label>
-            <AdminSearchableDropdown options={BRANCH_TIME_RANGE_OPTIONS as any} value={timeRange} onChange={(value) => setTimeRange(value as typeof timeRange)} placeholder="Select range" />
+            <AdminSearchableDropdown options={BRANCH_TIME_RANGE_OPTIONS as {value: string; label: string}[]} value={timeRange} onChange={(value) => setTimeRange(value as typeof timeRange)} placeholder="Select range" />
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ export function AdminSettingsRoles() {
         </div>
       </div>
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-        {roles.map((role: any) => {
+        {roles.map((role) => {
           const granted = Object.values(role.permissions).filter(Boolean).length;
           const total = Object.keys(role.permissions).length;
           return (
@@ -49,3 +49,4 @@ export function AdminSettingsRoles() {
     </div>
   );
 }
+

@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Validates pagination, search, and sorting inputs for the gyms feature.
 // FLOW: HTTP query -> class-validator -> SuperadminGymsListQuery.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString } from 'class-validator';
-import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import { IsIn, IsOptional, IsString} from 'class-validator';
+import { SuperadminCorePaginationQueryDto} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
 
 /**
  * Primary Intent: Defines SuperadminGymsQueryDto as the class-level contract for superadmin-gyms-query.dto.ts.
@@ -13,11 +13,12 @@ import { SuperadminCorePaginationQueryDto } from '@/backend_superadmin/superadmi
 export class SuperadminGymsQueryDto extends SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   /** Optional case-insensitive search text. */
-  @IsOptional() @IsString() search?: string;@ApiPropertyOptional()
+  @IsOptional() @IsString() search?: string = undefined;@ApiPropertyOptional()
 
   /** Allowlisted sort field. */
   @IsOptional() @IsIn(['createdAt', 'updatedAt', 'name', 'ownerName', 'adminEmail', 'phone', 'plan', 'databaseVersion', 'city', 'state', 'memberCount', 'lastActiveAt']) sortBy = 'createdAt';@ApiPropertyOptional()
 
   /** Frontend-compatible lowercase sort direction alias. */
-  @IsOptional() @IsIn(['asc', 'desc']) order?: 'asc' | 'desc';
-}
+  @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order?: 'asc' | 'desc' = undefined;}
+
+

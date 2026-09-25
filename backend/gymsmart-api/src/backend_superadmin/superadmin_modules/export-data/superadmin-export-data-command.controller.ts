@@ -35,7 +35,7 @@ export class SuperadminExportDataCommandController {
   @ApiOperation({ summary: 'Start asynchronous Superadmin export job' })
   @RequireIdempotencyKey()
   // SLA: HEAVY
-  @Post('api/superadmin/export-data')
+  @Post('superadmin/export-data')
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.ACCEPTED, type: SuperadminExportDataAcceptedResponseDto })

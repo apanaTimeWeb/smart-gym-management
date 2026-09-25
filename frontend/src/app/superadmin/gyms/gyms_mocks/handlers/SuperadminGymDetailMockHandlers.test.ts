@@ -15,10 +15,11 @@ describe('Superadmin Gym 360 MSW integration', () => {
     const ids = Object.keys(SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES);
     expect(ids).toHaveLength(24);
     for (const gymId of ids) {
-      const response = await fetch(`http://localhost/api/superadmin/gym-detail/business-overview?gymId=${gymId}`);
+      const response = await fetch(`http://localhost/superadmin/gym-detail/business-overview?gymId=${gymId}`);
       expect(response.ok).toBe(true);
       const body = await response.json();
       expect(body.data.gymId).toBe(gymId);
     }
   });
 });
+

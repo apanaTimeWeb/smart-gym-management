@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Defines Auth session transaction boundaries without owning credential or token business rules.
+// RESPONSIBILITY: Defines Auth session transaction boundaries without owning credential or token business rules.
 // FLOW: AuthCommandController -> AuthSessionOrchestrator -> CoreTransactionService -> Auth micro-services/repositories.
 
 import { createHash } from 'node:crypto';
@@ -64,12 +64,12 @@ export class AuthSessionOrchestrator {
     if (!(error instanceof AuthInvalidCredentialsException) && !(error instanceof AuthAccountLockedException)) return;
     const isLocked = error instanceof AuthAccountLockedException;
     await this.audit.record({
-      actorId: null,
+      actorId: '00000000-0000-0000-0000-000000000000',
       actorRole: null,
       action: isLocked ? AuthConstants.AUDIT.ACCOUNT_LOCKED : AuthConstants.AUDIT.LOGIN_FAILED,
       entityType: 'auth_user',
       entityId: null,
-      oldValue: null,
+      oldValue: {},
       newValue: { emailHash: this.emailHash(email) },
       ipAddress: this.audit.getRequestMetadata().ipAddress,
     });
@@ -85,7 +85,7 @@ export class AuthSessionOrchestrator {
         action: AuthConstants.AUDIT.REFRESH_REUSE,
         entityType: 'auth_refresh_session',
         entityId: error.sessionId,
-        oldValue: null,
+        oldValue: {},
         newValue: { sessionRevoked: true },
         ipAddress: this.audit.getRequestMetadata().ipAddress,
       });

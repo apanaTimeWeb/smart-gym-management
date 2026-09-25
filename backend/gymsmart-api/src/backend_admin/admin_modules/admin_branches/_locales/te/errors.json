@@ -1,0 +1,7 @@
+{
+  "branches.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "branches.ERRORS.INVALID": "The request is invalid.",
+  "branches.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "branches.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "branches.ERRORS.REVOKED": "The refresh token has been revoked."
+}

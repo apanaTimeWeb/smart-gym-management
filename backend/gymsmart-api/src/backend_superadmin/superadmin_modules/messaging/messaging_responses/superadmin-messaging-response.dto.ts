@@ -42,4 +42,6 @@ export class SuperadminMessagingResponseDto {
   /** Primary Intent: Defines the `scheduledAt` data contract for this superadmin-messaging-response.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   scheduledAt!: string | null;
+  @ApiPropertyOptional()
+  createdAt!: string;
 }

@@ -10,7 +10,7 @@ export default function SuperadminReportsV1ComparisonControls({ data, period, se
   const metrics = useMemo(() => getSuperadminReportsV1ComparisonMetrics(data, period, segment), [data, period, segment]);
   const handleExport = async () => {
     try {
-      const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+      const response = await fetch('/superadmin/export-data', { method: 'POST' });
       if (response.status === 202) {
         toast.success('Export started. A secure download link will be sent to your email.');
       } else {
@@ -29,3 +29,4 @@ export default function SuperadminReportsV1ComparisonControls({ data, period, se
     <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm"><caption className="sr-only">{segmentLabel} report comparison for {periodLabel}</caption><thead><tr className="border-b border-border bg-input"><th scope="col" className="px-3 py-2 text-left text-xs uppercase text-secondary">Metric</th><th scope="col" className="px-3 py-2 text-right text-xs uppercase text-secondary">Current</th><th scope="col" className="px-3 py-2 text-right text-xs uppercase text-secondary">Previous</th><th scope="col" className="px-3 py-2 text-right text-xs uppercase text-secondary">Change</th></tr></thead><tbody className="divide-y divide-border">{metrics.map((metric) => <tr key={metric.name}><td className="px-3 py-2 text-primary">{metric.name}</td><td className="px-3 py-2 text-right text-primary">{formatNumber(metric.current)}</td><td className="px-3 py-2 text-right text-secondary">{formatNumber(metric.previous)}</td><td className="px-3 py-2 text-right text-secondary">{formatDecimal(metric.change, 1)}%</td></tr>)}</tbody></table></div>
   </div>;
 }
+

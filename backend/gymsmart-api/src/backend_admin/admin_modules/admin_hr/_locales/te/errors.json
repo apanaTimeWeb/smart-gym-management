@@ -1,0 +1,7 @@
+{
+  "hr.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "hr.ERRORS.INVALID": "The request is invalid.",
+  "hr.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "hr.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "hr.ERRORS.REVOKED": "The refresh token has been revoked."
+}

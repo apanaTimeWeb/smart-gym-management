@@ -31,7 +31,7 @@ export class SuperadminSettingsQueryController {
 
   /** Returns a paginated settings list. */
   // SLA: FAST
-  @Get(['api/superadmin/settings', 'api/superadmin/settings'])
+  @Get(['superadmin/settings', 'superadmin/settings'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSettingsQueryController {
 
   /** Returns one settings record. */
   // SLA: FAST
-  @Get(['api/superadmin/settings/:id', 'api/superadmin/settings/:id'])
+  @Get(['superadmin/settings/:id', 'superadmin/settings/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

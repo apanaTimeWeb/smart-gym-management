@@ -33,7 +33,7 @@ export class SuperadminSystemOpsInfrastructureTelemetryQueryController {
 
   /** Executes GET /superadmin/system-ops/infrastructure/redis. */
   // SLA: FAST
-  @Get('api/superadmin/system-ops/infrastructure/redis')
+  @Get('superadmin/system-ops/infrastructure/redis')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'redis' })
   /**
@@ -52,10 +52,10 @@ export class SuperadminSystemOpsInfrastructureTelemetryQueryController {
 
   /** Executes GET /superadmin/system-ops/infrastructure/uptime. */
   // SLA: FAST
-  @Get('api/superadmin/system-ops/infrastructure/uptime')
+  @Get('superadmin/system-ops/infrastructure/uptime')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-  @Get('api/superadmin/system-ops/infrastructure/uptime-history')
+  @Get('superadmin/system-ops/infrastructure/uptime-history')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'uptime' })
   /**
@@ -76,7 +76,7 @@ export class SuperadminSystemOpsInfrastructureTelemetryQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/system-ops/infrastructure/api-health', 'api/superadmin/system-ops/infrastructure/api-health'])
+@Get(['superadmin/system-ops/infrastructure/api-health', 'superadmin/system-ops/infrastructure/api-health'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'apiHealth' })
   /**

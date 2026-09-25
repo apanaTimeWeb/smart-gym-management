@@ -27,7 +27,7 @@ describe('Manager Store user-visible behavior', () => {
 
   it('renders the module empty state from an MSW empty response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/store/products', () => HttpResponse.json({ success: true, message: 'Empty result', data: { products : [], total: 0 } }))
+      http.get('/manager/store/products', () => HttpResponse.json({ success: true, message: 'Empty result', data: { products : [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerStoreMain initialData={undefined} /></ManagerTestProviders>);
     expect(await screen.findByText('No products added yet.')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('Manager Store user-visible behavior', () => {
 
   it('renders a user-facing error state when the module API fails', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/store/products', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/store/products', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerStoreMain initialData={undefined} /></ManagerTestProviders>);
     const errorText = await screen.findByText(/Failed to load/i);

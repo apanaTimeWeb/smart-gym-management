@@ -31,7 +31,7 @@ export class SuperadminSystemOpsJobsQueryController {
 
   /** Returns a paginated jobs list. */
   // SLA: FAST
-  @Get(['api/superadmin/system-ops/jobs', 'api/superadmin/system-ops/jobs'])
+  @Get(['superadmin/system-ops/jobs', 'superadmin/system-ops/jobs'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSystemOpsJobsQueryController {
 
   /** Returns one jobs record. */
   // SLA: FAST
-  @Get(['api/superadmin/system-ops/jobs/:id', 'api/superadmin/system-ops/jobs/:id'])
+  @Get(['superadmin/system-ops/jobs/:id', 'superadmin/system-ops/jobs/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

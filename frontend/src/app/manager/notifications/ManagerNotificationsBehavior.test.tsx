@@ -24,7 +24,7 @@ describe('Manager Notifications user-visible behavior', () => {
   });
 it('renders the notifications empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/notifications', () => HttpResponse.json({ success: true, message: 'Empty result', data: { notifications: [], total: 0 } }))
+      http.get('/manager/notifications', () => HttpResponse.json({ success: true, message: 'Empty result', data: { notifications: [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerNotificationsMain /></ManagerTestProviders>);
     expect(await screen.findByText('No notifications found')).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the notifications empty state from an MSW response', async () => {
 
   it('renders the notifications error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/notifications', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/notifications', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerNotificationsMain /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load notifications')).toBeInTheDocument();

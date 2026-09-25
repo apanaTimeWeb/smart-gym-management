@@ -18,7 +18,7 @@ import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modul
  * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
-@ApiTags('gyms')
+@ApiTags('superadmin/gyms')
 @Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
@@ -33,7 +33,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns a paginated gyms list. */
   // SLA: FAST
-  @Get(['api/superadmin/gyms', 'api/superadmin/gyms'])
+  @Get(['superadmin/gyms', 'superadmin/gyms'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns the Gym export resource URI. */
   // SLA: HEAVY
-  @Get(['api/superadmin/gyms/export', 'api/superadmin/gyms/export'])
+  @Get(['superadmin/gyms/export', 'superadmin/gyms/export'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'export' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns one gyms record. */
   // SLA: FAST
-  @Get(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Get(['superadmin/gyms/:id', 'superadmin/gyms/:id'])
   @ApiResponse({ type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

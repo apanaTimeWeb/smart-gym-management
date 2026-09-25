@@ -28,7 +28,7 @@ export class SuperadminSystemOpsBackupsDownloadService {
   async findBackupsDownload(id:string):Promise<{downloadUrl:string;expiresAt:string}> {
     await this.repository.findCompletedWithArtifactOrThrow(id);
     const expiresAt=new Date(Date.now()+24*60*60*1000).toISOString();
-    return { downloadUrl:`/superadmin/system-ops/backups/${encodeURIComponent(id)}/download/file`, expiresAt };
+    return { downloadUrl:`${process.env.API_URL ?? ''}/superadmin/system-ops/backups/${encodeURIComponent(id)}/download/file`, expiresAt };
   }
 
   /**

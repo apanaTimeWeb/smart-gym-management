@@ -24,7 +24,7 @@ describe('Manager Expenses user-visible behavior', () => {
   });
 it('renders the expenses empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/expenses', () => HttpResponse.json({ success: true, message: 'Empty result', data: { expenses: [], total: 0, page: 1, limit: 10 } }))
+      http.get('/manager/expenses', () => HttpResponse.json({ success: true, message: 'Empty result', data: { expenses: [], total: 0, page: 1, limit: 10 } }))
     );
     render(<ManagerTestProviders><ManagerExpensesMain /></ManagerTestProviders>);
     expect(await screen.findByText('No expenses found')).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the expenses empty state from an MSW response', async () => {
 
   it('renders the expenses error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/expenses', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/expenses', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerExpensesMain /></ManagerTestProviders>);
     expect(await screen.findByText(/Unable to load expenses|Failed to load expenses/i)).toBeInTheDocument();

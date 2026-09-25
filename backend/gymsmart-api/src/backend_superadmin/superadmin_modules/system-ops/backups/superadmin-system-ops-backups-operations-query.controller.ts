@@ -41,7 +41,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
   /** Returns the persisted backup schedule required by the frontend. */
   // SLA: HEAVY
   // SLA: FAST
-  @Get('api/superadmin/system-ops/backups/schedule')
+  @Get('superadmin/system-ops/backups/schedule')
   @ApiResponse({status:HttpStatus.OK,description:'Persisted backup schedule.'})
   @ApiOperation({ summary: 'schedule' })
   /**
@@ -63,7 +63,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
   /** Returns live backup health from persisted backup records. */
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/system-ops/backups/health', 'api/superadmin/system-ops/backups/health'])
+@Get(['superadmin/system-ops/backups/health', 'superadmin/system-ops/backups/health'])
   @ApiResponse({status:HttpStatus.OK,description:'Backup health.'})
   @ApiOperation({ summary: 'health' })
   /**
@@ -85,7 +85,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
   /** Returns a durable job status for polling. */
   // SLA: HEAVY
   // SLA: FAST
-  @Get('api/superadmin/system-ops/backups/jobs/:jobId')
+  @Get('superadmin/system-ops/backups/jobs/:jobId')
   @ApiResponse({status:HttpStatus.OK,type:SuperadminSystemOpsBackupsJobStatusResponseDto,description:'Backup job status.'})
   @ApiOperation({ summary: 'jobStatus' })
   /**
@@ -104,7 +104,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
 
   /** Returns the protected application download resource metadata. */
   // SLA: HEAVY
-  @Get('api/superadmin/system-ops/backups/:id/download')
+  @Get('superadmin/system-ops/backups/:id/download')
   @ApiResponse({status:HttpStatus.OK,description:'Protected backup download URL.'})
   @ApiOperation({ summary: 'download' })
   /**
@@ -123,7 +123,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
 
   /** Streams a completed backup artifact from protected storage after authorization. */
   // SLA: HEAVY
-  @Get('api/superadmin/system-ops/backups/:id/download/file')
+  @Get('superadmin/system-ops/backups/:id/download/file')
   @ApiResponse({status:HttpStatus.OK,description:'Protected backup artifact.'})
   @ApiOperation({ summary: 'downloadFile' })
   /**

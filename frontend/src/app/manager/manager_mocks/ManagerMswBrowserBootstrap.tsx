@@ -32,7 +32,7 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
         await managerMswWorker.start({
           onUnhandledRequest(request) {
             const pathname = new URL(request.url).pathname;
-            if (pathname.startsWith('/api/v1/manager/')) {
+            if (pathname.startsWith('/manager/')) {
               logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
             }
           } });

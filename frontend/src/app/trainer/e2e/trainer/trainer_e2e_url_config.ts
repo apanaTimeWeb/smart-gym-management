@@ -8,6 +8,6 @@ export const TRAINER_TRAINER_E2E_URLS = {
         ROOT: '/trainer/trainer_e2e',
     },
     API: {
-        BASE: '/api/v1/trainer/trainer_e2e',
+        BASE: '/trainer/trainer_e2e',
     }
 } as const;

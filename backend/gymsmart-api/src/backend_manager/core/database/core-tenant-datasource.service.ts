@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityTarget, Repository } from 'typeorm';
-import { CoreTenantDataSourceManager } from '@/backend_admin/core/database/core-tenant-data-source.manager';
+import { AdminCoreTenantDataSourceManager as CoreTenantDataSourceManager } from '@/backend_admin/admin_core/admin_core_database/admin-core-tenant-data-source.manager';
 
 @Injectable()
 export class CoreTenantDatasourceService {

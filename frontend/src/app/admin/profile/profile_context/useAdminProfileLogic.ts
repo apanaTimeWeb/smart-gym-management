@@ -52,7 +52,7 @@ export function useAdminProfileLogic() {
   });
 
   const profileMutation = useMutation({
-    mutationFn: (payload: UpdateAdminProfilePayload) => adminProfileApi.updateProfile(payload),
+    mutationFn: (payload: UpdateAdminProfilePayload) => adminProfileApi.updateProfile(payload, crypto.randomUUID()),
     onSuccess: async (response) => {
       profileForm.reset({ name: response.data?.name ?? profileForm.getValues('name'), phone: response.data?.phone ?? profileForm.getValues('phone') });
       await queryClient.invalidateQueries({ queryKey: ['admin', 'profile', 'detail'] });
@@ -62,7 +62,7 @@ export function useAdminProfileLogic() {
   });
 
   const passwordMutation = useMutation({
-    mutationFn: (payload: UpdateAdminPasswordPayload) => adminProfileApi.updatePassword(payload),
+    mutationFn: (payload: UpdateAdminPasswordPayload) => adminProfileApi.updatePassword(payload, crypto.randomUUID()),
     onSuccess: (response) => {
       passwordForm.reset(EMPTY_PASSWORD_FORM);
       adminToast.success(response.message, 'admin-profile-password');
