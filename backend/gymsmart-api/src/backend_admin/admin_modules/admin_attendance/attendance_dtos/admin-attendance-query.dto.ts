@@ -37,7 +37,7 @@ export class AdminAttendanceQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminAttendanceStatus)
-  status?: AdminAttendanceStatus;
+  status?: AdminAttendanceStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()

@@ -29,14 +29,14 @@ export class SuperadminReportsDataQueryDto {
   @ApiPropertyOptional({ required: false})
   /** Primary Intent: Defines the `plan` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  plan?: string;
+  plan?: string = undefined;
 
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ required: false})
   /** Primary Intent: Defines the `region` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  region?: string;
+  region?: string = undefined;
 
   @IsOptional()
   @IsString()
@@ -57,5 +57,11 @@ export class SuperadminReportsDataQueryDto {
   @IsString()
   @ApiPropertyOptional({ required: false })
   customEnd?: string;
+
+  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) status?: string = undefined;
+  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) order?: string = undefined;
+  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) type?: string = undefined;
+  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) search?: string = undefined;
+  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) sort?: string = undefined;
 }
 

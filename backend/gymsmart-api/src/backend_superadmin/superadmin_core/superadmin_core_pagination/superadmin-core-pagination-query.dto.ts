@@ -2,7 +2,7 @@
 // FLOW: HTTP query -> SuperadminCorePaginationQueryDto -> feature query DTO -> repository.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 /**
  * Primary Intent: Defines SuperadminCorePaginationQueryDto as the class-level contract for superadmin-core-pagination-query.dto.ts.
@@ -45,5 +45,29 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   @IsOptional()
   preset?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string = undefined;
+
+  @IsOptional()
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
+  order?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  plan?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  region?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  type?: string = undefined;
+
+  @IsOptional()
+  @IsString()
+  sort?: string = undefined;
 }
 

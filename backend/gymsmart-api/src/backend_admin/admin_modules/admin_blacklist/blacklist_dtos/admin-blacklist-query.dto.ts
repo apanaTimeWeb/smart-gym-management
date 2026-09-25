@@ -37,7 +37,7 @@ export class AdminBlacklistQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminBlacklistStatus)
-  status?: AdminBlacklistStatus;
+  status?: AdminBlacklistStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()

@@ -13,7 +13,7 @@ import { SuperadminCorePaginationQueryDto} from '@/backend_superadmin/superadmin
 export class SuperadminMessagingQueryDto extends SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   /** Optional case-insensitive search text. */
-  @IsOptional() @IsString() search?: string;@ApiPropertyOptional()
+  @IsOptional() @IsString() search?: string = undefined;@ApiPropertyOptional()
 
   /** Allowlisted sort field. */
   @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';}

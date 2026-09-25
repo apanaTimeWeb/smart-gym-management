@@ -37,7 +37,7 @@ export class AdminPermissionsQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminPermissionsStatus)
-  status?: AdminPermissionsStatus;
+  status?: AdminPermissionsStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()

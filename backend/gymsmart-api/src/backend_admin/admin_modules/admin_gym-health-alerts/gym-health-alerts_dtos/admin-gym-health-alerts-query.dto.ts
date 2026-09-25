@@ -37,7 +37,7 @@ export class AdminGymHealthAlertsQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminGymHealthAlertsStatus)
-  status?: AdminGymHealthAlertsStatus;
+  status?: AdminGymHealthAlertsStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()

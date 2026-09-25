@@ -20,9 +20,9 @@ export class SuperadminGymsUpdateDto {@ApiPropertyOptional()
 
   @IsOptional() @IsString() @Length(10, 20) phone?: string;@ApiPropertyOptional()
 
-  @IsOptional() @IsEnum(TenantStatus) status?: TenantStatus;@ApiPropertyOptional()
+  @IsOptional() @IsEnum(TenantStatus) status?: TenantStatus = undefined;@ApiPropertyOptional()
 
-  @IsOptional() @IsString() @Length(1, 128) plan?: string;@ApiPropertyOptional()
+  @IsOptional() @IsString() @Length(1, 128) plan?: string = undefined;@ApiPropertyOptional()
 
   @IsOptional() @IsString() @Length(8, 128) temporaryPassword?: string;@ApiPropertyOptional()
 

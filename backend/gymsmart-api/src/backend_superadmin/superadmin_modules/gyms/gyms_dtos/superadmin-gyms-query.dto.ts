@@ -13,12 +13,12 @@ import { SuperadminCorePaginationQueryDto} from '@/backend_superadmin/superadmin
 export class SuperadminGymsQueryDto extends SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   /** Optional case-insensitive search text. */
-  @IsOptional() @IsString() search?: string;@ApiPropertyOptional()
+  @IsOptional() @IsString() search?: string = undefined;@ApiPropertyOptional()
 
   /** Allowlisted sort field. */
   @IsOptional() @IsIn(['createdAt', 'updatedAt', 'name', 'ownerName', 'adminEmail', 'phone', 'plan', 'databaseVersion', 'city', 'state', 'memberCount', 'lastActiveAt']) sortBy = 'createdAt';@ApiPropertyOptional()
 
   /** Frontend-compatible lowercase sort direction alias. */
-  @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order?: 'asc' | 'desc';}
+  @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order?: 'asc' | 'desc' = undefined;}
 
 

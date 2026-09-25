@@ -23,7 +23,7 @@ export class AdminCorePaginationQueryDto {
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
-  search?: string;
+  search?: string = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
@@ -43,6 +43,28 @@ export class AdminCorePaginationQueryDto {
 
   @IsOptional()
   preset?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  status?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional()
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
+  order?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  plan?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  region?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  type?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  sort?: string = undefined;
+
+  @ApiPropertyOptional() @IsOptional() @IsString()
+  sortBy?: string = undefined;
 }
 
 

@@ -10,10 +10,17 @@ import { IsOptional, IsString} from 'class-validator';
  */
 export class SuperadminSaasBillingInvoicesExportQueryDto {@ApiPropertyOptional()
  @IsOptional() @IsString() tenantId?: string;@ApiPropertyOptional()
- @IsOptional() @IsString() status?: string;
+ @IsOptional() @IsString() status?: string = undefined;
  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) preset?: string;
  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) timeRange?: string;
  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) customStart?: string;
  @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) customEnd?: string;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) order?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) plan?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) region?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) type?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) search?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) sort?: string = undefined;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) sortBy?: string = undefined;
 }
 

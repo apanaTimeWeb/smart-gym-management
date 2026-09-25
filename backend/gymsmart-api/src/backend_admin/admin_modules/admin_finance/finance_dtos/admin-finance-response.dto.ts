@@ -25,7 +25,7 @@ export class AdminFinancePaymentDto {
   @ApiPropertyOptional() invoiceNumber?: string;
   @ApiPropertyOptional() hsn_code?: string;
   @ApiPropertyOptional() planId?: string;
-  @ApiPropertyOptional({ enum: ['PAYMENT', 'REFUND', 'ADJUSTMENT'] }) type?: string;
+  @ApiPropertyOptional({ enum: ['PAYMENT', 'REFUND', 'ADJUSTMENT'] }) type?: string = undefined;
   @ApiProperty() status!: AdminFinanceStatus;
   @ApiPropertyOptional() notes?: string;
   @ApiProperty() invoiceNo!: string;

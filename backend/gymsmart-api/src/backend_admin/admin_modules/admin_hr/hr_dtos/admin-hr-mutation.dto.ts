@@ -18,7 +18,7 @@ export class AdminHrMutationDto extends AdminHrMutationFieldsDto {
   @IsOptional()
   @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminHrStatus)
-  status?: AdminHrStatus;
+  status?: AdminHrStatus = undefined;
 
   /** @description Validates the ISO 4217 currency identifier attached to monetary HR values. @returns ISO currency code. */
   @ApiProperty({ description: 'ISO 4217 currency code', example: 'INR' })

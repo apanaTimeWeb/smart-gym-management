@@ -38,7 +38,7 @@ export class AdminFinanceQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminFinanceStatus)
-  status?: AdminFinanceStatus;
+  status?: AdminFinanceStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()

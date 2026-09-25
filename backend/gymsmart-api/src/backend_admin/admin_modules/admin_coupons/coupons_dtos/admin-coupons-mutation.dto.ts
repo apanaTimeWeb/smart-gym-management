@@ -30,7 +30,7 @@ export class AdminCouponsMutationDto {
   @IsOptional()
   @IsEnum(['percentage', 'flat'])
   @ApiPropertyOptional({ enum: ['percentage', 'flat'] })
-  type?: string;
+  type?: string = undefined;
 
   @IsOptional()
   @IsNumber()
@@ -87,5 +87,5 @@ export class AdminCouponsMutationDto {
   @IsOptional()
   @IsEnum(AdminCouponsStatus)
   @ApiPropertyOptional({ enum: AdminCouponsStatus })
-  status?: AdminCouponsStatus;
+  status?: AdminCouponsStatus = undefined;
 }

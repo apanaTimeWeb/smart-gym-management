@@ -37,7 +37,7 @@ export class AdminMembersQueryDto extends AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminMembersStatus)
-  status?: AdminMembersStatus;
+  status?: AdminMembersStatus = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
@@ -49,7 +49,7 @@ export class AdminMembersQueryDto extends AdminCorePaginationQueryDto {
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
-  plan?: string;
+  plan?: string = undefined;
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
