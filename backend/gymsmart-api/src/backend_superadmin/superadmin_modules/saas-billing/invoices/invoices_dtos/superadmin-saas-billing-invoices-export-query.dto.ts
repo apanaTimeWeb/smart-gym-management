@@ -1,31 +1,7 @@
 // RESPONSIBILITY: Validates invoice export filter input.
 // FLOW: HTTP query -> DTO -> repository query -> export contract.
-import { ApiProperty, ApiPropertyOptional 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@nestjs/swagger';
-import { IsOptional, IsString 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import { IsOptional, IsString} from 'class-validator';
 /**
  * Primary Intent: Defines SuperadminSaasBillingInvoicesExportQueryDto as the class-level contract for superadmin-saas-billing-invoices-export-query.dto.ts.
  * Edge Cases: Preserve exact exported names, field shapes, enum values, nullability, and module isolation when changing this construct.
@@ -34,17 +10,5 @@ import { IsOptional, IsString
  */
 export class SuperadminSaasBillingInvoicesExportQueryDto {@ApiPropertyOptional()
  @IsOptional() @IsString() tenantId?: string;@ApiPropertyOptional()
- @IsOptional() @IsString() status?: string; 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}
+ @IsOptional() @IsString() status?: string;}
 

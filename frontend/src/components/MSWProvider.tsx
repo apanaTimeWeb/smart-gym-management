@@ -14,6 +14,7 @@ async function enableMocking() {
   // Only activate MSW in browser environments
   if (typeof window === 'undefined') return;
 
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
   if (!isDemoMode) return;
 
   const { worker } = await import('@/mocks/browser');

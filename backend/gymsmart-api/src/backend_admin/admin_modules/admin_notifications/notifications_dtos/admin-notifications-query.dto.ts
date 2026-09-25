@@ -1,73 +1,13 @@
 // RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin notifications.
 // FLOW: HTTP query â†’ AdminNotificationsQueryDto â†’ repository allowlists â†’ PostgreSQL query.
-import { ApiProperty, ApiPropertyOptional 
-  @IsOptional()
-  timeRange?: string;
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 
-  @IsOptional()
-  customStart?: string;
+import { Type, Transform} from 'class-transformer';
+import { IsOptional, IsString, IsIn, IsNumber, IsEnum} from 'class-validator';
 
-  @IsOptional()
-  customEnd?: string;
+import { AdminCorePaginationQueryDto} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
-  @IsOptional()
-  preset?: string;
-} from '@nestjs/swagger';
-
-import { Type, Transform 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber, IsEnum 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-validator';
-
-import { AdminCorePaginationQueryDto 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
-
-import { AdminNotificationsStatus, AdminNotificationsSeverity 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants'
+import { AdminNotificationsStatus, AdminNotificationsSeverity} from '@/backend_admin/admin_modules/admin_notifications/admin-notifications.constants'
 
 /**
  * @description Defines the AdminNotificationsQueryDto boundary for the admin_notifications backend feature.
@@ -95,19 +35,7 @@ export class AdminNotificationsQueryDto extends AdminCorePaginationQueryDto {
   endDate?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminNotificationsStatus)
   status?: AdminNotificationsStatus;
 
@@ -116,19 +44,7 @@ export class AdminNotificationsQueryDto extends AdminCorePaginationQueryDto {
   priority?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminNotificationsSeverity)
   severity?: AdminNotificationsSeverity;
 
@@ -146,18 +62,5 @@ export class AdminNotificationsQueryDto extends AdminCorePaginationQueryDto {
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
-  consumer?: string;
-
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}
+  consumer?: string;}
 

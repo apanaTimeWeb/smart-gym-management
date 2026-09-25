@@ -1,44 +1,8 @@
 // RESPONSIBILITY: Validates pagination, search, and sorting inputs for the broadcasts feature.
 // FLOW: HTTP query -> class-validator -> SuperadminBroadcastsListQuery.
-import { ApiProperty, ApiPropertyOptional 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@nestjs/swagger';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-validator';
-import { SuperadminCorePaginationQueryDto 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min} from 'class-validator';
+import { SuperadminCorePaginationQueryDto} from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination-query.dto';
 
 /**
  * Primary Intent: Defines SuperadminBroadcastsQueryDto as the class-level contract for superadmin-broadcasts-query.dto.ts.
@@ -52,18 +16,5 @@ export class SuperadminBroadcastsQueryDto extends SuperadminCorePaginationQueryD
   @IsOptional() @IsString() search?: string;@ApiPropertyOptional()
 
   /** Allowlisted sort field. */
-  @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';
-
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}
+  @IsOptional() @IsIn(['createdAt','updatedAt']) sortBy = 'createdAt';}
 

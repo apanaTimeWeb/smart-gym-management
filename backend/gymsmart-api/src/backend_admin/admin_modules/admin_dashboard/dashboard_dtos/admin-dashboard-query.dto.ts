@@ -1,73 +1,13 @@
 // RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin dashboard.
 // FLOW: HTTP query â†’ AdminDashboardQueryDto â†’ repository allowlists â†’ PostgreSQL query.
-import { ApiProperty, ApiPropertyOptional 
-  @IsOptional()
-  timeRange?: string;
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 
-  @IsOptional()
-  customStart?: string;
+import { Type, Transform} from 'class-transformer';
+import { IsOptional, IsString, IsIn, IsNumber, IsEnum} from 'class-validator';
 
-  @IsOptional()
-  customEnd?: string;
+import { AdminCorePaginationQueryDto} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
 
-  @IsOptional()
-  preset?: string;
-} from '@nestjs/swagger';
-
-import { Type, Transform 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber, IsEnum 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from 'class-validator';
-
-import { AdminCorePaginationQueryDto 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@/backend_admin/admin_core/admin_core_dto/admin-core-pagination-query.dto'
-
-import { AdminDashboardStatus, AdminDashboardSeverity 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-} from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants'
+import { AdminDashboardStatus, AdminDashboardSeverity} from '@/backend_admin/admin_modules/admin_dashboard/admin-dashboard.constants'
 
 /**
  * @description Defines the AdminDashboardQueryDto boundary for the admin_dashboard backend feature.
@@ -95,19 +35,7 @@ export class AdminDashboardQueryDto extends AdminCorePaginationQueryDto {
   endDate?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminDashboardStatus)
   status?: AdminDashboardStatus;
 
@@ -116,19 +44,7 @@ export class AdminDashboardQueryDto extends AdminCorePaginationQueryDto {
   priority?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @Transform(({ value 
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
+  @Transform(({ value}) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   @IsEnum(AdminDashboardSeverity)
   severity?: AdminDashboardSeverity;
 
@@ -146,18 +62,5 @@ export class AdminDashboardQueryDto extends AdminCorePaginationQueryDto {
 
 @ApiPropertyOptional() @IsOptional()
   @IsString()
-  consumer?: string;
-
-  @IsOptional()
-  timeRange?: string;
-
-  @IsOptional()
-  customStart?: string;
-
-  @IsOptional()
-  customEnd?: string;
-
-  @IsOptional()
-  preset?: string;
-}
+  consumer?: string;}
 
