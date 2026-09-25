@@ -7,7 +7,7 @@ import { Users, IndianRupee } from 'lucide-react';
 
 import type { SuperadminAffiliatesStatsBarProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesStatsBarTypes';
 
-export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCommission }: SuperadminAffiliatesStatsBarProps) {
+export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCommission, currency = 'INR' }: SuperadminAffiliatesStatsBarProps) {
     const locale = useLocale();
 
     return (<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -28,7 +28,7 @@ export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCom
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">Total Commission Paid</span>
         </div>
         <div className="text-3xl font-bold text-primary mt-1">
-          {formatCurrency(totalCommission, 'INR', locale)}
+          {formatCurrency(totalCommission, currency, locale)}
         </div>
       </div>
     </div>);

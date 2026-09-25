@@ -15,7 +15,7 @@ export default function SuperadminDashboardV1IncomeGymsAndAlertsSection({ data }
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
   <Panel title="Why monthly income changed" description="Opening income plus gains and losses for this period.">
     <div className="h-72">
-      <ApexBarChart categories={data.waterfall.map((item) => item.label)} series={[{ name: 'Monthly income', data: data.waterfall.map((item) => item.value) }]} valueFormatter={(value) => formatCurrency(value, 'INR', locale)} horizontal/>
+      <ApexBarChart categories={data.waterfall.map((item) => item.label)} series={[{ name: 'Monthly income', data: data.waterfall.map((item) => item.value) }]} valueFormatter={(value) => formatCurrency(value, data.currency || 'INR', locale)} horizontal/>
     </div>
   </Panel>
   <Panel title="Top & at-risk gyms" description="Use this to see high-value growth and tenants needing attention.">
@@ -48,7 +48,7 @@ export default function SuperadminDashboardV1IncomeGymsAndAlertsSection({ data }
               </div>
             </td>
             <td className="px-3 py-3 text-primary">
-              {formatCurrency(row.income, 'INR', locale)}
+              {formatCurrency(row.income, data.currency || 'INR', locale)}
             </td>
             <td className={row.growth >= 0 ? 'px-3 py-3 text-success' : 'px-3 py-3 text-danger'}>
               {row.growth >= 0 ? <ArrowUp size={18} className="mr-1 inline"/> : <ArrowDown size={18} className="mr-1 inline"/>}

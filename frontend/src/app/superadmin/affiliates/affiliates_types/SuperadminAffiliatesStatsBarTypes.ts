@@ -4,4 +4,5 @@
 export interface SuperadminAffiliatesStatsBarProps {
     totalAffiliates: number;
     totalCommission: number;
+    currency: string;
 }

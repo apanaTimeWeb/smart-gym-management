@@ -14,6 +14,6 @@ export default function SuperadminDashboardV1RetentionSummaryCards({ data }: Sup
   <MetricCard label="Gym retention" value={formatPercent1dp(data.gymRetention)} helper="Gyms still active" tone="success"/>
   <MetricCard label="Revenue lost" value={formatPercent1dp(data.revenueLostPercent)} helper="Share of opening income" tone="danger"/>
   <MetricCard label="Customer churn" value={formatPercent1dp(data.customerChurn)} helper="Gyms that left" tone="warning"/>
-  <MetricCard label="Closing monthly income" value={formatCurrency(data.endingIncome, 'INR', locale)} helper="Current recurring income"/>
+  <MetricCard label="Closing monthly income" value={formatCurrency(data.endingIncome, data.currency || 'INR', locale)} helper="Current recurring income"/>
     </div>;
 }

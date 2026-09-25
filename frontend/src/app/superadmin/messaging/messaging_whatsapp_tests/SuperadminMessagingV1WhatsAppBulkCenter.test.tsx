@@ -2,9 +2,14 @@ import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/me
 import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SuperadminMessagingV1WhatsAppBulkCenter from '@/app/superadmin/messaging/messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
 import { createWhatsAppCampaign } from '@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi';
+
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+const customRender = (ui: React.ReactElement) => render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+
 vi.mock('@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi', () => ({
     createWhatsAppCampaign: vi.fn(),
 }));
@@ -29,7 +34,7 @@ describe('Superadmin tenant Smart Bulk WhatsApp', () => {
         vi.spyOn(window, 'open').mockImplementation(() => null);
     });
     it('loads tenant audiences, templates, and personalized preview without member targeting', () => {
-        render(<SuperadminMessagingV1WhatsAppBulkCenter data={SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE}/>);
+        customRender(<SuperadminMessagingV1WhatsAppBulkCenter data={SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE}/>);
         expect(screen.getByRole('heading', { name: 'Smart Bulk WhatsApp' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Subscription Renewal Reminder' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'All Tenant Contacts' })).toHaveAttribute('aria-pressed', 'true');
@@ -37,7 +42,7 @@ describe('Superadmin tenant Smart Bulk WhatsApp', () => {
         expect(screen.getByText(/gym member messaging stays in admin \/ manager/i)).toBeInTheDocument();
     });
     it('auto-selects maintenance audience and builds a tenant queue', async () => {
-        render(<SuperadminMessagingV1WhatsAppBulkCenter data={SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE}/>);
+        customRender(<SuperadminMessagingV1WhatsAppBulkCenter data={SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE}/>);
         fireEvent.click(screen.getByRole('button', { name: 'Planned Maintenance Notice' }));
         expect(screen.getByRole('button', { name: 'Maintenance / Incident Affected' })).toHaveAttribute('aria-pressed', 'true');
         expect(screen.getByDisplayValue('Planned Smart Gym Maintenance')).toBeInTheDocument();
@@ -50,7 +55,7 @@ describe('Superadmin tenant Smart Bulk WhatsApp', () => {
         }));
     });
     it('opens WhatsApp and advances when the operator marks the chat sent', async () => {
-        render(<SuperadminMessagingV1WhatsAppBulkCenter data={{
+        customRender(<SuperadminMessagingV1WhatsAppBulkCenter data={{
                 ...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE,
                 recipients: SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.recipients.filter((recipient) => recipient.id === 'tc1' || recipient.id === 'tc11'),
             }}/>);
@@ -63,7 +68,7 @@ describe('Superadmin tenant Smart Bulk WhatsApp', () => {
         expect(screen.getByText('1 of 2 completed')).toBeInTheDocument();
     });
     it('shows an empty state when all tenant contacts are opted out', () => {
-        render(<SuperadminMessagingV1WhatsAppBulkCenter data={{
+        customRender(<SuperadminMessagingV1WhatsAppBulkCenter data={{
                 ...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE,
                 recipients: SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.recipients.map((recipient) => ({ ...recipient, whatsappOptIn: false })),
             }}/>);

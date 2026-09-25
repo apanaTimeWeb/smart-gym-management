@@ -128,7 +128,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-success font-medium text-right">
                   {/* Design Â§21: Indian Numbering System â€” â‚¹1,23,456 */}
-                  {formatCurrency(gym.monthlyRevenue, 'INR', locale)}
+                  {formatCurrency(gym.monthlyRevenue, gym.currency, locale)}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">

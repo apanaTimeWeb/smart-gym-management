@@ -7,6 +7,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('@tanstack/react-query', () => ({
     useQuery: vi.fn(),
     useQueryClient: vi.fn(),
+    useMutation: vi.fn(() => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false, error: null })),
 }));
 vi.mock('react-hot-toast', () => ({
     default: { success: vi.fn(), error: vi.fn(), loading: vi.fn() },

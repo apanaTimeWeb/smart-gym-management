@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSuperadminInvoicesPresetRange } from '@/app/superadmin/saas-billing/invoices/SuperadminInvoicesDateRangeUtils';
+import { getSuperadminInvoicesPresetRange } from '@/app/superadmin/saas-billing/invoices/invoices_utils/SuperadminInvoicesDateRangeUtils';
 
 describe('getSuperadminInvoicesPresetRange', () => {
   it('returns deterministic preset bounds', () => {

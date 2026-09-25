@@ -37,7 +37,7 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
             {p.name}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrency(p.monthly, 'INR', locale)}
+            {formatCurrency(p.monthly, p.currency || 'INR', locale)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {p.members < 0 ? 'Unlimited' : formatNumber(p.members)}

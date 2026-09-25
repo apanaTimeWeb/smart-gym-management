@@ -2,6 +2,7 @@
 import type { SuperadminGymsV1Data } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsV1Types';
 
 export const SUPERADMIN_GYMS_BUSINESS_CONTROLS_MOCK_FIXTURE: SuperadminGymsV1Data = {
+  currency: 'INR',
   segments: [
     { name: 'High income + at risk', count: 18, rule: 'Monthly income above ₹50,000 and health below 70.' },
     { name: 'Trial ending soon', count: 27, rule: 'Trial ends within 5 days.' },

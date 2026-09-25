@@ -34,7 +34,7 @@ export default function SuperadminInvoicesClient() {
     return (<div className="space-y-6 relative">
       <SuperadminInvoicesHeader onLogPaymentClick={() => setShowAddModal(true)}/>
       
-      <SuperadminInvoicesStatsBar totalRevenue={totalRevenue} failedRevenue={failedRevenue} pendingRevenue={pendingRevenue} overdueCount={overdueCount}/>
+      <SuperadminInvoicesStatsBar totalRevenue={totalRevenue} failedRevenue={failedRevenue} pendingRevenue={pendingRevenue} overdueCount={overdueCount} currency="INR"/>
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input">

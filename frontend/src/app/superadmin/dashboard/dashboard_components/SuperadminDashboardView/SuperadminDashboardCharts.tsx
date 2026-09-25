@@ -29,7 +29,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         yaxis: {
             labels: {
                 style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY },
-                formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k',
+                formatter: (val: number) => formatCurrency(val / 1000, metrics.currency || 'INR', locale).replace('.00', '') + 'k',
             },
         },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4 },
@@ -67,7 +67,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         dataLabels: { enabled: false },
         tooltip: {
             theme: 'dark' as const,
-            y: { formatter: (val: number) => formatCurrency(val, 'INR', locale) },
+            y: { formatter: (val: number) => formatCurrency(val, metrics.currency || 'INR', locale) },
         },
         legend: { position: 'bottom' as const, labels: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } },
     };
@@ -80,19 +80,19 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
             enabled: true,
             offsetX: 20,
             style: { fontSize: '12px', colors: [SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY] },
-            formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k'
+            formatter: (val: number) => formatCurrency(val / 1000, metrics.currency || 'INR', locale).replace('.00', '') + 'k'
         },
         stroke: { show: true, width: 1, colors: ['transparent'] },
         xaxis: {
             categories: (metrics.revenueByGeography || []).map((g) => g.region),
-            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrency(val / 1000, 'INR', locale).replace('.00', '') + 'k' },
+            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrency(val / 1000, metrics.currency || 'INR', locale).replace('.00', '') + 'k' },
             axisBorder: { show: false },
             axisTicks: { show: false },
         },
         yaxis: { labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } } },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
         theme: { mode: 'dark' as const },
-        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrency(val, 'INR', locale) } },
+        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrency(val, metrics.currency || 'INR', locale) } },
     };
     const geoChartSeries = [{
             name: 'Revenue',

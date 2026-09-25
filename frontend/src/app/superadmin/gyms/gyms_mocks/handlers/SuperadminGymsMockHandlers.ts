@@ -11,7 +11,9 @@ export const superadminGymsHandlers = [
         return HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUBSCRIPTION_PLANS });
     }),
     http.get(GymsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
-        await delay(400);
+        try {
+            console.log('Handler hit!');
+            await delay(400);
         const url = new URL(request.url);
         const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
         const limit = Math.max(Number(url.searchParams.get('limit') || '20'), 1);
@@ -31,7 +33,7 @@ export const superadminGymsHandlers = [
         };
         const order = url.searchParams.get('order') === 'asc' ? 'asc' : 'desc';
         let rows = mockGymsList.filter((gym) => {
-            const matchesSearch = !search || [gym.name, gym.ownerName, gym.adminEmail, gym.city || '', gym.state || ''].some((value) => value.toLowerCase().includes(search));
+            const matchesSearch = !search || [gym.id, gym.name, gym.ownerName, gym.adminEmail, gym.city || '', gym.state || ''].some((value) => value.toLowerCase().includes(search));
             const matchesStatus = !status || status === 'All' || gym.status === status;
             const matchesPlan = !plan || plan === 'All' || gym.plan === plan;
             const matchesSegmentRow = matchesSegment(gym.id, mockGymsList.indexOf(gym));
@@ -42,6 +44,10 @@ export const superadminGymsHandlers = [
         const start = (page - 1) * limit;
         const paginatedData = rows.slice(start, start + limit);
         return HttpResponse.json({ success: true, message: 'Success', data: paginatedData, meta: { total, page, limit, totalPages: Math.max(Math.ceil(total / limit), 1) } });
+        } catch (e) {
+            console.error('MSW GET /api/gyms ERROR:', e);
+            throw e;
+        }
     }),
     http.post(`${GymsUrlConfig.BACKEND_API.BASE}/provision`, async ({ request }) => {
         await delay(700);
@@ -50,7 +56,7 @@ export const superadminGymsHandlers = [
         const body = parsed.data;
         const gymName = body.gymName;
         const planName = String(body.planId ?? body.plan ?? 'Starter');
-        const newGym = { id: `t${Date.now()}`, name: gymName, ownerName: String(body.ownerName ?? 'Tenant Owner'), adminEmail: String(body.adminEmail ?? 'admin@example.com'), phone: String(body.phone ?? ''), status: 'ACTIVE' as const, plan: planName, createdAt: new Date().toISOString(), memberCount: 0, monthlyRevenue: 0, databaseVersion: 'v2.4.1', city: '', state: '', country: 'India', staffCount: 1, lastActiveAt: new Date().toISOString() };
+        const newGym = { id: `t${Date.now()}`, name: gymName, ownerName: String(body.ownerName ?? 'Tenant Owner'), adminEmail: String(body.adminEmail ?? 'admin@example.com'), phone: String(body.phone ?? ''), status: 'ACTIVE' as const, plan: planName, createdAt: new Date().toISOString(), memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', city: '', state: '', country: 'India', staffCount: 1, lastActiveAt: new Date().toISOString() };
         mockGymsList = [newGym, ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Gym provisioned successfully.', data: newGym });
     }),
@@ -58,7 +64,7 @@ export const superadminGymsHandlers = [
         await delay(500);
         const parsed = gymCreateSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json({ success: false, message: 'Gym creation payload is invalid.', data: null }, { status: StatusCodes.BAD_REQUEST });
-        const newGym = { ...parsed.data, id: `t${Date.now()}`, createdAt: new Date().toISOString(), status: 'ACTIVE' as const, memberCount: 0, monthlyRevenue: 0, databaseVersion: 'v2.4.1', lastActiveAt: new Date().toISOString() };
+        const newGym = { ...parsed.data, id: `t${Date.now()}`, createdAt: new Date().toISOString(), status: 'ACTIVE' as const, memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', lastActiveAt: new Date().toISOString() };
         mockGymsList = [newGym as typeof mockGymsList[0], ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Created', data: newGym });
     }),

@@ -32,8 +32,8 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : 'â€”'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
-        {formatCurrency(aff.commissionEarned, 'INR', locale)}
-        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout, 'INR', locale)} pending)</span>) : null}
+        {formatCurrency(aff.commissionEarned, aff.currency || 'INR', locale)}
+        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout, aff.currency || 'INR', locale)} pending)</span>) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <SuperadminAffiliateStatusBadge status={aff.status}/>
@@ -69,7 +69,7 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
                 e.stopPropagation();
                 const ok = await confirm({
                     title: 'Pay Commission',
-                    message: `Pay ${formatCurrency(aff.pendingPayout || 0, 'INR', locale)} to ${aff.name}? This will trigger a bank transfer.`,
+                    message: `Pay ${formatCurrency(aff.pendingPayout || 0, aff.currency || 'INR', locale)} to ${aff.name}? This will trigger a bank transfer.`,
                     type: 'warning',
                     confirmText: 'Pay Now',
                 });

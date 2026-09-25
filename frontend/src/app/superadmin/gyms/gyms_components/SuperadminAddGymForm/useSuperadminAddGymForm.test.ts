@@ -1,5 +1,5 @@
 import { resetSuperadminGymsMockState } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsMockHandlers';
-import { resetSuperadminGymsMockState } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsV1MockHandlers';
+import { resetSuperadminGymsMockState as resetV1MockState } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsV1MockHandlers';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
@@ -10,7 +10,17 @@ import toast from 'react-hot-toast';
 vi.mock('@/app/superadmin/gyms/gyms_api/SuperadminGymsApi');
 vi.mock('@tanstack/react-query', () => ({
     useQueryClient: vi.fn(),
-    useQuery: vi.fn()
+    useQuery: vi.fn(),
+    useMutation: vi.fn((options: any) => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(async (vars, mutOptions) => {
+            const result = options.mutationFn ? await options.mutationFn(vars) : undefined;
+            if (options.onSuccess) options.onSuccess(result);
+            if (mutOptions && mutOptions.onSuccess) mutOptions.onSuccess(result);
+            return result;
+        }),
+        isPending: false
+    }))
 }));
 vi.mock('next/navigation', () => ({
     useRouter: vi.fn()
@@ -21,7 +31,7 @@ beforeEach(() => {
 });
 
 beforeEach(() => {
-  resetSuperadminGymsMockState();
+  resetV1MockState();
 });
 
 describe('useSuperadminAddGymForm', () => {
@@ -46,13 +56,15 @@ describe('useSuperadminAddGymForm', () => {
         vi.mocked(gymsApi.provisionGym).mockResolvedValue({ success: true, message: 'Provisioned', data: { id: 'test-gym' } } as never);
         const { result } = renderHook(() => useSuperadminAddGymForm());
         // Fill required fields
-        result.current.form.reset({
-            gymName: 'Test Gym',
-            ownerName: 'Owner',
-            adminEmail: 'owner@test.com',
-            phone: '9876543210',
-            plan: 'plan-1',
-            temporaryPassword: 'Password1'
+        await act(async () => {
+            result.current.form.reset({
+                gymName: 'Test Gym',
+                ownerName: 'Owner',
+                adminEmail: 'owner@test.com',
+                phone: '9876543210',
+                plan: 'plan-1',
+                temporaryPassword: 'Password1'
+            });
         });
         let submitPromise: Promise<void>;
         await act(async () => {
@@ -61,7 +73,7 @@ describe('useSuperadminAddGymForm', () => {
             await submitPromise;
         });
         expect(gymsApi.provisionGym).toHaveBeenCalled();
-        expect(toast.success).toHaveBeenCalledWith('Provisioned');
+        expect(toast.success).toHaveBeenCalledWith('Provisioned', expect.any(Object));
         expect(mockQueryClient.invalidateQueries).toHaveBeenCalled();
     });
 });

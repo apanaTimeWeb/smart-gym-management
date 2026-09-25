@@ -13,12 +13,12 @@ export default function SuperadminReportsV1PlanAndRegionComparison({ data }: Sup
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Plan comparison" description="Current income by plan.">
     <div className="h-72">
-      <ApexBarChart categories={data.planComparison.map((x) => x.name)} series={[{ name: 'Monthly income', data: data.planComparison.map((x) => x.income) }]} valueFormatter={(v) => formatCurrency(v, 'INR', locale)}/>
+      <ApexBarChart categories={data.planComparison.map((x) => x.name)} series={[{ name: 'Monthly income', data: data.planComparison.map((x) => x.income) }]} valueFormatter={(v) => formatCurrency(v, data.currency || 'INR', locale)}/>
     </div>
   </Panel>
   <Panel title="Region comparison" description="Current vs previous income by region.">
     <div className="h-72">
-      <ApexBarChart categories={data.regionComparison.map((x) => x.name)} series={[{ name: 'Current', data: data.regionComparison.map((x) => x.current) }, { name: 'Previous', data: data.regionComparison.map((x) => x.previous) }]} valueFormatter={(v) => formatCurrency(v, 'INR', locale)}/>
+      <ApexBarChart categories={data.regionComparison.map((x) => x.name)} series={[{ name: 'Current', data: data.regionComparison.map((x) => x.current) }, { name: 'Previous', data: data.regionComparison.map((x) => x.previous) }]} valueFormatter={(v) => formatCurrency(v, data.currency || 'INR', locale)}/>
     </div>
   </Panel>
     </div>;

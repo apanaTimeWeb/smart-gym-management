@@ -6,4 +6,5 @@ export interface SuperadminInvoicesStatsBarProps {
     failedRevenue: number;
     pendingRevenue: number;
     overdueCount: number;
+    currency?: string;
 }

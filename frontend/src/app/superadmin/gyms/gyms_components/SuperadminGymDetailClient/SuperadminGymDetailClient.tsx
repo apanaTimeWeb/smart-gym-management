@@ -76,7 +76,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { label: 'Members', value: formatNumber(gym.memberCount), icon: User, tone: 'bg-primary-subtle text-primary' },
-              { label: 'Monthly Revenue', value: formatCurrency(gym.monthlyRevenue, 'INR', locale), icon: CreditCard, tone: 'bg-success-bg text-success' },
+              { label: 'Monthly Revenue', value: formatCurrency(gym.monthlyRevenue, gym.currency, locale), icon: CreditCard, tone: 'bg-success-bg text-success' },
               { label: 'Plan', value: displayValue(gym.plan).toUpperCase(), icon: Activity, tone: 'bg-purple-bg text-purple-text' },
               { label: 'DB Version', value: displayValue(gym.databaseVersion), icon: Clock, tone: 'bg-warning-bg text-warning' },
             ].map(({ label, value, icon: Icon, tone }) => (

@@ -75,7 +75,7 @@ export default function SuperadminAddGymForm() {
 
               <div className="space-y-2">
                 <label htmlFor="superadmin-add-gym-plan" className="text-sm font-bold text-secondary">SaaS Plan</label>
-                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
+                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), p.currency, locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
                 {errors.plan && <p className="text-danger text-xs">{errors.plan.message}</p>}
               </div>
             </div>

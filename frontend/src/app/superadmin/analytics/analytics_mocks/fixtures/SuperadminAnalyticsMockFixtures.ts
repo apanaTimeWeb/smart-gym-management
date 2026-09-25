@@ -6,6 +6,7 @@ export const MOCK_REVENUE_METRICS: RevenueMetrics = {
     cancellationRate: 2.5,
     ltv: 50000,
     cac: 2000,
+    currency: 'INR',
     activeTenants: 125,
     arpu: 1200,
     mrrDeltaPercent: 5.2,

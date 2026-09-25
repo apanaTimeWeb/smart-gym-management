@@ -12,6 +12,7 @@ export const RedemptionRecordSchema = z.object({
   redeemedAt: z.string(),
   planName: z.string(),
   discountApplied: z.number(),
+  currency: z.string().optional(),
 });
 export type RedemptionRecord = z.infer<typeof RedemptionRecordSchema>;
 
@@ -25,6 +26,7 @@ export const CouponRecordSchema = z.object({
   status: CouponStatusSchema,
   expiryDate: z.string(),
   isDeleted: z.boolean(),
+  currency: z.string().optional(),
   redemptions: z.array(RedemptionRecordSchema).optional(),
 });
 export type Coupon = z.infer<typeof CouponRecordSchema>;

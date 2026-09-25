@@ -65,7 +65,7 @@ export default function SuperadminGymEditModal() {
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-danger">*</span></label>
-            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
+            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly), p.currency, locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
             {errors.plan && <p className="text-xs text-danger mt-1">{errors.plan.message}</p>}
           </div>
 
