@@ -29,7 +29,7 @@ export default function AdminHrStaffModal() {
   </div>
   <form onSubmit={handleSubmit(saveStaff)} className="p-8">
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-  {STAFF_MODAL_FIELDS.map((f: { name: string; label: string; type: string; options?: readonly string[] }) => (
+  {STAFF_MODAL_FIELDS.map((f: { key: string; label: string; type: string; placeholder: string }) => (
   <div key={f.key} className={f.key === 'name' ? 'sm:col-span-2' : ''}>
   <label className="block text-sm font-medium mb-1.5 text-secondary">{f.label}</label>
   <input 

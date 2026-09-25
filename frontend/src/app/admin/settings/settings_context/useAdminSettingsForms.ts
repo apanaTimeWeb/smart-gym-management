@@ -4,7 +4,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, useWatch, type FieldValues, type DefaultValues } from 'react-hook-form';
+import { useForm, useWatch, type FieldValues, type DefaultValues, type UseFormReturn, type Resolver } from 'react-hook-form';
 import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 import {
@@ -28,13 +28,13 @@ import type { ZodType } from 'zod';
 
 function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
   initialData: TFormValues,
-  schema: unknown,
+  schema: ZodType<TFormValues>,
   submit: (data: TFormValues) => ReturnType<typeof settingsApi.updateSettings>,
   toastId: string,
 ) {
   const queryClient = useQueryClient();
   const form = useForm<TFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema as ZodType<FieldValues>) as Resolver<TFormValues>,
     defaultValues: initialData as DefaultValues<TFormValues>,
   });
   const formValues = useWatch({ control: form.control });
@@ -51,7 +51,7 @@ function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
     onError: (err) => adminToast.error((err as Error).message, toastId),
   });
 
-  return { form, formValues, mutation };
+  return { form: form as UseFormReturn<TFormValues>, formValues, mutation };
 }
 
 /** Coordinates SettingsGeneralForm state, data flow, and feature behavior. */

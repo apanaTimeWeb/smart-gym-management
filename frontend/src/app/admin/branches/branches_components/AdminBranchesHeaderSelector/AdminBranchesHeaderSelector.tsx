@@ -3,8 +3,9 @@
 // DATA FLOW: Branches API → TanStack Query → selector → URL branchId → feature query keys/request scope.
 import { useCallback, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { Building2 } from 'lucide-react';
-import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
+import { branchesApi } from '@/app/admin/branches/branches_api/AdminBranchesApi';
 import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
@@ -12,8 +13,8 @@ export default function AdminBranchesHeaderSelector() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data: branchesData = [] } = useAdminBranchesQueries({});
-  const branches = Array.isArray(branchesData) ? branchesData : [];
+  const { data: branchesResponse } = useQuery({ queryKey: ['admin', 'branches', 'list', 'selector'], queryFn: () => branchesApi.fetchBranches(), staleTime: 5 * 60 * 1000 });
+  const branches: Branch[] = Array.isArray(branchesResponse?.data) ? branchesResponse.data : [];
   const selectedBranchId = searchParams.get('branchId') || 'all';
 
   const branchOptions = useMemo(() => [

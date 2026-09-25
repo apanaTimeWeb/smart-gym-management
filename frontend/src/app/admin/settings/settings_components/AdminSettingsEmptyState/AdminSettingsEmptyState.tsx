@@ -9,3 +9,4 @@ export default function AdminSettingsEmptyState() {
     <p className="text-sm text-secondary">Notification event configuration is currently empty.</p>
   </div>;
 }
+
