@@ -37,7 +37,7 @@ export class SuperadminSettingsCommandController {
   @ApiOperation({ summary: 'create settings' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/settings', 'api/superadmin/settings'])
+  @Post(['superadmin/settings', 'superadmin/settings'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -60,7 +60,7 @@ export class SuperadminSettingsCommandController {
   @ApiOperation({ summary: 'update settings' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/settings/:id', 'api/superadmin/settings/:id'])
+  @Patch(['superadmin/settings/:id', 'superadmin/settings/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -82,7 +82,7 @@ export class SuperadminSettingsCommandController {
   @ApiOperation({ summary: 'remove settings' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['api/superadmin/settings/:id', 'api/superadmin/settings/:id'])
+@Delete(['superadmin/settings/:id', 'superadmin/settings/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)

@@ -33,7 +33,7 @@ export class SuperadminGlobalAuditInvestigationQueryController {
   /** Executes GET /superadmin/global-audit/investigation. */
   @ApiOperation({ summary: 'investigation' })
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminGlobalAuditInvestigationResponseDto, description: 'Successful investigation response.' })
-  @Get(['api/superadmin/global-audit/investigation', 'api/superadmin/global-audit/investigation', 'api/superadmin/audit-logs/investigation', 'api/superadmin/audit-logs/investigation'])
+  @Get(['superadmin/global-audit/investigation', 'superadmin/global-audit/investigation', 'superadmin/audit-logs/investigation', 'superadmin/audit-logs/investigation'])
   async investigation(@Query() query: SuperadminQueryDto): Promise<SuperadminGlobalAuditInvestigationResponseDto> { return (await this.investigationService.findGlobalAuditInvestigation({ query })) as unknown as SuperadminGlobalAuditInvestigationResponseDto; }
 
 }

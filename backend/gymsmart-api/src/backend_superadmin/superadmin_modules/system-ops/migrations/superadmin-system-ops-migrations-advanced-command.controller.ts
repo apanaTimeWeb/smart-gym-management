@@ -35,7 +35,7 @@ export class SuperadminSystemOpsMigrationsAdvancedCommandController {
   @RequireIdempotencyKey()
   // SLA: HEAVY
   // SLA: STANDARD
-@Post('api/superadmin/system-ops/migrations/trigger')
+@Post('superadmin/system-ops/migrations/trigger')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'trigger' })
   /**

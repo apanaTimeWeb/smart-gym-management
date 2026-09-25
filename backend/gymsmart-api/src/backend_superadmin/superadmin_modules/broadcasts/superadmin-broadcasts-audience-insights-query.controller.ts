@@ -34,7 +34,7 @@ export class SuperadminBroadcastsAudienceInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/broadcasts/audience-insights', 'api/superadmin/broadcasts/audience-insights'])
+@Get(['superadmin/broadcasts/audience-insights', 'superadmin/broadcasts/audience-insights'])
   @ApiResponse({ type: SuperadminBroadcastsAudienceInsightsResponseDto })
   @ApiOperation({ summary: 'audienceInsights' })
   /**

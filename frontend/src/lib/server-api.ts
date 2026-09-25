@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import { StatusCodes } from 'http-status-codes';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
   const cookieStore = await cookies();

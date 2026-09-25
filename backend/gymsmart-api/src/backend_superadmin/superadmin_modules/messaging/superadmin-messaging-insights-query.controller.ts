@@ -36,7 +36,7 @@ export class SuperadminMessagingInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/messaging/template-insights', 'api/superadmin/messaging/template-insights'])
+@Get(['superadmin/messaging/template-insights', 'superadmin/messaging/template-insights'])
   @ApiResponse({ type: SuperadminMessagingTemplateInsightsResponseDto })
   @ApiOperation({ summary: 'templateInsights' })
   /**
@@ -55,7 +55,7 @@ export class SuperadminMessagingInsightsQueryController {
 
   /** Executes GET /superadmin/messaging/whatsapp/bulk-center. */
   // SLA: HEAVY
-  @Get('api/superadmin/messaging/whatsapp/bulk-center')
+  @Get('superadmin/messaging/whatsapp/bulk-center')
   @ApiResponse({ type: SuperadminMessagingWhatsappBulkCenterResponseDto })
   @ApiOperation({ summary: 'whatsappBulkCenter' })
   /**

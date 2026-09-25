@@ -31,7 +31,7 @@ export class SuperadminTeamAdministrationQueryController {
 
   /** Executes GET /superadmin/team. */
   // SLA: FAST
-  @Get('api/superadmin/team')
+  @Get('superadmin/team')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'main' })
   /**

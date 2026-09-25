@@ -13,7 +13,7 @@ BASE_URL = os.environ.get("SUPERADMIN_E2E_BASE_URL", "http://localhost:3000").rs
 TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 
-ROUTES = ['/api/gyms', '/api/superadmin/gyms/business-controls', '/api/superadmin/gyms/stats', '/api/superadmin/gym-detail/business-overview?gymId=00000000-0000-4000-8000-000000000001']
+ROUTES = ['/superadmin/gyms', '/superadmin/gyms/business-controls', '/superadmin/gyms/stats', '/superadmin/gym-detail/business-overview?gymId=00000000-0000-4000-8000-000000000001']
 
 def _headers() -> dict[str, str]:
     if not TOKEN:
@@ -46,7 +46,7 @@ def test_gym_export_is_async_but_returns_frontend_usable_download_url():
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
-        f"{BASE_URL}/api/gyms/export",
+        f"{BASE_URL}/superadmin/gyms/export",
         headers={"Authorization": f"Bearer {TOKEN}", "Idempotency-Key": str(uuid.uuid4())},
         params={"status": "ACTIVE"},
         timeout=10,
@@ -56,14 +56,14 @@ def test_gym_export_is_async_but_returns_frontend_usable_download_url():
     assert payload["success"] is True
     assert payload["data"]["downloadUrl"]
     assert "token=" in payload["data"]["downloadUrl"]
-    assert "/api/gyms/export/" in payload["data"]["downloadUrl"]
+    assert "/gyms/export/" in payload["data"]["downloadUrl"]
 
 
 
 def test_gym_export_requires_idempotency_key():
     if not TOKEN:
         pytest.skip("Runtime credentials/IDs were not supplied")
-    response = httpx.post(f"{BASE_URL}/api/gyms/export", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=10)
+    response = httpx.post(f"{BASE_URL}/superadmin/gyms/export", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=10)
     assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json()["data"] is None
 

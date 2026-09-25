@@ -106,7 +106,10 @@ export class AdminCoreRequestContextService {
   /** @description Returns the active request context. @returns Trusted request metadata. @throws Error when no request context exists. */
   get(): AdminCoreRequestContext {
     const context = this.storage.getStore();
-    if (!context) throw new Error('REQUEST_CONTEXT_MISSING');
+    if (!context) {
+      console.trace('REQUEST_CONTEXT_MISSING thrown here:');
+      throw new Error('REQUEST_CONTEXT_MISSING');
+    }
     return context;
   }
 }

@@ -33,7 +33,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns revenue report rows. */
   // SLA: FAST
-  @Get(['api/superadmin/reports/revenue', 'api/superadmin/reports/revenue'])
+  @Get(['superadmin/reports/revenue', 'superadmin/reports/revenue'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'revenue' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns cancellation report rows. */
   // SLA: FAST
-  @Get(['api/superadmin/reports/cancellations', 'api/superadmin/reports/cancellations'])
+  @Get(['superadmin/reports/cancellations', 'superadmin/reports/cancellations'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'cancellations' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns tenant health score report rows. */
   // SLA: FAST
-  @Get(['api/superadmin/reports/health', 'api/superadmin/reports/health'])
+  @Get(['superadmin/reports/health', 'superadmin/reports/health'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'health' })
   /**
@@ -90,7 +90,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns one reports record. */
   // SLA: FAST
-  @Get(['api/superadmin/reports/:id', 'api/superadmin/reports/:id'])
+  @Get(['superadmin/reports/:id', 'superadmin/reports/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

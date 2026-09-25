@@ -28,8 +28,8 @@ export class AdminCoreTenantContextInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Record<string, unknown>>();
     const rawPath = String(request.url ?? '');
-    const path = rawPath.replace(/^\/api\/v1/, '');
-    if (path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path === '/auth/login' || path === '/auth/refresh') {
+    const path = rawPath;
+    if (path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path.startsWith('/auth/') || path.startsWith('/superadmin/')) {
       return next.handle();
     }
 

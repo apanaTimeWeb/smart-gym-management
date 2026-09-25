@@ -51,7 +51,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Keep this endpoint independently usable by widget consumers.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/business-overview', 'api/superadmin/dashboard/business-overview'])
+  @Get(['superadmin/dashboard/business-overview', 'superadmin/dashboard/business-overview'])
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminDashboardBusinessOverviewResponseDto })
   @ApiOperation({ summary: 'businessOverview' })
   /**
@@ -70,7 +70,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: KPI calculation remains isolated inside the KPI service.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/kpis', 'api/superadmin/dashboard/kpis', 'api/superadmin/dashboard/metrics'])
+  @Get(['superadmin/dashboard/kpis', 'superadmin/dashboard/kpis', 'superadmin/dashboard/metrics'])
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminDashboardKpisResponseDto })
   @ApiOperation({ summary: 'kpis' })
   /**
@@ -89,7 +89,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Preserve backend-defined currency and smallest-unit semantics.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/revenue-chart', 'api/superadmin/dashboard/revenue-chart'])
+  @Get(['superadmin/dashboard/revenue-chart', 'superadmin/dashboard/revenue-chart'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminDashboardRevenueChartResponseDto] })
   @ApiOperation({ summary: 'revenueChart' })
   /**
@@ -108,7 +108,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Keep month ordering deterministic.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/growth-chart', 'api/superadmin/dashboard/growth-chart'])
+  @Get(['superadmin/dashboard/growth-chart', 'superadmin/dashboard/growth-chart'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminDashboardGrowthChartResponseDto] })
   @ApiOperation({ summary: 'growthChart' })
   /**
@@ -127,7 +127,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Do not move tier aggregation into the controller.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/revenue-by-tier', 'api/superadmin/dashboard/revenue-by-tier'])
+  @Get(['superadmin/dashboard/revenue-by-tier', 'superadmin/dashboard/revenue-by-tier'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminDashboardRevenueByTierResponseDto] })
   @ApiOperation({ summary: 'revenueByTier' })
   /**
@@ -146,7 +146,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Preserve tenant scope and monetary currency semantics.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/revenue-by-geography', 'api/superadmin/dashboard/revenue-by-geography'])
+  @Get(['superadmin/dashboard/revenue-by-geography', 'superadmin/dashboard/revenue-by-geography'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminDashboardRevenueByGeographyResponseDto] })
   @ApiOperation({ summary: 'revenueByGeography' })
   /**
@@ -165,7 +165,7 @@ export class SuperadminDashboardOverviewQueryController {
    * AI-Note: Keep the projection in its owning service and repository.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard/recent-onboards', 'api/superadmin/dashboard/recent-onboards'])
+  @Get(['superadmin/dashboard/recent-onboards', 'superadmin/dashboard/recent-onboards'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminDashboardRecentOnboardsResponseDto] })
   @ApiOperation({ summary: 'recentOnboards' })
   /**

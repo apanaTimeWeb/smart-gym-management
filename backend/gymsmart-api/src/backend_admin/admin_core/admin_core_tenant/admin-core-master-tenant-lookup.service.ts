@@ -49,6 +49,7 @@ export class AdminCoreMasterTenantLookupService {
       `SELECT database_name FROM tenants WHERE id = $1 AND status = 'ACTIVE'`,
       [tenantId],
     );
+    console.log('!!!!!!! LOOKUP DB NAME:', rows);
     if (rows.length === 0) throw new NotFoundException({ message: 'Tenant not found.', errorCode: 'CORE.CORE.NOT_FOUND' });
     return rows[0].database_name as string;
   }

@@ -18,6 +18,7 @@ export class CoreResponseInterceptor implements NestInterceptor {
     if (this.reflector.getAllAndOverride<boolean>('core_raw_response', [context.getHandler(), context.getClass()])) return next.handle();
     return next.handle().pipe(map((result: unknown): ApiResponse<unknown> => {
       if (this.hasPaginationEnvelope(result)) return { success: true, message: 'Request completed successfully', data: result.data, meta: result.meta };
+      if (result && typeof result === 'object' && 'success' in result && 'data' in result) return result as ApiResponse<unknown>;
       return { success: true, message: 'Request completed successfully', data: result };
     }));
   }

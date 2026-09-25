@@ -41,7 +41,7 @@ export class SuperadminIntegrationsCommandController {
   @ApiOperation({ summary: 'create integrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/integrations', 'api/superadmin/integrations'])
+  @Post(['superadmin/integrations', 'superadmin/integrations'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminIntegrationsResponseDto })
@@ -64,7 +64,7 @@ export class SuperadminIntegrationsCommandController {
   @ApiOperation({ summary: 'update integrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/integrations/:id', 'api/superadmin/integrations/:id'])
+  @Patch(['superadmin/integrations/:id', 'superadmin/integrations/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminIntegrationsResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -86,7 +86,7 @@ export class SuperadminIntegrationsCommandController {
   @ApiOperation({ summary: 'remove integrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['api/superadmin/integrations/:id', 'api/superadmin/integrations/:id'])
+  @Delete(['superadmin/integrations/:id', 'superadmin/integrations/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -109,7 +109,7 @@ export class SuperadminIntegrationsCommandController {
   @ApiOperation({ summary: 'changeStatus integrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['api/superadmin/integrations/:id/status', 'api/superadmin/integrations/:id/status'])
+@Patch(['superadmin/integrations/:id/status', 'superadmin/integrations/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminIntegrationsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

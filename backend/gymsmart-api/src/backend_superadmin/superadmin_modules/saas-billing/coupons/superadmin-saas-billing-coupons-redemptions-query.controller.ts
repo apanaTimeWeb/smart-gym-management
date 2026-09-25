@@ -30,7 +30,7 @@ export class SuperadminSaasBillingCouponsRedemptionsQueryController {
 
   /** Executes GET /superadmin/saas-billing/coupons/:id/redemptions. */
   // SLA: FAST
-  @Get('api/superadmin/saas-billing/coupons/:id/redemptions')
+  @Get('superadmin/saas-billing/coupons/:id/redemptions')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'redemptions' })
   /**

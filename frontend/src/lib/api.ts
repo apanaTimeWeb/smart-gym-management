@@ -39,7 +39,7 @@ import { z } from 'zod';
 import { getMockResponse } from '@/lib/mock_data';
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // ─── User Helper (reads from non-HttpOnly cookie set by server) ───────────────
 

@@ -33,7 +33,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns a paginated plans list. */
   // SLA: FAST
-  @Get(['api/superadmin/saas-billing/plans', 'api/superadmin/saas-billing/plans'])
+  @Get(['superadmin/saas-billing/plans', 'superadmin/saas-billing/plans'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns plan business-control insights. */
   // SLA: FAST
-  @Get(['api/superadmin/saas-billing/plans/business-controls', 'api/superadmin/saas-billing/plans/business-controls'])
+  @Get(['superadmin/saas-billing/plans/business-controls', 'superadmin/saas-billing/plans/business-controls'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'businessControls' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns one plans record. */
   // SLA: FAST
-  @Get(['api/superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
+  @Get(['superadmin/saas-billing/plans/:id', 'superadmin/saas-billing/plans/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

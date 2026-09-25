@@ -31,7 +31,7 @@ export class SuperadminDashboardQueryController {
 
   /** Returns one dashboard record. */
   // SLA: FAST
-  @Get(['api/superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
+  @Get(['superadmin/dashboard/:id', 'superadmin/dashboard/:id'])
   @ApiResponse({ type: SuperadminDashboardResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

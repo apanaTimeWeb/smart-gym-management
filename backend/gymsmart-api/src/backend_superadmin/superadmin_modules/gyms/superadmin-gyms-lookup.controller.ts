@@ -29,7 +29,7 @@ export class SuperadminGymsLookupController {
 
   /** Returns the active gym lookup vocabulary shared by Superadmin features. */
   // SLA: FAST
-  @Get('gyms')
+  @Get('superadmin/gyms')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findGymsLookup' })
   /**

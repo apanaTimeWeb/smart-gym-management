@@ -35,7 +35,7 @@ export class SuperadminTeamAlertsCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Patch('api/superadmin/team/alerts')
+  @Patch('superadmin/team/alerts')
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Alert preferences updated; response data is null.' })
   @ApiOperation({ summary: 'alerts' })

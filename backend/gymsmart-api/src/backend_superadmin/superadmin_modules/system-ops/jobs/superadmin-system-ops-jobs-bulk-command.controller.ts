@@ -39,7 +39,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/retry-all' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/jobs/retry-all')
+  @Post('superadmin/system-ops/jobs/retry-all')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'retryAll' })
   /**
@@ -60,7 +60,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/:id/retry' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/jobs/:id/retry')
+  @Post('superadmin/system-ops/jobs/:id/retry')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'retry' })
   /**
@@ -81,7 +81,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/:id/cancel' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/jobs/:id/cancel')
+  @Post('superadmin/system-ops/jobs/:id/cancel')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'cancel' })
   /**
@@ -102,7 +102,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/clear-completed' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/jobs/clear-completed')
+  @Post('superadmin/system-ops/jobs/clear-completed')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'clearCompleted' })
   /**
@@ -123,7 +123,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/bulk-retry' })
   @RequireIdempotencyKey()
   // SLA: HEAVY
-  @Post('api/superadmin/system-ops/jobs/bulk-retry')
+  @Post('superadmin/system-ops/jobs/bulk-retry')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'bulkRetry' })
   /**
@@ -144,7 +144,7 @@ export class SuperadminSystemOpsJobsBulkCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/jobs/bulk-delete' })
   @RequireIdempotencyKey()
   // SLA: HEAVY
-@Post('api/superadmin/system-ops/jobs/bulk-delete')
+@Post('superadmin/system-ops/jobs/bulk-delete')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'bulkDelete' })
   /**

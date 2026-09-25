@@ -12,7 +12,7 @@ BASE_URL = os.environ.get("SUPERADMIN_E2E_BASE_URL", "http://localhost:3000").rs
 TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 
-ROUTES = ['/api/superadmin/broadcasts', '/api/superadmin/broadcasts/audience-insights', '/api/superadmin/broadcasts/recipient-count']
+ROUTES = ['/superadmin/broadcasts', '/superadmin/broadcasts/audience-insights', '/superadmin/broadcasts/recipient-count']
 
 def _headers() -> dict[str, str]:
     if not TOKEN:

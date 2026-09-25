@@ -2,7 +2,7 @@
 // FLOW: Centralized environment reader -> AdminCoreDatabaseConfig -> TypeORM DataSource options.
 import { registerAs } from '@nestjs/config';
 
-import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment.js';
+import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_config/admin-core-environment';
 
 /**
  * @description Registers PostgreSQL connection and pool settings for master and tenant infrastructure.

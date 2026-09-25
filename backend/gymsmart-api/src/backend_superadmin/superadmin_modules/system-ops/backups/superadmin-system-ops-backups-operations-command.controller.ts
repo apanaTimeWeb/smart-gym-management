@@ -36,7 +36,7 @@ export class SuperadminSystemOpsBackupsOperationsCommandController {
   /** Updates the persisted backup schedule. */
   // SLA: HEAVY
   // SLA: STANDARD
-  @Patch('api/superadmin/system-ops/backups/schedule')
+  @Patch('superadmin/system-ops/backups/schedule')
   @RequireIdempotencyKey()
   @ApiResponse({status:HttpStatus.OK,description:'Backup schedule updated.'})
   @ApiOperation({ summary: 'patchSchedule' })
@@ -58,7 +58,7 @@ export class SuperadminSystemOpsBackupsOperationsCommandController {
 
   /** Starts real backup work asynchronously and immediately returns its durable job identifiers. */
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/backups/trigger')
+  @Post('superadmin/system-ops/backups/trigger')
   @RequireIdempotencyKey()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiResponse({status:HttpStatus.ACCEPTED,description:'Backup snapshot job(s) queued. The Location header points to the durable job resource; the canonical data payload remains null for frontend compatibility.'})
@@ -80,7 +80,7 @@ export class SuperadminSystemOpsBackupsOperationsCommandController {
   /** Starts a destructive restore asynchronously and immediately returns its durable job identifier. */
   // SLA: HEAVY
   // SLA: STANDARD
-  @Post('api/superadmin/system-ops/backups/:id/restore')
+  @Post('superadmin/system-ops/backups/:id/restore')
   @RequireIdempotencyKey()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiResponse({status:HttpStatus.ACCEPTED,description:'Backup restore job queued. The Location header points to the durable job status resource; the canonical data payload remains null for frontend compatibility.'})

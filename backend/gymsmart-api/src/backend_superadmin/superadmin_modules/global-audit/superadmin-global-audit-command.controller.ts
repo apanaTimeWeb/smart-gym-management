@@ -38,7 +38,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'create global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/global-audit', 'api/superadmin/global-audit'])
+  @Post(['superadmin/global-audit', 'superadmin/global-audit'])
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
@@ -61,7 +61,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'update global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
+  @Patch(['superadmin/global-audit/:id', 'superadmin/global-audit/:id'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -83,7 +83,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'remove global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['api/superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
+@Delete(['superadmin/global-audit/:id', 'superadmin/global-audit/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

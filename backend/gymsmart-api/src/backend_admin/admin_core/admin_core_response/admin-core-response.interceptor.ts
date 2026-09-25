@@ -20,6 +20,9 @@ export class AdminCoreResponseInterceptor implements NestInterceptor {
         if (this.isPaginated(payload)) {
           return { success: true, message: 'Success', data: payload.items, meta: payload.meta };
         }
+        if (payload && typeof payload === 'object' && 'success' in payload && 'data' in payload) {
+          return payload;
+        }
         return { success: true, message: 'Success', data: payload ?? null };
       }),
     );

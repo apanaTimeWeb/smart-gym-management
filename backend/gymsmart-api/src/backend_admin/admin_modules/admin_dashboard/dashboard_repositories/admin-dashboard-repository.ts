@@ -103,8 +103,7 @@ export class AdminDashboardRepository extends AdminCoreTenantRepositoryBase<Admi
     if (search) builder.andWhere('(entity.name ILIKE :search OR entity.payload::text ILIKE :search)', { search: `%${search}%` });
     if (startDate) builder.andWhere('entity.created_at >= :startDate', { startDate });
     if (endDate) builder.andWhere("entity.created_at < (CAST(:endDate AS timestamptz) + INTERVAL '1 day')", { endDate });
-    builder.andWhere('entity.read_model_updated_at IS NOT NULL');
-    builder.orderBy('entity.read_model_updated_at', 'DESC');
+    builder.orderBy('entity.created_at', 'DESC');
     const entity = await builder.getOne();
     return entity ? this.mapper.toDomain(entity) : null;
   }

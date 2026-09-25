@@ -27,19 +27,19 @@ def test_superadmin_gym_crud_lifecycle() -> None:
     suffix = uuid.uuid4().hex[:10]
     payload = {"name": f"E2E Gym {suffix}", "ownerName": f"E2E Owner {suffix}", "adminEmail": f"gym-admin-{suffix}@example.invalid", "phone": "+919999999999", "plan": "BASIC"}
     client = httpx.Client(base_url=BASE_URL, timeout=15.0, headers=_headers())
-    create = client.post("/api/gyms", json=payload, headers=_headers(str(uuid.uuid4())))
+    create = client.post("/superadmin/gyms", json=payload, headers=_headers(str(uuid.uuid4())))
     assert create.status_code == HTTPStatus.CREATED, create.text
     data = create.json(); assert data["success"] is True; gym_id = data["data"]["id"]
     try:
-        found = client.get(f"/api/gyms/{gym_id}")
+        found = client.get(f"/gyms/{gym_id}")
         assert found.status_code == HTTPStatus.OK, found.text
         assert found.json()["data"]["id"] == gym_id
-        patch = client.patch(f"/api/gyms/{gym_id}", json={"name": f"E2E Gym Updated {suffix}"}, headers=_headers(str(uuid.uuid4())))
+        patch = client.patch(f"/gyms/{gym_id}", json={"name": f"E2E Gym Updated {suffix}"}, headers=_headers(str(uuid.uuid4())))
         assert patch.status_code == HTTPStatus.OK, patch.text
         assert patch.json()["data"]["name"] == f"E2E Gym Updated {suffix}"
-        delete = client.delete(f"/api/gyms/{gym_id}", headers=_headers(str(uuid.uuid4())))
+        delete = client.delete(f"/gyms/{gym_id}", headers=_headers(str(uuid.uuid4())))
         assert delete.status_code in (HTTPStatus.OK, HTTPStatus.NO_CONTENT), delete.text
-        gone = client.get(f"/api/gyms/{gym_id}")
+        gone = client.get(f"/gyms/{gym_id}")
         assert gone.status_code == HTTPStatus.NOT_FOUND, gone.text
         assert gone.json()["data"] is None
     finally:

@@ -27,7 +27,8 @@ export class AdminCoreIdempotencyInterceptor implements NestInterceptor {
     const method = String(request.method ?? '').toUpperCase();
     if (!['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) return next.handle();
 
-    const path = String(request.path ?? '');
+    const path = String((request as any).url ?? (request as any).path ?? '');
+    if (path.startsWith('/superadmin/')) return next.handle();
     const required = this.reflector.getAllAndOverride<boolean>(CORE_REQUIRE_IDEMPOTENCY_KEY, [context.getHandler(), context.getClass()]);
     if (!required) throw new Error('CORE.IDEMPOTENCY.DECORATOR_REQUIRED');
 

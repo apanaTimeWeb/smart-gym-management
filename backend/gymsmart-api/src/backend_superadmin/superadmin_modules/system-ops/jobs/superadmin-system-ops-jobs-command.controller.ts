@@ -39,7 +39,7 @@ export class SuperadminSystemOpsJobsCommandController {
   @ApiOperation({ summary: 'create jobs' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/system-ops/jobs', 'api/superadmin/system-ops/jobs'])
+  @Post(['superadmin/system-ops/jobs', 'superadmin/system-ops/jobs'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSystemOpsJobsCommandController {
   @ApiOperation({ summary: 'update jobs' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/system-ops/jobs/:id', 'api/superadmin/system-ops/jobs/:id'])
+  @Patch(['superadmin/system-ops/jobs/:id', 'superadmin/system-ops/jobs/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSystemOpsJobsCommandController {
   @ApiOperation({ summary: 'remove jobs' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['api/superadmin/system-ops/jobs/:id', 'api/superadmin/system-ops/jobs/:id'])
+  @Delete(['superadmin/system-ops/jobs/:id', 'superadmin/system-ops/jobs/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSystemOpsJobsCommandController {
   @ApiOperation({ summary: 'changeStatus jobs' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['api/superadmin/system-ops/jobs/:id/status', 'api/superadmin/system-ops/jobs/:id/status'])
+@Patch(['superadmin/system-ops/jobs/:id/status', 'superadmin/system-ops/jobs/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

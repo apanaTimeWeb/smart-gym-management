@@ -45,7 +45,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Create feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/features/flags', 'api/superadmin/features/flags'])
+  @Post(['superadmin/features/flags', 'superadmin/features/flags'])
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
@@ -70,7 +70,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Update feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/features/flags/:id', 'api/superadmin/features/flags/:id'])
+  @Patch(['superadmin/features/flags/:id', 'superadmin/features/flags/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'updateFlag' })
@@ -94,7 +94,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Toggle feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/features/flags/:id/toggle', 'api/superadmin/features/flags/:id/toggle'])
+  @Post(['superadmin/features/flags/:id/toggle', 'superadmin/features/flags/:id/toggle'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'toggleFlag' })
@@ -118,7 +118,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Delete feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['api/superadmin/features/flags/:id', 'api/superadmin/features/flags/:id'])
+@Delete(['superadmin/features/flags/:id', 'superadmin/features/flags/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)

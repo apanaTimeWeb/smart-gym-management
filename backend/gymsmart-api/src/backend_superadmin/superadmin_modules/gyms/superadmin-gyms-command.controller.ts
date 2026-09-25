@@ -26,7 +26,7 @@ import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modul
  * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
-@ApiTags('gyms')
+@ApiTags('superadmin/gyms')
 @Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
@@ -43,7 +43,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'create gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post(['api/superadmin/gyms', 'api/superadmin/gyms'])
+@Post(['superadmin/gyms', 'superadmin/gyms'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -66,7 +66,7 @@ export class SuperadminGymsCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post(['api/superadmin/gyms/provision', 'api/superadmin/gyms/provision'])
+  @Post(['superadmin/gyms/provision', 'superadmin/gyms/provision'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -87,7 +87,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the update mutation for the feature. */
   // SLA: STANDARD
-  @Patch(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Patch(['superadmin/gyms/:id', 'superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -108,7 +108,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Delete(['superadmin/gyms/:id', 'superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -132,7 +132,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'changeStatus gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['api/superadmin/gyms/:id/status', 'api/superadmin/gyms/:id/status'])
+@Patch(['superadmin/gyms/:id/status', 'superadmin/gyms/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

@@ -32,7 +32,7 @@ export class SuperadminReportsAnalyticsQueryController {
 
   /** Executes GET /superadmin/reports. */
   // SLA: HEAVY
-  @Get('api/superadmin/reports')
+  @Get('superadmin/reports')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'main' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminReportsAnalyticsQueryController {
   // SLA: HEAVY
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: HEAVY
-@Get(['api/superadmin/reports/comparison', 'api/superadmin/reports/comparison'])
+@Get(['superadmin/reports/comparison', 'superadmin/reports/comparison'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'comparison' })
   /**

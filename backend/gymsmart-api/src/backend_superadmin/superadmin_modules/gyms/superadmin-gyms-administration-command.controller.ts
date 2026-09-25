@@ -39,7 +39,7 @@ export class SuperadminGymsAdministrationCommandController {
   // SLA: STANDARD
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: HEAVY
-@Post(['api/superadmin/gyms/business-controls', 'api/superadmin/gyms/business-controls'])
+@Post(['superadmin/gyms/business-controls', 'superadmin/gyms/business-controls'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'bulkAction' })
   /**
@@ -60,7 +60,7 @@ export class SuperadminGymsAdministrationCommandController {
   @ApiOperation({ summary: 'POST /superadmin/gyms/:id/email' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('api/superadmin/gyms/:id/email')
+  @Post('superadmin/gyms/:id/email')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'emailOwner' })
   /**
@@ -81,7 +81,7 @@ export class SuperadminGymsAdministrationCommandController {
   @ApiOperation({ summary: 'POST /superadmin/gyms/:id/impersonate' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post('api/superadmin/gyms/:id/impersonate')
+@Post('superadmin/gyms/:id/impersonate')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'impersonate' })
   /**

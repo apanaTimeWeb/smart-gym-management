@@ -37,7 +37,7 @@ export class SuperadminGymsAdministrationQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/gyms/business-controls', 'api/superadmin/gyms/business-controls'])
+@Get(['superadmin/gyms/business-controls', 'superadmin/gyms/business-controls'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'businessControls' })
   /**
@@ -56,7 +56,7 @@ export class SuperadminGymsAdministrationQueryController {
 
   /** Returns live Gym aggregate statistics. */
   // SLA: FAST
-  @Get('api/superadmin/gyms/stats')
+  @Get('superadmin/gyms/stats')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'stats' })
   /**
@@ -77,7 +77,7 @@ export class SuperadminGymsAdministrationQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['api/superadmin/gym-detail/business-overview', 'api/superadmin/gym-detail/business-overview'])
+@Get(['superadmin/gym-detail/business-overview', 'superadmin/gym-detail/business-overview'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'detailBusinessOverview' })
   /**

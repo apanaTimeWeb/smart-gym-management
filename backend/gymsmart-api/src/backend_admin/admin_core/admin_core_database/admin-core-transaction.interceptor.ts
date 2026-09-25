@@ -35,6 +35,6 @@ export class AdminCoreTransactionInterceptor implements NestInterceptor {
   /** @description Identifies public/runtime endpoints that do not belong in tenant transactions. @param path Request URL path. @returns True for non-tenant public paths. */
   private isPublic(path: string): boolean {
     const normalized = path.replace(/^\/api\/v1/, '');
-    return normalized === '/health/live' || normalized === '/health/ready' || normalized.startsWith('/metrics') || normalized === '/auth/login' || normalized === '/auth/refresh';
+    return normalized === '/health/live' || normalized === '/health/ready' || normalized.startsWith('/metrics') || normalized === '/auth/login' || normalized === '/auth/refresh' || normalized.startsWith('/superadmin/');
   }
 }

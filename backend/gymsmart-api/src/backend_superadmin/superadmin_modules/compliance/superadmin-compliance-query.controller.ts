@@ -32,7 +32,7 @@ export class SuperadminComplianceQueryController {
 
   /** Returns one compliance record. */
   // SLA: FAST
-  @Get(['api/superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
+  @Get(['superadmin/compliance/:id', 'superadmin/compliance/:id'])
   @ApiResponse({ type: SuperadminComplianceResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

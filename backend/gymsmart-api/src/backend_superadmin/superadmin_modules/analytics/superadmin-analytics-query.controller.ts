@@ -32,7 +32,7 @@ export class SuperadminAnalyticsQueryController {
 
   /** Returns one analytics record. */
   // SLA: FAST
-  @Get(['api/superadmin/analytics/:id', 'api/superadmin/analytics/:id'])
+  @Get(['superadmin/analytics/:id', 'superadmin/analytics/:id'])
   @ApiResponse({ type: SuperadminAnalyticsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

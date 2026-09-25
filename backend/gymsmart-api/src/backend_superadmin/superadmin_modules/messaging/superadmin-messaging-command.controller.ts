@@ -40,7 +40,7 @@ export class SuperadminMessagingCommandController {
   @ApiOperation({ summary: 'create messaging' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/messaging', 'api/superadmin/messaging'])
+  @Post(['superadmin/messaging', 'superadmin/messaging'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminMessagingResponseDto })
@@ -63,7 +63,7 @@ export class SuperadminMessagingCommandController {
   @ApiOperation({ summary: 'create messaging message' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['api/superadmin/messaging/messages', 'api/superadmin/messaging/messages'])
+  @Post(['superadmin/messaging/messages', 'superadmin/messaging/messages'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ type: SuperadminMessagingResponseDto })
@@ -88,7 +88,7 @@ export class SuperadminMessagingCommandController {
   @ApiOperation({ summary: 'update messaging' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['api/superadmin/messaging/:id', 'api/superadmin/messaging/:id'])
+  @Patch(['superadmin/messaging/:id', 'superadmin/messaging/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminMessagingResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -110,7 +110,7 @@ export class SuperadminMessagingCommandController {
   @ApiOperation({ summary: 'remove messaging' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['api/superadmin/messaging/:id', 'api/superadmin/messaging/:id'])
+  @Delete(['superadmin/messaging/:id', 'superadmin/messaging/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -133,7 +133,7 @@ export class SuperadminMessagingCommandController {
   @ApiOperation({ summary: 'changeStatus messaging' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['api/superadmin/messaging/:id/status', 'api/superadmin/messaging/:id/status'])
+@Patch(['superadmin/messaging/:id/status', 'superadmin/messaging/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminMessagingResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

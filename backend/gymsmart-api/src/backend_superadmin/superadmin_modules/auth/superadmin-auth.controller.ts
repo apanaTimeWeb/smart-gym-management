@@ -16,8 +16,8 @@ import { Public } from '@/backend_superadmin/superadmin_core/superadmin_core_aut
  * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
-@ApiTags('auth')
-@Controller('/auth')
+@ApiTags('superadmin/auth')
+@Controller('superadmin/auth')
 export class SuperadminAuthController {
   constructor(private readonly service: SuperadminAuthService, private readonly config: ConfigService) {}
 /**

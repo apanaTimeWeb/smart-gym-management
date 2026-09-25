@@ -13,7 +13,7 @@ TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 COUPON_ID = "00000000-0000-4000-8000-000000000001"
 import uuid
-ROUTES = ['/api/superadmin/saas-billing/coupons', '/api/superadmin/saas-billing/coupons' ]
+ROUTES = ['/superadmin/saas-billing/coupons', '/superadmin/saas-billing/coupons' ]
 
 def _headers() -> dict[str, str]:
     if not TOKEN:
@@ -46,7 +46,7 @@ def test_coupon_restore_uses_frontend_contract_post():
     if not TOKEN or not COUPON_ID:
         pytest.skip("Runtime credentials/IDs were not supplied")
     response = httpx.post(
-        f"{BASE_URL}/api/superadmin/saas-billing/coupons/{COUPON_ID}/restore",
+        f"{BASE_URL}/superadmin/saas-billing/coupons/{COUPON_ID}/restore",
         headers={"Authorization": f"Bearer {TOKEN}", "Idempotency-Key": str(uuid.uuid4())},
         timeout=10,
     )

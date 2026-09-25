@@ -35,7 +35,7 @@ export class SuperadminMessagingWhatsappCommandController {
   @ApiOperation({ summary: 'POST /superadmin/messaging/whatsapp/campaigns' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post('api/superadmin/messaging/whatsapp/campaigns')
+@Post('superadmin/messaging/whatsapp/campaigns')
   @ApiResponse({ type: SuperadminMessagingWhatsappCampaignResponseDto })
   @ApiOperation({ summary: 'whatsappCampaign' })
   /**
