@@ -25,7 +25,7 @@ describe('Manager HR user-visible behavior', () => {
 
   it('renders the module empty state from an MSW empty response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/hr/staff', () => HttpResponse.json({ success: true, message: 'Empty result', data: { staff: [], total: 0 } }))
+      http.get('/manager/hr/staff', () => HttpResponse.json({ success: true, message: 'Empty result', data: { staff: [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerHRMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('No staff members yet')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('Manager HR user-visible behavior', () => {
 
   it('renders a user-facing error state when the module API fails', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/hr/staff', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/hr/staff', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerHRMain initialData={null} /></ManagerTestProviders>);
     const errorText = await screen.findByText(/Unable to load HR data\./i);

@@ -23,7 +23,7 @@ describe('Manager Reports user-visible behavior', () => {
   });
 it('renders the reports error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/reports/summary', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/reports/summary', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerReportsMain /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load report data')).toBeInTheDocument();

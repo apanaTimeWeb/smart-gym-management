@@ -5,7 +5,7 @@
 /**
  * GymSmart API Client
  * Centralised fetch wrapper for all backend API calls.
- * Base URL: http://localhost:5000/api/v1
+ * Base URL: http://localhost:5000
  */
 
 export interface PaginationMeta {

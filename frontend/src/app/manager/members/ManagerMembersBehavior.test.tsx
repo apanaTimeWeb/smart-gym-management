@@ -31,7 +31,7 @@ describe('Manager Members user-visible behavior', () => {
 
   it('renders the module empty state from an MSW empty response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/members', () => HttpResponse.json({ success: true, message: 'Empty result', data: { members : [], total: 0 } }))
+      http.get('/manager/members', () => HttpResponse.json({ success: true, message: 'Empty result', data: { members : [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('No members yet')).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('Manager Members user-visible behavior', () => {
 
   it('renders a user-facing error state when the module API fails', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/members', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/members', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
     const errorText = await screen.findByText(/Unable to load members\./i);

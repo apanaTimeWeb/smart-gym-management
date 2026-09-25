@@ -31,7 +31,7 @@ describe('Manager Plans user-visible behavior', () => {
   });
 it('renders the plans empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/plans', () => HttpResponse.json({ success: true, message: 'Empty result', data: { plans: [], total: 0 } }))
+      http.get('/manager/plans', () => HttpResponse.json({ success: true, message: 'Empty result', data: { plans: [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerPlansMain /></ManagerTestProviders>);
     expect(await screen.findByRole('button', { name: 'View Plans' })).toBeInTheDocument();
@@ -40,7 +40,7 @@ it('renders the plans empty state from an MSW response', async () => {
 
   it('renders the plans error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/plans', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/plans', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerPlansMain /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load plans')).toBeInTheDocument();

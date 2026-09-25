@@ -24,7 +24,7 @@ describe('Manager PT user-visible behavior', () => {
   });
 it('renders the PT package empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/pt/packages', () => HttpResponse.json({ success: true, message: 'Empty result', data: [] }))
+      http.get('/manager/pt/packages', () => HttpResponse.json({ success: true, message: 'Empty result', data: [] }))
     );
     render(<ManagerTestProviders><ManagerPTMain /></ManagerTestProviders>);
     const { default: userEvent } = await import('@testing-library/user-event');
@@ -35,7 +35,7 @@ it('renders the PT package empty state from an MSW response', async () => {
 
   it('renders the PT error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/pt/kpis', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/pt/kpis', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerPTMain /></ManagerTestProviders>);
     expect(await screen.findByText('Unable to load PT data. Retry by refreshing this route.')).toBeInTheDocument();

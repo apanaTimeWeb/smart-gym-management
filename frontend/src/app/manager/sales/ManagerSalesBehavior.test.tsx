@@ -23,7 +23,7 @@ describe('Manager Sales user-visible behavior', () => {
   });
 it('renders the sales membership-report empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/sales/membership-report', () => HttpResponse.json({ success: true, message: 'Empty result', data: { report: [], totals: {}, total: 0, page: 1, limit: 10 } }))
+      http.get('/manager/sales/membership-report', () => HttpResponse.json({ success: true, message: 'Empty result', data: { report: [], totals: {}, total: 0, page: 1, limit: 10 } }))
     );
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();
@@ -34,7 +34,7 @@ it('renders the sales membership-report empty state from an MSW response', async
 
   it('renders the sales membership-report error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/sales/membership-report', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/sales/membership-report', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();

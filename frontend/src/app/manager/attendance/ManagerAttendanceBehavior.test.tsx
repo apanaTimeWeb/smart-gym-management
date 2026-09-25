@@ -24,7 +24,7 @@ describe('Manager Attendance user-visible behavior', () => {
   });
 it('renders the attendance empty state from an MSW response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/attendance', () => HttpResponse.json({ success: true, message: 'Empty result', data: { attendances: [], total: 0, page: 1, limit: 10 } }))
+      http.get('/manager/attendance', () => HttpResponse.json({ success: true, message: 'Empty result', data: { attendances: [], total: 0, page: 1, limit: 10 } }))
     );
     render(<ManagerTestProviders><ManagerAttendanceMain /></ManagerTestProviders>);
     expect(await screen.findByText('No attendance records')).toBeInTheDocument();
@@ -32,7 +32,7 @@ it('renders the attendance empty state from an MSW response', async () => {
 
   it('renders the attendance error state from an MSW failure', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/attendance', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/attendance', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerAttendanceMain /></ManagerTestProviders>);
     expect(await screen.findByText('Failed to load attendance records.')).toBeInTheDocument();

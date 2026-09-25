@@ -4,6 +4,7 @@ import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/Admin
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin dashboard feature.
 
 export const MOCK_ADMIN_DASHBOARD: DashboardStats = {
+  currency: 'USD',
   totalMembers: 15400,
   activeMembers: 12500,
   newMembersThisMonth: 850,
@@ -78,7 +79,7 @@ export const MOCK_ADMIN_DASHBOARD: DashboardStats = {
 export type AdminDashboardRange = 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year' | 'custom' | 'monthly' | 'yearly';
 
 const ADMIN_DASHBOARD_BRANCH_FIXTURES: Record<string, DashboardStats> = {
-  b1: {
+  b1: { currency: 'USD',
     totalMembers: 4928, activeMembers: 4000, newMembersThisMonth: 272, totalRevenue: 7840000, monthlyRevenue: 912000, netProfit: 304000, totalExpenses: 608000, pendingPayments: 144000, totalStaff: 40, activeStaff: 35, totalProducts: 144, lowStockCount: 7, totalInquiries: 384, newInquiries: 14, cancellationRate: 2.9, retentionRate: 87, arpm: 2190,
     memberGrowth: [{month:'Jan',count:3850},{month:'Feb',count:4010},{month:'Mar',count:4180},{month:'Apr',count:4470},{month:'May',count:4700},{month:'Jun',count:4928}],
     revenueTrend: [{month:'Jan',revenue:640000,profit:145000},{month:'Feb',revenue:700000,profit:171000},{month:'Mar',revenue:760000,profit:201000},{month:'Apr',revenue:810000,profit:231000},{month:'May',revenue:860000,profit:268000},{month:'Jun',revenue:912000,profit:304000}],
@@ -88,7 +89,7 @@ const ADMIN_DASHBOARD_BRANCH_FIXTURES: Record<string, DashboardStats> = {
     expiringMemberships:[{id:'b1-m1',name:'Pooja Iyer',branch:'Downtown Branch',plan:'Silver Plan',expiryDate:'2026-09-19',daysLeft:3},{id:'b1-m2',name:'Rahul Sharma',branch:'Downtown Branch',plan:'Gold Plan',expiryDate:'2026-10-10',daysLeft:24}],
     attendanceTrend:[{date:'2026-09-10',count:95},{date:'2026-09-11',count:88},{date:'2026-09-12',count:101},{date:'2026-09-13',count:93},{date:'2026-09-14',count:108},{date:'2026-09-15',count:118},{date:'2026-09-16',count:112}],
   },
-  b2: {
+  b2: { currency: 'USD',
     totalMembers: 3696, activeMembers: 3020, newMembersThisMonth: 204, totalRevenue: 5880000, monthlyRevenue: 684000, netProfit: 221000, totalExpenses: 463000, pendingPayments: 108000, totalStaff: 30, activeStaff: 27, totalProducts: 108, lowStockCount: 6, totalInquiries: 288, newInquiries: 11, cancellationRate: 3.1, retentionRate: 84, arpm: 2110,
     memberGrowth: [{month:'Jan',count:3000},{month:'Feb',count:3090},{month:'Mar',count:3220},{month:'Apr',count:3350},{month:'May',count:3510},{month:'Jun',count:3696}],
     revenueTrend: [{month:'Jan',revenue:490000,profit:118000},{month:'Feb',revenue:520000,profit:136000},{month:'Mar',revenue:561000,profit:158000},{month:'Apr',revenue:610000,profit:180000},{month:'May',revenue:648000,profit:205000},{month:'Jun',revenue:684000,profit:221000}],
@@ -98,7 +99,7 @@ const ADMIN_DASHBOARD_BRANCH_FIXTURES: Record<string, DashboardStats> = {
     expiringMemberships:[{id:'b2-m1',name:'Anita Rao',branch:'Westside Gym',plan:'Gold Plan',expiryDate:'2026-09-22',daysLeft:6},{id:'b2-m2',name:'Vikram Singh',branch:'Westside Gym',plan:'Quarterly',expiryDate:'2026-09-28',daysLeft:12}],
     attendanceTrend:[{date:'2026-09-10',count:72},{date:'2026-09-11',count:76},{date:'2026-09-12',count:81},{date:'2026-09-13',count:78},{date:'2026-09-14',count:86},{date:'2026-09-15',count:91},{date:'2026-09-16',count:88}],
   },
-  b3: {
+  b3: { currency: 'USD',
     totalMembers: 2772, activeMembers: 2295, newMembersThisMonth: 153, totalRevenue: 4410000, monthlyRevenue: 513000, netProfit: 166000, totalExpenses: 347000, pendingPayments: 81000, totalStaff: 23, activeStaff: 20, totalProducts: 81, lowStockCount: 5, totalInquiries: 216, newInquiries: 8, cancellationRate: 3.4, retentionRate: 82, arpm: 2055,
     memberGrowth: [{month:'Jan',count:2210},{month:'Feb',count:2280},{month:'Mar',count:2360},{month:'Apr',count:2470},{month:'May',count:2620},{month:'Jun',count:2772}],
     revenueTrend: [{month:'Jan',revenue:371000,profit:96000},{month:'Feb',revenue:400000,profit:111000},{month:'Mar',revenue:423000,profit:127000},{month:'Apr',revenue:455000,profit:144000},{month:'May',revenue:486000,profit:155000},{month:'Jun',revenue:513000,profit:166000}],
@@ -108,7 +109,7 @@ const ADMIN_DASHBOARD_BRANCH_FIXTURES: Record<string, DashboardStats> = {
     expiringMemberships:[{id:'b3-m1',name:'Meera Shah',branch:'Northside Arena',plan:'Silver Plan',expiryDate:'2026-09-24',daysLeft:8},{id:'b3-m2',name:'Arjun Mehta',branch:'Northside Arena',plan:'Annual Pro',expiryDate:'2026-10-01',daysLeft:15}],
     attendanceTrend:[{date:'2026-09-10',count:51},{date:'2026-09-11',count:49},{date:'2026-09-12',count:57},{date:'2026-09-13',count:54},{date:'2026-09-14',count:58},{date:'2026-09-15',count:63},{date:'2026-09-16',count:61}],
   },
-  b4: {
+  b4: { currency: 'USD',
     totalMembers: 1848, activeMembers: 1530, newMembersThisMonth: 102, totalRevenue: 2940000, monthlyRevenue: 342000, netProfit: 109000, totalExpenses: 233000, pendingPayments: 54000, totalStaff: 19, activeStaff: 16, totalProducts: 54, lowStockCount: 5, totalInquiries: 144, newInquiries: 6, cancellationRate: 3.8, retentionRate: 79, arpm: 1985,
     memberGrowth: [{month:'Jan',count:1510},{month:'Feb',count:1560},{month:'Mar',count:1600},{month:'Apr',count:1670},{month:'May',count:1750},{month:'Jun',count:1848}],
     revenueTrend: [{month:'Jan',revenue:251000,profit:72000},{month:'Feb',revenue:268000,profit:79000},{month:'Mar',revenue:286000,profit:85000},{month:'Apr',revenue:301000,profit:92000},{month:'May',revenue:324000,profit:101000},{month:'Jun',revenue:342000,profit:109000}],

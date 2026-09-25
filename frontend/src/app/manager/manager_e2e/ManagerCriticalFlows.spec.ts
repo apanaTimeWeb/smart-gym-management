@@ -47,7 +47,7 @@ test.describe('Manager critical journeys', () => {
   });
 
   test('permission-denied responses surface the backend message', async ({ page }) => {
-    await page.route('**/api/v1/manager/plans/membership-overview', async (route) => {
+    await page.route('**/manager/plans/membership-overview', async (route) => {
       await route.fulfill({ status: StatusCodes.FORBIDDEN, contentType: 'application/json', body: JSON.stringify({ success: false, message: 'Manager membership access denied.', data: null }) });
     });
     await page.goto('/manager/plans');
@@ -56,7 +56,7 @@ test.describe('Manager critical journeys', () => {
   });
 
   test('session expiry redirects away after an authenticated API returns 401', async ({ page }) => {
-    await page.route('**/api/v1/manager/profile', async (route) => {
+    await page.route('**/manager/profile', async (route) => {
       await route.fulfill({ status: StatusCodes.UNAUTHORIZED, contentType: 'application/json', body: JSON.stringify({ success: false, message: 'Session expired.', data: null }) });
     });
     await page.goto('/manager/profile');
@@ -141,7 +141,7 @@ test.describe('Manager critical journeys', () => {
 
   test('failed member load can be retried and recovers to the real dataset', async ({ page }) => {
     let failed = false;
-    await page.route('**/api/v1/manager/members?*', async (route) => {
+    await page.route('**/manager/members?*', async (route) => {
       if (!failed) {
         failed = true;
         await route.fulfill({ status: StatusCodes.SERVICE_UNAVAILABLE, contentType: 'application/json', body: JSON.stringify({ success: false, message: 'Temporary member service failure.', data: null }) });

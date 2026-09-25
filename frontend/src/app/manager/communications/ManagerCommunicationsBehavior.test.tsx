@@ -30,7 +30,7 @@ describe('Manager Communications user-visible behavior', () => {
   });
 it('renders the communications empty history state from MSW', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/communications/campaigns', () => HttpResponse.json({ success: true, message: 'Empty result', data: { campaigns: [], total: 0 } }))
+      http.get('/manager/communications/campaigns', () => HttpResponse.json({ success: true, message: 'Empty result', data: { campaigns: [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerCommunicationsMain /></ManagerTestProviders>);
     expect(await screen.findByText('No campaigns yet')).toBeInTheDocument();
@@ -38,7 +38,7 @@ it('renders the communications empty history state from MSW', async () => {
 
   it('renders the communications error state from MSW', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/communications/campaigns', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+      http.get('/manager/communications/campaigns', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
     );
     render(<ManagerTestProviders><ManagerCommunicationsMain /></ManagerTestProviders>);
     expect(await screen.findByText('Unable to load campaigns.')).toBeInTheDocument();
@@ -57,7 +57,7 @@ it('renders the communications empty history state from MSW', async () => {
 
   it('renders the empty campaign state from an MSW empty response', async () => {
     managerMswServer.use(
-      http.get('/api/v1/manager/communications/campaigns', () => HttpResponse.json({ success: true, message: 'Empty result', data: { campaigns: [], total: 0 } }))
+      http.get('/manager/communications/campaigns', () => HttpResponse.json({ success: true, message: 'Empty result', data: { campaigns: [], total: 0 } }))
     );
     render(<ManagerTestProviders><ManagerCommunicationsMain /></ManagerTestProviders>);
     expect(await screen.findByText('No campaigns yet')).toBeInTheDocument();

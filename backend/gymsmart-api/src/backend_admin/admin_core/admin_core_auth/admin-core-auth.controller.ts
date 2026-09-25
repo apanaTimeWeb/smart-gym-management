@@ -11,7 +11,7 @@ import { RequireIdempotencyKey } from '@/backend_admin/admin_core/admin_core_ide
 import type { Request, Response } from 'express';
 
 @ApiTags('Authentication')
-@Controller('auth')
+@Controller('admin/auth')
 /**
  * @description Defines the AdminCoreAuthController boundary for the admin_core_auth backend feature.
  * @remarks Keep this class focused on its declared responsibility; preserve tenant, contract, security, and AI-context invariants when modifying it.

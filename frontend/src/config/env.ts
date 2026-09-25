@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.string().url().default('http://localhost:5000/api/v1'),
+  NEXT_PUBLIC_API_URL: z.string().url().default('http://localhost:5000'),
   NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
   NEXT_PUBLIC_DEMO_MODE: z.string().default('false').transform((val) => val === 'true'),
   NEXT_PUBLIC_GYM_NAME: z.string().default('Smart Gym'),
