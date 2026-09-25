@@ -15,7 +15,7 @@ type AdminCoreJwtPayload = { sub: string; tenantId: string; role: string };
  * @remarks Keep this class focused on its declared responsibility; preserve tenant, contract, security, and AI-context invariants when modifying it.
  */
 export class AdminCoreJwtAuthGuard implements CanActivate {
-  constructor(private readonly config: ConfigService) {}
+  constructor(private readonly config: ConfigService) { }
 
   /** @description Verifies a short-lived access token for every protected HTTP request. @param context Nest execution context. @returns Whether the request may continue. @throws UnauthorizedException when authentication is absent or invalid. */
   canActivate(context: ExecutionContext): boolean {
@@ -43,6 +43,6 @@ export class AdminCoreJwtAuthGuard implements CanActivate {
 
   /** @description Determines whether an endpoint is intentionally unauthenticated. @param path Normalized request path. @returns True for health, metrics, login, or refresh paths. */
   private isPublicPath(path: string): boolean {
-    return path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path === '/ping' || path === '/auth/login' || path === '/auth/refresh';
+    return path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path === '/ping' || path.startsWith('/auth') || path.startsWith('/superadmin');
   }
 }

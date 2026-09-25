@@ -101,7 +101,8 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
   if (auth) {
     const tokenRes = await fetch(AuthUrlConfig.PROXY_API.TOKEN).catch(() => null);
     if (tokenRes?.ok) {
-      const { token } = await tokenRes.json();
+      const resJson = await tokenRes.json();
+      const token = resJson?.data?.token;
       if (token) headers['Authorization'] = `Bearer ${token}`;
     }
   }
@@ -137,21 +138,27 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
       }
     }
 
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+    
     // ── 5xx server error fallback ─────────────────────────────────────────────
-    if (finalRes.status >= 500) {
+    if (isDemoMode && finalRes.status >= 500) {
       console.warn(`[MOCK] Backend returned ${finalRes.status} for ${path} — falling back to mock data`);
       return getMockResponse(path) as T;
     }
 
     // ── Dev mode: unhandled 4xx → fall back to mock data ─────────────────────
-    if (process.env.NODE_ENV !== 'production' && finalRes.status >= 400) {
+    if (isDemoMode && process.env.NODE_ENV !== 'production' && finalRes.status >= 400) {
       console.warn(`[MOCK] Backend returned ${finalRes.status} for ${path} in dev mode — falling back to mock data`);
       return getMockResponse(path) as T;
     }
   } catch (_networkErr) {
     // Backend is offline / ECONNREFUSED — fall back to hardcoded mock data
-    console.warn(`[MOCK] Network error for ${path} — falling back to mock data`);
-    return getMockResponse(path) as T;
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+    if (isDemoMode) {
+      console.warn(`[MOCK] Network error for ${path} — falling back to mock data`);
+      return getMockResponse(path) as T;
+    }
+    throw _networkErr;
   }
 
   const json = await finalRes.json();

@@ -34,6 +34,12 @@ async function createDatabaseIfNotExists() {
 async function bootstrap() {
   await createDatabaseIfNotExists();
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: true,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept, Authorization, x-tenant-id, x-request-id',
+  });
   // Set global prefix if needed: app.setGlobalPrefix('api/v1');
   await app.listen(5000);
   console.log('Unified Monolith running on port 5000');

@@ -25,7 +25,17 @@ export default function SuperadminDashboardView() {
     }
     if (error || !apiData) {
         return (<div className="p-8 text-center text-danger font-medium">
-        
+        <div className="flex flex-col items-center justify-center p-12 bg-surface border border-danger/20 rounded-xl">
+          <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-text-primary mb-2">Failed to load dashboard</h3>
+          <p className="text-text-secondary text-center max-w-md">
+            We couldn't fetch the latest dashboard metrics. Please check if the backend server is running and try refreshing the page.
+          </p>
+        </div>
       </div>);
     }
     const { metrics, revenue: revenueChartData, growth: growthChartData = [] } = apiData;
