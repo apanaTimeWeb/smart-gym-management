@@ -38,7 +38,7 @@ async function bootstrap() {
     origin: true,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Accept, Authorization, x-tenant-id, x-request-id',
+    allowedHeaders: 'Content-Type, Accept, Authorization, x-tenant-id, x-request-id, idempotency-key',
   });
   // Set global prefix if needed: app.setGlobalPrefix('api/v1');
   await app.listen(5000);

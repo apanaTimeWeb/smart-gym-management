@@ -8,8 +8,8 @@ export const GymsUrlConfig = {
         ADD: "/superadmin/gyms/add",
     },
     BACKEND_API: {
-        BASE: '/api/gyms',
-        IMPERSONATE: '/api/gyms',
+        BASE: '/superadmin/gyms',
+        IMPERSONATE: '/superadmin/gyms',
         SUBSCRIPTION_PLANS: '/superadmin/saas-billing/plans',
     },
     /** Ghost-login constants. Owned here so the gyms module does not cross-import /auth. */
