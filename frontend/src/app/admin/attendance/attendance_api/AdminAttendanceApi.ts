@@ -22,10 +22,10 @@ function buildQuery(params?: Record<string, string | number | DateRangeFilter | 
 }
 
 export const fetchAttendanceRecords = async (params: AdminAttendanceQueryParams) =>
-  apiFetch<ApiResponse<AdminAttendanceRecord[]>>(`${AdminAttendanceUrlConfig.api.base}${buildQuery(params as any)}`, { method: 'GET', dataSchema: z.array(adminAttendanceRecordSchema) });
+  apiFetch<ApiResponse<AdminAttendanceRecord[]>>(`${AdminAttendanceUrlConfig.api.base}${buildQuery(params as unknown as Record<string, string | number | undefined>)}`, { method: 'GET', dataSchema: z.array(adminAttendanceRecordSchema) });
 
 export const fetchAttendanceSummary = async (params: Pick<AdminAttendanceQueryParams, 'branchId' | 'dateRange'>) =>
-  apiFetch<ApiResponse<AdminAttendanceSummary>>(`${AdminAttendanceUrlConfig.api.base}/summary${buildQuery(params as any)}`, { method: 'GET', dataSchema: adminAttendanceSummarySchema });
+  apiFetch<ApiResponse<AdminAttendanceSummary>>(`${AdminAttendanceUrlConfig.api.base}/summary${buildQuery(params as unknown as Record<string, string | number | undefined>)}`, { method: 'GET', dataSchema: adminAttendanceSummarySchema });
 
 export const fetchAttendanceTrend = async (params: Pick<AdminAttendanceQueryParams, 'branchId' | 'dateRange'>) =>
-  apiFetch<ApiResponse<AdminAttendanceTrendPoint[]>>(`${AdminAttendanceUrlConfig.api.base}/trend${buildQuery(params as any)}`, { method: 'GET', dataSchema: z.array(adminAttendanceTrendPointSchema) });
+  apiFetch<ApiResponse<AdminAttendanceTrendPoint[]>>(`${AdminAttendanceUrlConfig.api.base}/trend${buildQuery(params as unknown as Record<string, string | number | undefined>)}`, { method: 'GET', dataSchema: z.array(adminAttendanceTrendPointSchema) });

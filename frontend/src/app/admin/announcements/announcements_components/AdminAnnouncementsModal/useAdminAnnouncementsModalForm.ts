@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAdminAnnouncementsLogic } from '@/app/admin/announcements/announcements_context/useAdminAnnouncementsLogic';
 import { useAdminAnnouncementsStore } from '@/app/admin/announcements/announcements_store/useAdminAnnouncementsStore';
 import { useUnsavedChangesGuard } from '@/app/admin/admin_layout/admin_utils/useAdminUnsavedChangesGuard';
-import { announcementSchema } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsSchemas';
+import { announcementFormValuesSchema } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsSchemas';
 import { EMPTY_ANNOUNCEMENT_FORM } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 import type { AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
@@ -17,7 +17,7 @@ export function useAdminAnnouncementsModalForm() {
   const { showModal, setShowModal, editingAnnouncement, saveAnnouncement, saving } = useAdminAnnouncementsLogic();
   const { form: storeForm } = useAdminAnnouncementsStore();
   const form = useForm<AnnouncementFormValues>({
-    resolver: zodResolver(announcementSchema) as any,
+    resolver: zodResolver(announcementFormValuesSchema),
     defaultValues: storeForm ?? EMPTY_ANNOUNCEMENT_FORM,
   });
   const { register, handleSubmit, control, reset, formState: { errors, isDirty } } = form;

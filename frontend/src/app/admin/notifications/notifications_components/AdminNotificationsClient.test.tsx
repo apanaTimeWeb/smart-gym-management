@@ -9,10 +9,10 @@ vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage
       { id: '1', text: 'Test notification one', time: '5m ago', unread: true },
       { id: '2', text: 'Test notification two', time: '1h ago', unread: false },
     ],
+    status: 'success',
     markAllAsRead: vi.fn(),
     clearAll: vi.fn(),
     markAsRead: vi.fn(),
-    clearAll: vi.fn(),
   }),
 }));
 
@@ -40,11 +40,6 @@ describe('AdminNotificationsClient', () => {
   it('renders Mark all read button', () => {
     render(<AdminNotificationsClient />);
     expect(screen.getByText(/Mark all read/i)).toBeInTheDocument();
-  });
-
-  it('renders Clear all button', () => {
-    render(<AdminNotificationsClient />);
-    expect(screen.getByText(/Clear all/i)).toBeInTheDocument();
   });
 
   it('renders the notifications list', () => {

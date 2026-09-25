@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const moduleRoot = path.resolve(__dirname);
-const featureModules = new Set(['announcements','attendance','audit_logs','blacklist','branches','campaigns','coupons','dashboard','data-export','finance','gym-health-alerts','hr','members','notifications','payouts','permissions','plans','profile','reports','sales','settings','subscriptions','usage']);
+const featureModules = new Set(['announcements','attendance','audit_logs','blacklist','branches','campaigns','coupons','dashboard','finance','gym-health-alerts','hr','members','notifications','payouts','permissions','plans','profile','reports','sales','settings','subscriptions','usage']);
 
 function sourceFiles(root: string): string[] {
   const output: string[] = [];

@@ -15,7 +15,7 @@ import type { PayrollFormValues } from '@/app/admin/hr/hr_types/AdminHrTypes';
 export function useAdminHrPayrollModalForm() {
   const { showPayrollModal, setShowPayrollModal, savePayroll, saving, staff } = useHrContext();
   const [calculationInfo, setCalculationInfo] = React.useState('');
-  const form = useForm<PayrollFormValues>({    resolver: zodResolver(payrollSchema) as any, defaultValues: EMPTY_PAYROLL_FORM });
+  const form = useForm<PayrollFormValues>({    resolver: zodResolver(payrollSchema), defaultValues: EMPTY_PAYROLL_FORM });
   const { register, handleSubmit, reset, setValue, control, formState: { errors, isDirty } } = form;
   const { confirmDiscardIfDirty } = useUnsavedChangesGuard(isDirty);
   const formValues = useWatch({ control });

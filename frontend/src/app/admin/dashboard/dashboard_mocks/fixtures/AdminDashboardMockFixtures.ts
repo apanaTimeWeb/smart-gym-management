@@ -128,7 +128,7 @@ export function getAdminDashboardFixture(branchId: string | undefined, range: Ad
   // Keep revenueTrend intact (6 months trailing) as UI chart expects it for trailing view.
   // Other trends (member growth, attendance) can be sliced based on the filter range if needed.
   const trendLength = range === 'last_month' || range === 'this_month' ? 1 : range === 'last_3_months' ? 3 : range === 'last_6_months' || range === 'this_year' ? 6 : base.revenueTrend.length;
-  // base.revenueTrend = base.revenueTrend.slice(-trendLength); // Removed to keep chart functional
+  base.revenueTrend = base.revenueTrend.slice(-trendLength);
   base.memberGrowth = base.memberGrowth.slice(-trendLength);
   base.attendanceTrend = base.attendanceTrend?.slice(-Math.min(7, trendLength * 2)) ?? [];
   return base;

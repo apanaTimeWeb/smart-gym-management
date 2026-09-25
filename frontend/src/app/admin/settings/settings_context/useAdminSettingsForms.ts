@@ -28,7 +28,7 @@ import type { ZodType } from 'zod';
 
 function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
   initialData: TFormValues,
-  schema: any,
+  schema: unknown,
   submit: (data: TFormValues) => ReturnType<typeof settingsApi.updateSettings>,
   toastId: string,
 ) {

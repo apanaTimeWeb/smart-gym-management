@@ -20,6 +20,8 @@ function wrapper({ children }: { children: React.ReactNode }) {
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
 
+import { waitFor } from '@testing-library/react';
+
 describe('useAdminPermissionsLogic revoke confirmation contract', () => {
   const confirm = vi.fn();
   beforeEach(() => {
@@ -30,6 +32,7 @@ describe('useAdminPermissionsLogic revoke confirmation contract', () => {
 
   it('requires confirmation when revoking an enabled role permission', async () => {
     const { result } = renderHook(() => useAdminPermissionsLogic(), { wrapper });
+    await waitFor(() => expect(result.current.status).toBe('success'));
     await act(async () => {
       await result.current.updateRolePermission('manager', 'members.read', false);
     });
@@ -40,6 +43,7 @@ describe('useAdminPermissionsLogic revoke confirmation contract', () => {
   it('does not submit a revoke when confirmation is declined', async () => {
     confirm.mockResolvedValueOnce(false);
     const { result } = renderHook(() => useAdminPermissionsLogic(), { wrapper });
+    await waitFor(() => expect(result.current.status).toBe('success'));
     await act(async () => {
       await result.current.updateRolePermission('manager', 'members.read', false);
     });
