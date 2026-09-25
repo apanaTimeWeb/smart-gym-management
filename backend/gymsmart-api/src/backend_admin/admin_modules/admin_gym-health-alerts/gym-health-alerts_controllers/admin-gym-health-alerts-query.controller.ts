@@ -29,8 +29,9 @@ export class AdminGymHealthAlertsQueryController {
   @Get('fetchAlerts')
   @ApiOperation({ summary: 'Execute fetchAlerts' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminGymHealthAlertDto] })
-  async findAllAlerts(@Query() query: AdminGymHealthAlertsQueryDto): Promise<AdminCorePaginatedResult<AdminGymHealthAlertDto>> {
-    return this.service.findAllAlerts(query);
+  async findAllAlerts(@Query() query: AdminGymHealthAlertsQueryDto): Promise<AdminGymHealthAlertDto[]> {
+    const result = await this.service.findAllAlerts(query);
+    return result.items;
   }
 
   // SLA: STANDARD

@@ -43,6 +43,7 @@ export class SuperadminGymsQueryController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findAll(@Query() query: SuperadminGymsQueryDto): Promise<{ data: SuperadminGymsResponseDto[]; meta: unknown }> { return (await this.listService.findGymsPage(query)) as never; }
+
 /**
  * Primary Intent: Executes the export use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -62,6 +63,7 @@ export class SuperadminGymsQueryController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async export(): Promise<{ downloadUrl: string }> { return this.operationalService.exportGyms(); }
+
 /**
  * Primary Intent: Executes the findOne use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

@@ -29,16 +29,18 @@ export class AdminCampaignsQueryController {
   @Get('audiences')
   @ApiOperation({ summary: 'Execute fetchAudiences' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminCampaignsAudienceDto] })
-  async findAllAudiences(@Query() query: AdminCampaignsQueryDto): Promise<AdminCorePaginatedResult<AdminCampaignsAudienceDto>> {
-    return this.service.findAllAudiences(query);
+  async findAllAudiences(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsAudienceDto[]> {
+    const result = await this.service.findAllAudiences(query);
+    return result.items;
   }
 
   // SLA: STANDARD
   @Get('templates')
   @ApiOperation({ summary: 'Execute fetchTemplates' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminCampaignsTemplateDto] })
-  async findAllTemplates(@Query() query: AdminCampaignsQueryDto): Promise<AdminCorePaginatedResult<AdminCampaignsTemplateDto>> {
-    return this.service.findAllTemplates(query);
+  async findAllTemplates(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsTemplateDto[]> {
+    const result = await this.service.findAllTemplates(query);
+    return result.items;
   }
 
   // SLA: STANDARD
