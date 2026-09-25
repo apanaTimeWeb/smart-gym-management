@@ -21,7 +21,7 @@ import { SuperadminReportsDeleteService } from '@/backend_superadmin/superadmin_
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('reports')
-@Controller('/superadmin/reports')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminReportsCommandController {
@@ -37,7 +37,7 @@ export class SuperadminReportsCommandController {
   @ApiOperation({ summary: 'create reports' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/reports', 'api/superadmin/reports'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -60,7 +60,7 @@ export class SuperadminReportsCommandController {
   @ApiOperation({ summary: 'update reports' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/reports/:id', 'api/superadmin/reports/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -82,7 +82,7 @@ export class SuperadminReportsCommandController {
   @ApiOperation({ summary: 'remove reports' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(':id')
+@Delete(['superadmin/reports/:id', 'api/superadmin/reports/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

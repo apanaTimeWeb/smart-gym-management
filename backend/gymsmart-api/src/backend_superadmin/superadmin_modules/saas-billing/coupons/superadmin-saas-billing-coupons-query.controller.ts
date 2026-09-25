@@ -17,7 +17,7 @@ import { SuperadminSaasBillingCouponsFindService } from '@/backend_superadmin/su
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('coupons')
-@Controller('/superadmin/saas-billing/coupons')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSaasBillingCouponsQueryController {
@@ -31,7 +31,7 @@ export class SuperadminSaasBillingCouponsQueryController {
 
   /** Returns a paginated coupons list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/saas-billing/coupons', 'api/superadmin/saas-billing/coupons'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSaasBillingCouponsQueryController {
 
   /** Returns one coupons record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

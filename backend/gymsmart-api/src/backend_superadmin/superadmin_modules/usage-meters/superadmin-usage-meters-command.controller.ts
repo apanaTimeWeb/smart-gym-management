@@ -21,7 +21,7 @@ import { SuperadminUsageMetersDeleteService } from '@/backend_superadmin/superad
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('usage-meters')
-@Controller('/superadmin/usage-meters')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminUsageMetersCommandController {
@@ -37,7 +37,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'create usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/usage-meters', 'api/superadmin/usage-meters'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -60,7 +60,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'update usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -82,7 +82,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'remove usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(':id')
+@Delete(['superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

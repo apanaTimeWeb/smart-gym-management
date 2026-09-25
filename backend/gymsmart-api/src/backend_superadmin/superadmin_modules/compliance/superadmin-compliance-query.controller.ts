@@ -18,7 +18,7 @@ import { SuperadminComplianceResponseDto } from '@/backend_superadmin/superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('compliance')
-@Controller('/superadmin/compliance')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminComplianceQueryController {
@@ -32,7 +32,7 @@ export class SuperadminComplianceQueryController {
 
   /** Returns one compliance record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
   @ApiResponse({ type: SuperadminComplianceResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

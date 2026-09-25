@@ -17,7 +17,7 @@ import { SuperadminGlobalAuditQueryDto } from '@/backend_superadmin/superadmin_m
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('audit-logs')
-@Controller('/superadmin/audit-logs')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminGlobalAuditAuditLogsQueryController {
@@ -31,7 +31,7 @@ export class SuperadminGlobalAuditAuditLogsQueryController {
 
   /** Returns the audit log collection through the frontend route alias. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/audit-logs', 'api/superadmin/audit-logs'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'list' })
   /**

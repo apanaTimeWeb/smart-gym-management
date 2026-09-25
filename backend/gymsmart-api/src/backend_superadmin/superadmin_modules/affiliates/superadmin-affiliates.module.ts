@@ -24,7 +24,7 @@ import { SuperadminAffiliatesLedgerRepository } from '@/backend_superadmin/super
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminAffiliatesEntity, SuperadminAffiliatesLedgerEntity])],
-  controllers: [SuperadminAffiliatesQueryController, SuperadminAffiliatesCommandController],
+  controllers: [SuperadminAffiliatesCommandController, SuperadminAffiliatesQueryController],
   providers: [SuperadminAffiliatesStatusService, SuperadminAffiliatesPayoutService, SuperadminAffiliatesPayoutOrchestratorService, SuperadminAffiliatesLedgerRepository, SuperadminAffiliatesRepository, SuperadminAffiliatesListService, SuperadminAffiliatesFindService, SuperadminAffiliatesCreateService, SuperadminAffiliatesUpdateService, SuperadminAffiliatesDeleteService],
   exports: [SuperadminAffiliatesRepository],
 })

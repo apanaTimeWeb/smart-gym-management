@@ -18,7 +18,7 @@ import { SuperadminMessagingNotificationResponseDto } from '@/backend_superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('messaging-notifications')
-@Controller('/superadmin/messaging/notifications')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminMessagingNotificationCommandController {
@@ -33,7 +33,7 @@ export class SuperadminMessagingNotificationCommandController {
   /** Marks every current notification as read. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('read-all')
+  @Patch(['superadmin/messaging/notifications/read-all', 'api/superadmin/messaging/notifications/read-all'])
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'All notifications marked as read.' })
@@ -55,7 +55,7 @@ export class SuperadminMessagingNotificationCommandController {
   /** Marks one notification as read. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/read')
+@Patch(['superadmin/messaging/notifications/:id/read', 'api/superadmin/messaging/notifications/:id/read'])
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminMessagingNotificationResponseDto })

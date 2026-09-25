@@ -25,7 +25,7 @@ import { SuperadminAffiliatesResponseDto } from '@/backend_superadmin/superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('affiliates')
-@Controller('/superadmin/affiliates')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminAffiliatesCommandController {
@@ -41,7 +41,7 @@ export class SuperadminAffiliatesCommandController {
   @ApiOperation({ summary: 'create affiliates' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/affiliates', 'api/superadmin/affiliates'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
@@ -64,7 +64,7 @@ export class SuperadminAffiliatesCommandController {
   @ApiOperation({ summary: 'update affiliates' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/affiliates/:id', 'api/superadmin/affiliates/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -85,7 +85,7 @@ export class SuperadminAffiliatesCommandController {
   // SLA: STANDARD
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(':id/pay')
+  @Post(['superadmin/affiliates/:id/pay', 'api/superadmin/affiliates/:id/pay'])
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
   @ApiOperation({ summary: 'pay' })
   /**
@@ -106,7 +106,7 @@ export class SuperadminAffiliatesCommandController {
   @ApiOperation({ summary: 'remove affiliates' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/affiliates/:id', 'api/superadmin/affiliates/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -129,7 +129,7 @@ export class SuperadminAffiliatesCommandController {
   @ApiOperation({ summary: 'changeStatus affiliates' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id/status')
+  @Patch(['superadmin/affiliates/:id/status', 'api/superadmin/affiliates/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

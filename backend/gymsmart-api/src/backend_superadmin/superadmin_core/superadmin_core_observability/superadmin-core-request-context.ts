@@ -27,6 +27,12 @@ export function getRequestContext(): SuperadminRequestContextValue | undefined {
 
 export function setAuthenticatedRequestContext(userId: string, userRole: SuperadminRole, tenantId: string | null): void {
   const current = requestContextStorage.getStore();
-  if (!current) return;
-  requestContextStorage.enterWith({ ...current, userId, userRole, tenantId });
+  if (!current) {
+    // Fallback: create a minimal store if called before middleware (e.g. E2E bypass in guards)
+    requestContextStorage.enterWith({ requestId: 'e2e-fallback', traceId: 'e2e-fallback', spanId: 'e2e-fallback', ipAddress: '127.0.0.1', userId, userRole, tenantId });
+    return;
+  }
+  current.userId = userId;
+  current.userRole = userRole;
+  current.tenantId = tenantId;
 }

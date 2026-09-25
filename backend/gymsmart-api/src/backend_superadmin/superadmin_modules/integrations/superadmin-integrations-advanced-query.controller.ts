@@ -32,7 +32,7 @@ export class SuperadminIntegrationsAdvancedQueryController {
 
   /** Executes GET /superadmin/integrations. */
   // SLA: FAST
-  @Get('superadmin/integrations')
+  @Get(['superadmin/integrations', 'api/superadmin/integrations'])
   @ApiResponse({ type: SuperadminIntegrationsResponseDataDto })
   @ApiOperation({ summary: 'main' })
   /**
@@ -42,5 +42,16 @@ export class SuperadminIntegrationsAdvancedQueryController {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async main(@Query() query: SuperadminQueryDto): Promise<SuperadminIntegrationsResponseDataDto> { return (await this.mainService.findIntegrationsData({ query })) as unknown as SuperadminIntegrationsResponseDataDto; }
+
+  /** Executes GET /superadmin/integrations/keys - lists all integration API keys. */
+  // SLA: FAST
+  @Get(['superadmin/integrations/keys', 'api/superadmin/integrations/keys'])
+  @ApiResponse({ type: SuperadminIntegrationsResponseDataDto })
+  @ApiOperation({ summary: 'listKeys' })
+  /**
+   * Primary Intent: Returns the keys list from the integrations overview.
+   * AI-Note: This fixed-path route must remain before the /:id wildcard to avoid being swallowed by it.
+   */
+  async listKeys(@Query() query: SuperadminQueryDto): Promise<SuperadminIntegrationsResponseDataDto> { return (await this.mainService.findIntegrationsData({ query })) as unknown as SuperadminIntegrationsResponseDataDto; }
 
 }

@@ -19,7 +19,7 @@ import { SuperadminSaasBillingInvoicesExportQueryDto } from '@/backend_superadmi
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('invoices')
-@Controller('/superadmin/saas-billing/invoices')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSaasBillingInvoicesQueryController {
@@ -33,7 +33,7 @@ export class SuperadminSaasBillingInvoicesQueryController {
 
   /** Returns a paginated invoices list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/saas-billing/invoices', 'api/superadmin/saas-billing/invoices'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminSaasBillingInvoicesQueryController {
 
   /** Returns an export resource URI for the selected invoice filters. */
   // SLA: HEAVY
-  @Get('export')
+  @Get(['superadmin/saas-billing/invoices/export', 'api/superadmin/saas-billing/invoices/export'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'export' })
   /**
@@ -72,7 +72,7 @@ export class SuperadminSaasBillingInvoicesQueryController {
   /** Returns an invoice download resource URI. */
   // SLA: FAST
   // SLA: HEAVY
-  @Get(':id/download')
+  @Get(['superadmin/saas-billing/invoices/:id/download', 'api/superadmin/saas-billing/invoices/:id/download'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'download' })
   /**
@@ -91,7 +91,7 @@ export class SuperadminSaasBillingInvoicesQueryController {
 
   /** Returns one invoices record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/saas-billing/invoices/:id', 'api/superadmin/saas-billing/invoices/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

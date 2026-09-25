@@ -39,8 +39,7 @@ export class SuperadminGymsAdministrationCommandController {
   // SLA: STANDARD
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: HEAVY
-@Post('superadmin/gyms/business-controls')
-  @Post('api/superadmin/gyms/business-controls')
+@Post(['superadmin/gyms/business-controls', 'api/superadmin/gyms/business-controls'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'bulkAction' })
   /**

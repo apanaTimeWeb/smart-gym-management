@@ -16,7 +16,7 @@ import { SuperadminMessagingNotificationResponseDto } from '@/backend_superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('messaging-notifications')
-@Controller('/superadmin/messaging/notifications')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminMessagingNotificationQueryController {
@@ -31,7 +31,7 @@ export class SuperadminMessagingNotificationQueryController {
   /** Lists notifications for the current Superadmin. */
   // SLA: STANDARD
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/messaging/notifications', 'api/superadmin/messaging/notifications'])
   @ApiResponse({ status: HttpStatus.OK, type: [SuperadminMessagingNotificationResponseDto] })
   @ApiOperation({ summary: 'list' })
   /**

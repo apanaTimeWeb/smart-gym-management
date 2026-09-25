@@ -17,7 +17,7 @@ import { SuperadminSettingsFindService } from '@/backend_superadmin/superadmin_m
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('settings')
-@Controller('/superadmin/settings')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSettingsQueryController {
@@ -31,7 +31,7 @@ export class SuperadminSettingsQueryController {
 
   /** Returns a paginated settings list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/settings', 'api/superadmin/settings'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSettingsQueryController {
 
   /** Returns one settings record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/settings/:id', 'api/superadmin/settings/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -31,6 +31,7 @@ export class SuperadminGymsExportWorkerService implements OnModuleInit, OnModule
   private running=true;
   private readonly pageSize=500;
   private readonly maxAttempts=3;
+  private subscriberClient: ReturnType<ReturnType<SuperadminCoreRedisService['getClient']>['duplicate']> | null = null;
   constructor(private readonly redis:SuperadminCoreRedisService,private readonly repository:SuperadminGymsRepository,private readonly jobs:SuperadminGymsExportJobRepository,private readonly config:ConfigService,private readonly logger:PinoLogger){}
 /**
  * Primary Intent: Executes the onModuleInit use case within the owning backend feature boundary.
@@ -58,7 +59,7 @@ export class SuperadminGymsExportWorkerService implements OnModuleInit, OnModule
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  onModuleDestroy():void{ this.running=false; }
+  onModuleDestroy():void{ this.running=false; this.subscriberClient?.quit(); }
   /**
  * Primary Intent: Executes the `consume` responsibility owned by this feature-local superadmin-gyms-export-worker.service construct.
    * Edge Cases: Missing records, invalid inputs, and downstream failures must fail fast and preserve the owning feature's error contract.
@@ -71,7 +72,8 @@ export class SuperadminGymsExportWorkerService implements OnModuleInit, OnModule
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private async consume():Promise<void>{ while(this.running){ const result=await this.redis.getClient().brpop(SUPERADMIN_GYMS_EXPORT_QUEUE,2); if(!result) continue; const job=JSON.parse(result[1]) as ExportEnvelope; try{ await this.process(job); }catch(error){ this.logger.error({err:error,jobId:job.jobId,context:SuperadminGymsExportWorkerService.name},'Gym export worker iteration failed'); } } }
+  private async consume():Promise<void>{ if (!this.subscriberClient) this.subscriberClient = this.redis.getClient().duplicate();
+      while(this.running){ let result; try { result = await this.subscriberClient.brpop(SUPERADMIN_GYMS_EXPORT_QUEUE, 2); } catch(e) { await new Promise(r => setTimeout(r, 1000)); continue; } if(!result) continue; const job=JSON.parse(result[1]) as ExportEnvelope; try{ await this.process(job); }catch(error){ this.logger.error({err:error,jobId:job.jobId,context:SuperadminGymsExportWorkerService.name},'Gym export worker iteration failed'); } } }
   /**
  * Primary Intent: Executes the `process` responsibility owned by this superadmin-gyms-export-worker.service construct.
    * Edge Cases: Invalid or unavailable dependencies must fail fast according to the owning module contract.

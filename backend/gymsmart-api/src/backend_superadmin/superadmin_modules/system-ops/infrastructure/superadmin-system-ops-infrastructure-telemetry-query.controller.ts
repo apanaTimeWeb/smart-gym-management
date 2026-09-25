@@ -76,8 +76,7 @@ export class SuperadminSystemOpsInfrastructureTelemetryQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/system-ops/infrastructure/api-health')
-  @Get('api/superadmin/system-ops/infrastructure/api-health')
+@Get(['superadmin/system-ops/infrastructure/api-health', 'api/superadmin/system-ops/infrastructure/api-health'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'apiHealth' })
   /**

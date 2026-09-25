@@ -22,7 +22,7 @@ import { SuperadminAnalyticsRetentionInsightsService } from '@/backend_superadmi
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminAnalyticsEntity])],
-  controllers: [SuperadminAnalyticsQueryController, SuperadminAnalyticsCommandController, SuperadminAnalyticsInsightsQueryController],
+  controllers: [SuperadminAnalyticsInsightsQueryController, SuperadminAnalyticsCommandController, SuperadminAnalyticsQueryController],
   providers: [SuperadminAnalyticsMainService, SuperadminAnalyticsRetentionInsightsService, SuperadminAnalyticsRepository, SuperadminAnalyticsListService, SuperadminAnalyticsFindService, SuperadminAnalyticsCreateService, SuperadminAnalyticsUpdateService, SuperadminAnalyticsDeleteService],
   exports: [SuperadminAnalyticsRepository],
 })

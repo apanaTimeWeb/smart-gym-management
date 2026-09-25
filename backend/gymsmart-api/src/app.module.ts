@@ -72,7 +72,7 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
         password: config.getOrThrow<string>('MASTER_DB_PASSWORD'),
         database: config.getOrThrow<string>('MASTER_DB_NAME'),
         autoLoadEntities: true, // MAGIC: Automatically registers any entity provided by feature modules!
-        synchronize: process.env.NODE_ENV !== 'production',
+        synchronize: false, // Schema managed via migrations to avoid multi-entity sync conflicts on shared tables (e.g. tenants)
         extra: {
           max: 20,
           connectionTimeoutMillis: 30000,

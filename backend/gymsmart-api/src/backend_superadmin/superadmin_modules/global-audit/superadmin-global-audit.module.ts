@@ -24,7 +24,7 @@ import { SuperadminGlobalAuditAuditLogsQueryController } from '@/backend_superad
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminGlobalAuditContractSnapshotEntity, SuperadminGlobalAuditEntity])],
-  controllers: [SuperadminGlobalAuditQueryController, SuperadminGlobalAuditCommandController, SuperadminGlobalAuditAuditLogsQueryController, SuperadminGlobalAuditInvestigationQueryController],
+  controllers: [SuperadminGlobalAuditInvestigationQueryController, SuperadminGlobalAuditAuditLogsQueryController, SuperadminGlobalAuditCommandController, SuperadminGlobalAuditQueryController],
   providers: [SuperadminGlobalAuditInvestigationService, SuperadminGlobalAuditRepository, SuperadminGlobalAuditListService, SuperadminGlobalAuditFindService, SuperadminGlobalAuditCreateService, SuperadminGlobalAuditUpdateService, SuperadminGlobalAuditDeleteService],
   exports: [SuperadminGlobalAuditRepository],
 })

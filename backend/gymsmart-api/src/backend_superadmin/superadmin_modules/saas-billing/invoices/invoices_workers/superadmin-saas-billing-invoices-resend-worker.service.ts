@@ -26,6 +26,7 @@ interface InvoiceResendEnvelope { jobId: string; tenantId: string | null; payloa
 @Injectable()
 export class SuperadminSaasBillingInvoicesResendWorkerService implements OnModuleInit, OnModuleDestroy {
   private running = true;
+  private subscriberClient: any;
   private readonly maxAttempts = 3;
 
   constructor(
@@ -62,7 +63,7 @@ export class SuperadminSaasBillingInvoicesResendWorkerService implements OnModul
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  onModuleDestroy(): void { this.running = false; }
+  onModuleDestroy(): void { this.running = false; this.subscriberClient?.quit(); }
 
   /**
  * Primary Intent: Executes the `consume` responsibility owned by this superadmin-saas-billing-invoices-resend-worker.service construct.
@@ -77,8 +78,9 @@ export class SuperadminSaasBillingInvoicesResendWorkerService implements OnModul
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async consume(): Promise<void> {
-    while (this.running) {
-      const result = await this.redis.getClient().brpop(SUPERADMIN_INVOICE_RESEND_QUEUE, 2);
+    if (!this.subscriberClient) this.subscriberClient = this.redis.getClient().duplicate();
+      while (this.running) {
+      let result; try { result = await this.subscriberClient.brpop(SUPERADMIN_INVOICE_RESEND_QUEUE, 2); } catch(e) { await new Promise(r => setTimeout(r, 1000)); continue; }
       if (!result) continue;
       try {
         await this.process(JSON.parse(result[1]) as InvoiceResendEnvelope);

@@ -18,7 +18,7 @@ import { SuperadminAnalyticsResponseDto } from '@/backend_superadmin/superadmin_
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('analytics')
-@Controller('/superadmin/analytics')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminAnalyticsQueryController {
@@ -32,7 +32,7 @@ export class SuperadminAnalyticsQueryController {
 
   /** Returns one analytics record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/analytics/:id', 'api/superadmin/analytics/:id'])
   @ApiResponse({ type: SuperadminAnalyticsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

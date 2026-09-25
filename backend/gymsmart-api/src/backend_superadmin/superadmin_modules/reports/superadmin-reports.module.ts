@@ -25,7 +25,7 @@ import { SuperadminReportsDataService } from '@/backend_superadmin/superadmin_mo
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminReportsEntity])],
-  controllers: [SuperadminReportsQueryController, SuperadminReportsCommandController, SuperadminReportsAnalyticsQueryController],
+  controllers: [SuperadminReportsAnalyticsQueryController, SuperadminReportsCommandController, SuperadminReportsQueryController],
   providers: [SuperadminReportsDataService, SuperadminReportsMainService, SuperadminReportsComparisonService, SuperadminReportsRepository, SuperadminReportsAnalyticsRepository, SuperadminReportsListService, SuperadminReportsFindService, SuperadminReportsCreateService, SuperadminReportsUpdateService, SuperadminReportsDeleteService],
   exports: [SuperadminReportsRepository],
 })

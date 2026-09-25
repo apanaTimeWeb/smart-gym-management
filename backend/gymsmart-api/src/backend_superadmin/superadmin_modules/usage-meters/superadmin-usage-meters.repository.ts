@@ -16,7 +16,7 @@ import type { SuperadminUsageMetersListQuery, SuperadminUsageMetersCreateInput, 
  */
 @Injectable()
 export class SuperadminUsageMetersRepository extends SuperadminCoreBaseRepository<SuperadminUsageMetersEntity> {
-  constructor(@InjectRepository(SuperadminUsageMetersEntity) repository: Repository<SuperadminUsageMetersEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext, true); }
+  constructor(@InjectRepository(SuperadminUsageMetersEntity) repository: Repository<SuperadminUsageMetersEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
   /**
  * Primary Intent: Executes the findPage use case within its owning backend boundary.

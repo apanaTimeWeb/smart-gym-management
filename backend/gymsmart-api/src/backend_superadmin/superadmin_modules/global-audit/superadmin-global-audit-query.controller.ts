@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the global-audit-query.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { HttpStatus, Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { HttpStatus, Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { SuperadminCoreJwtAuthGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-jwt-auth.guard';
 import { SuperadminCoreRolesGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.guard';
@@ -18,7 +18,7 @@ import { SuperadminGlobalAuditResponseDto } from '@/backend_superadmin/superadmi
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('global-audit')
-@Controller('/superadmin/global-audit')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminGlobalAuditQueryController {
@@ -32,7 +32,7 @@ export class SuperadminGlobalAuditQueryController {
 
   /** Returns a paginated global-audit list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/global-audit', 'api/superadmin/global-audit'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Paginated global-audit results.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -51,7 +51,7 @@ export class SuperadminGlobalAuditQueryController {
 
   /** Returns one global-audit record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**
@@ -60,5 +60,9 @@ export class SuperadminGlobalAuditQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findOne(@Param('id') id: string): Promise<SuperadminGlobalAuditResponseDto> { return (await this.findService.findGlobalAuditById(id)) as unknown as SuperadminGlobalAuditResponseDto; }
+  async findOne(@Param('id') id: string): Promise<SuperadminGlobalAuditResponseDto> {
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(id)) throw new NotFoundException({ error: 'NOT_FOUND', errorCode: 'GLOBAL_AUDIT.NOT_FOUND', message: { key: 'global_audit.ERRORS.NOT_FOUND' } });
+    return (await this.findService.findGlobalAuditById(id)) as unknown as SuperadminGlobalAuditResponseDto;
+  }
 }

@@ -18,7 +18,7 @@ import { SuperadminTicketsReplyDto } from '@/backend_superadmin/superadmin_modul
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('tickets-actions')
-@Controller('/superadmin/tickets')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminTicketsActionsController {
@@ -33,7 +33,7 @@ export class SuperadminTicketsActionsController {
   /** Closes one ticket. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(':id/close')
+  @Post(['superadmin/tickets/:id/close', 'api/superadmin/tickets/:id/close'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'close' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminTicketsActionsController {
   /** Assigns one ticket. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(':id/assign')
+  @Post(['superadmin/tickets/:id/assign', 'api/superadmin/tickets/:id/assign'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'assign' })
   /**
@@ -73,7 +73,7 @@ export class SuperadminTicketsActionsController {
   /** Replies to one ticket. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post(':id/reply')
+@Post(['superadmin/tickets/:id/reply', 'api/superadmin/tickets/:id/reply'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'reply' })
   /**

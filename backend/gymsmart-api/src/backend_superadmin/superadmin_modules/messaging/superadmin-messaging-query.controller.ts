@@ -20,7 +20,7 @@ import { SuperadminCoreTenantRegistryRepository } from '@/backend_superadmin/sup
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('messaging')
-@Controller('/superadmin/messaging')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminMessagingQueryController {
@@ -34,7 +34,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns a paginated messaging list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/messaging', 'api/superadmin/messaging'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns the frontend-required tenant lookup for message recipients. */
   // SLA: FAST
-  @Get('tenants')
+  @Get(['superadmin/messaging/tenants', 'api/superadmin/messaging/tenants'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findTenants' })
   /**
@@ -74,7 +74,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns messages through the explicit frontend /messages resource contract. */
   // SLA: FAST
-  @Get('messages')
+  @Get(['superadmin/messaging/messages', 'api/superadmin/messaging/messages'])
   @ApiResponse({ status: HttpStatus.OK })
   @ApiOperation({ summary: 'findMessages' })
   /**
@@ -95,7 +95,7 @@ export class SuperadminMessagingQueryController {
 
   /** Returns one messaging record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/messaging/:id', 'api/superadmin/messaging/:id'])
   @ApiResponse({ type: SuperadminMessagingResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

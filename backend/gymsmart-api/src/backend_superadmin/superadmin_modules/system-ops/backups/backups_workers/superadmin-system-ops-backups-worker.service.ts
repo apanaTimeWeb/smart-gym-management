@@ -32,6 +32,7 @@ interface BackupEnvelope { jobId:string; queueName:string; tenantId:string; payl
 @Injectable()
 export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, OnModuleDestroy {
   private running = true;
+  private subscriberClient: any;
   private readonly maxAttempts = 3;
   constructor(
     private readonly redis: SuperadminCoreRedisService,
@@ -68,7 +69,7 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  onModuleDestroy(): void { this.running = false; }
+  onModuleDestroy(): void { this.running = false; this.subscriberClient?.quit(); }
 
   /**
  * Primary Intent: Executes the `consume` responsibility owned by this superadmin-system-ops-backups-worker.service construct.
@@ -83,8 +84,9 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async consume(queue: string): Promise<void> {
-    while (this.running) {
-      const result = await this.redis.getClient().brpop(queue, 2);
+    if (!this.subscriberClient) this.subscriberClient = this.redis.getClient().duplicate();
+      while (this.running) {
+      let result; try { result = await this.subscriberClient.brpop(queue, 2); } catch(e) { await new Promise(r => setTimeout(r, 1000)); continue; }
       if (!result) continue;
       const job = JSON.parse(result[1]) as BackupEnvelope;
       try { await this.process(job); }

@@ -24,7 +24,7 @@ import { SuperadminFeaturesResponseDto } from '@/backend_superadmin/superadmin_m
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('features')
-@Controller('/superadmin/features')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminFeaturesCommandController {
@@ -45,7 +45,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Create feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('flags')
+  @Post(['superadmin/features/flags', 'api/superadmin/features/flags'])
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
@@ -70,7 +70,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Update feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('flags/:id')
+  @Patch(['superadmin/features/flags/:id', 'api/superadmin/features/flags/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'updateFlag' })
@@ -94,7 +94,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Toggle feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('flags/:id/toggle')
+  @Post(['superadmin/features/flags/:id/toggle', 'api/superadmin/features/flags/:id/toggle'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'toggleFlag' })
@@ -118,7 +118,7 @@ export class SuperadminFeaturesCommandController {
   @ApiOperation({ summary: 'Delete feature flag' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete('flags/:id')
+@Delete(['superadmin/features/flags/:id', 'api/superadmin/features/flags/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)

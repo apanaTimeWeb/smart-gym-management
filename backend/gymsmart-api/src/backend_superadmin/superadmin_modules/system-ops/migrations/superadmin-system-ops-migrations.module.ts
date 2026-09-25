@@ -22,7 +22,7 @@ import { SuperadminSystemOpsMigrationsTriggerService } from '@/backend_superadmi
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSystemOpsMigrationsEntity])],
-  controllers: [SuperadminSystemOpsMigrationsQueryController, SuperadminSystemOpsMigrationsCommandController, SuperadminSystemOpsMigrationsAdvancedCommandController],
+  controllers: [SuperadminSystemOpsMigrationsAdvancedCommandController, SuperadminSystemOpsMigrationsCommandController, SuperadminSystemOpsMigrationsQueryController],
   providers: [SuperadminSystemOpsMigrationsTriggerService, SuperadminSystemOpsMigrationsRepository, SuperadminSystemOpsMigrationsListService, SuperadminSystemOpsMigrationsFindService, SuperadminSystemOpsMigrationsCreateService, SuperadminSystemOpsMigrationsUpdateService, SuperadminSystemOpsMigrationsDeleteService, SuperadminSystemOpsMigrationLogStatusService],
   exports: [SuperadminSystemOpsMigrationsRepository],
 })

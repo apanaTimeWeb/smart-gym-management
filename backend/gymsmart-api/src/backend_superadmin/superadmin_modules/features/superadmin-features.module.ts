@@ -27,7 +27,7 @@ import { SuperadminFeaturesMainService } from '@/backend_superadmin/superadmin_m
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminFeaturesEntity, SuperadminFeaturesReleaseNoteEntity])],
-  controllers: [SuperadminFeaturesQueryController, SuperadminFeaturesCommandController, SuperadminFeaturesRolloutInsightsQueryController, SuperadminFeaturesReleaseNoteCommandController],
+  controllers: [SuperadminFeaturesRolloutInsightsQueryController, SuperadminFeaturesReleaseNoteCommandController, SuperadminFeaturesCommandController, SuperadminFeaturesQueryController],
   providers: [SuperadminFeaturesReleaseNoteRepository, SuperadminFeaturesReleaseNoteService, SuperadminFeaturesRolloutInsightsService, SuperadminFeaturesMainService, SuperadminFeaturesRepository, SuperadminFeaturesListService, SuperadminFeaturesFindService, SuperadminFeaturesCreateService, SuperadminFeaturesUpdateService, SuperadminFeaturesToggleService, SuperadminFeaturesDeleteService],
   exports: [SuperadminFeaturesRepository],
 })

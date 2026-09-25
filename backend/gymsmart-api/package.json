@@ -12,6 +12,7 @@
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:e2e": "pytest -q",
+    "test:e2e:superadmin": "cd backend_e2e && pytest backend_superadmin_e2e/ -v",
     "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/core/database/master-data-source.ts",
     "seed": "ts-node -r tsconfig-paths/register src/core/database/run-seed.ts",
     "architecture:check": "node scripts/architecture-gate.mjs"

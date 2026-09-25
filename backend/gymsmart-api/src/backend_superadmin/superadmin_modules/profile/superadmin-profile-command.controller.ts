@@ -21,7 +21,7 @@ import { SuperadminProfileDeleteService } from '@/backend_superadmin/superadmin_
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('profile')
-@Controller('/superadmin/profile')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminProfileCommandController {
@@ -37,7 +37,7 @@ export class SuperadminProfileCommandController {
   @ApiOperation({ summary: 'create profile' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/profile', 'api/superadmin/profile'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -60,7 +60,7 @@ export class SuperadminProfileCommandController {
   @ApiOperation({ summary: 'update profile' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/profile/:id', 'api/superadmin/profile/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -82,7 +82,7 @@ export class SuperadminProfileCommandController {
   @ApiOperation({ summary: 'remove profile' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(':id')
+@Delete(['superadmin/profile/:id', 'api/superadmin/profile/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)

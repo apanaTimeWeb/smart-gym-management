@@ -20,7 +20,7 @@ import { SuperadminPaginatedResult } from '@/backend_superadmin/superadmin_core/
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('affiliates')
-@Controller('/superadmin/affiliates')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminAffiliatesQueryController {
@@ -34,7 +34,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns payout history across active affiliates. */
   // SLA: FAST
-  @Get('payout-history')
+  @Get(['superadmin/affiliates/payout-history', 'api/superadmin/affiliates/payout-history'])
   @ApiResponse({ type: [SuperadminAffiliatePayoutRecordDto] })
   @ApiOperation({ summary: 'payoutHistory' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns a paginated affiliates list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/affiliates', 'api/superadmin/affiliates'])
   @ApiResponse({ type: [SuperadminAffiliatesResponseDto] })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -77,7 +77,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns one affiliates record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/affiliates/:id', 'api/superadmin/affiliates/:id'])
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

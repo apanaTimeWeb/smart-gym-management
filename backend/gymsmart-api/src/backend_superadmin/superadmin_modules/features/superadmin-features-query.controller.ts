@@ -20,7 +20,7 @@ import { SuperadminFeaturesHistoryEntryDto } from '@/backend_superadmin/superadm
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('features')
-@Controller('/superadmin/features')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminFeaturesQueryController {
@@ -34,7 +34,7 @@ export class SuperadminFeaturesQueryController {
 
   /** Returns the audit history for one feature flag. */
   // SLA: FAST
-  @Get('flags/:id/history')
+  @Get(['superadmin/features/flags/:id/history', 'api/superadmin/features/flags/:id/history'])
   @ApiResponse({ type: [SuperadminFeaturesHistoryEntryDto] })
   @ApiOperation({ summary: 'history' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminFeaturesQueryController {
 
   /** Returns one features record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/features/:id', 'api/superadmin/features/:id'])
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Wraps successful controller returns in the single canonical ApiResponse envelope and lifts pagination metadata.
+// RESPONSIBILITY: Wraps successful controller returns in the single canonical ApiResponse envelope and lifts pagination metadata.
 // FLOW: Controller return â†’ CoreResponseInterceptor â†’ ApiResponse<T> with data/meta.
 
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
@@ -11,6 +11,9 @@ export class CoreResponseInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       map((payload: unknown) => {
+        if (payload && typeof payload === 'object' && 'success' in payload && 'data' in payload && 'message' in payload) {
+          return payload as any;
+        }
         if (this.isPaginated(payload)) {
           return { success: true, message: 'Success', data: payload.items, meta: payload.meta };
         }

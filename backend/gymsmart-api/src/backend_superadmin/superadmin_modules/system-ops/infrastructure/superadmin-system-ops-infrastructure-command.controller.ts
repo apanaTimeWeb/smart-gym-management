@@ -23,7 +23,7 @@ import { SuperadminSystemOpsInfrastructureNodeStatusService } from '@/backend_su
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('infrastructure')
-@Controller('/superadmin/system-ops/infrastructure')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsInfrastructureCommandController {
@@ -39,7 +39,7 @@ export class SuperadminSystemOpsInfrastructureCommandController {
   @ApiOperation({ summary: 'create infrastructure' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/system-ops/infrastructure', 'api/superadmin/system-ops/infrastructure'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSystemOpsInfrastructureCommandController {
   @ApiOperation({ summary: 'update infrastructure' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/system-ops/infrastructure/:id', 'api/superadmin/system-ops/infrastructure/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSystemOpsInfrastructureCommandController {
   @ApiOperation({ summary: 'remove infrastructure' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/system-ops/infrastructure/:id', 'api/superadmin/system-ops/infrastructure/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSystemOpsInfrastructureCommandController {
   @ApiOperation({ summary: 'changeStatus infrastructure' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/system-ops/infrastructure/:id/status', 'api/superadmin/system-ops/infrastructure/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

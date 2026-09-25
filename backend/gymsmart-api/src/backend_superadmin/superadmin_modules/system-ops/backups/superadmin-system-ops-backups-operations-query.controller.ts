@@ -63,8 +63,7 @@ export class SuperadminSystemOpsBackupsOperationsQueryController {
   /** Returns live backup health from persisted backup records. */
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/system-ops/backups/health')
-  @Get('api/superadmin/system-ops/backups/health')
+@Get(['superadmin/system-ops/backups/health', 'api/superadmin/system-ops/backups/health'])
   @ApiResponse({status:HttpStatus.OK,description:'Backup health.'})
   @ApiOperation({ summary: 'health' })
   /**

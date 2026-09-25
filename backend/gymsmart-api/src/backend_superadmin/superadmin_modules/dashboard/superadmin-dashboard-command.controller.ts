@@ -22,7 +22,7 @@ import { SuperadminDashboardResponseDto } from '@/backend_superadmin/superadmin_
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('dashboard')
-@Controller('/superadmin/dashboard')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminDashboardCommandController {
@@ -38,7 +38,7 @@ export class SuperadminDashboardCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/dashboard', 'api/superadmin/dashboard'])
   @RequireIdempotencyKey()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminDashboardCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
   @RequireIdempotencyKey()
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminDashboardResponseDto })
@@ -83,7 +83,7 @@ export class SuperadminDashboardCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)

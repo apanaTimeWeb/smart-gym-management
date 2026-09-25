@@ -36,8 +36,7 @@ export class SuperadminSaasBillingInvoicesRecoveryQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/saas-billing/invoices/recovery-center')
-  @Get('api/superadmin/saas-billing/invoices/recovery-center')
+@Get(['superadmin/saas-billing/invoices/recovery-center', 'api/superadmin/saas-billing/invoices/recovery-center'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'recoveryCenter' })
   /**

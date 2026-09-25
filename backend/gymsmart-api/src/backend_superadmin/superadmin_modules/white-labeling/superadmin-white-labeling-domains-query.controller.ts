@@ -33,8 +33,7 @@ export class SuperadminWhiteLabelingDomainsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/white-labeling/domains')
-  @Get('api/superadmin/white-labeling/domains')
+@Get(['superadmin/white-labeling/domains', 'api/superadmin/white-labeling/domains'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'domains' })
   /**

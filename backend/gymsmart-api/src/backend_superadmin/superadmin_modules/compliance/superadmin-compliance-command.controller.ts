@@ -22,7 +22,7 @@ import { SuperadminComplianceResponseDto } from '@/backend_superadmin/superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('compliance')
-@Controller('/superadmin/compliance')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminComplianceCommandController {
@@ -38,7 +38,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'create compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/compliance', 'api/superadmin/compliance'])
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminComplianceResponseDto })
@@ -61,7 +61,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'update compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminComplianceResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -83,7 +83,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'remove compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(':id')
+@Delete(['superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

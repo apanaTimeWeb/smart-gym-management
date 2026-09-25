@@ -39,7 +39,7 @@ import { SuperadminGymsExportDownloadTokenService } from '@/backend_superadmin/s
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminGymsDetailContractSnapshotEntity, SuperadminGymsEntity, SuperadminGymsExportJobEntity])],
-  controllers: [SuperadminGymsQueryController, SuperadminGymsCommandController, SuperadminGymsApiQueryController, SuperadminGymsApiCommandController, SuperadminGymsExportController, SuperadminGymsLookupController, SuperadminGymsAdministrationQueryController, SuperadminGymsAdministrationCommandController],
+  controllers: [SuperadminGymsAdministrationCommandController, SuperadminGymsAdministrationQueryController, SuperadminGymsApiCommandController, SuperadminGymsApiQueryController, SuperadminGymsCommandController, SuperadminGymsExportController, SuperadminGymsLookupController, SuperadminGymsQueryController],
   providers: [SuperadminGymsDetailContractSnapshotRepository, SuperadminGymsBusinessControlsService, SuperadminGymsBulkActionService, SuperadminGymsDetailBusinessOverviewService, SuperadminGymsRepository, SuperadminGymsListService, SuperadminGymsFindService, SuperadminGymsCreateService, SuperadminGymsUpdateService, SuperadminGymsDeleteService, SuperadminTenantStatusService, SuperadminGymsLookupService, SuperadminGymsProvisionService, SuperadminGymsExportJobRepository, SuperadminGymsExportWorkerService, SuperadminGymsExportDownloadTokenService, SuperadminGymsOperationalService],
   exports: [SuperadminGymsRepository],
 })

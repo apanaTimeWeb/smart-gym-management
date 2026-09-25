@@ -23,7 +23,7 @@ import { SuperadminTeamAlertsService } from '@/backend_superadmin/superadmin_mod
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminTeamEntity])],
-  controllers: [SuperadminTeamQueryController, SuperadminTeamCommandController, SuperadminTeamAdministrationQueryController, SuperadminTeamAlertsCommandController],
+  controllers: [SuperadminTeamAdministrationQueryController, SuperadminTeamAlertsCommandController, SuperadminTeamCommandController, SuperadminTeamQueryController],
   providers: [SuperadminTeamMainService, SuperadminTeamAlertsService, SuperadminTeamRepository, SuperadminTeamListService, SuperadminTeamFindService, SuperadminTeamCreateService, SuperadminTeamUpdateService, SuperadminTeamDeleteService],
   exports: [SuperadminTeamRepository],
 })

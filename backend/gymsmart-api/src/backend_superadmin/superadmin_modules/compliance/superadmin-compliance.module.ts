@@ -3,6 +3,7 @@
 import { Module } from '@nestjs/common';
 import { SuperadminComplianceOverviewQueryController } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance-overview-query.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SuperadminComplianceDocumentEntity } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance-document.entity';
 import { SuperadminComplianceEntity } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance.entity';
 import { SuperadminComplianceRepository } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance.repository';
 import { SuperadminComplianceQueryController } from '@/backend_superadmin/superadmin_modules/compliance/superadmin-compliance-query.controller';
@@ -20,8 +21,8 @@ import { SuperadminComplianceMainService } from '@/backend_superadmin/superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([SuperadminComplianceEntity])],
-  controllers: [SuperadminComplianceQueryController, SuperadminComplianceCommandController, SuperadminComplianceOverviewQueryController],
+  imports: [TypeOrmModule.forFeature([SuperadminComplianceEntity, SuperadminComplianceDocumentEntity])],
+  controllers: [SuperadminComplianceOverviewQueryController, SuperadminComplianceCommandController, SuperadminComplianceQueryController],
   providers: [SuperadminComplianceMainService, SuperadminComplianceRepository, SuperadminComplianceListService, SuperadminComplianceFindService, SuperadminComplianceCreateService, SuperadminComplianceUpdateService, SuperadminComplianceDeleteService],
   exports: [SuperadminComplianceRepository],
 })

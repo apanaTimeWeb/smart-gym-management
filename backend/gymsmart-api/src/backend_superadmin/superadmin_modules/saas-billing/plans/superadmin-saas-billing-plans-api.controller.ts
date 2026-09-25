@@ -30,7 +30,7 @@ export class SuperadminSaasBillingPlansApiController {
 
   /** Returns plan-level business controls through the frontend-compatible API route. */
   // SLA: FAST
-  @Get('api/superadmin/saas-billing/plans/business-controls')
+  @Get(['superadmin/saas-billing/plans/business-controls', 'api/superadmin/saas-billing/plans/business-controls'])
   @ApiOperation({ summary: 'Get plan business controls' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Plan business controls.' })
   /**

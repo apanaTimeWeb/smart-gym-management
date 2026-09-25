@@ -17,7 +17,7 @@ import { SuperadminSystemOpsJobsFindService } from '@/backend_superadmin/superad
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('jobs')
-@Controller('/superadmin/system-ops/jobs')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsJobsQueryController {
@@ -31,7 +31,7 @@ export class SuperadminSystemOpsJobsQueryController {
 
   /** Returns a paginated jobs list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/system-ops/jobs', 'api/superadmin/system-ops/jobs'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSystemOpsJobsQueryController {
 
   /** Returns one jobs record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/system-ops/jobs/:id', 'api/superadmin/system-ops/jobs/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

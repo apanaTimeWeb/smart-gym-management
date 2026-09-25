@@ -16,7 +16,7 @@ import type { SuperadminMessagingListQuery, SuperadminMessagingCreateInput, Supe
  */
 @Injectable()
 export class SuperadminMessagingRepository extends SuperadminCoreBaseRepository<SuperadminMessagingEntity> {
-  constructor(@InjectRepository(SuperadminMessagingEntity) repository: Repository<SuperadminMessagingEntity>, transactionContext: SuperadminCoreTransactionContext, @InjectDataSource() private readonly dataSource: DataSource) { super(repository, transactionContext, true); }
+  constructor(@InjectRepository(SuperadminMessagingEntity) repository: Repository<SuperadminMessagingEntity>, transactionContext: SuperadminCoreTransactionContext, @InjectDataSource() private readonly dataSource: DataSource) { super(repository, transactionContext); }
 
   /**
  * Primary Intent: Executes the findPage use case within its owning backend boundary.

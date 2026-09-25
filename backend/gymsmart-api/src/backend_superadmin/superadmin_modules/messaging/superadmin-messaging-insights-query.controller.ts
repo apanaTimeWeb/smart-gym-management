@@ -36,8 +36,7 @@ export class SuperadminMessagingInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/messaging/template-insights')
-  @Get('api/superadmin/messaging/template-insights')
+@Get(['superadmin/messaging/template-insights', 'api/superadmin/messaging/template-insights'])
   @ApiResponse({ type: SuperadminMessagingTemplateInsightsResponseDto })
   @ApiOperation({ summary: 'templateInsights' })
   /**

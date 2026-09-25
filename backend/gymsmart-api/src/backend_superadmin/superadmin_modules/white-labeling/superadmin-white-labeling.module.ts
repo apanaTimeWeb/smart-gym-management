@@ -23,7 +23,7 @@ import { SuperadminWhiteLabelingDomainsService } from '@/backend_superadmin/supe
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminWhiteLabelingEntity])],
-  controllers: [SuperadminWhiteLabelingQueryController, SuperadminWhiteLabelingCommandController, SuperadminWhiteLabelingDomainsQueryController, SuperadminWhiteLabelingDomainsCommandController],
+  controllers: [SuperadminWhiteLabelingDomainsCommandController, SuperadminWhiteLabelingDomainsQueryController, SuperadminWhiteLabelingCommandController, SuperadminWhiteLabelingQueryController],
   providers: [SuperadminWhiteLabelingDomainsService, SuperadminWhiteLabelDomainStatusService, SuperadminWhiteLabelingRepository, SuperadminWhiteLabelingListService, SuperadminWhiteLabelingFindService, SuperadminWhiteLabelingCreateService, SuperadminWhiteLabelingUpdateService, SuperadminWhiteLabelingDeleteService],
   exports: [SuperadminWhiteLabelingRepository],
 })

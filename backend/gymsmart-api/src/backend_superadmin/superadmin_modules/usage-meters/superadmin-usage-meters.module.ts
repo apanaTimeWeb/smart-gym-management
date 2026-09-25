@@ -21,7 +21,7 @@ import { SuperadminUsageMetersMainService } from '@/backend_superadmin/superadmi
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminUsageMetersEntity])],
-  controllers: [SuperadminUsageMetersQueryController, SuperadminUsageMetersCommandController, SuperadminUsageMetersAnalyticsQueryController],
+  controllers: [SuperadminUsageMetersAnalyticsQueryController, SuperadminUsageMetersCommandController, SuperadminUsageMetersQueryController],
   providers: [SuperadminUsageMetersMainService, SuperadminUsageMetersRepository, SuperadminUsageMetersListService, SuperadminUsageMetersFindService, SuperadminUsageMetersCreateService, SuperadminUsageMetersUpdateService, SuperadminUsageMetersDeleteService],
   exports: [SuperadminUsageMetersRepository],
 })

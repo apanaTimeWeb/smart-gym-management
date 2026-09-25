@@ -23,7 +23,7 @@ import { SuperadminBroadcastsDeliveryService } from '@/backend_superadmin/supera
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminBroadcastsEntity])],
-  controllers: [SuperadminBroadcastsQueryController, SuperadminBroadcastsCommandController, SuperadminBroadcastsAudienceInsightsQueryController],
+  controllers: [SuperadminBroadcastsAudienceInsightsQueryController, SuperadminBroadcastsCommandController, SuperadminBroadcastsQueryController],
   providers: [SuperadminBroadcastsDeliveryService, SuperadminBroadcastsAudienceInsightsService, SuperadminBroadcastsRepository, SuperadminBroadcastsListService, SuperadminBroadcastsFindService, SuperadminBroadcastsCreateService, SuperadminBroadcastsUpdateService, SuperadminBroadcastsDeleteService, SuperadminBroadcastsStatusService],
   exports: [SuperadminBroadcastsRepository],
 })

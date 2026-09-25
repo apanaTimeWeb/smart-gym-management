@@ -17,7 +17,7 @@ import { SuperadminWhiteLabelingFindService } from '@/backend_superadmin/superad
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('white-labeling')
-@Controller('/superadmin/white-labeling')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminWhiteLabelingQueryController {
@@ -31,7 +31,7 @@ export class SuperadminWhiteLabelingQueryController {
 
   /** Returns a paginated white-labeling list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/white-labeling', 'api/superadmin/white-labeling'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminWhiteLabelingQueryController {
 
   /** Returns one white-labeling record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

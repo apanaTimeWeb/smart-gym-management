@@ -17,7 +17,7 @@ import { SuperadminDashboardResponseDto } from '@/backend_superadmin/superadmin_
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('dashboard')
-@Controller('/superadmin/dashboard')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminDashboardQueryController {
@@ -31,7 +31,7 @@ export class SuperadminDashboardQueryController {
 
   /** Returns one dashboard record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
   @ApiResponse({ type: SuperadminDashboardResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

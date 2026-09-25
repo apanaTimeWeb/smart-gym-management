@@ -27,7 +27,7 @@ import { SuperadminTicketsActionsService } from '@/backend_superadmin/superadmin
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminTicketsContractSnapshotEntity, SuperadminTicketsEntity])],
-  controllers: [SuperadminTicketsQueryController, SuperadminTicketsCommandController, SuperadminTicketsActionsController, SuperadminTicketsInsightsQueryController],
+  controllers: [SuperadminTicketsInsightsQueryController, SuperadminTicketsActionsController, SuperadminTicketsCommandController, SuperadminTicketsQueryController],
   providers: [SuperadminTicketsActionsService, SuperadminTicketsContractSnapshotRepository, SuperadminTicketsInsightsService, SuperadminTicketsRepository, SuperadminTicketsListService, SuperadminTicketsFindService, SuperadminTicketsCreateService, SuperadminTicketsUpdateService, SuperadminTicketsDeleteService, SuperadminSupportTicketStatusService],
   exports: [SuperadminTicketsRepository],
 })

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Maps the master tenants registry used for trusted tenant lookup and provisioning.
+// RESPONSIBILITY: Maps the master tenants registry used for trusted tenant lookup and provisioning.
 // FLOW: Master tenant registry â†’ TenantDatabaseProvisioner / TenantResolution â†’ tenant DB.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -8,6 +8,8 @@ import { CoreBaseEntity } from '@/backend_landing/landing_core/database/base.ent
 export enum MasterTenantStatus {
   ACTIVE = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
+  TRIAL = 'TRIAL',
+  CANCELLED = 'CANCELLED',
 }
 
 @Entity('tenants')

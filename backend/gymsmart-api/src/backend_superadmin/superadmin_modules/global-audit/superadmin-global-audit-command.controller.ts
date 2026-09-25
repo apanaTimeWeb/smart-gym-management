@@ -22,7 +22,7 @@ import { SuperadminGlobalAuditResponseDto } from '@/backend_superadmin/superadmi
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('global-audit')
-@Controller('/superadmin/global-audit')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminGlobalAuditCommandController {
@@ -38,7 +38,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'create global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/global-audit', 'api/superadmin/global-audit'])
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
@@ -61,7 +61,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'update global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -83,7 +83,7 @@ export class SuperadminGlobalAuditCommandController {
   @ApiOperation({ summary: 'remove global-audit' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(':id')
+@Delete(['superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

@@ -21,7 +21,7 @@ import { SuperadminSettingsGovernanceService } from '@/backend_superadmin/supera
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSettingsEntity])],
-  controllers: [SuperadminSettingsQueryController, SuperadminSettingsCommandController, SuperadminSettingsGovernanceQueryController],
+  controllers: [SuperadminSettingsGovernanceQueryController, SuperadminSettingsCommandController, SuperadminSettingsQueryController],
   providers: [SuperadminSettingsGovernanceService, SuperadminSettingsRepository, SuperadminSettingsListService, SuperadminSettingsFindService, SuperadminSettingsCreateService, SuperadminSettingsUpdateService, SuperadminSettingsDeleteService],
   exports: [SuperadminSettingsRepository],
 })

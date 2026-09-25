@@ -37,8 +37,7 @@ export class SuperadminIntegrationsAdvancedCommandController {
   // SLA: STANDARD
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: HEAVY
-@Post('superadmin/integrations/keys')
-@Post('api/superadmin/integrations/generate-key')
+@Post(['superadmin/integrations/keys', 'api/superadmin/integrations/generate-key'])
   @ApiResponse({ type: SuperadminGenerateApiKeyResultDto })
   @ApiOperation({ summary: 'generateKey' })
   /**

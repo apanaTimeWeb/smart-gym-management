@@ -30,7 +30,7 @@ import { SuperadminDashboardRecentOnboardsService } from '@/backend_superadmin/s
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminDashboardEntity])],
-  controllers: [SuperadminDashboardQueryController, SuperadminDashboardCommandController, SuperadminDashboardOverviewQueryController, SuperadminDashboardCompatibilityQueryController],
+  controllers: [SuperadminDashboardCompatibilityQueryController, SuperadminDashboardOverviewQueryController, SuperadminDashboardCommandController, SuperadminDashboardQueryController],
   providers: [SuperadminDashboardBusinessOverviewService, SuperadminDashboardApiReadService, SuperadminDashboardKpisService, SuperadminDashboardRevenueChartService, SuperadminDashboardGrowthChartService, SuperadminDashboardRevenueByTierService, SuperadminDashboardRevenueByGeographyService, SuperadminDashboardRecentOnboardsService, SuperadminDashboardRepository, SuperadminDashboardWidgetRepository, SuperadminDashboardListService, SuperadminDashboardFindService, SuperadminDashboardCreateService, SuperadminDashboardUpdateService, SuperadminDashboardDeleteService],
   exports: [SuperadminDashboardRepository],
 })

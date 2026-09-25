@@ -19,7 +19,7 @@ import type { SuperadminTicketsListQuery, SuperadminTicketsCreateInput, Superadm
  */
 @Injectable()
 export class SuperadminTicketsRepository extends SuperadminCoreBaseRepository<SuperadminTicketsEntity> {
-  constructor(@InjectRepository(SuperadminTicketsEntity) repository: Repository<SuperadminTicketsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext, true); }
+  constructor(@InjectRepository(SuperadminTicketsEntity) repository: Repository<SuperadminTicketsEntity>, transactionContext: SuperadminCoreTransactionContext) { super(repository, transactionContext); }
 
   /**
  * Primary Intent: Executes the findPage use case within its owning backend boundary.

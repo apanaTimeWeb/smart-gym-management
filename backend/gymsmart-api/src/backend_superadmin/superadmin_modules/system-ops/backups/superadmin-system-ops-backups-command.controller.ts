@@ -23,7 +23,7 @@ import { SuperadminSystemOpsSuperadminBackupJobStatusService } from '@/backend_s
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('backups')
-@Controller('/superadmin/system-ops/backups')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsBackupsCommandController {
@@ -39,7 +39,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'create backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/system-ops/backups', 'api/superadmin/system-ops/backups'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'update backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'remove backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSystemOpsBackupsCommandController {
   @ApiOperation({ summary: 'changeStatus backups' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/system-ops/backups/:id/status', 'api/superadmin/system-ops/backups/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

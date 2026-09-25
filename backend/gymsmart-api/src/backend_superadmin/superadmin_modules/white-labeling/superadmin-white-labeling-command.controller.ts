@@ -23,7 +23,7 @@ import { SuperadminWhiteLabelDomainStatusService } from '@/backend_superadmin/su
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('white-labeling')
-@Controller('/superadmin/white-labeling')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminWhiteLabelingCommandController {
@@ -39,7 +39,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'create white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/white-labeling', 'api/superadmin/white-labeling'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'update white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'remove white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'changeStatus white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/white-labeling/:id/status', 'api/superadmin/white-labeling/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

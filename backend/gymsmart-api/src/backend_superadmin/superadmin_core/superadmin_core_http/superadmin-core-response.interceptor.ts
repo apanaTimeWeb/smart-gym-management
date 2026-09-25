@@ -35,6 +35,9 @@ export class SuperadminCoreResponseInterceptor<T> implements NestInterceptor<T, 
         if (result instanceof StreamableFile) return result;
         const request = context.switchToHttp().getRequest<{ path?: string }>();
         if (request.path === '/metrics' || request.path?.endsWith('/metrics')) return String(result);
+        if (result && typeof result === 'object' && 'success' in result && 'data' in result && 'message' in result) {
+          return result as any;
+        }
         if (this.isPaginatedResult(result)) {
           return {
             success: true,

@@ -17,7 +17,7 @@ import { SuperadminTeamFindService } from '@/backend_superadmin/superadmin_modul
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('team')
-@Controller('/superadmin/team')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminTeamQueryController {
@@ -31,7 +31,7 @@ export class SuperadminTeamQueryController {
 
   /** Returns one team record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/team/:id', 'api/superadmin/team/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

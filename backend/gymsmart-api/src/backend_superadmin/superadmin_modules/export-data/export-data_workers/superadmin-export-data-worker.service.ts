@@ -34,6 +34,7 @@ interface ExportQueuePayload { jobId: string; queueName: string; tenantId: strin
 export class SuperadminExportDataWorkerService implements OnModuleInit, OnModuleDestroy {
   private running = true;
   private readonly secret: string;
+  private subscriberClient: any;
   constructor(
     private readonly redis: SuperadminCoreRedisService,
     private readonly jobs: SuperadminExportDataJobRepository,
@@ -44,7 +45,8 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
     private readonly tenantRegistry: SuperadminCoreTenantRegistryRepository,
     private readonly config: ConfigService,
     private readonly logger: PinoLogger,
-  ) { this.secret = config.getOrThrow<string>('app.exportDownloadSecret'); }
+  ) { this.secret = config.getOrThrow<string>('app.exportDownloadSecret');
+    this.subscriberClient = this.redis.getClient().duplicate(); }
 
   /**
  * Primary Intent: Executes the `onModuleInit` responsibility owned by this superadmin-export-data-worker.service construct.
@@ -72,7 +74,7 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async onModuleDestroy(): Promise<void> { this.running = false; }
+  async onModuleDestroy(): Promise<void> { this.running = false; this.subscriberClient?.quit(); }
 
   /**
  * Primary Intent: Executes the `consume` responsibility owned by this superadmin-export-data-worker.service construct.
@@ -88,7 +90,7 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
    */
   private async consume(): Promise<void> {
     while (this.running) {
-      const result = await this.redis.getClient().brpop(EXPORT_DATA_QUEUE_NAME, 5);
+      let result; try { result = await this.subscriberClient.brpop(EXPORT_DATA_QUEUE_NAME, 5); } catch(e) { await new Promise(r => setTimeout(r, 1000)); continue; }
       if (!result) continue;
       const raw = result[1];
       try { await this.process(JSON.parse(raw) as ExportQueuePayload); }

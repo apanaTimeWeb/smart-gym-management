@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { SuperadminUsageMetersRepository } from '@/backend_superadmin/superadmin_modules/usage-meters/superadmin-usage-meters.repository';
 import type { SuperadminUsageMetersListQuery } from '@/backend_superadmin/superadmin_modules/usage-meters/usage-meters_types/superadmin-usage-meters.interfaces';
+import { buildPaginationMeta } from '@/backend_superadmin/superadmin_core/superadmin_core_pagination/superadmin-core-pagination.utils';
 
 /**
  * Primary Intent: Defines SuperadminUsageMetersMainService as an explicit backend construct in its owning role/module boundary.
@@ -30,6 +31,6 @@ export class SuperadminUsageMetersMainService {
     const raw = input.query as Record<string, string> | undefined;
     const query: SuperadminUsageMetersListQuery = { page: Number(raw?.page ?? 1), limit: Math.min(Number(raw?.limit ?? 50), 100), search: raw?.search, tenantId: raw?.tenantId, sortBy: (raw?.sortBy ?? 'createdAt') as never, sortOrder: raw?.sortOrder === 'ASC' ? 'ASC' : 'DESC' };
     const result = await this.repository.findPage(query);
-    return { data: result.items.map((item) => ({ id: item.id, tenantId: item.tenantId, tenantName: item.tenantName, smsSent: item.smsSent, smsLimit: item.smsLimit, whatsappMessagesSent: item.whatsappMessagesSent, whatsappLimit: item.whatsappLimit, emailsSent: item.emailsSent, emailLimit: item.emailLimit, apiCallsCount: item.apiCallsCount, apiCallsLimit: item.apiCallsLimit, databaseGb: item.databaseGb, mediaGb: item.mediaGb, storageLimitGb: item.storageLimitGb, activeMembers: item.activeMembers, totalMembers: item.totalMembers, memberLimit: item.memberLimit, staffCount: item.staffCount, staffLimit: item.staffLimit, billingCycleEnd: item.billingCycleEnd.toISOString() })), meta: { page: query.page, limit: query.limit, total: result.total, totalPages: Math.ceil(result.total / query.limit) } };
+    return { data: result.items.map((item) => ({ id: item.id, tenantId: item.tenantId, tenantName: item.tenantName, smsSent: item.smsSent, smsLimit: item.smsLimit, whatsappMessagesSent: item.whatsappMessagesSent, whatsappLimit: item.whatsappLimit, emailsSent: item.emailsSent, emailLimit: item.emailLimit, apiCallsCount: item.apiCallsCount, apiCallsLimit: item.apiCallsLimit, databaseGb: item.databaseGb, mediaGb: item.mediaGb, storageLimitGb: item.storageLimitGb, activeMembers: item.activeMembers, totalMembers: item.totalMembers, memberLimit: item.memberLimit, staffCount: item.staffCount, staffLimit: item.staffLimit, billingCycleEnd: item.billingCycleEnd.toISOString() })), meta: buildPaginationMeta(query.page, query.limit, result.total) };
   }
 }

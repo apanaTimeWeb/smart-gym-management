@@ -11,7 +11,8 @@ import pytest
 BASE_URL = os.environ.get("SUPERADMIN_E2E_BASE_URL", "http://localhost:3000").rstrip("/")
 TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
-
+COUPON_ID = "00000000-0000-4000-8000-000000000001"
+import uuid
 ROUTES = ['/superadmin/saas-billing/coupons', '/superadmin/saas-billing/coupons' ]
 
 def _headers() -> dict[str, str]:

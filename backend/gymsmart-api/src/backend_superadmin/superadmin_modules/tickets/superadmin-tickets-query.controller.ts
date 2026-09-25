@@ -17,7 +17,7 @@ import { SuperadminTicketsFindService } from '@/backend_superadmin/superadmin_mo
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('tickets')
-@Controller('/superadmin/tickets')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminTicketsQueryController {
@@ -31,7 +31,7 @@ export class SuperadminTicketsQueryController {
 
   /** Returns a paginated tickets list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/tickets', 'api/superadmin/tickets'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminTicketsQueryController {
 
   /** Returns one tickets record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

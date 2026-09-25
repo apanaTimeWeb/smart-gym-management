@@ -24,7 +24,7 @@ import { SuperadminSaasBillingPlansArchiveService } from '@/backend_superadmin/s
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSaasBillingPlansContractSnapshotEntity, SuperadminSaasBillingPlansEntity])],
-  controllers: [SuperadminSaasBillingPlansQueryController, SuperadminSaasBillingPlansApiController, SuperadminSaasBillingPlansCommandController],
+  controllers: [SuperadminSaasBillingPlansCommandController, SuperadminSaasBillingPlansQueryController, SuperadminSaasBillingPlansApiController],
   providers: [SuperadminSaasBillingPlansArchiveService, SuperadminSaasBillingPlansBusinessControlsService, SuperadminSaasBillingPlansRepository, SuperadminSaasBillingPlansListService, SuperadminSaasBillingPlansFindService, SuperadminSaasBillingPlansCreateService, SuperadminSaasBillingPlansUpdateService, SuperadminSaasBillingPlansDeleteService],
   exports: [SuperadminSaasBillingPlansRepository],
 })

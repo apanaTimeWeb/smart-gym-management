@@ -21,7 +21,7 @@ import { SuperadminTeamDeleteService } from '@/backend_superadmin/superadmin_mod
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('team')
-@Controller('/superadmin/team')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminTeamCommandController {
@@ -37,7 +37,7 @@ export class SuperadminTeamCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/team', 'api/superadmin/team'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
@@ -61,7 +61,7 @@ export class SuperadminTeamCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/team/:id', 'api/superadmin/team/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -82,7 +82,7 @@ export class SuperadminTeamCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/team/:id', 'api/superadmin/team/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)

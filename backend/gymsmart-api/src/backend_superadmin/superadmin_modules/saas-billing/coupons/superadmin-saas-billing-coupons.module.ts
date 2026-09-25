@@ -24,7 +24,7 @@ import { SuperadminSaasBillingCouponsRestoreService } from '@/backend_superadmin
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSaasBillingCouponsEntity])],
-  controllers: [SuperadminSaasBillingCouponsQueryController, SuperadminSaasBillingCouponsCommandController, SuperadminSaasBillingCouponsRedemptionsQueryController, SuperadminSaasBillingCouponsRestoreCommandController],
+  controllers: [SuperadminSaasBillingCouponsRedemptionsQueryController, SuperadminSaasBillingCouponsRestoreCommandController, SuperadminSaasBillingCouponsCommandController, SuperadminSaasBillingCouponsQueryController],
   providers: [SuperadminSaasBillingCouponsRedemptionsService, SuperadminSaasBillingCouponsRestoreService, SuperadminSaasBillingCouponsRepository, SuperadminSaasBillingCouponsListService, SuperadminSaasBillingCouponsFindService, SuperadminSaasBillingCouponsCreateService, SuperadminSaasBillingCouponsUpdateService, SuperadminSaasBillingCouponsDeleteService, SuperadminSaasBillingCouponStatusService],
   exports: [SuperadminSaasBillingCouponsRepository],
 })

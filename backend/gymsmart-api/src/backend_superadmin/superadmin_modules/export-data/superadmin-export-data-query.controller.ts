@@ -32,7 +32,7 @@ export class SuperadminExportDataQueryController {
 
   /** Returns one durable export job status. */
   // SLA: HEAVY
-  @Get('api/superadmin/export-data/:jobId')
+  @Get(['superadmin/export-data/:jobId', 'api/superadmin/export-data/:jobId'])
   @ApiOperation({ summary: 'Get Superadmin export job status' })
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminExportDataStatusResponseDto })
   /**
@@ -51,7 +51,7 @@ export class SuperadminExportDataQueryController {
 
   /** Streams one completed export artifact after the service validates authorization and token expiry. */
   // SLA: HEAVY
-  @Get('api/superadmin/export-data/download/:jobId/:token')
+  @Get(['superadmin/export-data/download/:jobId/:token', 'api/superadmin/export-data/download/:jobId/:token'])
   @ApiOperation({ summary: 'Download completed Superadmin export' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Protected ZIP download.' })
   /**

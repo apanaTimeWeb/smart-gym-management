@@ -26,7 +26,7 @@ import { SuperadminBroadcastsDeliveryDto } from '@/backend_superadmin/superadmin
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('broadcasts')
-@Controller('/superadmin/broadcasts')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminBroadcastsCommandController {
@@ -42,7 +42,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'create broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/broadcasts', 'api/superadmin/broadcasts'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
@@ -65,7 +65,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'update broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -87,7 +87,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'remove broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -109,7 +109,7 @@ export class SuperadminBroadcastsCommandController {
   /** Records a broadcast recipient delivery result. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(':broadcastId/deliveries/:recipientId')
+  @Post(['superadmin/broadcasts/:broadcastId/deliveries/:recipientId', 'api/superadmin/broadcasts/:broadcastId/deliveries/:recipientId'])
   @ApiOperation({ summary: 'Record broadcast recipient delivery' })
   @ApiResponse({ type: SuperadminBroadcastDeliveryResultDto })
   /**
@@ -130,7 +130,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'changeStatus broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/broadcasts/:id/status', 'api/superadmin/broadcasts/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

@@ -27,7 +27,7 @@ import { SuperadminGymsResponseDto } from '@/backend_superadmin/superadmin_modul
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('gyms')
-@Controller('/superadmin/gyms')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminGymsCommandController {
@@ -43,7 +43,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'create gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post()
+@Post(['superadmin/gyms', 'api/superadmin/gyms'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -66,7 +66,7 @@ export class SuperadminGymsCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post('/provision')
+  @Post(['superadmin/gyms/provision', 'api/superadmin/gyms/provision'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -87,7 +87,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the update mutation for the feature. */
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -108,7 +108,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -132,7 +132,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'changeStatus gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/gyms/:id/status', 'api/superadmin/gyms/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

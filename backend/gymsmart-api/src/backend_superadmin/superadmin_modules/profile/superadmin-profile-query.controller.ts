@@ -17,7 +17,7 @@ import { SuperadminProfileFindService } from '@/backend_superadmin/superadmin_mo
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('profile')
-@Controller('/superadmin/profile')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminProfileQueryController {
@@ -31,7 +31,7 @@ export class SuperadminProfileQueryController {
 
   /** Returns one profile record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/profile/:id', 'api/superadmin/profile/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -17,7 +17,7 @@ import { SuperadminUsageMetersFindService } from '@/backend_superadmin/superadmi
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('usage-meters')
-@Controller('/superadmin/usage-meters')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminUsageMetersQueryController {
@@ -31,7 +31,7 @@ export class SuperadminUsageMetersQueryController {
 
   /** Returns one usage-meters record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

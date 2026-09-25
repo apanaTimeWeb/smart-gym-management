@@ -19,7 +19,7 @@ import { SuperadminReportsDataQueryDto } from '@/backend_superadmin/superadmin_m
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('reports')
-@Controller('/superadmin/reports')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminReportsQueryController {
@@ -33,7 +33,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns revenue report rows. */
   // SLA: FAST
-  @Get('revenue')
+  @Get(['superadmin/reports/revenue', 'api/superadmin/reports/revenue'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'revenue' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns cancellation report rows. */
   // SLA: FAST
-  @Get('cancellations')
+  @Get(['superadmin/reports/cancellations', 'api/superadmin/reports/cancellations'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'cancellations' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns tenant health score report rows. */
   // SLA: FAST
-  @Get('health')
+  @Get(['superadmin/reports/health', 'api/superadmin/reports/health'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'health' })
   /**
@@ -90,7 +90,7 @@ export class SuperadminReportsQueryController {
 
   /** Returns one reports record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/reports/:id', 'api/superadmin/reports/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

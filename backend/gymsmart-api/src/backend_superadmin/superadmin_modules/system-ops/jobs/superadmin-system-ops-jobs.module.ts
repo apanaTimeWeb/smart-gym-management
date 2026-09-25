@@ -29,7 +29,7 @@ import { SuperadminSystemOpsJobsBulkDeleteService } from '@/backend_superadmin/s
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminSystemOpsJobsEntity])],
-  controllers: [SuperadminSystemOpsJobsQueryController, SuperadminSystemOpsJobsCommandController, SuperadminSystemOpsJobsQueueHealthQueryController, SuperadminSystemOpsJobsBulkCommandController],
+  controllers: [SuperadminSystemOpsJobsQueueHealthQueryController, SuperadminSystemOpsJobsBulkCommandController, SuperadminSystemOpsJobsCommandController, SuperadminSystemOpsJobsQueryController],
   providers: [SuperadminSystemOpsJobsQueueHealthService, SuperadminSystemOpsJobsRetryAllService, SuperadminSystemOpsJobsRetryService, SuperadminSystemOpsJobsCancelService, SuperadminSystemOpsJobsClearCompletedService, SuperadminSystemOpsJobsBulkRetryService, SuperadminSystemOpsJobsBulkDeleteService, SuperadminSystemOpsJobsRepository, SuperadminSystemOpsJobsListService, SuperadminSystemOpsJobsFindService, SuperadminSystemOpsJobsCreateService, SuperadminSystemOpsJobsUpdateService, SuperadminSystemOpsJobsDeleteService, SuperadminSystemOpsBackgroundJobStatusService],
   exports: [SuperadminSystemOpsJobsRepository],
 })

@@ -23,7 +23,7 @@ import { SuperadminSystemOpsMigrationLogStatusService } from '@/backend_superadm
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('migrations')
-@Controller('/superadmin/system-ops/migrations')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsMigrationsCommandController {
@@ -39,7 +39,7 @@ export class SuperadminSystemOpsMigrationsCommandController {
   @ApiOperation({ summary: 'create migrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post()
+  @Post(['superadmin/system-ops/migrations', 'api/superadmin/system-ops/migrations'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSystemOpsMigrationsCommandController {
   @ApiOperation({ summary: 'update migrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(':id')
+  @Patch(['superadmin/system-ops/migrations/:id', 'api/superadmin/system-ops/migrations/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSystemOpsMigrationsCommandController {
   @ApiOperation({ summary: 'remove migrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(':id')
+  @Delete(['superadmin/system-ops/migrations/:id', 'api/superadmin/system-ops/migrations/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSystemOpsMigrationsCommandController {
   @ApiOperation({ summary: 'changeStatus migrations' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(':id/status')
+@Patch(['superadmin/system-ops/migrations/:id/status', 'api/superadmin/system-ops/migrations/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

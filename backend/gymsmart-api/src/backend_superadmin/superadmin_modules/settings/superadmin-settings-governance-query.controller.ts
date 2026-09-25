@@ -33,8 +33,7 @@ export class SuperadminSettingsGovernanceQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/settings/governance')
-  @Get('api/superadmin/settings/governance')
+@Get(['superadmin/settings/governance', 'api/superadmin/settings/governance'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'governance' })
   /**

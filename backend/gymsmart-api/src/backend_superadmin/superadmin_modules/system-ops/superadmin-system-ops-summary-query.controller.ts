@@ -32,8 +32,7 @@ export class SuperadminSystemOpsSummaryQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get('superadmin/system-ops/summary')
-  @Get('api/superadmin/system-ops/summary')
+@Get(['superadmin/system-ops/summary', 'api/superadmin/system-ops/summary'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findSystemOpsSummary' })
   /**

@@ -24,7 +24,7 @@ import { SuperadminProfileTwoFactorService } from '@/backend_superadmin/superadm
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminProfileEntity])],
-  controllers: [SuperadminProfileQueryController, SuperadminProfileCommandController, SuperadminProfileAdvancedQueryController, SuperadminProfileSecurityCommandController],
+  controllers: [SuperadminProfileSecurityCommandController, SuperadminProfileAdvancedQueryController, SuperadminProfileCommandController, SuperadminProfileQueryController],
   providers: [SuperadminProfileRepository, SuperadminProfileListService, SuperadminProfileFindService, SuperadminProfileCreateService, SuperadminProfileUpdateService, SuperadminProfileDeleteService, SuperadminProfilePasswordService, SuperadminProfileTwoFactorService, SuperadminProfileMainService],
   exports: [SuperadminProfileRepository],
 })

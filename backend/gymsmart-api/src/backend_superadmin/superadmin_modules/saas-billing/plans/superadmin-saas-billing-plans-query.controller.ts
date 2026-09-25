@@ -19,7 +19,7 @@ import { SuperadminQueryDto } from '@/backend_superadmin/superadmin_core/superad
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('plans')
-@Controller('/superadmin/saas-billing/plans')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSaasBillingPlansQueryController {
@@ -33,7 +33,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns a paginated plans list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/saas-billing/plans', 'api/superadmin/saas-billing/plans'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns plan business-control insights. */
   // SLA: FAST
-  @Get('business-controls')
+  @Get(['superadmin/saas-billing/plans/business-controls', 'api/superadmin/saas-billing/plans/business-controls'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'businessControls' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminSaasBillingPlansQueryController {
 
   /** Returns one plans record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

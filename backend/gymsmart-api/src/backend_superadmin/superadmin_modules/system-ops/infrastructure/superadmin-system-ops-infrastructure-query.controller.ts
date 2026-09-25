@@ -17,7 +17,7 @@ import { SuperadminSystemOpsInfrastructureFindService } from '@/backend_superadm
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('infrastructure')
-@Controller('/superadmin/system-ops/infrastructure')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminSystemOpsInfrastructureQueryController {
@@ -31,7 +31,7 @@ export class SuperadminSystemOpsInfrastructureQueryController {
 
   /** Returns a paginated infrastructure list. */
   // SLA: FAST
-  @Get()
+  @Get(['superadmin/system-ops/infrastructure', 'api/superadmin/system-ops/infrastructure'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSystemOpsInfrastructureQueryController {
 
   /** Returns one infrastructure record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/system-ops/infrastructure/:id', 'api/superadmin/system-ops/infrastructure/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

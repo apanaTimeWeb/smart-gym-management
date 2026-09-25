@@ -24,7 +24,7 @@ import { SuperadminIntegrationsGenerateKeyService } from '@/backend_superadmin/s
  */
 @Module({
   imports: [TypeOrmModule.forFeature([SuperadminIntegrationsEntity])],
-  controllers: [SuperadminIntegrationsQueryController, SuperadminIntegrationsCommandController, SuperadminIntegrationsAdvancedQueryController, SuperadminIntegrationsAdvancedCommandController],
+  controllers: [SuperadminIntegrationsAdvancedCommandController, SuperadminIntegrationsAdvancedQueryController, SuperadminIntegrationsCommandController, SuperadminIntegrationsQueryController],
   providers: [SuperadminIntegrationsMainService, SuperadminIntegrationsGenerateKeyService, SuperadminIntegrationsRepository, SuperadminIntegrationsListService, SuperadminIntegrationsFindService, SuperadminIntegrationsCreateService, SuperadminIntegrationsUpdateService, SuperadminIntegrationsDeleteService, SuperadminIntegrationKeyStatusService],
   exports: [SuperadminIntegrationsRepository],
 })

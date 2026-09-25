@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Owns HTTP transport for the integrations-query.controller controller surface; business logic remains outside the controller.
 // FLOW: HTTP request -> DTO/query -> owning service -> canonical response envelope.
-import { HttpStatus, Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { HttpStatus, Controller, Get, NotFoundException, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { SuperadminCoreJwtAuthGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-jwt-auth.guard';
 import { SuperadminCoreRolesGuard } from '@/backend_superadmin/superadmin_core/superadmin_core_auth/superadmin-core-roles.guard';
@@ -18,7 +18,7 @@ import { SuperadminIntegrationsResponseDto } from '@/backend_superadmin/superadm
  * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
  */
 @ApiTags('integrations')
-@Controller('/superadmin/integrations')
+@Controller()
 @UseGuards(SuperadminCoreJwtAuthGuard, SuperadminCoreRolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class SuperadminIntegrationsQueryController {
@@ -32,7 +32,7 @@ export class SuperadminIntegrationsQueryController {
 
   /** Returns one integrations record. */
   // SLA: FAST
-  @Get(':id')
+  @Get(['superadmin/integrations/:id', 'api/superadmin/integrations/:id'])
   @ApiResponse({ type: SuperadminIntegrationsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**
@@ -41,5 +41,9 @@ export class SuperadminIntegrationsQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findOne(@Param('id') id: string): Promise<SuperadminIntegrationsResponseDto> { return (await this.findService.findIntegrationsById(id)) as unknown as SuperadminIntegrationsResponseDto; }
+  async findOne(@Param('id') id: string): Promise<SuperadminIntegrationsResponseDto> {
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(id)) throw new NotFoundException({ error: 'NOT_FOUND', errorCode: 'INTEGRATIONS.NOT_FOUND', message: { key: 'integrations.ERRORS.NOT_FOUND' } });
+    return (await this.findService.findIntegrationsById(id)) as unknown as SuperadminIntegrationsResponseDto;
+  }
 }
