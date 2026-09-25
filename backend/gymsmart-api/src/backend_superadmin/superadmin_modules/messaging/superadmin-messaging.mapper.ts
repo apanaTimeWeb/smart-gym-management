@@ -26,7 +26,16 @@ export class SuperadminMessagingMapper {
 
   static toResponse(domain: SuperadminMessagingDomainModel): SuperadminMessagingResponseDto {
     const dto = new SuperadminMessagingResponseDto();
-    Object.assign(dto, domain);
+    dto.id = domain.id;
+    dto.tenantId = domain.tenantId;
+    dto.tenantName = domain.tenantName;
+    dto.channel = domain.channel;
+    dto.subject = domain.subject;
+    dto.body = domain.body;
+    dto.status = domain.status;
+    dto.sentAt = domain.sentAt ? (domain.sentAt instanceof Date ? domain.sentAt.toISOString() : String(domain.sentAt)) : null;
+    dto.scheduledAt = domain.scheduledAt ? (domain.scheduledAt instanceof Date ? domain.scheduledAt.toISOString() : String(domain.scheduledAt)) : null;
+    dto.createdAt = domain.createdAt instanceof Date ? domain.createdAt.toISOString() : String(domain.createdAt);
     return dto;
   }
 }

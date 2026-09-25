@@ -10,5 +10,10 @@ import { IsOptional, IsString} from 'class-validator';
  */
 export class SuperadminSaasBillingInvoicesExportQueryDto {@ApiPropertyOptional()
  @IsOptional() @IsString() tenantId?: string;@ApiPropertyOptional()
- @IsOptional() @IsString() status?: string;}
+ @IsOptional() @IsString() status?: string;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) preset?: string;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) timeRange?: string;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) customStart?: string;
+ @IsOptional() @IsString() @ApiPropertyOptional({ required: false }) customEnd?: string;
+}
 

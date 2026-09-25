@@ -36,5 +36,26 @@ export class SuperadminReportsDataQueryDto {
   @ApiPropertyOptional({ required: false})
   /** Primary Intent: Defines the `region` data contract for this superadmin-reports-data-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  region?: string;}
+  region?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  preset?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  timeRange?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  customStart?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  customEnd?: string;
+}
 
