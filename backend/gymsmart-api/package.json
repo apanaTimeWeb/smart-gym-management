@@ -15,6 +15,7 @@
     "test:e2e:superadmin": "cd backend_e2e && pytest backend_superadmin_e2e/ -v",
     "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/core/database/master-data-source.ts",
     "seed:superadmin": "ts-node -r tsconfig-paths/register src/backend_superadmin/backend_superadmin.seed.ts",
+    "seed:admin": "ts-node -r tsconfig-paths/register src/backend_admin/admin_core/admin_core_database/admin-core-master-seeder.ts",
     "architecture:check": "node scripts/architecture-gate.mjs"
   },
   "dependencies": {
