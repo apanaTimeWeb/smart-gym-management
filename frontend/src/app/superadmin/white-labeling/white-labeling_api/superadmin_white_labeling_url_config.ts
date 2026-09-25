@@ -3,7 +3,8 @@ export const SuperadminWhiteLabelingUrlConfig = {
     MAIN: '/superadmin/white-labeling',
   },
   API: {
-    DOMAINS: '/api/superadmin/white-labeling/domains',
+    DOMAINS: '/superadmin/white-labeling/domains',
     UPDATE_STATUS: (id: string) => `/api/superadmin/white-labeling/domains/${id}/status`,
   }
 } as const;
+
