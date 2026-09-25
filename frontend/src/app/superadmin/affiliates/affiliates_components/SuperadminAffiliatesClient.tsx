@@ -27,7 +27,7 @@ export default function SuperadminAffiliatesClient() {
     return (<div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
       <SuperadminAffiliatesHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} statusFilter={statusFilter} onStatusFilterChange={setStatusFilter} onAddClick={() => setIsModalOpen(true)} startDate={startDate ?? ''} onStartDateChange={(value) => setStartDate(value)} endDate={endDate ?? ''} onEndDateChange={(value) => setEndDate(value)}/>
 
-      <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission}/>
+      <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission} currency="INR"/>
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input">

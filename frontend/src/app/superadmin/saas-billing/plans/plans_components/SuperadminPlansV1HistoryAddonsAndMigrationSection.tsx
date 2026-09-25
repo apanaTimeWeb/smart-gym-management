@@ -26,7 +26,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {v.change}
         </p>
         <p className="mt-2 text-sm text-primary">
-          {formatCurrency(v.monthly, 'INR', locale)}
+          {formatCurrency(v.monthly, v.currency || 'INR', locale)}
           / month
         </p>
       </div>)}
@@ -39,7 +39,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {a.name}
         </span>
         <span className="text-sm font-medium text-primary">
-          {formatCurrency(a.price, 'INR', locale)}
+          {formatCurrency(a.price, a.currency || 'INR', locale)}
         </span>
       </div>)}
     </div>
@@ -71,7 +71,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           </p>
           <p className="text-lg font-semibold text-success">
             +
-            {formatCurrency(data.migration.monthlyChange, 'INR', locale)}
+            {formatCurrency(data.migration.monthlyChange, data.migration.currency || 'INR', locale)}
           </p>
         </div>
       </div>

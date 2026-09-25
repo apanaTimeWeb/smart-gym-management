@@ -25,7 +25,7 @@ export default function SuperadminGymsV1TenantComparisonPanel({ data, selectedGy
         <tbody>{data.rows.map((row) => <tr key={row.id} className="border-b border-border hover:bg-surface-hover">
           <td className="px-3 py-3"><input aria-label={`Select ${row.name}`} type="checkbox" checked={selected.has(row.id)} onChange={() => onSelectionChange(selected.has(row.id) ? selectedGymIds.filter((id) => id !== row.id) : [...selectedGymIds, row.id])} className="h-4 w-4 accent-primary" /></td>
           <td className="px-3 py-3"><span className="block max-w-52 truncate font-medium text-primary">{row.name}</span><span className="text-xs text-secondary">{row.status}</span></td>
-          <td className="px-3 py-3 text-secondary">{row.region}</td><td className="px-3 py-3 text-secondary">{row.plan}</td><td className="px-3 py-3 text-primary">{formatCurrency(row.income, 'INR', locale)}</td><td className="px-3 py-3 text-primary">{formatNumber(row.health)}/100</td><td className="px-3 py-3 text-primary">{row.usage}%</td><td className="px-3 py-3 text-secondary">{row.lastAction ?? '—'}</td>
+          <td className="px-3 py-3 text-secondary">{row.region}</td><td className="px-3 py-3 text-secondary">{row.plan}</td><td className="px-3 py-3 text-primary">{formatCurrency(row.income, data.currency, locale)}</td><td className="px-3 py-3 text-primary">{formatNumber(row.health)}/100</td><td className="px-3 py-3 text-primary">{row.usage}%</td><td className="px-3 py-3 text-secondary">{row.lastAction ?? '—'}</td>
         </tr>)}</tbody>
       </table>
     </div>

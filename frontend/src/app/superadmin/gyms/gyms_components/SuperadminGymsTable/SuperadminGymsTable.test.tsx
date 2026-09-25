@@ -12,12 +12,13 @@ vi.mock('@/components/ui/CopyButton', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal', () => ({ default: () => null }));
+vi.mock('next-intl', () => ({ useLocale: () => 'en-IN' }));
 
 const mockedUseGymsTable = vi.mocked(useSuperadminGymsTable);
 const baseGym = {
   id: 't1', name: 'Iron Paradise', ownerName: 'John Doe', adminEmail: 'john@iron.com', phone: '9876543210',
   status: 'ACTIVE' as const, plan: 'Pro', createdAt: '2026-08-01', memberCount: 200, monthlyRevenue: 5000,
-  databaseVersion: 'v1.2', city: 'Mumbai', state: 'MH', staffCount: 15,
+  databaseVersion: 'v1.2', city: 'Mumbai', state: 'MH', staffCount: 15, currency: 'INR', databaseName: 'gym_db', lastActiveAt: '2026-09-17T09:15:00Z',
 };
 const setSortOrder = vi.fn();
 const setSortBy = vi.fn();

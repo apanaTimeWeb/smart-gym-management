@@ -23,7 +23,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
         const dateStr = formatDate(cpn.expiryDate);
         const discountStr = cpn.discountType === 'PERCENTAGE'
             ? `${cpn.discountValue}% OFF`
-            : `${formatCurrency(cpn.discountValue, 'INR', locale)} OFF`;
+            : `${formatCurrency(cpn.discountValue, cpn.currency || 'INR', locale)} OFF`;
         const waText = WhatsAppFormatter.formatReceipt({
             title: 'Smart Gym 360',
             subtitle: 'Exclusive Gym Partner Coupon',
@@ -55,7 +55,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
         {cpn.discountType === 'PERCENTAGE'
             ? <span className="font-semibold text-success">{cpn.discountValue}% OFF</span>
-            : <span className="font-semibold text-success">{formatCurrency(cpn.discountValue, 'INR', locale)} OFF</span>}
+            : <span className="font-semibold text-success">{formatCurrency(cpn.discountValue, cpn.currency || 'INR', locale)} OFF</span>}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>
       <td className="px-6 py-4 whitespace-nowrap"><SuperadminCouponsStatusBadge status={coupon.status}/></td>

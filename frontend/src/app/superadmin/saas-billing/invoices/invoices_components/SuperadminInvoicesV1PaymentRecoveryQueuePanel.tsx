@@ -43,7 +43,7 @@ export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: 
             {r.invoice}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrency(r.amount, 'INR', locale)}
+            {formatCurrency(r.amount, r.currency || 'INR', locale)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {formatNumber(r.attempts)}

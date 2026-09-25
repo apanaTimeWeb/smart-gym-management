@@ -25,6 +25,7 @@ export const SuperadminGymDetailDataSchema = z.object({
   trialEndsAt: z.string().optional(),
   memberCount: z.number(),
   monthlyRevenue: z.number(),
+  currency: z.string(),
   plan: z.string(),
   databaseVersion: z.string(),
   tabs: z.array(SuperadminGymDetailTabSchema),
@@ -41,6 +42,7 @@ export const SuperadminGymDetailDataSchema = z.object({
     nextPayment: z.string(),
     failedPayments: z.number(),
     discount: z.string(),
+    currency: z.string(),
   }),
   support: z.object({
     openTickets: z.number(),
@@ -48,7 +50,7 @@ export const SuperadminGymDetailDataSchema = z.object({
     satisfaction: z.number(),
   }),
   activity: z.array(z.object({ date: z.string(), event: z.string() })),
-  subscription: z.object({ plan: z.string(), started: z.string(), renewal: z.string(), monthlyIncome: z.number() }),
+  subscription: z.object({ plan: z.string(), started: z.string(), renewal: z.string(), monthlyIncome: z.number(), currency: z.string() }),
 });
 
 export const SuperadminGymDetailResponseSchema = z.object({

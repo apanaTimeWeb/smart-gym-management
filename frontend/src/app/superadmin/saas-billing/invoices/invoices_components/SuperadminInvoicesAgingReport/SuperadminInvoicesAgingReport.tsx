@@ -26,7 +26,7 @@ export default function SuperadminInvoicesAgingReport({ invoices }: {
         {Object.entries(agingBuckets).map(([bucket, data]) => (<div key={bucket} className="bg-input border border-border rounded-xl p-4 shadow-card flex flex-col justify-between">
             <div>
               <h3 className="text-sm font-semibold text-secondary uppercase tracking-wider">{bucket}</h3>
-              <p className="text-2xl font-bold text-primary mt-2">{formatCurrency(data.amount, 'INR', locale)}</p>
+              <p className="text-2xl font-bold text-primary mt-2">{formatCurrency(data.amount, data.currency || 'INR', locale)}</p>
               <p className="text-xs text-secondary mt-1">{data.count} invoices</p>
             </div>
             {data.invoices.length > 0 && (<div className="mt-4 pt-4 border-t border-border max-h-32 overflow-y-auto scrollbar-thin">

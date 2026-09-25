@@ -19,6 +19,7 @@ const SuperadminGymsV1RowSchema = z.object({
 });
 
 export const SuperadminGymsV1DataSchema = z.object({
+  currency: z.string(),
   segments: z.array(z.object({ name: z.string(), count: z.number(), rule: z.string() })),
   filters: z.array(SuperadminGymsV1FilterSchema),
   bulk: z.array(SuperadminGymsV1BulkActionSchema),

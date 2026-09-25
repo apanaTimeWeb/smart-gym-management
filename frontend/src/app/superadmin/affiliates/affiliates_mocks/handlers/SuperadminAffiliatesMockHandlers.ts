@@ -55,6 +55,7 @@ export const superadminAffiliatesHandlers = [
       status: 'ACTIVE',
       joinedAt: new Date().toISOString(),
       phone: '',
+      currency: parsed.data.currency || 'INR',
       commissionRate: 10,
       referralCount: 0,
       conversionRate: 0,

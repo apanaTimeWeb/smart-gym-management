@@ -10,7 +10,7 @@ beforeEach(() => resetSuperadminAffiliatesMockState());
 
 describe('Superadmin Affiliates MSW integration', () => {
   it('creates an affiliate and makes it visible in the next list query', async () => {
-    const payload = { name: 'Integration Affiliate', email: 'integration@affiliate.test', referralCode: 'INT-001' };
+    const payload = { name: 'Integration Affiliate', email: 'integration@affiliate.test', referralCode: 'INT001' };
     const createResponse = await fetch('http://localhost/superadmin/affiliates', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': 'affiliate-create-1' },

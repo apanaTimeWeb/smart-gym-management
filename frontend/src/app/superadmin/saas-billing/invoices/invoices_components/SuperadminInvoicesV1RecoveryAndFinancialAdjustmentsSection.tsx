@@ -36,7 +36,7 @@ export default function SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSecti
         </div>
         <div className="text-right">
           <p className="font-medium text-primary">
-            {formatCurrency(r.amount, 'INR', locale)}
+            {formatCurrency(r.amount, r.currency || 'INR', locale)}
           </p>
           <span className={`text-xs font-semibold ${getSuperadminInvoicesStatusBadgeClasses(r.status)}`}>
             {r.status}

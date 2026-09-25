@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSuperadminCouponsPresetRange } from '@/app/superadmin/saas-billing/coupons/SuperadminCouponsDateRangeUtils';
+import { getSuperadminCouponsPresetRange } from '@/app/superadmin/saas-billing/coupons/coupons_utils/SuperadminCouponsDateRangeUtils';
 
 describe('getSuperadminCouponsPresetRange', () => {
   it('returns deterministic preset bounds', () => {

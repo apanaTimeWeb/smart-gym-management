@@ -8,6 +8,16 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('@tanstack/react-query', () => ({
     useQuery: vi.fn(),
     useQueryClient: vi.fn(),
+    useMutation: vi.fn((options: any) => ({
+        mutate: vi.fn(),
+        mutateAsync: vi.fn(async (vars, mutOptions) => {
+            const result = options.mutationFn ? await options.mutationFn(vars) : undefined;
+            if (options.onSuccess) options.onSuccess(result);
+            if (mutOptions && mutOptions.onSuccess) mutOptions.onSuccess(result);
+            return result;
+        }),
+        isPending: false
+    }))
 }));
 vi.mock('next/navigation', () => ({
     useRouter: vi.fn(() => ({ replace: vi.fn() })),
