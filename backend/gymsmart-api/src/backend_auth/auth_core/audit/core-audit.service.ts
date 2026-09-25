@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Provides the sanitized audit boundary used by security-critical feature mutations.
+// RESPONSIBILITY: Provides the sanitized audit boundary used by security-critical feature mutations.
 // FLOW: Feature service/orchestrator -> CoreAuditService -> CoreAuditLogRepository -> audit_logs.
 
 import { Injectable } from '@nestjs/common';
@@ -18,7 +18,7 @@ export class CoreAuditService {
   async record(input: CoreAuditLogInput): Promise<void> { await this.repository.createAuditLog(input); }
 
   /** @description Returns server-derived IP metadata from the current request context. @returns Safe IP metadata. */
-  getRequestMetadata(): { ipAddress: string | null } { return { ipAddress: this.requestContext.get()?.ipAddress ?? null }; }
+  getRequestMetadata(): { ipAddress: string } { return { ipAddress: this.requestContext.get()?.ipAddress ?? '0.0.0.0' }; }
 
   /** @description Reads the authenticated actor ID from request context. @returns Actor UUID or null. */
   getActorId(): string | null { return this.requestContext.get()?.userId ?? null; }

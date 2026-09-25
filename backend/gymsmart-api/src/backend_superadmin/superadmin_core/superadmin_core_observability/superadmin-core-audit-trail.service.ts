@@ -37,6 +37,6 @@ export class SuperadminCoreAuditTrailService {
    */
   async record(input: SuperadminAuditTrailRecordInput): Promise<void> {
     const dataSource = getTenantDataSource() ?? this.dataSource;
-    await dataSource.query('INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, old_value, new_value, ip_address, tenant_id, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,$9,$10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)', [randomUUID(), input.actorId, input.actorRole, input.action.slice(0, 500), input.entityType.slice(0, 500), input.entityId.slice(0, 500), JSON.stringify(input.oldValue ?? null), JSON.stringify(input.newValue ?? null), input.ipAddress.slice(0, 255), input.tenantId]);
+    await dataSource.query('INSERT INTO audit_logs (id, actor_id, actor_role, action, entity_type, entity_id, old_value, new_value, ip_address, tenant_id, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,$9,$10,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)', [randomUUID(), input.actorId, input.actorRole, input.action.slice(0, 500), input.entityType.slice(0, 500), input.entityId.slice(0, 500), JSON.stringify(input.oldValue ?? {}), JSON.stringify(input.newValue ?? {}), input.ipAddress.slice(0, 255), input.tenantId]);
   }
 }

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Validates and rotates refresh sessions under a pessimistic row lock.
+// RESPONSIBILITY: Validates and rotates refresh sessions under a pessimistic row lock.
 // FLOW: AuthSessionOrchestrator -> AuthRefreshService -> token verification -> locked repository -> audit.
 
 import { Injectable } from '@nestjs/common';
@@ -70,7 +70,7 @@ export class AuthRefreshService {
     const refreshToken = this.tokenUtils.createRefreshToken(user.id, sessionId);
     const expiresAt = new Date(Date.now() + this.refreshTtlMs());
     await this.sessionRepository.rotateRefreshSession(sessionId, this.tokenUtils.hashRefreshToken(refreshToken), expiresAt);
-    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.REFRESH_ROTATED, entityType: 'auth_refresh_session', entityId: sessionId, oldValue: null, newValue: { rotated: true }, ipAddress: this.audit.getRequestMetadata().ipAddress });
+    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.REFRESH_ROTATED, entityType: 'auth_refresh_session', entityId: sessionId, oldValue: {}, newValue: { rotated: true }, ipAddress: this.audit.getRequestMetadata().ipAddress });
     return this.tokenUtils.toRefreshResult(accessToken, refreshToken);
   }
 
