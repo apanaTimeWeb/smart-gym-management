@@ -28,7 +28,7 @@ export function useSuperadminFeaturesData() {
         }
     });
     const updateFeatureFlagStatusMutation = useMutation({
-        mutationFn: ({ id, enabled, idempotencyKey }: SuperadminFeatureFlagStatusMutationInput) => enabled ? featuresApi.activateFeatureFlag(id, idempotencyKey) : featuresApi.suspendFeatureFlag(id, idempotencyKey),
+        mutationFn: ({ id, idempotencyKey }: SuperadminFeatureFlagStatusMutationInput) => featuresApi.toggleFeatureFlag(id, idempotencyKey),
         onSuccess: (res) => {
             if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {

@@ -5,7 +5,7 @@ import type { ApiResponse } from '@/lib/api';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
 import { z } from "zod";
 import { TenantSchema } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
-import { GymStatsSchema, type GymStats } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
+
 import { SuperadminGymsPlanOptionSchema, type SuperadminGymsPlanOption } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsPlanTypes';
 export const gymsApi = {
     fetchGyms: (params?: Record<string, string>) => {
@@ -35,7 +35,7 @@ export const gymsApi = {
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: z.object({}).passthrough()
     }),
-    fetchGymStats: () => apiFetch<ApiResponse<GymStats>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: GymStatsSchema }),
+
     emailGymOwner: (id: string, body: {
         subject: string;
         message: string;

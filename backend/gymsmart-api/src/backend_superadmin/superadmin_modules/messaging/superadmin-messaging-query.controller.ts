@@ -43,7 +43,10 @@ export class SuperadminMessagingQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findAll(@Query() query: SuperadminMessagingQueryDto): Promise<{ data: SuperadminMessagingResponseDto[]; meta: ReturnType<typeof buildPaginationMeta> }> { return (await this.listService.findMessagingPage(query)) as never; }
+  async findAll(@Query() query: SuperadminMessagingQueryDto): Promise<SuperadminMessagingResponseDto[]> { 
+    const page = await this.listService.findMessagingPage(query);
+    return page.data as unknown as SuperadminMessagingResponseDto[];
+  }
 /**
  * Primary Intent: Executes the findTenants use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.
@@ -83,8 +86,9 @@ export class SuperadminMessagingQueryController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findMessages(@Query() query: SuperadminMessagingQueryDto): Promise<{ data: SuperadminMessagingResponseDto[]; meta: ReturnType<typeof buildPaginationMeta> }> {
-    return (await this.listService.findMessagingPage(query)) as never;
+  async findMessages(@Query() query: SuperadminMessagingQueryDto): Promise<SuperadminMessagingResponseDto[]> {
+    const page = await this.listService.findMessagingPage(query);
+    return page.data as unknown as SuperadminMessagingResponseDto[];
   }
 /**
  * Primary Intent: Executes the findOne use case within the owning backend feature boundary.

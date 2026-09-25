@@ -29,17 +29,23 @@ export default function SuperadminGymsClient() {
       </div>
 
       <div className="flex w-full overflow-x-auto border-b border-border hide-scrollbar">
-        {['All', 'Onboarding', 'Active', 'Churn Risk', 'Cancelled'].map((status) => (
+        {[
+          { label: 'All', value: 'All' },
+          { label: 'Active', value: 'ACTIVE' },
+          { label: 'Suspended', value: 'SUSPENDED' },
+          { label: 'Trial', value: 'TRIAL' },
+          { label: 'Cancelled', value: 'CANCELLED' }
+        ].map(({ label, value }) => (
           <button
-            key={status}
-            onClick={() => setParam('statusFilter', status)}
+            key={value}
+            onClick={() => setParam('statusFilter', value)}
             className={`whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-surface-hover ${
-              statusFilter === status
+              statusFilter === value
                 ? 'border-primary text-primary'
                 : 'border-transparent text-secondary hover:text-primary hover:border-border'
             }`}
           >
-            {status}
+            {label}
           </button>
         ))}
       </div>

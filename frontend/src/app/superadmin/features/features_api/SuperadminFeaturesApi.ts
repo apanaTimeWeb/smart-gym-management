@@ -33,12 +33,7 @@ export const featuresApi = {
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: FeatureFlagSchema,
     }),
-    activateFeatureFlag: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {
-        method: 'POST',
-        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
-        dataSchema: FeatureFlagSchema,
-    }),
-    suspendFeatureFlag: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {
+    toggleFeatureFlag: (id: string, idempotencyKey?: string) => apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {
         method: 'POST',
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: FeatureFlagSchema,

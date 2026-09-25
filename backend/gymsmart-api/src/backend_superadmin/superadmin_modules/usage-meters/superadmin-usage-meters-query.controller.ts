@@ -28,6 +28,15 @@ export class SuperadminUsageMetersQueryController {
  * Side-Effects: Persists only through the approved repository/orchestrator path and emits declared events/jobs when the feature requires them.
  * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
  */
+  /** Executes the list use case. */
+  // SLA: FAST
+  @Get(['superadmin/usage-meters', 'superadmin/usage-meters'])
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
+  @ApiOperation({ summary: 'findAll' })
+  async findAll(@Query() query: SuperadminUsageMetersQueryDto) {
+    const page = await this.listService.findUsageMetersPage(query);
+    return page.data;
+  }
 
   /** Returns one usage-meters record. */
   // SLA: FAST

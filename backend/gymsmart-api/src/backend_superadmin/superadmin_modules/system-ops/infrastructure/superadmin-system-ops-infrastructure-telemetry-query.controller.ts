@@ -50,12 +50,9 @@ export class SuperadminSystemOpsInfrastructureTelemetryQueryController {
  * AI-Note: Preserve the method's explicit return type, guard-clause structure, dependency isolation, and frontend-frozen contract.
  */
 
-  /** Executes GET /superadmin/system-ops/infrastructure/uptime. */
+  /** Executes GET /superadmin/system-ops/infrastructure/uptime and uptime-history. */
   // SLA: FAST
-  @Get('superadmin/system-ops/infrastructure/uptime')
-  @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
-  // SLA: FAST
-  @Get('superadmin/system-ops/infrastructure/uptime-history')
+  @Get(['superadmin/system-ops/infrastructure/uptime', 'superadmin/system-ops/infrastructure/uptime-history'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'uptime' })
   /**
