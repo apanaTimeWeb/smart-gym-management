@@ -32,7 +32,7 @@ export class SuperadminProfileAdvancedQueryController {
 
   /** Executes GET /superadmin/profile. */
   // SLA: FAST
-  @Get('superadmin/profile')
+  @Get('api/superadmin/profile')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'main' })
   /**

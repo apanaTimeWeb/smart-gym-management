@@ -18,7 +18,7 @@ def _headers() -> dict[str, str]:
     if TENANT_ID: headers["x-tenant-id"] = TENANT_ID
     return headers
 
-MUTATION_ROUTES = [('POST', '/superadmin/affiliates', 'REQ-002'), ('PATCH', '/superadmin/affiliates/00000000-0000-4000-8000-000000000001', 'REQ-003'), ('PATCH', '/superadmin/affiliates/00000000-0000-4000-8000-000000000001/status', 'REQ-004'), ('DELETE', '/superadmin/affiliates/00000000-0000-4000-8000-000000000001', 'REQ-005'), ('POST', '/superadmin/affiliates/00000000-0000-4000-8000-000000000001/pay', 'REQ-006')]
+MUTATION_ROUTES = [('POST', '/api/superadmin/affiliates', 'REQ-002'), ('PATCH', '/api/superadmin/affiliates/00000000-0000-4000-8000-000000000001', 'REQ-003'), ('PATCH', '/api/superadmin/affiliates/00000000-0000-4000-8000-000000000001/status', 'REQ-004'), ('DELETE', '/api/superadmin/affiliates/00000000-0000-4000-8000-000000000001', 'REQ-005'), ('POST', '/api/superadmin/affiliates/00000000-0000-4000-8000-000000000001/pay', 'REQ-006')]
 
 
 @pytest.mark.parametrize("method,path,requirement", MUTATION_ROUTES)

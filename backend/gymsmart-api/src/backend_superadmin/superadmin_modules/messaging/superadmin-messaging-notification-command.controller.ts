@@ -33,7 +33,7 @@ export class SuperadminMessagingNotificationCommandController {
   /** Marks every current notification as read. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/messaging/notifications/read-all', 'api/superadmin/messaging/notifications/read-all'])
+  @Patch(['api/superadmin/messaging/notifications/read-all', 'api/superadmin/messaging/notifications/read-all'])
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'All notifications marked as read.' })
@@ -55,7 +55,7 @@ export class SuperadminMessagingNotificationCommandController {
   /** Marks one notification as read. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/messaging/notifications/:id/read', 'api/superadmin/messaging/notifications/:id/read'])
+@Patch(['api/superadmin/messaging/notifications/:id/read', 'api/superadmin/messaging/notifications/:id/read'])
   @HttpCode(HttpStatus.OK)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminMessagingNotificationResponseDto })

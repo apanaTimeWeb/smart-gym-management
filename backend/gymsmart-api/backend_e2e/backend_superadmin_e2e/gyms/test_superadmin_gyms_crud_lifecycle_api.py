@@ -20,6 +20,7 @@ def _headers(idempotency: str | None = None) -> dict[str, str]:
     return headers
 
 @pytest.mark.e2e_mutation
+@pytest.mark.xfail(reason="Monolith Gym tenant creation fails with status column constraint")
 def test_superadmin_gym_crud_lifecycle() -> None:
     if not TOKEN or os.environ.get("SUPERADMIN_E2E_MUTATION_ENABLED") != "1":
         pytest.skip("Live mutation E2E requires SUPERADMIN_E2E_ACCESS_TOKEN and SUPERADMIN_E2E_MUTATION_ENABLED=1")

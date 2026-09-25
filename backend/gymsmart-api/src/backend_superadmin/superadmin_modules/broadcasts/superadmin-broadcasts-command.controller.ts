@@ -42,7 +42,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'create broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/broadcasts', 'api/superadmin/broadcasts'])
+  @Post(['api/superadmin/broadcasts', 'api/superadmin/broadcasts'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
@@ -65,7 +65,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'update broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
+  @Patch(['api/superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -87,7 +87,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'remove broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
+  @Delete(['api/superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -109,7 +109,7 @@ export class SuperadminBroadcastsCommandController {
   /** Records a broadcast recipient delivery result. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/broadcasts/:broadcastId/deliveries/:recipientId', 'api/superadmin/broadcasts/:broadcastId/deliveries/:recipientId'])
+  @Post(['api/superadmin/broadcasts/:broadcastId/deliveries/:recipientId', 'api/superadmin/broadcasts/:broadcastId/deliveries/:recipientId'])
   @ApiOperation({ summary: 'Record broadcast recipient delivery' })
   @ApiResponse({ type: SuperadminBroadcastDeliveryResultDto })
   /**
@@ -130,7 +130,7 @@ export class SuperadminBroadcastsCommandController {
   @ApiOperation({ summary: 'changeStatus broadcasts' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/broadcasts/:id/status', 'api/superadmin/broadcasts/:id/status'])
+@Patch(['api/superadmin/broadcasts/:id/status', 'api/superadmin/broadcasts/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

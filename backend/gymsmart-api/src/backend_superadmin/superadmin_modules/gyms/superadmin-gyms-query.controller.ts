@@ -33,7 +33,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns a paginated gyms list. */
   // SLA: FAST
-  @Get(['superadmin/gyms', 'api/superadmin/gyms'])
+  @Get(['api/superadmin/gyms', 'api/superadmin/gyms'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -52,7 +52,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns the Gym export resource URI. */
   // SLA: HEAVY
-  @Get(['superadmin/gyms/export', 'api/superadmin/gyms/export'])
+  @Get(['api/superadmin/gyms/export', 'api/superadmin/gyms/export'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'export' })
   /**
@@ -71,7 +71,7 @@ export class SuperadminGymsQueryController {
 
   /** Returns one gyms record. */
   // SLA: FAST
-  @Get(['superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Get(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
   @ApiResponse({ type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

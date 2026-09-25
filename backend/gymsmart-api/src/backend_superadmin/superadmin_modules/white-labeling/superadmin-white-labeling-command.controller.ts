@@ -39,7 +39,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'create white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/white-labeling', 'api/superadmin/white-labeling'])
+  @Post(['api/superadmin/white-labeling', 'api/superadmin/white-labeling'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'update white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
+  @Patch(['api/superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'remove white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
+  @Delete(['api/superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminWhiteLabelingCommandController {
   @ApiOperation({ summary: 'changeStatus white-labeling' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/white-labeling/:id/status', 'api/superadmin/white-labeling/:id/status'])
+@Patch(['api/superadmin/white-labeling/:id/status', 'api/superadmin/white-labeling/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

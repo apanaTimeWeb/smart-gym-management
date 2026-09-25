@@ -31,7 +31,7 @@ export class SuperadminGlobalAuditAuditLogsQueryController {
 
   /** Returns the audit log collection through the frontend route alias. */
   // SLA: FAST
-  @Get(['superadmin/audit-logs', 'api/superadmin/audit-logs'])
+  @Get(['api/superadmin/audit-logs', 'api/superadmin/audit-logs'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'list' })
   /**

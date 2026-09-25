@@ -34,7 +34,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns payout history across active affiliates. */
   // SLA: FAST
-  @Get(['superadmin/affiliates/payout-history', 'api/superadmin/affiliates/payout-history'])
+  @Get(['api/superadmin/affiliates/payout-history', 'api/superadmin/affiliates/payout-history'])
   @ApiResponse({ type: [SuperadminAffiliatePayoutRecordDto] })
   @ApiOperation({ summary: 'payoutHistory' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns a paginated affiliates list. */
   // SLA: FAST
-  @Get(['superadmin/affiliates', 'api/superadmin/affiliates'])
+  @Get(['api/superadmin/affiliates', 'api/superadmin/affiliates'])
   @ApiResponse({ type: [SuperadminAffiliatesResponseDto] })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -77,7 +77,7 @@ export class SuperadminAffiliatesQueryController {
 
   /** Returns one affiliates record. */
   // SLA: FAST
-  @Get(['superadmin/affiliates/:id', 'api/superadmin/affiliates/:id'])
+  @Get(['api/superadmin/affiliates/:id', 'api/superadmin/affiliates/:id'])
   @ApiResponse({ type: SuperadminAffiliatesResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

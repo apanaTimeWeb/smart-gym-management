@@ -34,7 +34,7 @@ export class SuperadminSaasBillingCouponsRestoreCommandController {
   @RequireIdempotencyKey()
   // SLA: HEAVY
   // SLA: STANDARD
-@Post('superadmin/saas-billing/coupons/:id/restore')
+@Post('api/superadmin/saas-billing/coupons/:id/restore')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'restore' })
   /**

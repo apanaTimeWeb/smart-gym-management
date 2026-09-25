@@ -40,7 +40,7 @@ export class SuperadminProfileSecurityCommandController {
   @ApiOperation({ summary: 'PATCH /superadmin/profile' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('superadmin/profile')
+  @Patch('api/superadmin/profile')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'update' })
   /**
@@ -61,7 +61,7 @@ export class SuperadminProfileSecurityCommandController {
   @ApiOperation({ summary: 'PATCH /superadmin/profile/password' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('superadmin/profile/password')
+  @Patch('api/superadmin/profile/password')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'password' })
   /**
@@ -82,7 +82,7 @@ export class SuperadminProfileSecurityCommandController {
   @ApiOperation({ summary: 'PATCH /superadmin/profile/2fa' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch('superadmin/profile/2fa')
+@Patch('api/superadmin/profile/2fa')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'twoFactor' })
   /**

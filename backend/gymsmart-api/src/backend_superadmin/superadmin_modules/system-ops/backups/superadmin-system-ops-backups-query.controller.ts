@@ -31,7 +31,7 @@ export class SuperadminSystemOpsBackupsQueryController {
 
   /** Returns a paginated backups list. */
   // SLA: FAST
-  @Get(['superadmin/system-ops/backups', 'api/superadmin/system-ops/backups'])
+  @Get(['api/superadmin/system-ops/backups', 'api/superadmin/system-ops/backups'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSystemOpsBackupsQueryController {
 
   /** Returns one backups record. */
   // SLA: FAST
-  @Get(['superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
+  @Get(['api/superadmin/system-ops/backups/:id', 'api/superadmin/system-ops/backups/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

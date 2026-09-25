@@ -26,7 +26,7 @@ export class SuperadminDashboardCompatibilityQueryController {
    * AI-Note: This is a compatibility composition endpoint, not a location for SQL or new dashboard business rules.
    */
   // SLA: FAST
-  @Get(['api/v1/superadmin/dashboard', 'superadmin/dashboard'])
+  @Get(['api/v1/superadmin/dashboard', 'api/superadmin/dashboard'])
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminDashboardApiResponseDto })
   @ApiOperation({ summary: 'dashboard' })
   /**

@@ -32,7 +32,7 @@ export class SuperadminIntegrationsAdvancedQueryController {
 
   /** Executes GET /superadmin/integrations. */
   // SLA: FAST
-  @Get(['superadmin/integrations', 'api/superadmin/integrations'])
+  @Get(['api/superadmin/integrations', 'api/superadmin/integrations'])
   @ApiResponse({ type: SuperadminIntegrationsResponseDataDto })
   @ApiOperation({ summary: 'main' })
   /**
@@ -45,7 +45,7 @@ export class SuperadminIntegrationsAdvancedQueryController {
 
   /** Executes GET /superadmin/integrations/keys - lists all integration API keys. */
   // SLA: FAST
-  @Get(['superadmin/integrations/keys', 'api/superadmin/integrations/keys'])
+  @Get(['api/superadmin/integrations/keys', 'api/superadmin/integrations/keys'])
   @ApiResponse({ type: SuperadminIntegrationsResponseDataDto })
   @ApiOperation({ summary: 'listKeys' })
   /**

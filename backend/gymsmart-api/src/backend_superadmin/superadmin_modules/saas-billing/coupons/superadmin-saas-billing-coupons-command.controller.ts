@@ -39,7 +39,7 @@ export class SuperadminSaasBillingCouponsCommandController {
   @ApiOperation({ summary: 'create coupons' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/saas-billing/coupons', 'api/superadmin/saas-billing/coupons'])
+  @Post(['api/superadmin/saas-billing/coupons', 'api/superadmin/saas-billing/coupons'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSaasBillingCouponsCommandController {
   @ApiOperation({ summary: 'update coupons' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
+  @Patch(['api/superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSaasBillingCouponsCommandController {
   @ApiOperation({ summary: 'remove coupons' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
+  @Delete(['api/superadmin/saas-billing/coupons/:id', 'api/superadmin/saas-billing/coupons/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminSaasBillingCouponsCommandController {
   @ApiOperation({ summary: 'changeStatus coupons' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/saas-billing/coupons/:id/status', 'api/superadmin/saas-billing/coupons/:id/status'])
+@Patch(['api/superadmin/saas-billing/coupons/:id/status', 'api/superadmin/saas-billing/coupons/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

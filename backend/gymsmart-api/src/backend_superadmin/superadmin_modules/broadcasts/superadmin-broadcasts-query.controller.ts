@@ -34,7 +34,7 @@ export class SuperadminBroadcastsQueryController {
 
   /** Returns a paginated broadcasts list. */
   // SLA: FAST
-  @Get(['superadmin/broadcasts', 'api/superadmin/broadcasts'])
+  @Get(['api/superadmin/broadcasts', 'api/superadmin/broadcasts'])
   @ApiResponse({ type: [SuperadminBroadcastsResponseDto] })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminBroadcastsQueryController {
 
   /** Returns the current recipient count used by the broadcast composer. */
   // SLA: FAST
-  @Get(['superadmin/broadcasts/recipient-count', 'api/superadmin/broadcasts/recipient-count'])
+  @Get(['api/superadmin/broadcasts/recipient-count', 'api/superadmin/broadcasts/recipient-count'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Recipient count for the broadcast composer.' })
   @ApiOperation({ summary: 'recipientCount' })
   /**
@@ -72,7 +72,7 @@ export class SuperadminBroadcastsQueryController {
 
   /** Returns one broadcasts record. */
   // SLA: FAST
-  @Get(['superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
+  @Get(['api/superadmin/broadcasts/:id', 'api/superadmin/broadcasts/:id'])
   @ApiResponse({ type: SuperadminBroadcastsResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

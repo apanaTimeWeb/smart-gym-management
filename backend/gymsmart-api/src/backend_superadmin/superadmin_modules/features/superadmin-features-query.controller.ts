@@ -34,7 +34,7 @@ export class SuperadminFeaturesQueryController {
 
   /** Returns the audit history for one feature flag. */
   // SLA: FAST
-  @Get(['superadmin/features/flags/:id/history', 'api/superadmin/features/flags/:id/history'])
+  @Get(['api/superadmin/features/flags/:id/history', 'api/superadmin/features/flags/:id/history'])
   @ApiResponse({ type: [SuperadminFeaturesHistoryEntryDto] })
   @ApiOperation({ summary: 'history' })
   /**
@@ -53,7 +53,7 @@ export class SuperadminFeaturesQueryController {
 
   /** Returns one features record. */
   // SLA: FAST
-  @Get(['superadmin/features/:id', 'api/superadmin/features/:id'])
+  @Get(['api/superadmin/features/:id', 'api/superadmin/features/:id'])
   @ApiResponse({ type: SuperadminFeaturesResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

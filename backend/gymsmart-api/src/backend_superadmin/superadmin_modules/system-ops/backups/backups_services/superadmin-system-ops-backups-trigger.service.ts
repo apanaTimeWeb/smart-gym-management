@@ -51,6 +51,6 @@ export class SuperadminSystemOpsBackupsTriggerService {
       await this.queue.enqueue({ jobId:job.id, queueName:SUPERADMIN_BACKUP_QUEUE, tenantId, payload:{ backupId:backup.id, type:SuperadminBackupJobType.SNAPSHOT, requestedByUserId:actor }, enqueuedAt:new Date().toISOString() });
       jobs.push(job.id);
     }
-    return { jobIds:jobs, statusUrl:'/superadmin/system-ops/backups/jobs' };
+    return { jobIds:jobs, statusUrl:'/api/superadmin/system-ops/backups/jobs' };
   }
 }

@@ -12,7 +12,7 @@ BASE_URL = os.environ.get("SUPERADMIN_E2E_BASE_URL", "http://localhost:3000").rs
 TOKEN = os.environ.get("SUPERADMIN_E2E_ACCESS_TOKEN")
 TENANT_ID = os.environ.get("SUPERADMIN_E2E_TENANT_ID")
 
-ROUTES = ['/superadmin/system-ops/jobs', '/api/superadmin/system-ops/jobs/queue-health']
+ROUTES = ['/api/superadmin/system-ops/jobs', '/api/superadmin/system-ops/jobs/queue-health']
 
 def _headers() -> dict[str, str]:
     if not TOKEN:

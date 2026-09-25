@@ -31,7 +31,7 @@ export class SuperadminWhiteLabelingQueryController {
 
   /** Returns a paginated white-labeling list. */
   // SLA: FAST
-  @Get(['superadmin/white-labeling', 'api/superadmin/white-labeling'])
+  @Get(['api/superadmin/white-labeling', 'api/superadmin/white-labeling'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminWhiteLabelingQueryController {
 
   /** Returns one white-labeling record. */
   // SLA: FAST
-  @Get(['superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
+  @Get(['api/superadmin/white-labeling/:id', 'api/superadmin/white-labeling/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

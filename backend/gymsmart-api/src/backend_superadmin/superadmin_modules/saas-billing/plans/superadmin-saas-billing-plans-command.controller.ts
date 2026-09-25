@@ -39,7 +39,7 @@ export class SuperadminSaasBillingPlansCommandController {
   @ApiOperation({ summary: 'create plans' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/saas-billing/plans', 'api/superadmin/saas-billing/plans'])
+  @Post(['api/superadmin/saas-billing/plans', 'api/superadmin/saas-billing/plans'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminSaasBillingPlansCommandController {
   @ApiOperation({ summary: 'update plans' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
+  @Patch(['api/superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminSaasBillingPlansCommandController {
   @ApiOperation({ summary: 'remove plans' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
+  @Delete(['api/superadmin/saas-billing/plans/:id', 'api/superadmin/saas-billing/plans/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -106,7 +106,7 @@ export class SuperadminSaasBillingPlansCommandController {
   /** Archives a plan using the soft state transition required by the frontend. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/saas-billing/plans/:id/archive', 'api/superadmin/saas-billing/plans/:id/archive'])
+@Patch(['api/superadmin/saas-billing/plans/:id/archive', 'api/superadmin/saas-billing/plans/:id/archive'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'archive' })
   /**

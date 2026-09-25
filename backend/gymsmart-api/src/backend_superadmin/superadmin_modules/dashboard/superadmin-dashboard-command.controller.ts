@@ -38,7 +38,7 @@ export class SuperadminDashboardCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post(['superadmin/dashboard', 'api/superadmin/dashboard'])
+  @Post(['api/superadmin/dashboard', 'api/superadmin/dashboard'])
   @RequireIdempotencyKey()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminDashboardCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Patch(['superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
+  @Patch(['api/superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
   @RequireIdempotencyKey()
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminDashboardResponseDto })
@@ -83,7 +83,7 @@ export class SuperadminDashboardCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(['superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
+  @Delete(['api/superadmin/dashboard/:id', 'api/superadmin/dashboard/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)

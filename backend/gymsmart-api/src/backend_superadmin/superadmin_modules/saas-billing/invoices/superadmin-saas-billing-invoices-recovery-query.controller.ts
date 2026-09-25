@@ -36,7 +36,7 @@ export class SuperadminSaasBillingInvoicesRecoveryQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['superadmin/saas-billing/invoices/recovery-center', 'api/superadmin/saas-billing/invoices/recovery-center'])
+@Get(['api/superadmin/saas-billing/invoices/recovery-center', 'api/superadmin/saas-billing/invoices/recovery-center'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'recoveryCenter' })
   /**
@@ -55,7 +55,7 @@ export class SuperadminSaasBillingInvoicesRecoveryQueryController {
 
   /** Returns durable invoice resend status for the async communication lifecycle. */
   // SLA: FAST
-  @Get('superadmin/saas-billing/invoices/resend-jobs/:jobId')
+  @Get('api/superadmin/saas-billing/invoices/resend-jobs/:jobId')
   @ApiResponse({ status: HttpStatus.OK, type: SuperadminSaasBillingInvoicesResendJobStatusResponseDto, description: 'Invoice resend job status.' })
   @ApiOperation({ summary: 'resendJobStatus' })
   /**

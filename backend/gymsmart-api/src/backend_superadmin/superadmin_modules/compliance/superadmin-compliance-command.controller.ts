@@ -38,7 +38,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'create compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/compliance', 'api/superadmin/compliance'])
+  @Post(['api/superadmin/compliance', 'api/superadmin/compliance'])
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminComplianceResponseDto })
@@ -61,7 +61,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'update compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
+  @Patch(['api/superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminComplianceResponseDto })
   @ApiOperation({ summary: 'update' })
@@ -83,7 +83,7 @@ export class SuperadminComplianceCommandController {
   @ApiOperation({ summary: 'remove compliance' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
+@Delete(['api/superadmin/compliance/:id', 'api/superadmin/compliance/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

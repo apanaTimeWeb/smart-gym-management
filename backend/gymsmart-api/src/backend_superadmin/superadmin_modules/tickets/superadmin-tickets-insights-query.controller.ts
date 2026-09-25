@@ -33,7 +33,7 @@ export class SuperadminTicketsInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['superadmin/tickets/service-insights', 'api/superadmin/tickets/service-insights'])
+@Get(['api/superadmin/tickets/service-insights', 'api/superadmin/tickets/service-insights'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'insights' })
   /**

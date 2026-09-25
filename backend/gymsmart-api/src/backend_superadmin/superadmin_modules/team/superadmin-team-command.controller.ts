@@ -37,7 +37,7 @@ export class SuperadminTeamCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post(['superadmin/team', 'api/superadmin/team'])
+  @Post(['api/superadmin/team', 'api/superadmin/team'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
@@ -61,7 +61,7 @@ export class SuperadminTeamCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Patch(['superadmin/team/:id', 'api/superadmin/team/:id'])
+  @Patch(['api/superadmin/team/:id', 'api/superadmin/team/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -82,7 +82,7 @@ export class SuperadminTeamCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(['superadmin/team/:id', 'api/superadmin/team/:id'])
+  @Delete(['api/superadmin/team/:id', 'api/superadmin/team/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)

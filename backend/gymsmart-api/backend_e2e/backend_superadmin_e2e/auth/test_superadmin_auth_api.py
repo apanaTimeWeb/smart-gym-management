@@ -15,7 +15,7 @@ def _headers():
 
 def test_invalid_access_token_is_rejected():
     try:
-        response = httpx.get(f"{BASE_URL}/superadmin/dashboard", headers={"Authorization": "Bearer invalid-token"}, timeout=10)
+        response = httpx.get(f"{BASE_URL}/api/superadmin/dashboard", headers={"Authorization": "Bearer invalid-token"}, timeout=10)
     except (httpx.ConnectError, httpx.ConnectTimeout):
         pytest.skip("Live backend is unavailable for runtime E2E verification")
     assert response.status_code == HTTPStatus.UNAUTHORIZED

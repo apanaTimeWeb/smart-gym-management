@@ -35,7 +35,7 @@ export class SuperadminFeaturesRolloutInsightsQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['superadmin/features/rollout-insights', 'api/superadmin/features/rollout-insights'])
+@Get(['api/superadmin/features/rollout-insights', 'api/superadmin/features/rollout-insights'])
   @ApiResponse({ type: SuperadminFeaturesRolloutInsightsResponseDto })
   @ApiOperation({ summary: 'findFeaturesRolloutInsights' })
   /**
@@ -54,7 +54,7 @@ export class SuperadminFeaturesRolloutInsightsQueryController {
 
   /** Executes GET /superadmin/features. */
   // SLA: FAST
-  @Get('superadmin/features')
+  @Get('api/superadmin/features')
   @ApiResponse({ type: SuperadminFeaturesResponseDataDto })
   @ApiOperation({ summary: 'findFeaturesData' })
   /**

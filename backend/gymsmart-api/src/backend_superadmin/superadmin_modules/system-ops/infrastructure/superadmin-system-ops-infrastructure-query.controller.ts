@@ -31,7 +31,7 @@ export class SuperadminSystemOpsInfrastructureQueryController {
 
   /** Returns a paginated infrastructure list. */
   // SLA: FAST
-  @Get(['superadmin/system-ops/infrastructure', 'api/superadmin/system-ops/infrastructure'])
+  @Get(['api/superadmin/system-ops/infrastructure', 'api/superadmin/system-ops/infrastructure'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -50,7 +50,7 @@ export class SuperadminSystemOpsInfrastructureQueryController {
 
   /** Returns one infrastructure record. */
   // SLA: FAST
-  @Get(['superadmin/system-ops/infrastructure/:id', 'api/superadmin/system-ops/infrastructure/:id'])
+  @Get(['api/superadmin/system-ops/infrastructure/:id', 'api/superadmin/system-ops/infrastructure/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

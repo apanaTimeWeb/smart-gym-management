@@ -37,7 +37,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'create usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/usage-meters', 'api/superadmin/usage-meters'])
+  @Post(['api/superadmin/usage-meters', 'api/superadmin/usage-meters'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -60,7 +60,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'update usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
+  @Patch(['api/superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -82,7 +82,7 @@ export class SuperadminUsageMetersCommandController {
   @ApiOperation({ summary: 'remove usage-meters' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete(['superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
+@Delete(['api/superadmin/usage-meters/:id', 'api/superadmin/usage-meters/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
     @HttpCode(HttpStatus.OK)

@@ -43,7 +43,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'create gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post(['superadmin/gyms', 'api/superadmin/gyms'])
+@Post(['api/superadmin/gyms', 'api/superadmin/gyms'])
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -66,7 +66,7 @@ export class SuperadminGymsCommandController {
   // SLA: STANDARD
 
   // SLA: STANDARD
-  @Post(['superadmin/gyms/provision', 'api/superadmin/gyms/provision'])
+  @Post(['api/superadmin/gyms/provision', 'api/superadmin/gyms/provision'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -87,7 +87,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the update mutation for the feature. */
   // SLA: STANDARD
-  @Patch(['superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Patch(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
@@ -108,7 +108,7 @@ export class SuperadminGymsCommandController {
 
   /** Handles the remove mutation for the feature. */
   // SLA: STANDARD
-  @Delete(['superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
+  @Delete(['api/superadmin/gyms/:id', 'api/superadmin/gyms/:id'])
   @RequireIdempotencyKey()
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
@@ -132,7 +132,7 @@ export class SuperadminGymsCommandController {
   @ApiOperation({ summary: 'changeStatus gyms' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/gyms/:id/status', 'api/superadmin/gyms/:id/status'])
+@Patch(['api/superadmin/gyms/:id/status', 'api/superadmin/gyms/:id/status'])
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiResponse({ type: SuperadminGymsResponseDto })
   @ApiOperation({ summary: 'changeStatus' })

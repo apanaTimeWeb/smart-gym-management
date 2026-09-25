@@ -31,7 +31,7 @@ export class SuperadminSystemOpsMigrationsQueryController {
 
   /** Returns a paginated migrations list. */
   // SLA: FAST
-  @Get('superadmin/system-ops/migrations')
+  @Get('api/superadmin/system-ops/migrations')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -65,7 +65,7 @@ export class SuperadminSystemOpsMigrationsQueryController {
 
   /** Returns one migrations record. */
   // SLA: FAST
-  @Get('superadmin/system-ops/migrations/:id')
+  @Get('api/superadmin/system-ops/migrations/:id')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'findOne' })
   /**

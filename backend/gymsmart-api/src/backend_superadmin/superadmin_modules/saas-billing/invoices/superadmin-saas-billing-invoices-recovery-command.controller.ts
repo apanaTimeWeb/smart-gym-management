@@ -36,7 +36,7 @@ export class SuperadminSaasBillingInvoicesRecoveryCommandController {
   @ApiOperation({ summary: 'POST /superadmin/saas-billing/invoices/manual-payment' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('superadmin/saas-billing/invoices/manual-payment')
+  @Post('api/superadmin/saas-billing/invoices/manual-payment')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'manualPayment' })
   /**
@@ -57,7 +57,7 @@ export class SuperadminSaasBillingInvoicesRecoveryCommandController {
   @ApiOperation({ summary: 'POST /superadmin/saas-billing/invoices/:id/resend' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post('superadmin/saas-billing/invoices/:id/resend')
+@Post('api/superadmin/saas-billing/invoices/:id/resend')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Invoice resend queued. The Location header points to the durable job status resource; the canonical data payload remains null for frontend compatibility.' })
   @ApiOperation({ summary: 'resend' })

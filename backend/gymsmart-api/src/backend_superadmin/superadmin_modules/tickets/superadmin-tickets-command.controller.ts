@@ -39,7 +39,7 @@ export class SuperadminTicketsCommandController {
   @ApiOperation({ summary: 'create tickets' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post(['superadmin/tickets', 'api/superadmin/tickets'])
+  @Post(['api/superadmin/tickets', 'api/superadmin/tickets'])
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Successful response.' })
     @HttpCode(HttpStatus.CREATED)
   @UseGuards(SuperadminCoreRateLimitGuard)
@@ -62,7 +62,7 @@ export class SuperadminTicketsCommandController {
   @ApiOperation({ summary: 'update tickets' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch(['superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
+  @Patch(['api/superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'update' })
@@ -84,7 +84,7 @@ export class SuperadminTicketsCommandController {
   @ApiOperation({ summary: 'remove tickets' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Delete(['superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
+  @Delete(['api/superadmin/tickets/:id', 'api/superadmin/tickets/:id'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @HttpCode(HttpStatus.OK)
@@ -107,7 +107,7 @@ export class SuperadminTicketsCommandController {
   @ApiOperation({ summary: 'changeStatus tickets' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Patch(['superadmin/tickets/:id/status', 'api/superadmin/tickets/:id/status'])
+@Patch(['api/superadmin/tickets/:id/status', 'api/superadmin/tickets/:id/status'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
     @UseGuards(SuperadminCoreRateLimitGuard)
   @ApiOperation({ summary: 'changeStatus' })

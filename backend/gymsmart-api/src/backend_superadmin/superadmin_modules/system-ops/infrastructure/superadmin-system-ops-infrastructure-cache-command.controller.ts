@@ -35,7 +35,7 @@ export class SuperadminSystemOpsInfrastructureCacheCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/infrastructure/redis/flush-global' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('superadmin/system-ops/infrastructure/redis/flush-global')
+  @Post('api/superadmin/system-ops/infrastructure/redis/flush-global')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'flushGlobal' })
   /**
@@ -56,7 +56,7 @@ export class SuperadminSystemOpsInfrastructureCacheCommandController {
   @ApiOperation({ summary: 'POST /superadmin/system-ops/infrastructure/redis/flush-tenant' })
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Post('superadmin/system-ops/infrastructure/redis/flush-tenant')
+@Post('api/superadmin/system-ops/infrastructure/redis/flush-tenant')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'flushTenant' })
   /**

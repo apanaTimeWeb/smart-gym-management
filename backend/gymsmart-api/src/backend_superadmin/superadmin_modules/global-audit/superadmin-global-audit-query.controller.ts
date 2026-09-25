@@ -32,7 +32,7 @@ export class SuperadminGlobalAuditQueryController {
 
   /** Returns a paginated global-audit list. */
   // SLA: FAST
-  @Get(['superadmin/global-audit', 'api/superadmin/global-audit'])
+  @Get(['api/superadmin/global-audit', 'api/superadmin/global-audit'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Paginated global-audit results.' })
   @ApiOperation({ summary: 'findAll' })
   /**
@@ -51,7 +51,7 @@ export class SuperadminGlobalAuditQueryController {
 
   /** Returns one global-audit record. */
   // SLA: FAST
-  @Get(['superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
+  @Get(['api/superadmin/global-audit/:id', 'api/superadmin/global-audit/:id'])
   @ApiResponse({ type: SuperadminGlobalAuditResponseDto })
   @ApiOperation({ summary: 'findOne' })
   /**

@@ -18,7 +18,7 @@ def _headers() -> dict[str, str]:
     if TENANT_ID: headers["x-tenant-id"] = TENANT_ID
     return headers
 
-MUTATION_ROUTES = [('PATCH', '/superadmin/messaging/notifications/00000000-0000-4000-8000-000000000001/read', 'REQ-058'), ('PATCH', '/superadmin/messaging/notifications/read-all', 'REQ-059'), ('POST', '/superadmin/messaging/messages', 'REQ-060'), ('POST', '/superadmin/messaging/whatsapp/campaigns', 'REQ-063')]
+MUTATION_ROUTES = [('PATCH', '/api/superadmin/messaging/notifications/00000000-0000-4000-8000-000000000001/read', 'REQ-058'), ('PATCH', '/api/superadmin/messaging/notifications/read-all', 'REQ-059'), ('POST', '/api/superadmin/messaging/messages', 'REQ-060'), ('POST', '/api/superadmin/messaging/whatsapp/campaigns', 'REQ-063')]
 
 
 @pytest.mark.parametrize("method,path,requirement", MUTATION_ROUTES)

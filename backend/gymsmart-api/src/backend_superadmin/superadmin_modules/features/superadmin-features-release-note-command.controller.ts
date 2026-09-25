@@ -35,7 +35,7 @@ export class SuperadminFeaturesReleaseNoteCommandController {
   /** Creates a release note. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Post('superadmin/features/notes')
+  @Post('api/superadmin/features/notes')
   @ApiResponse({ type: SuperadminFeaturesReleaseNoteDto })
   @ApiOperation({ summary: 'createReleaseNote' })
   /**
@@ -55,7 +55,7 @@ export class SuperadminFeaturesReleaseNoteCommandController {
   /** Updates a release note. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-  @Patch('superadmin/features/notes/:id')
+  @Patch('api/superadmin/features/notes/:id')
   @ApiResponse({ type: SuperadminFeaturesReleaseNoteDto })
   @ApiOperation({ summary: 'updateReleaseNote' })
   /**
@@ -75,7 +75,7 @@ export class SuperadminFeaturesReleaseNoteCommandController {
   /** Deletes a release note using soft-delete. */
   @RequireIdempotencyKey()
   // SLA: STANDARD
-@Delete('superadmin/features/notes/:id')
+@Delete('api/superadmin/features/notes/:id')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'deleteReleaseNote' })
   /**

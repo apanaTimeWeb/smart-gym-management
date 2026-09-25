@@ -33,7 +33,7 @@ export class SuperadminSystemOpsJobsQueueHealthQueryController {
   // SLA: FAST
     @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   // SLA: FAST
-@Get(['superadmin/system-ops/jobs/queue-health', 'api/superadmin/system-ops/jobs/queue-health'])
+@Get(['api/superadmin/system-ops/jobs/queue-health', 'api/superadmin/system-ops/jobs/queue-health'])
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful response.' })
   @ApiOperation({ summary: 'queueHealth' })
   /**
