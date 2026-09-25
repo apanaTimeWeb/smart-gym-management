@@ -17,6 +17,10 @@ export class SuperadminGymsEntity extends SuperadminCoreBaseEntity {
  */
 @Column({ name: 'name', type: 'varchar', length: 500 })
   name!: string;
+  @Column({ name: 'slug', type: 'varchar', length: 500 })
+  slug!: string;
+  @Column({ name: 'display_name', type: 'varchar', length: 500 })
+  displayName!: string;
   /**
  * Primary Intent: Documents entity property ownerName. Edge Cases: Preserve validation, nullability, persistence, authorization, and frozen API semantics. Side-Effects: None unless the owning file documents them. Side-Effects: None. AI-Note: Treat this construct as an explicit contract; do not rename, widen, or reinterpret it without updating its owner documentation.
  */
