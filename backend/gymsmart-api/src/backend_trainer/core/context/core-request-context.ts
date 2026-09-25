@@ -4,7 +4,7 @@
 
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { globalCoreRequestStorage } from '@/backend_admin/core/context/core-request-context.service';
+import { globalAdminCoreRequestStorage as globalCoreRequestStorage } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service';
 
 export interface CoreRequestContextValue { requestId: string; tenantId?: string; userId?: string; role?: import('@/backend_trainer/core/types/core-auth.types').CoreRole; traceId?: string; spanId?: string; ipAddress?: string; }
 

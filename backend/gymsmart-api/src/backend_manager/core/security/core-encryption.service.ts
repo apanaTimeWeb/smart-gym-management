@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoreEncryptionService as GlobalEncryptionService } from '@/backend_admin/core/security/core-encryption.service';
+import { AdminCoreEncryptionService as GlobalEncryptionService } from '@/backend_admin/admin_core/admin_core_security/admin-core-encryption.service';
 
 @Injectable()
 export class CoreEncryptionService {

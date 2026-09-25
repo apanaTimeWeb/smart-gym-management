@@ -1,0 +1,7 @@
+{
+  "subscriptions.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "subscriptions.ERRORS.INVALID": "The request is invalid.",
+  "subscriptions.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "subscriptions.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "subscriptions.ERRORS.REVOKED": "The refresh token has been revoked."
+}

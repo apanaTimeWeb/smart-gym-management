@@ -1,0 +1,7 @@
+{
+  "profile.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "profile.ERRORS.INVALID": "The request is invalid.",
+  "profile.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "profile.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "profile.ERRORS.REVOKED": "The refresh token has been revoked."
+}

@@ -1,0 +1,7 @@
+{
+  "gym_health_alerts.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "gym_health_alerts.ERRORS.INVALID": "The request is invalid.",
+  "gym_health_alerts.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "gym_health_alerts.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "gym_health_alerts.ERRORS.REVOKED": "The refresh token has been revoked."
+}

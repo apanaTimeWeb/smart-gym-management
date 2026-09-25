@@ -1,0 +1,7 @@
+{
+  "coupons.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "coupons.ERRORS.INVALID": "The request is invalid.",
+  "coupons.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "coupons.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "coupons.ERRORS.REVOKED": "The refresh token has been revoked."
+}

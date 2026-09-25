@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoreRedisService as GlobalRedisService } from '@/backend_admin/core/redis/core-redis.service';
+import { AdminCoreRedisService as GlobalRedisService } from '@/backend_admin/admin_core/admin_core_redis/admin-core-redis.service';
 
 @Injectable()
 export class CoreRedisService {

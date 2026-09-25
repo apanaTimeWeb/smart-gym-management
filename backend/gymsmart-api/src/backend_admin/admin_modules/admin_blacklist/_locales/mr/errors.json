@@ -1,0 +1,7 @@
+{
+  "blacklist.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "blacklist.ERRORS.INVALID": "The request is invalid.",
+  "blacklist.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "blacklist.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "blacklist.ERRORS.REVOKED": "The refresh token has been revoked."
+}

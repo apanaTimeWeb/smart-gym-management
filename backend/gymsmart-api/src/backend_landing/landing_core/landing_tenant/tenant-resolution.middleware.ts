@@ -2,7 +2,7 @@
 // FLOW: HTTP request -> public-route policy / authenticated actor -> master tenant registry -> RequestContext.
 import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';
+import { AdminCoreRequestContextService as CoreRequestContextService } from '@/backend_admin/admin_core/admin_core_context/admin-core-request-context.service';
 import { MasterTenantRepository } from '@/backend_landing/landing_core/landing_tenant/master-tenant.repository';
 import type { NextFunction, Request, Response } from 'express';
 

@@ -1,0 +1,7 @@
+{
+  "notifications.ERRORS.NOT_FOUND": "Requested record was not found.",
+  "notifications.ERRORS.INVALID": "The request is invalid.",
+  "notifications.ERRORS.FORBIDDEN": "You are not permitted to perform this action.",
+  "notifications.ERRORS.CONFLICT": "The requested change conflicts with current state.",
+  "notifications.ERRORS.REVOKED": "The refresh token has been revoked."
+}
