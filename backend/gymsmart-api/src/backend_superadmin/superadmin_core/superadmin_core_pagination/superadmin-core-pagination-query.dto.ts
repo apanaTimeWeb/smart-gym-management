@@ -34,5 +34,17 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
 
   @IsOptional()
   sortBy = 'createdAt';
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
 

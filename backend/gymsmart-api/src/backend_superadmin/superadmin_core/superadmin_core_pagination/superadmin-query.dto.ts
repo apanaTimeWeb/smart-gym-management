@@ -138,6 +138,11 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
   targetVersion?: string;
 
   @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  preset?: string;
+
+  @IsOptional()
   @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `order` data contract for this superadmin-query.dto construct.

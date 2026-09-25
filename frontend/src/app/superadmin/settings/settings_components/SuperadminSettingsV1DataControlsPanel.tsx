@@ -12,7 +12,7 @@ export default function SuperadminSettingsV1DataControlsPanel({ data }: Superadm
     const handleExport = async () => {
         setIsExporting(true);
         try {
-            const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+            const response = await fetch('/superadmin/export-data', { method: 'POST' });
             if (response.status === 202) {
                 toast.success('Export started. A secure download link will be sent to your email.');
                 // Polling/WebSocket fallback simulation for real-time notification
@@ -64,3 +64,4 @@ export default function SuperadminSettingsV1DataControlsPanel({ data }: Superadm
         </Panel>
     );
 }
+

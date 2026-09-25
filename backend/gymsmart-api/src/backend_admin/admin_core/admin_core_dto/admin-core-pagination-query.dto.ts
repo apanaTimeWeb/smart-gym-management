@@ -1,9 +1,45 @@
 // RESPONSIBILITY: Validates and standardizes paginated list query parameters.
 // FLOW: HTTP query â†’ AdminCorePaginationQueryDto â†’ feature query DTO â†’ repository query.
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional 
+  @IsOptional()
+  timeRange?: string;
 
-import { Type } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from '@nestjs/swagger';
+
+import { Type 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-transformer';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min 
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
+} from 'class-validator';
 
 /**
  * @description Defines the AdminCorePaginationQueryDto boundary for the admin_core_dto backend feature.
@@ -32,5 +68,18 @@ export class AdminCorePaginationQueryDto {
 @ApiPropertyOptional() @IsOptional()
   @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   sortDir?: 'ASC' | 'DESC' = 'DESC';
+
+  @IsOptional()
+  timeRange?: string;
+
+  @IsOptional()
+  customStart?: string;
+
+  @IsOptional()
+  customEnd?: string;
+
+  @IsOptional()
+  preset?: string;
 }
+
 

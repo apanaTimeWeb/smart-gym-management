@@ -2,7 +2,8 @@
 export const SuperadminGymDetailUrlConfig = Object.freeze({
     BACKEND_API: {
         BASE: '/superadmin/gym-detail/business-overview',
-        BY_GYM: (gymId: string) => `/api/superadmin/gym-detail/business-overview?gymId=${encodeURIComponent(gymId)}`,
+        BY_GYM: (gymId: string) => `/superadmin/gym-detail/business-overview?gymId=${encodeURIComponent(gymId)}`,
     },
 });
+
 

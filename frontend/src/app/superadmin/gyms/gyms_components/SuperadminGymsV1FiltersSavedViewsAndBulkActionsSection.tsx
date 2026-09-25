@@ -31,7 +31,7 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
     if (!pendingAction || selectedGymIds.length === 0) return;
     if (pendingAction === 'Export selected') {
       try {
-        const response = await fetch('/api/superadmin/export-data', { method: 'POST' });
+        const response = await fetch('/superadmin/export-data', { method: 'POST' });
         if (response.status === 202) {
           toast.success('Export started. A secure download link will be sent to your email.');
         } else {
@@ -101,3 +101,4 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
     </div>
   );
 }
+
