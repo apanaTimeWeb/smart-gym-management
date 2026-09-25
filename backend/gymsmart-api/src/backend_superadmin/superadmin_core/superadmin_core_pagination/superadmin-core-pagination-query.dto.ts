@@ -26,7 +26,7 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
   limit = 20;
 
   @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiProperty()
   /** Primary Intent: Defines the `sortOrder` data contract for this superadmin-core-pagination-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
@@ -35,3 +35,4 @@ export class SuperadminCorePaginationQueryDto {@ApiPropertyOptional()
   @IsOptional()
   sortBy = 'createdAt';
 }
+

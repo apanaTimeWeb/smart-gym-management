@@ -19,5 +19,6 @@ export class SuperadminGymsQueryDto extends SuperadminCorePaginationQueryDto {@A
   @IsOptional() @IsIn(['createdAt', 'updatedAt', 'name', 'ownerName', 'adminEmail', 'phone', 'plan', 'databaseVersion', 'city', 'state', 'memberCount', 'lastActiveAt']) sortBy = 'createdAt';@ApiPropertyOptional()
 
   /** Frontend-compatible lowercase sort direction alias. */
-  @IsOptional() @IsIn(['asc', 'desc']) order?: 'asc' | 'desc';
+  @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order?: 'asc' | 'desc';
 }
+

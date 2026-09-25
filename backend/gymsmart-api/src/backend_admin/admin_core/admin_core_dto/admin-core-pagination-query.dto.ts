@@ -30,6 +30,7 @@ export class AdminCorePaginationQueryDto {
   sortKey?: string;
 
 @ApiPropertyOptional() @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   sortDir?: 'ASC' | 'DESC' = 'DESC';
 }
+

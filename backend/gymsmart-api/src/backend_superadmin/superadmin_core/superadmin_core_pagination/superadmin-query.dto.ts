@@ -91,6 +91,20 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ required: false })
+  /** Primary Intent: Defines the `customStart` data contract for this superadmin-query.dto construct.
+ * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
+  customStart?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
+  /** Primary Intent: Defines the `customEnd` data contract for this superadmin-query.dto construct.
+ * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
+  customEnd?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `period` data contract for this superadmin-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
   period?: string;
@@ -124,10 +138,10 @@ export class SuperadminQueryDto extends SuperadminCorePaginationQueryDto {
   targetVersion?: string;
 
   @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiPropertyOptional({ required: false })
   /** Primary Intent: Defines the `order` data contract for this superadmin-query.dto construct.
  * Edge Cases: Validation/nullability/enum semantics follow the API contract. Side-Effects: None. AI-Note: Preserve exact field name and type. */
-  order?: 'ASC' | 'DESC';
+  order?: 'ASC' | 'DESC' | 'asc' | 'desc';
 
 }
