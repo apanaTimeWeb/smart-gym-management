@@ -24,7 +24,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
     const kpiCards = [
         {
             label: mrrLabel + dateSuffix,
-            value: formatCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier), 'INR', locale),
+            value: formatCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier), metrics.currency || 'INR', locale),
             trend: metrics.mrrDeltaPercent !== undefined
                 ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month`
                 : mrrTrendStr,
@@ -62,7 +62,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'Avg. Income per Gym',
-            value: formatCurrency(metrics.arpu || 0, 'INR', locale),
+            value: formatCurrency(metrics.arpu || 0, metrics.currency || 'INR', locale),
             trend: undefined,
             trendUp: true,
             icon: DollarSign,
@@ -89,7 +89,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'PENDING REVENUE',
-            value: formatCurrency(metrics.pendingRevenue || 0, 'INR', locale),
+            value: formatCurrency(metrics.pendingRevenue || 0, metrics.currency || 'INR', locale),
             trend: undefined,
             trendUp: true,
             icon: CreditCard,

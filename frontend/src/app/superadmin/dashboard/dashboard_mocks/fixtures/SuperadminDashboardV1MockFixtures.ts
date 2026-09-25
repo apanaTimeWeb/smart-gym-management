@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Owns complete MSW fixture data for this Superadmin feature.
 export const SUPERADMIN_DASHBOARD_BUSINESS_OVERVIEW_MOCK_FIXTURE = {
+    'currency': 'INR',
     'openingIncome': 1200000,
     'newIncome': 185000,
     'growthIncome': 96000,
