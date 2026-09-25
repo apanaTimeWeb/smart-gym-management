@@ -10,10 +10,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AdminCoreDatabaseConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-database.config';
 import { AdminCoreRuntimeConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-runtime.config';
 import { AdminCoreAppConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-app.config';
+import { AdminCoreMasterEntities } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-entities';
 import { CoreEnvironmentConfig } from '@/backend_auth/auth_core/config/core-environment.config';
 import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
 import superadminConfig from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
-
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { BackendAdminModule as AdminDomainModule } from '@/backend_admin/backend-admin.module';
 import { AuthModule } from '@/backend_auth/auth_modules/auth/auth.module';
@@ -23,6 +23,7 @@ import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/m
 import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
+import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard';
 import { AdminCoreRateLimitGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-rate-limit.guard';
 import { AdminCoreTenantContextInterceptor } from '@/backend_admin/admin_core/admin_core_context/admin-core-tenant-context.interceptor';
 import { AdminCoreResponseInterceptor } from '@/backend_admin/admin_core/admin_core_response/admin-core-response.interceptor';
@@ -72,6 +73,7 @@ import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/
         password: config.getOrThrow<string>('MASTER_DB_PASSWORD'),
         database: config.getOrThrow<string>('MASTER_DB_NAME'),
         autoLoadEntities: true, // MAGIC: Automatically registers any entity provided by feature modules!
+        entities: AdminCoreMasterEntities, // Add master entities
         synchronize: false, // Schema managed via migrations to avoid multi-entity sync conflicts on shared tables (e.g. tenants)
         extra: {
           max: 20,
@@ -92,6 +94,7 @@ import { AdminCoreRolesGuard } from '@/backend_admin/admin_core/admin_core_auth/
   ],
   providers: [
     // 4. Unified Global Guards and Interceptors
+    { provide: APP_GUARD, useClass: AdminCoreJwtAuthGuard },
     { provide: APP_GUARD, useClass: AdminCoreRolesGuard },
     { provide: APP_GUARD, useClass: AdminCoreRateLimitGuard },
     { provide: APP_INTERCEPTOR, useClass: AdminCoreTenantContextInterceptor },

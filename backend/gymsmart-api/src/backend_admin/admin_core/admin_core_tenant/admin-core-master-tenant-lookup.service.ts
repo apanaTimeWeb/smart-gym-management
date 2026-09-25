@@ -1,13 +1,11 @@
 // RESPONSIBILITY: Resolves trusted tenant authorization and database-name metadata in the master database.
-// FLOW: JWT actor + tenant â†’ membership verification â†’ trusted tenant context â†’ DataSource resolver.
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+// FLOW: JWT actor + tenant → membership verification → trusted tenant context → DataSource resolver.
+// NOTE: Uses raw SQL to avoid TypeORM entity column-mapping conflicts between the AdminCore entity
+//       definitions and the Superadmin-owned `tenants` table schema (which uses `status` not `is_active`).
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 
 import { DataSource } from 'typeorm';
-
-import { AdminCoreMasterAdminEntity } from '@/backend_admin/admin_core/admin_core_auth/admin-core-master-admin.entity.js';
-import { AdminCoreMasterTenantMembershipEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant-membership.entity.js';
-import { AdminCoreMasterTenantEntity } from '@/backend_admin/admin_core/admin_core_tenant/admin-core-master-tenant.entity.js';
 
 @Injectable()
 /**
@@ -17,20 +15,41 @@ import { AdminCoreMasterTenantEntity } from '@/backend_admin/admin_core/admin_co
 export class AdminCoreMasterTenantLookupService {
   constructor(@InjectDataSource() private readonly masterDataSource: DataSource) {}
 
-  /** @description Verifies actor-to-tenant membership and active tenant state before routing any feature request. @param userId Actor UUID. @param tenantId Requested tenant UUID. @returns Authorization boolean. */
+  /** @description Verifies actor-to-tenant membership and active tenant state before routing any feature request.
+   *  Uses raw SQL because the shared `tenants` table is owned by Superadmin and uses `status='ACTIVE'` not `is_active`.
+   *  The `admins` and `tenant_memberships` tables are AdminCore-specific and use `is_active`.
+   *  @param userId Actor UUID. @param tenantId Requested tenant UUID. @returns Authorization boolean. */
   async isUserAuthorizedForTenant(userId: string, tenantId: string): Promise<boolean> {
-    const [admin, membership, tenant] = await Promise.all([
-      this.masterDataSource.getRepository(AdminCoreMasterAdminEntity).findOne({ where: { id: userId, tenantId, isActive: true } }),
-      this.masterDataSource.getRepository(AdminCoreMasterTenantMembershipEntity).findOne({ where: { actorId: userId, tenantId, isActive: true } }),
-      this.masterDataSource.getRepository(AdminCoreMasterTenantEntity).findOne({ where: { id: tenantId, isActive: true } }),
+    // Check tenant is active; Superadmin-owned tenants table uses `status` column
+    const tenantRows = await this.masterDataSource.query(
+      `SELECT id FROM tenants WHERE id = $1 AND status = 'ACTIVE'`,
+      [tenantId],
+    );
+    if (tenantRows.length === 0) return false;
+
+    // Check admin membership via AdminCore tables
+    const [adminRows, membershipRows] = await Promise.all([
+      this.masterDataSource.query(
+        `SELECT id FROM admins WHERE id = $1 AND tenant_id = $2 AND is_active = true`,
+        [userId, tenantId],
+      ),
+      this.masterDataSource.query(
+        `SELECT id FROM tenant_memberships WHERE actor_id = $1 AND tenant_id = $2 AND is_active = true`,
+        [userId, tenantId],
+      ),
     ]);
-    return Boolean(tenant && (admin || membership));
+    return adminRows.length > 0 || membershipRows.length > 0;
   }
 
-  /** @description Retrieves a tenant database name only after the tenant is active. @param tenantId Tenant UUID. @returns Database name. @throws NotFoundException when the tenant is missing/inactive. */
+  /** @description Retrieves a tenant database name only after the tenant is active.
+   *  Uses raw SQL to avoid TypeORM column mapping conflicts with the Superadmin-owned tenants table.
+   *  @param tenantId Tenant UUID. @returns Database name. @throws NotFoundException when the tenant is missing/inactive. */
   async findTenantDatabaseNameOrThrow(tenantId: string): Promise<string> {
-    const tenant = await this.masterDataSource.getRepository(AdminCoreMasterTenantEntity).findOne({ where: { id: tenantId, isActive: true } });
-    if (!tenant) throw new NotFoundException({ message: 'Tenant not found.', errorCode: 'CORE.CORE.NOT_FOUND' });
-    return tenant.databaseName;
+    const rows = await this.masterDataSource.query(
+      `SELECT database_name FROM tenants WHERE id = $1 AND status = 'ACTIVE'`,
+      [tenantId],
+    );
+    if (rows.length === 0) throw new NotFoundException({ message: 'Tenant not found.', errorCode: 'CORE.CORE.NOT_FOUND' });
+    return rows[0].database_name as string;
   }
 }

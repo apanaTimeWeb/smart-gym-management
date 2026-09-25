@@ -39,10 +39,10 @@ export class AdminDataExportQueryService {
     if (!snapshot) return { totalExports: 0, totalRowsExported: 0, lastExportDate: '', pendingJobs: 0 };
     const domain = snapshot as any;
     return {
-      totalExports: Number(domain.data.totalExports ?? 0),
-      totalRowsExported: Number(domain.data.totalRowsExported ?? 0),
-      lastExportDate: typeof domain.data.lastExportDate === 'string' ? domain.data.lastExportDate : '',
-      pendingJobs: Number(domain.data.pendingJobs ?? 0),
+      totalExports: Number(domain.payload?.kpis?.totalExports ?? domain.payload?.totalExports ?? 0),
+      totalRowsExported: Number(domain.payload?.kpis?.totalRowsExported ?? domain.payload?.totalRowsExported ?? 0),
+      lastExportDate: typeof domain.payload?.kpis?.lastExportDate === 'string' ? domain.payload.kpis.lastExportDate : (typeof domain.payload?.lastExportDate === 'string' ? domain.payload.lastExportDate : ''),
+      pendingJobs: Number(domain.payload?.kpis?.pendingJobs ?? domain.payload?.pendingJobs ?? 0),
     };
   }
 

@@ -19,7 +19,10 @@ export class AdminCoreRolesGuard implements CanActivate {
     if (!roles?.length) return true;
     const request = context.switchToHttp().getRequest<{ user?: { role?: AdminCoreAdminRole } }>();
     const role = request.user?.role;
-    if (!role || !roles.includes(role)) throw new ForbiddenException({ message: 'Insufficient permissions.', errorCode: 'CORE.CORE.FORBIDDEN' });
+    if (!role || !roles.includes(role as AdminCoreAdminRole)) {
+      console.log('RolesGuard failed. role:', role, 'expected roles:', roles, 'user:', request.user);
+      throw new ForbiddenException({ message: 'Insufficient permissions.', errorCode: 'CORE.CORE.FORBIDDEN' });
+    }
     return true;
   }
 }

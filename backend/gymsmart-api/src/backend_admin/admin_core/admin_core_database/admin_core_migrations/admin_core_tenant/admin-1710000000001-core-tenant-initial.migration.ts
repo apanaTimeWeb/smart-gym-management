@@ -389,8 +389,9 @@ export class AdminCoreTenantInitial1710000000001 implements MigrationInterface {
     await queryRunner.query('CREATE INDEX "IDX_usage_snapshots_status" ON "usage_snapshots" ("status")');
     await queryRunner.query('CREATE INDEX "IDX_usage_snapshots_branch_id" ON "usage_snapshots" ("branch_id")');
     await queryRunner.query('CREATE INDEX "IDX_usage_snapshots_deleted_at" ON "usage_snapshots" ("deleted_at")');
+    /*
     await queryRunner.query(`
-      CREATE TABLE "audit_logs" (
+      CREATE TABLE IF NOT EXISTS "audit_logs" (
         "id" uuid NOT NULL DEFAULT gen_random_uuid(),
         "actor_id" uuid NOT NULL,
         "actor_role" varchar(32) NOT NULL,
@@ -406,8 +407,10 @@ export class AdminCoreTenantInitial1710000000001 implements MigrationInterface {
         "module" varchar(80) NOT NULL,
         CONSTRAINT "PK_audit_logs" PRIMARY KEY ("id")
       )`);
-    await queryRunner.query('CREATE INDEX "IDX_audit_logs_timestamp" ON "audit_logs" ("timestamp")');
-    await queryRunner.query('CREATE INDEX "IDX_audit_logs_entity_type" ON "audit_logs" ("entity_type")');
+    await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_audit_logs_timestamp" ON "audit_logs" ("timestamp")');
+    await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_audit_logs_entity_type" ON "audit_logs" ("entity_type")');
+    */
+
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

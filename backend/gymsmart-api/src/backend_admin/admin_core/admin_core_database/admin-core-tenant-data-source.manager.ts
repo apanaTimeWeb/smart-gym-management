@@ -81,6 +81,7 @@ export class AdminCoreTenantDataSourceManager implements OnModuleDestroy {
     const poolBudget = Math.max(configuredMax, Number(this.config.get<number>('runtime.tenantPoolBudget', 20)));
     const maxActiveSources = Math.max(1, Math.floor(poolBudget / configuredMax));
     await this.ensureCapacity(maxActiveSources);
+    console.log('!!!!!!! DEBUG DB NAME: ', databaseName);
     const dataSource = new DataSource({
       type: 'postgres',
       host: this.config.getOrThrow<string>('runtime.tenantHost'),
@@ -90,8 +91,8 @@ export class AdminCoreTenantDataSourceManager implements OnModuleDestroy {
       database: databaseName,
       entities: AdminCoreTenantEntityRegistry,
       migrations: [join(tenantDbDir, 'admin_core_migrations/admin_core_tenant/*.{js,ts}')],
-      migrationsRun: true,
-      synchronize: this.config.get<string>('app.nodeEnv', 'development') !== 'production',
+      migrationsRun: false,
+      synchronize: false,
       extra: { max: configuredMax, connectionTimeoutMillis: 30000, idleTimeoutMillis: 10000, statement_timeout: 3000 },
     });
     await dataSource.initialize();

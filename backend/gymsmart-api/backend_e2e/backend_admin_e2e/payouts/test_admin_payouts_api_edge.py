@@ -10,7 +10,7 @@ import pytest
 import requests
 
 BASE_URL = os.environ.get("E2E_BASE_URL")
-TARGET_PATH = '/api/v1/admin/payouts/fetchPayouts'
+TARGET_PATH = "/admin/payouts/fetchPayouts"
 
 
 def test_unauthenticated_request_is_rejected():

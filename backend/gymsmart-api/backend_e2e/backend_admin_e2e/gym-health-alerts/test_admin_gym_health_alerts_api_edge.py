@@ -10,7 +10,7 @@ import pytest
 import requests
 
 BASE_URL = os.environ.get("E2E_BASE_URL")
-TARGET_PATH = '/api/v1/admin/gym-health-alerts/resolveAlert'
+TARGET_PATH = "/admin/gym-health-alerts/fetchAlerts"
 
 
 def test_unauthenticated_request_is_rejected():
