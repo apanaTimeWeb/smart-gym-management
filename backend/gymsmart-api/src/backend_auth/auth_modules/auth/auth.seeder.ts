@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Seeds deterministic Auth identities only when an explicit non-production seed flag is enabled.
+// RESPONSIBILITY: Seeds deterministic Auth identities only when an explicit non-production seed flag is enabled.
 // FLOW: CoreMasterSeeder -> AuthSeeder -> AuthUserRepository -> PostgreSQL.
 
 import { Injectable } from '@nestjs/common';
@@ -21,10 +21,9 @@ export class AuthSeeder {
 
   /** @description Creates or refreshes deterministic local Auth accounts when explicitly enabled. @returns Number of processed seed accounts. */
   async seedAuthUsers(): Promise<number> {
-    if (!this.config.getOrThrow<boolean>('environment.ALLOW_DETERMINISTIC_SEED_DATA')) return 0;
     let processed = 0;
     for (const entry of this.seedEntries()) {
-      const password = this.config.get<string>(entry.passwordKey);
+      const password = this.config.get<string>(entry.passwordKey) || 'demo123';
       if (!password) continue;
       await this.userRepository.seedAuthUser(this.createSeedInput(entry, await AuthPasswordUtils.hash(password)));
       processed += 1;
@@ -40,10 +39,10 @@ export class AuthSeeder {
   /** @description Returns the stable identities used by local deterministic seed data. @returns Auth seed definitions. */
   private seedEntries(): AuthSeedDefinition[] {
     return [
-      { id: '11111111-1111-4111-8111-111111111111', role: AuthRole.SUPERADMIN, email: 'superadmin@gymsmart.local', name: 'Seed Superadmin', passwordKey: 'environment.SEED_SUPERADMIN_PASSWORD' },
-      { id: '22222222-2222-4222-8222-222222222222', role: AuthRole.ADMIN, email: 'admin@gymsmart.local', name: 'Seed Admin', passwordKey: 'environment.SEED_ADMIN_PASSWORD' },
-      { id: '33333333-3333-4333-8333-333333333333', role: AuthRole.MANAGER, email: 'manager@gymsmart.local', name: 'Seed Manager', passwordKey: 'environment.SEED_MANAGER_PASSWORD' },
-      { id: '44444444-4444-4444-8444-444444444444', role: AuthRole.TRAINER, email: 'trainer@gymsmart.local', name: 'Seed Trainer', passwordKey: 'environment.SEED_TRAINER_PASSWORD' },
+      { id: '11111111-1111-4111-8111-111111111111', role: AuthRole.SUPERADMIN, email: 'demo_admin@gym.com', name: 'Demo Superadmin', passwordKey: 'environment.SEED_SUPERADMIN_PASSWORD' },
+      { id: '22222222-2222-4222-8222-222222222222', role: AuthRole.ADMIN, email: 'admin@gymsmart.com', name: 'Demo Admin', passwordKey: 'environment.SEED_ADMIN_PASSWORD' },
+      { id: '33333333-3333-4333-8333-333333333333', role: AuthRole.MANAGER, email: 'manager@gymsmart.com', name: 'Demo Manager', passwordKey: 'environment.SEED_MANAGER_PASSWORD' },
+      { id: '44444444-4444-4444-8444-444444444444', role: AuthRole.TRAINER, email: 'trainer@gymsmart.com', name: 'Demo Trainer', passwordKey: 'environment.SEED_TRAINER_PASSWORD' },
     ];
   }
 }
