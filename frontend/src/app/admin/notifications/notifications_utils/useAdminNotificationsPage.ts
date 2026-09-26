@@ -16,7 +16,7 @@ function mapNotificationToItem(notification: { id: string; title: string; body: 
   return {
     id: notification.id,
     text: `${notification.title}: ${notification.body}`,
-    time: notification.createdAt ? format(new Date(notification.createdAt), 'dd MMM yyyy, hh:mm a') : 'Recent',
+    time: (() => { if (!notification.createdAt) return 'Recent'; const d = new Date(notification.createdAt); return isNaN(d.getTime()) ? 'Recent' : format(d, 'dd MMM yyyy, hh:mm a'); })(),
     unread: !notification.read,
   };
 }
