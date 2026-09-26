@@ -36,7 +36,17 @@ export class AdminAttendanceQueryService {
    */
   async findAttendanceSummary(_query?: AdminAttendanceQueryDto): Promise<AdminAttendanceSummaryDto> {
     const result = await this.repository.findLatestReadModel(_query); 
-    if (!result) throw new NotFoundException('ADMIN.READ.NOT_FOUND');
+    if (!result) {
+      return {
+        todayTotal: 0,
+        todayPresent: 0,
+        todayLate: 0,
+        weeklyAverage: 0,
+        peakHour: 'N/A',
+        trendVsLastWeek: 0,
+        uniqueMembersThisMonth: 0,
+      } as AdminAttendanceSummaryDto;
+    }
     return this.presenter.toSummaryResponse(result);
   }
 
@@ -46,7 +56,7 @@ export class AdminAttendanceQueryService {
    */
   async findAttendanceTrend(_query?: AdminAttendanceQueryDto): Promise<AdminAttendanceTrendPointDto[]> {
     const result = await this.repository.findLatestReadModel(_query); 
-    if (!result) throw new NotFoundException('ATTENDANCE.READ_MODEL.NOT_FOUND');
+    if (!result) return [];
     return this.presenter.toTrendResponse(result);
   }
 }
