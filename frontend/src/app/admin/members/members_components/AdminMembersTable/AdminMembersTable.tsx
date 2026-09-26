@@ -1,5 +1,6 @@
 "use client";
 import { format } from 'date-fns';
+import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the paginated members table with clickable rows, status badges, and branch info.
 
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
@@ -88,7 +89,7 @@ export default function AdminMembersTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-primary whitespace-nowrap">
-                    {format(new Date(m.joinDate), 'dd MMM yyyy')}
+                    {formatDate(m.joinDate)}
                   </span>
                 </td>
                 <td className="px-4 py-3">
@@ -98,7 +99,7 @@ export default function AdminMembersTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-primary whitespace-nowrap">
-                    {format(new Date(m.expiryDate), 'dd MMM yyyy')}
+                    {formatDate(m.expiryDate)}
                   </span>
                 </td>
                 <td className="px-4 py-3">

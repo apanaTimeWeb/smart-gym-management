@@ -3,5 +3,5 @@ import { apiFetch, type ApiResponse } from '@/lib/api';
 import { z } from 'zod';
 import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
 import type { AdminMembersBranchReference } from '@/app/admin/members/members_types/AdminMembersBranchReferenceTypes';
-const schema = z.array(z.object({ id: z.string(), name: z.string() }));
-export const AdminMembersBranchReferenceApi = { fetchMemberBranchReferences: () => apiFetch<ApiResponse<AdminMembersBranchReference[]>>(`${AdminMembersUrlConfig.api.branchReference}?consumer=members`, { method: 'GET', dataSchema: schema }) };
+const schema = z.object({ items: z.array(z.object({ id: z.string(), name: z.string() })) });
+export const AdminMembersBranchReferenceApi = { fetchMemberBranchReferences: () => apiFetch<ApiResponse<{ items: AdminMembersBranchReference[] }>>(`${AdminMembersUrlConfig.api.branchReference}?consumer=members`, { method: 'GET', dataSchema: schema }) };
