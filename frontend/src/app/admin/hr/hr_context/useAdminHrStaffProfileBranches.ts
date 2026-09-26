@@ -8,7 +8,7 @@ import { AdminHrBranchReferenceApi } from '@/app/admin/hr/hr_api/AdminHrBranchRe
 export function useAdminHrStaffProfileBranches(enabled: boolean){
   return useQuery<AdminHrBranchReference[]>({
     queryKey: ['admin','hr','staff-profile','branches'],
-    queryFn: () => AdminHrBranchReferenceApi.fetchHrBranchReferences().then((response)=>response.data??[]),
+    queryFn: () => AdminHrBranchReferenceApi.fetchHrBranchReferences().then((response)=>response.data?.items??[]),
     enabled,
     staleTime: 1000 * 60 * 10,
   });
