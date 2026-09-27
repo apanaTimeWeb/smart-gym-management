@@ -13,8 +13,8 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 ## MODE A — CREATE (No Existing Backend Supplied)
 
 **Inputs given:**
-1. Frontend role folder ZIP (e.g., `frontend_superadmin/` or `superadmin/`)
-2. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+- INPUT 1: Frontend role folder ZIP (e.g., `frontend_superadmin/` or `superadmin/`)
+- INPUT 3: Backend Documentation ZIP (containing `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`)
 
 **What AI does:**
 1. Deeply read and analyze the entire frontend ZIP — every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
@@ -29,9 +29,9 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 ## MODE B — AUDIT + REPAIR (Existing Backend Supplied)
 
 **Inputs given:**
-1. Frontend role folder ZIP
-2. Existing backend role module ZIP (e.g., `backend_superadmin/`)
-3. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+- INPUT 1: Frontend role folder ZIP
+- INPUT 2: Existing backend role module ZIP (e.g., `backend_superadmin/`)
+- INPUT 3: Backend Documentation ZIP (containing `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`)
 
 **What AI does:**
 1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
@@ -432,7 +432,7 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 **In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
-The answer must distinguish 4 core dimensions (which expand into 8 final axes in the verdict):
+The answer must distinguish 4 core dimensions (which expand into the 12-item verdict in Section 79):
 
 ### A. FRONTEND-REQUIRED BACKEND COMPLETENESS
 
@@ -3058,13 +3058,14 @@ Verify:
 
 ---
 
-## RULE 27 — TWO-TIER TEST STRATEGY
+## RULE 27 — THREE-TIER TEST STRATEGY
 
 Verify exact separation:
 
 ```text
 Jest = unit / internal behavior
 Pytest = black-box API / E2E
+Selenium = UI Behavior
 ```
 
 Jest must not become an API/E2E substitute.
@@ -6500,16 +6501,16 @@ During the alignment and backend audit, you MUST explicitly verify the following
 For every violation, list the file, the missing architectural pattern, and the exact architectural guidance required to repair it.
 
 
-# 86. PROJECT-SPECIFIC STRICT CONSTRAINTS
+# 86B. PROJECT-SPECIFIC STRICT CONSTRAINTS
 
 You MUST verify any additional strict architectural rules that are explicitly supplied by the project documentation or task context. Do NOT invent project-specific rules. Keep project-specific findings separate from universal backend architecture findings.
 
-## 86.4 Markdown Artifact Output Requirement
+## 86B.1 Markdown Artifact Output Requirement
 DO NOT dump massive output tables directly into the chat. You MUST write your findings for each stage into separate Markdown Artifact files using your file-writing tools.
 - Stage 1 Output → `stage_1_frontend_requirements.md`
 - Stage 2 Output → `stage_2_backend_audit.md`
 - Stage 3 Output → `stage_3_final_verdict.md`
-## 86.5 E2E API AND SELENIUM TEST GENERATION MANDATE
+## 86B.2 E2E API AND SELENIUM TEST GENERATION MANDATE
 
 This is a mandatory deliverable that runs in parallel with Stage 2 and is finalized in Stage 3.
 
@@ -6725,7 +6726,7 @@ The Selenium files MUST follow Rule 112 exactly — no cross-module imports, no 
 
 ---
 
-## 86.6 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
+## 86B.3 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
 
 > ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
 
@@ -6845,7 +6846,7 @@ Everything in one ZIP. Nothing before. Nothing after.
 
 ---
 
-## 86.7 RE-AUDIT AFTER REPAIR — MANDATORY SECOND PASS
+## 86B.4 RE-AUDIT AFTER REPAIR — MANDATORY SECOND PASS
 
 After ALL repairs from the Repair Order (Section 80) are complete, you MUST perform a mandatory second audit pass before delivering any output.
 
@@ -6865,7 +6866,7 @@ It is a targeted verification pass:
    - Every `[ ]` item must be re-evaluated against the repaired state.
    - Produce the checklist with `[✅]` for passed, `[❌]` for still failing, `[⚠️]` for partially addressed.
 
-3. **Produce the final verdict axes (Section 79):**
+3. **Produce the final verdict (Section 79):**
    ```
    FRONTEND-REQUIRED BACKEND COMPLETENESS:        [updated verdict]
    BACKEND ARCHITECTURE COMPLIANCE:               [updated verdict]
@@ -6920,7 +6921,7 @@ This file is a mandatory deliverable alongside the repaired code.
 
 ---
 
-## 86.8 Backend Architecture Final Scorecard (DYNAMIC)
+## 86B.5 Backend Architecture Final Scorecard (DYNAMIC)
 When outputting Stage 2 and the Final Verdict, include a dynamically generated scorecard derived from the COMPLETE supplied backend architecture document.
 
 NEVER hardcode a fixed rule count.
@@ -6962,7 +6963,7 @@ RULES NOT APPLICABLE: [count]
 HIGHEST DISCOVERED RULE NUMBER: [number / identifier]
 ```
 
-# 86.9 FINAL V6.2 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
+# 86B.6 FINAL V6.2 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
 
 A backend MUST NOT be declared “complete” solely because:
 

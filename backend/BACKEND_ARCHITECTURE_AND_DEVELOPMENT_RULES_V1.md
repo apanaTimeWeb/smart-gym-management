@@ -72,8 +72,8 @@ Break down large files into micro-features. Every file must handle only one spec
 - ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
 - ✅ **GOOD:** 
   - `admin-member-registration.service.ts`
-  - `member-billing.service.ts`
-  - `member-attendance.service.ts`
+  - `admin-member-billing.service.ts`
+  - `admin-member-attendance.service.ts`
   - `member-notifications.service.ts`
 
 **IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
@@ -214,7 +214,7 @@ For Non-NestJS projects, strictly adhere to the role and module isolation princi
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `admin-member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-member-registration.service.spec.ts` next to `admin-member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
 * **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
@@ -483,6 +483,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** This project uses a strict three-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
   2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_superadmin_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  3. **Python Selenium (UI Behavior Tests):** Lives in a top-level `backend_selenium/` directory. Tests the complete frontend-to-backend user flow as a real browser would.
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These three tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -636,7 +637,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
-* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/erp/billing`, `/api/v1/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
 * **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
@@ -957,7 +958,7 @@ Before implementing an endpoint, the backend AI MUST verify the corresponding fr
 frozen API contract from the `## Frozen API Contract` section inside the backend feature's own
 `_backend_feature.md`. At API Contract Freeze (Rule 67), the frontend publishes its complete
 data requirements and the backend copies a snapshot into its own `_backend_feature.md` — then
-the backend AI can remain inside `/backend/[feature]/**` without needing the frontend folder.
+the backend AI can remain inside `src/backend_[role]/...` without needing the frontend folder.
 
 **If the `## Frozen API Contract` section is not yet populated,** the backend AI MUST inspect:
 1. Frontend `_features.md` → `## UI Data Requirements`
