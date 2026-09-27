@@ -37,7 +37,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
 2. Deeply read and audit the existing backend ZIP against:
    - All frontend-derived requirements
-   - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 126)
+   - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 119)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
 4. Fix ALL found issues directly in code — no half-fixes, no skipping.
 5. Double-verify after repair: re-run the full audit against the repaired code.
@@ -440,7 +440,7 @@ Does the backend (created or repaired) satisfy the frontend's actual backend-fac
 
 ### B. BACKEND ARCHITECTURE COMPLIANCE
 
-Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 126)?
+Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 119)?
 
 ### C. RUNTIME VERIFICATION
 
@@ -6175,7 +6175,7 @@ Before producing the final verdict, verify:
 [ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
 [ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
 [ ] Rule 0C — Change scope failure conditions checked
-[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural folders are role/module-prefixed; NO generic core/, modules/, config/, utils/ exist
+[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ exception verified)
 [ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
@@ -6242,17 +6242,19 @@ Before producing the final verdict, verify:
 [ ] Rule 113 — WebSockets are horizontally scalable (Redis adapter, no in-process state)
 [ ] Rule 114 — Role-based data serialization and field masking applied
 [ ] Rule 115 — Cache invalidation strategy is strict and consistent
-[ ] Rule 116 — i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
-[ ] Rule 117 — Feature flags are centralized
-[ ] Rule 118 — Multi-currency amounts stored as integer minor units; currency code stored separately
-[ ] Rule 119 — Tenant data export and offboarding endpoint exists
-[ ] Rule 120 — Persistent WebSockets for notifications; Redis-backed; offline recovery via REST
-[ ] Rule 121 — E2E and Selenium tests are completely isolated; no cross-module test imports
-[ ] Rule 122 — No AI runtime verification requirement violated; exhaustive JSDoc docstrings on every class/method
-[ ] Rule 123 — No Mega API; dashboard APIs are decomposed; exhaustive OpenAPI/Swagger decorators
-[ ] Rule 124 — RAG-ready projections for LLM features (if applicable)
-[ ] Rule 125 — Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
-[ ] Rule 126 — Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
+[ ] Rule 107 — i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
+[ ] Rule 108 — Feature flags are centralized
+[ ] Rule 109 — Multi-currency amounts stored as integer minor units; currency code stored separately
+[ ] Rule 110 — Tenant data export and offboarding endpoint exists
+[ ] Rule 111 — Persistent WebSockets for notifications; Transactional outbox/relay; offline recovery via REST
+[ ] Rule 112 — E2E and Selenium tests are completely isolated; no cross-module test imports
+[ ] Rule 113 — No AI runtime verification requirement violated
+[ ] Rule 114 — No Mega API; dashboard APIs are decomposed
+[ ] Rule 115 — Exhaustive JSDoc docstrings on every class/method
+[ ] Rule 116 — MCP-Ready API Design; exhaustive OpenAPI/Swagger decorators
+[ ] Rule 117 — RAG-ready projections for LLM features (if applicable)
+[ ] Rule 118 — Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
+[ ] Rule 119 — Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
 [ ] Tests checked for behavioral integrity
 [ ] Documentation checked against implementation
 [ ] Shared/outside-scope dependencies classified
@@ -6420,15 +6422,15 @@ SCOPE / EVIDENCE COMPLETENESS
 ---
 
 
-# 85B. ENTERPRISE AI, RAG & FINANCIAL ARCHITECTURE AUDIT (RULES 122-126)
+# 85B. ENTERPRISE AI, RAG & FINANCIAL ARCHITECTURE AUDIT (RULES 115-119)
 
 During the alignment and backend audit, you MUST explicitly verify the following Agentic/Enterprise rules:
 
-1. **AI Docstrings (Rule 122):** Verify every Class, Controller, DTO, Entity, and Service method has a detailed multi-line Docstring capturing Intent, Edge Cases, and AI Notes.
-2. **MCP-Ready APIs (Rule 123):** Verify all REST endpoints and DTOs have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
-3. **RAG-Ready Projections (Rule 124):** If the module serves Chatbot/AI features, verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
-4. **Immutable Analytics (Rule 125):** For critical entity changes (Billing, Subscriptions, Attendance...etc), verify the backend uses a Zero-Overwrite strategy (emitting domain events to a log/message broker) instead of erasing historical state via standard CRUD updates.
-5. **Double-Entry Ledger (Rule 126):** For ALL financial or wallet mutations, verify the code never updates a balance directly (e.g. `UPDATE balance = balance - X`). It MUST write paired Debit/Credit rows into a `ledger_entries` table.
+1. **AI Docstrings (Rule 115):** Verify every Class, Controller, DTO, Entity, and Service method has a detailed multi-line Docstring capturing Intent, Edge Cases, and AI Notes.
+2. **MCP-Ready APIs (Rule 116):** Verify all REST endpoints and DTOs have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
+3. **RAG-Ready Projections (Rule 117):** If the module serves Chatbot/AI features, verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
+4. **Immutable Analytics (Rule 118):** For critical entity changes (Billing, Subscriptions, Attendance...etc), verify the backend uses a Zero-Overwrite strategy (emitting domain events to a log/message broker) instead of erasing historical state via standard CRUD updates.
+5. **Double-Entry Ledger (Rule 119):** For ALL financial or wallet mutations, verify the code never updates a balance directly (e.g. `UPDATE balance = balance - X`). It MUST write paired Debit/Credit rows into a `ledger_entries` table.
 
 For every violation, list the file, the missing architectural pattern, and the exact architectural guidance required to repair it.
 
@@ -6661,7 +6663,7 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 ```text
 [SILENT PHASE] Create/Fix ALL code completely
         ↓
-[SILENT PHASE] Re-run complete 84-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
+[SILENT PHASE] Re-run complete 112-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
         ↓
 [SILENT PHASE] Verify every checklist item passes
         ↓
@@ -6678,7 +6680,7 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 
 4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
 
-5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 84-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm every item passes.
+5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 112-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm every item passes.
 
 6. **The final delivery is ONE atomic output.** All backend files, the Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
 
@@ -6698,7 +6700,7 @@ Before you deliver anything, ALL of the following must be true simultaneously:
 [ ] Every missing test has been written
 [ ] Every documentation drift has been corrected
 [ ] All Selenium test files (Section 86.5) have been written
-[ ] The 84-item Anti-Skipping Checklist re-run is complete and clean
+[ ] The 112-item Anti-Skipping Checklist re-run is complete and clean
 [ ] No previously failing item remains failing
 [ ] No new violation was introduced by a repair
 [ ] The Final Verdict (stage_3_final_verdict.md) is complete
@@ -6748,7 +6750,7 @@ stage_1_frontend_requirements.md         ← requirements extracted from fronten
 stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
 backend_selenium/...                     ← all Selenium test files (Section 86.5)
-RE_AUDIT_CHECKLIST_RESULT.md            ← 84-item checklist result on the final code
+RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 ```
 
 **The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
@@ -6771,9 +6773,9 @@ It is a targeted verification pass:
    - Confirm the repair was applied.
    - Confirm the repair is correct against the frontend requirement.
    - Confirm no new violation was introduced by the repair.
-   - Change the status to PASS or NOT_VERIFIABLE (if runtime-only).
+   - Change the status to PASS or NOT VERIFIED (if runtime-only).
 
-2. **Run the 84-item Anti-Skipping Checklist (Section 84) on the repaired code:**
+2. **Run the 112-item Anti-Skipping Checklist (Section 84) on the repaired code:**
    - Every `[ ]` item must be re-evaluated against the repaired state.
    - Produce the checklist with `[✅]` for passed, `[❌]` for still failing, `[⚠️]` for partially addressed.
 
@@ -6804,7 +6806,7 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 - Issues remaining: [count]
 - New issues introduced by repair: [count]
 
-## 84-Item Anti-Skipping Checklist (Post-Repair)
+## 112-item Anti-Skipping Checklist (Post-Repair)
 [✅] All four supplied inputs identified
 [✅] Backend documentation fully read
 ...
@@ -7003,6 +7005,6 @@ The V6 audit standard is exhaustive:
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
 - no Selenium test generation skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
-- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 84-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
-- no delivery without re-audit — after all repairs are done, the complete 84-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
+- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
+- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
 

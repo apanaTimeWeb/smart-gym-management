@@ -33,7 +33,7 @@ Because the project contains a 1-to-1 mapping of frontend and backend roles, the
   - Example Selenium: `src/backend_selenium/backend_admin_selenium/`
 - **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/billing/` and `src/backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
 
-When fixing a bug in `modules/superadmin/billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+When fixing a bug in `backend_superadmin/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
@@ -76,7 +76,7 @@ Break down large files into micro-features. Every file must handle only one spec
   - `member-attendance.service.ts`
   - `member-notifications.service.ts`
 
-**IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `modules/members/services/`, `modules/members/controllers/`).
+**IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
 
 ## 2. Highly Descriptive, AI-Contextual Filenames & Module Prefixing
 Rename all controllers, services, and models to be extremely descriptive based on exactly what they do, AND they must strictly begin with the module name as a prefix.
@@ -85,10 +85,10 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 - ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
 * **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
-* **Top-Level & Structural Folder Prefixing (CRITICAL):** NEVER use generic names for ANY structural folders (e.g., `core/`, `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL folders MUST be explicitly prefixed with their parent domain/role name. This rule applies universally to ALL folders, not just a few specific ones.
+* **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
   - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
-  This ensures that when an AI or developer is instructed to look into ANY folder, the folder name itself uniquely identifies its exact role and domain, completely eliminating cross-domain context confusion.
+* **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). Never put business logic in these generic folders.
   
   **Canonical Example of Complete Prefixing Architecture:**
   ```text
@@ -263,7 +263,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** AI might take shortcuts and manually instantiate classes inside business logic, creating tight coupling. Enforcing Dependency Injection ensures that tests can easily mock out databases, external APIs, and child services.
 
 ## 16. Module-Specific API Collections (Postman/Insomnia)
-* **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `modules/auth/auth_collection.json`). 
+* **The Rule:** Whenever a module is created or finalized, generate a `[module-name]_collection.json` file directly inside the module's folder (e.g., `backend_admin/admin_auth/admin_auth_collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
 ## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale - Backend Driven)
@@ -279,7 +279,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
-* **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `modules/auth/auth_backend_feature.md`). 
+* **The Rule:** Every single module must contain a `[module_name]_backend_feature.md` file at its root (e.g., `backend_admin/admin_auth/admin_auth_backend_feature.md`). 
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
 
 ### Documentation Quality Standard
@@ -398,7 +398,7 @@ should an AI NEVER do in this module?]
 | POST /billing/wallet/topup | MANAGER, ADMIN | Actor must belong to same branch as member |
 | GET /billing/history | MANAGER, ADMIN, MEMBER | Member can only see own history |
 
-CODEOWNERS path: `src/modules/[domain]/[module]/` → @[reviewer-handle]
+CODEOWNERS path: `src/backend_[role]/[role]_[module]/` → @[reviewer-handle]
 
 ## Edge Cases / AI Warnings
 [REQUIRED: Minimum 3 entries. Each must cite a specific Rule number and explain
@@ -558,11 +558,13 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
   3. **AI Safety:** An AI asked to "implement the delete endpoint" will set a flag, not wipe database rows. This prevents catastrophic, irreversible data loss.
 * **Implementation:** Add a global query filter (e.g., Prisma's `where: { deletedAt: null }` applied in a base repository method, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records. For ORM-specific soft-delete column hooks (TypeORM `@DeleteDateColumn`, Prisma middleware), apply them at the repository layer only — never in services.
+* **Data Privacy / Legal Erasure Exception:** Soft-delete is the normal operational mechanism. Legally required data retention and right-to-erasure workflows (Rule 35, Rule 110) are the ONLY explicit hard-deletion/anonymization exceptions, and must be performed via dedicated background jobs with strict audit logging.
 
 ---
 
 ## 30. Audit Trail / Activity Log (Who Did What & When)
 * **The Rule:** Every meaningful state change to critical entities (Members, Payments, Staff, Settings) MUST be recorded in an `audit_logs` table. At minimum, log: `actor_id`, `actor_role`, `action` (e.g., `MEMBER_UPDATED`), `entity_type`, `entity_id`, `old_value` (JSON), `new_value` (JSON), `ip_address`, `timestamp`.
+* **Sensitive Data Redaction (CRITICAL):** The `old_value` and `new_value` JSON payloads MUST be scrubbed of sensitive PII (passwords, payment tokens, government IDs) before saving to the audit log. Audit logs must have strict access control, defined retention limits, and encryption for highly sensitive payloads.
 * **Completeness Rule:** Mutations occur from HTTP requests, Background Jobs, Event Consumers, Scheduled Jobs, Webhooks, and Internal Commands. The audit trail architecture MUST integrate with the mutation layer (e.g., repository or orchestrator) rather than relying solely on HTTP interceptors to guarantee completeness.
 * **How:** Implement this as a cross-cutting concern using:
   - **NestJS/Express:** An interceptor, event listener, or AOP-style wrapper around repositories that fires after mutating actions.
@@ -573,9 +575,9 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ---
 
 ## 31. Idempotency Keys for Critical Mutations
-* **The Rule:** Any endpoint that triggers a financial transaction, sends a communication, or creates a resource that must never be duplicated MUST support an `Idempotency-Key` request header. The server caches the result of the first request with that key. If the same key is received again (e.g., due to a network retry), it returns the original cached result without re-executing the operation.
-* **Why:** Networks are unreliable. A client (mobile app, frontend, partner API) might retry a `POST /payments` request after a timeout, not knowing the first one succeeded. Without idempotency, the member gets double-charged. This is a critical rule for any fintech or e-commerce feature.
-* **Implementation:** Store `(idempotency_key, response_payload)` in Redis with a TTL of 24 hours. Check before processing. Return cached response if key already exists.
+* **The Rule:** Any endpoint that triggers a financial transaction, sends a communication, or creates a resource that must never be duplicated MUST support an `Idempotency-Key` request header.
+* **Why:** Networks are unreliable. A client might retry a `POST /payments` request after a timeout, not knowing the first one succeeded. Without idempotency, the member gets double-charged.
+* **Superseded by Rule 103:** *Note: Rule 103 expands this requirement from "critical mutations" to ALL state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`). Rule 103 is the superseding architectural standard and defines the strict atomic/transactional safety contracts that must be implemented. AI agents must follow Rule 103's broader scope and safety constraints.*
 
 ---
 
@@ -641,9 +643,9 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ---
 
 ## 38. Domain-Driven Module Grouping (The "Route Group" Equivalent)
-* **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level domain folders before splitting them into specific features.
-  - ❌ **BAD:** `src/modules/billing/`, `src/modules/superadmin-stats/`, `src/modules/attendance/` (All dumped into a flat `modules/` directory).
-  - ✅ **GOOD:** `src/modules/erp/billing/`, `src/modules/superadmin/stats/`, `src/modules/members-app/attendance/`.
+* **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level role/domain folders before splitting them into specific features.
+  - ❌ **BAD:** `src/billing/`, `src/superadmin_stats/`, `src/attendance/` (All dumped into a flat directory).
+  - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
 * **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
@@ -683,7 +685,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
 ## 42. Distributed Cron Jobs (No Local Schedulers)
 * **The Rule:** Never use local cron jobs (like `setInterval`, `node-cron`, or `@Cron()` without a lock) inside the backend code. You must use a **Distributed Task Scheduler** backed by Redis (like BullMQ in Node, Celery Beat in Python) or a database-backed distributed lock (like Redlock/ShedLock).
-* **Why:** In an enterprise environment, your backend will scale horizontally (e.g., 3 instances running behind a load balancer). If you use a local cron job to send "Morning Reminders", all 3 instances will fire it simultaneously, sending 3 duplicate emails to the user. A distributed scheduler guarantees a job only runs exactly once across the entire cluster.
+* **Why:** In an enterprise environment, your backend will scale horizontally (e.g., 3 instances running behind a load balancer). If you use a local cron job to send "Morning Reminders", all 3 instances will fire it simultaneously, sending 3 duplicate emails. A distributed scheduler provides **single scheduling ownership** across the cluster. However, distributed systems can retry/redeliver, so the job processing itself MUST still be idempotent with deduplication where required.
 
 ---
 
@@ -702,7 +704,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** Define distinct rate-limit tiers in a centralized `rate-limit.config.ts`. (e.g., Public Auth: 5 req/min, Authenticated Read: 100 req/min, Export: 2 req/min). Never hardcode rate limits inside controllers.
 
 ## 45. Webhook Signature Verification
-* **The Rule:** All inbound webhooks (e.g., Payment gateways) MUST verify the cryptographic signature (HMAC-SHA256) before processing. Furthermore, check timestamps to prevent replay attacks.
+* **The Rule:** All inbound webhooks (e.g., Payment gateways) MUST verify the provider's documented cryptographic signature mechanism and implement replay-protection requirements (e.g., timestamp bounds checking) before processing. Do not assume HMAC-SHA256 is universally correct; strictly adhere to the third-party provider's official SDK or webhook documentation.
 
 ## 46. Strict Input Sanitization Layer
 * **The Rule:** Beyond validation, inputs must be sanitized. Strip HTML/script tags from free-text fields. Strip leading/trailing whitespaces. Normalize emails (lowercase) and phone numbers to canonical formats before saving.
@@ -1071,11 +1073,11 @@ If a backend implementation cannot provide a field currently required by the fro
 
 ## 84. No Barrel File / Re-Export Index Rule
 * **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This mirrors Frontend Rule 32. Always import directly from the explicitly named source file.
-  - ❌ **BAD:** `import { MemberService } from '@/modules/members'` (where `members/index.ts` re-exports everything)
-  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/modules/members/services/member-registration.service'`
+  - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_members'` (where `members/index.ts` re-exports everything)
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_members/manager_members_services/member-registration.service'`
 * **Why barrel files are dangerous in AI-driven codebases:**
   1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Express projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
-  2. **AI Context Pollution:** When an AI imports `from '@/modules/members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
+  2. **AI Context Pollution:** When an AI imports `from '@/backend_manager/manager_members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
   3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
 * **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
 
@@ -1173,10 +1175,10 @@ This rule MUST remain consistent with Rule 99.
 
   import { DatabaseConfig } from '@/config/database.config';
 
-  import { MemberEntity } from '@/modules/members/entities/member.entity';
-  import { MemberNotFoundException } from '@/modules/members/exceptions/member.exceptions';
+  import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
+  import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
 
-  import type { CreateMemberDto } from '@/modules/members/dtos/member-create.dto';
+  import type { CreateMemberDto } from '@/backend_manager/manager_members/dtos/member-create.dto';
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
 
@@ -1363,7 +1365,7 @@ This rule MUST remain consistent with Rule 99.
     {
       name: 'MembershipExpiryNotifier',
       module: 'members',
-      file: 'src/modules/erp/members/jobs/membership-expiry-notifier.job.ts',
+      file: 'src/backend_manager/manager_members/jobs/manager-members-expiry-notifier.job.ts',
       schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
       description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
       touchesEntities: ['members', 'notifications'],
@@ -1374,7 +1376,7 @@ This rule MUST remain consistent with Rule 99.
     {
       name: 'WalletAutoDeductionJob',
       module: 'billing',
-      file: 'src/modules/erp/billing/jobs/wallet-auto-deduction.job.ts',
+      file: 'src/backend_manager/manager_billing/jobs/manager-billing-wallet-auto-deduction.job.ts',
       schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
@@ -1654,30 +1656,34 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy.
 * **Why:** A global Naming Strategy blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
-## Rule 112 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
+## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
 All state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) across the entire backend architecture MUST enforce strict idempotency by applying the `@RequireIdempotencyKey()` decorator to the controller method. 
 This is a non-negotiable enterprise requirement designed to prevent duplicate payments, duplicate record creation, and partial transaction failures from network retries.
 
 - The `@RequireIdempotencyKey()` decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
+- **Atomic Concurrency Lock:** The interceptor MUST perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
+- **Payload Verification:** If a cached response exists for the key, the system MUST verify that the request body matches the original request body (hash comparison). If the body differs, reject with `400 Bad Request`.
+- **Transaction Safety:** The idempotency record MUST only be marked as completed (storing the final response payload) AFTER the primary database transaction successfully commits.
+- **Degradation:** If Redis is unavailable, mutating requests should fail closed (return `503 Service Unavailable`) rather than risk double-processing financial transactions.
 - Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
 
-## Rule 113 — WebSockets & Real-Time Communication
+## Rule 104 — WebSockets & Real-Time Communication
 * **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
 * **Implementation:** Use a Redis Pub/Sub adapter (e.g., `@nestjs/platform-ws` or `socket.io` with `redis-adapter`) to ensure that WebSocket events scale across multiple backend instances.
 * **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
 
-## Rule 114 — Role-Based Data Serialization & Field Masking
+## Rule 105 — Role-Based Data Serialization & Field Masking
 * **The Rule:** Data intended to be hidden from specific user roles (e.g., hiding internal revenue metrics from a basic Member, but showing it to a Superadmin) MUST be masked at the serialization layer.
 * **Implementation:** Use `class-transformer` decorators such as `@Exclude()` or `@Expose({ groups: ['admin'] })` on the DTO. The controller must pass the current user's role to the serialization interceptor so that the DTO automatically strips forbidden fields before sending the JSON response.
 * **Why:** This ensures data hiding is centralized and declarative, preventing developers from manually trying to `delete user.revenue` in various service methods, which is error-prone.
 
-## Rule 115 — Strict Cache Invalidation Strategy
+## Rule 106 — Strict Cache Invalidation Strategy
 * **The Rule:** Caching data in Redis (Rule 20) is mandatory for high-traffic read operations, but stale data in an enterprise app is dangerous. Every cached query MUST have a strict, programmatic invalidation strategy.
 * **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
 
-## Rule 116 — Internationalization (i18n) & Localization
+## Rule 107 — Internationalization (i18n) & Localization
 
 ### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
 
@@ -1771,7 +1777,7 @@ import * as glob from 'glob';
 const OUTPUT_DIR = 'dist/i18n';
 const mergedByLang: Record<string, Record<string, any>> = {};
 
-const localeFiles = glob.sync('src/modules/**/_locales/**/*.json');
+const localeFiles = glob.sync('src/backend_*/**/_locales/**/*.json');
 
 for (const file of localeFiles) {
   const parts = file.split(path.sep);
@@ -1827,18 +1833,20 @@ This is the **authoritative list of languages** this project supports. There is 
 | `ml` | Malayalam | Kerala, India | Malayalam | Low |
 | `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
 
-> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+> **Phased Rollout:**
+> - `SUPPORTED_LANGUAGES`: The full table above represents all future supported languages.
+> - `ACTIVE_LANGUAGES`: We currently only ship `en` (English) + `hi` (Hindi) at launch.
 
 > **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. `nestjs-i18n` handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new NestJS module, you MUST create its `_locales/en/errors.json` AND all configured target-language files (e.g., `_locales/nl/errors.json`) in the same commit. Use your own translation capability — do NOT call any external translation API. Keys must be namespaced by module name (e.g., `members.ERRORS.NOT_FOUND`). Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new NestJS module, you MUST create its _locales/en/errors.json AND _locales/hi/errors.json (the `ACTIVE_LANGUAGES`). Do not generate files for the full `SUPPORTED_LANGUAGES` list yet. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name (e.g., members.ERRORS.NOT_FOUND). Hardcoding English strings in exceptions is a critical violation.
 
-## Rule 117 — Centralized Feature Flags
+## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
 * **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
 
 
-## Rule 118 — Multi-Currency Monetary Amounts
+## Rule 109 — Multi-Currency Monetary Amounts
 
 ### The Problem
 Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in financial calculations. Hardcoding currency symbols (₹, $, €) breaks international deployments. Formatting amounts in service methods couples business logic to presentation.
@@ -1885,7 +1893,7 @@ return { amount, currency };
 > **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
 
 
-## Rule 119 — Tenant Data Export & Offboarding
+## Rule 110 — Tenant Data Export & Offboarding
 
 ### The Problem
 When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
@@ -1909,7 +1917,7 @@ All data exports MUST be processed asynchronously via background jobs and delive
 > **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.
 
 
-## Rule 120 — Persistent WebSockets (Notifications & Chats)
+## Rule 111 — Persistent WebSockets (Notifications & Chats)
 
 ### The Problem
 WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('notification')` or `socket.emit('chat_message')`) while the user is offline or experiencing a network blip, that message is lost forever.
@@ -1917,12 +1925,12 @@ WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('n
 ### The Rule
 Never emit a critical WebSocket event (like "Export Ready", "Payment Received", or a "Chat Message") without **first saving it to the database**.
 
-1. **Save First:** Insert a record into the `Notifications` or `Chats` table.
-2. **Emit Second:** Only after the DB transaction commits, emit the WebSocket event.
+1. **Save First:** Insert a record into the `Notifications` or `Chats` table within your database transaction.
+2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL WAL tailing via Listen-Notify) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
 3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
 4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions.
 
-## Rule 121 — Complete Isolation for E2E and Selenium Testing
+## Rule 112 — Complete Isolation for E2E and Selenium Testing
 
 ### The Philosophy
 The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to E2E (pytest/Playwright/Cypress) and Selenium testing suites as they do to the backend source code. 
@@ -1976,7 +1984,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 
-## 122. Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
+## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
 * **The Rule:** EVERY single construct in the codebase—Classes, Controllers, Service Methods, DTOs, Entities, Database Columns, Enums, and Config Variables—MUST have an exhaustive, multi-line docstring. 
 * **Why:** AI agents must not guess. When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The docstring must explicitly declare it.
 * **What MUST be included:**
@@ -1985,24 +1993,24 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
   3. **Side-Effects:** Mention cache invalidations, webhooks, or event emissions.
   4. **AI-Note (Crucial):** Warnings or routing instructions for future AIs.
 
-## 123. MCP-Ready API Design & AI Introspection
+## Rule 116 - MCP-Ready API Design & AI Introspection
 * **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
 * **Implementation:** Every REST endpoint, DTO, and Response object must be heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`). The resulting `swagger.json` must be 100% strictly typed with no missing fields.
 * **Why:** This allows an MCP Server to ingest the backend's API specification and dynamically convert all your endpoints into **LLM Tools**. An AI agent can then connect to your backend and intuitively execute commands (e.g., `create_member`, `fetch_dashboard_kpis`) natively, treating your backend as an extension of its own brain rather than just static code.
 
-## 124. RAG-Ready API Projections (LLM / Chatbot Optimization)
+## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
 * **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
 * **The Rule:** The backend must expose a dedicated `/api/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
 * **Implementation:** These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
 * **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
 
-## 125. Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
+## Rule 118 - Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
 * **The Problem:** Standard CRUD operations (like updating a subscription status from 'Active' to 'Cancelled') overwrite historical state, completely destroying the ability to perform deep, time-series analytics (e.g., "How many users cancelled exactly on day 14?").
 * **The Rule:** For any critical domain entity (Billing, Attendance, Subscription, Member Lifecycle), apply a **Zero-Overwrite** rule for analytics. 
 * **Implementation:** Every critical state change MUST publish an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`) to a message broker (Redis Streams/Kafka) and store it in an append-only `events_log` or timeseries table. 
 * **Why:** All AI Analytics engines, forecasting models, and Manager Dashboards MUST query this immutable event log (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
 
-## 126. The Double-Entry Financial Ledger (For Billing & Wallets)
+## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert two rows into a `ledger_entries` table for every transaction: a Credit (+500 to Gym Revenue account) and a Debit (-500 from Member Wallet account). The current balance is always dynamically calculated as `SUM(credits) - SUM(debits)`. 

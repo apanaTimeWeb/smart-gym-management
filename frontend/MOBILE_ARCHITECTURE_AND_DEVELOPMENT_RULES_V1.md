@@ -2378,11 +2378,13 @@ This is the **authoritative list of languages** this project supports. There is 
 | `ml` | Malayalam | Kerala, India | Malayalam | Low |
 | `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
 
-> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+> **Phased Rollout:**
+> - `SUPPORTED_LANGUAGES`: The full table above represents all future supported languages.
+> - `ACTIVE_LANGUAGES`: We currently only ship `en` (English) + `hi` (Hindi) at launch.
 
 > **Indian Script Note (Mobile):** Indian script fonts (Devanagari, Tamil, Telugu, etc.) are bundled inside the APK/IPA. Use `react-native-localize` to detect the active script and load the correct font family from the app bundle. All Indian scripts are Left-to-Right (LTR) — no RTL layout changes are needed. Ensure fonts are declared in `react-native.config.js` and linked correctly for both iOS and Android.
 
-> **AI AGENT NOTE:** Every UI string inside `<Text>` or component props MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all configured target-language files (e.g., `_locales/nl.json`) in the same response. Use your own translation capability — do NOT call any external API. Hardcoding English strings is a critical rule violation.
+> **AI AGENT NOTE:** Every UI string inside <Text> or component props MUST use 	('NAMESPACE.KEY'). When creating a new feature module, you MUST create _locales/en.json AND _locales/hi.json (the `ACTIVE_LANGUAGES`). Do not generate files for the full `SUPPORTED_LANGUAGES` list yet. Use your own translation capability - do NOT call any external translation API. Hardcoding English strings is a critical rule violation.
 
 ## Rule 62 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements.
