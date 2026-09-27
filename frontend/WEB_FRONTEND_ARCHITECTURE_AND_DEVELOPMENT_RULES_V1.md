@@ -417,7 +417,7 @@ AI Repair Boundary
 The term "module" in all isolation, portability, dependency, and AI repair rules MUST refer to the FEATURE MODULE unless a rule explicitly states otherwise.
 
 2. **Total Role Isolation (No Shared Business Components)**:
-To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `/frontend_admin/members/`, `ManagerMembersTable.tsx` inside `/frontend_manager/members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_trainer/`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `src/app/frontend_admin/admin_members/`, `ManagerMembersTable.tsx` inside `src/app/frontend_manager/manager_members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
 
 3. **Hyper-Descriptive Naming & Mandatory Role + Module Prefix (CRITICAL)**: 
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
@@ -1000,7 +1000,7 @@ protected (which hook/component/guard). Generic statements are not acceptable.]
 - **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `gymsmart_token` cookie]
 - **Destructive actions and their guards:** [e.g., "Delete member → `useConfirm()` from `ManagerConfirmProvider` with message 'This will permanently delete the member and all their records.'"]
 - **Sensitive data handling:** [e.g., "Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal."]
-- **Cross-role isolation:** [e.g., "Zero imports from `/admin`, `/trainer`, `/superadmin`. Enforced in `members_forbidden.md`."]
+- **Cross-role isolation:** [e.g., "Zero imports from `src/app/frontend_admin`, `src/app/frontend_trainer`, `src/app/frontend_superadmin`. Enforced in `manager_members_forbidden.md`."]
 - **CODEOWNERS:** [e.g., "No payment/auth logic in this module — standard review applies."]
 
 ## Loading, Empty, and Error States
@@ -1787,22 +1787,23 @@ Every module MUST own its own feature-specific mock fixtures and MSW handlers.
 Example:
 
 src/app/
-└── members/
-    ├── members_components/
-    ├── members_hooks/
-    ├── members_api/
-    ├── members_types/
-    ├── members_schemas/
-    ├── members_store/
-    ├── members_tests/
-    ├── members_mocks/
-    │   ├── handlers/
-    │   │   └── ManagerMembersMockHandlers.ts
-    │   └── fixtures/
-    │       └── ManagerMembersMockFixtures.ts
-    ├── members_features.md
-    ├── members_forbidden.md
-    └── members_theme_contract.md
+└── frontend_manager/
+    └── manager_members/
+        ├── manager_members_components/
+        ├── manager_members_hooks/
+        ├── manager_members_api/
+        ├── manager_members_types/
+        ├── manager_members_schemas/
+        ├── manager_members_store/
+        ├── manager_members_tests/
+        ├── manager_members_mocks/
+        │   ├── handlers/
+        │   │   └── ManagerMembersMockHandlers.ts
+        │   └── fixtures/
+        │       └── ManagerMembersMockFixtures.ts
+        ├── manager_members_features.md
+        ├── manager_members_forbidden.md
+        └── manager_members_theme_contract.md
 
 The exact folder/file names may follow the module naming rules, but ownership is mandatory:
 
@@ -2315,13 +2316,15 @@ src/app/
       _locales/
         en.json   ← AI writes this when creating the module
         hi.json   ← AI translates this in the same commit
-      components/
-      hooks/
+      admin_members_components/
+      admin_members_hooks/
   frontend_superadmin/
     superadmin_tenants/
       _locales/
         en.json
         hi.json
+      superadmin_tenants_components/
+      superadmin_tenants_hooks/
 scripts/
   merge-locales.ts   ← Merges all _locales into one bundle at build time
 ```

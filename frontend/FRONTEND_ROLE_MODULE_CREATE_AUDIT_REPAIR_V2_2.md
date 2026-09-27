@@ -53,6 +53,18 @@ Second fix after v2:     frontend_{role}_v3_fix.zip
 ... and so on
 ```
 
+### VERSION DISCOVERY RULE
+
+In MODE B, determine the existing version from the supplied artifact name, project metadata, changelog, release manifest, or other explicit version evidence.
+
+Never guess a version.
+
+If an existing version is explicitly identified as vN, the repair output MUST increment it to v(N+1)_fix.
+
+If no version evidence exists:
+- use v2_fix for the first repair cycle;
+- record `VERSION SOURCE: NOT PROVIDED - DEFAULTED TO v2_fix` inside the final verdict and changelog.
+
 The AI MUST try so hard in its first pass that the user never needs to come back for a second fix. Treat every delivery as if it is the last chance to get it right.
 
 ---
@@ -5801,15 +5813,3 @@ Everything in one ZIP. Nothing before. Nothing after.
 1. Every ZIP delivery MUST contain a dedicated changelog file: `[module_name]_changelog_vN.md`. The changelog MUST be delivered inside the same atomic ZIP. No separate changelog delivery is permitted.
 2. This document MUST detail **exactly what was fixed** in this specific version, mapped directly to the original audit findings.
 3. **Purpose:** The human developer will provide this `.md` file and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
-
-### VERSION DISCOVERY RULE
-
-In MODE B, determine the existing version from the supplied artifact name, project metadata, changelog, release manifest, or other explicit version evidence.
-
-Never guess a version.
-
-If an existing version is explicitly identified as vN, the repair output MUST increment it to v(N+1)_fix.
-
-If no version evidence exists:
-- use v2_fix for the first repair cycle;
-- record `VERSION SOURCE: NOT PROVIDED — DEFAULTED TO v2_fix` inside the final verdict and changelog.
