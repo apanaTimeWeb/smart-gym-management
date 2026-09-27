@@ -74,7 +74,7 @@ Break down large files into micro-features. Every file must handle only one spec
   - `admin-member-registration.service.ts`
   - `admin-member-billing.service.ts`
   - `admin-member-attendance.service.ts`
-  - `member-notifications.service.ts`
+  - `admin-member-notifications.service.ts`
 
 **IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
 
@@ -82,7 +82,7 @@ Break down large files into micro-features. Every file must handle only one spec
 Rename all controllers, services, and models to be extremely descriptive based on exactly what they do, AND they must strictly begin with the module name as a prefix.
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
-- ✅ **GOOD:** `billing-jwt-token-generator.utils.ts`, `billing-stripe-payment-webhook.controller.ts`, `attendance-member-registration-validator.py`
+- ✅ **GOOD:** `admin-billing-jwt-token-generator.utils.ts`, `admin-billing-stripe-payment-webhook.controller.ts`, `admin-attendance-member-registration-validator.py`
 * **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
@@ -201,15 +201,15 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
 ### In Django (Python) — Reference Only
-- Avoid massive `views.py`. Create a `views/` folder and split class-based views into individual files (e.g., `member_registration_view.py`).
-- Avoid "fat models". Move complex business logic from `models.py` into a `services/` directory.
+- Avoid massive `views.py`. Create a `my_module_views/` folder and split class-based views into individual files (e.g., `admin_member_registration_view.py`).
+- Avoid "fat models". Move complex business logic from `models.py` into a `my_module_services/` directory.
 - Keep `serializers.py` strictly for validation and data formatting.
 
 ### In Express.js (Node.js) — Reference Only
 - Avoid putting logic inside route definitions.
-- `routes/` should only map URLs to Controllers.
-- `controllers/` handle HTTP (req, res).
-- `services/` handle the heavy lifting and should be highly split up (e.g., `paymentService.js`, `refundService.js`).
+- `my_module_routes/` should only map URLs to Controllers.
+- `my_module_controllers/` handle HTTP (req, res).
+- `my_module_services/` handle the heavy lifting and should be highly split up (e.g., `adminPaymentService.js`, `adminRefundService.js`).
 
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
@@ -335,8 +335,8 @@ should an AI NEVER do in this module?]
 ## Directory Structure
 | File | Responsibility |
 |---|---|
-| [module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
-| [module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
+| [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
+| [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
 | [role]_[module]_services/[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
 | [role]_[module]_repositories/[module].repository.ts | [REQUIRED: what queries it owns] |
 | [role]_[module]_dtos/[module]-create.dto.ts | [REQUIRED: what it validates] |
@@ -1515,7 +1515,7 @@ This rule MUST remain consistent with Rule 99.
 * **Implementation (Prisma-equivalent naming in `schema.prisma`):**
   ```prisma
   model Member {
-    id       String @id @default(uuid()) @map("id") // PK_members
+    id       String @id(map: "PK_members") @default(uuid()) @map("id")
     email    String @map("email")
                    // @@unique(["email"], name: "UQ_members_email")
     branchId String @map("branch_id")
@@ -1660,7 +1660,7 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 
 ## Rule 104 — WebSockets & Real-Time Communication
 * **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
-* **Implementation:** Use a Redis Pub/Sub adapter (e.g., `@nestjs/platform-ws` or `socket.io` with `redis-adapter`) to ensure that WebSocket events scale across multiple backend instances.
+* **Implementation:** Use a Redis Pub/Sub adapter (e.g., use `@nestjs/platform-ws` or `socket.io` with the `@nestjs/microservices` redis adapter) to ensure that WebSocket events scale across multiple backend instances.
 * **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
 
 ## Rule 105 — Role-Based Data Serialization & Field Masking
@@ -1682,7 +1682,7 @@ The backend uses `nestjs-i18n` with **co-located locale files inside each NestJS
 
 ### Stack
 - **Library:** `nestjs-i18n`
-- **Base language:** English (`en.json`) — written by developer / AI agent
+- **Base language:** English (`en/errors.json` and `en/messages.json`) — written by developer / AI agent
 - **Other languages:** Written by the AI agent in the same commit that creates the module
 - **Runtime cost:** Zero — all files are static JSON, bundled with the app
 
@@ -1944,11 +1944,11 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend_manager_e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
    - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend_e2e/backend_manager_e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
    - ❌ **BAD:** `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
-   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/dashboard/auth_helper.py` AND `backend_e2e/backend_manager_e2e/billing/auth_helper.py`
+   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/manager_dashboard/manager_auth_helper.py` AND `backend_e2e/backend_manager_e2e/manager_billing/manager_auth_helper.py`
 
 4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
-5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing role container — both in `backend_e2e/backend_[role]_e2e/` and `backend_selenium/backend_[role]_selenium/` — MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables.
+5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing role container — both in `backend_e2e/backend_[role]_e2e/` and `backend_selenium/backend_[role]_selenium/` — MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables. (*Note: `_test_forbidden.md` and global test config files are explicitly exempt from the Rule 2 role-prefixing requirement.*)
 
 6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 

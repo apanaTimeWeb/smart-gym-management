@@ -4524,7 +4524,7 @@ Verify:
 
 Verify:
 
-- Module exposes a dedicated `/api/_rag/` namespace or `?format=rag` query param for AI/Chatbot consumers.
+- Module exposes a dedicated `/api/v1/_rag/` namespace or `?format=rag` query param for AI/Chatbot consumers.
 
 - RAG endpoints return flattened, token-optimized text/markdown representations, NOT raw deep JSON.
 
@@ -6317,7 +6317,7 @@ Before producing the final verdict, verify:
 [ ] Rule 114 — No Mega API; dashboard APIs are decomposed
 [ ] Rule 115 — Documentation for classes/methods/DTOs/controllers/services (JSDoc), database columns (@Column/schema), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
 [ ] Rule 116 — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
-[ ] Rule 117 — Dedicated RAG namespace (/api/_rag/ or format=rag) and token-optimized markdown representation
+[ ] Rule 117 — Dedicated RAG namespace (/api/v1/_rag/ or format=rag) and token-optimized markdown representation
 [ ] Rule 118 — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
 [ ] Rule 119 — Immutable ledger rows, journal_id, account_id, direction, positive amount_minor_units, balanced debits/credits, reversal journals; NO direct UPDATEs
 [ ] Tests checked for behavioral integrity
