@@ -196,15 +196,9 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ---
 
-## Framework Reference Appendix (Non-NestJS Projects Only)
+## Framework Reference Appendix
 
-> **This section is a reference appendix for teams migrating from or using a non-NestJS stack.**
-> The primary standard in this document is **NestJS (TypeScript)**. All numbered rules in this document (Rules 1–119)
-> above are NestJS-specific. If your project uses Django, Express, or Spring Boot, translate the
-> architectural *principles* (Extreme Isolation, Use-Case Driven Files, Repository Pattern,
-> DTO Isolation, Event-Driven Decoupling, Co-located Tests) to your framework's idioms using
-> the mappings below. The specific tooling (e.g. `nestjs-pino`, `class-validator`, `@Roles()`,
-> `AsyncLocalStorage`) will differ — pick the nearest equivalent in your framework.
+For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
 ### In NestJS (TypeScript) — Primary Standard
 - Break down monolithic `@Injectable()` classes.
@@ -439,7 +433,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
-- [ ] Rule 29: Soft deletes only — no hard DELETE calls
+- [ ] Rule 29: Soft-delete by default; hard deletion/anonymization only through approved Rule 35/110 legal-erasure workflows
 - [ ] Rule 103: Idempotency-Key supported on all financial mutation endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
@@ -1653,8 +1647,8 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy.
-* **Why:** A global Naming Strategy blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy or implicit Prisma naming.
+* ** **Why:** A global Naming Strategy (like TypeORM Naming Strategy) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -1901,7 +1895,7 @@ When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchron
 All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
 - **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
 
-1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use TypeORM QueryBuilder to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
+1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder or Prisma Fluent API) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
 2. **Trigger:** `POST /api/v1/admin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
 3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.

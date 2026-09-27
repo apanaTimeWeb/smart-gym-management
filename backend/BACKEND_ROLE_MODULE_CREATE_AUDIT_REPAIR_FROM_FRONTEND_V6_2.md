@@ -6302,7 +6302,7 @@ Before producing the final verdict, verify:
 [ ] Rule 104 - WebSockets are horizontally scalable (Redis adapter, no in-process state)
 [ ] Rule 105 - Role-based data serialization and field masking applied
 [ ] Rule 106 - Cache invalidation strategy is strict and consistent
-[ ] Rule 107 — i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
+[ ] Rule 107 — i18n module-co-located locales; no central src/i18n/ bucket; AI translations generated
 [ ] Rule 108 — Feature flags are centralized
 [ ] Rule 109 — Multi-currency amounts stored as integer minor units; currency code stored separately
 [ ] Rule 110 — Tenant data export and offboarding endpoint exists
@@ -6625,10 +6625,15 @@ For every major feature, cover:
 
 Create this file in BOTH `backend_e2e/backend_[role]_e2e/` AND `backend_selenium/backend_[role]_selenium/` to enforce test isolation rules.
 
-Document at least 5 patterns that Selenium tests in this module MUST NEVER do:
+Document at least 5 patterns that API E2E and Selenium tests in this module MUST NEVER do:
 
 ```markdown
-# [Role] [Module] — Selenium Test Forbidden Patterns
+# [Role] [Module] — API E2E and Selenium Test Forbidden Patterns
+
+- No DB mocking (API E2E)
+- No internal service imports (API E2E)
+- No direct ORM access (API E2E)
+- No UI assertions in API tests
 
 ## FORBIDDEN-1: [Pattern Name]
 Pattern: [exact forbidden pattern]
@@ -6695,9 +6700,9 @@ class Test[Role][Module]UI:
 
 ### Selenium Generation Timing
 
-* During Stage 2: identify every frontend user flow that needs a Selenium test.
+* During Stage 2: identify every frontend user flow that needs an API E2E and Selenium test.
 * Map each flow to a test function stub.
-* During Stage 3 (Final): write the complete Selenium test files.
+* During Stage 3 (Final): write the complete API E2E and Selenium test files.
 
 ### Selenium Output File in Stage 3
 
@@ -6781,6 +6786,7 @@ Before you deliver anything, ALL of the following must be true simultaneously:
 [ ] Every missing migration/DB field has been added
 [ ] Every missing test has been written
 [ ] Every documentation drift has been corrected
+[ ] All API E2E test files have been written
 [ ] All Selenium test files (Section 86.5) have been written
 [ ] The 112-item Anti-Skipping Checklist re-run is complete and clean
 [ ] No previously failing item remains failing
@@ -7086,7 +7092,7 @@ The V6 audit standard is exhaustive:
 - no endpoint-exists-only acceptance;
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
-- no Selenium test generation skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
+- no API E2E or Selenium test generation skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
 - no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
 - no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
 
