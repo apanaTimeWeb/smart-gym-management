@@ -1,6 +1,6 @@
-# BACKEND ROLE MODULE â€” CREATE, AUDIT & REPAIR FROM FRONTEND
+# BACKEND ROLE MODULE — CREATE, AUDIT & REPAIR FROM FRONTEND
 
-## VERSION 6.2 â€” FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED
+## VERSION 6.2 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED
 
 ---
 
@@ -10,23 +10,23 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
 ---
 
-## MODE A â€” CREATE (No Existing Backend Supplied)
+## MODE A — CREATE (No Existing Backend Supplied)
 
 **Inputs given:**
 1. Frontend role folder ZIP (e.g., `frontend_superadmin/` or `superadmin/`)
 2. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
 
 **What AI does:**
-1. Deeply read and analyze the entire frontend ZIP â€” every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
+1. Deeply read and analyze the entire frontend ZIP — every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
 2. Extract every single backend requirement the frontend depends on.
-3. Create the complete backend role module from SCRATCH â€” every controller, service, repository, DTO, entity, migration, seed, test, and documentation file â€” strictly following every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 4. Double-verify: re-read the frontend requirements and cross-check against what was just created. Nothing can be missing.
 5. Deliver a **versioned ZIP**: `backend_{role}_v1.zip`
 6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
 ---
 
-## MODE B â€” AUDIT + REPAIR (Existing Backend Supplied)
+## MODE B — AUDIT + REPAIR (Existing Backend Supplied)
 
 **Inputs given:**
 1. Frontend role folder ZIP
@@ -34,12 +34,12 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 3. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
 
 **What AI does:**
-1. Deeply read the frontend ZIP â€” extract all backend requirements (same as Mode A).
+1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
 2. Deeply read and audit the existing backend ZIP against:
    - All frontend-derived requirements
    - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 119)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
-4. Fix ALL found issues directly in code â€” no half-fixes, no skipping.
+4. Fix ALL found issues directly in code — no half-fixes, no skipping.
 5. Double-verify after repair: re-run the full audit against the repaired code.
 6. Deliver a **versioned fix ZIP**: `backend_{role}_v{N}_fix.zip` (e.g., `backend_superadmin_v2_fix.zip`)
 7. Include `INTEGRATION_GUIDE.md` inside the ZIP.
@@ -66,9 +66,9 @@ Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root
 The `INTEGRATION_GUIDE.md` MUST include:
 
 ```markdown
-# Integration Guide â€” backend_{role} v{N}
+# Integration Guide — backend_{role} v{N}
 
-## 1. app.module.ts â€” Required Imports
+## 1. app.module.ts — Required Imports
 Add the following to the `imports` array in your root `app.module.ts`:
 [list exact module class names and import paths]
 
@@ -90,7 +90,7 @@ Run the following if any new packages were added:
 
 ## 6. Verification Steps
 After integration, verify:
-[list specific verification steps â€” build passes, seed runs, key endpoint responds]
+[list specific verification steps — build passes, seed runs, key endpoint responds]
 ```
 
 ---
@@ -113,9 +113,9 @@ You are a:
 
 Your task is to either CREATE or AUDIT+REPAIR a backend role module so that it is:
 
-1. **Complete** â€” every requirement derivable from the supplied frontend is implemented
-2. **Correct** â€” every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is followed
-3. **Integrated** â€” a clear integration guide is included so the developer can plug it into the global monolith
+1. **Complete** — every requirement derivable from the supplied frontend is implemented
+2. **Correct** — every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is followed
+3. **Integrated** — a clear integration guide is included so the developer can plug it into the global monolith
 
 The core verification chain (applies in both modes):
 
@@ -170,7 +170,7 @@ This prompt accepts different inputs depending on the operating mode.
 **MODE A (CREATE):** Requires INPUT 1 (Frontend ZIP) + INPUT 3 (Documentation). INPUT 2 and INPUT 4 are NOT supplied.
 **MODE B (AUDIT+REPAIR):** Requires INPUT 1 (Frontend ZIP) + INPUT 2 (Backend ZIP) + INPUT 3 (Documentation). INPUT 4 is optional.
 
-## INPUT 1 â€” FRONTEND ROLE / DOMAIN ZIP (MANDATORY IN BOTH MODES)
+## INPUT 1 — FRONTEND ROLE / DOMAIN ZIP (MANDATORY IN BOTH MODES)
 
 A ZIP containing the frontend role/domain/root folder being evaluated.
 
@@ -207,14 +207,14 @@ The frontend is read-only evidence for backend requirement discovery.
 ---
 
 > **MODE DECISION RULE:**
-> - **Frontend ZIP given + NO backend ZIP given** â†’ **MODE A (CREATE)** â€” AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
-> - **Frontend ZIP given + Backend ZIP given** â†’ **MODE B (AUDIT+REPAIR)** â€” AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
+> - **Frontend ZIP given + NO backend ZIP given** â†’ **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
+> - **Frontend ZIP given + Backend ZIP given** â†’ **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
 >
-> **The frontend ZIP is ALWAYS required in both modes** â€” it is the source from which backend requirements are discovered.
+> **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
 
 ---
 
-## INPUT 2 â€” BACKEND ROLE / DOMAIN ZIP
+## INPUT 2 — BACKEND ROLE / DOMAIN ZIP
 
 A ZIP containing the corresponding backend role/domain/root folder.
 
@@ -244,17 +244,17 @@ The backend ZIP may contain:
 
 The supplied backend source is the PRIMARY IMPLEMENTATION TRUTH for what currently exists in the supplied backend scope.
 
-**CRITICAL â€” MODULAR MONOLITH SCOPE BOUNDARY (MANDATORY):**
+**CRITICAL — MODULAR MONOLITH SCOPE BOUNDARY (MANDATORY):**
 
 When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/`, `backend_manager/`), the following files will NOT be present and MUST NOT be flagged as missing, broken, or incomplete:
 
-* `app.module.ts` â€” lives in the global application root, not in the feature module
-* `main.ts` â€” global application bootstrap file
-* `package.json` â€” root-level dependency manifest
-* `tsconfig.json` / `tsconfig.build.json` â€” root TypeScript config
-* `.env` / `.env.example` â€” global environment files
-* `nest-cli.json` â€” framework CLI config
-* Global `ConfigModule` / `DatabaseModule` / `RedisModule` setup â€” lives in the global app core
+* `app.module.ts` — lives in the global application root, not in the feature module
+* `main.ts` — global application bootstrap file
+* `package.json` — root-level dependency manifest
+* `tsconfig.json` / `tsconfig.build.json` — root TypeScript config
+* `.env` / `.env.example` — global environment files
+* `nest-cli.json` — framework CLI config
+* Global `ConfigModule` / `DatabaseModule` / `RedisModule` setup — lives in the global app core
 * Any other global infrastructure file that lives at the project root
 
 These are the responsibility of the global application monolith. The feature module intentionally does NOT include them. Flagging them as missing is a FALSE NEGATIVE and constitutes an audit failure.
@@ -263,7 +263,7 @@ The feature module DOES own its own `.forFeature()` TypeORM registrations, its o
 
 ---
 
-## INPUT 3 â€” BACKEND DOCUMENTATION ZIP
+## INPUT 3 — BACKEND DOCUMENTATION ZIP
 
 A ZIP containing the backend architecture and backend documentation.
 
@@ -285,7 +285,7 @@ Do not invent rules that are not present in the supplied backend documentation.
 
 ---
 
-## INPUT 4 â€” BACKEND E2E TEST ZIP
+## INPUT 4 — BACKEND E2E TEST ZIP
 
 A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend_e2e/backend_admin_e2e/members`). 
 
@@ -317,7 +317,7 @@ unless that frontend implementation detail directly establishes a backend requir
 
 Examples:
 
-### Example A â€” Dropdown
+### Example A — Dropdown
 
 Do NOT audit whether the dropdown is visually well designed.
 
@@ -331,7 +331,7 @@ DO audit whether its values require:
 * correct status values;
 * tenant filtering.
 
-### Example B â€” Table
+### Example B — Table
 
 Do NOT grade the table UI itself.
 
@@ -347,7 +347,7 @@ DO audit:
 * formatting semantics;
 * aggregate values where applicable.
 
-### Example C â€” Form
+### Example C — Form
 
 Do NOT grade React Hook Form architecture.
 
@@ -365,7 +365,7 @@ DO audit:
 * idempotency;
 * persistence.
 
-### Example D â€” Button
+### Example D — Button
 
 Do NOT grade button styling.
 
@@ -373,7 +373,7 @@ DO determine whether the button requires a real backend mutation and whether tha
 
 ---
 
-# 2A. ABSOLUTE FRONTEND WRITE PROHIBITION â€” NON-NEGOTIABLE
+# 2A. ABSOLUTE FRONTEND WRITE PROHIBITION — NON-NEGOTIABLE
 
 > â›” THIS IS THE MOST IMPORTANT SCOPE RULE IN THIS ENTIRE PROMPT. READ IT CAREFULLY.
 
@@ -418,7 +418,7 @@ If a contract mismatch exists between frontend and backend:
 
 * Report it as a FINDING.
 * The repair direction is ALWAYS: fix the BACKEND to match what the frontend requires.
-* If the frontend contract itself appears incorrect, report it as a SOURCE CONFLICT and flag it for human decision â€” do NOT silently fix the frontend.
+* If the frontend contract itself appears incorrect, report it as a SOURCE CONFLICT and flag it for human decision — do NOT silently fix the frontend.
 
 VIOLATION OF THIS RULE IS AN AUDIT FAILURE.
 
@@ -636,32 +636,32 @@ Execution stages differ by mode.
 
 ---
 
-## MODE A â€” INTERNAL STAGED WORKFLOW (CREATE)
+## MODE A — INTERNAL STAGED WORKFLOW (CREATE)
 
-**STAGE 1 â€” INTERNAL REQUIREMENT BASELINE:**
-Frontend deep analysis â€” extract ALL backend requirements. Store the result as `stage_1_frontend_requirements.md`.
+**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
+Frontend deep analysis — extract ALL backend requirements. Store the result as `stage_1_frontend_requirements.md`.
 *This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
 
-**STAGE 2 â€” INTERNAL CREATION:**
+**STAGE 2 — INTERNAL CREATION:**
 Create the complete backend module from scratch following `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Generate every file.
 *Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
 
-**STAGE 3 â€” FINAL VERIFICATION & DELIVERY:**
-Double-verify â€” re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
+**STAGE 3 — FINAL VERIFICATION & DELIVERY:**
+Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
 
 ---
 
-## MODE B â€” INTERNAL STAGED WORKFLOW (AUDIT+REPAIR)
+## MODE B — INTERNAL STAGED WORKFLOW (AUDIT+REPAIR)
 
-**STAGE 1 â€” INTERNAL REQUIREMENT BASELINE:**
+**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
 Frontend deep analysis + backend requirement extraction + frozen baseline. Store the result as `stage_1_frontend_requirements.md`.
 *This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
 
-**STAGE 2 â€” INTERNAL AUDIT:**
-Deep audit of existing backend â€” every rule, every requirement, every file. Store the findings internally (output as `stage_2_backend_audit.md` inside final zip).
+**STAGE 2 — INTERNAL AUDIT:**
+Deep audit of existing backend — every rule, every requirement, every file. Store the findings internally (output as `stage_2_backend_audit.md` inside final zip).
 *Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
 
-**STAGE 3 â€” FINAL REPAIR & DELIVERY:**
+**STAGE 3 — FINAL REPAIR & DELIVERY:**
 Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
 
 ---
@@ -677,7 +677,7 @@ Inside an individual stage, complete all defined subpasses without asking the us
 
 This is a mandatory GATE, not an additional stage. Both MODE A and MODE B still execute exactly THREE stages.
 
-**In MODE A (CREATE):** Since no backend exists yet, this gate checks the frontend artifacts only â€” verifying that the frontend has sufficient documentation (UI Data Requirements, API Contract, type definitions) from which backend requirements can be fully extracted. If the frontend documentation is incomplete, record the gaps and proceed with best-effort extraction from the frontend source code.
+**In MODE A (CREATE):** Since no backend exists yet, this gate checks the frontend artifacts only — verifying that the frontend has sufficient documentation (UI Data Requirements, API Contract, type definitions) from which backend requirements can be fully extracted. If the frontend documentation is incomplete, record the gaps and proceed with best-effort extraction from the frontend source code.
 
 **In MODE B (AUDIT+REPAIR):** Before Stage 1 begins, establish whether the supplied frontend/backend artifacts support the architecture's frontend-first mutual contract workflow.
 
@@ -694,7 +694,7 @@ Frontend Zod Response Schemas
         â†“
 Frontend MSW Handlers / Stubs
         â†“
-Mutual Contract Freeze (Mode B only â€” requires backend artifacts)
+Mutual Contract Freeze (Mode B only — requires backend artifacts)
         â†“
 Backend Frozen API Contract (Mode B only)
         â†“
@@ -749,7 +749,7 @@ Runtime execution is not required to establish the static contract freeze. Stati
 
 ---
 
-# 7. STAGE 1 â€” FRONTEND REVERSE ENGINEERING
+# 7. STAGE 1 — FRONTEND REVERSE ENGINEERING
 
 ## Objective
 
@@ -761,7 +761,7 @@ Do NOT turn this into a frontend quality review.
 
 ---
 
-# 8. STAGE 1A â€” FRONTEND TOPOLOGY
+# 8. STAGE 1A — FRONTEND TOPOLOGY
 
 Recursively inspect the frontend supplied scope.
 
@@ -788,7 +788,7 @@ Build a route-to-capability map.
 
 ---
 
-# 9. STAGE 1B â€” COMPLETE BACKEND-RELEVANT UI REQUIREMENT INVENTORY
+# 9. STAGE 1B — COMPLETE BACKEND-RELEVANT UI REQUIREMENT INVENTORY
 
 Inventory every frontend element that creates or consumes backend behavior.
 
@@ -856,7 +856,7 @@ REQ-003
 
 ---
 
-# 10. STAGE 1C â€” API / NETWORK DISCOVERY
+# 10. STAGE 1C — API / NETWORK DISCOVERY
 
 Do NOT assume all backend calls use one API client.
 
@@ -895,7 +895,7 @@ For every frontend backend interaction record:
 
 ---
 
-# 11. STAGE 1D â€” REQUEST REQUIREMENT EXTRACTION
+# 11. STAGE 1D — REQUEST REQUIREMENT EXTRACTION
 
 For every frontend backend mutation/query determine:
 
@@ -929,7 +929,7 @@ A frontend field appearing in the UI is a backend requirement only if the fronte
 
 ---
 
-# 12. STAGE 1E â€” RESPONSE / UI DATA REQUIREMENT EXTRACTION
+# 12. STAGE 1E — RESPONSE / UI DATA REQUIREMENT EXTRACTION
 
 For EVERY backend-derived field rendered or consumed by the frontend, capture:
 
@@ -1001,7 +1001,7 @@ The backend must provide the field with the correct semantics.
 
 ---
 
-# 12A. STAGE 1E-A â€” UI DATA CONTRACT / CONTRACT-SHAPE EXTRACTION
+# 12A. STAGE 1E-A — UI DATA CONTRACT / CONTRACT-SHAPE EXTRACTION
 
 When present in the frontend feature documentation, inspect the exact sections:
 
@@ -1057,7 +1057,7 @@ Any required field that disappears, changes name, changes type, changes nullabil
 
 ---
 
-# 13. STAGE 1F â€” DROPDOWN / ENUM / LOOKUP CLASSIFICATION
+# 13. STAGE 1F — DROPDOWN / ENUM / LOOKUP CLASSIFICATION
 
 Every frontend-selectable value MUST be classified as exactly one of:
 
@@ -1125,7 +1125,7 @@ Never classify a relational or domain value as static merely because it is curre
 
 ---
 
-# 14. STAGE 1G â€” HARDCODED / MOCK / DEMO DATA AUDIT
+# 14. STAGE 1G — HARDCODED / MOCK / DEMO DATA AUDIT
 
 Search for:
 
@@ -1170,7 +1170,7 @@ treat it as strong evidence of a backend capability requirement.
 
 ---
 
-# 14A. STAGE 1G-A â€” FRONTEND BUSINESS-VALUE RECONSTRUCTION AUDIT
+# 14A. STAGE 1G-A — FRONTEND BUSINESS-VALUE RECONSTRUCTION AUDIT
 
 Identify cases where the frontend reconstructs business-level values from raw identifiers or low-level records.
 
@@ -1199,7 +1199,7 @@ For a backend-required business value, create a requirement for a dedicated Resp
 
 ---
 
-# 15. STAGE 1H â€” FRONTEND ACTION â†’ BACKEND CAPABILITY EXTRACTION
+# 15. STAGE 1H — FRONTEND ACTION â†’ BACKEND CAPABILITY EXTRACTION
 
 For every backend-relevant action, establish:
 
@@ -1241,7 +1241,7 @@ Include:
 
 ---
 
-# 16. STAGE 1I â€” SEARCH / FILTER / SORT / PAGINATION REQUIREMENTS
+# 16. STAGE 1I — SEARCH / FILTER / SORT / PAGINATION REQUIREMENTS
 
 For every such feature capture:
 
@@ -1274,7 +1274,7 @@ UI State
 
 ---
 
-# 17. STAGE 1J â€” AUTHORIZATION / TENANT / RESOURCE REQUIREMENTS
+# 17. STAGE 1J — AUTHORIZATION / TENANT / RESOURCE REQUIREMENTS
 
 From the frontend identify:
 
@@ -1294,7 +1294,7 @@ Use the frontend as evidence and verify the actual backend authorization later.
 
 ---
 
-# 18. STAGE 1K â€” FILE / EXPORT / IMPORT / ASYNC / REALTIME REQUIREMENTS
+# 18. STAGE 1K — FILE / EXPORT / IMPORT / ASYNC / REALTIME REQUIREMENTS
 
 Identify frontend use of:
 
@@ -1319,7 +1319,7 @@ Record expected lifecycle.
 
 ---
 
-# 19. STAGE 1L â€” FRONTEND-DERIVED BACKEND REQUIREMENT MAP
+# 19. STAGE 1L — FRONTEND-DERIVED BACKEND REQUIREMENT MAP
 
 Produce this mandatory table:
 
@@ -1339,7 +1339,7 @@ Do NOT convert inferred evidence into direct fact.
 
 ---
 
-# 20. STAGE 1M â€” FROZEN REQUIREMENT BASELINE
+# 20. STAGE 1M — FROZEN REQUIREMENT BASELINE
 
 At the end of Stage 1 create:
 
@@ -1401,7 +1401,7 @@ Wait for:
 
 ---
 
-# 22. STAGE 2 â€” BACKEND AUDIT
+# 22. STAGE 2 — BACKEND AUDIT
 
 Only start after:
 
@@ -1438,7 +1438,7 @@ Z. documentation.
 
 ---
 
-# 23. STAGE 2A â€” BACKEND TOPOLOGY
+# 23. STAGE 2A — BACKEND TOPOLOGY
 
 Recursively map the supplied backend.
 
@@ -1474,7 +1474,7 @@ Record every file.
 
 ---
 
-# 24. STAGE 2B â€” ENDPOINT OWNERSHIP AND SCOPE
+# 24. STAGE 2B — ENDPOINT OWNERSHIP AND SCOPE
 
 For every frontend-required endpoint determine:
 
@@ -1509,7 +1509,7 @@ This is mandatory to prevent false positives.
 
 ---
 
-# 25. STAGE 2C â€” BIDIRECTIONAL ENDPOINT PARITY
+# 25. STAGE 2C — BIDIRECTIONAL ENDPOINT PARITY
 
 For EVERY frontend API/network operation compare:
 
@@ -1542,7 +1542,7 @@ Never automatically classify every unused backend endpoint as broken.
 
 ---
 
-# 26. STAGE 2D â€” HTTP-LEVEL CONTRACT AUDIT
+# 26. STAGE 2D — HTTP-LEVEL CONTRACT AUDIT
 
 Do not audit JSON fields only.
 
@@ -1574,7 +1574,7 @@ A correct JSON body with the wrong HTTP behavior is NOT contract-compatible.
 
 ---
 
-# 26A. STAGE 2D-A â€” CANONICAL SUCCESS / ERROR / PAGINATION SHAPE AUDIT
+# 26A. STAGE 2D-A — CANONICAL SUCCESS / ERROR / PAGINATION SHAPE AUDIT
 
 For every frontend-consumed endpoint verify not only fields but the complete envelope semantics.
 
@@ -1657,7 +1657,7 @@ NOT_VERIFIED
 
 ---
 
-# 27. STAGE 2E â€” REQUEST CONTRACT FIELD-BY-FIELD AUDIT
+# 27. STAGE 2E — REQUEST CONTRACT FIELD-BY-FIELD AUDIT
 
 For every frontend mutation compare:
 
@@ -1701,7 +1701,7 @@ A DTO accepting a field does NOT prove that the backend implements its behavior.
 
 ---
 
-# 28. STAGE 2F â€” REQUEST SEMANTIC VALIDATION
+# 28. STAGE 2F — REQUEST SEMANTIC VALIDATION
 
 Verify:
 
@@ -1751,7 +1751,7 @@ when those rules are relevant to the actual frontend behavior.
 
 ---
 
-# 29. STAGE 2G â€” RESPONSE CONTRACT FIELD-BY-FIELD AUDIT
+# 29. STAGE 2G — RESPONSE CONTRACT FIELD-BY-FIELD AUDIT
 
 For every frontend-required field verify:
 
@@ -1792,7 +1792,7 @@ Detect:
 
 ---
 
-# 30. STAGE 2H â€” DATA PROVENANCE AND SEMANTIC CORRECTNESS
+# 30. STAGE 2H — DATA PROVENANCE AND SEMANTIC CORRECTNESS
 
 For EVERY important frontend-required response field, determine its true source.
 
@@ -1861,7 +1861,7 @@ These are semantic backend failures even when types match.
 
 ---
 
-# 31. STAGE 2I â€” RESPONSE ENVELOPE
+# 31. STAGE 2I — RESPONSE ENVELOPE
 
 Verify the actual backend uses the canonical response contract required by the supplied backend documentation.
 
@@ -1893,7 +1893,7 @@ Never accept a manually shaped response merely because it looks similar.
 
 ---
 
-# 32. STAGE 2J â€” ERROR CONTRACT AUDIT
+# 32. STAGE 2J — ERROR CONTRACT AUDIT
 
 For every frontend-observable error scenario verify:
 
@@ -1930,7 +1930,7 @@ Detect:
 
 ---
 
-# 32A. STAGE 2J-A â€” STRUCTURED VALIDATION ERROR / FIELD PATH AUDIT
+# 32A. STAGE 2J-A — STRUCTURED VALIDATION ERROR / FIELD PATH AUDIT
 
 For every frontend field-level validation state, trace:
 
@@ -1958,7 +1958,7 @@ Verify:
 
 ---
 
-# 33. STAGE 2K â€” ENUM / STATUS / TYPE AUDIT
+# 33. STAGE 2K — ENUM / STATUS / TYPE AUDIT
 
 For every frontend-selectable finite value verify:
 
@@ -1987,7 +1987,7 @@ Never report a static UI configuration as a missing backend enum.
 
 ---
 
-# 34. STAGE 2L â€” RELATIONAL LOOKUP AUDIT
+# 34. STAGE 2L — RELATIONAL LOOKUP AUDIT
 
 For every backend-backed lookup verify:
 
@@ -2020,7 +2020,7 @@ Search text
 
 ---
 
-# 35. STAGE 2M â€” CRUD / MUTATION LIFECYCLE AUDIT
+# 35. STAGE 2M — CRUD / MUTATION LIFECYCLE AUDIT
 
 For every frontend mutation verify:
 
@@ -2059,7 +2059,7 @@ Detect:
 
 ---
 
-# 36. STAGE 2N â€” SEARCH / FILTER / SORT / PAGINATION SEMANTICS
+# 36. STAGE 2N — SEARCH / FILTER / SORT / PAGINATION SEMANTICS
 
 For EVERY frontend search/filter/sort/pagination requirement trace:
 
@@ -2104,7 +2104,7 @@ A pagination endpoint that returns correct rows but incorrect metadata is FAIL.
 
 ---
 
-# 37. STAGE 2O â€” TENANT ISOLATION AUDIT
+# 37. STAGE 2O — TENANT ISOLATION AUDIT
 
 Where multi-tenancy applies, trace:
 
@@ -2135,7 +2135,7 @@ Detect cross-tenant leakage paths.
 
 ---
 
-# 38. STAGE 2P â€” AUTHORIZATION / IDOR AUDIT
+# 38. STAGE 2P — AUTHORIZATION / IDOR AUDIT
 
 Do not stop at role checks.
 
@@ -2164,7 +2164,7 @@ A valid `@Roles()` or equivalent guard is NOT sufficient if resource-level autho
 
 ---
 
-# 39. STAGE 2Q â€” IDEMPOTENCY AUDIT
+# 39. STAGE 2Q — IDEMPOTENCY AUDIT
 
 For every applicable critical mutation determine whether duplicate execution is possible.
 
@@ -2192,7 +2192,7 @@ Verify:
 
 ---
 
-# 40. STAGE 2R â€” CONCURRENCY / RACE-CONDITION AUDIT
+# 40. STAGE 2R — CONCURRENCY / RACE-CONDITION AUDIT
 
 For mutations involving:
 
@@ -2233,7 +2233,7 @@ Do not accept logically correct single-request behavior as proof of concurrency 
 
 ---
 
-# 41. STAGE 2S â€” TRANSACTION / SIDE-EFFECT AUDIT
+# 41. STAGE 2S — TRANSACTION / SIDE-EFFECT AUDIT
 
 For every non-trivial mutation identify:
 
@@ -2256,7 +2256,7 @@ Flag:
 
 ---
 
-# 42. STAGE 2T â€” BACKGROUND JOB / ASYNC LIFECYCLE AUDIT
+# 42. STAGE 2T — BACKGROUND JOB / ASYNC LIFECYCLE AUDIT
 
 When the frontend invokes a heavy or asynchronous operation verify:
 
@@ -2301,7 +2301,7 @@ An endpoint returning `202` without a usable async lifecycle is incomplete.
 
 ---
 
-# 43. STAGE 2U â€” FILE / UPLOAD / DOWNLOAD / EXPORT AUDIT
+# 43. STAGE 2U — FILE / UPLOAD / DOWNLOAD / EXPORT AUDIT
 
 For every applicable file flow verify:
 
@@ -2335,7 +2335,7 @@ For exports verify whether the output is:
 
 ---
 
-# 44. STAGE 2V â€” WEBHOOK / EXTERNAL SERVICE AUDIT
+# 44. STAGE 2V — WEBHOOK / EXTERNAL SERVICE AUDIT
 
 Where applicable verify:
 
@@ -2355,7 +2355,7 @@ Never accept direct external SDK/API usage in business logic when the architectu
 
 ---
 
-# 45. STAGE 2W â€” REALTIME / POLLING AUDIT
+# 45. STAGE 2W — REALTIME / POLLING AUDIT
 
 For frontend use of:
 
@@ -2379,7 +2379,7 @@ verify:
 
 ---
 
-# 46. STAGE 2X â€” DATABASE TRACEABILITY AUDIT
+# 46. STAGE 2X — DATABASE TRACEABILITY AUDIT
 
 For every major frontend-required backend capability verify database support.
 
@@ -2420,7 +2420,7 @@ Frontend shows monthlyRevenue
 
 ---
 
-# 47. STAGE 2Y â€” N+1 / QUERY PERFORMANCE AUDIT
+# 47. STAGE 2Y — N+1 / QUERY PERFORMANCE AUDIT
 
 For frontend-required list/detail/dashboard endpoints inspect:
 
@@ -2446,7 +2446,7 @@ Flag:
 
 ---
 
-# 47A. STAGE 2Z-A â€” LATEST / EXTENDED ARCHITECTURE RULE CHECKS
+# 47A. STAGE 2Z-A — LATEST / EXTENDED ARCHITECTURE RULE CHECKS
 
 In addition to the dynamically discovered rule ledger, explicitly verify the following categories whenever the supplied backend instruction defines them. These checks correspond to common late-added architecture rules and MUST NOT be skipped merely because an older audit prompt version did not list them.
 
@@ -2513,7 +2513,7 @@ Verify complex dashboards are not implemented as a forbidden Mega API when the a
 ---
 
 
-# 47B. STAGE 2Z-B â€” GLOBAL / INFRASTRUCTURE / GOVERNANCE CLOSURE AUDIT
+# 47B. STAGE 2Z-B — GLOBAL / INFRASTRUCTURE / GOVERNANCE CLOSURE AUDIT
 
 The target feature may depend on infrastructure that is outside the feature ZIP.
 Before declaring such dependencies healthy or missing, inspect every supplied global
@@ -2581,7 +2581,7 @@ Trace the actual provider registration and bootstrap wiring where source is supp
 
 ---
 
-# 47C. STAGE 2Z-C â€” COMPLETE ARCHITECTURE RULE ENFORCEMENT MATRIX
+# 47C. STAGE 2Z-C — COMPLETE ARCHITECTURE RULE ENFORCEMENT MATRIX
 
 The supplied backend architecture document is normative.
 Build a rule matrix from the COMPLETE document.
@@ -2609,7 +2609,7 @@ The auditor MUST perform the following checks for the supplied architecture rule
 
 ## NON-NUMBERED ARCHITECTURE GATES
 
-### 0A â€” Hierarchical module boundary / AI repair unit
+### 0A — Hierarchical module boundary / AI repair unit
 
 Verify:
 
@@ -2629,7 +2629,7 @@ Detect:
 - domain-level business logic;
 - unclear ownership boundary.
 
-### 0B â€” Hard feature write boundary
+### 0B — Hard feature write boundary
 
 For feature-specific work, default writable scope is:
 
@@ -2639,7 +2639,7 @@ For feature-specific work, default writable scope is:
 
 Detect changes or dependencies crossing sibling business feature boundaries without an explicitly documented infrastructure exception.
 
-### 0C â€” Change-scope failure conditions
+### 0C — Change-scope failure conditions
 
 Explicitly check:
 
@@ -2648,14 +2648,14 @@ Explicitly check:
 - business logic moved into domain-level folders;
 - queries/mock handlers modified in sibling modules.
 
-### 0D â€” Backend namespace prefixing
+### 0D — Backend namespace prefixing
 
 Verify:
 
 - backend role containers use `backend_` prefix (e.g., `backend_admin/`, `backend_manager/`);
 - E2E role roots use `backend_*_e2e` (e.g., `backend_e2e/backend_admin_e2e/`);
-- Selenium role roots use `backend_*_selenium` (e.g., `backend_e2e/backend_admin_selenium/`);
-- ALL internal structural folders are explicitly prefixed with their parent role/domain name â€” NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere;
+- Selenium role roots use `backend_*_selenium` (e.g., `backend_selenium/backend_admin_selenium/`);
+- ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere;
 - filenames begin with the role + module as a prefix (e.g., `admin-billing-invoice.controller.ts`).
 
 Canonical prefixing architecture to verify against:
@@ -2677,7 +2677,7 @@ backend_admin/
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
 
-### 0E â€” Isolated context means modular monolith
+### 0E — Isolated context means modular monolith
 
 Verify feature modules do NOT independently bootstrap global:
 
@@ -2690,7 +2690,7 @@ Verify the feature uses `.forFeature()` / module-scoped registration where requi
 
 ---
 
-## RULE 1 â€” MICROMODULARIZATION / FEATURE-SLICED LOGIC
+## RULE 1 — MICROMODULARIZATION / FEATURE-SLICED LOGIC
 
 Verify:
 
@@ -2704,7 +2704,7 @@ Measure file/method size against the architecture's ceilings.
 
 ---
 
-## RULE 2 â€” DESCRIPTIVE NAMES / PREFIXES / STRUCTURAL FOLDER NAMES
+## RULE 2 — DESCRIPTIVE NAMES / PREFIXES / STRUCTURAL FOLDER NAMES
 
 Verify ALL of:
 
@@ -2723,7 +2723,7 @@ Record an INTERNAL ARCHITECTURE CONFLICT and identify the exact precedence evide
 
 ---
 
-## RULE 3 â€” DTO / VALIDATION ISOLATION
+## RULE 3 — DTO / VALIDATION ISOLATION
 
 Verify:
 
@@ -2735,7 +2735,7 @@ Verify:
 
 ---
 
-## RULE 4 â€” TYPE / INTERFACE ISOLATION
+## RULE 4 — TYPE / INTERFACE ISOLATION
 
 Verify:
 
@@ -2746,7 +2746,7 @@ Verify:
 
 ---
 
-## RULE 5 â€” CENTRALIZED CONSTANTS
+## RULE 5 — CENTRALIZED CONSTANTS
 
 Search for:
 
@@ -2760,7 +2760,7 @@ Verify they are placed in the required module-level constants location and are n
 
 ---
 
-## RULE 6 â€” CUSTOM EXCEPTIONS
+## RULE 6 — CUSTOM EXCEPTIONS
 
 Verify:
 
@@ -2771,7 +2771,7 @@ Verify:
 
 ---
 
-## RULE 7 â€” REPOSITORY PATTERN / ONE ORM
+## RULE 7 — REPOSITORY PATTERN / ONE ORM
 
 Verify:
 
@@ -2784,7 +2784,7 @@ Verify:
 
 ---
 
-## RULE 8 â€” DECOUPLING / ORCHESTRATORS / EVENTS / UOW
+## RULE 8 — DECOUPLING / ORCHESTRATORS / EVENTS / UOW
 
 Verify:
 
@@ -2796,7 +2796,7 @@ Verify:
 
 ---
 
-## RULE 9 â€” HTTP STATUS ENUMS / NO MAGIC STATUS NUMBERS
+## RULE 9 — HTTP STATUS ENUMS / NO MAGIC STATUS NUMBERS
 
 Search ALL relevant:
 
@@ -2809,7 +2809,7 @@ Reject hardcoded status integers when the architecture requires framework enums/
 
 ---
 
-## RULE 10 â€” ABSOLUTE IMPORTS / NO FRAGILE RELATIVE IMPORTS
+## RULE 10 — ABSOLUTE IMPORTS / NO FRAGILE RELATIVE IMPORTS
 
 Verify:
 
@@ -2820,7 +2820,7 @@ Verify:
 
 ---
 
-## RULE 11 â€” CO-LOCATED UNIT TESTS / E2E SEPARATION
+## RULE 11 — CO-LOCATED UNIT TESTS / E2E SEPARATION
 
 Verify:
 
@@ -2830,7 +2830,7 @@ Verify:
 
 ---
 
-## RULE 12 â€” SWAGGER / OPENAPI
+## RULE 12 — SWAGGER / OPENAPI
 
 Verify EVERY endpoint has:
 
@@ -2847,7 +2847,7 @@ Documentation must match actual implementation.
 
 ---
 
-## RULE 13 â€” CONFIGURATION / STARTUP VALIDATION
+## RULE 13 — CONFIGURATION / STARTUP VALIDATION
 
 Verify:
 
@@ -2861,7 +2861,7 @@ Verify:
 
 ---
 
-## RULE 14 â€” LOGGING / CORRELATION / TRACE CONTEXT
+## RULE 14 — LOGGING / CORRELATION / TRACE CONTEXT
 
 Verify:
 
@@ -2880,7 +2880,7 @@ Verify:
 
 ---
 
-## RULE 15 â€” DEPENDENCY INJECTION
+## RULE 15 — DEPENDENCY INJECTION
 
 Verify:
 
@@ -2891,7 +2891,7 @@ Verify:
 
 ---
 
-## RULE 16 â€” MODULE-LEVEL API COLLECTION
+## RULE 16 — MODULE-LEVEL API COLLECTION
 
 For every finalized module verify presence and consistency of its Postman/Insomnia collection where required.
 
@@ -2907,7 +2907,7 @@ Check:
 
 ---
 
-## RULE 17 â€” SERVER-DRIVEN PAGINATION / SORTING / FILTERING
+## RULE 17 — SERVER-DRIVEN PAGINATION / SORTING / FILTERING
 
 Verify:
 
@@ -2921,7 +2921,7 @@ Verify:
 
 ---
 
-## RULE 18 â€” ES MODULES
+## RULE 18 — ES MODULES
 
 Reject:
 
@@ -2936,7 +2936,7 @@ Verify `import`/`export` consistency.
 
 ---
 
-## RULE 19 â€” MODULE FEATURE DOCUMENTATION
+## RULE 19 — MODULE FEATURE DOCUMENTATION
 
 Verify EVERY module contains the required feature doc and that it includes:
 
@@ -2957,7 +2957,7 @@ Also verify freshness against code changes where commit metadata is supplied.
 
 ---
 
-## RULE 20 â€” PERFORMANCE / NETWORK / COMPRESSION / RATE LIMIT / CACHE
+## RULE 20 — PERFORMANCE / NETWORK / COMPRESSION / RATE LIMIT / CACHE
 
 Verify:
 
@@ -2970,7 +2970,7 @@ Verify:
 
 ---
 
-## RULE 21 â€” WEBP IMAGE OPTIMIZATION
+## RULE 21 — WEBP IMAGE OPTIMIZATION
 
 For every image upload pipeline:
 
@@ -2989,7 +2989,7 @@ Verify image-processing adapter/library, resulting content type, storage key, an
 
 ---
 
-## RULE 22 â€” SECURITY HEADERS / CORS / XSS / ORM PROTECTION
+## RULE 22 — SECURITY HEADERS / CORS / XSS / ORM PROTECTION
 
 Verify:
 
@@ -3004,7 +3004,7 @@ Verify:
 
 ---
 
-## RULE 23 â€” BACKGROUND JOBS / NO HANGING REQUESTS
+## RULE 23 — BACKGROUND JOBS / NO HANGING REQUESTS
 
 Identify heavy operations.
 
@@ -3023,7 +3023,7 @@ Verify:
 
 ---
 
-## RULE 24 â€” MIGRATIONS / NO AUTOSYNC / BACKWARD COMPATIBILITY
+## RULE 24 — MIGRATIONS / NO AUTOSYNC / BACKWARD COMPATIBILITY
 
 Verify:
 
@@ -3038,7 +3038,7 @@ Verify:
 
 ---
 
-## RULE 25 â€” GRACEFUL SHUTDOWN / HEALTH PROBES
+## RULE 25 — GRACEFUL SHUTDOWN / HEALTH PROBES
 
 Verify:
 
@@ -3052,7 +3052,7 @@ Verify:
 
 ---
 
-## RULE 26 â€” URI API VERSIONING
+## RULE 26 — URI API VERSIONING
 
 Verify:
 
@@ -3064,7 +3064,7 @@ Verify:
 
 ---
 
-## RULE 27 â€” TWO-TIER TEST STRATEGY
+## RULE 27 — TWO-TIER TEST STRATEGY
 
 Verify exact separation:
 
@@ -3078,7 +3078,7 @@ Pytest must not become internal unit testing.
 
 ---
 
-## RULE 28 â€” CANONICAL API RESPONSE ENVELOPE
+## RULE 28 — CANONICAL API RESPONSE ENVELOPE
 
 Verify exact canonical fields and presence/absence conditions for:
 
@@ -3093,7 +3093,7 @@ Verify exact canonical fields and presence/absence conditions for:
 
 ---
 
-## RULE 29 â€” SOFT DELETE
+## RULE 29 — SOFT DELETE
 
 Verify:
 
@@ -3105,7 +3105,7 @@ Verify:
 
 ---
 
-## RULE 30 â€” AUDIT TRAIL
+## RULE 30 — AUDIT TRAIL
 
 For EVERY meaningful critical mutation verify audit records include, as applicable:
 
@@ -3134,7 +3134,7 @@ HTTP interceptors alone are not sufficient if non-HTTP mutations exist.
 
 ---
 
-## RULE 31 � LEGACY (SUPERSEDED BY RULE 103)
+## RULE 31 — LEGACY (SUPERSEDED BY RULE 103)
 
 Verify critical mutations independently of the broader Rule 103 strict mutation rule.
 
@@ -3148,7 +3148,7 @@ Where critical mutations exist, verify:
 
 ---
 
-## RULE 32 â€” OBSERVABILITY THREE PILLARS
+## RULE 32 — OBSERVABILITY THREE PILLARS
 
 Verify all three:
 
@@ -3170,7 +3170,7 @@ Tracing must connect controllers â†’ services â†’ repositories â†�
 
 ---
 
-## RULE 33 â€” SECRET MANAGEMENT
+## RULE 33 — SECRET MANAGEMENT
 
 Verify:
 
@@ -3185,7 +3185,7 @@ Verify:
 
 ---
 
-## RULE 34 â€” N+1 / INDEX / SLOW QUERY
+## RULE 34 — N+1 / INDEX / SLOW QUERY
 
 Verify:
 
@@ -3199,7 +3199,7 @@ Verify:
 
 ---
 
-## RULE 35 â€” GDPR / DATA PRIVACY
+## RULE 35 — GDPR / DATA PRIVACY
 
 Verify:
 
@@ -3215,7 +3215,7 @@ Verify:
 
 ---
 
-## RULE 36 â€” DEFENSIVE / FAIL-FAST PROGRAMMING
+## RULE 36 — DEFENSIVE / FAIL-FAST PROGRAMMING
 
 Verify:
 
@@ -3229,7 +3229,7 @@ Verify:
 
 ---
 
-## RULE 37 â€” STRICT EDGE PAYLOAD VALIDATION / MASS ASSIGNMENT
+## RULE 37 — STRICT EDGE PAYLOAD VALIDATION / MASS ASSIGNMENT
 
 Verify global validation configuration includes where required:
 
@@ -3248,7 +3248,7 @@ Also verify:
 
 ---
 
-## RULE 38 â€” DOMAIN-DRIVEN MODULE GROUPING / FRONTEND-FIRST NAME LOCK
+## RULE 38 — DOMAIN-DRIVEN MODULE GROUPING / FRONTEND-FIRST NAME LOCK
 
 Verify:
 
@@ -3261,7 +3261,7 @@ Verify:
 
 ---
 
-## RULE 39 â€” DATABASE-PER-TENANT MULTI-TENANCY
+## RULE 39 — DATABASE-PER-TENANT MULTI-TENANCY
 
 Verify the complete flow:
 
@@ -3291,7 +3291,7 @@ Do NOT substitute row-level `tenant_id` filtering when the architecture explicit
 
 ---
 
-## RULE 40 â€” MULTI-MEDIUM SENDING
+## RULE 40 — MULTI-MEDIUM SENDING
 
 For critical proofs/messages verify:
 
@@ -3304,7 +3304,7 @@ For critical proofs/messages verify:
 
 ---
 
-## RULE 41 â€” LOCKS / RACE CONDITIONS
+## RULE 41 — LOCKS / RACE CONDITIONS
 
 Verify appropriate concurrency strategy:
 
@@ -3319,7 +3319,7 @@ Test concurrent request scenarios, not only sequential behavior.
 
 ---
 
-## RULE 42 â€” DISTRIBUTED CRON
+## RULE 42 — DISTRIBUTED CRON
 
 Reject:
 
@@ -3340,7 +3340,7 @@ Verify:
 
 ---
 
-## RULE 43 â€” TRUE E2E DATABASE ISOLATION / LIFECYCLE
+## RULE 43 — TRUE E2E DATABASE ISOLATION / LIFECYCLE
 
 Verify:
 
@@ -3358,7 +3358,7 @@ Verify no production/dev DB reuse and no database mocking.
 
 ---
 
-## RULE 44 â€” CENTRAL RATE LIMIT TIERS
+## RULE 44 — CENTRAL RATE LIMIT TIERS
 
 Verify:
 
@@ -3372,7 +3372,7 @@ Verify:
 
 ---
 
-## RULE 45 â€” WEBHOOK SIGNATURE / REPLAY PROTECTION
+## RULE 45 — WEBHOOK SIGNATURE / REPLAY PROTECTION
 
 Verify:
 
@@ -3385,7 +3385,7 @@ Verify:
 
 ---
 
-## RULE 46 â€” INPUT SANITIZATION
+## RULE 46 — INPUT SANITIZATION
 
 Verify:
 
@@ -3398,7 +3398,7 @@ Verify:
 
 ---
 
-## RULE 47 â€” CIRCUIT BREAKERS
+## RULE 47 — CIRCUIT BREAKERS
 
 For outbound external services verify:
 
@@ -3412,7 +3412,7 @@ For outbound external services verify:
 
 ---
 
-## RULE 48 â€” CQRS LITE
+## RULE 48 — CQRS LITE
 
 Verify separation of:
 
@@ -3428,7 +3428,7 @@ Commands must not become giant read aggregators.
 
 ---
 
-## RULE 49 â€” EXPLICIT MODULE DEPENDENCY GRAPH
+## RULE 49 — EXPLICIT MODULE DEPENDENCY GRAPH
 
 Verify:
 
@@ -3443,7 +3443,7 @@ Verify:
 
 ---
 
-## RULE 50 â€” EVENT NAMING
+## RULE 50 — EVENT NAMING
 
 Verify event names follow the central convention exactly.
 
@@ -3458,7 +3458,7 @@ Check:
 
 ---
 
-## RULE 51 â€” API CHANGELOG / DEPRECATION
+## RULE 51 — API CHANGELOG / DEPRECATION
 
 Verify:
 
@@ -3473,7 +3473,7 @@ A changed response field without changelog/deprecation handling is a governance 
 
 ---
 
-## RULE 52 â€” JWT REFRESH ROTATION / REVOCATION
+## RULE 52 — JWT REFRESH ROTATION / REVOCATION
 
 For auth modules verify:
 
@@ -3489,7 +3489,7 @@ This is security-critical code and must also pass the human-review gate.
 
 ---
 
-## RULE 53 â€” SENSITIVE FIELD ENCRYPTION AT REST
+## RULE 53 — SENSITIVE FIELD ENCRYPTION AT REST
 
 Identify fields requiring encryption at rest.
 
@@ -3505,7 +3505,7 @@ Verify:
 
 ---
 
-## RULE 54 â€” BRUTE FORCE / ACCOUNT LOCKOUT
+## RULE 54 — BRUTE FORCE / ACCOUNT LOCKOUT
 
 For authentication entry points verify:
 
@@ -3519,7 +3519,7 @@ For authentication entry points verify:
 
 ---
 
-## RULE 55 â€” DETERMINISTIC SEED DATA
+## RULE 55 — DETERMINISTIC SEED DATA
 
 Verify:
 
@@ -3531,7 +3531,7 @@ Verify:
 
 ---
 
-## RULE 56 â€” REPOSITORY NULL SAFETY
+## RULE 56 — REPOSITORY NULL SAFETY
 
 Verify repository contracts distinguish:
 
@@ -3546,7 +3546,7 @@ Verify return types and call-site handling are explicit.
 
 ---
 
-## RULE 57 â€” ASYNCLOCALSTORAGE / REQUEST CONTEXT
+## RULE 57 — ASYNCLOCALSTORAGE / REQUEST CONTEXT
 
 Verify tenant/request/trace context propagation through:
 
@@ -3562,7 +3562,7 @@ Detect context loss between asynchronous callbacks/promises/jobs.
 
 ---
 
-## RULE 58 â€” BASE ENTITY ABSTRACTION
+## RULE 58 — BASE ENTITY ABSTRACTION
 
 Where the architecture defines a BaseEntity, verify:
 
@@ -3575,7 +3575,7 @@ Where the architecture defines a BaseEntity, verify:
 
 ---
 
-## RULE 59 â€” RESPONSE TIME SLA CATEGORIES
+## RULE 59 — RESPONSE TIME SLA CATEGORIES
 
 Verify:
 
@@ -3589,7 +3589,7 @@ Do not make unsupported runtime timing claims without runtime evidence.
 
 ---
 
-## RULE 60 â€” FOREIGN KEY NAMING
+## RULE 60 — FOREIGN KEY NAMING
 
 Verify exact FK names in:
 
@@ -3602,7 +3602,7 @@ No random ORM-generated FK names when explicit names are required.
 
 ---
 
-## RULE 61 â€” DLQ
+## RULE 61 — DLQ
 
 Every retry-exhausted background job must have an appropriate DLQ where required.
 
@@ -3618,7 +3618,7 @@ Verify:
 
 ---
 
-## RULE 62 â€” EXPLICIT RETURN TYPES
+## RULE 62 — EXPLICIT RETURN TYPES
 
 Verify all service methods have explicit return types where required.
 
@@ -3626,7 +3626,7 @@ Do not accept inferred `any`/broad return types as a substitute.
 
 ---
 
-## RULE 63 â€” DB CONNECTION POOL
+## RULE 63 — DB CONNECTION POOL
 
 Verify:
 
@@ -3640,7 +3640,7 @@ Verify:
 
 ---
 
-## RULE 64 â€” MACHINE-READABLE ERROR CODES
+## RULE 64 — MACHINE-READABLE ERROR CODES
 
 Verify:
 
@@ -3653,7 +3653,7 @@ Verify:
 
 ---
 
-## RULE 65 â€” FILE UPLOAD SECURITY
+## RULE 65 — FILE UPLOAD SECURITY
 
 Verify:
 
@@ -3670,7 +3670,7 @@ Verify:
 
 ---
 
-## RULE 66 â€” TABLE NAMING
+## RULE 66 — TABLE NAMING
 
 Verify:
 
@@ -3682,7 +3682,7 @@ Verify:
 
 ---
 
-## RULE 67 â€” MUTUAL CONTRACT FREEZE
+## RULE 67 — MUTUAL CONTRACT FREEZE
 
 Verify:
 
@@ -3694,7 +3694,7 @@ Verify:
 
 ---
 
-## RULE 68 â€” HEALTH CHECK DEPTH
+## RULE 68 — HEALTH CHECK DEPTH
 
 When multiple health levels are defined, verify the correct distinction, for example:
 
@@ -3708,7 +3708,7 @@ Do not equate `/health` existence with complete health-probe compliance.
 
 ---
 
-## RULE 69 â€” STRICT TSCONFIG
+## RULE 69 — STRICT TSCONFIG
 
 Inspect `tsconfig.json` and applicable build configs.
 
@@ -3723,7 +3723,7 @@ Verify required strictness including:
 
 ---
 
-## RULE 70 â€” NO RAW ANY FROM ORM
+## RULE 70 — NO RAW ANY FROM ORM
 
 Search for:
 
@@ -3739,7 +3739,7 @@ Verify explicit domain/DTO mapping.
 
 ---
 
-## RULE 71 â€” UTC STORAGE
+## RULE 71 — UTC STORAGE
 
 Verify:
 
@@ -3751,7 +3751,7 @@ Verify:
 
 ---
 
-## RULE 72 â€” PER-ENDPOINT PAYLOAD SIZE LIMITS
+## RULE 72 — PER-ENDPOINT PAYLOAD SIZE LIMITS
 
 Verify:
 
@@ -3763,7 +3763,7 @@ Verify:
 
 ---
 
-## RULE 73 â€” CURRENCY / NUMBER CONTRACT
+## RULE 73 — CURRENCY / NUMBER CONTRACT
 
 Verify:
 
@@ -3776,7 +3776,7 @@ Verify:
 
 ---
 
-## RULE 74 â€” MECHANICAL ISOLATION TOOLING GATE
+## RULE 74 — MECHANICAL ISOLATION TOOLING GATE
 
 Inspect tooling that mechanically enforces architecture where supplied.
 
@@ -3793,7 +3793,7 @@ Architecture that is only â€œdocumentedâ€� but mechanically unguarded s
 
 ---
 
-## RULE 75 â€” FILE-SIZE CEILINGS
+## RULE 75 — FILE-SIZE CEILINGS
 
 Measure relevant source files against architecture-defined hard ceilings.
 
@@ -3807,7 +3807,7 @@ Flag:
 
 ---
 
-## RULE 76 â€” FILE RESPONSIBILITY CONTRACT
+## RULE 76 — FILE RESPONSIBILITY CONTRACT
 
 Verify every file has one clear responsibility.
 
@@ -3820,7 +3820,7 @@ Detect:
 
 ---
 
-## RULE 77 â€” DEPENDENCY-ADDITION GUARDRAIL
+## RULE 77 — DEPENDENCY-ADDITION GUARDRAIL
 
 For new packages verify:
 
@@ -3835,7 +3835,7 @@ For new packages verify:
 
 ---
 
-## RULE 78 â€” FORBIDDEN PATTERNS DOCUMENT
+## RULE 78 — FORBIDDEN PATTERNS DOCUMENT
 
 Verify each module's `_forbidden.md` exists and is accurate.
 
@@ -3843,7 +3843,7 @@ Check source for every forbidden pattern actually listed.
 
 ---
 
-## RULE 79 â€” DATA FLOW DIRECTION COMMENTS
+## RULE 79 — DATA FLOW DIRECTION COMMENTS
 
 Where mandated, verify source files contain concise AI-context comments showing:
 
@@ -3861,7 +3861,7 @@ Comments must describe actual ownership and not be decorative.
 
 ---
 
-## RULE 80 â€” JSDOC
+## RULE 80 — JSDOC
 
 Verify required JSDoc exists on:
 
@@ -3874,7 +3874,7 @@ Check that JSDoc is meaningful and matches current behavior.
 
 ---
 
-## RULE 81 â€” MOCK-FIRST / STUB-FIRST WORKFLOW
+## RULE 81 — MOCK-FIRST / STUB-FIRST WORKFLOW
 
 Verify when feature workflow requires it:
 
@@ -3894,7 +3894,7 @@ Do not treat mock data as real backend proof.
 
 ---
 
-## RULE 82 â€” DISCRIMINATED UNION RESPONSE SHAPE
+## RULE 82 — DISCRIMINATED UNION RESPONSE SHAPE
 
 Verify one stable `data` shape per endpoint and explicit type discrimination where applicable.
 
@@ -3902,7 +3902,7 @@ Reject ambiguous runtime response shapes.
 
 ---
 
-## RULE 82A â€” COMPLETE FRONTEND UI DATA CONTRACT
+## RULE 82A — COMPLETE FRONTEND UI DATA CONTRACT
 
 Verify backend response DTO contains ALL UI-required data:
 
@@ -3918,7 +3918,7 @@ The frontend must not be forced to reconstruct required business semantics.
 
 ---
 
-## RULE 83 â€” CENTRAL RBAC / PERMISSION GUARDS
+## RULE 83 — CENTRAL RBAC / PERMISSION GUARDS
 
 Verify:
 
@@ -3931,7 +3931,7 @@ Verify:
 
 ---
 
-## RULE 84 â€” NO BARREL FILES / RE-EXPORT INDEX
+## RULE 84 — NO BARREL FILES / RE-EXPORT INDEX
 
 Search for:
 
@@ -3945,7 +3945,7 @@ Reject where prohibited.
 
 ---
 
-## RULE 85 â€” GUARD CLAUSE / EARLY RETURN
+## RULE 85 — GUARD CLAUSE / EARLY RETURN
 
 Review service methods for nested conditional complexity.
 
@@ -3957,7 +3957,7 @@ Where the architecture requires guard clauses:
 
 ---
 
-## RULE 86 â€” METHOD NAMING
+## RULE 86 — METHOD NAMING
 
 Verify service/repository verbs exactly follow the supplied convention.
 
@@ -3978,7 +3978,7 @@ Reject arbitrary generic method names when prohibited.
 
 ---
 
-## RULE 87 â€” METHOD SINGLE RESPONSIBILITY / 20-LINE SOFT CEILING
+## RULE 87 — METHOD SINGLE RESPONSIBILITY / 20-LINE SOFT CEILING
 
 Measure service method bodies.
 
@@ -3991,7 +3991,7 @@ Flag:
 
 ---
 
-## RULE 88 â€” IMPORT ORDER
+## RULE 88 — IMPORT ORDER
 
 Verify exact ordering:
 
@@ -4009,7 +4009,7 @@ Verify ESLint mechanically enforces this.
 
 ---
 
-## RULE 89 â€” DOMAIN OBJECT / ORM ENTITY SEPARATION
+## RULE 89 — DOMAIN OBJECT / ORM ENTITY SEPARATION
 
 Verify:
 
@@ -4025,7 +4025,7 @@ No unified model shortcut.
 
 ---
 
-## RULE 90 â€” SECURITY CI/CD GATES
+## RULE 90 — SECURITY CI/CD GATES
 
 Inspect CI config for:
 
@@ -4038,7 +4038,7 @@ Inspect CI config for:
 
 ---
 
-## RULE 91 â€” PRE-COMMIT GATES
+## RULE 91 — PRE-COMMIT GATES
 
 Inspect Husky/pre-commit configuration.
 
@@ -4053,7 +4053,7 @@ Verify:
 
 ---
 
-## RULE 92 â€” ORM RAW INPUT INJECTION
+## RULE 92 — ORM RAW INPUT INJECTION
 
 Search for:
 
@@ -4067,7 +4067,7 @@ Verify allowlists live in module constants.
 
 ---
 
-## RULE 93 â€” HUMAN REVIEW FOR SECURITY-CRITICAL AI CODE
+## RULE 93 — HUMAN REVIEW FOR SECURITY-CRITICAL AI CODE
 
 Flag required human review for:
 
@@ -4088,7 +4088,7 @@ This is a merge governance requirement, not something an AI may self-certify.
 
 ---
 
-## RULE 94 â€” CANONICAL PAGINATION META
+## RULE 94 — CANONICAL PAGINATION META
 
 Verify exact `PaginationMeta` shape:
 
@@ -4113,7 +4113,7 @@ Verify:
 
 ---
 
-## RULE 95 â€” ENUM-DRIVEN ENTITY STATES
+## RULE 95 — ENUM-DRIVEN ENTITY STATES
 
 Verify finite entity states use declared enums:
 
@@ -4134,7 +4134,7 @@ Check:
 
 ---
 
-## RULE 96 â€” CENTRAL SCHEDULED JOB INVENTORY
+## RULE 96 — CENTRAL SCHEDULED JOB INVENTORY
 
 Verify:
 
@@ -4148,7 +4148,7 @@ Verify:
 
 ---
 
-## RULE 97 â€” TIMEOUT POLICY
+## RULE 97 — TIMEOUT POLICY
 
 Verify:
 
@@ -4164,7 +4164,7 @@ Reject raw external calls with no timeout where architecture forbids them.
 
 ---
 
-## RULE 98 â€” STRUCTURED VALIDATION ERROR
+## RULE 98 — STRUCTURED VALIDATION ERROR
 
 Verify exact:
 
@@ -4187,7 +4187,7 @@ Nested paths use dot notation where required.
 
 ---
 
-## RULE 99 â€” IMMUTABLE SERVICE / REPOSITORY MUTATION BOUNDARY
+## RULE 99 — IMMUTABLE SERVICE / REPOSITORY MUTATION BOUNDARY
 
 Verify:
 
@@ -4200,7 +4200,7 @@ Verify:
 
 ---
 
-## RULE 100 â€” DATABASE CONSTRAINT NAMES
+## RULE 100 — DATABASE CONSTRAINT NAMES
 
 Verify exact patterns for:
 
@@ -4221,7 +4221,7 @@ Verify:
 
 ---
 
-## RULE 101 â€” TEST INTEGRITY / NO FALSE PASS
+## RULE 101 — TEST INTEGRITY / NO FALSE PASS
 
 For every important test verify it would fail if the claimed behavior were broken.
 
@@ -4237,7 +4237,7 @@ Reject:
 
 ---
 
-## RULE 102 â€” TABLE PREFIXING
+## RULE 102 — TABLE PREFIXING
 
 Verify explicit non-shared table prefixing for monolith sub-domains.
 
@@ -4245,12 +4245,12 @@ Verify shared tables remain explicitly central and are not accidentally duplicat
 
 ---
 
-## RULE-NUMBERING GAP / SOURCE INTEGRITY â€” DYNAMIC
+## RULE-NUMBERING GAP / SOURCE INTEGRITY — DYNAMIC
 
 The auditor MUST discover numbering gaps dynamically from the supplied authoritative
 architecture document.
 
-Do NOT hardcode any particular missing range such as `103â€“111`.
+Do NOT hardcode any particular missing range such as `103–111`.
 
 If the supplied document contains a gap:
 
@@ -4493,47 +4493,76 @@ Flag endpoints that combine unrelated KPI/chart/table workloads when the archite
 
 
 ## RULE 115 — AI-CONTEXTUAL DOCSTRINGS
+
 Verify:
-- Code Constructs (Classes, Controllers, Service Methods, DTOs, Entities) have exhaustive JSDoc block comments.
-- Database Columns have schema/migration field documentation or entity @Column({ comment: '...' }).
-- Config Variables are documented in config schema (e.g., Joi/Zod, .env.example).
-- Each AI note includes: primary intent, edge cases, side-effects, and routing instructions for future AIs.
+
+- Classes / methods / DTOs / services / controllers → JSDoc block comments.
+
+- Database columns → entity `@Column({ comment: '...' })` and schema/migration documentation.
+
+- Config variables → Joi/Zod configuration-schema documentation and `.env.example` annotations.
+
+- All of the above MUST include: Intent + Edge Cases + Side Effects + AI Notes (primary intent, edge cases, side-effects, routing instructions for future AIs).
 
 ---
 
 ## RULE 116 — MCP-READY API DESIGN
+
 Verify:
-- Every REST endpoint is annotated.
-- Every DTO is annotated.
-- Every Response object/schema is heavily annotated using Swagger/OpenAPI decorators.
-- swagger.json is strictly typed with no missing fields.
+
+- Every REST endpoint is heavily annotated (`@ApiTags`, `@ApiOperation`, `@ApiResponse`).
+
+- Every DTO is heavily annotated (`@ApiProperty` on every field).
+
+- Every Response object/schema is explicitly defined and heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, typed generics). No `any` return types.
+
+- The resulting `swagger.json` is 100% strictly typed with no missing fields, no implicit `any` schemas.
 
 ---
 
 ## RULE 117 — RAG-READY API PROJECTIONS
+
 Verify (if applicable):
-- Endpoints return text-heavy data optimized for LLM consumption.
-- Data structures are chunkable.
+
+- Module exposes a dedicated `/api/_rag/` namespace or `?format=rag` query param for AI/Chatbot consumers.
+
+- RAG endpoints return flattened, token-optimized text/markdown representations, NOT raw deep JSON.
+
+- Data structures are chunkable and avoid UUIDs/timestamps as the primary content.
 
 ---
 
 ## RULE 118 — EVENT-DRIVEN IMMUTABLE ANALYTICS
+
 Verify:
-- Critical entity changes use a zero-overwrite strategy.
-- Instead of mutating historical facts, append an event.
+
+- Critical entity changes (Billing, Attendance, Subscription, Member Lifecycle) use a zero-overwrite strategy.
+
+- Instead of mutating historical facts, append an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`).
+
+- Events are emitted to a message broker (Redis Streams / Kafka) AND stored in an append-only `events_log` or timeseries table.
+
+- Analytics queries MUST read from the immutable event log (CQRS read-replica), NOT the live transactional DB.
 
 ---
 
 ## RULE 119 — DOUBLE-ENTRY FINANCIAL LEDGER
+
 Verify:
-- Never update financial balances directly (e.g., UPDATE ... SET balance = balance - 500).
-- Immutable ledger pattern: inserting rows for DEBIT and CREDIT.
-- Corrections require reversal journal entries.
-- Transactions guarantee 	otal_debits == total_credits.
+
+- No direct balance UPDATE (e.g., `UPDATE ... SET balance = balance - 500`) anywhere in the codebase.
+
+- Immutable ledger pattern: every monetary transaction inserts DEBIT + CREDIT rows into `ledger_entries`.
+
+- Schema enforces: `journal_id` (atomicity), `account_id`, `direction` (DEBIT | CREDIT), `amount_minor_units` (always > 0).
+
+- Each transaction guarantees `total_debits == total_credits` (enforced transactionally).
+
+- Corrections require reversal journal entries; ledger rows are immutable (no UPDATE or DELETE).
 
 ---
 
-# 47D. STAGE 2Z-D â€” INTERNAL ARCHITECTURE DOCUMENT CONSISTENCY AUDIT
+# 47D. STAGE 2Z-D — INTERNAL ARCHITECTURE DOCUMENT CONSISTENCY AUDIT
 
 The normative backend documentation itself MUST be internally coherent.
 
@@ -4575,7 +4604,7 @@ Do not silently invent precedence.
 
 ---
 
-# 47E. STAGE 2Z-E â€” CROSS-CUTTING SECURITY / DATA / OPERATIONS SWEEP
+# 47E. STAGE 2Z-E — CROSS-CUTTING SECURITY / DATA / OPERATIONS SWEEP
 
 Perform one additional independent sweep focused on failures that can survive feature-level checks.
 
@@ -4658,7 +4687,7 @@ The sweep MUST be independent from earlier findings so it can catch omissions ca
 
 ---
 
-# 47F. STAGE 2Z-F â€” ARCHITECTURE RULE COVERAGE INTEGRITY
+# 47F. STAGE 2Z-F — ARCHITECTURE RULE COVERAGE INTEGRITY
 
 Before Stage 2 ends, prove:
 
@@ -4870,7 +4899,7 @@ Every checked item must match current code and current architecture.
 
 ---
 
-# 47I. DOCUMENTATION QUALITY FAILURE CONDITIONS â€” EXACT
+# 47I. DOCUMENTATION QUALITY FAILURE CONDITIONS — EXACT
 
 Mark Rule 19/documentation quality as FAIL when any applicable source condition is present:
 
@@ -4965,13 +4994,13 @@ PROMPT_EXAMPLE_NOT_AUTHORITATIVE
 
 Do not create a finding solely because the implementation differs from an illustrative example.
 
-# 48. STAGE 2Z â€” BACKEND ARCHITECTURE RULE-BY-RULE AUDIT
+# 48. STAGE 2Z — BACKEND ARCHITECTURE RULE-BY-RULE AUDIT
 
 Read the COMPLETE supplied backend instruction.
 
 Construct a rule ledger for EVERY numbered rule contained in it.
 
-Do NOT assume the number is always exactly 1â€“101.
+Do NOT assume the number is always exactly 1–101.
 
 Discover the actual numbering in the supplied file.
 
@@ -5535,7 +5564,7 @@ Do NOT claim a complete zero-sampling audit.
 
 Use:
 
-## P0 â€” CRITICAL
+## P0 — CRITICAL
 
 Examples:
 
@@ -5547,7 +5576,7 @@ Examples:
 * corrupted data risk;
 * irreversible mutation without required protection.
 
-## P1 â€” HIGH
+## P1 — HIGH
 
 Examples:
 
@@ -5558,7 +5587,7 @@ Examples:
 * critical async lifecycle missing;
 * missing transaction or side effect.
 
-## P2 â€” MEDIUM
+## P2 — MEDIUM
 
 Examples:
 
@@ -5568,7 +5597,7 @@ Examples:
 * documentation drift affecting AI maintainability;
 * missing non-critical test.
 
-## P3 â€” LOW
+## P3 — LOW
 
 Examples:
 
@@ -6147,7 +6176,7 @@ Wait for:
 
 ---
 
-# 83. STAGE 3 â€” FINAL ACCEPTANCE / VERDICT
+# 83. STAGE 3 — FINAL ACCEPTANCE / VERDICT
 
 Only start after:
 
@@ -6214,11 +6243,11 @@ Before producing the final verdict, verify:
 [ ] Relevant authored files inspected
 [ ] Exclusions recorded
 [ ] Unreadable files recorded
-[ ] Rule 0A â€” AI repair boundary is FEATURE MODULE not role container verified
-[ ] Rule 0B â€” Hard feature write boundary (no sibling coupling) verified
-[ ] Rule 0C â€” Change scope failure conditions checked
-[ ] Rule 0D â€” All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ exception verified)
-[ ] Rule 0E â€” Feature modules do not independently bootstrap global infrastructure
+[ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
+[ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
+[ ] Rule 0C — Change scope failure conditions checked
+[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ exception verified)
+[ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
 [ ] Frozen requirement baseline created
@@ -6274,29 +6303,33 @@ Before producing the final verdict, verify:
 [ ] Every dynamically discovered backend architecture rule checked
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
-[ ] Rule 78 â€” _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
-[ ] Rule 79 â€” Explicit data flow direction comment in every non-trivial service/orchestrator method
-[ ] Rule 80 â€” JSDoc present on ALL service methods, repositories, and utilities
-[ ] Rule 82A â€” Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
-[ ] Rule 101 â€” Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
-[ ] Rule 102 â€” Database tables are prefixed correctly in monolith
+[ ] Rule 78 — _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
+[ ] Rule 79 — Explicit data flow direction comment in every non-trivial service/orchestrator method
+[ ] Rule 80 — JSDoc present on ALL service methods, repositories, and utilities
+[ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
+[ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
+[ ] Rule 102 — Database tables are prefixed correctly in monolith
 [ ] Rule 103 - Strict mutational idempotency (@RequireIdempotencyKey) on all state-changing endpoints
 [ ] Rule 104 - WebSockets are horizontally scalable (Redis adapter, no in-process state)
 [ ] Rule 105 - Role-based data serialization and field masking applied
 [ ] Rule 106 - Cache invalidation strategy is strict and consistent
-[ ] Rule 107 â€” i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
-[ ] Rule 108 â€” Feature flags are centralized
-[ ] Rule 109 â€” Multi-currency amounts stored as integer minor units; currency code stored separately
-[ ] Rule 110 â€” Tenant data export and offboarding endpoint exists
-[ ] Rule 111 â€” Persistent WebSockets for notifications; Transactional outbox/relay; offline recovery via REST
-[ ] Rule 112 â€” E2E and Selenium tests are completely isolated; no cross-module test imports
-[ ] Rule 113 â€” No AI runtime verification requirement violated
-[ ] Rule 114 â€” No Mega API; dashboard APIs are decomposed
-[ ] Rule 115 â€” Exhaustive JSDoc docstrings on every class/method
-[ ] Rule 116 â€” MCP-Ready API Design; exhaustive OpenAPI/Swagger decorators
-[ ] Rule 117 â€” RAG-ready projections for LLM features (if applicable)
-[ ] Rule 118 â€” Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
-[ ] Rule 119 â€” Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
+[ ] Rule 107 — i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
+[ ] Rule 108 — Feature flags are centralized
+[ ] Rule 109 — Multi-currency amounts stored as integer minor units; currency code stored separately
+[ ] Rule 110 — Tenant data export and offboarding endpoint exists
+[ ] Rule 111 — Persistent WebSockets for notifications; Transactional outbox/relay; offline recovery via REST
+[ ] Rule 112 — E2E and Selenium tests are completely isolated; no cross-module test imports
+[ ] Rule 113 — No AI runtime verification requirement violated
+[ ] Rule 114 — No Mega API; dashboard APIs are decomposed
+[ ] Rule 115 — Exhaustive JSDoc docstrings on every class/method/DTO/column
+
+[ ] Rule 116 — MCP-Ready API Design; exhaustive OpenAPI/Swagger decorators including Response objects
+
+[ ] Rule 117 — RAG-ready projections for LLM features (if applicable)
+
+[ ] Rule 118 — Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
+
+[ ] Rule 119 — Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
 [ ] Tests checked for behavioral integrity
 [ ] Documentation checked against implementation
 [ ] Shared/outside-scope dependencies classified
@@ -6317,8 +6350,8 @@ Before producing the final verdict, verify:
 [ ] Source numbering gaps discovered dynamically
 [ ] Special/non-numeric architecture gates included
 [ ] Prompt examples not treated as authoritative project requirements
-[ ] MODULAR MONOLITH SCOPE BOUNDARY respected â€” app.module.ts, main.ts, package.json, tsconfig.json, .env, nest-cli.json NOT flagged as missing in a single feature module ZIP
-[ ] MODE DECISION correctly applied â€” if no backend ZIP supplied â†’ MODE A (CREATE); if backend ZIP supplied â†’ MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
+[ ] MODULAR MONOLITH SCOPE BOUNDARY respected — app.module.ts, main.ts, package.json, tsconfig.json, .env, nest-cli.json NOT flagged as missing in a single feature module ZIP
+[ ] MODE DECISION correctly applied — if no backend ZIP supplied â†’ MODE A (CREATE); if backend ZIP supplied â†’ MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
 ```
 
 If any item is not satisfied, do not claim a fully verified audit.
@@ -6429,7 +6462,7 @@ Show contradictions found inside the supplied normative documentation.
 
 ## 13C. EXHAUSTIVE ARCHITECTURE RULE COVERAGE
 
-Show the dynamic complete rule ledger, including non-contiguous identifiers and special 0Aâ€“0E gates.
+Show the dynamic complete rule ledger, including non-contiguous identifiers and special 0A–0E gates.
 
 ## 14. Repair Order
 
@@ -6445,7 +6478,7 @@ Exact binary DONE criteria.
 
 ## 17. Final Verdict
 
-Use the four-axis verdict (applies to the created backend in Mode A or the repaired backend in Mode B):
+Use the Multi-Axis Final Verdict (applies to the created backend in Mode A or the repaired backend in Mode B):
 
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS
@@ -6469,7 +6502,8 @@ SCOPE / EVIDENCE COMPLETENESS
 During the alignment and backend audit, you MUST explicitly verify the following Agentic/Enterprise rules:
 
 1. **AI Docstrings (Rule 115):** Verify every Class, Controller, DTO, Entity, and Service method has a detailed multi-line Docstring capturing Intent, Edge Cases, and AI Notes.
-2. **MCP-Ready APIs (Rule 116):** Verify all REST endpoints and DTOs have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
+
+2. **MCP-Ready APIs (Rule 116):** Verify all REST endpoints, DTOs, and Response Objects have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
 3. **RAG-Ready Projections (Rule 117):** If the module serves Chatbot/AI features, verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
 4. **Immutable Analytics (Rule 118):** For critical entity changes (Billing, Subscriptions, Attendance...etc), verify the backend uses a Zero-Overwrite strategy (emitting domain events to a log/message broker) instead of erasing historical state via standard CRUD updates.
 5. **Double-Entry Ledger (Rule 119):** For ALL financial or wallet mutations, verify the code never updates a balance directly (e.g. `UPDATE balance = balance - X`). It MUST write paired Debit/Credit rows into a `ledger_entries` table.
@@ -6521,6 +6555,12 @@ Files MUST follow the exact project naming pattern:
 
 ```
 backend_e2e/
+  backend_[role]_e2e/
+    _test_forbidden.md                <-- E2E forbidden patterns doc
+    [module]/
+      test_[role]_[module]_api.py       <-- End-to-End API endpoint logic test
+
+backend_selenium/
   backend_[role]_selenium/
     [module]/
       test_[role]_[module]_ui.py        â†� Selenium UI flow tests
@@ -6531,14 +6571,14 @@ backend_e2e/
 Examples:
 
 ```
-backend_e2e/backend_admin_selenium/members/test_admin_members_ui.py
-backend_e2e/backend_admin_selenium/members/test_admin_members_ui_edge.py
-backend_e2e/backend_trainer_selenium/attendance/test_trainer_attendance_ui.py
+backend_selenium/backend_admin_selenium/members/test_admin_members_ui.py
+backend_selenium/backend_admin_selenium/members/test_admin_members_ui_edge.py
+backend_selenium/backend_trainer_selenium/attendance/test_trainer_attendance_ui.py
 ```
 
 ### What Each Selenium Test File MUST Cover
 
-#### `test_[role]_[module]_ui.py` â€” Happy Path Flows
+#### `test_[role]_[module]_ui.py` — Happy Path Flows
 
 For every major user-facing feature, cover the complete happy path:
 
@@ -6558,7 +6598,7 @@ Each test MUST:
 * use real browser automation (Selenium WebDriver);
 * start from a fresh authenticated session;
 * navigate to the actual route;
-* use real element locators (by data-testid, aria-label, role, or visible text â€” in that priority order);
+* use real element locators (by data-testid, aria-label, role, or visible text — in that priority order);
 * assert on visible UI content, not internal state;
 * verify the result after each action;
 * include a backup locator using CSS selector or XPath as a fallback;
@@ -6579,7 +6619,7 @@ Mandatory happy-path flows to cover (where applicable to the supplied module):
 * tabs: click tab â†’ content changes;
 * modal/drawer: open â†’ interact â†’ close â†’ original state preserved.
 
-#### `test_[role]_[module]_ui_edge.py` â€” Edge Cases and Negative Flows
+#### `test_[role]_[module]_ui_edge.py` — Edge Cases and Negative Flows
 
 For every major feature, cover:
 
@@ -6593,12 +6633,14 @@ For every major feature, cover:
 * duplicate submit: submit twice â†’ only one record created (idempotency test);
 * session expiry: token expires â†’ redirect to login (where applicable).
 
-#### `_test_forbidden.md` â€” Selenium Forbidden Patterns
+#### `_test_forbidden.md` — E2E & Selenium Forbidden Patterns
+
+Create this file in BOTH `backend_e2e/backend_[role]_e2e/` AND `backend_selenium/backend_[role]_selenium/` to enforce test isolation rules.
 
 Document at least 5 patterns that Selenium tests in this module MUST NEVER do:
 
 ```markdown
-# [Role] [Module] â€” Selenium Test Forbidden Patterns
+# [Role] [Module] — Selenium Test Forbidden Patterns
 
 ## FORBIDDEN-1: [Pattern Name]
 Pattern: [exact forbidden pattern]
@@ -6611,12 +6653,12 @@ Rule: [reference]
 Examples of forbidden Selenium patterns:
 
 * using `time.sleep()` for synchronization instead of explicit waits;
-* hardcoding production URLs â€” must use the base URL from config;
+* hardcoding production URLs — must use the base URL from config;
 * sharing state between test classes without resetting;
-* testing internal React/Next.js state directly â€” only assert visible UI;
+* testing internal React/Next.js state directly — only assert visible UI;
 * using element IDs that are auto-generated and non-deterministic;
 * importing locators from another module's test file (WET rule);
-* asserting API response bodies â€” that belongs in E2E pytest, not Selenium;
+* asserting API response bodies — that belongs in E2E pytest, not Selenium;
 * modifying the database directly from a Selenium test.
 
 ### Selenium Test Structure Requirements
@@ -6627,7 +6669,7 @@ Each test file MUST:
 # RESPONSIBILITY: [what this test file validates in one sentence]
 # FLOW: [Browser â†’ Route â†’ UI Interaction â†’ Assert Visible Result]
 # MODULE: [role]_[module]
-# RULE: Rule 112 â€” Complete E2E/Selenium isolation
+# RULE: Rule 112 — Complete E2E/Selenium isolation
 
 import pytest
 from selenium import webdriver
@@ -6635,7 +6677,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import os`nBASE_URL = os.getenv("E2E_BASE_URL", "http://localhost:3000")
+import os
+BASE_URL = os.getenv("E2E_BASE_URL", "http://localhost:3000")
 
 class Test[Role][Module]UI:
     """Happy path Selenium flows for [role] [module]."""
@@ -6672,18 +6715,25 @@ In Stage 3, create the actual Selenium test files alongside the final audit:
 
 ```
 stage_3_final_verdict.md
-backend_e2e/backend_[role]_selenium/[module]/test_[role]_[module]_ui.py
-backend_e2e/backend_[role]_selenium/[module]/test_[role]_[module]_ui_edge.py
-backend_e2e/backend_[role]_selenium/_test_forbidden.md
+
+backend_e2e/backend_[role]_e2e/[module]/test_[role]_[module]_api.py
+
+backend_e2e/backend_[role]_e2e/_test_forbidden.md
+
+backend_selenium/backend_[role]_selenium/[module]/test_[role]_[module]_ui.py
+
+backend_selenium/backend_[role]_selenium/[module]/test_[role]_[module]_ui_edge.py
+
+backend_selenium/backend_[role]_selenium/_test_forbidden.md
 ```
 
 These files are DELIVERABLES, not optional suggestions.
 
-The Selenium files MUST follow Rule 112 exactly â€” no cross-module imports, no shared utilities, self-contained, behavioral assertions only.
+The Selenium files MUST follow Rule 112 exactly — no cross-module imports, no shared utilities, self-contained, behavioral assertions only.
 
 ---
 
-## 86.6 COMPLETE-BEFORE-DELIVER RULE â€” NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
+## 86.6 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
 
 > â›” THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
 
@@ -6709,7 +6759,7 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
         â†“
 [SILENT PHASE] Verify every checklist item passes
         â†“
-[SINGLE OUTPUT] Deliver everything at once â€” ONE final output
+[SINGLE OUTPUT] Deliver everything at once — ONE final output
 ```
 
 ### Strict Rules
@@ -6718,13 +6768,13 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 
 2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the file", or any deliverable until the complete creation/repair is finished and verified.
 
-3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done â€” proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
+3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
 
 4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
 
 5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 112-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm every item passes.
 
-6. **The final delivery is ONE atomic output.** All backend files, the Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
+6. **The final delivery is ONE atomic output.** All backend files, the API E2E and Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
 
 ### What "Complete" Means Before You Deliver
 
@@ -6785,7 +6835,7 @@ The ZIP MUST contain:
 ```text
 INTEGRATION_GUIDE.md                     â†� mandatory integration instructions for the developer
 backend_{role}/                          â†� complete backend role module folder
-  [all source files â€” controllers,
+  [all source files — controllers,
    services, repos, DTOs, entities,
    migrations, seeds, tests, docs]
 stage_1_frontend_requirements.md         â†� requirements extracted from frontend ZIP
@@ -6801,7 +6851,7 @@ Everything in one ZIP. Nothing before. Nothing after.
 
 ---
 
-## 86.7 RE-AUDIT AFTER REPAIR â€” MANDATORY SECOND PASS
+## 86.7 RE-AUDIT AFTER REPAIR — MANDATORY SECOND PASS
 
 After ALL repairs from the Repair Order (Section 80) are complete, you MUST perform a mandatory second audit pass before delivering any output.
 
@@ -6840,7 +6890,7 @@ It is a targeted verification pass:
 Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 
 ```markdown
-# Re-Audit Result â€” [Role] [Module]
+# Re-Audit Result — [Role] [Module]
 
 ## Summary
 - Issues identified in Stage 2: [count]
@@ -6861,7 +6911,7 @@ RUNTIME VERIFICATION: ...
 OVERALL READINESS: ...
 
 ## Remaining Issues (if any)
-[If count > 0 â€” fix these before delivering]
+[If count > 0 — fix these before delivering]
 ```
 
 This file is a mandatory deliverable alongside the repaired code.
@@ -7045,9 +7095,9 @@ The V6 audit standard is exhaustive:
 - no invented architecture;
 - no endpoint-exists-only acceptance;
 - no frontend business-semantic reconstruction where backend support is required;
-- no frontend file created, edited, renamed, or deleted under any circumstances â€” the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
-- no Selenium test generation skipped â€” Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
-- no batch delivery â€” do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
-- no delivery without re-audit â€” after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
+- no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
+- no Selenium test generation skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
+- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
+- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
 
 

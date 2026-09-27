@@ -29,9 +29,9 @@ Because the project contains a 1-to-1 mapping of frontend and backend roles, the
 - **The Rule:** EVERY top-level backend role container or domain folder MUST be prefixed with `backend_`.
 - **Primary Examples:** `backend_admin/`, `backend_manager/`, `backend_superadmin/`.
 - **E2E / Selenium Testing Folders:** If tests are grouped in a separate root directory, the test root AND the role subfolders inside it MUST carry the namespace to maintain context.
-  - Example E2E: `src/backend_e2e/backend_admin_e2e/`, `src/backend_e2e/backend_manager_e2e/`
-  - Example Selenium: `src/backend_selenium/backend_admin_selenium/`
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/billing/` and `src/backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
+  - Example E2E: `backend_e2e/backend_admin_e2e/`, `backend_e2e/backend_manager_e2e/`
+  - Example Selenium: `backend_selenium/backend_admin_selenium/`
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/billing/` and `backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
 
 When fixing a bug in `backend_superadmin/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
@@ -199,7 +199,7 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 ## Framework Reference Appendix (Non-NestJS Projects Only)
 
 > **This section is a reference appendix for teams migrating from or using a non-NestJS stack.**
-> The primary standard in this document is **NestJS (TypeScript)**. All numbered rules (1–101)
+> The primary standard in this document is **NestJS (TypeScript)**. All numbered rules in this document (Rules 1–119)
 > above are NestJS-specific. If your project uses Django, Express, or Spring Boot, translate the
 > architectural *principles* (Extreme Isolation, Use-Case Driven Files, Repository Pattern,
 > DTO Isolation, Event-Driven Decoupling, Co-located Tests) to your framework's idioms using
@@ -1927,7 +1927,7 @@ Never emit a critical WebSocket event (like "Export Ready", "Payment Received", 
 1. **Save First:** Insert a record into the `Notifications` or `Chats` table within your database transaction.
 2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL WAL tailing via Listen-Notify) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
 3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
-4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions.
+4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions (subject only to the legal-erasure exception defined in Rule 29 / Rule 110).
 
 ## Rule 112 — Complete Isolation for E2E and Selenium Testing
 
@@ -1937,13 +1937,13 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ### Implementation Constraints
 
 1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
-   - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/`
-   - **Feature Level:** `src/backend_superadmin/dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/dashboard/`
+   - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/` (API) or `backend_selenium/backend_superadmin_selenium/` (UI)
+   - **Feature Level:** `src/backend_superadmin/dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/dashboard/` (UI)
    - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
 
-2. **Strict File Naming Convention:** Just like backend development files, every E2E and Selenium test file MUST be explicitly prefixed with the role and module name to prevent any ambiguity. Since these are Python (`pytest`) tests, they must start with `test_` for test discovery.
+2. **Strict File Naming Convention (Testing Filename Exception — Rule 2 Exemption):** Python test discovery requires the `test_` prefix. Therefore Rule 112 test files are exempt from the role/module-first filename rule (Rule 2) **only in the leading position**. The role and module MUST immediately follow `test_`. Just like backend development files, every E2E and Selenium test file MUST encode the role and module name to prevent any ambiguity.
    - **E2E (API) Format:** `test_[role]_[module]_api.py` (e.g., `test_superadmin_dashboard_api.py`)
    - **Selenium (UI) Format:** `test_[role]_[module]_ui.py` (e.g., `test_superadmin_dashboard_ui.py`)
    - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
@@ -1956,7 +1956,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
-5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing domain (e.g., `backend_admin_e2e`) MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries.
+5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing role container — both in `backend_e2e/backend_[role]_e2e/` and `backend_selenium/backend_[role]_selenium/` — MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables.
 
 6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
@@ -1984,9 +1984,12 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 ## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
-* **The Rule:** EVERY single construct in the codebase—Classes, Controllers, Service Methods, DTOs, Entities, Database Columns, Enums, and Config Variables—MUST have an exhaustive, multi-line docstring. 
+* **The Rule:** EVERY single construct in the codebase MUST carry exhaustive, multi-line documentation. The form varies by construct:
+  - **Classes / methods / DTOs / services / controllers** → JSDoc block comments
+  - **Database columns** → entity `@Column({ comment: '...' })` and schema/migration field documentation
+  - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
-* **What MUST be included:**
+* **What MUST be included in every documented construct:**
   1. **Primary Intent:** Deep explanation of the business context.
   2. **Edge Cases:** Explicit mapping of failure states and constraints.
   3. **Side-Effects:** Mention cache invalidations, webhooks, or event emissions.
