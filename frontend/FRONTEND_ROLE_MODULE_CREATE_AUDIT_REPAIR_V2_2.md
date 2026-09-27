@@ -716,14 +716,17 @@ Audit:
 
 Find:
 
+* INLINE CSS (e.g., `style={{ color: 'red' }}`) — absolutely forbidden
 * hardcoded theme colors
-* arbitrary Tailwind values
+* arbitrary Tailwind values (e.g., `text-[#FF5733]`)
 * undefined CSS variables
 * inconsistent design tokens
 * wrong icon usage
 * incorrect status colors
 * invalid z-index values
 * missing design-system behavior
+
+**ABSOLUTE THEME RULE:** Every single color, spacing, radius, and shadow MUST come from the design system tokens defined in `web_global_design.md` or Tailwind config. Tomorrow, if the user changes a primary color variable in the global CSS, the ENTIRE module must automatically reflect the change without touching any component files. If you find a hardcoded color or inline style, FAIL the audit and REPAIR it by replacing it with a semantic token.
 
 For every issue explain:
 
