@@ -7,7 +7,7 @@ import { ManagerCoreUnitOfWorkService } from '@/backend_manager/manager_core/man
 import { ManagerCoreConfigService } from '@/backend_manager/manager_core/manager_core_config/manager-core-config.service';
 import { CommunicationsDeliveryAdapter } from '@/backend_manager/manager_modules/communications/communications_adapters/manager-communications-delivery.adapter';
 import { CommunicationsDeliveryJobRepository } from '@/backend_manager/manager_modules/communications/communications_repositories/manager-communications-delivery-job.repository';
-import { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications-delivery.constants';
+import { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications.constants';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class ManagerCommunicationsProcessDeliveryJobsService {
   }
 
   /** Processes a claimed delivery job and persists success/retry/DLQ state. */
-  private async processClaimedJob(job: import('@/backend_manager/manager_modules/communications/manager-communications-delivery-job.entity').CommunicationsDeliveryJobEntity, actor: { id: string; role: import('@/backend_manager/manager_core/manager_core_auth/manager-core-role.constants').ManagerCoreRole }): Promise<void> {
+  private async processClaimedJob(job: import('@/backend_manager/manager_modules/communications/communications_repositories/manager-communications-delivery-job.entity').CommunicationsDeliveryJobEntity, actor: { id: string; role: import('@/backend_manager/manager_core/manager_core_auth/manager-core-role.constants').ManagerCoreRole }): Promise<void> {
     try {
       await this.adapter.send(job.deliveryMedium, job.payload, job.id);
       await this.markSent(job.id, actor.id, actor.role, job.communicationId, job.deliveryMedium);
@@ -39,7 +39,7 @@ export class ManagerCommunicationsProcessDeliveryJobsService {
   }
 
   /** Attempts the configured fallback medium before consuming a retry or moving to the DLQ. */
-  private async tryFallbackOrRetry(job: import('@/backend_manager/manager_modules/communications/manager-communications-delivery-job.entity').CommunicationsDeliveryJobEntity, actor: { id: string; role: import('@/backend_manager/manager_core/manager_core_auth/manager-core-role.constants').ManagerCoreRole }, primaryError: string): Promise<void> {
+  private async tryFallbackOrRetry(job: import('@/backend_manager/manager_modules/communications/communications_repositories/manager-communications-delivery-job.entity').CommunicationsDeliveryJobEntity, actor: { id: string; role: import('@/backend_manager/manager_core/manager_core_auth/manager-core-role.constants').ManagerCoreRole }, primaryError: string): Promise<void> {
     const fallback = this.config.communicationsFallbackMedium as CommunicationsDeliveryMedium;
     if (fallback !== job.deliveryMedium) {
       try {

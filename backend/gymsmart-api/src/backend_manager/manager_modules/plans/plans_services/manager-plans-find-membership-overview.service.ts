@@ -18,7 +18,7 @@ export class ManagerPlansFindMembershipOverviewService {
   /** @description Loads the plans collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findMembershipOverview(query:ManagerCoreJsonObject={}):Promise<ManagerPlansFindMembershipOverviewServiceFindMembershipOverviewResult> {
     const result=await this.repository.findAll({ ...query, __unbounded: true, page:1, limit:100 });
-    const rows=result.data.map((row)=>row.payload);
+    const rows=result.data.map((row: any)=>row.payload);
     return { activeCount:rows.filter((row)=>(row).isActive===true || row.status==='ACTIVE').length, revenue:rows.reduce((sum,row)=>sum+Number(row.price ?? row.price12Month ?? 0),0) };
   }
 }

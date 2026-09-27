@@ -9,15 +9,15 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerReferralsMutationService } from '@/backend_manager/manager_modules/referrals/referrals_services/manager-referrals-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { ReferralsDomainData } from '@/backend_manager/manager_modules/referrals/referrals_types/manager-referrals.types';
+import type { ManagerReferralsDomainData } from '@/backend_manager/manager_modules/referrals/referrals_types/manager-referrals.types';
 
 @Injectable()
 export class ManagerReferralsOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerReferralsMutationService) {}
 
   /** @description Executes create inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated payload. @returns Created domain record. */
-  async createReferral(data: ManagerCoreJsonObject): Promise<ReferralsDomainData> {
-    let result: ReferralsDomainData | undefined;
+  async createReferral(data: ManagerCoreJsonObject): Promise<ManagerReferralsDomainData> {
+    let result: ManagerReferralsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createReferral(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_REFERRALS_CREATED, { feature: 'referrals', id: result.id });
@@ -25,9 +25,9 @@ export class ManagerReferralsOrchestratorService {
   }
 
   /** @description Executes update inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated patch. @param id - Resource UUID. @returns Updated domain record. */
-  async updateReferral(data: ManagerCoreJsonObject, id?: string): Promise<ReferralsDomainData> {
+  async updateReferral(data: ManagerCoreJsonObject, id?: string): Promise<ManagerReferralsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: ReferralsDomainData | undefined;
+    let result: ManagerReferralsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateReferral(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_REFERRALS_UPDATED, { feature: 'referrals', id });
@@ -35,12 +35,12 @@ export class ManagerReferralsOrchestratorService {
   }
 
   /** @description Claims an eligible reward inside a UnitOfWork and emits a committed event. @param data - Claim payload. @param id - Referral UUID. @returns Updated referral. */
-  async claimReward(data: ManagerCoreJsonObject, id?: string): Promise<ReferralsDomainData> { void data; if(!id) throw new ManagerCoreContextException('Resource id is required','CORE.RESOURCE.ID_REQUIRED'); let result:ReferralsDomainData|undefined; await this.uow.run(async context=>{result=await this.mutation.claimReward(id,context);}); if(!result) throw new ManagerCoreContextException('Mutation completed without a result.','CORE.TRANSACTION.NO_RESULT'); this.events.emit(ManagerCoreEventRegistry.MANAGER_REFERRALS_UPDATED,{feature:'referrals',id,action:'REWARD_CLAIMED'}); return result; }
+  async claimReward(data: ManagerCoreJsonObject, id?: string): Promise<ManagerReferralsDomainData> { void data; if(!id) throw new ManagerCoreContextException('Resource id is required','CORE.RESOURCE.ID_REQUIRED'); let result:ManagerReferralsDomainData|undefined; await this.uow.run(async context=>{result=await this.mutation.claimReward(id,context);}); if(!result) throw new ManagerCoreContextException('Mutation completed without a result.','CORE.TRANSACTION.NO_RESULT'); this.events.emit(ManagerCoreEventRegistry.MANAGER_REFERRALS_UPDATED,{feature:'referrals',id,action:'REWARD_CLAIMED'}); return result; }
 
   /** @description Executes soft delete inside a UnitOfWork and emits the committed lifecycle event. @param id - Resource UUID. @returns Soft-deleted domain record. */
-  async deleteReferral(id?: string): Promise<ReferralsDomainData> {
+  async deleteReferral(id?: string): Promise<ManagerReferralsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: ReferralsDomainData | undefined;
+    let result: ManagerReferralsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteReferral(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_REFERRALS_DELETED, { feature: 'referrals', id });

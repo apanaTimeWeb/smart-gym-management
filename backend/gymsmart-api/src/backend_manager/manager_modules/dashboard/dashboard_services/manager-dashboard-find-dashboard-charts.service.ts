@@ -2,7 +2,7 @@
 // FLOW: Chart query -> dashboard repository snapshot -> typed chart/distribution projection.
 import { Injectable } from '@nestjs/common';
 import { ManagerDashboardRepository } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.repository';
-import type { DashboardChartsData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
+import type { ManagerDashboardChartsData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
 @Injectable()
@@ -10,10 +10,10 @@ export class ManagerDashboardFindDashboardChartsService {
   constructor(private readonly repository: ManagerDashboardRepository) {}
   /**
    * @description Executes find dashboard charts within its declared architectural boundary.
-   * @returns Promise<DashboardChartsData>.
+   * @returns Promise<ManagerDashboardChartsData>.
    * @throws Error when a validation, persistence, transaction, or downstream invariant fails.
    */
-  async findDashboardCharts(): Promise<DashboardChartsData> {
+  async findDashboardCharts(): Promise<ManagerDashboardChartsData> {
     const payload = await this.repository.findSnapshotPayload();
     return {
       memberGrowth: this.arrayOfObjects(payload.memberGrowth).map((item) => ({ month: String(item.month ?? ''), count: this.number(item.count) })),

@@ -9,15 +9,15 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerMembersMutationService } from '@/backend_manager/manager_modules/members/members_services/manager-members-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { MembersDomainData, MembersPaymentSnapshot } from '@/backend_manager/manager_modules/members/members_types/manager-members.types';
+import type { ManagerMembersDomainData, ManagerMembersPaymentSnapshot } from '@/backend_manager/manager_modules/members/members_types/manager-members.types';
 
 @Injectable()
 export class ManagerMembersOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerMembersMutationService) {}
 
   /** @description Executes create inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated payload. @returns Created domain record. */
-  async createMember(data: ManagerCoreJsonObject): Promise<MembersDomainData> {
-    let result: MembersDomainData | undefined;
+  async createMember(data: ManagerCoreJsonObject): Promise<ManagerMembersDomainData> {
+    let result: ManagerMembersDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createMember(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_MEMBERS_CREATED, { feature: 'members', id: result.id });
@@ -25,9 +25,9 @@ export class ManagerMembersOrchestratorService {
   }
 
   /** @description Executes update inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated patch. @param id - Resource UUID. @returns Updated domain record. */
-  async updateMember(data: ManagerCoreJsonObject, id?: string): Promise<MembersDomainData> {
+  async updateMember(data: ManagerCoreJsonObject, id?: string): Promise<ManagerMembersDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: MembersDomainData | undefined;
+    let result: ManagerMembersDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateMember(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_MEMBERS_UPDATED, { feature: 'members', id });
@@ -41,9 +41,9 @@ export class ManagerMembersOrchestratorService {
   async assignWorkout(data: ManagerCoreJsonObject, id: string): Promise<{ success: boolean }> { const workoutId=typeof data.workoutId==='string'?data.workoutId:''; if(!workoutId) throw new ManagerCoreContextException('Workout id is required.','MEMBERS.ASSIGNMENT.REQUIRED'); await this.uow.run(async context=>{ await this.mutation.assignWorkout(id,workoutId,context); }); this.events.emit(ManagerCoreEventRegistry.MANAGER_MEMBERS_UPDATED,{feature:'members',id,action:'WORKOUT_ASSIGNED'}); return { success:true }; }
 
   /** @description Executes soft delete inside a UnitOfWork and emits the committed lifecycle event. @param id - Resource UUID. @returns Soft-deleted domain record. */
-  async deleteMember(id?: string): Promise<MembersDomainData> {
+  async deleteMember(id?: string): Promise<ManagerMembersDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: MembersDomainData | undefined;
+    let result: ManagerMembersDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteMember(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_MEMBERS_DELETED, { feature: 'members', id });
@@ -51,9 +51,9 @@ export class ManagerMembersOrchestratorService {
   }
 
   /** @description Adds a member payment inside the UnitOfWork transaction. @param payment - Validated payment payload. @param id - Member UUID. @returns Persisted payment snapshot. */
-  async createMemberPayment(payment: ManagerCoreJsonObject, id?: string): Promise<MembersPaymentSnapshot> {
+  async createMemberPayment(payment: ManagerCoreJsonObject, id?: string): Promise<ManagerMembersPaymentSnapshot> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: MembersPaymentSnapshot | undefined;
+    let result: ManagerMembersPaymentSnapshot | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createMemberPayment(id, payment, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     return result;

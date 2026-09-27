@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerInquiriesEntity } from '@/backend_manager/manager_modules/inquiries/manager-inquiries.entity';
 import { ManagerInquiriesMutationService } from '@/backend_manager/manager_modules/inquiries/inquiries_services/manager-inquiries-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerInquiriesAuthorizationService } from '@/backend_manager/manager_modules/inquiries/inquiries_services/manager-inquiries-authorization.service';
@@ -19,7 +21,14 @@ import { ManagerInquiriesFindInquiryStatsService } from '@/backend_manager/manag
 import { ManagerInquiriesOrchestratorService } from '@/backend_manager/manager_modules/inquiries/inquiries_services/manager-inquiries-orchestrator.service';
 import { ManagerInquiriesUpdateInquiryService } from '@/backend_manager/manager_modules/inquiries/inquiries_services/manager-inquiries-update-inquiry.service';
 
+/**
+ * Primary Intent: Defines ManagerInquiriesModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerInquiriesEntity])],
   controllers: [ManagerInquiriesQueryController, ManagerInquiriesCommandController],
   providers: [ManagerInquiriesMutationService, ManagerInquiriesConvertLeadService, ManagerInquiriesCreateInquiryService, ManagerInquiriesUpdateInquiryService, ManagerInquiriesDeleteInquiryService, ManagerInquiriesFindInquiriesService, ManagerInquiriesFindInquiryPlansService, ManagerInquiriesFindInquiryPlansSnapshotService, ManagerInquiriesFindInquiryByIdService, ManagerInquiriesFindInquiryStatsService, ManagerInquiriesRepository, ManagerInquiriesOrchestratorService,
   ManagerInquiriesAuthorizationService,

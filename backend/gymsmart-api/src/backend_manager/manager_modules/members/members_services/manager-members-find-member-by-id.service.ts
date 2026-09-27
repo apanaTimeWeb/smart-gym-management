@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { MembersRepository } from '@/backend_manager/manager_modules/members/manager-members.repository';
-import { MembersResponseMapper } from '@/backend_manager/manager_modules/members/members_mappers/manager-members-response.mapper';
+import { ManagerMembersMapper } from '@/backend_manager/manager_modules/members/manager-members.mapper';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
@@ -17,7 +17,7 @@ export class ManagerMembersFindMemberByIdService {
   async findMemberById(id: string, query: ManagerCoreJsonObject = {}): Promise<ManagerMembersFindMemberByIdServiceFindMemberByIdResult> {
     void query;
     const row = await this.repository.findByIdOrThrow(id);
-    return MembersResponseMapper.toMember(row);
+    return ManagerMembersMapper.toMember(row);
   }
 }
 

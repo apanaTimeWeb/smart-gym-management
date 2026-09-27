@@ -18,27 +18,27 @@ import { ManagerMembersPaymentStatus } from '@/backend_manager/manager_modules/m
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { MembersDomainData, MembersListResult, MembersPaymentSnapshot } from '@/backend_manager/manager_modules/members/members_types/manager-members.types';
+import type { ManagerMembersDomainData, ManagerMembersListResult, ManagerMembersPaymentSnapshot } from '@/backend_manager/manager_modules/members/members_types/manager-members.types';
 
 @Injectable()
 export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService, private readonly encryption: ManagerCoreEncryptionService) { super(tenants, MembersEntity); }
 
   /** @description Finds a non-deleted members record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<MembersDomainData | null> {
+  async findById(id: string): Promise<ManagerMembersDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? MembersMapper.toDomain({ ...row, isDeleted: false, payload: this.revealSensitivePayload(row.payload) }) : null;
   }
 
   /** @description Finds a non-deleted members record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<MembersDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerMembersDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('members', id);
     return row;
   }
 
   /** @description Creates a members record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createMember(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<MembersDomainData> {
+  async createMember(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerMembersDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: this.protectSensitivePayload(prepared.payload), currency: prepared.currency, totalAmountMinor: prepared.minors.totalAmount, paidAmountMinor: prepared.minors.paidAmount, pendingAmountMinor: prepared.minors.pendingAmount, advanceAmountMinor: prepared.minors.advanceAmount, amountPaidMinor: prepared.minors.amountPaid, isDeleted: false });
@@ -48,7 +48,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
   }
 
   /** @description Updates a members record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<MembersDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerMembersDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('members', id);
@@ -59,7 +59,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
   }
 
   /** @description Soft-deletes a members record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<MembersDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerMembersDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('members', id);
@@ -71,7 +71,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
 
 
   /** Adds one validated payment snapshot to the member ledger under a pessimistic write lock. */
-  async createMemberPayment(id: string, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<MembersPaymentSnapshot> {
+  async createMemberPayment(id: string, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerMembersPaymentSnapshot> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('members', id);
@@ -89,7 +89,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
     return snapshot;
   }
   /** @description Assigns a diet plan to an existing member under a pessimistic lock. @param memberId - Member UUID. @param dietPlanId - Diet plan UUID. @param context - Active transaction context. @returns Updated member domain record. */
-  async assignDietPlan(memberId: string, dietPlanId: string, context: ManagerCoreTransactionContext): Promise<MembersDomainData> {
+  async assignDietPlan(memberId: string, dietPlanId: string, context: ManagerCoreTransactionContext): Promise<ManagerMembersDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :memberId AND record.deleted_at IS NULL', { memberId }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('members', memberId);
@@ -100,7 +100,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
   }
 
   /** @description Assigns a workout to an existing member under a pessimistic lock. @param memberId - Member UUID. @param workoutId - Workout UUID. @param context - Active transaction context. @returns Updated member domain record. */
-  async assignWorkout(memberId: string, workoutId: string, context: ManagerCoreTransactionContext): Promise<MembersDomainData> {
+  async assignWorkout(memberId: string, workoutId: string, context: ManagerCoreTransactionContext): Promise<ManagerMembersDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :memberId AND record.deleted_at IS NULL', { memberId }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('members', memberId);
@@ -111,7 +111,7 @@ export class ManagerMembersRepository extends CoreBaseRepository<MembersEntity> 
   }
 
   /** @description Finds filtered  and paginated members records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<MembersListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerMembersListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

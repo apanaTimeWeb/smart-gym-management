@@ -9,14 +9,14 @@ import { ManagerCoreNotFoundException } from '@/backend_manager/manager_core/man
 import { ManagerDashboardEntity } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.entity';
 import { ManagerDashboardMapper } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.mapper';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { DashboardDomainData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
+import type { ManagerDashboardDomainData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
 
 @Injectable()
 export class ManagerDashboardRepository extends CoreBaseRepository<ManagerDashboardEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ManagerDashboardEntity); }
 
   /** Returns the latest active dashboard snapshot for the trusted tenant. */
-  async findLatestSnapshot(): Promise<DashboardDomainData> {
+  async findLatestSnapshot(): Promise<ManagerDashboardDomainData> {
     const repository = await this.getRepository();
     const row = await repository.createQueryBuilder('record')
       .where('record.deleted_at IS NULL')
@@ -53,7 +53,7 @@ export class ManagerDashboardRepository extends CoreBaseRepository<ManagerDashbo
         LIMIT $2 OFFSET $3`,
       [normalized, Math.max(1, limit), offset],
     ) as Array<{ item: ManagerCoreJsonObject }>;
-    return { rows: rows.map((row) => row.item), total: Number(countRows[0]?.total ?? 0) };
+    return { rows: rows.map((row: any) => row.item), total: Number(countRows[0]?.total ?? 0) };
   }
 
   /** Returns pending payments after applying the frontend search server-side and stable pagination. */
@@ -94,11 +94,11 @@ export class ManagerDashboardRepository extends CoreBaseRepository<ManagerDashbo
         LIMIT $2 OFFSET $3`,
       [normalized, Math.max(1, limit), offset],
     ) as Array<{ item: ManagerCoreJsonObject }>;
-    return { rows: rows.map((row) => row.item), total: Number(countRows[0]?.total ?? 0) };
+    return { rows: rows.map((row: any) => row.item), total: Number(countRows[0]?.total ?? 0) };
   }
 
   /** Returns the complete persisted snapshot payload for chart/KPI projections. */
-  async findSnapshotPayload(): Promise<DashboardDomainData['payload']> { return (await this.findLatestSnapshot()).payload; }
+  async findSnapshotPayload(): Promise<ManagerDashboardDomainData['payload']> { return (await this.findLatestSnapshot()).payload; }
 }
 
 export { ManagerDashboardRepository as DashboardRepository };

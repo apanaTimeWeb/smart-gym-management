@@ -5,7 +5,7 @@ import { ManagerCoreImmutableEventLogEntity } from '@/backend_manager/manager_co
 import { ManagerFinanceLedgerEntity } from '@/backend_manager/manager_modules/finance/finance_ledger/manager-finance-ledger.entity';
 import { ManagerAttendanceEntity } from '@/backend_manager/manager_modules/attendance/manager-attendance.entity';
 import { ManagerCommunicationsEntity } from '@/backend_manager/manager_modules/communications/manager-communications.entity';
-import { ManagerCommunicationsDeliveryJobEntity } from '@/backend_manager/manager_modules/communications/manager-communications-delivery-job.entity';
+import { ManagerCommunicationsDeliveryJobEntity } from '@/backend_manager/manager_modules/communications/communications_repositories/manager-communications-delivery-job.entity';
 import { ManagerDashboardEntity } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.entity';
 import { ManagerExpensesEntity } from '@/backend_manager/manager_modules/expenses/manager-expenses.entity';
 import { ManagerFinanceEntity } from '@/backend_manager/manager_modules/finance/manager-finance.entity';

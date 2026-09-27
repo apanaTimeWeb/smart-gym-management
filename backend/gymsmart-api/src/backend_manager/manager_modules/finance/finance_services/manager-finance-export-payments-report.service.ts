@@ -24,7 +24,7 @@ export class ManagerFinanceExportPaymentsReportService {
   async createPaymentsReportExport(query: FinanceQueryDto): Promise<{ url: string }> {
     const format = query.format ?? FinanceExportFormat.CSV;
     const result = await this.repository.findAll({ ...query, __unbounded: true });
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     const buffer = format === FinanceExportFormat.PDF ? this.toPdf(rows) : this.toCsv(rows);
     const artifactId = randomUUID();
     const ctx = this.context.get();
@@ -73,7 +73,7 @@ export class ManagerFinanceExportPaymentsReportService {
 
   /** @description Renders one PDF content stream. @param rows - Rows for one page. @returns PDF stream text. */
   private toPdfStream(rows: Array<Record<string, unknown>>): string {
-    const lines = rows.map((row) => Object.entries(row).map(([key, value]) => `${key}: ${String(value ?? '')}`).join(' | ').replace(/[()\\]/g, ' '));
+    const lines = rows.map((row: any) => Object.entries(row).map(([key, value]) => `${key}: ${String(value ?? '')}`).join(' | ').replace(/[()\\]/g, ' '));
     return ['BT','/F1 8 Tf','36 760 Td',...lines.flatMap((line,index)=>[index?'0 -14 Td':'',`(${line.slice(0,175)}) Tj`]),'ET'].filter(Boolean).join('\n');
   }
 

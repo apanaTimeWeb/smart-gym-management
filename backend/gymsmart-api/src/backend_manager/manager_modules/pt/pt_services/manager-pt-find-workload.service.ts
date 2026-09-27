@@ -16,7 +16,7 @@ export class ManagerPtFindWorkloadService {
   /** @description Loads the pt collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findWorkload(query: ManagerCoreJsonObject = {}): Promise<PtWorkloadResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { workload: rows, };
   }
 }

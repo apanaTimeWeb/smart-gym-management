@@ -9,15 +9,15 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerNotificationsMutationService } from '@/backend_manager/manager_modules/notifications/notifications_services/manager-notifications-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { NotificationsDomainData } from '@/backend_manager/manager_modules/notifications/notifications_types/manager-notifications.types';
+import type { ManagerNotificationsDomainData } from '@/backend_manager/manager_modules/notifications/notifications_types/manager-notifications.types';
 
 @Injectable()
 export class ManagerNotificationsOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerNotificationsMutationService) {}
 
   /** @description Executes create inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated payload. @returns Created domain record. */
-  async createNotification(data: ManagerCoreJsonObject): Promise<NotificationsDomainData> {
-    let result: NotificationsDomainData | undefined;
+  async createNotification(data: ManagerCoreJsonObject): Promise<ManagerNotificationsDomainData> {
+    let result: ManagerNotificationsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createNotification(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_NOTIFICATIONS_CREATED, { feature: 'notifications', id: result.id });
@@ -25,9 +25,9 @@ export class ManagerNotificationsOrchestratorService {
   }
 
   /** @description Executes update inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated patch. @param id - Resource UUID. @returns Updated domain record. */
-  async updateNotification(data: ManagerCoreJsonObject, id?: string): Promise<NotificationsDomainData> {
+  async updateNotification(data: ManagerCoreJsonObject, id?: string): Promise<ManagerNotificationsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: NotificationsDomainData | undefined;
+    let result: ManagerNotificationsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateNotification(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_NOTIFICATIONS_UPDATED, { feature: 'notifications', id });
@@ -35,9 +35,9 @@ export class ManagerNotificationsOrchestratorService {
   }
 
   /** @description Executes soft delete inside a UnitOfWork and emits the committed lifecycle event. @param id - Resource UUID. @returns Soft-deleted domain record. */
-  async deleteNotification(id?: string): Promise<NotificationsDomainData> {
+  async deleteNotification(id?: string): Promise<ManagerNotificationsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: NotificationsDomainData | undefined;
+    let result: ManagerNotificationsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteNotification(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_NOTIFICATIONS_DELETED, { feature: 'notifications', id });

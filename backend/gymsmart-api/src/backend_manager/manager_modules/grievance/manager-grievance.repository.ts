@@ -13,34 +13,34 @@ import { ManagerGrievanceMapper } from '@/backend_manager/manager_modules/grieva
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { GrievanceDomainData, GrievanceListResult } from '@/backend_manager/manager_modules/grievance/grievance_types/manager-grievance.types';
+import type { ManagerGrievanceDomainData, ManagerGrievanceListResult } from '@/backend_manager/manager_modules/grievance/grievance_types/manager-grievance.types';
 
 @Injectable()
 export class ManagerGrievanceRepository extends CoreBaseRepository<ManagerGrievanceEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ManagerGrievanceEntity); }
 
   /** @description Finds a non-deleted grievance record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<GrievanceDomainData | null> {
+  async findById(id: string): Promise<ManagerGrievanceDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ManagerGrievanceMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted grievance record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<GrievanceDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerGrievanceDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('grievance', id);
     return row;
   }
 
   /** @description Creates a grievance record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createGrievance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<GrievanceDomainData> {
+  async createGrievance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerGrievanceDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ManagerGrievanceMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a grievance record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<GrievanceDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerGrievanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('grievance', id);
@@ -49,7 +49,7 @@ export class ManagerGrievanceRepository extends CoreBaseRepository<ManagerGrieva
   }
 
   /** @description Soft-deletes a grievance record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<GrievanceDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerGrievanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('grievance', id);
@@ -58,7 +58,7 @@ export class ManagerGrievanceRepository extends CoreBaseRepository<ManagerGrieva
   }
 
   /** @description Finds filtered and paginated grievance records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<GrievanceListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerGrievanceListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

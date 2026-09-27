@@ -12,4 +12,3 @@ export class ManagerMembersPaymentSnapshotResponseDto {
   @ApiProperty() invoiceNumber!: string;
 }
 
-export { ManagerMembersPaymentSnapshotResponseDto as MembersPaymentSnapshotResponseDto };

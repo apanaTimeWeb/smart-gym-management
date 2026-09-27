@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerMembersEntity } from '@/backend_manager/manager_modules/members/manager-members.entity';
 import { ManagerMembersMutationService } from '@/backend_manager/manager_modules/members/members_services/manager-members-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerMembersAuthorizationService } from '@/backend_manager/manager_modules/members/members_services/manager-members-authorization.service';
@@ -28,7 +30,14 @@ import { ManagerMembersRenewMemberService } from '@/backend_manager/manager_modu
 import { ManagerMembersUpdateMemberService } from '@/backend_manager/manager_modules/members/members_services/manager-members-update-member.service';
 import { ManagerCoreMemberCreationRegistry } from '@/backend_manager/manager_core/manager-core-member-creation.registry';
 
+/**
+ * Primary Intent: Defines ManagerMembersModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerMembersEntity])],
   controllers: [ManagerMembersQueryController, ManagerMembersCommandController],
   providers: [ManagerMembersMutationService, ManagerMembersCreateMemberService, ManagerMembersUpdateMemberService, ManagerMembersDeleteMemberService, ManagerMembersRenewMemberService, ManagerMembersAddMemberPaymentService, ManagerMembersAssignDietPlanService, ManagerMembersAssignWorkoutService, ManagerMembersFindMembersService, ManagerMembersFindMemberByIdService, ManagerMembersFindMemberStatsService, ManagerMembersExportMembersReportService, ManagerMembersFindMemberTrainersService, ManagerMembersFindMemberPlansService, ManagerMembersFindMemberPaymentsService, ManagerMembersFindMemberAttendanceService, ManagerMembersFindMemberDietPlansService, ManagerMembersFindMemberWorkoutsService, ManagerMembersRepository, ManagerMembersOrchestratorService,
   ManagerMembersAuthorizationService,

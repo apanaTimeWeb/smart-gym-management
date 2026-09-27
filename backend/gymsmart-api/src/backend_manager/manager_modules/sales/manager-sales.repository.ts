@@ -15,27 +15,27 @@ import { SalesEntity } from '@/backend_manager/manager_modules/sales/manager-sal
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { SalesDomainData, SalesListResult } from '@/backend_manager/manager_modules/sales/sales_types/manager-sales.types';
+import type { ManagerSalesDomainData, ManagerSalesListResult } from '@/backend_manager/manager_modules/sales/sales_types/manager-sales.types';
 
 @Injectable()
 export class ManagerSalesRepository extends CoreBaseRepository<SalesEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, SalesEntity); }
 
   /** @description Finds a non-deleted sales record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<SalesDomainData | null> {
+  async findById(id: string): Promise<ManagerSalesDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? SalesMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted sales record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<SalesDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerSalesDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('sales', id);
     return row;
   }
 
   /** @description Creates a sales record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createSales(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<SalesDomainData> {
+  async createSales(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerSalesDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, amountMinor: prepared.minors.amount, revenueMinor: prepared.minors.revenue, pendingAmountMinor: prepared.minors.pendingAmount, refundMinor: prepared.minors.refund });
@@ -43,7 +43,7 @@ export class ManagerSalesRepository extends CoreBaseRepository<SalesEntity> {
   }
 
   /** @description Updates a sales record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<SalesDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerSalesDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('sales', id);
@@ -58,7 +58,7 @@ export class ManagerSalesRepository extends CoreBaseRepository<SalesEntity> {
   }
 
   /** @description Soft-deletes a sales record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<SalesDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerSalesDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('sales', id);
@@ -67,7 +67,7 @@ export class ManagerSalesRepository extends CoreBaseRepository<SalesEntity> {
   }
 
   /** @description Finds filtered and paginated sales records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<SalesListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerSalesListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

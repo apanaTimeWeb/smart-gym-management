@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerAttendanceEntity } from '@/backend_manager/manager_modules/attendance/manager-attendance.entity';
 import { ManagerAttendanceMutationService } from '@/backend_manager/manager_modules/attendance/attendance_services/manager-attendance-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerAttendanceAuthorizationService } from '@/backend_manager/manager_modules/attendance/attendance_services/manager-attendance-authorization.service';
@@ -16,7 +18,14 @@ import { ManagerAttendanceFindAttendanceStatsService } from '@/backend_manager/m
 import { ManagerAttendanceMarkAttendanceService } from '@/backend_manager/manager_modules/attendance/attendance_services/manager-attendance-mark-attendance.service';
 import { ManagerAttendanceOrchestratorService } from '@/backend_manager/manager_modules/attendance/attendance_services/manager-attendance-orchestrator.service';
 
+/**
+ * Primary Intent: Defines ManagerAttendanceModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerAttendanceEntity])],
   controllers: [ManagerAttendanceQueryController, ManagerAttendanceCommandController],
   providers: [ManagerAttendanceMutationService, ManagerAttendanceMarkAttendanceService, ManagerAttendanceFindAttendanceRecordsService, ManagerAttendanceFindAttendanceStatsService, ManagerAttendanceFindAttendanceHistoryService, ManagerAttendanceFindAttendanceMembersService, ManagerAttendanceFindAttendanceStaffService, ManagerAttendanceRepository, ManagerAttendanceOrchestratorService,
   ManagerAttendanceAuthorizationService,

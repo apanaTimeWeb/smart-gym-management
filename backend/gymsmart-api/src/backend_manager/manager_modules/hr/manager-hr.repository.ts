@@ -16,27 +16,27 @@ import { HrMapper } from '@/backend_manager/manager_modules/hr/manager-hr.mapper
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject, ManagerCoreJsonValue } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { HrDomainData, HrListResult } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
+import type { ManagerHrDomainData, ManagerHrListResult } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
 
 @Injectable()
 export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService, private readonly encryption: ManagerCoreEncryptionService) { super(tenants, HrEntity); }
 
   /** @description Finds a non-deleted hr record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<HrDomainData | null> {
+  async findById(id: string): Promise<ManagerHrDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? HrMapper.toDomain({ ...row, isDeleted: false, payload: this.revealSensitivePayload(row.payload) }) : null;
   }
 
   /** @description Finds a non-deleted hr record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<HrDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerHrDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('hr', id);
     return row;
   }
 
   /** @description Creates a hr record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createStaff(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async createStaff(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: this.protectSensitivePayload(prepared.payload), currency: prepared.currency, salaryMinor: prepared.minors.salary, advanceSalaryMinor: prepared.minors.advanceSalary, currentDueMinor: prepared.minors.currentDue, amountMinor: prepared.minors.amount, paidAmountMinor: prepared.minors.paidAmount, pendingAmountMinor: prepared.minors.pendingAmount, advanceAmountMinor: prepared.minors.advanceAmount, netPayableMinor: prepared.minors.netPayable, isDeleted: false });
@@ -46,7 +46,7 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Creates a payroll record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createPayroll(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async createPayroll(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: this.protectSensitivePayload(prepared.payload), currency: prepared.currency, salaryMinor: prepared.minors.salary, advanceSalaryMinor: prepared.minors.advanceSalary, currentDueMinor: prepared.minors.currentDue, amountMinor: prepared.minors.amount, paidAmountMinor: prepared.minors.paidAmount, pendingAmountMinor: prepared.minors.pendingAmount, advanceAmountMinor: prepared.minors.advanceAmount, netPayableMinor: prepared.minors.netPayable, isDeleted: false });
@@ -56,7 +56,7 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Updates a hr record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateStaff(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async updateStaff(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', id);
@@ -67,7 +67,7 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Updates a payroll record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updatePayroll(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async updatePayroll(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', id);
@@ -78,7 +78,7 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Updates payroll status with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updatePayrollStatus(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async updatePayrollStatus(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', id);
@@ -89,10 +89,10 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Generates one payroll record per eligible staff member for the requested month, skipping existing payrolls. @param month - Payroll month YYYY-MM. @param context - Transaction context. @returns Generated payroll records. */
-  async generatePayrolls(month: string, context: ManagerCoreTransactionContext): Promise<HrDomainData[]> {
+  async generatePayrolls(month: string, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData[]> {
     const repository = await this.getRepository(context);
     const staffRows = await repository.createQueryBuilder('record').setLock('pessimistic_read').where("record.deleted_at IS NULL AND record.payload ->> 'recordType' = :recordType", { recordType: 'STAFF' }).getMany();
-    const payrolls: HrDomainData[] = [];
+    const payrolls: ManagerHrDomainData[] = [];
     for (const staff of staffRows) {
       const existing = await repository.createQueryBuilder('record').where("record.deleted_at IS NULL AND record.payload ->> 'recordType' = :recordType AND record.payload ->> 'staffId' = :staffId AND record.payload ->> 'month' = :month", { recordType: 'PAYROLL', staffId: staff.id, month }).getOne();
       if (existing) continue;
@@ -105,19 +105,19 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Records a staff advance using a locked staff record. @param staffId - Staff UUID. @param amount - Integer minor units. @param payment - Payment metadata. @param context - Transaction context. @returns Updated staff domain record. */
-  async giveStaffAdvance(staffId: string, amount: number, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async giveStaffAdvance(staffId: string, amount: number, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context); const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :staffId AND record.deleted_at IS NULL', { staffId }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', staffId); const next = (BigInt(row.advanceAmountMinor ?? '0') + BigInt(amount)).toString(); row.advanceAmountMinor = next; row.payload = this.protectSensitivePayload({ ...row.payload, lastLedgerEntry: { type: 'ADVANCE_GIVEN', amount, ...payment, createdAt: new Date().toISOString() } }); const saved = await repository.save(row); saved.payload = this.revealSensitivePayload(saved.payload); return HrMapper.toDomain(saved);
   }
 
   /** @description Pays staff due using a locked staff record. @param staffId - Staff UUID. @param amount - Integer minor units. @param payment - Payment metadata. @param context - Transaction context. @returns Updated staff domain record. */
-  async payStaffDue(staffId: string, amount: number, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async payStaffDue(staffId: string, amount: number, payment: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context); const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :staffId AND record.deleted_at IS NULL', { staffId }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', staffId); const due = BigInt(row.currentDueMinor ?? '0'); const pay = BigInt(amount); if (pay > due) throw new ManagerCoreBusinessException('hr.ERRORS.DUE_EXCEEDS_BALANCE', 'HR.LEDGER.EXCEEDS_DUE', HttpStatus.CONFLICT); row.currentDueMinor = (due - pay).toString(); row.paidAmountMinor = (BigInt(row.paidAmountMinor ?? '0') + pay).toString(); row.payload = this.protectSensitivePayload({ ...row.payload, lastLedgerEntry: { type: 'DUE_PAID', amount, ...payment, createdAt: new Date().toISOString() } }); const saved = await repository.save(row); saved.payload = this.revealSensitivePayload(saved.payload); return HrMapper.toDomain(saved);
   }
 
   /** @description Soft-deletes a hr record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteStaff(id: string, context: ManagerCoreTransactionContext): Promise<HrDomainData> {
+  async deleteStaff(id: string, context: ManagerCoreTransactionContext): Promise<ManagerHrDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('hr', id);
@@ -128,7 +128,7 @@ export class ManagerHrRepository extends CoreBaseRepository<HrEntity> {
   }
 
   /** @description Finds filtered and paginated hr records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<HrListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerHrListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

@@ -9,15 +9,15 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerInquiriesMutationService } from '@/backend_manager/manager_modules/inquiries/inquiries_services/manager-inquiries-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { InquiriesDomainData } from '@/backend_manager/manager_modules/inquiries/inquiries_types/manager-inquiries.types';
+import type { ManagerInquiriesDomainData } from '@/backend_manager/manager_modules/inquiries/inquiries_types/manager-inquiries.types';
 
 @Injectable()
 export class ManagerInquiriesOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerInquiriesMutationService) {}
 
   /** @description Executes create inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated payload. @returns Created domain record. */
-  async createInquiry(data: ManagerCoreJsonObject): Promise<InquiriesDomainData> {
-    let result: InquiriesDomainData | undefined;
+  async createInquiry(data: ManagerCoreJsonObject): Promise<ManagerInquiriesDomainData> {
+    let result: ManagerInquiriesDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createInquiry(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_INQUIRIES_CREATED, { feature: 'inquiries', id: result.id });
@@ -25,9 +25,9 @@ export class ManagerInquiriesOrchestratorService {
   }
 
   /** @description Executes update inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated patch. @param id - Resource UUID. @returns Updated domain record. */
-  async updateInquiry(data: ManagerCoreJsonObject, id?: string): Promise<InquiriesDomainData> {
+  async updateInquiry(data: ManagerCoreJsonObject, id?: string): Promise<ManagerInquiriesDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: InquiriesDomainData | undefined;
+    let result: ManagerInquiriesDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateInquiry(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_INQUIRIES_UPDATED, { feature: 'inquiries', id });
@@ -45,9 +45,9 @@ export class ManagerInquiriesOrchestratorService {
   }
 
   /** @description Executes soft delete inside a UnitOfWork and emits the committed lifecycle event. @param id - Resource UUID. @returns Soft-deleted domain record. */
-  async deleteInquiry(id?: string): Promise<InquiriesDomainData> {
+  async deleteInquiry(id?: string): Promise<ManagerInquiriesDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: InquiriesDomainData | undefined;
+    let result: ManagerInquiriesDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteInquiry(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_INQUIRIES_DELETED, { feature: 'inquiries', id });

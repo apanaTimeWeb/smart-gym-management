@@ -18,7 +18,7 @@ export class ManagerProfileFindProfileService {
   /** @description Loads the profile collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findProfile(query: ManagerCoreJsonObject = {}): Promise<ManagerProfileFindProfileServiceFindProfileResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     if (!rows[0]) throw new ManagerCoreNotFoundException('profile', 'current');
     return rows[0];
   }

@@ -5,9 +5,9 @@ import { Injectable } from '@nestjs/common';
 import { HrRepository } from '@/backend_manager/manager_modules/hr/manager-hr.repository';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { HrSummaryData } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
+import type { ManagerHrSummaryData } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
 
-export type ManagerHrFindHrSummaryServiceFindHrSummaryResult = HrSummaryData;
+export type ManagerHrFindHrSummaryServiceFindHrSummaryResult = ManagerHrSummaryData;
 
 @Injectable()
 export class ManagerHrFindHrSummaryService {
@@ -16,7 +16,7 @@ export class ManagerHrFindHrSummaryService {
   /** @description Aggregates all Manager HR summary metrics from tenant records. @param query - Validated HR filters. @returns Complete HR summary KPI object. */
   async findHrSummary(query: ManagerCoreJsonObject = {}): Promise<ManagerHrFindHrSummaryServiceFindHrSummaryResult> {
     const result = await this.repository.findAll({ ...query, __unbounded: true, page: 1, limit: 100 });
-    const rows = result.data.map((row) => row.payload);
+    const rows = result.data.map((row: any) => row.payload);
     const totalStaff = rows.filter((row) => row.role != null || row.staffId != null || row.name != null).length;
     const activeStaff = rows.filter((row) => (row).isActive === true || row.status === 'ACTIVE').length;
     const totalSalaryThisMonth = rows.reduce((sum, row) => sum + Number(row.amount ?? row.salary ?? row.netPayable ?? 0), 0);

@@ -13,34 +13,34 @@ import { ScheduleEntity } from '@/backend_manager/manager_modules/schedule/manag
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { ScheduleDomainData, ScheduleListResult } from '@/backend_manager/manager_modules/schedule/schedule_types/manager-schedule.types';
+import type { ManagerScheduleDomainData, ManagerScheduleListResult } from '@/backend_manager/manager_modules/schedule/schedule_types/manager-schedule.types';
 
 @Injectable()
 export class ManagerScheduleRepository extends CoreBaseRepository<ScheduleEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ScheduleEntity); }
 
   /** @description Finds a non-deleted schedule record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<ScheduleDomainData | null> {
+  async findById(id: string): Promise<ManagerScheduleDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ScheduleMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted schedule record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<ScheduleDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerScheduleDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('schedule', id);
     return row;
   }
 
   /** @description Creates a schedule record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createShift(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ScheduleDomainData> {
+  async createShift(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerScheduleDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ScheduleMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a schedule record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ScheduleDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerScheduleDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('schedule', id);
@@ -49,7 +49,7 @@ export class ManagerScheduleRepository extends CoreBaseRepository<ScheduleEntity
   }
 
   /** @description Soft-deletes a schedule record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ScheduleDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerScheduleDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('schedule', id);
@@ -58,7 +58,7 @@ export class ManagerScheduleRepository extends CoreBaseRepository<ScheduleEntity
   }
 
   /** @description Finds filtered and paginated schedule records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<ScheduleListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerScheduleListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

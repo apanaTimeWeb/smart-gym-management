@@ -15,7 +15,7 @@ export class ManagerGrievanceManagerGrievanceApiFindGrievanceTicketsService {
   /** @description Lists grievance records for the Manager scope. @param query - Validated query. @returns Contract-compatible rows. */
   async findGrievanceTickets(query: ManagerCoreJsonObject = {}): Promise<GrievanceTicketsResult> {
     const result = await this.repository.findAll(query);
-    return result.data.map((row) => ({ id: row.id, ...row.payload }));
+    return result.data.map((row: any) => ({ id: row.id, ...row.payload }));
   }
 }
 

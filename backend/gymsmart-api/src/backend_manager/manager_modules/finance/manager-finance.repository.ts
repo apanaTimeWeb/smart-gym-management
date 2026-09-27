@@ -15,27 +15,27 @@ import { FinanceMapper } from '@/backend_manager/manager_modules/finance/manager
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { FinanceDomainData, FinanceListResult } from '@/backend_manager/manager_modules/finance/finance_types/manager-finance.types';
+import type { ManagerFinanceDomainData, ManagerFinanceListResult } from '@/backend_manager/manager_modules/finance/finance_types/manager-finance.types';
 
 @Injectable()
 export class ManagerFinanceRepository extends CoreBaseRepository<FinanceEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, FinanceEntity); }
 
   /** @description Finds a non-deleted finance record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<FinanceDomainData | null> {
+  async findById(id: string): Promise<ManagerFinanceDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? FinanceMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted finance record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<FinanceDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerFinanceDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('finance', id);
     return row;
   }
 
   /** @description Creates a finance record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createPayment(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<FinanceDomainData> {
+  async createPayment(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerFinanceDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, amountMinor: prepared.minors.amount, gstAmountMinor: prepared.minors.gstAmount, discountAmountMinor: prepared.minors.discountAmount, taxableAmountMinor: prepared.minors.taxableAmount });
@@ -43,7 +43,7 @@ export class ManagerFinanceRepository extends CoreBaseRepository<FinanceEntity> 
   }
 
   /** @description Updates a finance record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<FinanceDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerFinanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('finance', id);
@@ -58,7 +58,7 @@ export class ManagerFinanceRepository extends CoreBaseRepository<FinanceEntity> 
   }
 
   /** @description Soft-deletes a finance record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<FinanceDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerFinanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('finance', id);
@@ -67,7 +67,7 @@ export class ManagerFinanceRepository extends CoreBaseRepository<FinanceEntity> 
   }
 
   /** @description Finds filtered and paginated finance records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<FinanceListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerFinanceListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

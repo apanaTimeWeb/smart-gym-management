@@ -14,27 +14,27 @@ import { ManagerStoreEntity } from '@/backend_manager/manager_modules/store/mana
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { StoreDomainData, StoreListResult } from '@/backend_manager/manager_modules/store/store_types/manager-store.types';
+import type { ManagerStoreDomainData, ManagerStoreListResult } from '@/backend_manager/manager_modules/store/store_types/manager-store.types';
 
 @Injectable()
 export class ManagerStoreRepository extends CoreBaseRepository<ManagerStoreEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, ManagerStoreEntity); }
 
   /** @description Finds a non-deleted store record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<StoreDomainData | null> {
+  async findById(id: string): Promise<ManagerStoreDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ManagerStoreMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted store record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<StoreDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerStoreDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('store', id);
     return row;
   }
 
   /** @description Creates a store record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createProduct(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<StoreDomainData> {
+  async createProduct(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerStoreDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, priceMinor: prepared.minors.price, costPriceMinor: prepared.minors.costPrice, totalMinor: prepared.minors.total });
@@ -42,7 +42,7 @@ export class ManagerStoreRepository extends CoreBaseRepository<ManagerStoreEntit
   }
 
   /** @description Creates an order record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createOrder(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<StoreDomainData> {
+  async createOrder(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerStoreDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, priceMinor: prepared.minors.price, costPriceMinor: prepared.minors.costPrice, totalMinor: prepared.minors.total });
@@ -50,7 +50,7 @@ export class ManagerStoreRepository extends CoreBaseRepository<ManagerStoreEntit
   }
 
   /** @description Updates a store record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateProduct(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<StoreDomainData> {
+  async updateProduct(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerStoreDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('store', id);
@@ -64,7 +64,7 @@ export class ManagerStoreRepository extends CoreBaseRepository<ManagerStoreEntit
   }
 
   /** @description Soft-deletes a store record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteProduct(id: string, context: ManagerCoreTransactionContext): Promise<StoreDomainData> {
+  async deleteProduct(id: string, context: ManagerCoreTransactionContext): Promise<ManagerStoreDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('store', id);
@@ -73,7 +73,7 @@ export class ManagerStoreRepository extends CoreBaseRepository<ManagerStoreEntit
   }
 
   /** @description Finds filtered and paginated store records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<StoreListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerStoreListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

@@ -3,7 +3,7 @@
 import { Check, Column, Entity, Index } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_manager/manager_core/manager_core_database/manager-core-base.entity';
-import { CommunicationsDeliveryJobStatus, CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications-delivery.constants';
+import { CommunicationsDeliveryJobStatus, CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications.constants';
 
 @Entity('manager_communications_delivery_jobs')
 @Check('CHK_manager_comm_delivery_attempts_nonnegative', 'attempts >= 0')

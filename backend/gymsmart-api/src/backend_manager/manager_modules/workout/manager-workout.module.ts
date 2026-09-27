@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerWorkoutEntity } from '@/backend_manager/manager_modules/workout/manager-workout.entity';
 import { ManagerWorkoutMutationService } from '@/backend_manager/manager_modules/workout/workout_services/manager-workout-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerWorkoutAuthorizationService } from '@/backend_manager/manager_modules/workout/workout_services/manager-workout-authorization.service';
@@ -19,7 +21,14 @@ import { ManagerWorkoutUpdateWorkoutService } from '@/backend_manager/manager_mo
 import { ManagerWorkoutCommandController } from '@/backend_manager/manager_modules/workout/manager-workout-command.controller';
 import { ManagerWorkoutQueryController } from '@/backend_manager/manager_modules/workout/manager-workout-query.controller';
 
+/**
+ * Primary Intent: Defines ManagerWorkoutModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerWorkoutEntity])],
   controllers: [ManagerWorkoutQueryController, ManagerWorkoutCommandController],
   providers: [ManagerWorkoutMutationService, ManagerWorkoutCreateWorkoutService, ManagerWorkoutUpdateWorkoutService, ManagerWorkoutDeleteWorkoutService, ManagerWorkoutCreateExerciseService, ManagerWorkoutUpdateExerciseService, ManagerWorkoutDeleteExerciseService, ManagerWorkoutFindWorkoutsService, ManagerWorkoutFindExercisesService, ManagerWorkoutFindAssignmentsService, ManagerWorkoutRepository, ManagerWorkoutOrchestratorService,
   ManagerWorkoutAuthorizationService,

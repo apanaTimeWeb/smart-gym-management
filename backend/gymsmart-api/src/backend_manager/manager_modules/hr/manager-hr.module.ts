@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerHrEntity } from '@/backend_manager/manager_modules/hr/manager-hr.entity';
 import { ManagerHrMutationService } from '@/backend_manager/manager_modules/hr/hr_services/manager-hr-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerHrAuthorizationService } from '@/backend_manager/manager_modules/hr/hr_services/manager-hr-authorization.service';
@@ -25,7 +27,14 @@ import { ManagerHrUpdatePayrollStatusService } from '@/backend_manager/manager_m
 import { ManagerHrUpdatePayrollService } from '@/backend_manager/manager_modules/hr/hr_services/manager-hr-update-payroll.service';
 import { ManagerHrUpdateStaffService } from '@/backend_manager/manager_modules/hr/hr_services/manager-hr-update-staff.service';
 
+/**
+ * Primary Intent: Defines ManagerHrModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerHrEntity])],
   controllers: [ManagerHrQueryController, ManagerHrCommandController],
   providers: [ManagerHrMutationService, ManagerHrCreateStaffService, ManagerHrUpdateStaffService, ManagerHrDeleteStaffService, ManagerHrGeneratePayrollsService, ManagerHrCreatePayrollService, ManagerHrUpdatePayrollService, ManagerHrUpdatePayrollStatusService, ManagerHrGiveStaffAdvanceService, ManagerHrPayStaffDueService, ManagerHrFindStaffService, ManagerHrFindStaffByIdService, ManagerHrFindPayrollsService, ManagerHrFindHrSummaryService, ManagerHrFindLedgerService, ManagerHrFindStaffAttendanceService, ManagerHrRepository, ManagerHrOrchestratorService,
   ManagerHrAuthorizationService,

@@ -15,27 +15,27 @@ import { ManagerInquiriesMapper } from '@/backend_manager/manager_modules/inquir
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { InquiriesDomainData, InquiriesListResult } from '@/backend_manager/manager_modules/inquiries/inquiries_types/manager-inquiries.types';
+import type { ManagerInquiriesDomainData, ManagerInquiriesListResult } from '@/backend_manager/manager_modules/inquiries/inquiries_types/manager-inquiries.types';
 
 @Injectable()
 export class ManagerInquiriesRepository extends CoreBaseRepository<ManagerInquiriesEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, ManagerInquiriesEntity); }
 
   /** @description Finds a non-deleted inquiries record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<InquiriesDomainData | null> {
+  async findById(id: string): Promise<ManagerInquiriesDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ManagerInquiriesMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted inquiries record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<InquiriesDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerInquiriesDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('inquiries', id);
     return row;
   }
 
   /** @description Creates a inquiries record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createInquiry(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<InquiriesDomainData> {
+  async createInquiry(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerInquiriesDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, totalAmountMinor: prepared.minors.totalAmount, paidAmountMinor: prepared.minors.paidAmount, pendingAmountMinor: prepared.minors.pendingAmount });
@@ -43,7 +43,7 @@ export class ManagerInquiriesRepository extends CoreBaseRepository<ManagerInquir
   }
 
   /** @description Updates a inquiries record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<InquiriesDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerInquiriesDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('inquiries', id);
@@ -57,7 +57,7 @@ export class ManagerInquiriesRepository extends CoreBaseRepository<ManagerInquir
   }
 
   /** @description Soft-deletes a inquiries record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<InquiriesDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerInquiriesDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('inquiries', id);
@@ -66,7 +66,7 @@ export class ManagerInquiriesRepository extends CoreBaseRepository<ManagerInquir
   }
 
   /** @description Finds filtered and paginated inquiries records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<InquiriesListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerInquiriesListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

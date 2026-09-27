@@ -13,34 +13,34 @@ import { AttendanceMapper } from '@/backend_manager/manager_modules/attendance/m
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { AttendanceDomainData, AttendanceListResult } from '@/backend_manager/manager_modules/attendance/attendance_types/manager-attendance.types';
+import type { ManagerAttendanceDomainData, ManagerAttendanceListResult } from '@/backend_manager/manager_modules/attendance/attendance_types/manager-attendance.types';
 
 @Injectable()
 export class ManagerAttendanceRepository extends CoreBaseRepository<AttendanceEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, AttendanceEntity); }
 
   /** @description Finds a non-deleted attendance record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<AttendanceDomainData | null> {
+  async findById(id: string): Promise<ManagerAttendanceDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? AttendanceMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted attendance record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<AttendanceDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerAttendanceDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('attendance', id);
     return row;
   }
 
   /** @description Creates a attendance record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async markAttendance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<AttendanceDomainData> {
+  async markAttendance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerAttendanceDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return AttendanceMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a attendance record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<AttendanceDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerAttendanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('attendance', id);
@@ -49,7 +49,7 @@ export class ManagerAttendanceRepository extends CoreBaseRepository<AttendanceEn
   }
 
   /** @description Soft-deletes a attendance record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<AttendanceDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerAttendanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('attendance', id);
@@ -58,7 +58,7 @@ export class ManagerAttendanceRepository extends CoreBaseRepository<AttendanceEn
   }
 
   /** @description Finds filtered and paginated attendance records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<AttendanceListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerAttendanceListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

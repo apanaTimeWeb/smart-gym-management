@@ -19,7 +19,7 @@ export class ManagerStoreFindOrdersService {
   /** @description Loads the store collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findOrders(query: ManagerCoreJsonObject = {}): Promise<ManagerStoreFindOrdersServiceFindOrdersResult> {
     const result = await this.repository.findAll({ ...query, resource: 'orders' });
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { data: { orders: rows, total: result.meta.total }, meta: result.meta  };
   }
 }

@@ -19,7 +19,7 @@ export class ManagerAttendanceFindAttendanceStatsService {
   /** @description Loads the attendance collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findAttendanceStats(query:ManagerCoreJsonObject={}):Promise<ManagerAttendanceFindAttendanceStatsServiceFindAttendanceStatsResult> {
     const result=await this.repository.findAll({ ...query, __unbounded: true, page:1, limit:100 });
-    const rows=result.data.map((row)=>row.payload);
+    const rows=result.data.map((row: any)=>row.payload);
     const memberCheckIns=rows.filter((row)=>row.type==='MEMBER').length;
     const staffCheckIns=rows.filter((row)=>row.type==='STAFF').length;
     return { totalCheckIns:rows.length, memberCheckIns, staffCheckIns };

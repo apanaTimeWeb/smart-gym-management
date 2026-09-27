@@ -2,8 +2,8 @@
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
-export interface MaintenanceDomainData { id: string; payload: ManagerCoreJsonObject; }
+export interface ManagerMaintenanceDomainData { id: string; payload: ManagerCoreJsonObject; }
 
 import type { PaginationMeta } from '@/backend_manager/manager_core/manager_core_types/manager-core-pagination.types';
 
-export interface MaintenanceListResult { data: MaintenanceDomainData[]; meta: PaginationMeta; }
+export interface ManagerMaintenanceListResult { data: ManagerMaintenanceDomainData[]; meta: PaginationMeta; }

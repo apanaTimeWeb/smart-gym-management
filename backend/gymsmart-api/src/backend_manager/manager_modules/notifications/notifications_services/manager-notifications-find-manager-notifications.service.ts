@@ -19,7 +19,7 @@ export class ManagerNotificationsFindManagerNotificationsService {
   /** @description Loads the notifications collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findManagerNotifications(query: ManagerCoreJsonObject = {}): Promise<ManagerNotificationsFindManagerNotificationsServiceFindManagerNotificationsResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { data: { notifications: rows, total: result.meta.total }, meta: result.meta  };
   }
 }

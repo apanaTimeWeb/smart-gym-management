@@ -2,12 +2,12 @@
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import type { ManagerCoreJsonObject, ManagerCoreJsonValue } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
-export interface HrDomainData { id:string; payload:ManagerCoreJsonObject; }
-export interface HrPayrollDeductions { [key:string]: ManagerCoreJsonValue; }
+export interface ManagerHrDomainData { id:string; payload:ManagerCoreJsonObject; }
+export interface ManagerHrPayrollDeductions { [key:string]: ManagerCoreJsonValue; }
 
 import type { PaginationMeta } from '@/backend_manager/manager_core/manager_core_types/manager-core-pagination.types';
 
-export interface HrSummaryData {
+export interface ManagerHrSummaryData {
   totalSalaryThisMonth: number;
   totalSalaryPaid: number;
   totalSalaryDue: number;
@@ -20,4 +20,4 @@ export interface HrSummaryData {
   currency: string;
 }
 
-export interface HrListResult { data: HrDomainData[]; meta: PaginationMeta; }
+export interface ManagerHrListResult { data: ManagerHrDomainData[]; meta: PaginationMeta; }

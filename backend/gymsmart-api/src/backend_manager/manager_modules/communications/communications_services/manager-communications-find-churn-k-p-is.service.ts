@@ -20,7 +20,7 @@ export class ManagerCommunicationsFindChurnKPIsService {
   /** @description Loads the communications collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findChurnKPIs(query:ManagerCoreJsonObject={}):Promise<ManagerCommunicationsFindChurnKPIsServiceFindChurnKPIsResult> {
     const result=await this.repository.findAll({ ...query, __unbounded: true, page:1, limit:100 });
-    const rows=result.data.map((row)=>row.payload);
+    const rows=result.data.map((row: any)=>row.payload);
     const recovered=rows.filter((row)=>row.recovered===true).length;
     const totalChurned=rows.length;
     const avgDaysSinceExit=totalChurned?rows.reduce((sum,row)=>sum+Number(row.daysSinceExit ?? 0),0)/totalChurned:0;

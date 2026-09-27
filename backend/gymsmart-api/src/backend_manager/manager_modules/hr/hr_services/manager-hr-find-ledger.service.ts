@@ -19,7 +19,7 @@ export class ManagerHrFindLedgerService {
   /** @description Loads the filtered hr collection for a resource-scoped query. @param staffId - Resource or related identifier. @param query - Validated pagination/filter query. @returns Canonical paginated collection payload. */
   async findLedger(staffId: string, query: ManagerCoreJsonObject = {}): Promise<ManagerHrFindLedgerServiceFindLedgerResult> {
     const result = await this.repository.findAll({ ...query, staffId });
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { data: { items: rows, total: result.meta.total }, meta: result.meta  };
   }
 }

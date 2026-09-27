@@ -13,7 +13,7 @@ export class ManagerReportsExportReportsReportService {
   /** @description Builds a CSV export from real tenant report rows. @param query - Validated report filters. @returns CSV bytes for download. */
   async createReportsExport(query: ManagerCoreJsonObject = {}): Promise<Buffer> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return this.toCsv(rows);
   }
 

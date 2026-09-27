@@ -6,7 +6,7 @@ import { ManagerCoreBusinessException } from '@/backend_manager/manager_core/man
 import { ManagerCoreConfigService } from '@/backend_manager/manager_core/manager_core_config/manager-core-config.service';
 import { ManagerCoreCircuitBreakerService } from '@/backend_manager/manager_core/manager_core_infrastructure/manager-core-circuit-breaker.service';
 import { TIMEOUT_CONFIG } from '@/backend_manager/manager_core/manager_core_config/manager-core-timeout.config';
-import { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications-delivery.constants';
+import { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications.constants';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 
 export interface CommunicationsDeliveryResult { delivered: boolean; providerMessageId?: string; }

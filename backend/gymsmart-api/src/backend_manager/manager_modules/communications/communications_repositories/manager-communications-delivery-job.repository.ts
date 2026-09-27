@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_manager/manager_core/manager_core_database/manager-core-base.repository';
 import { ManagerCoreTenantDatasourceService } from '@/backend_manager/manager_core/manager_core_database/manager-core-tenant-datasource.service';
-import { CommunicationsDeliveryJobEntity } from '@/backend_manager/manager_modules/communications/manager-communications-delivery-job.entity';
-import { CommunicationsDeliveryJobStatus } from '@/backend_manager/manager_modules/communications/manager-communications-delivery.constants';
+import { CommunicationsDeliveryJobEntity } from '@/backend_manager/manager_modules/communications/communications_repositories/manager-communications-delivery-job.entity';
+import { CommunicationsDeliveryJobStatus } from '@/backend_manager/manager_modules/communications/manager-communications.constants';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
-import type { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications-delivery.constants';
+import type { CommunicationsDeliveryMedium } from '@/backend_manager/manager_modules/communications/manager-communications.constants';
 
 @Injectable()
 export class ManagerCommunicationsDeliveryJobRepository extends CoreBaseRepository<CommunicationsDeliveryJobEntity> {

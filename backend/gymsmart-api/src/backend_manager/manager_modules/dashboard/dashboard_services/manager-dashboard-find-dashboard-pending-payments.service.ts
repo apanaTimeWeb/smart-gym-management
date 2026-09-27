@@ -19,7 +19,7 @@ export class ManagerDashboardFindDashboardPendingPaymentsService {
     const page = query.page ?? 1;
     const limit = query.limit ?? 6;
     const result = await this.repository.findPendingPayments(query.search, page, limit);
-    const pendingPaymentsList = result.rows.map((row) => ({ id: String(row.id ?? ''), name: String(row.name ?? ''), pendingAmount: Number(row.pendingAmount ?? 0), expiryDate: String(row.expiryDate ?? ''), currency: String(row.currency ?? 'INR') }));
+    const pendingPaymentsList = result.rows.map((row: any) => ({ id: String(row.id ?? ''), name: String(row.name ?? ''), pendingAmount: Number(row.pendingAmount ?? 0), expiryDate: String(row.expiryDate ?? ''), currency: String(row.currency ?? 'INR') }));
     return { data: { pendingPaymentsList, total: result.total }, meta: buildPaginationMeta(result.total, page, limit) };
   }
 }

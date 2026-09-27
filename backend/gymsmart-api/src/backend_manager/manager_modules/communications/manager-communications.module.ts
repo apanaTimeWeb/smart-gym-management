@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerCommunicationsEntity } from '@/backend_manager/manager_modules/communications/manager-communications.entity';
 import { ManagerCommunicationsMutationService } from '@/backend_manager/manager_modules/communications/communications_services/manager-communications-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerCommunicationsAuthorizationService } from '@/backend_manager/manager_modules/communications/communications_services/manager-communications-authorization.service';
@@ -22,7 +24,14 @@ import { ManagerCommunicationsSendCampaignService } from '@/backend_manager/mana
 import { ManagerCommunicationsSendWinBackMessageService } from '@/backend_manager/manager_modules/communications/communications_services/manager-communications-send-win-back-message.service';
 import { ManagerCommunicationsUpdateAutomationService } from '@/backend_manager/manager_modules/communications/communications_services/manager-communications-update-automation.service';
 
+/**
+ * Primary Intent: Defines ManagerCommunicationsModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerCommunicationsEntity])],
   controllers: [ManagerCommunicationsQueryController, ManagerCommunicationsCommandController],
   providers: [ManagerCommunicationsMutationService, ManagerCommunicationsSendCampaignService, ManagerCommunicationsUpdateAutomationService, ManagerCommunicationsSendWinBackMessageService, ManagerCommunicationsFindCampaignsService, ManagerCommunicationsFindCommunicationKPIsService, ManagerCommunicationsFindSegmentRecipientsService, ManagerCommunicationsFindAutomationsService, ManagerCommunicationsFindChurnedMembersService, ManagerCommunicationsFindChurnKPIsService, ManagerCommunicationsRepository, ManagerCommunicationsDeliveryJobRepository, ManagerCommunicationsDeliveryAdapter, ManagerCommunicationsProcessDeliveryJobsService, ManagerCommunicationsOrchestratorService,
   ManagerCommunicationsAuthorizationService,

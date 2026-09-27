@@ -15,7 +15,7 @@ export class ManagerMaintenanceManagerMaintenanceApiFindMaintenanceIssuesService
   /** @description Lists maintenance records for the Manager scope. @param query - Validated query. @returns Contract-compatible rows. */
   async findMaintenanceIssues(query: ManagerCoreJsonObject = {}): Promise<MaintenanceIssuesResult> {
     const result = await this.repository.findAll(query);
-    return result.data.map((row) => ({ id: row.id, ...row.payload }));
+    return result.data.map((row: any) => ({ id: row.id, ...row.payload }));
   }
 }
 

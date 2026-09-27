@@ -17,7 +17,7 @@ export class ManagerMembersFindMemberPlansService {
   /** @description Loads the members collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findMemberPlans(query: ManagerCoreJsonObject = {}): Promise<ManagerMembersFindMemberPlansServiceFindMemberPlansResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { plans: rows, };
   }
 }

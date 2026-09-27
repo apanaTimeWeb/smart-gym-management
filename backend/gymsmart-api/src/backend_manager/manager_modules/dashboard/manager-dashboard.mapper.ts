@@ -3,11 +3,11 @@
 import { ManagerDashboardEntity } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.entity';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { DashboardDomainData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
+import type { ManagerDashboardDomainData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
 
 export class ManagerDashboardMapper {
   /** @description Maps an ORM entity to an ORM-free domain object. @param entity - TypeORM entity. @returns Domain object. */
-  static toDomain(entity: ManagerDashboardEntity): DashboardDomainData {
+  static toDomain(entity: ManagerDashboardEntity): ManagerDashboardDomainData {
     const payload: ManagerCoreJsonObject = { ...entity.payload, currency: entity.currency };
     payload.createdAt = entity.createdAt.toISOString();
     payload.updatedAt = entity.updatedAt.toISOString();
@@ -21,7 +21,7 @@ export class ManagerDashboardMapper {
     return { id: entity.id, payload, currency: entity.currency };
   }
   /** @description Extracts the JSON persistence payload from a domain object. @param data - Domain object. @returns JSON payload. */
-  static toEntity(data: DashboardDomainData): ManagerCoreJsonObject { return data.payload; }
+  static toEntity(data: ManagerDashboardDomainData): ManagerCoreJsonObject { return data.payload; }
   /** Converts a persisted bigint minor-unit string into a safe API integer. */
   private static fromMinor(value: string | null): number { return value === null ? 0 : Number(value); }
 

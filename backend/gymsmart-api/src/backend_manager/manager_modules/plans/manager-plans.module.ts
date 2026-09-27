@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerPlansEntity } from '@/backend_manager/manager_modules/plans/manager-plans.entity';
 import { ManagerPlansMutationService } from '@/backend_manager/manager_modules/plans/plans_services/manager-plans-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerPlansAuthorizationService } from '@/backend_manager/manager_modules/plans/plans_services/manager-plans-authorization.service';
@@ -20,7 +22,14 @@ import { ManagerPlansOrchestratorService } from '@/backend_manager/manager_modul
 import { ManagerPlansRenewMembershipService } from '@/backend_manager/manager_modules/plans/plans_services/manager-plans-renew-membership.service';
 import { ManagerPlansUpdatePlanService } from '@/backend_manager/manager_modules/plans/plans_services/manager-plans-update-plan.service';
 
+/**
+ * Primary Intent: Defines ManagerPlansModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerPlansEntity])],
   controllers: [ManagerPlansQueryController, ManagerPlansCommandController],
   providers: [ManagerPlansMutationService, ManagerPlansCreatePlanService, ManagerPlansUpdatePlanService, ManagerPlansDeletePlanService, ManagerPlansCreateChangeRequestService, ManagerPlansActivateMembershipService, ManagerPlansRenewMembershipService, ManagerPlansFreezeMembershipService, ManagerPlansFindPlansService, ManagerPlansFindPlanByIdService, ManagerPlansFindMembershipOverviewService, ManagerPlansRepository, ManagerPlansOrchestratorService,
   ManagerPlansAuthorizationService,

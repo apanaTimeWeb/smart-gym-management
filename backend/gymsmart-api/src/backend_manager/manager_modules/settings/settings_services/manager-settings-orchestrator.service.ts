@@ -9,15 +9,15 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerSettingsMutationService } from '@/backend_manager/manager_modules/settings/settings_services/manager-settings-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { SettingsDomainData } from '@/backend_manager/manager_modules/settings/settings_types/manager-settings.types';
+import type { ManagerSettingsDomainData } from '@/backend_manager/manager_modules/settings/settings_types/manager-settings.types';
 
 @Injectable()
 export class ManagerSettingsOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerSettingsMutationService) {}
 
   /** @description Executes create inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated payload. @returns Created domain record. */
-  async createManagerSettings(data: ManagerCoreJsonObject): Promise<SettingsDomainData> {
-    let result: SettingsDomainData | undefined;
+  async createManagerSettings(data: ManagerCoreJsonObject): Promise<ManagerSettingsDomainData> {
+    let result: ManagerSettingsDomainData | undefined;
     await this.uow.run(async (context) => { result = await (this.mutation as any).createSettings(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_SETTINGS_CREATED, { feature: 'settings', id: result.id });
@@ -25,9 +25,9 @@ export class ManagerSettingsOrchestratorService {
   }
 
   /** @description Executes update inside a UnitOfWork and emits the committed lifecycle event. @param data - Validated patch. @param id - Resource UUID. @returns Updated domain record. */
-  async updateSettings(data: ManagerCoreJsonObject, id?: string): Promise<SettingsDomainData> {
+  async updateSettings(data: ManagerCoreJsonObject, id?: string): Promise<ManagerSettingsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: SettingsDomainData | undefined;
+    let result: ManagerSettingsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateSettings(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_SETTINGS_UPDATED, { feature: 'settings', id });
@@ -35,9 +35,9 @@ export class ManagerSettingsOrchestratorService {
   }
 
   /** @description Executes soft delete inside a UnitOfWork and emits the committed lifecycle event. @param id - Resource UUID. @returns Soft-deleted domain record. */
-  async deleteManagerSettings(id?: string): Promise<SettingsDomainData> {
+  async deleteManagerSettings(id?: string): Promise<ManagerSettingsDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: SettingsDomainData | undefined;
+    let result: ManagerSettingsDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteManagerSettings(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_SETTINGS_DELETED, { feature: 'settings', id });

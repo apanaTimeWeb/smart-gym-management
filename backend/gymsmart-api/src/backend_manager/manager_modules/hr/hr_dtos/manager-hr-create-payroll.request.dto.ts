@@ -10,7 +10,7 @@ import { CoreRequestDto } from '@/backend_manager/manager_core/manager_core_dtos
 
 import { HrPayrollStatus } from '@/backend_manager/manager_modules/hr/manager-hr.constants';
 
-import type { HrPayrollDeductions } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
+import type { ManagerHrPayrollDeductions } from '@/backend_manager/manager_modules/hr/hr_types/manager-hr.types';
 
 export class ManagerHrCreatePayrollRequestDto extends CoreRequestDto {
   @Matches(/^[A-Z]{3}$/)
@@ -62,7 +62,7 @@ export class ManagerHrCreatePayrollRequestDto extends CoreRequestDto {
 
   @IsString()
   @ApiProperty()
-  deductions!: HrPayrollDeductions;
+  deductions!: ManagerHrPayrollDeductions;
 
   @IsOptional()
   @IsObject()

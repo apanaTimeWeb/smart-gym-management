@@ -15,27 +15,27 @@ import { MaintenanceMapper } from '@/backend_manager/manager_modules/maintenance
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { MaintenanceDomainData, MaintenanceListResult } from '@/backend_manager/manager_modules/maintenance/maintenance_types/manager-maintenance.types';
+import type { ManagerMaintenanceDomainData, ManagerMaintenanceListResult } from '@/backend_manager/manager_modules/maintenance/maintenance_types/manager-maintenance.types';
 
 @Injectable()
 export class ManagerMaintenanceRepository extends CoreBaseRepository<MaintenanceEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, MaintenanceEntity); }
 
   /** @description Finds a non-deleted maintenance record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<MaintenanceDomainData | null> {
+  async findById(id: string): Promise<ManagerMaintenanceDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? MaintenanceMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted maintenance record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<MaintenanceDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerMaintenanceDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('maintenance', id);
     return row;
   }
 
   /** @description Creates a maintenance record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createMaintenance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<MaintenanceDomainData> {
+  async createMaintenance(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerMaintenanceDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, estimatedCostMinor: prepared.minors.estimatedCost });
@@ -43,7 +43,7 @@ export class ManagerMaintenanceRepository extends CoreBaseRepository<Maintenance
   }
 
   /** @description Updates a maintenance record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<MaintenanceDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerMaintenanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('maintenance', id);
@@ -55,7 +55,7 @@ export class ManagerMaintenanceRepository extends CoreBaseRepository<Maintenance
   }
 
   /** @description Soft-deletes a maintenance record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<MaintenanceDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerMaintenanceDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('maintenance', id);
@@ -64,7 +64,7 @@ export class ManagerMaintenanceRepository extends CoreBaseRepository<Maintenance
   }
 
   /** @description Finds filtered and paginated maintenance records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<MaintenanceListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerMaintenanceListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

@@ -3,11 +3,11 @@
 import { FinanceEntity } from '@/backend_manager/manager_modules/finance/manager-finance.entity';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { FinanceDomainData } from '@/backend_manager/manager_modules/finance/finance_types/manager-finance.types';
+import type { ManagerFinanceDomainData } from '@/backend_manager/manager_modules/finance/finance_types/manager-finance.types';
 
 export class ManagerFinanceMapper {
   /** @description Maps an ORM entity to an ORM-free domain object. @param entity - TypeORM entity. @returns Domain object. */
-  static toDomain(entity: FinanceEntity): FinanceDomainData {
+  static toDomain(entity: FinanceEntity): ManagerFinanceDomainData {
     const payload: ManagerCoreJsonObject = { ...entity.payload, currency: entity.currency };
     payload.createdAt = entity.createdAt.toISOString();
     payload.updatedAt = entity.updatedAt.toISOString();
@@ -15,10 +15,10 @@ export class ManagerFinanceMapper {
     payload.gstAmount = ManagerFinanceMapper.fromMinor(entity.gstAmountMinor);
     payload.discountAmount = ManagerFinanceMapper.fromMinor(entity.discountAmountMinor);
     payload.taxableAmount = ManagerFinanceMapper.fromMinor(entity.taxableAmountMinor);
-    return { id: entity.id, payload } as FinanceDomainData;
+    return { id: entity.id, payload } as ManagerFinanceDomainData;
   }
   /** @description Extracts the JSON persistence payload from a domain object. @param data - Domain object. @returns JSON payload. */
-  static toEntity(data: FinanceDomainData): ManagerCoreJsonObject { return data.payload; }
+  static toEntity(data: ManagerFinanceDomainData): ManagerCoreJsonObject { return data.payload; }
   /** Converts a persisted bigint minor-unit string into a safe API integer. */
   private static fromMinor(value: string | null): number { return value === null ? 0 : Number(value); }
 

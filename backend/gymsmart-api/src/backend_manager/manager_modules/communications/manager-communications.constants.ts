@@ -57,3 +57,6 @@ export enum ChurnReasonType {
   DISSATISFIED = 'dissatisfied',
   UNKNOWN = 'unknown',
 }
+
+export enum CommunicationsDeliveryMedium { EMAIL = 'EMAIL', SMS = 'SMS', PUSH = 'PUSH', WHATSAPP = 'WHATSAPP' }
+export enum CommunicationsDeliveryJobStatus { QUEUED = 'QUEUED', PROCESSING = 'PROCESSING', SENT = 'SENT', FAILED = 'FAILED', DEAD_LETTER = 'DEAD_LETTER' }

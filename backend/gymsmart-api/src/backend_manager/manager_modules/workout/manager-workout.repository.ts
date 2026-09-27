@@ -13,41 +13,41 @@ import { ManagerWorkoutEntity } from '@/backend_manager/manager_modules/workout/
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { WorkoutDomainData, WorkoutListResult } from '@/backend_manager/manager_modules/workout/workout_types/manager-workout.types';
+import type { ManagerWorkoutDomainData, ManagerWorkoutListResult } from '@/backend_manager/manager_modules/workout/workout_types/manager-workout.types';
 
 @Injectable()
 export class ManagerWorkoutRepository extends CoreBaseRepository<ManagerWorkoutEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ManagerWorkoutEntity); }
 
   /** @description Finds a non-deleted workout record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<WorkoutDomainData | null> {
+  async findById(id: string): Promise<ManagerWorkoutDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ManagerWorkoutMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted workout record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<WorkoutDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerWorkoutDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('workout', id);
     return row;
   }
 
   /** @description Creates a workout record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createWorkout(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async createWorkout(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ManagerWorkoutMapper.toDomain(await repository.save(row));
   }
 
   /** @description Creates an exercise record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createExercise(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async createExercise(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ManagerWorkoutMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a workout record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateWorkout(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async updateWorkout(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('workout', id);
@@ -56,7 +56,7 @@ export class ManagerWorkoutRepository extends CoreBaseRepository<ManagerWorkoutE
   }
 
   /** @description Updates an exercise record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateExercise(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async updateExercise(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('workout', id);
@@ -65,7 +65,7 @@ export class ManagerWorkoutRepository extends CoreBaseRepository<ManagerWorkoutE
   }
 
   /** @description Soft-deletes a workout record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteWorkout(id: string, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async deleteWorkout(id: string, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('workout', id);
@@ -74,7 +74,7 @@ export class ManagerWorkoutRepository extends CoreBaseRepository<ManagerWorkoutE
   }
 
   /** @description Soft-deletes an exercise record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteExercise(id: string, context: ManagerCoreTransactionContext): Promise<WorkoutDomainData> {
+  async deleteExercise(id: string, context: ManagerCoreTransactionContext): Promise<ManagerWorkoutDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('workout', id);
@@ -83,7 +83,7 @@ export class ManagerWorkoutRepository extends CoreBaseRepository<ManagerWorkoutE
   }
 
   /** @description Finds filtered and paginated workout records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<WorkoutListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerWorkoutListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

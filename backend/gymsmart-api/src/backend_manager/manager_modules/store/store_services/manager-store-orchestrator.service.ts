@@ -9,40 +9,40 @@ import { ManagerCoreContextException } from '@/backend_manager/manager_core/mana
 import { ManagerStoreMutationService } from '@/backend_manager/manager_modules/store/store_services/manager-store-mutation.service';
 
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { StoreDomainData } from '@/backend_manager/manager_modules/store/store_types/manager-store.types';
+import type { ManagerStoreDomainData } from '@/backend_manager/manager_modules/store/store_types/manager-store.types';
 
 @Injectable()
 export class ManagerStoreOrchestratorService {
   constructor(private readonly uow: ManagerCoreUnitOfWorkService, private readonly events: ManagerCoreEventService, private readonly mutation: ManagerStoreMutationService) {}
 
-  async createProduct(data: ManagerCoreJsonObject): Promise<StoreDomainData> {
-    let result: StoreDomainData | undefined;
+  async createProduct(data: ManagerCoreJsonObject): Promise<ManagerStoreDomainData> {
+    let result: ManagerStoreDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.createProduct(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_STORE_CREATED, { feature: 'store', id: result.id });
     return result;
   }
 
-  async updateProduct(data: ManagerCoreJsonObject, id?: string): Promise<StoreDomainData> {
+  async updateProduct(data: ManagerCoreJsonObject, id?: string): Promise<ManagerStoreDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: StoreDomainData | undefined;
+    let result: ManagerStoreDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.updateProduct(id, data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_STORE_UPDATED, { feature: 'store', id });
     return result;
   }
 
-  async deleteProduct(id?: string): Promise<StoreDomainData> {
+  async deleteProduct(id?: string): Promise<ManagerStoreDomainData> {
     if (!id) throw new ManagerCoreContextException('Resource id is required', 'CORE.RESOURCE.ID_REQUIRED');
-    let result: StoreDomainData | undefined;
+    let result: ManagerStoreDomainData | undefined;
     await this.uow.run(async (context) => { result = await this.mutation.deleteProduct(id, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_STORE_DELETED, { feature: 'store', id });
     return result;
   }
 
-  async createOrder(data: ManagerCoreJsonObject): Promise<StoreDomainData> {
-    let result: StoreDomainData | undefined;
+  async createOrder(data: ManagerCoreJsonObject): Promise<ManagerStoreDomainData> {
+    let result: ManagerStoreDomainData | undefined;
     await this.uow.run(async (context) => { result = await (this.mutation as any).createOrder(data, context); });
     if (!result) throw new ManagerCoreContextException('Mutation completed without a result.', 'CORE.TRANSACTION.NO_RESULT');
     this.events.emit(ManagerCoreEventRegistry.MANAGER_STORE_CREATED, { feature: 'store', id: result.id, action: 'ORDER_CREATED' });

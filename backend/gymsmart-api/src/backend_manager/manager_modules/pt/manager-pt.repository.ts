@@ -15,27 +15,27 @@ import { PtEntity } from '@/backend_manager/manager_modules/pt/manager-pt.entity
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { PtDomainData, PtListResult } from '@/backend_manager/manager_modules/pt/pt_types/manager-pt.types';
+import type { ManagerPtDomainData, ManagerPtListResult } from '@/backend_manager/manager_modules/pt/pt_types/manager-pt.types';
 
 @Injectable()
 export class ManagerPtRepository extends CoreBaseRepository<PtEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, PtEntity); }
 
   /** @description Finds a non-deleted pt record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<PtDomainData | null> {
+  async findById(id: string): Promise<ManagerPtDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? PtMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted pt record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<PtDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerPtDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('pt', id);
     return row;
   }
 
   /** @description Creates a pt record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createAssignment(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<PtDomainData> {
+  async createAssignment(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerPtDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, priceMinor: prepared.minors.price, amountPaidMinor: prepared.minors.amountPaid, totalAmountMinor: prepared.minors.totalAmount });
@@ -43,7 +43,7 @@ export class ManagerPtRepository extends CoreBaseRepository<PtEntity> {
   }
 
   /** @description Updates a pt record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<PtDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerPtDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('pt', id);
@@ -57,7 +57,7 @@ export class ManagerPtRepository extends CoreBaseRepository<PtEntity> {
   }
 
   /** @description Completes one PT session under a pessimistic lock and updates session counters. @param id - Assignment UUID. @param data - Completion payload. @param context - Transaction context. @returns Updated assignment. */
-  async completeSession(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<PtDomainData> {
+  async completeSession(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerPtDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('pt', id);
@@ -78,7 +78,7 @@ export class ManagerPtRepository extends CoreBaseRepository<PtEntity> {
   }
 
   /** @description Soft-deletes a pt record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<PtDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerPtDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('pt', id);
@@ -87,7 +87,7 @@ export class ManagerPtRepository extends CoreBaseRepository<PtEntity> {
   }
 
   /** @description Finds filtered and paginated pt records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<PtListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerPtListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

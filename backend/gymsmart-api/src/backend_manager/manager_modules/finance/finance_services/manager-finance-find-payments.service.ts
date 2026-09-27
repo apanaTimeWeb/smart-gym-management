@@ -19,7 +19,7 @@ export class ManagerFinanceFindPaymentsService {
   /** @description Loads the finance collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findPayments(query: ManagerCoreJsonObject = {}): Promise<ManagerFinanceFindPaymentsServiceFindPaymentsResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { data: { payments: rows, total: result.meta.total }, meta: result.meta  };
   }
 }

@@ -15,27 +15,27 @@ import { ReferralsEntity } from '@/backend_manager/manager_modules/referrals/man
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { ReferralsDomainData, ReferralsListResult } from '@/backend_manager/manager_modules/referrals/referrals_types/manager-referrals.types';
+import type { ManagerReferralsDomainData, ManagerReferralsListResult } from '@/backend_manager/manager_modules/referrals/referrals_types/manager-referrals.types';
 
 @Injectable()
 export class ManagerReferralsRepository extends CoreBaseRepository<ReferralsEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService, private readonly config: ManagerCoreConfigService) { super(tenants, ReferralsEntity); }
 
   /** @description Finds a non-deleted referrals record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<ReferralsDomainData | null> {
+  async findById(id: string): Promise<ManagerReferralsDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ReferralsMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted referrals record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<ReferralsDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerReferralsDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('referrals', id);
     return row;
   }
 
   /** @description Creates a referrals record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createReferral(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ReferralsDomainData> {
+  async createReferral(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerReferralsDomainData> {
     const repository = await this.getRepository(context);
     const prepared = this.prepareMoneyPersistence(data);
     const row = repository.create({ payload: prepared.payload, currency: prepared.currency, rewardAmountMinor: prepared.minors.rewardAmount });
@@ -43,7 +43,7 @@ export class ManagerReferralsRepository extends CoreBaseRepository<ReferralsEnti
   }
 
   /** @description Updates a referrals record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ReferralsDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerReferralsDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('referrals', id);
@@ -55,7 +55,7 @@ export class ManagerReferralsRepository extends CoreBaseRepository<ReferralsEnti
   }
 
   /** @description Claims an eligible referral reward under a pessimistic lock. @param id - Referral UUID. @param context - Transaction context. @returns Updated referral. */
-  async claimReward(id: string, context: ManagerCoreTransactionContext): Promise<ReferralsDomainData> {
+  async claimReward(id: string, context: ManagerCoreTransactionContext): Promise<ManagerReferralsDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('referrals', id);
@@ -70,7 +70,7 @@ export class ManagerReferralsRepository extends CoreBaseRepository<ReferralsEnti
   }
 
   /** @description Soft-deletes a referrals record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ReferralsDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerReferralsDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('referrals', id);
@@ -79,7 +79,7 @@ export class ManagerReferralsRepository extends CoreBaseRepository<ReferralsEnti
   }
 
   /** @description Finds filtered and paginated referrals records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<ReferralsListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerReferralsListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

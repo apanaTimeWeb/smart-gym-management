@@ -13,34 +13,34 @@ import { NotificationsEntity } from '@/backend_manager/manager_modules/notificat
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { NotificationsDomainData, NotificationsListResult } from '@/backend_manager/manager_modules/notifications/notifications_types/manager-notifications.types';
+import type { ManagerNotificationsDomainData, ManagerNotificationsListResult } from '@/backend_manager/manager_modules/notifications/notifications_types/manager-notifications.types';
 
 @Injectable()
 export class ManagerNotificationsRepository extends CoreBaseRepository<NotificationsEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, NotificationsEntity); }
 
   /** @description Finds a non-deleted notifications record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<NotificationsDomainData | null> {
+  async findById(id: string): Promise<ManagerNotificationsDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? NotificationsMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted notifications record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<NotificationsDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerNotificationsDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('notifications', id);
     return row;
   }
 
   /** @description Creates a notifications record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createNotification(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<NotificationsDomainData> {
+  async createNotification(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerNotificationsDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return NotificationsMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a notifications record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<NotificationsDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerNotificationsDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('notifications', id);
@@ -49,7 +49,7 @@ export class ManagerNotificationsRepository extends CoreBaseRepository<Notificat
   }
 
   /** @description Soft-deletes a notifications record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<NotificationsDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerNotificationsDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('notifications', id);
@@ -58,7 +58,7 @@ export class ManagerNotificationsRepository extends CoreBaseRepository<Notificat
   }
 
   /** @description Finds filtered and paginated notifications records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<NotificationsListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerNotificationsListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

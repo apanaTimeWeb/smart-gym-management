@@ -16,7 +16,7 @@ export class ManagerMembersFindMemberWorkoutsService {
   /** @description Loads the members collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findMemberWorkouts(query: ManagerCoreJsonObject = {}): Promise<MemberWorkoutsResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { workouts: rows, };
   }
 }

@@ -21,7 +21,7 @@ export class ManagerFinanceFindFinanceSummaryService {
   /** @description Aggregates finance KPIs and preserves persisted monthly chart data when available. @param query - Validated finance filters. @returns Complete finance summary contract. */
   async findFinanceSummary(query: ManagerCoreJsonObject = {}): Promise<ManagerFinanceFindFinanceSummaryServiceFindFinanceSummaryResult> {
     const result = await this.repository.findAll({ ...query, __unbounded: true, page: 1, limit: 100 });
-    const rows = result.data.map((row) => row.payload);
+    const rows = result.data.map((row: any) => row.payload);
     const persisted = rows.find((row) => Array.isArray(row.monthlyData));
     const totalRevenue = rows.reduce((sum, row) => sum + Number(row.amount ?? (row).totalRevenue ?? 0), 0);
     const pendingAmount = rows.filter((row) => String(row.status ?? '').toUpperCase() === 'PENDING').reduce((sum, row) => sum + Number(row.amount ?? 0), 0);

@@ -17,7 +17,7 @@ export class ManagerCommunicationsFindSegmentRecipientsService {
   /** @description Loads the filtered communications collection for a resource-scoped query. @param segment - Resource or related identifier. @param query - Validated pagination/filter query. @returns Canonical paginated collection payload. */
   async findSegmentRecipients(segment: string, query: ManagerCoreJsonObject = {}): Promise<ManagerCommunicationsFindSegmentRecipientsServiceFindSegmentRecipientsResult> {
     const result = await this.repository.findAll({ ...query, segment });
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { recipients: rows, };
   }
 }

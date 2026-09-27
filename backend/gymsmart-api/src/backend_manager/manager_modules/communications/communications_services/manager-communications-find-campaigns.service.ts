@@ -19,7 +19,7 @@ export class ManagerCommunicationsFindCampaignsService {
   /** @description Loads the communications collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findCampaigns(query: ManagerCoreJsonObject = {}): Promise<ManagerCommunicationsFindCampaignsServiceFindCampaignsResult> {
     const result = await this.repository.findAll(query);
-    const rows = result.data.map((row) => ({ id: row.id, ...row.payload }));
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
     return { data: { campaigns: rows, total: result.meta.total }, meta: result.meta  };
   }
 }

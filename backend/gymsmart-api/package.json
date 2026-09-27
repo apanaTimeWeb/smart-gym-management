@@ -17,7 +17,8 @@
     "seed:superadmin": "ts-node -r tsconfig-paths/register src/backend_superadmin/backend_superadmin.seed.ts",
     "seed:admin": "ts-node -r tsconfig-paths/register src/backend_admin/admin_core/admin_core_database/admin-core-master-seeder.ts",
     "seed:auth": "ts-node -r tsconfig-paths/register src/backend_auth/auth_core/database/core-master-seeder.ts",
-    "architecture:check": "node scripts/architecture-gate.mjs"
+    "architecture:check": "node scripts/architecture-gate.mjs",
+    "seed:manager": "ts-node -r tsconfig-paths/register src/backend_manager/backend_manager.seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.3",

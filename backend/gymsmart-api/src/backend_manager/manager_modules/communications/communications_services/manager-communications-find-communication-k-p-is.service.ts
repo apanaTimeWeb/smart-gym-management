@@ -20,7 +20,7 @@ export class ManagerCommunicationsFindCommunicationKPIsService {
   /** @description Loads the communications collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findCommunicationKPIs(query:ManagerCoreJsonObject={}):Promise<ManagerCommunicationsFindCommunicationKPIsServiceFindCommunicationKPIsResult> {
     const result=await this.repository.findAll({ ...query, __unbounded: true, page:1, limit:100 });
-    const rows=result.data.map((row)=>row.payload);
+    const rows=result.data.map((row: any)=>row.payload);
     const totalSent=rows.reduce((sum,row)=>sum+Number(row.sentCount ?? 0),0);
     const whatsappSent=rows.filter((row)=>row.channel==='whatsapp').reduce((sum,row)=>sum+Number(row.sentCount ?? 0),0);
     const emailSent=rows.filter((row)=>row.channel==='email').reduce((sum,row)=>sum+Number(row.sentCount ?? 0),0);

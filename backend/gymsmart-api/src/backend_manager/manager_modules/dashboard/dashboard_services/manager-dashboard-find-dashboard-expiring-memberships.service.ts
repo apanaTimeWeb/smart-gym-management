@@ -20,7 +20,7 @@ export class ManagerDashboardFindDashboardExpiringMembershipsService {
     const page = query.page ?? 1;
     const limit = query.limit ?? 5;
     const result = await this.repository.findExpiringMemberships(query.search, page, limit);
-    const expiringMemberships = result.rows.map((row) => ({ id: String(row.id ?? ''), name: String(row.name ?? ''), pendingAmount: Number(row.pendingAmount ?? 0), expiryDate: String(row.expiryDate ?? ''), currency: String(row.currency ?? 'INR') }));
+    const expiringMemberships = result.rows.map((row: any) => ({ id: String(row.id ?? ''), name: String(row.name ?? ''), pendingAmount: Number(row.pendingAmount ?? 0), expiryDate: String(row.expiryDate ?? ''), currency: String(row.currency ?? 'INR') }));
     return { data: { expiringMemberships, total: result.total }, meta: buildPaginationMeta(result.total, page, limit) };
   }
 }

@@ -1,6 +1,8 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 // RESPONSIBILITY: Owns the backend application module infrastructure/code contract.
 // FLOW: Module-owned input/configuration → focused backend behavior → typed output.
 import { Module } from '@nestjs/common';
+import { ManagerExpensesEntity } from '@/backend_manager/manager_modules/expenses/manager-expenses.entity';
 import { ManagerExpensesMutationService } from '@/backend_manager/manager_modules/expenses/expenses_services/manager-expenses-mutation.service';
 import { ManagerCoreResourceAuthorizationRegistry } from '@/backend_manager/manager_core/manager_core_authorization/manager-core-resource-authorization.registry';
 import { ManagerExpensesAuthorizationService } from '@/backend_manager/manager_modules/expenses/expenses_services/manager-expenses-authorization.service';
@@ -16,7 +18,14 @@ import { ManagerExpensesFindExpensesService } from '@/backend_manager/manager_mo
 import { ManagerExpensesOrchestratorService } from '@/backend_manager/manager_modules/expenses/expenses_services/manager-expenses-orchestrator.service';
 import { ManagerExpensesUpdateExpenseService } from '@/backend_manager/manager_modules/expenses/expenses_services/manager-expenses-update-expense.service';
 
+/**
+ * Primary Intent: Defines ManagerExpensesModule as an explicit backend construct in its owning role/module boundary.
+ * Edge Cases: Preserve validation, authorization, tenant, transaction, persistence, and API-contract invariants.
+ * Side-Effects: Only documented database, cache, event, queue, or external-service effects are allowed.
+ * AI-Note: Keep dependencies isolated and preserve the frozen API/data contract.
+ */
 @Module({
+  imports: [TypeOrmModule.forFeature([ManagerExpensesEntity])],
   controllers: [ManagerExpensesQueryController, ManagerExpensesCommandController],
   providers: [ManagerExpensesMutationService, ManagerExpensesCreateExpenseService, ManagerExpensesUpdateExpenseService, ManagerExpensesDeleteExpenseService, ManagerExpensesFindExpensesService, ManagerExpensesFindExpenseByIdService, ManagerExpensesFindExpenseStatsService, ManagerExpensesRepository, ManagerExpensesOrchestratorService,
   ManagerExpensesAuthorizationService,

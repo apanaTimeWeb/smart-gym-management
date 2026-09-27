@@ -13,41 +13,41 @@ import { ManagerLibraryMapper } from '@/backend_manager/manager_modules/library/
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { LibraryDomainData, LibraryListResult } from '@/backend_manager/manager_modules/library/library_types/manager-library.types';
+import type { ManagerLibraryDomainData, ManagerLibraryListResult } from '@/backend_manager/manager_modules/library/library_types/manager-library.types';
 
 @Injectable()
 export class ManagerLibraryRepository extends CoreBaseRepository<ManagerLibraryEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ManagerLibraryEntity); }
 
   /** @description Finds a non-deleted library record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<LibraryDomainData | null> {
+  async findById(id: string): Promise<ManagerLibraryDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ManagerLibraryMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted library record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<LibraryDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerLibraryDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('library', id);
     return row;
   }
 
   /** @description Creates a library record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createExercise(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async createExercise(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ManagerLibraryMapper.toDomain(await repository.save(row));
   }
 
   /** @description Creates a diet plan record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createDietPlan(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async createDietPlan(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ManagerLibraryMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a library record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateExercise(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async updateExercise(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('library', id);
@@ -56,7 +56,7 @@ export class ManagerLibraryRepository extends CoreBaseRepository<ManagerLibraryE
   }
 
   /** @description Updates a diet plan record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateDietPlan(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async updateDietPlan(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('library', id);
@@ -65,7 +65,7 @@ export class ManagerLibraryRepository extends CoreBaseRepository<ManagerLibraryE
   }
 
   /** @description Soft-deletes a library record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteExercise(id: string, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async deleteExercise(id: string, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('library', id);
@@ -74,7 +74,7 @@ export class ManagerLibraryRepository extends CoreBaseRepository<ManagerLibraryE
   }
 
   /** @description Soft-deletes a diet plan record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async deleteDietPlan(id: string, context: ManagerCoreTransactionContext): Promise<LibraryDomainData> {
+  async deleteDietPlan(id: string, context: ManagerCoreTransactionContext): Promise<ManagerLibraryDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('library', id);
@@ -83,7 +83,7 @@ export class ManagerLibraryRepository extends CoreBaseRepository<ManagerLibraryE
   }
 
   /** @description Finds filtered and paginated library records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<LibraryListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerLibraryListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

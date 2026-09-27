@@ -22,7 +22,7 @@ export class ManagerReferralsFindReferralKPIsService {
   /** @description Calculates complete referral KPIs from tenant referral records. @param query - Validated referral filters. @returns Complete referral KPI object. */
   async findReferralKPIs(query: ManagerCoreJsonObject = {}): Promise<ManagerReferralsFindReferralKPIsServiceFindReferralKPIsResult> {
     const result = await this.repository.findAll({ ...query, __unbounded: true, page: 1, limit: 100 });
-    const rows = result.data.map((row) => row.payload);
+    const rows = result.data.map((row: any) => row.payload);
     const totalReferrals = rows.length;
     const totalConverted = rows.filter((row) => ['CONVERTED', 'JOINED'].includes(String(row.status ?? '').toUpperCase())).length;
     const pendingRewards = rows.filter((row) => String(row.rewardStatus ?? row.status ?? '').toUpperCase() === 'PENDING').length;

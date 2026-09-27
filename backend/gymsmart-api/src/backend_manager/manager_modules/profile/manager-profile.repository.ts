@@ -13,34 +13,34 @@ import { ProfileEntity } from '@/backend_manager/manager_modules/profile/manager
 
 import type { ManagerCoreTransactionContext } from '@/backend_manager/manager_core/manager_core_database/manager-core-transaction-context';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { ProfileDomainData, ProfileListResult } from '@/backend_manager/manager_modules/profile/profile_types/manager-profile.types';
+import type { ManagerProfileDomainData, ManagerProfileListResult } from '@/backend_manager/manager_modules/profile/profile_types/manager-profile.types';
 
 @Injectable()
 export class ManagerProfileRepository extends CoreBaseRepository<ProfileEntity> {
   constructor(tenants: ManagerCoreTenantDatasourceService) { super(tenants, ProfileEntity); }
 
   /** @description Finds a non-deleted profile record by identifier. @param id - Record UUID. @returns Domain record or null. */
-  async findById(id: string): Promise<ProfileDomainData | null> {
+  async findById(id: string): Promise<ManagerProfileDomainData | null> {
     const row = await (await this.getRepository()).findOne({ where: { id } });
     return row ? ProfileMapper.toDomain(row) : null;
   }
 
   /** @description Finds a non-deleted profile record or fails fast. @param id - Record UUID. @returns Domain record. @throws ManagerCoreNotFoundException when absent. */
-  async findByIdOrThrow(id: string): Promise<ProfileDomainData> {
+  async findByIdOrThrow(id: string): Promise<ManagerProfileDomainData> {
     const row = await this.findById(id);
     if (!row) throw new ManagerCoreNotFoundException('profile', id);
     return row;
   }
 
   /** @description Creates a profile record inside the caller's transaction. @param data - Validated domain payload. @param context - Transaction context. @returns Created domain record. */
-  async createProfile(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ProfileDomainData> {
+  async createProfile(data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerProfileDomainData> {
     const repository = await this.getRepository(context);
     const row = repository.create({ payload: data });
     return ProfileMapper.toDomain(await repository.save(row));
   }
 
   /** @description Updates a profile record with pessimistic locking inside the caller's transaction. @param id - Record UUID. @param data - Patch payload. @param context - Transaction context. @returns Updated domain record. @throws ManagerCoreNotFoundException when absent. */
-  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ProfileDomainData> {
+  async updateById(id: string, data: ManagerCoreJsonObject, context: ManagerCoreTransactionContext): Promise<ManagerProfileDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('profile', id);
@@ -49,7 +49,7 @@ export class ManagerProfileRepository extends CoreBaseRepository<ProfileEntity> 
   }
 
   /** @description Soft-deletes a profile record with a write lock. @param id - Record UUID. @param context - Transaction context. @returns Soft-deleted domain record. @throws ManagerCoreNotFoundException when absent. */
-  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ProfileDomainData> {
+  async softDelete(id: string, context: ManagerCoreTransactionContext): Promise<ManagerProfileDomainData> {
     const repository = await this.getRepository(context);
     const row = await repository.createQueryBuilder('record').setLock('pessimistic_write').where('record.id = :id AND record.deleted_at IS NULL', { id }).getOne();
     if (!row) throw new ManagerCoreNotFoundException('profile', id);
@@ -58,7 +58,7 @@ export class ManagerProfileRepository extends CoreBaseRepository<ProfileEntity> 
   }
 
   /** @description Finds filtered and paginated profile records using a parameterized JSONB query. @param query - Feature query filters. @returns Domain rows plus canonical pagination metadata. */
-  async findAll(query: ManagerCoreJsonObject): Promise<ProfileListResult> {
+  async findAll(query: ManagerCoreJsonObject): Promise<ManagerProfileListResult> {
     const page = Math.max(1, Number(query.page ?? 1));
     const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)));
     const repository = await this.getRepository();

@@ -21,7 +21,7 @@ export class ManagerInquiriesFindInquiryStatsService {
   /** @description Loads the inquiries collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
   async findInquiryStats(query:ManagerCoreJsonObject={}):Promise<ManagerInquiriesFindInquiryStatsServiceFindInquiryStatsResult> {
     const result=await this.repository.findAll({ ...query, __unbounded: true, page:1, limit:100 });
-    const rows=result.data.map((row)=>row.payload);
+    const rows=result.data.map((row: any)=>row.payload);
     const count=(value:string)=>rows.filter((row)=>String(row.status ?? '').toUpperCase()===value).length;
     return { total:rows.length, new:count('NEW'), followUp:count('FOLLOW_UP'), converted:count('CONVERTED'), lost:count('LOST') };
   }

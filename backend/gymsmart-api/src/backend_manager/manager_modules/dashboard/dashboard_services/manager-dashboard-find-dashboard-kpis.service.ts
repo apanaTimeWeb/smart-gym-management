@@ -3,17 +3,17 @@
 import { Injectable } from '@nestjs/common';
 import { ManagerDashboardRepository } from '@/backend_manager/manager_modules/dashboard/manager-dashboard.repository';
 import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
-import type { DashboardKpiData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
+import type { ManagerDashboardKpiData } from '@/backend_manager/manager_modules/dashboard/dashboard_types/manager-dashboard.types';
 
 @Injectable()
 export class ManagerDashboardFindDashboardKpisService {
   constructor(private readonly repository: ManagerDashboardRepository) {}
   /**
    * @description Executes find dashboard kpis within its declared architectural boundary.
-   * @returns Promise<DashboardKpiData>.
+   * @returns Promise<ManagerDashboardKpiData>.
    * @throws Error when a validation, persistence, transaction, or downstream invariant fails.
    */
-  async findDashboardKpis(): Promise<DashboardKpiData> {
+  async findDashboardKpis(): Promise<ManagerDashboardKpiData> {
     const payload = await this.repository.findSnapshotPayload();
     return {
       totalMembers: this.number(payload.totalMembers), activeMembers: this.number(payload.activeMembers), newMembersThisMonth: this.number(payload.newMembersThisMonth),
