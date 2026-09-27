@@ -6493,7 +6493,7 @@ During the alignment and backend audit, you MUST explicitly verify the following
 1. **AI Docstrings (Rule 115):** Verify every Class, Controller, DTO, Entity, and Service method has a detailed multi-line Docstring capturing Intent, Edge Cases, and AI Notes.
 
 2. **MCP-Ready APIs (Rule 116):** Verify all REST endpoints, DTOs, and Response Objects have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
-3. **RAG-Ready Projections (Rule 117):** If the module serves Chatbot/AI features, verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
+3. **RAG-Ready Projections (Rule 117):**  verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
 4. **Immutable Analytics (Rule 118):** For critical entity changes (Billing, Subscriptions, Attendance...etc), verify the backend uses a Zero-Overwrite strategy (emitting domain events to a log/message broker) instead of erasing historical state via standard CRUD updates.
 5. **Double-Entry Ledger (Rule 119):** For ALL financial or wallet mutations, verify the code never updates a balance directly (e.g. `UPDATE balance = balance - X`). It MUST write paired Debit/Credit rows into a `ledger_entries` table.
 
@@ -6867,15 +6867,18 @@ It is a targeted verification pass:
 
 3. **Produce the final verdict axes (Section 79):**
    ```
-   FRONTEND-REQUIRED BACKEND COMPLETENESS:    [updated verdict]
-   BACKEND ARCHITECTURE COMPLIANCE:           [updated verdict]
-   FRONTEND ↔ BACKEND CONTRACT STATUS:        [updated verdict]
-   CONTRACT FREEZE STATUS:                    [updated verdict]
-   UI DATA CONTRACT STATUS:                   [updated verdict]
-   RESPONSE/ERROR/PAGINATION CONTRACT STATUS: [updated verdict]
-   RUNTIME VERIFICATION:                      [updated verdict]
-   SCOPE/EVIDENCE COMPLETENESS:               [updated verdict]
-   OVERALL READINESS:                         [updated verdict]
+   FRONTEND-REQUIRED BACKEND COMPLETENESS:        [updated verdict]
+   BACKEND ARCHITECTURE COMPLIANCE:               [updated verdict]
+   RUNTIME VERIFICATION:                          [updated verdict]
+   SCOPE:                                         [updated verdict]
+   CRITICAL BLOCKERS:                             [updated count + IDs]
+   HIGH PRIORITY ISSUES:                          [updated count + IDs]
+   UNVERIFIED REQUIREMENTS:                       [updated count]
+   BLOCKED_BY_SUPPLIED_SCOPE ITEMS:               [updated count]
+   FRONTEND-DERIVED BACKEND REQUIREMENTS:         [updated count]
+   BACKEND ENDPOINTS:                             [updated count]
+   BACKEND RULES:                                 [updated count]
+   OVERALL READINESS:                             [updated verdict]
    ```
 
 4. **If the re-audit reveals any remaining issue:**

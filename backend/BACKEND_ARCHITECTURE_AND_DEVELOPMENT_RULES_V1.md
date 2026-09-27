@@ -71,7 +71,7 @@ Do not create monolithic Services, Controllers, or Views. A generic `UserService
 Break down large files into micro-features. Every file must handle only one specific business flow.
 - ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
 - ✅ **GOOD:** 
-  - `member-registration.service.ts`
+  - `admin-member-registration.service.ts`
   - `member-billing.service.ts`
   - `member-attendance.service.ts`
   - `member-notifications.service.ts`
@@ -88,7 +88,7 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
   - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
-* **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). Never put business logic in these generic folders.
+* **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). These root-level generic folders may contain standard un-prefixed sub-folders (like `src/core/utils/`, `src/core/dtos/`, `src/core/config/`) provided they are strictly global and cross-cutting. Never put business logic in these generic folders.
   
   **Canonical Example of Complete Prefixing Architecture:**
   ```text
@@ -110,7 +110,7 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
 Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
-- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `create-member.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
+- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-create-member.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
 AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
@@ -121,7 +121,7 @@ AI relies heavily on data shapes to write correct code. If the AI knows the exac
 Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[ModuleName].constants.ts` (or `.py`).
 - ❌ **BAD:** `throw new Error("User age must be over 18")`
 - ✅ **GOOD:** `throw new Error(MEMBER_ERRORS.AGE_RESTRICTION)`
-- **Why?** Tomorrow, if the business requirement changes from 18 to 21, or if you need to translate error messages to a different language, you only feed the AI `members.constants.ts`. The business logic remains untouched.
+- **Why?** Tomorrow, if the business requirement changes from 18 to 21, or if you need to translate error messages to a different language, you only feed the AI `admin-members.constants.ts`. The business logic remains untouched.
 
 ## 6. Centralized Custom Exceptions
 Handling errors with generic `throw new Error()` makes it hard for AI to write precise unit tests or generic error handlers.
@@ -130,7 +130,7 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
-Extract complex queries into a dedicated Repository or Query file (e.g., `member-analytics.repository.ts`).
+Extract complex queries into a dedicated Repository or Query file (e.g., `admin-member-analytics.repository.ts`).
 * **The Rule:** If the backend is built with JavaScript/TypeScript, it MUST use the project's single approved ORM. The repository pattern is mandatory; the specific ORM implementation is an architectural project decision and MUST NOT be changed per module.
   - If Prisma is selected for the project, ALL modules use Prisma.
   - If TypeORM is selected for the project, ALL modules use TypeORM.
@@ -214,7 +214,7 @@ For Non-NestJS projects, strictly adhere to the role and module isolation princi
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `member-registration.service.spec.ts` next to `admin-member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
 * **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
@@ -227,7 +227,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `logger.info()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `method` (HTTP method: GET, POST, PATCH, etc.)
   - `route` / `path` (the matched route template, e.g., `/api/v1/members/:id` — **not** the raw URL with substituted values)
@@ -293,18 +293,18 @@ Handles billing operations.
 ## Module Purpose
 Processes all wallet top-ups, plan purchases, and refunds for gym members.
 Wallet balance is stored in paise (integer). All mutations go through
-BillingOrchestratorService to guarantee atomic DB + audit log writes.
-Never call BillingWalletRepository directly from outside this module.
+AdminBillingOrchestratorService to guarantee atomic DB + audit log writes.
+Never call AdminBillingWalletRepository directly from outside this module.
 
 ## Feature Inventory
-| POST /billing/wallet/topup | WalletCommandController | Top up member wallet | WalletTopupDto |
-| POST /billing/plans/purchase | PlanCommandController | Purchase a plan | PlanPurchaseDto |
+| POST /billing/wallet/topup | AdminWalletCommandController | Top up member wallet | AdminWalletTopupDto |
+| POST /billing/plans/purchase | AdminPlanCommandController | Purchase a plan | AdminPlanPurchaseDto |
 
 ## Edge Cases / AI Warnings
 - Wallet deductions use pessimistic locking (Rule 41) — never remove the
   SELECT FOR UPDATE or concurrent requests will produce negative balances.
 - Plan purchase and wallet deduction MUST be in the same transaction
-  (BillingOrchestratorService) — splitting them causes partial charge bugs.
+  (AdminBillingOrchestratorService) — splitting them causes partial charge bugs.
 - Idempotency-Key header is mandatory on /wallet/topup (Rule 103) —
   removing it will cause double-charges on network retries.
 ```
@@ -364,11 +364,11 @@ should an AI NEVER do in this module?]
 ## Business Flow / Key Sequences
 [REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
 **Example — Plan Purchase:**
-1. PlanCommandController receives POST /billing/plans/purchase
-2. Validates PlanPurchaseDto (Rule 3)
-3. Calls BillingOrchestratorService.purchasePlan(dto)
+1. AdminPlanCommandController receives POST /billing/plans/purchase
+2. Validates AdminPlanPurchaseDto (Rule 3)
+3. Calls AdminBillingOrchestratorService.purchasePlan(dto)
 4. Orchestrator opens DB transaction
-5. Calls BillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
+5. Calls AdminBillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
 6. Calls MemberPlanRepository.createPlanRecord()
 7. Commits transaction — emits BILLING.PLAN.PURCHASED event
 8. EventBus listener triggers NotificationService (decoupled — Rule 8)
@@ -862,7 +862,7 @@ Backend implementation (services, repositories, DB queries)
 
 ## What is NEVER allowed in this module
 
-1. **Never call BillingWalletRepository directly from outside BillingOrchestratorService.**
+1. **Never call AdminBillingWalletRepository directly from outside AdminBillingOrchestratorService.**
    Consequence: Wallet deductions outside the Orchestrator bypass the DB transaction
    boundary, causing partial charges where balance is deducted but plan is not activated.
    Rule: 8B (Orchestrator Pattern), Rule 41 (Pessimistic Locking).
@@ -1311,7 +1311,7 @@ This rule MUST remain consistent with Rule 99.
 * **The Rule:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a TypeScript `enum` — never raw string literals. Saving `member.status = 'actve'` (a typo) to the database must be a **compile-time error**, not a silent data corruption bug discovered in production.
 * **The Pattern:**
   ```typescript
-  // In the module's constants file: members.constants.ts
+  // In the module's constants file: admin-members.constants.ts
   export enum MemberStatus {
     ACTIVE = 'ACTIVE',
     SUSPENDED = 'SUSPENDED',
@@ -1572,7 +1572,7 @@ This rule MUST remain consistent with Rule 99.
    - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
    - If the change touches `auth/`, `billing/`, `webhooks/`, or `tenant-provisioning/`, has a human reviewed it? (Rule 93)
 6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
-7. Run `pytest` against the live API to confirm contract compliance.
+7. Generate `pytest` tests for the live API (execution optional/handled by CI) to confirm contract compliance.
 8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
 9. Review the AI's isolated changes one final time.
 
@@ -1917,7 +1917,7 @@ Never emit a critical WebSocket event (like "Export Ready", "Payment Received", 
 
 1. **Save First:** Insert a record into the `Notifications` or `Chats` table within your database transaction.
 2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL WAL tailing via Listen-Notify) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
-3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/notifications` or `GET /api/chats`).
+3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/v1/notifications` or `GET /api/v1/chats`).
 4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions (subject only to the legal-erasure exception defined in Rule 29 / Rule 110).
 
 ## Rule 112 — Complete Isolation for E2E and Selenium Testing
@@ -1993,7 +1993,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
 * **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
-* **The Rule:** The backend must expose a dedicated `/api/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
+* **The Rule:** The backend must expose a dedicated `/api/v1/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
 * **Implementation:** These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
 * **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
 
