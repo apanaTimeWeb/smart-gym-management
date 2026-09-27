@@ -83,7 +83,7 @@ Rename all controllers, services, and models to be extremely descriptive based o
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
 - ✅ **GOOD:** `admin-billing-jwt-token-generator.utils.ts`, `admin-billing-stripe-payment-webhook.controller.ts`, `admin-attendance-member-registration-validator.py`
-* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
+* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exception: Global configuration, constants, and root tooling files like `database.config.ts`, `rate-limit.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
@@ -177,8 +177,8 @@ Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type 
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
-*Solution:* **Create an isolated wrapper or "Adapter"** for third-party tools (e.g., `stripe-payment.adapter.ts`). Your core service should only call generic methods like `paymentAdapter.charge()`.
-* **Why?** If Stripe changes their API version, you only give the AI the `stripe-payment.adapter.ts` file. The AI fixes the API call without ever seeing (or risking breaking) your internal checkout logic.
+*Solution:* **Create an isolated wrapper or "Adapter"** for third-party tools (e.g., `admin-stripe-payment.adapter.ts`). Your core service should only call generic methods like `paymentAdapter.charge()`.
+* **Why?** If Stripe changes their API version, you only give the AI the `admin-stripe-payment.adapter.ts` file. The AI fixes the API call without ever seeing (or risking breaking) your internal checkout logic.
 
 ## 9. Avoid Hardcoded HTTP Status Codes
 Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controllers, exceptions, or responses. 
@@ -189,7 +189,7 @@ Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controlle
 ## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
 *(Applicable to JavaScript/TypeScript Frameworks)*
 Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`). 
-* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory). Always use dynamic imports with `@/` (or your configured alias) instead of traversing directories up and down with `../..`.
+* **The Rule:** Configure the backend framework to use absolute path aliases (e.g., mapping `@/` to the `src/` directory). Always use absolute/aliased imports with `@/` (or your configured alias) instead of traversing directories up and down with `../..`.
 * **Why?** It prevents import paths from breaking when files are refactored, moved, or copy-pasted, drastically improving the ability for AI to generate drop-in code without path hallucinations.
 
 ---
@@ -199,8 +199,6 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 ## Framework Reference Appendix (Non-NestJS Projects Only)
 
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
-
-*(Note: In non-NestJS frameworks like Django or Express, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
 
 *(Note: In non-NestJS frameworks like Django or Express, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
 
@@ -379,9 +377,9 @@ should an AI NEVER do in this module?]
 
 ## File Responsibility Map
 [REQUIRED: One line per file stating its single responsibility and what it must NOT do.]
-- `billing-orchestrator.service.ts` — Opens transactions, calls micro-services. MUST NOT contain business logic.
-- `billing-wallet.repository.ts` — Raw DB queries for wallet table only. MUST NOT call other repositories.
-- `billing-plan-purchase.service.ts` — Plan purchase business logic only. MUST NOT touch wallet directly.
+- `admin-billing-orchestrator.service.ts` — Opens transactions, calls micro-services. MUST NOT contain business logic.
+- `admin-billing-wallet.repository.ts` — Raw DB queries for wallet table only. MUST NOT call other repositories.
+- `admin-billing-plan-purchase.service.ts` — Plan purchase business logic only. MUST NOT touch wallet directly.
 
 ## Permissions and Security
 [REQUIRED: List every endpoint with its required role(s) and any resource-level checks.]
@@ -431,7 +429,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
-- [ ] Rule 29: Soft-delete by default; hard deletion/anonymization only through approved Rule 35/110 legal-erasure workflows
+- [ ] Rule 29: Soft-delete by default. (Exception: Immutable event logs (Rule 118) and financial ledgers (Rule 119) are strictly append-only and exempt from standard soft-delete rules. Furthermore, the 90-day tenant hard-delete (Rule 110) must explicitly archive/retain legally required financial/audit ledgers rather than blindly deleting them.)
 - [ ] Rule 103: Idempotency-Key enforced on all state-mutating endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
@@ -949,7 +947,7 @@ Backend implementation (services, repositories, DB queries)
   - ❌ **BAD (Ambiguous):** `data: { member: MemberEntity, invoice: InvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
   - ✅ **GOOD:** `data: MemberWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
   - ❌ **BAD (Inconsistent):** One code path returns `data: MemberEntity`, another returns `data: { member: MemberEntity }`.
-  - ✅ **GOOD:** Always `data: MemberEntity` — one shape, all paths.
+  - ✅ **GOOD:** Always `data: MemberResponseDTO` — one shape, all paths.
 * **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
 * **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
 
@@ -1180,9 +1178,9 @@ This rule MUST remain consistent with Rule 99.
 ## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
-  1. **ORM Model / Entity** (`member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
+  1. **ORM Model / Entity** (`admin-member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
   2. **Domain Object / DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
-  3. **Mapper** (`member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
+  3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
 * **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
 
@@ -1325,7 +1323,7 @@ This rule MUST remain consistent with Rule 99.
   }
   ```
   ```typescript
-  // In the entity/model: member.entity.ts (TypeORM) or Prisma schema
+  // In the entity/model: admin-member.entity.ts (TypeORM) or Prisma schema
   // TypeORM:
   // @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
   // status: MemberStatus;
@@ -1766,8 +1764,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import pino from 'pino';
 
-const logger = pino();
 import * as glob from 'glob';
+const logger = pino();
 
 const OUTPUT_DIR = 'dist/i18n';
 const mergedByLang: Record<string, Record<string, any>> = {};
@@ -1810,7 +1808,7 @@ Add to `package.json`:
 5. **Never** put locale files in a central `src/i18n/` folder — that breaks module isolation.
 
 ### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every currently active language.
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -1898,7 +1896,7 @@ All data exports MUST be processed asynchronously via background jobs and delive
 - **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
 
 1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder or Prisma Fluent API) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
-2. **Trigger:** `POST /api/v1/admin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
+2. **Trigger:** `POST /api/v1/superadmin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
 3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
 5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/admin/download-export?token=xyz`) that streams the file.
@@ -1928,7 +1926,7 @@ Never emit a critical WebSocket event (like "Export Ready", "Payment Received", 
 ## Rule 112 — Complete Isolation for E2E and Selenium Testing
 
 ### The Philosophy
-The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to E2E (pytest/Playwright/Cypress) and Selenium testing suites as they do to the backend source code. 
+The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to API E2E (pytest) and Selenium UI testing suites as they do to the backend source code. 
 
 ### Implementation Constraints
 
@@ -1948,7 +1946,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend_manager_e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
    - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend_e2e/backend_manager_e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
    - ❌ **BAD:** `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
-   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/manager_dashboard/manager_auth_helper.py` AND `backend_e2e/backend_manager_e2e/manager_billing/manager_auth_helper.py`
+   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/dashboard/manager_auth_helper.py` AND `backend_e2e/backend_manager_e2e/billing/manager_auth_helper.py`
 
 4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 

@@ -6373,17 +6373,18 @@ The final Stage 3 response MUST use this structure:
 ## 1. Executive Result
 
 ```text
-FRONTEND-REQUIRED BACKEND COMPLETENESS:
-...
-
-BACKEND ARCHITECTURE COMPLIANCE:
-...
-
-RUNTIME VERIFICATION:
-...
-
-OVERALL READINESS:
-...
+FRONTEND-REQUIRED BACKEND COMPLETENESS:        [updated verdict]
+BACKEND ARCHITECTURE COMPLIANCE:               [updated verdict]
+RUNTIME VERIFICATION:                          [updated verdict]
+SCOPE:                                         [updated verdict]
+CRITICAL BLOCKERS:                             [updated count + IDs]
+HIGH PRIORITY ISSUES:                          [updated count + IDs]
+UNVERIFIED REQUIREMENTS:                       [updated count]
+BLOCKED_BY_SUPPLIED_SCOPE ITEMS:               [updated count]
+FRONTEND-DERIVED BACKEND REQUIREMENTS:         [updated count]
+BACKEND ENDPOINTS:                             [updated count]
+BACKEND RULES:                                 [updated count]
+OVERALL READINESS:                             [updated verdict]
 ```
 
 ## 2. Scope and Coverage
@@ -6777,7 +6778,7 @@ Before you deliver anything, ALL of the following must be true simultaneously:
 [ ] Every missing test has been written
 [ ] Every documentation drift has been corrected
 [ ] All API E2E test files have been written
-[ ] All Selenium test files (Section 86.5) have been written
+[ ] All Selenium test files (Section 86B.2) have been written
 [ ] The 112-item Anti-Skipping Checklist re-run is complete and clean
 [ ] No previously failing item remains failing
 [ ] No new violation was introduced by a repair
@@ -6828,7 +6829,7 @@ stage_1_frontend_requirements.md         ← requirements extracted from fronten
 stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
 backend_e2e/...                          ← all API E2E test files
-backend_selenium/...  ← all Selenium test files (Section 86.5)
+backend_selenium/...  ← all Selenium test files (Section 86B.2)
 RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 ```
 
@@ -6894,8 +6895,6 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 - New issues introduced by repair: [count]
 
 ## 112-item Anti-Skipping Checklist (Post-Repair)
-[✅] All applicable/supplied inputs identified
-[✅] Backend documentation fully read
 [INSERT ALL 112 ROWS FROM SECTION 84 VERBATIM HERE]
 [❌] [any still-failing item with reason]
 
@@ -7091,7 +7090,7 @@ The V6 audit standard is exhaustive:
 - no endpoint-exists-only acceptance;
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
-- BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
+- BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86B.2);
 - no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
 - no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
 
