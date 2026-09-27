@@ -131,7 +131,7 @@ This hierarchy applies to EVERY frontend project regardless of business domain.
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders. 
 - **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
 - **Primary Examples:** `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_superadmin/`.
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/billing/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager_billing/`, there is zero ambiguity for the AI or the human developer.
 
 Examples of ROLE CONTAINERS:
 
@@ -376,7 +376,7 @@ src/app/frontend_admin/admin_billing/admin_billing_utils/
 and
 
 ```text
-/frontend_manager/billing/admin_billing_utils/
+src/app/frontend_manager/manager_billing/manager_billing_utils/
 ```
 
 may contain similar code.
@@ -1091,7 +1091,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
 - [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all complex forms and wizards
-- [ ] Rule 80: Currency/number formatting - `formatCurrencyFromMinorUnits()` used for all monetary values (minor-unit input), `formatNumber()` used for counts, no raw `.toFixed()` in JSX
+- [ ] Rule 80: Currency/number formatting - feature-local `[module]FormatCurrency()` used for all monetary values (minor-unit input), no raw `.toFixed()` in JSX, no global formatters.ts
 - [ ] Rule 81: Button loading width stability — no layout shift on loading state, `min-w` or text+spinner pattern used
 - [ ] Rule 82: Toast deduplication — all `toast()` calls pass a stable `id`, no stacking identical toasts
 - [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
@@ -1758,8 +1758,8 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
-- ❌ **BAD:** `import { MemberTableProps } from '@/app/frontend_admin/admin_members/members_types/member.types'`
-- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/frontend_admin/admin_members/members_types/member.types'`
+- ❌ **BAD:** `import { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
+- ✅ **GOOD:** `import type { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
@@ -2275,7 +2275,7 @@ All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly en
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MEMBER_URLS } from './manager_members_url_config';
+import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
 export const updateMemberProfile = async (id: string, body: unknown, idempotencyKey?: string) => apiFetch(MEMBER_URLS.PROFILE(id), {
   method: 'PATCH',

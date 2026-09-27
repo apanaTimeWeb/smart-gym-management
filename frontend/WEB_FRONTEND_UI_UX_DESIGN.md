@@ -123,9 +123,9 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--pay-cash-bg` | `#134E4A` | `#CCFBF1` |
 | `--pay-upi-text` | `#67E8F9` (Cyan) | `#0E7490` |
 | `--pay-upi-bg` | `#164E63` | `#CFFAFE` |
-| `--pay-card-text` | `#94A3B8` (Slate)| `#475569` |
+| `--pay-card-text` | `#CBD5E1` (Slate)| `#334155` |
 | `--pay-card-bg` | `#1E293B` | `#F1F5F9` |
-| `--pay-bank-text` | `#38BDF8` (Sky) | `#0369A1` |
+| `--pay-bank-text` | `#7DD3FC` (Sky) | `#0369A1` |
 | `--pay-bank-bg` | `#0C4A6E` | `#E0F2FE` |
 
 ### Chart Semantic Tokens
