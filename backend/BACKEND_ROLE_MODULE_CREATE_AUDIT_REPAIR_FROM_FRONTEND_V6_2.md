@@ -2671,6 +2671,25 @@ backend_admin/
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
 
+### 0B — Hard feature write boundary
+
+For feature-specific work, default writable scope is:
+
+```text
+[owning-feature]/**
+```
+
+Detect changes or dependencies crossing sibling business feature boundaries without an explicitly documented infrastructure exception.
+
+### 0C — Change-scope failure conditions
+
+Explicitly check:
+
+- unrelated business module changes;
+- new sibling-feature business dependencies;
+- business logic moved into domain-level folders;
+- queries/mock handlers modified in sibling modules.
+
 ### 0E — Isolated context means modular monolith
 
 Verify feature modules do NOT independently bootstrap global:
@@ -6372,6 +6391,8 @@ The final Stage 3 response MUST use this structure:
 
 ## 1. Executive Result
 
+*(Note: Section 79 is the canonical verdict schema. Section 86 is for report presentation.)*
+
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS:        [updated verdict]
 BACKEND ARCHITECTURE COMPLIANCE:               [updated verdict]
@@ -6509,7 +6530,7 @@ This is a mandatory deliverable that runs in parallel with Stage 2 and is finali
 
 You have the frontend source code (INPUT 1) in your context.
 
-You are also delivering backend repairs.
+You are also creating or repairing the backend.
 
 Therefore you MUST also generate Selenium test files for the supplied role/module.
 
@@ -7091,7 +7112,7 @@ The V6 audit standard is exhaustive:
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
 - BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86B.2);
-- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
-- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
+- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.6);
+- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86B.7).
 
 
