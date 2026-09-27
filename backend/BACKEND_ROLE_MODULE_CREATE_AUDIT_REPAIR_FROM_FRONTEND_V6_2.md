@@ -432,7 +432,7 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 **In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
-The answer must distinguish eight dimensions:
+The answer must distinguish four dimensions:
 
 ### A. FRONTEND-REQUIRED BACKEND COMPLETENESS
 
@@ -450,7 +450,7 @@ What was actually executed and verified at runtime?
 
 What could not be verified because the supplied inputs do not contain required shared/global artifacts or runtime dependencies?
 
-Never collapse these eight dimensions into one vague conclusion.
+Never collapse these four dimensions into one vague conclusion.
 
 ---
 
@@ -995,7 +995,7 @@ Filter scope: selected date range
 
 ### Derived display value
 
-Do not stop at “field exists.â€�
+Do not stop at “field exists.
 
 The backend must provide the field with the correct semantics.
 
@@ -1631,11 +1631,11 @@ Compare:
 
 ```text
 Frontend UI contract
-â†” Frontend schema/type
-â†” MSW response
-â†” Backend frozen contract
-â†” Backend DTO
-â†” Actual runtime/static implementation
+↔ Frontend schema/type
+↔ MSW response
+↔ Backend frozen contract
+↔ Backend DTO
+↔ Actual runtime/static implementation
 ```
 
 Classify:
@@ -1910,7 +1910,7 @@ Also verify:
 
 ```text
 Frontend-consumed errorCode
-â†”
+↔
 Backend-generated errorCode
 ```
 
@@ -2656,17 +2656,17 @@ Canonical prefixing architecture to verify against:
 
 ```text
 backend_admin/
-â”œâ”€â”€ admin_core/                             â†� (Top-level prefixed, NOT core/)
-â”‚   â”œâ”€â”€ admin_guards/                       â†� (Sub-folder prefixed, NOT guards/)
-â”‚   â”‚   â””â”€â”€ admin-core-jwt-auth.guard.ts    â†� (Role: admin, Module: core)
-â”‚   â””â”€â”€ admin-core.module.ts
-â””â”€â”€ admin_modules/                          â†� (Top-level prefixed, NOT modules/)
-    â””â”€â”€ admin_billing/                      â†� (Feature folder prefixed)
-        â”œâ”€â”€ billing_controllers/            â†� (Sub-folder prefixed with module name)
-        â”‚   â””â”€â”€ admin-billing-invoice.controller.ts
-        â”œâ”€â”€ billing_dto/
-        â”‚   â””â”€â”€ admin-billing-create-invoice.dto.ts
-        â””â”€â”€ admin-billing.module.ts
+├── admin_core/                             ← (Top-level prefixed, NOT core/)
+│   ├── admin_guards/                       ← (Sub-folder prefixed, NOT guards/)
+│   │   └── admin-core-jwt-auth.guard.ts    ← (Role: admin, Module: core)
+│   └── admin-core.module.ts
+└── admin_modules/                          ← (Top-level prefixed, NOT modules/)
+    └── admin_billing/                      ← (Feature folder prefixed)
+        ├── billing_controllers/            ← (Sub-folder prefixed with module name)
+        │   └── admin-billing-invoice.controller.ts
+        ├── billing_dto/
+        │   └── admin-billing-create-invoice.dto.ts
+        └── admin-billing.module.ts
 ```
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
@@ -2970,11 +2970,11 @@ For every image upload pipeline:
 
 ```text
 Upload
-â†’ Validation
-â†’ Transformation
-â†’ Compression
-â†’ WebP conversion
-â†’ Storage
+→ Validation
+→ Transformation
+→ Compression
+→ WebP conversion
+→ Storage
 ```
 
 Reject storage of raw PNG/JPG/JPEG/BMP when this rule applies.
@@ -3160,7 +3160,7 @@ Metrics must cover, where defined:
 - queue depth;
 - DB connection pool usage.
 
-Tracing must connect controllers â†’ services â†’ repositories â†’ external APIs.
+Tracing must connect controllers → services → repositories → external APIs.
 
 ---
 
@@ -3250,7 +3250,7 @@ Verify:
 - frontend feature/module semantic name is preserved;
 - backend feature folder mirrors frontend semantic name;
 - route naming mirrors domain grouping;
-- no silent semantic rename such as `auth` â†’ `identity`;
+- no silent semantic rename such as `auth` → `identity`;
 - casing may change only where framework convention requires it.
 
 ---
@@ -3261,11 +3261,11 @@ Verify the complete flow:
 
 ```text
 Request
-â†’ Authentication
-â†’ Tenant Authorization
-â†’ Trusted Tenant Context
-â†’ Tenant DataSource Resolver
-â†’ Tenant Database
+→ Authentication
+→ Tenant Authorization
+→ Trusted Tenant Context
+→ Tenant DataSource Resolver
+→ Tenant Database
 ```
 
 Verify:
@@ -3340,12 +3340,12 @@ Verify:
 
 ```text
 Create test tenant/database
-â†’ POST
-â†’ extract real ID
-â†’ GET by real ID
-â†’ PATCH real ID
-â†’ DELETE / soft delete real ID
-â†’ GET and verify documented post-delete behavior
+→ POST
+→ extract real ID
+→ GET by real ID
+→ PATCH real ID
+→ DELETE / soft delete real ID
+→ GET and verify documented post-delete behavior
 ```
 
 Verify no production/dev DB reuse and no database mocking.
@@ -3530,8 +3530,8 @@ Verify:
 Verify repository contracts distinguish:
 
 ```text
-findById() â†’ Entity | null
-findByIdOrThrow() â†’ Entity
+findById() → Entity | null
+findByIdOrThrow() → Entity
 ```
 
 No silent null propagation.
@@ -3576,7 +3576,7 @@ Verify:
 - endpoint SLA category is documented;
 - implementation meets category expectations based on source evidence;
 - timeout budgets fit inside SLA;
-- slow external dependencies are not hidden inside â€œFASTâ€� routes;
+- slow external dependencies are not hidden inside “FAST” routes;
 - heavy work is asynchronous.
 
 Do not make unsupported runtime timing claims without runtime evidence.
@@ -3783,7 +3783,7 @@ Verify:
 - module ownership enforcement;
 - CI blocking behavior.
 
-Architecture that is only â€œdocumentedâ€� but mechanically unguarded should be reported as an enforcement gap when tooling is mandated.
+Architecture that is only “documented” but mechanically unguarded should be reported as an enforcement gap when tooling is mandated.
 
 ---
 
@@ -3843,12 +3843,12 @@ Where mandated, verify source files contain concise AI-context comments showing:
 
 ```text
 Controller
-â†’ DTO
-â†’ Orchestrator
-â†’ Service
-â†’ Repository
-â†’ Mapper
-â†’ Response
+→ DTO
+→ Orchestrator
+→ Service
+→ Repository
+→ Mapper
+→ Response
 ```
 
 Comments must describe actual ownership and not be decorative.
@@ -3874,7 +3874,7 @@ Verify when feature workflow requires it:
 
 ```text
 Frontend mock contract
-â†’ backend implementation against frozen shape
+→ backend implementation against frozen shape
 ```
 
 Audit:
@@ -3947,7 +3947,7 @@ Where the architecture requires guard clauses:
 
 - invalid states return early;
 - happy path remains readable;
-- no deeply nested conditional â€œlogic tunnelâ€�.
+- no deeply nested conditional “logic tunnel”.
 
 ---
 
@@ -3991,12 +3991,12 @@ Verify exact ordering:
 
 ```text
 Node built-ins
-â†’ Framework
-â†’ Third-party
-â†’ Infrastructure absolute imports
-â†’ Module absolute imports
-â†’ NO relative imports
-â†’ type-only imports last
+→ Framework
+→ Third-party
+→ Infrastructure absolute imports
+→ Module absolute imports
+→ NO relative imports
+→ type-only imports last
 ```
 
 Verify ESLint mechanically enforces this.
@@ -4009,8 +4009,8 @@ Verify:
 
 ```text
 ORM Entity
-â†” Mapper
-â†” Domain Object
+↔ Mapper
+↔ Domain Object
 ```
 
 Services and event handlers must not consume ORM entities where forbidden.
@@ -4279,7 +4279,11 @@ Apply exactly as defined by the supplied architecture:
 - all POST/PATCH/PUT/DELETE mutations;
 - controller-level `@RequireIdempotencyKey()`;
 - missing-key rejection;
+- request-body hash verification;
+- atomic in-progress locking;
 - server-side deduplication;
+- completion only after DB commit;
+- fail-closed behavior when Redis/store is unavailable;
 - GET never requires key.
 
 ---
@@ -4318,11 +4322,11 @@ For every cached query verify:
 
 ```text
 Read
-â†’ deterministic key
-â†’ Mutation
-â†’ DB commit
-â†’ Explicit invalidation
-â†’ Next read
+→ deterministic key
+→ Mutation
+→ DB commit
+→ Explicit invalidation
+→ Next read
 ```
 
 TTL alone is insufficient where this rule requires explicit invalidation.
@@ -4384,17 +4388,17 @@ When applicable, verify the complete lifecycle:
 
 ```text
 Authorized Trigger
-â†’ 202
-â†’ Job
-â†’ Paginated extraction
-â†’ Deep relationship resolution
-â†’ CSV files
-â†’ ZIP
-â†’ Secure storage
-â†’ Time-limited token/URL
-â†’ Email delivery
-â†’ WebSocket completion event
-â†’ 90-day retention / hard deletion
+→ 202
+→ Job
+→ Paginated extraction
+→ Deep relationship resolution
+→ CSV files
+→ ZIP
+→ Secure storage
+→ Time-limited token/URL
+→ Email delivery
+→ WebSocket completion event
+→ 90-day retention / hard deletion
 ```
 
 Also verify:
@@ -4435,7 +4439,7 @@ And:
 Verify EXACTLY:
 
 - 1:1 backend folder mirroring;
-- role/module-prefixed filenames;
+- role/module-prefixed filenames (exempt from prefix rules ONLY for the `test_` prefix exception);
 - `test_[role]_[module]_api.py`;
 - `test_[role]_[module]_ui.py`;
 - no shared helpers/utilities;
@@ -4478,8 +4482,8 @@ Map:
 
 ```text
 Widget
-â†’ Dedicated API
-â†’ Dedicated query/service
+→ Dedicated API
+→ Dedicated query/service
 ```
 
 Flag endpoints that combine unrelated KPI/chart/table workloads when the architecture forbids such aggregation.
@@ -4517,7 +4521,7 @@ Verify:
 
 ## RULE 117 — RAG-READY API PROJECTIONS
 
-Verify (if applicable):
+Verify:
 
 - Module exposes a dedicated `/api/_rag/` namespace or `?format=rag` query param for AI/Chatbot consumers.
 
@@ -4688,10 +4692,10 @@ Before Stage 2 ends, prove:
 
 ```text
 DISCOVERED RULE
-â†’ APPLICABILITY DECISION
-â†’ EVIDENCE REQUEST
-â†’ EVIDENCE FOUND / NOT FOUND
-â†’ STATUS
+→ APPLICABILITY DECISION
+→ EVIDENCE REQUEST
+→ EVIDENCE FOUND / NOT FOUND
+→ STATUS
 ```
 
 A rule cannot disappear merely because:
@@ -4755,18 +4759,18 @@ serializers.py for validation/data formatting
 For Express verify:
 
 ```text
-routes â†’ Controllers
-controllers â†’ HTTP handling
-services â†’ business logic
+routes → Controllers
+controllers → HTTP handling
+services → business logic
 ```
 
 For NestJS verify the primary mappings:
 
 ```text
-Controller â†’ micro-service/service
-DTO â†’ validation
+Controller → micro-service/service
+DTO → validation
 CQRS or separated query/command services
-Repository â†’ ORM/data access
+Repository → ORM/data access
 ```
 
 The final report MUST identify which framework mapping was actually used.
@@ -4848,13 +4852,13 @@ For every non-trivial mutation verify the actual sequence:
 
 ```text
 Controller
-â†’ DTO validation
-â†’ Orchestrator
-â†’ transaction
-â†’ service
-â†’ repository
-â†’ commit
-â†’ event/job
+→ DTO validation
+→ Orchestrator
+→ transaction
+→ service
+→ repository
+→ commit
+→ event/job
 ```
 
 where applicable.
@@ -4932,11 +4936,11 @@ For every rule it must preserve:
 
 ```text
 Source Rule
-â†’ Applicable Scope
-â†’ Required Evidence
-â†’ Actual Evidence
-â†’ Finding
-â†’ Status
+→ Applicable Scope
+→ Required Evidence
+→ Actual Evidence
+→ Finding
+→ Status
 ```
 
 Where the architecture source contains exact implementation examples, inspect the underlying
@@ -5149,11 +5153,11 @@ For every frontend-required backend operation trace:
 
 ```text
 Controller
-â†’ DTO
-â†’ Orchestrator if applicable
-â†’ Service
-â†’ Repository
-â†’ Mapper
+→ DTO
+→ Orchestrator if applicable
+→ Service
+→ Repository
+→ Mapper
 ```
 
 Check:
@@ -5289,10 +5293,10 @@ Use:
 
 ```text
 Frontend Requirement
-â†’ Backend Capability
-â†’ Test
-â†’ Test Type
-â†’ Observable Behavior Proven
+→ Backend Capability
+→ Test
+→ Test Type
+→ Observable Behavior Proven
 ```
 
 For each important capability determine whether tests prove:
@@ -6054,16 +6058,16 @@ Preferred dependency logic:
 
 ```text
 Architecture blockers
-â†’ Shared contract blockers
-â†’ Database/schema blockers
-â†’ Security/authorization blockers
-â†’ Core backend capabilities
-â†’ Request/response contract
-â†’ Search/filter/sort/pagination
-â†’ Async/jobs/files
-â†’ Tests
-â†’ Documentation
-â†’ Final verification
+→ Shared contract blockers
+→ Database/schema blockers
+→ Security/authorization blockers
+→ Core backend capabilities
+→ Request/response contract
+→ Search/filter/sort/pagination
+→ Async/jobs/files
+→ Tests
+→ Documentation
+→ Final verification
 ```
 
 Change the order when actual dependency relationships require it.
@@ -6184,7 +6188,7 @@ Before generating the final verdict, perform a dedicated contract acceptance pas
 The final report MUST separately state:
 
 ```text
-FRONTEND â†” BACKEND CONTRACT STATUS:
+FRONTEND ↔ BACKEND CONTRACT STATUS:
 [ALIGNED / PARTIAL / CONFLICTED / NOT VERIFIED]
 
 CONTRACT FREEZE STATUS:
@@ -6216,7 +6220,7 @@ OUTSIDE_SUPPLIED_SCOPE
 NOT_VERIFIED
 ```
 
-Do not collapse these into a generic â€œbackend incompleteâ€� label.
+Do not collapse these into a generic “backend incomplete” label.
 
 ---
 
@@ -6336,7 +6340,7 @@ Before producing the final verdict, verify:
 [ ] Special/non-numeric architecture gates included
 [ ] Prompt examples not treated as authoritative project requirements
 [ ] MODULAR MONOLITH SCOPE BOUNDARY respected — app.module.ts, main.ts, package.json, tsconfig.json, .env, nest-cli.json NOT flagged as missing in a single feature module ZIP
-[ ] MODE DECISION correctly applied — if no backend ZIP supplied â†’ MODE A (CREATE); if backend ZIP supplied â†’ MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
+[ ] MODE DECISION correctly applied — if no backend ZIP supplied → MODE A (CREATE); if backend ZIP supplied → MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
 ```
 
 If any item is not satisfied, do not claim a fully verified audit.
@@ -6468,7 +6472,7 @@ Use the Multi-Axis Final Verdict (applies to the created backend in Mode A or th
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS
 BACKEND ARCHITECTURE COMPLIANCE
-FRONTEND â†” BACKEND CONTRACT STATUS
+FRONTEND ↔ BACKEND CONTRACT STATUS
 CONTRACT FREEZE STATUS
 UI DATA CONTRACT STATUS
 RESPONSE / ERROR / PAGINATION CONTRACT STATUS
@@ -6502,12 +6506,9 @@ You MUST verify any additional strict architectural rules that are explicitly su
 
 ## 86.4 Markdown Artifact Output Requirement
 DO NOT dump massive output tables directly into the chat. You MUST write your findings for each stage into separate Markdown Artifact files using your file-writing tools.
-- Stage 1 Output â†’ `stage_1_frontend_requirements.md`
-- Stage 2 Output â†’ `stage_2_backend_audit.md`
-- Stage 3 Output â†’ `stage_3_final_verdict.md`
-Keep all stage artifacts internal and include them only in the final ZIP. Never ask the user to proceed between stages.
-
-
+- Stage 1 Output → `stage_1_frontend_requirements.md`
+- Stage 2 Output → `stage_2_backend_audit.md`
+- Stage 3 Output → `stage_3_final_verdict.md`
 ## 86.5 E2E API AND SELENIUM TEST GENERATION MANDATE
 
 This is a mandatory deliverable that runs in parallel with Stage 2 and is finalized in Stage 3.
@@ -6551,9 +6552,9 @@ backend_selenium/
       test_[role]_[module]_ui_edge.py
   _test_forbidden.md
     [module]/
-      test_[role]_[module]_ui.py        â†� Selenium UI flow tests
-      test_[role]_[module]_ui_edge.py   â†� Selenium edge case / negative UI tests  
-      _test_forbidden.md                â†� Selenium forbidden patterns doc
+      test_[role]_[module]_ui.py        ← Selenium UI flow tests
+      test_[role]_[module]_ui_edge.py   ← Selenium edge case / negative UI tests  
+      _test_forbidden.md                ← Selenium forbidden patterns doc
 ```
 
 Examples:
@@ -6572,13 +6573,13 @@ For every major user-facing feature, cover the complete happy path:
 
 ```
 User navigates to route
-â†’ Page loads
-â†’ Data appears
-â†’ User performs primary action (click, fill form, submit)
-â†’ Loading state appears
-â†’ Success state appears
-â†’ UI updates (list refreshes, record appears/disappears)
-â†’ Navigation works
+→ Page loads
+→ Data appears
+→ User performs primary action (click, fill form, submit)
+→ Loading state appears
+→ Success state appears
+→ UI updates (list refreshes, record appears/disappears)
+→ Navigation works
 ```
 
 Each test MUST:
@@ -6595,31 +6596,31 @@ Each test MUST:
 Mandatory happy-path flows to cover (where applicable to the supplied module):
 
 * list page loads with at least one record;
-* create flow: fill form â†’ submit â†’ new record appears in list;
-* view/detail flow: click record â†’ detail page loads â†’ correct data shown;
-* edit flow: open edit â†’ change field â†’ save â†’ updated value visible in list/detail;
-* delete/archive flow: click delete â†’ confirm â†’ record disappears or status changes;
-* search: type in search â†’ results narrow;
-* filter: apply filter â†’ results change;
-* sort: click column header â†’ order changes;
-* pagination: advance page â†’ different records shown;
-* export: click export â†’ file download initiated or job status shown;
-* tabs: click tab â†’ content changes;
-* modal/drawer: open â†’ interact â†’ close â†’ original state preserved.
+* create flow: fill form → submit → new record appears in list;
+* view/detail flow: click record → detail page loads → correct data shown;
+* edit flow: open edit → change field → save → updated value visible in list/detail;
+* delete/archive flow: click delete → confirm → record disappears or status changes;
+* search: type in search → results narrow;
+* filter: apply filter → results change;
+* sort: click column header → order changes;
+* pagination: advance page → different records shown;
+* export: click export → file download initiated or job status shown;
+* tabs: click tab → content changes;
+* modal/drawer: open → interact → close → original state preserved.
 
 #### `test_[role]_[module]_ui_edge.py` — Edge Cases and Negative Flows
 
 For every major feature, cover:
 
-* empty state: no records â†’ empty state UI appears;
-* error state: backend returns error â†’ error message appears;
-* form validation: submit invalid data â†’ field-level errors appear;
-* not found: navigate to invalid ID â†’ 404 or not-found UI;
-* unauthorized action: attempt restricted action â†’ access denied UI;
-* retry: failed operation â†’ retry button â†’ operation re-attempted;
-* cancel: start action â†’ cancel â†’ original state preserved;
-* duplicate submit: submit twice â†’ only one record created (idempotency test);
-* session expiry: token expires â†’ redirect to login (where applicable).
+* empty state: no records → empty state UI appears;
+* error state: backend returns error → error message appears;
+* form validation: submit invalid data → field-level errors appear;
+* not found: navigate to invalid ID → 404 or not-found UI;
+* unauthorized action: attempt restricted action → access denied UI;
+* retry: failed operation → retry button → operation re-attempted;
+* cancel: start action → cancel → original state preserved;
+* duplicate submit: submit twice → only one record created (idempotency test);
+* session expiry: token expires → redirect to login (where applicable).
 
 #### `_test_forbidden.md` — E2E & Selenium Forbidden Patterns
 
@@ -6660,7 +6661,7 @@ Each test file MUST:
 
 ```python
 # RESPONSIBILITY: [what this test file validates in one sentence]
-# FLOW: [Browser â†’ Route â†’ UI Interaction â†’ Assert Visible Result]
+# FLOW: [Browser → Route → UI Interaction → Assert Visible Result]
 # MODULE: [role]_[module]
 # RULE: Rule 112 — Complete E2E/Selenium isolation
 
@@ -6688,7 +6689,7 @@ class Test[Role][Module]UI:
         ...
 
     def test_create_flow(self, driver):
-        """Create form â†’ submit â†’ new record appears in list."""
+        """Create form → submit → new record appears in list."""
         ...
 ```
 
@@ -6801,7 +6802,7 @@ If ANY item above is not yet done, you are NOT done. Do NOT deliver yet.
 While repairs are in progress, the ONLY acceptable communication to the user is a brief, non-deliverable status line such as:
 
 ```
-âš™ Repairing: 47/89 issues resolved. Continuing...
+⚙ Repairing: 47/89 issues resolved. Continuing...
 ```
 
 No files. No code blocks. No download links. Just a status count.
@@ -6829,16 +6830,16 @@ Mode B (second):   backend_{role}_v3_fix.zip
 The ZIP MUST contain:
 
 ```text
-INTEGRATION_GUIDE.md                     â†� mandatory integration instructions for the developer
-backend_{role}/                          â†� complete backend role module folder
+INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
+backend_{role}/                          ← complete backend role module folder
   [all source files — controllers,
    services, repos, DTOs, entities,
    migrations, seeds, tests, docs]
-stage_1_frontend_requirements.md         â†� requirements extracted from frontend ZIP
-stage_2_backend_audit.md                 â†� audit findings (Mode B only; for Mode A: creation log)
-stage_3_final_verdict.md                 â†� final verdict after re-audit / after creation verification
-backend_e2e/...                     â†� all Selenium test files (Section 86.5)
-RE_AUDIT_CHECKLIST_RESULT.md            â†� 112-item checklist result on the final code
+stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
+stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
+stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
+backend_e2e/...                     ← all Selenium test files (Section 86.5)
+RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 ```
 
 **The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
@@ -6865,7 +6866,7 @@ It is a targeted verification pass:
 
 2. **Run the 112-item Anti-Skipping Checklist (Section 84) on the repaired code:**
    - Every `[ ]` item must be re-evaluated against the repaired state.
-   - Produce the checklist with `[✅]` for passed, `[â�Œ]` for still failing, `[âš ï¸�]` for partially addressed.
+   - Produce the checklist with `[✅]` for passed, `[❌]` for still failing, `[⚠️]` for partially addressed.
 
 3. **Produce the final verdict axes (Section 79):**
    ```
@@ -6898,7 +6899,7 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 [✅] All four supplied inputs identified
 [✅] Backend documentation fully read
 ... (You MUST explicitly reproduce and check off ALL 112 items here. Do not use ellipses or omit rows.)
-[â�Œ] [any still-failing item with reason]
+[❌] [any still-failing item with reason]
 
 ## Updated Final Verdict
 FRONTEND-REQUIRED BACKEND COMPLETENESS: ...
@@ -6958,7 +6959,7 @@ HIGHEST DISCOVERED RULE NUMBER: [number / identifier]
 
 # 86.9 FINAL V6.2 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
 
-A backend MUST NOT be declared “completeâ€� solely because:
+A backend MUST NOT be declared “complete” solely because:
 
 * the endpoint exists;
 * the DTO exists;

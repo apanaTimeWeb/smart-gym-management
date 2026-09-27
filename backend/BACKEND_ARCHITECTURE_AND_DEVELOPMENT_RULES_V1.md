@@ -200,12 +200,6 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
-### In NestJS (TypeScript) — Primary Standard
-- Break down monolithic `@Injectable()` classes.
-- Use `CQRS` (Command Query Responsibility Segregation) or just separate `xxx.service.ts` files.
-- Put DTOs in a `dtos/` folder.
-- Keep `@Controller()` classes incredibly thin; they should only receive the request and immediately pass it to a micro-service.
-
 ### In Django (Python) — Reference Only
 - Avoid massive `views.py`. Create a `views/` folder and split class-based views into individual files (e.g., `member_registration_view.py`).
 - Avoid "fat models". Move complex business logic from `models.py` into a `services/` directory.
@@ -1648,7 +1642,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
 * **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy or Prisma implicit naming or implicit Prisma naming.
-* ** **Why:** A global Naming Strategy (like TypeORM Naming Strategy or Prisma implicit naming) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Why:** A global Naming Strategy (like TypeORM Naming Strategy or Prisma implicit naming) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -1849,7 +1843,7 @@ Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in fin
   - INR: store `9999` for ₹99.99 (paise)
   - USD/EUR: store `9999` for $99.99 (cents)
   - JPY: store `100` for ¥100 (yen has no subunit)
-- Use `INT column type in your chosen ORM (TypeORM or Prisma). Never use `DECIMAL` or `FLOAT` for money.
+- Use `INT` or `BIGINT` column type in your chosen ORM (TypeORM or Prisma). Never use `DECIMAL` or `FLOAT` for money.
 - Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
 
 ``````typescript
