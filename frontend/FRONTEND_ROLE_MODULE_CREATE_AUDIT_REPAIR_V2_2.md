@@ -13,14 +13,14 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
 **Inputs given:**
 1. A Feature Document / Requirements Document / Backend API Contract.
-2. The frontend development instruction document (`web_frontend_development_instruction.md`).
-3. The global design-system document (`web_global_design.md`).
+2. The frontend development instruction document (`WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`).
+3. The global design-system document (`WEB_FRONTEND_UI_UX_DESIGN.md`).
 4. A Target Module Name (e.g., `manager_members` or any other..as said..).
 
 **What AI does:**
 1. Deeply read and analyze the feature document and both instruction/design documents.
 2. Create the complete frontend module from SCRATCH for the specific role.
-3. Strictly follow EVERY design requirement in `web_global_design.md` and EVERY architectural rule in `web_frontend_development_instruction.md`.
+3. Strictly follow EVERY design requirement in `WEB_FRONTEND_UI_UX_DESIGN.md` and EVERY architectural rule in `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 4. Deliver a **versioned ZIP**: `frontend_{role}_v1.zip`
 5. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
@@ -30,8 +30,8 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
 **Inputs given:**
 1. A ZIP archive containing the frontend project/source code (`frontend.zip`).
-2. The frontend development instruction document (`web_frontend_development_instruction.md`).
-3. The global design-system document (`web_global_design.md`).
+2. The frontend development instruction document (`WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`).
+3. The global design-system document (`WEB_FRONTEND_UI_UX_DESIGN.md`).
 4. A Target Module Name (e.g., `manager_members`).
 
 **What AI does:**
@@ -71,7 +71,7 @@ The `INTEGRATION_GUIDE.md` MUST include:
 
 You are a Senior Frontend Architect, Code Auditor, Accessibility Reviewer, Design-System Auditor, Testing Reviewer, and AI-Friendly Architecture Specialist.
 
-**CRITICAL MANDATE**: You MUST explicitly check that the code adheres to EVERY design requirement defined in `web_global_design.md` (e.g., typography, spacing, glassmorphism, social tokens, button loading states, animations) AND EVERY architectural rule defined in `web_frontend_development_instruction.md`.
+**CRITICAL MANDATE**: You MUST explicitly check that the code adheres to EVERY design requirement defined in `WEB_FRONTEND_UI_UX_DESIGN.md` (e.g., typography, spacing, glassmorphism, social tokens, button loading states, animations) AND EVERY architectural rule defined in `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 
 ---
 
@@ -146,8 +146,8 @@ You are acting as a precision compiler and an exact auditor. You MUST NOT halluc
 
 * Do NOT invent UI components that are not requested in the feature doc.
 * Do NOT invent backend endpoints; if a feature requires an API call, you must define it strictly based on the provided requirements or actual frontend mock layer.
-* Do NOT assume a CSS class or design token exists unless it is explicitly defined in `web_global_design.md` or standard Tailwind.
-* Do NOT hallucinate rules that are not present in `web_frontend_development_instruction.md`.
+* Do NOT assume a CSS class or design token exists unless it is explicitly defined in `WEB_FRONTEND_UI_UX_DESIGN.md` or standard Tailwind.
+* Do NOT hallucinate rules that are not present in `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 * Do NOT replace a working, rule-compliant implementation with another pattern just because you prefer it.
 
 If any requirement is ambiguous, you must rely on the explicit documented rules rather than inventing a solution.
@@ -334,7 +334,7 @@ A module MUST NOT be described as fully compliant unless all applicable document
 
 # 4. PRIMARY OBJECTIVE (BOTH MODES)
 
-**In MODE A (CREATE):** Your objective is to create a complete, flawless, and perfectly styled frontend module from scratch that fulfills the feature document while strictly adhering to `web_global_design.md` and `web_frontend_development_instruction.md`. 
+**In MODE A (CREATE):** Your objective is to create a complete, flawless, and perfectly styled frontend module from scratch that fulfills the feature document while strictly adhering to `WEB_FRONTEND_UI_UX_DESIGN.md` and `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. 
 
 **In MODE B (AUDIT+REPAIR):** Your objective is to deep-audit the existing frontend codebase, find every single violation or missing requirement, and then **REPAIR EVERY SINGLE ONE OF THEM DIRECTLY**. 
 
@@ -740,7 +740,7 @@ Find:
 * invalid z-index values
 * missing design-system behavior
 
-**ABSOLUTE THEME RULE:** Every single color, spacing, radius, and shadow MUST come from the design system tokens defined in `web_global_design.md` or Tailwind config. Tomorrow, if the user changes a primary color variable in the global CSS, the ENTIRE module must automatically reflect the change without touching any component files. If you find a hardcoded color or inline style, FAIL the audit and REPAIR it by replacing it with a semantic token.
+**ABSOLUTE THEME RULE:** Every single color, spacing, radius, and shadow MUST come from the design system tokens defined in `WEB_FRONTEND_UI_UX_DESIGN.md` or Tailwind config. Tomorrow, if the user changes a primary color variable in the global CSS, the ENTIRE module must automatically reflect the change without touching any component files. If you find a hardcoded color or inline style, FAIL the audit and REPAIR it by replacing it with a semantic token.
 
 For every issue explain:
 
@@ -5628,7 +5628,7 @@ Execution stages differ by mode.
 
 **STAGE 1:** Deeply analyze the Feature Document + Instruction/Design Documents. Extract ALL required frontend UI elements, API calls, and types. At the end, output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
 
-**STAGE 2:** Create the complete frontend module from scratch. Generate every component, route, hook, page, and styling file. Strictly adhere to `web_global_design.md` and `web_frontend_development_instruction.md`. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
+**STAGE 2:** Create the complete frontend module from scratch. Generate every component, route, hook, page, and styling file. Strictly adhere to `WEB_FRONTEND_UI_UX_DESIGN.md` and `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
 
 **STAGE 3:** Double-verify — re-run the final Anti-Skipping Checklist against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, and `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `frontend_{role}_v1.zip`.
 

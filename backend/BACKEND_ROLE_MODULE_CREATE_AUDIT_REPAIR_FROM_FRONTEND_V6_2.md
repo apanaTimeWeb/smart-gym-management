@@ -14,12 +14,12 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
 **Inputs given:**
 1. Frontend role folder ZIP (e.g., `frontend_superadmin/` or `superadmin/`)
-2. `backend_development_instruction.md`
+2. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
 
 **What AI does:**
 1. Deeply read and analyze the entire frontend ZIP — every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
 2. Extract every single backend requirement the frontend depends on.
-3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `backend_development_instruction.md`.
+3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 4. Double-verify: re-read the frontend requirements and cross-check against what was just created. Nothing can be missing.
 5. Deliver a **versioned ZIP**: `backend_{role}_v1.zip`
 6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
@@ -31,13 +31,13 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 **Inputs given:**
 1. Frontend role folder ZIP
 2. Existing backend role module ZIP (e.g., `backend_superadmin/`)
-3. `backend_development_instruction.md`
+3. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
 
 **What AI does:**
 1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
 2. Deeply read and audit the existing backend ZIP against:
    - All frontend-derived requirements
-   - Every rule in `backend_development_instruction.md` (Rules 0A through 126)
+   - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 126)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
 4. Fix ALL found issues directly in code — no half-fixes, no skipping.
 5. Double-verify after repair: re-run the full audit against the repaired code.
@@ -114,7 +114,7 @@ You are a:
 Your task is to either CREATE or AUDIT+REPAIR a backend role module so that it is:
 
 1. **Complete** — every requirement derivable from the supplied frontend is implemented
-2. **Correct** — every rule in the supplied `backend_development_instruction.md` is followed
+2. **Correct** — every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is followed
 3. **Integrated** — a clear integration guide is included so the developer can plug it into the global monolith
 
 The core verification chain (applies in both modes):
@@ -269,7 +269,7 @@ A ZIP containing the backend architecture and backend documentation.
 
 It may contain:
 
-* `backend_development_instruction.md`
+* `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
 * `[module]_backend_feature.md`
 * `[module]_dependencies.md`
 * `[module]_forbidden.md`
@@ -428,7 +428,7 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 # 3. PRIMARY QUESTION (BOTH MODES)
 
-**In MODE A (CREATE):** Does the created backend completely and correctly implement EVERYTHING the supplied frontend requires, while complying with all rules in `backend_development_instruction.md`?
+**In MODE A (CREATE):** Does the created backend completely and correctly implement EVERYTHING the supplied frontend requires, while complying with all rules in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`?
 
 **In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
@@ -440,7 +440,7 @@ Does the backend (created or repaired) satisfy the frontend's actual backend-fac
 
 ### B. BACKEND ARCHITECTURE COMPLIANCE
 
-Does the backend conform to every rule in the supplied `backend_development_instruction.md` (Rules 0A through 126)?
+Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 126)?
 
 ### C. RUNTIME VERIFICATION
 
@@ -566,7 +566,7 @@ Different sources answer different questions.
 
 Highest authority:
 
-1. supplied `backend_development_instruction.md`;
+1. supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`;
 2. supplied backend architecture documents;
 3. supplied module/backend feature/dependency/forbidden documentation.
 
@@ -640,7 +640,7 @@ Execution stages differ by mode.
 
 **STAGE 1:** Frontend deep analysis — extract ALL backend requirements. At the end, output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
 
-**STAGE 2:** Create the complete backend module from scratch following `backend_development_instruction.md`. Generate every file. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
+**STAGE 2:** Create the complete backend module from scratch following `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Generate every file. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
 
 **STAGE 3:** Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
 
