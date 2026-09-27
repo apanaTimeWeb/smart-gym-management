@@ -1165,7 +1165,7 @@ Minimum expectations:
 
 **Component Testing Philosophy (No Playwright):**
 1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
-2. **No Frontend E2E Suite:** Because true E2E is handled externally (e.g., Selenium via the backend QA pipeline), the frontend is responsible strictly for rigorous **Component Integration Testing**. You MUST use React Testing Library (RTL) + MSW to verify that:
+2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `frontend_e2e/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
    - Buttons trigger the correct actions and loading states.
    - Dropdowns open and select the correct values.
    - Modals appear and close correctly.
@@ -2245,14 +2245,15 @@ Global toast notifications MUST be deduplicated. If a specific toast (identified
 
 
 
-83. **Idempotency-Key for Financial and Irreversible Mutations (Web Equivalent of Mobile Rule 53)**:
-Any mutation that is financial, irreversible, or non-duplicable (payment recording, invoice creation, payroll processing, membership renewal) MUST attach an `Idempotency-Key` header to the HTTP request.
-- **Key generation:** Generate a UUID exactly once per user intent — at the moment the user confirms the action (e.g., inside the `useConfirm()` handler, not at the `onClick` of the trigger button).
-- **Retry behavior:** If the request times out or returns a 5xx response and the user or the app retries, it MUST send the **exact same** `Idempotency-Key`. Never generate a fresh key for a retry of the same intent.
-- **Key scope:** One key per user-initiated action. If the user cancels and re-opens the confirmation dialog, a new key is generated.
-- **Implementation:** Add the key in `apiFetch` via an optional `idempotencyKey` parameter, or accept it as a per-request header override in the module's API client.
-- ❌ **BAD:** Generating `crypto.randomUUID()` on every retry attempt — the backend may process the request twice, creating duplicate payments.
-- ✅ **GOOD:** Generate the key in the confirm handler, store it in a `useRef`, and reuse it on all retries until the mutation succeeds or is explicitly abandoned.
+83. **Idempotency-Key Lifecycle & Retry Behavior**:
+Rule 14 establishes that applicable mutation API clients require an Idempotency-Key. This rule defines the key lifecycle and retry behavior:
+- generate exactly once per user intent;
+- generate at confirmation;
+- reuse on retry;
+- new key only for a new intent;
+- never generate a fresh key for a retry.
+- **Implementation:** Generate the key in the confirm handler, store it (e.g., in a `useRef`), and reuse it on all retries until the mutation succeeds or is explicitly abandoned.
+- ❌ **BAD:** Generating `crypto.randomUUID()` on every retry attempt.
 
 Cross-reference: Backend Rule 31 (idempotency contract), Mobile Rule 53 (same requirement on mobile).
 
@@ -2307,21 +2308,20 @@ The frontend uses `next-intl` (Next.js) with **co-located locale files inside ea
 
 ### Module-Level File Structure
 Each feature module owns its own `_locales/` folder:
-```
-src/features/
-  admin/
-    members/
+```text
+src/app/
+  frontend_admin/
+    admin_members/
       _locales/
         en.json   ← AI writes this when creating the module
-        nl.json   ← AI translates this in the same commit
-        fr.json
+        hi.json   ← AI translates this in the same commit
       components/
       hooks/
-  superadmin/
-    tenants/
+  frontend_superadmin/
+    superadmin_tenants/
       _locales/
         en.json
-        nl.json
+        hi.json
 scripts/
   merge-locales.ts   ← Merges all _locales into one bundle at build time
 ```
@@ -2383,9 +2383,9 @@ import * as path from 'path';
 import { globSync } from 'glob';
 
 const OUTPUT_DIR = 'public/locales';
-const merged: Record<string, Record<string, any>> = {};
+const merged: Record<string, Record<string, unknown>> = {};
 
-for (const file of globSync('src/features/**/_locales/*.json')) {
+for (const file of globSync('src/app/frontend_*/**/_locales/*.json')) {
   const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
   const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
   merged[lang] = { ...merged[lang], ...content };
@@ -2429,16 +2429,22 @@ export const apiFetch = async (url: string, options?: RequestInit) => {
 4. Commit all `_locales/` files alongside the feature module code.
 5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
 
-### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
+### Currently Active Languages
+This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
 | `en` | English | Global | Latin | **Base — always first** |
+| `hi` | Hindi | India (North) | Devanagari | High |
+
+### Planned Languages
+These languages will be added as the product expands. Do NOT generate locales for these languages by default during new module creation until they are moved to the active list.
+
+| Code | Language | Region | Script | Priority |
+|------|----------|--------|--------|----------|
 | `nl` | Dutch | Netherlands, Belgium | Latin | High |
 | `fr` | French | France, Belgium, Canada | Latin | High |
 | `de` | German | Germany, Austria, Switzerland | Latin | High |
-| `hi` | Hindi | India (North) | Devanagari | High |
 | `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
 | `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
 | `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
@@ -2448,11 +2454,11 @@ This is the **authoritative list of languages** this project supports. There is 
 | `ml` | Malayalam | Kerala, India | Malayalam | Low |
 | `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
 
-> **Phased Rollout:** Do not ship all languages at launch. Start with `en` + `hi` (covers ~40% of India). Add `nl`, `fr`, `de` for European markets. Add remaining Indian regional languages as the product expands into those regions. Update this table when a new language is officially launched.
+When a planned language becomes officially active, every affected module MUST add that locale in the same change.
 
 > **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
 
-> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all configured target-language files (e.g., `_locales/nl.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all currently active target-language files (e.g., `_locales/hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 

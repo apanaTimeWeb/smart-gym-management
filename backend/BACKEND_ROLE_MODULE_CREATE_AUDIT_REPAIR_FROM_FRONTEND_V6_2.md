@@ -636,29 +636,38 @@ Execution stages differ by mode.
 
 ---
 
-## MODE A — STAGED EXECUTION (CREATE)
+## MODE A — INTERNAL STAGED WORKFLOW (CREATE)
 
-**STAGE 1:** Frontend deep analysis — extract ALL backend requirements. At the end, output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
+**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
+Frontend deep analysis — extract ALL backend requirements. Store the result as `stage_1_frontend_requirements.md`.
+*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
 
-**STAGE 2:** Create the complete backend module from scratch following `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Generate every file. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
+**STAGE 2 — INTERNAL CREATION:**
+Create the complete backend module from scratch following `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Generate every file.
+*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
 
-**STAGE 3:** Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
-
----
-
-## MODE B — STAGED EXECUTION (AUDIT+REPAIR)
-
-**STAGE 1:** Frontend deep analysis + backend requirement extraction + frozen baseline. Output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
-
-**STAGE 2:** Deep audit of existing backend — every rule, every requirement, every file. Output `stage_2_backend_audit.md`. STOP. Wait for `PROCEED TO STAGE 3`.
-
-**STAGE 3:** Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
+**STAGE 3 — FINAL VERIFICATION & DELIVERY:**
+Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
 
 ---
 
-Do NOT output the entire work in one response.
+## MODE B — INTERNAL STAGED WORKFLOW (AUDIT+REPAIR)
 
-Do not require any other continuation phrase beyond `PROCEED TO STAGE 2` and `PROCEED TO STAGE 3`.
+**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
+Frontend deep analysis + backend requirement extraction + frozen baseline. Store the result as `stage_1_frontend_requirements.md`.
+*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
+
+**STAGE 2 — INTERNAL AUDIT:**
+Deep audit of existing backend — every rule, every requirement, every file. Store the findings internally (output as `stage_2_backend_audit.md` inside final zip).
+*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
+
+**STAGE 3 — FINAL REPAIR & DELIVERY:**
+Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
+
+---
+
+Do NOT output intermediate code.
+Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
 
 Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
 

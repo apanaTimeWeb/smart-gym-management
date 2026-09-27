@@ -75,6 +75,7 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--bg-card` | `#111111` (Elevated Dark) | `#FFFFFF` | Card, panel, table background |
 | `--bg-sidebar` | `#050505` (Soft Black) | `#FAFAFA` | Sidebar background |
 | `--bg-header` | `#111111` (Elevated Dark) | `#FFFFFF` | Top header background |
+| `--bg-header-translucent` | `rgba(17, 17, 17, 0.8)` | `rgba(255, 255, 255, 0.8)` | Sticky header with blur |
 | `--bg-input` | `#1A1A1A` (Deep Gray) | `#FFFFFF` | Input field background |
 | `--bg-floating` | `#1A1A1A` | `#FFFFFF` | Inputs, code blocks, floating surfaces |
 | `--bg-overlay` | `#242424` | `#FAFAFA` | Modals, dialogs, drawers |
@@ -91,6 +92,7 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--text-disabled` | `#52525B` | `#A1A1AA` | Disabled states |
 | `--text-on-primary` | `#111111` | `#111111` | Text on primary buttons |
 | `--text-on-danger` | `#FFFFFF` | `#7F1D1D` | Text on danger actions |
+| `--text-on-warning` | `#111111` | `#78350F` | Text on warning states |
 | `--text-on-success` | `#FFFFFF` | `#064E3B` | Text on success states |
 | `--text-on-info` | `#FFFFFF` | `#1E3A8A` | Text on info states |
 | `--skeleton-base` | `#111111` | `#E4E4E7` | Loading skeleton base color |
@@ -99,6 +101,10 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 ### Status Tokens (Separated Text & Background)
 | Token | Dark Mode (Default) | Light Mode |
 |---|---|---|
+| `--success` | `#22C55E` | `#10B981` |
+| `--warning` | `#F59E0B` | `#F59E0B` |
+| `--danger` | `#EF4444` | `#EF4444` |
+| `--info` | `#3B82F6` | `#3B82F6` |
 | `--success-text` | `#22C55E` (Stronger Fitness Green) | `#10B981` |
 | `--success-bg` | `#064E3B` | `#D1FAE5` |
 | `--warning-text` | `#F59E0B` (Amber) | `#F59E0B` |
@@ -225,8 +231,10 @@ To remove ambiguity for AI generation, Tailwind classes MUST map to these underl
 | `bg-page` | `--bg-page` |
 | `bg-card` | `--bg-card` |
 | `bg-header` | `--bg-header` |
+| `bg-header-translucent` | `--bg-header-translucent` |
 | `bg-sidebar` | `--bg-sidebar` |
 | `bg-input` | `--bg-input` |
+| `text-on-warning` | `--text-on-warning` |
 | `bg-floating` | `--bg-floating` |
 | `bg-overlay` | `--bg-overlay` |
 | `bg-popover` | `--bg-popover` |
@@ -584,7 +592,7 @@ To ensure the application feels like a world-class, premium SaaS, **every develo
    - **Active states:** Buttons should scale down slightly when clicked (`motion-safe:active:scale-95`).
 
 2. **Glassmorphism & Depth (Z-Axis Elevation):**
-   - **Sticky Headers:** Must not be solid flat colors. Use translucent backgrounds with blur (e.g., `bg-header/80 backdrop-blur-md`).
+   - **Sticky Headers:** Must not be solid flat colors. Use translucent backgrounds with blur (e.g., `bg-header-translucent backdrop-blur-md`).
    - **Modals, Tooltips, & Dropdowns:** Must use deep, soft shadows to create physical separation from the background (e.g., `shadow-dialog` or `shadow-popover`).
 
 3. **Custom Premium Scrollbars:**
