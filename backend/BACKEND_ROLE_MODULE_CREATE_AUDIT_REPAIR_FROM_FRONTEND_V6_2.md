@@ -3131,15 +3131,7 @@ HTTP interceptors alone are not sufficient if non-HTTP mutations exist.
 
 ## RULE 31 — LEGACY (SUPERSEDED BY RULE 103)
 
-Verify critical mutations independently of the broader Rule 103 strict mutation rule.
-
-Where critical mutations exist, verify:
-
-- `Idempotency-Key`;
-- Redis persistence;
-- 24h TTL where specified;
-- first-result replay;
-- duplicate prevention.
+- Skip legacy Rule 31 verification. Verify idempotency strictly under Rule 103 instead.
 
 ---
 

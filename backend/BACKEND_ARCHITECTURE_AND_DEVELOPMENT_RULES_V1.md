@@ -200,6 +200,10 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
+*(Note: In non-NestJS frameworks like Django or Express, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
+
+*(Note: In non-NestJS frameworks like Django or Express, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
+
 ### In Django (Python) — Reference Only
 - Avoid massive `views.py`. Create a `my_module_views/` folder and split class-based views into individual files (e.g., `admin_member_registration_view.py`).
 - Avoid "fat models". Move complex business logic from `models.py` into a `my_module_services/` directory.
@@ -337,10 +341,10 @@ should an AI NEVER do in this module?]
 |---|---|
 | [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
 | [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
-| [role]_[module]_services/[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| [role]_[module]_repositories/[module].repository.ts | [REQUIRED: what queries it owns] |
-| [role]_[module]_dtos/[module]-create.dto.ts | [REQUIRED: what it validates] |
-| [module].entity.ts | [REQUIRED: what DB table it maps to] |
+| [role]_[module]_services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
+| [role]_[module]_repositories/[role]-[module].repository.ts | [REQUIRED: what queries it owns] |
+| [role]_[module]_dtos/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
+| [role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
 
 ## Feature Inventory
 [REQUIRED: One row per endpoint. Purpose must be a full sentence, not "Handles X".]
@@ -476,7 +480,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **Why:** When a server restarts or a container is killed, it shouldn't just die instantly, dropping user requests mid-flight. It must stop accepting new requests, finish processing current ones, safely close the database connection, and *then* shut down.
 
 ## 26. API Versioning (URI Based)
-* **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
+* **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally. *(Exception: Operational endpoints such as `/health`, `/health/live`, `/health/ready`, and `/metrics` are exempt from `/api/vN` business-route versioning and remain at the root.)*
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
 ## 27. API Testing Strategy (Three-Tier: Jest Unit + API E2E + Selenium UI)
@@ -836,8 +840,8 @@ Backend implementation (services, repositories, DB queries)
 ## 77. Dependency-Addition Guardrail
 * **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
 
-## 78. Forbidden Patterns File (`[moduleName]_forbidden.md`)
-* **The Rule:** Every backend module must have a `[moduleName]_forbidden.md` file listing what is explicitly NOT allowed in that specific module.
+## 78. Forbidden Patterns File (`[role]_[module]_forbidden.md`)
+* **The Rule:** Every backend module must have a `[role]_[module]_forbidden.md` file listing what is explicitly NOT allowed in that specific module.
 
 ### `_forbidden.md` Content Quality Standard
 
@@ -849,7 +853,7 @@ Backend implementation (services, repositories, DB queries)
 
 #### ❌ BAD — Generic, unactionable:
 ```markdown
-# billing_forbidden.md
+# admin_billing_forbidden.md
 - Never bypass the Orchestrator for payments.
 - Never mutate the DB without pessimistic locking.
 - Do not use console.log.
@@ -859,7 +863,7 @@ Backend implementation (services, repositories, DB queries)
 
 #### ✅ GOOD — Specific, rule-cited, consequence-explained:
 ```markdown
-# billing_forbidden.md
+# admin_billing_forbidden.md
 
 ## What is NEVER allowed in this module
 
@@ -1660,7 +1664,7 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 
 ## Rule 104 — WebSockets & Real-Time Communication
 * **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
-* **Implementation:** Use a Redis Pub/Sub adapter (e.g., use `@nestjs/platform-ws` or `socket.io` with the `@nestjs/microservices` redis adapter) to ensure that WebSocket events scale across multiple backend instances.
+* **Implementation:** Use a Redis Pub/Sub adapter. Use a WebSocket transport (e.g., `@nestjs/platform-ws` or `@nestjs/platform-socket.io`) paired with a Redis-backed horizontal-scaling adapter (e.g., the `@nestjs/microservices` redis adapter) to ensure that WebSocket events scale across multiple backend instances.
 * **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
 
 ## Rule 105 — Role-Based Data Serialization & Field Masking
