@@ -69,7 +69,7 @@ Do not create monolithic Services, Controllers, or Views. A generic `UserService
 
 **The Solution: Use-Case Driven Files**
 Break down large files into micro-features. Every file must handle only one specific business flow.
-- ❌ **BAD:** `members.service.ts` (Handles registration, billing, attendance, emails)
+- ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
 - ✅ **GOOD:** 
   - `member-registration.service.ts`
   - `member-billing.service.ts`
@@ -701,7 +701,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
 
 ## 48. CQRS Lite (Query vs Command Controllers)
-* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
+* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
 
 ## 49. Explicit Module Dependency Graph (Including Runtime Events)
 * **The Rule:** Every module must have a `[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
@@ -1158,10 +1158,10 @@ This rule MUST remain consistent with Rule 99.
 
   import { Injectable } from '@nestjs/common';
 
-  import { PrismaService } from '@/core/database/prisma.service';
   import * as bcrypt from 'bcrypt';
 
-  import { DatabaseConfig } from '@/src/infrastructure/config/database.config';
+  import { PrismaService } from '@/infrastructure/prisma/prisma.service';
+  import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
   import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
   import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
@@ -1641,8 +1641,8 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy or Prisma implicit naming or implicit Prisma naming.
-* **Why:** A global Naming Strategy (like TypeORM Naming Strategy or Prisma implicit naming) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom implicit global naming strategies.
+* **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -1701,8 +1701,8 @@ src/
           fr/
             errors.json
             messages.json
-        members.controller.ts
-        members.service.ts
+        admin-members.controller.ts
+        admin-members.service.ts
     superadmin/
       tenants/
         _locales/
@@ -1877,7 +1877,7 @@ return `₹${amount / 100}`;
 return { amount, currency };
 ``````
 
-> **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
+> **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` or `BIGINT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
 
 
 ## Rule 110 — Tenant Data Export & Offboarding

@@ -259,7 +259,7 @@ When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/
 
 These are the responsibility of the global application monolith. The feature module intentionally does NOT include them. Flagging them as missing is a FALSE NEGATIVE and constitutes an audit failure.
 
-The feature module DOES own its own `.forFeature()` TypeORM registrations, its own NestJS module file (e.g., `backend-superadmin.module.ts`), and its own seed script if required by the architecture.
+The feature module DOES own its own `module-scoped ORM registrations, its own NestJS module file (e.g., `backend-superadmin.module.ts`), and its own seed script if required by the architecture.
 
 ---
 
@@ -432,7 +432,7 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 **In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
-The answer must distinguish four dimensions:
+The answer must distinguish 4 core dimensions (which expand into 8 final axes in the verdict):
 
 ### A. FRONTEND-REQUIRED BACKEND COMPLETENESS
 
@@ -450,7 +450,7 @@ What was actually executed and verified at runtime?
 
 What could not be verified because the supplied inputs do not contain required shared/global artifacts or runtime dependencies?
 
-Never collapse these four dimensions into one vague conclusion.
+Never collapse these dimensions into one vague conclusion.
 
 ---
 
@@ -669,7 +669,7 @@ Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUID
 Do NOT output intermediate code.
 Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
 
-Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
+
 
 ---
 
@@ -2649,7 +2649,7 @@ Verify:
 - backend role containers use `backend_` prefix (e.g., `backend_admin/`, `backend_manager/`);
 - E2E role roots use `backend_*_e2e` (e.g., `backend_e2e/backend_admin_e2e/`);
 - Selenium role roots use `backend_*_selenium` (e.g., `backend_selenium/backend_admin_selenium/`);
-- ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere;
+- ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere unless explicitly matching the Rule 2 global infrastructure exception;
 - filenames begin with the role + module as a prefix (e.g., `admin-billing-invoice.controller.ts`).
 
 Canonical prefixing architecture to verify against:
@@ -2680,7 +2680,7 @@ Verify feature modules do NOT independently bootstrap global:
 - global Redis;
 - redundant `.forRoot()` infrastructure.
 
-Verify the feature uses `.forFeature()` / module-scoped registration where required.
+Verify the feature uses `module-scoped ORM registration where required.
 
 ---
 
@@ -6838,7 +6838,7 @@ backend_{role}/                          ← complete backend role module folder
 stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
 stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
-backend_e2e/...                     ← all Selenium test files (Section 86.5)
+backend_selenium/...  ← all Selenium test files (Section 86.5)
 RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 ```
 
@@ -6896,7 +6896,7 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 - New issues introduced by repair: [count]
 
 ## 112-item Anti-Skipping Checklist (Post-Repair)
-[✅] All four supplied inputs identified
+[✅] All applicable/supplied inputs identified
 [✅] Backend documentation fully read
 ... (You MUST explicitly reproduce and check off ALL 112 items here. Do not use ellipses or omit rows.)
 [❌] [any still-failing item with reason]
