@@ -432,7 +432,7 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 **In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
-The answer must distinguish four dimensions:
+The answer must distinguish eight dimensions:
 
 ### A. FRONTEND-REQUIRED BACKEND COMPLETENESS
 
@@ -450,7 +450,7 @@ What was actually executed and verified at runtime?
 
 What could not be verified because the supplied inputs do not contain required shared/global artifacts or runtime dependencies?
 
-Never collapse these four dimensions into one vague conclusion.
+Never collapse these eight dimensions into one vague conclusion.
 
 ---
 
@@ -1393,19 +1393,13 @@ Contract/documentation governance artifacts relevant to the frontend feature.
 19. Coverage counts.
 20. FROZEN REQUIREMENT BASELINE.
 
-Then STOP.
 
-Wait for:
-
-`PROCEED TO STAGE 2`
 
 ---
 
 # 22. STAGE 2 — BACKEND AUDIT
 
-Only start after:
 
-`PROCEED TO STAGE 2`
 
 Stage 2 audits:
 
@@ -4422,9 +4416,10 @@ Verify critical notifications/chats:
 
 ```text
 DB insert
-â†’ transaction commit
-â†’ WebSocket emit
-â†’ REST recovery
+→ transaction commit
+→ transactional outbox / reliable relay
+→ WebSocket emit
+→ REST recovery
 ```
 
 And:
@@ -6168,19 +6163,13 @@ Stage 2 MUST output:
 49. Documentation quality failure-condition audit.
 50. Source-to-rule traceability audit.
 
-Then STOP.
 
-Wait for:
-
-`PROCEED TO STAGE 3`
 
 ---
 
 # 83. STAGE 3 — FINAL ACCEPTANCE / VERDICT
 
-Only start after:
 
-`PROCEED TO STAGE 3`
 
 Stage 3 does NOT re-run the entire audit blindly.
 
@@ -6321,15 +6310,11 @@ Before producing the final verdict, verify:
 [ ] Rule 112 — E2E and Selenium tests are completely isolated; no cross-module test imports
 [ ] Rule 113 — No AI runtime verification requirement violated
 [ ] Rule 114 — No Mega API; dashboard APIs are decomposed
-[ ] Rule 115 — Exhaustive JSDoc docstrings on every class/method/DTO/column
-
-[ ] Rule 116 — MCP-Ready API Design; exhaustive OpenAPI/Swagger decorators including Response objects
-
-[ ] Rule 117 — RAG-ready projections for LLM features (if applicable)
-
-[ ] Rule 118 — Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
-
-[ ] Rule 119 — Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
+[ ] Rule 115 — Documentation for classes/methods/DTOs/controllers/services (JSDoc), database columns (@Column/schema), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
+[ ] Rule 116 — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
+[ ] Rule 117 — Dedicated RAG namespace (/api/_rag/ or format=rag) and token-optimized markdown representation
+[ ] Rule 118 — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
+[ ] Rule 119 — Immutable ledger rows, journal_id, account_id, direction, positive amount_minor_units, balanced debits/credits, reversal journals; NO direct UPDATEs
 [ ] Tests checked for behavioral integrity
 [ ] Documentation checked against implementation
 [ ] Shared/outside-scope dependencies classified
@@ -6523,7 +6508,7 @@ DO NOT dump massive output tables directly into the chat. You MUST write your fi
 Keep all stage artifacts internal and include them only in the final ZIP. Never ask the user to proceed between stages.
 
 
-## 86.5 SELENIUM TEST GENERATION MANDATE
+## 86.5 E2E API AND SELENIUM TEST GENERATION MANDATE
 
 This is a mandatory deliverable that runs in parallel with Stage 2 and is finalized in Stage 3.
 
@@ -6556,12 +6541,15 @@ Files MUST follow the exact project naming pattern:
 ```
 backend_e2e/
   backend_[role]_e2e/
-    _test_forbidden.md                <-- E2E forbidden patterns doc
     [module]/
-      test_[role]_[module]_api.py       <-- End-to-End API endpoint logic test
+      test_[role]_[module]_api.py
 
 backend_selenium/
   backend_[role]_selenium/
+    [module]/
+      test_[role]_[module]_ui.py
+      test_[role]_[module]_ui_edge.py
+  _test_forbidden.md
     [module]/
       test_[role]_[module]_ui.py        â†� Selenium UI flow tests
       test_[role]_[module]_ui_edge.py   â†� Selenium edge case / negative UI tests  
@@ -6678,12 +6666,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 import os
+
 BASE_URL = os.getenv("E2E_BASE_URL", "http://localhost:3000")
 
 class Test[Role][Module]UI:
     """Happy path Selenium flows for [role] [module]."""
 
     @pytest.fixture(autouse=True)
+    # Fixture MUST be locally defined within this test module per isolation rules
     def setup(self, driver: webdriver.Chrome):
         # authenticate, navigate to module root
         ...

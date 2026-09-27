@@ -494,7 +494,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
 * **The Rule:** This project uses a strict two-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
-  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_superadmin_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -1960,7 +1960,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
-7. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mucking or stubbing the database in E2E tests is strictly forbidden. 
+7. **True Test Database (No Database Mocking):** E2E tests MUST be executed against a completely isolated, dedicated `test` database instance. E2E tests must trigger real network requests, hit real controllers, and execute real SQL/ORM queries. Mocking or stubbing the database in E2E tests is strictly forbidden. 
 
 8. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
 
