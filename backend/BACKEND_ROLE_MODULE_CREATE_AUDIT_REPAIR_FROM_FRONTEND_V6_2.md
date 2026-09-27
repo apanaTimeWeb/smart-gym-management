@@ -121,41 +121,41 @@ The core verification chain (applies in both modes):
 
 ```text
 FRONTEND ACTUAL REQUIREMENT
-        â†“
+        ↓
 EXPECTED BACKEND CAPABILITY
-        â†“
+        ↓
 EXPECTED API / HTTP CONTRACT
-        â†“
+        ↓
 ACTUAL BACKEND ROUTE
-        â†“
+        ↓
 REQUEST DTO / INPUT VALIDATION
-        â†“
+        ↓
 AUTHENTICATION
-        â†“
+        ↓
 AUTHORIZATION / RESOURCE SCOPE / TENANT
-        â†“
+        ↓
 SERVICE / USE CASE
-        â†“
+        ↓
 ORCHESTRATOR / TRANSACTION
-        â†“
+        ↓
 REPOSITORY / QUERY
-        â†“
+        ↓
 ENTITY / DOMAIN MODEL
-        â†“
+        ↓
 DATABASE / MIGRATION / CONSTRAINTS / INDEXES
-        â†“
+        ↓
 MAPPER / SERIALIZER
-        â†“
+        ↓
 RESPONSE DTO
-        â†“
+        ↓
 CANONICAL RESPONSE ENVELOPE
-        â†“
+        ↓
 ERROR CONTRACT
-        â†“
+        ↓
 SIDE EFFECTS / EVENTS / JOBS / AUDIT
-        â†“
+        ↓
 TEST PROOF
-        â†“
+        ↓
 DOCUMENTATION
 ```
 
@@ -207,8 +207,8 @@ The frontend is read-only evidence for backend requirement discovery.
 ---
 
 > **MODE DECISION RULE:**
-> - **Frontend ZIP given + NO backend ZIP given** â†’ **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
-> - **Frontend ZIP given + Backend ZIP given** â†’ **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
+> - **Frontend ZIP given + NO backend ZIP given** → **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
+> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
 >
 > **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
 
@@ -375,7 +375,7 @@ DO determine whether the button requires a real backend mutation and whether tha
 
 # 2A. ABSOLUTE FRONTEND WRITE PROHIBITION — NON-NEGOTIABLE
 
-> â›” THIS IS THE MOST IMPORTANT SCOPE RULE IN THIS ENTIRE PROMPT. READ IT CAREFULLY.
+> ⛔ THIS IS THE MOST IMPORTANT SCOPE RULE IN THIS ENTIRE PROMPT. READ IT CAREFULLY.
 
 You MUST NOT write, edit, create, delete, rename, refactor, or repair ANY file inside the supplied frontend ZIP or frontend source directory under ANY circumstance.
 
@@ -685,21 +685,21 @@ Trace, where the artifacts exist:
 
 ```text
 Frontend UI Data Requirements
-        â†“
+        ↓
 Frontend API Contract
-        â†“
+        ↓
 Frontend TypeScript/API Types
-        â†“
+        ↓
 Frontend Zod Response Schemas
-        â†“
+        ↓
 Frontend MSW Handlers / Stubs
-        â†“
+        ↓
 Mutual Contract Freeze (Mode B only — requires backend artifacts)
-        â†“
+        ↓
 Backend Frozen API Contract (Mode B only)
-        â†“
+        ↓
 Backend Response DTO (Mode B only)
-        â†“
+        ↓
 Backend Implementation (Mode B only)
 ```
 
@@ -995,7 +995,7 @@ Filter scope: selected date range
 
 ### Derived display value
 
-Do not stop at â€œfield exists.â€�
+Do not stop at “field exists.â€�
 
 The backend must provide the field with the correct semantics.
 
@@ -1041,16 +1041,16 @@ Perform a full cross-layer parity check:
 
 ```text
 UI Data Requirement
-â†’ API Contract
-â†’ TS Type
-â†’ Zod Schema
-â†’ MSW
-â†’ Backend Frozen API Contract
-â†’ Response DTO
-â†’ Mapper
-â†’ Service
-â†’ Repository/Query
-â†’ DB/Computation
+→ API Contract
+→ TS Type
+→ Zod Schema
+→ MSW
+→ Backend Frozen API Contract
+→ Response DTO
+→ Mapper
+→ Service
+→ Repository/Query
+→ DB/Computation
 ```
 
 Any required field that disappears, changes name, changes type, changes nullability, or changes nesting between layers is a contract finding unless an explicit documented baseline amendment exists.
@@ -1176,8 +1176,8 @@ Identify cases where the frontend reconstructs business-level values from raw id
 
 Search for patterns such as:
 
-* `ownerId` â†’ separately fetched owner â†’ `ownerName`;
-* `planId` â†’ separately fetched plan â†’ `planName`;
+* `ownerId` → separately fetched owner → `ownerName`;
+* `planId` → separately fetched plan → `planName`;
 * transaction arrays summed in the browser to produce revenue totals;
 * member arrays counted in the browser when the backend can provide the aggregate;
 * status labels assembled from unrelated backend fields;
@@ -1199,19 +1199,19 @@ For a backend-required business value, create a requirement for a dedicated Resp
 
 ---
 
-# 15. STAGE 1H — FRONTEND ACTION â†’ BACKEND CAPABILITY EXTRACTION
+# 15. STAGE 1H — FRONTEND ACTION → BACKEND CAPABILITY EXTRACTION
 
 For every backend-relevant action, establish:
 
 ```text
 UI Control
-â†’ Event Handler
-â†’ Request / Network Behavior
-â†’ Expected Backend Capability
-â†’ Expected Response
-â†’ Expected Error
-â†’ Expected Data Refresh
-â†’ Expected Final State
+→ Event Handler
+→ Request / Network Behavior
+→ Expected Backend Capability
+→ Expected Response
+→ Expected Error
+→ Expected Data Refresh
+→ Expected Final State
 ```
 
 The frontend itself is not being graded.
@@ -1264,12 +1264,12 @@ Trace:
 
 ```text
 UI State
-â†’ Query Serialization
-â†’ Request Parameter
-â†’ Expected Backend Filtering
-â†’ Expected Ordering
-â†’ Pagination
-â†’ Result
+→ Query Serialization
+→ Request Parameter
+→ Expected Backend Filtering
+→ Expected Ordering
+→ Pagination
+→ Result
 ```
 
 ---
@@ -1751,12 +1751,12 @@ For every frontend-required field verify:
 
 ```text
 Frontend consumer
-â†’ response JSON path
-â†’ Response DTO
-â†’ Mapper/Serializer
-â†’ Service
-â†’ Repository/query
-â†’ Database/computation
+→ response JSON path
+→ Response DTO
+→ Mapper/Serializer
+→ Service
+→ Repository/query
+→ Database/computation
 ```
 
 Use:
@@ -1930,14 +1930,14 @@ For every frontend field-level validation state, trace:
 
 ```text
 Frontend Form Field
-â†’ Frontend Validation Schema
-â†’ HTTP Request
-â†’ Backend DTO Validation
-â†’ Validation Exception
-â†’ Global Validation Exception Filter
-â†’ Canonical Error Envelope
-â†’ validationErrors[]
-â†’ Frontend Field Error Rendering
+→ Frontend Validation Schema
+→ HTTP Request
+→ Backend DTO Validation
+→ Validation Exception
+→ Global Validation Exception Filter
+→ Canonical Error Envelope
+→ validationErrors[]
+→ Frontend Field Error Rendering
 ```
 
 Verify:
@@ -1958,11 +1958,11 @@ For every frontend-selectable finite value verify:
 
 ```text
 Frontend values
-â†’ Backend enum
-â†’ DTO validation
-â†’ Domain/entity field
-â†’ Database representation
-â†’ Migration
+→ Backend enum
+→ DTO validation
+→ Domain/entity field
+→ Database representation
+→ Migration
 ```
 
 Check:
@@ -2003,13 +2003,13 @@ For remote searchable lookups verify the full flow:
 
 ```text
 Search text
-â†’ Query parameter
-â†’ DTO
-â†’ Repository condition
-â†’ DB result
-â†’ pagination
-â†’ response
-â†’ frontend selected ID
+→ Query parameter
+→ DTO
+→ Repository condition
+→ DB result
+→ pagination
+→ response
+→ frontend selected ID
 ```
 
 ---
@@ -2020,19 +2020,19 @@ For every frontend mutation verify:
 
 ```text
 Request
-â†’ Validation
-â†’ Authentication
-â†’ Authorization
-â†’ Resource existence
-â†’ Business validation
-â†’ Transaction / Orchestration
-â†’ Repository mutation
-â†’ Database
-â†’ Audit trail
-â†’ Event
-â†’ Job
-â†’ Response
-â†’ UI-visible result
+→ Validation
+→ Authentication
+→ Authorization
+→ Resource existence
+→ Business validation
+→ Transaction / Orchestration
+→ Repository mutation
+→ Database
+→ Audit trail
+→ Event
+→ Job
+→ Response
+→ UI-visible result
 ```
 
 Only include applicable layers.
@@ -2059,16 +2059,16 @@ For EVERY frontend search/filter/sort/pagination requirement trace:
 
 ```text
 UI Control
-â†’ Query State
-â†’ Serialized Parameter
-â†’ DTO
-â†’ Repository Query
-â†’ DB Query
-â†’ Count
-â†’ Ordering
-â†’ Page Slice
-â†’ Response
-â†’ UI Result
+→ Query State
+→ Serialized Parameter
+→ DTO
+→ Repository Query
+→ DB Query
+→ Count
+→ Ordering
+→ Page Slice
+→ Response
+→ UI Result
 ```
 
 Verify:
@@ -2104,12 +2104,12 @@ Where multi-tenancy applies, trace:
 
 ```text
 Authentication
-â†’ Tenant Authorization
-â†’ Trusted Tenant Context
-â†’ DataSource / Repository Scope
-â†’ Query
-â†’ Mutation
-â†’ Response
+→ Tenant Authorization
+→ Trusted Tenant Context
+→ DataSource / Repository Scope
+→ Query
+→ Mutation
+→ Response
 ```
 
 Verify:
@@ -2137,11 +2137,11 @@ For resource-specific endpoints verify:
 
 ```text
 Authenticated Actor
-â†’ Role / Permission
-â†’ Requested Resource ID
-â†’ Resource Ownership / Scope
-â†’ Tenant / Branch / Organization
-â†’ Authorization Decision
+→ Role / Permission
+→ Requested Resource ID
+→ Resource Ownership / Scope
+→ Tenant / Branch / Organization
+→ Authorization Decision
 ```
 
 Check applicable cases:
@@ -2256,13 +2256,13 @@ When the frontend invokes a heavy or asynchronous operation verify:
 
 ```text
 Start Request
-â†’ Job Created
-â†’ Job Identifier
-â†’ Processing State
-â†’ Success / Failure
-â†’ Retry / Recovery
-â†’ Result Availability
-â†’ Download / Consumption
+→ Job Created
+→ Job Identifier
+→ Processing State
+→ Success / Failure
+→ Retry / Recovery
+→ Result Availability
+→ Download / Consumption
 ```
 
 Examples:
@@ -2396,20 +2396,20 @@ Examples:
 
 ```text
 Frontend sorts by createdAt
-â†’ backend must support ordering
-â†’ DB must support appropriate query path/index where required
+→ backend must support ordering
+→ DB must support appropriate query path/index where required
 ```
 
 ```text
 Frontend shows trainerName
-â†’ relation must exist
-â†’ query must load correct trainer
+→ relation must exist
+→ query must load correct trainer
 ```
 
 ```text
 Frontend shows monthlyRevenue
-â†’ aggregate query must exist
-â†’ grouping and timezone semantics must be correct
+→ aggregate query must exist
+→ grouping and timezone semantics must be correct
 ```
 
 ---
@@ -2470,7 +2470,7 @@ Verify sensitive or role-specific fields are enforced at the backend serializati
 
 ### Cache Invalidation
 
-Verify mutation â†’ successful DB commit â†’ cache invalidation ordering, deterministic cache keys, and tenant safety.
+Verify mutation → successful DB commit → cache invalidation ordering, deterministic cache keys, and tenant safety.
 
 ### i18n / Localization
 
@@ -2609,9 +2609,9 @@ Verify:
 
 ```text
 APPLICATION
-â†’ DOMAIN / ROLE CONTAINER
-â†’ FEATURE MODULE
-â†’ SUB-FEATURE / USE CASE
+→ DOMAIN / ROLE CONTAINER
+→ FEATURE MODULE
+→ SUB-FEATURE / USE CASE
 ```
 
 The default AI repair boundary is the FEATURE MODULE.
@@ -6730,16 +6730,16 @@ The Selenium files MUST follow Rule 112 exactly — no cross-module imports, no 
 
 ## 86.6 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
 
-> â›” THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
+> ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
 
 ### The Problem This Rule Fixes
 
 When an AI is asked to create or repair a backend, it defaults to a "batch delivery" pattern:
 
 ```text
-Fix batch 1 â†’ "Here are the files, download them" â†’
-Fix batch 2 â†’ "Here are the files, download them" â†’
-Fix batch 3 â†’ "Here are the files, download them" â†’
+Fix batch 1 → "Here are the files, download them" →
+Fix batch 2 → "Here are the files, download them" →
+Fix batch 3 → "Here are the files, download them" →
 ...
 ```
 
@@ -6749,11 +6749,11 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 
 ```text
 [SILENT PHASE] Create/Fix ALL code completely
-        â†“
+        ↓
 [SILENT PHASE] Re-run complete 112-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
-        â†“
+        ↓
 [SILENT PHASE] Verify every checklist item passes
-        â†“
+        ↓
 [SINGLE OUTPUT] Deliver everything at once — ONE final output
 ```
 
@@ -6865,7 +6865,7 @@ It is a targeted verification pass:
 
 2. **Run the 112-item Anti-Skipping Checklist (Section 84) on the repaired code:**
    - Every `[ ]` item must be re-evaluated against the repaired state.
-   - Produce the checklist with `[âœ…]` for passed, `[â�Œ]` for still failing, `[âš ï¸�]` for partially addressed.
+   - Produce the checklist with `[✅]` for passed, `[â�Œ]` for still failing, `[âš ï¸�]` for partially addressed.
 
 3. **Produce the final verdict axes (Section 79):**
    ```
@@ -6895,9 +6895,9 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 - New issues introduced by repair: [count]
 
 ## 112-item Anti-Skipping Checklist (Post-Repair)
-[âœ…] All four supplied inputs identified
-[âœ…] Backend documentation fully read
-...
+[✅] All four supplied inputs identified
+[✅] Backend documentation fully read
+... (You MUST explicitly reproduce and check off ALL 112 items here. Do not use ellipses or omit rows.)
 [â�Œ] [any still-failing item with reason]
 
 ## Updated Final Verdict
@@ -6958,7 +6958,7 @@ HIGHEST DISCOVERED RULE NUMBER: [number / identifier]
 
 # 86.9 FINAL V6.2 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
 
-A backend MUST NOT be declared â€œcompleteâ€� solely because:
+A backend MUST NOT be declared “completeâ€� solely because:
 
 * the endpoint exists;
 * the DTO exists;
@@ -6974,21 +6974,21 @@ A frontend/backend capability is complete only when the evidence supports the fu
 
 ```text
 FRONTEND ACTUAL REQUIREMENT
-â†’ FRONTEND API CONTRACT
-â†’ FRONTEND TYPE / ZOD / MSW CONTRACT
-â†’ MUTUAL CONTRACT FREEZE
-â†’ BACKEND FROZEN API CONTRACT
-â†’ BACKEND REQUEST DTO
-â†’ BUSINESS BEHAVIOR
-â†’ REPOSITORY / QUERY
-â†’ DATABASE / COMPUTATION
-â†’ AUTHORIZATION / TENANT / RESOURCE SCOPE
-â†’ TRANSACTION / IDEMPOTENCY / CONCURRENCY
-â†’ RESPONSE DTO / MAPPER
-â†’ CANONICAL RESPONSE / ERROR / PAGINATION CONTRACT
-â†’ EVENTS / JOBS / FILES / WEBHOOKS / REALTIME
-â†’ TEST PROOF
-â†’ DOCUMENTATION
+→ FRONTEND API CONTRACT
+→ FRONTEND TYPE / ZOD / MSW CONTRACT
+→ MUTUAL CONTRACT FREEZE
+→ BACKEND FROZEN API CONTRACT
+→ BACKEND REQUEST DTO
+→ BUSINESS BEHAVIOR
+→ REPOSITORY / QUERY
+→ DATABASE / COMPUTATION
+→ AUTHORIZATION / TENANT / RESOURCE SCOPE
+→ TRANSACTION / IDEMPOTENCY / CONCURRENCY
+→ RESPONSE DTO / MAPPER
+→ CANONICAL RESPONSE / ERROR / PAGINATION CONTRACT
+→ EVENTS / JOBS / FILES / WEBHOOKS / REALTIME
+→ TEST PROOF
+→ DOCUMENTATION
 ```
 
 Every broken link MUST be classified explicitly.
@@ -7046,19 +7046,19 @@ The final quality bar is:
 
 ```text
 FRONTEND ACTUAL REQUIREMENTS
-â†’
+→
 EXPECTED BACKEND CONTRACT
-â†’
+→
 ACTUAL BACKEND IMPLEMENTATION
-â†’
+→
 DATABASE / DOMAIN BEHAVIOR
-â†’
+→
 SECURITY / TENANT / TRANSACTION INTEGRITY
-â†’
+→
 RESPONSE / ERROR CONTRACT
-â†’
+→
 TEST PROOF
-â†’
+→
 DOCUMENTATION
 ```
 
@@ -7092,7 +7092,7 @@ The V6 audit standard is exhaustive:
 - no endpoint-exists-only acceptance;
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
-- no API E2E or Selenium test generation skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
+- BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86.5);
 - no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86.6);
 - no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86.7).
 

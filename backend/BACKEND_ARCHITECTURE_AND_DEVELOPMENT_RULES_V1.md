@@ -196,7 +196,7 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ---
 
-## Framework Reference Appendix
+## Framework Reference Appendix (Non-NestJS Projects Only)
 
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
@@ -434,7 +434,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
 - [ ] Rule 29: Soft-delete by default; hard deletion/anonymization only through approved Rule 35/110 legal-erasure workflows
-- [ ] Rule 103: Idempotency-Key supported on all financial mutation endpoints
+- [ ] Rule 103: Idempotency-Key enforced on all state-mutating endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
 - [ ] Rule 41: Pessimistic locking on all concurrent balance/inventory mutations
@@ -1647,8 +1647,8 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy or implicit Prisma naming.
-* ** **Why:** A global Naming Strategy (like TypeORM Naming Strategy) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy or Prisma implicit naming or implicit Prisma naming.
+* ** **Why:** A global Naming Strategy (like TypeORM Naming Strategy or Prisma implicit naming) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -1849,7 +1849,7 @@ Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in fin
   - INR: store `9999` for ₹99.99 (paise)
   - USD/EUR: store `9999` for $99.99 (cents)
   - JPY: store `100` for ¥100 (yen has no subunit)
-- Use `INT` or `BIGINT` column type in TypeORM. Never use `DECIMAL` or `FLOAT` for money.
+- Use `INT column type in your chosen ORM (TypeORM or Prisma). Never use `DECIMAL` or `FLOAT` for money.
 - Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
 
 ``````typescript
