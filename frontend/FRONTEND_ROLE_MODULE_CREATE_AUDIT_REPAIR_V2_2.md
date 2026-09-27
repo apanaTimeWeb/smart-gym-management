@@ -1,49 +1,77 @@
-# UNIVERSAL WEB FRONTEND MODULE — DEEP EXHAUSTIVE AUDIT + AI REPAIR SPECIFICATION
-VERSION 2.2 FINAL — WEB-FRONTEND / SOURCE-DRIVEN / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / AI-SAFE REPAIR
+# FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR SPECIFICATION
+VERSION 2.3 FINAL — WEB-FRONTEND / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY
 
+---
+
+# 0. WHAT THIS PROMPT DOES
+
+This prompt has **TWO operating modes**. Read the supplied inputs to determine which mode applies.
+
+---
+
+## MODE A — CREATE (No Existing Frontend ZIP Supplied)
+
+**Inputs given:**
+1. A Feature Document / Requirements Document / Backend API Contract.
+2. The frontend development instruction document (`web_frontend_development_instruction.md`).
+3. The global design-system document (`web_global_design.md`).
+4. A Target Module Name (e.g., `manager_members` or any other..as said..).
+
+**What AI does:**
+1. Deeply read and analyze the feature document and both instruction/design documents.
+2. Create the complete frontend module from SCRATCH for the specific role.
+3. Strictly follow EVERY design requirement in `web_global_design.md` and EVERY architectural rule in `web_frontend_development_instruction.md`.
+4. Deliver a **versioned ZIP**: `frontend_{role}_v1.zip`
+5. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+
+---
+
+## MODE B — AUDIT + REPAIR (Existing Frontend ZIP Supplied)
+
+**Inputs given:**
+1. A ZIP archive containing the frontend project/source code (`frontend.zip`).
+2. The frontend development instruction document (`web_frontend_development_instruction.md`).
+3. The global design-system document (`web_global_design.md`).
+4. A Target Module Name (e.g., `manager_members`).
+
+**What AI does:**
+1. Deeply read and audit the existing frontend ZIP against the documentation and rules.
+2. Identify every gap, missing file, UI issue, broken API contract, and missing architectural/design rule.
+3. Fix ALL found issues directly in code — no half-fixes, no skipping.
+4. Double-verify after repair by re-running the checklist.
+5. Deliver a **versioned fix ZIP**: `frontend_{role}_v{N}_fix.zip`
+6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+
+---
+
+## VERSIONING RULES
+
+```text
+First creation:          frontend_{role}_v1.zip
+First fix after v1:      frontend_{role}_v2_fix.zip
+Second fix after v2:     frontend_{role}_v3_fix.zip
+... and so on
+```
+
+The AI MUST try so hard in its first pass that the user never needs to come back for a second fix. Treat every delivery as if it is the last chance to get it right.
+
+---
+
+## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
+
+Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the main React/Next.js/Vite application.
+
+The `INTEGRATION_GUIDE.md` MUST include:
+- Required route additions in the main router.
+- Any new environment variables needed.
+- New NPM dependencies added.
+- Verification steps to ensure the module loads correctly.
+
+---
 
 You are a Senior Frontend Architect, Code Auditor, Accessibility Reviewer, Design-System Auditor, Testing Reviewer, and AI-Friendly Architecture Specialist.
 
-I will provide you with:
-
-1. A ZIP archive containing the frontend project/source code.
-2. The frontend development instruction document (e.g., `web_frontend_development_instruction.md`).
-3. The global design-system document (e.g., `web_global_design.md`).
-
 **CRITICAL MANDATE**: You MUST explicitly check that the code adheres to EVERY design requirement defined in `web_global_design.md` (e.g., typography, spacing, glassmorphism, social tokens, button loading states, animations) AND EVERY architectural rule defined in `web_frontend_development_instruction.md`.
-
-IMPORTANT:
-Do not assume the exact filenames above exist.
-
-First inspect the provided files and identify the actual documentation filenames.
-
-If the project contains equivalent documentation under different filenames, use the actual discovered files and explicitly record:
-
-DOCUMENT DISCOVERED:
-[actual filename]
-
-DOCUMENT ROLE:
-[development architecture / global design / other]
-
-If an expected documentation source is missing, mark the affected verification as:
-
-NOT VERIFIED — REQUIRED DOCUMENTATION NOT FOUND
-4. A target module name.
-
-TARGET MODULE:
-
-`[ROLE]_[MODULE]`
-
-Example:
-
-* `manager_members` (inside `frontend_manager/`)
-* `admin_billing` (inside `frontend_admin/`)
-* `superadmin_plans` (inside `frontend_superadmin/`)
-* `trainer_attendance` (inside `frontend_trainer/`)
-
-Your task is to perform a **DEEP, EXHAUSTIVE, EVIDENCE-BASED AUDIT of ONLY this frontend module**.
-
-This is a frontend behavior audit only.
 
 ---
 
@@ -290,36 +318,20 @@ A module MUST NOT be described as fully compliant unless all applicable document
 
 ---
 
-# 4. PRIMARY OBJECTIVE
+# 4. PRIMARY OBJECTIVE (BOTH MODES)
 
-The final audit will be handed directly to a second AI agent working in VS Code.
+**In MODE A (CREATE):** Your objective is to create a complete, flawless, and perfectly styled frontend module from scratch that fulfills the feature document while strictly adhering to `web_global_design.md` and `web_frontend_development_instruction.md`. 
 
-Therefore, your report must NOT merely say:
+**In MODE B (AUDIT+REPAIR):** Your objective is to deep-audit the existing frontend codebase, find every single violation or missing requirement, and then **REPAIR EVERY SINGLE ONE OF THEM DIRECTLY**. 
 
+You will not hand this off to a second AI agent. YOU are the coding agent.
+
+Therefore, you must NOT merely produce a report saying:
 * "this should be refactored"
 * "improve this"
 * "add tests"
-* "follow best practices"
-* "make it cleaner"
 
-Those statements are too vague.
-
-For EVERY meaningful issue, explain:
-
-1. What is happening now?
-2. Where exactly is it happening?
-3. What documentation rule applies?
-4. How does current behavior differ from the requirement?
-5. Why is that difference a problem?
-6. What should the final architecture/behavior be?
-7. Exactly how should the coding agent approach the fix?
-8. What files/responsibilities should change?
-9. What must NOT be changed?
-10. What common mistake might an AI agent make?
-11. How should the agent verify the fix?
-12. What exact condition means the issue is DONE?
-
-The coding agent should not have to invent the architecture.
+You must ACTUALLY FIX IT in the code, re-verify the fix, and deliver the final code in a versioned ZIP.
 
 ### NO SAMPLING RULE
 
@@ -2391,7 +2403,7 @@ Only include relevant warnings.
 
 ## 10. Verification
 
-Explain how the coding agent must verify the fix.
+Explain how you (the coding agent) must verify the fix.
 
 ## 11. DONE condition
 
@@ -2413,7 +2425,7 @@ If a file has:
 
 create separate issues if the fixes have different reasoning or verification.
 
-This allows the coding agent to complete them independently.
+This allows you (the coding agent) to complete them independently.
 
 ---
 
@@ -3003,17 +3015,11 @@ At the end verify:
 
 ---
 
-# 42. FINAL HANDOFF FOR THE CODING AI
+# 42. INTERNAL EXECUTION READINESS
 
-This section is the mandatory execution handoff and MUST appear at the end of the repair-specification portion of the report.
+This section verifies that the requirements and audit findings are perfectly clear before proceeding to STAGE 3 (Repair/Creation).
 
-The report may then include the final verification/closing rules defined in Sections 43 and FINAL PRINCIPLE.
-
-# READY-TO-GIVE-TO-VSCODE-AI
-
-This section is the actual execution specification.
-
-It must contain:
+The report must ensure:
 
 ## Target Module
 
@@ -5560,28 +5566,17 @@ Never allow a repair to introduce:
 
 ---
 
-# 43R. FINAL HANDOFF QUALITY BAR
+# 43R. FINAL VERIFICATION QUALITY BAR
 
-The final audit/repair package must be understandable to a second AI with minimal context.
+The final code (created or repaired) must be flawlessly verified.
 
-It MUST contain:
+It MUST pass:
+1. Exact source requirements check.
+2. Exact design requirements check.
+3. Exact test verification.
+4. Exact completion condition.
 
-1. Exact current state.
-2. Exact source requirement.
-3. Exact implementation evidence.
-4. Exact issue.
-5. Exact file(s).
-6. Exact repair responsibilities.
-7. Exact files that MUST NOT change.
-8. Exact tests.
-9. Exact verification.
-10. Exact DONE condition.
-11. Exact remaining uncertainty.
-12. Exact source conflicts.
-13. Exact scope limitations.
-14. Exact before/after score where scoring is enabled.
-
-The second AI should be able to verify the claim without reconstructing the architecture itself.
+The code MUST be production-ready and fully adhere to all rules without requiring human intervention.
 
 ---
 
@@ -5606,46 +5601,100 @@ For every missing AI introspection artifact:
 * Provide the EXACT `data-testid` or `JSDoc` string that must be added during repair.
 
 
-# 44. AI EXECUTION & DELIVERY PROTOCOL (MANDATORY)
+# 44. MANDATORY STAGED EXECUTION
 
-IMPORTANT: The execution protocol MUST obey the source-conflict and source-coverage rules above.
-A successful build cannot override an unresolved architectural-document conflict, and an
-unverified source rule cannot be silently marked PASS.
+Execution stages differ by mode.
 
+---
 
+## MODE A — STAGED EXECUTION (CREATE)
 
-When this audit transitions into the REPAIR phase, the coding agent MUST adhere to the following execution and delivery rules to ensure stability, prevent context timeouts, and enable external verification.
+**STAGE 1:** Deeply analyze the Feature Document + Instruction/Design Documents. Extract ALL required frontend UI elements, API calls, and types. At the end, output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
 
-### PHASE-WISE EXECUTION & CHECKLIST
-1. The AI MUST perform fixes **phase-wise** using a strict, visible **Task List / Checklist**.
-2. Before modifying any code, the AI must output the complete checklist of fixes derived from the audit.
-3. Fixes must be executed in manageable batches (phases). This ensures no requirement is skipped and prevents the AI from hitting conversation length limits or execution timeouts.
+**STAGE 2:** Create the complete frontend module from scratch. Generate every component, route, hook, page, and styling file. Strictly adhere to `web_global_design.md` and `web_frontend_development_instruction.md`. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
 
-### PRE-REPAIR CONTRACT LOCK
+**STAGE 3:** Double-verify — re-run the final Anti-Skipping Checklist against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, and `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `frontend_{role}_v1.zip`.
 
-Before changing code, the AI MUST freeze:
-- the discovered applicable source-rule set;
-- the current module route map;
-- the current API/data contract;
-- the current test baseline;
-- the current design-token dependencies;
-- source conflicts;
-- outside-scope dependencies.
+---
 
-Repairs MUST NOT silently change the frozen requirement interpretation.
+## MODE B — STAGED EXECUTION (AUDIT+REPAIR)
 
-### BUILD VERIFICATION LIMITATIONS
-1. **If the AI has access to terminal commands:** It MUST proactively run `npx tsc --noEmit` and `npm run build` to verify its own fixes before delivering the ZIP.
-2. **If the AI does NOT have access to terminal commands:** The AI is not required to run these commands. The human developer will download the code and run the build locally.
-3. In all cases, the AI MUST use extreme caution, rigorous type-checking logic, and strict adherence to the architecture documents to ensure the delivered code is structurally sound. The goal is that when the human runs `npm run build`, it either passes immediately or requires only trivial minor fixes.
+**STAGE 1:** Analyze the existing frontend ZIP + documentation to establish the frozen requirement baseline. Output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
 
-### VERSIONED ZIP DELIVERY
-1. The AI MUST deliver the repaired codebase as a downloadable **ZIP archive**.
-2. The ZIP file MUST be explicitly versioned. 
-   - Initial delivery: e.g., `[module_name]_fix_v1.zip`
-3. If the user returns with subsequent feedback (e.g., build errors or missing fixes), the AI will apply the corrections and provide a new versioned ZIP:
-   - Major structural changes: `[module_name]_fix_v2.zip`
-   - Minor tweaks/typo fixes: `[module_name]_fix_v1.1.zip`
+**STAGE 2:** Deep audit of the existing frontend codebase — check every rule, every requirement, every design token. Output `stage_2_frontend_audit.md`. STOP. Wait for `PROCEED TO STAGE 3`.
+
+**STAGE 3:** Repair ALL identified issues directly in the code. Re-audit repaired code using the Anti-Skipping Checklist. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, and `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `frontend_{role}_v{N}_fix.zip`.
+
+---
+
+Do NOT output the entire work in one response.
+Do not require any other continuation phrase beyond `PROCEED TO STAGE 2` and `PROCEED TO STAGE 3`.
+Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
+
+---
+
+# 45. COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
+
+> ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
+
+### The Problem This Rule Fixes
+
+When an AI is asked to create or repair a frontend, it defaults to a "batch delivery" pattern:
+
+```text
+Fix batch 1 → "Here are the files, download them" →
+Fix batch 2 → "Here are the files, download them" →
+Fix batch 3 → "Here are the files, download them" →
+...
+```
+
+This is WRONG. Each intermediate delivery is incomplete. The user cannot determine if the system is actually fixed/created until all work is done and verified as a whole.
+
+### The Only Acceptable Delivery Model
+
+```text
+[SILENT PHASE] Create/Fix ALL code completely
+        ↓
+[SILENT PHASE] Re-run complete Anti-Skipping Checklist on the GENERATED/REPAIRED code
+        ↓
+[SILENT PHASE] Verify every checklist item passes
+        ↓
+[SINGLE OUTPUT] Deliver everything at once — ONE final versioned ZIP output
+```
+
+### Strict Rules
+
+1. **NO intermediate file deliveries.** Do not deliver any created/repaired file, module, or section until ALL work across ALL phases is complete.
+2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the file", or any deliverable until the complete creation/repair is finished and verified.
+3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
+4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
+5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full Anti-Skipping Checklist against the generated/repaired code. Confirm every item passes.
+6. **The final delivery is ONE atomic output.** All frontend files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE downloadable ZIP.
+
+### Final Delivery Structure (MANDATORY)
+
+When you are fully done, your single final response MUST be delivered as a **versioned ZIP** named:
+
+```text
+Mode A (CREATE):   frontend_{role}_v1.zip
+Mode B (first):    frontend_{role}_v2_fix.zip
+Mode B (second):   frontend_{role}_v3_fix.zip
+```
+
+The ZIP MUST contain:
+
+```text
+INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
+frontend_{role}/                         ← complete frontend role module folder
+stage_1_frontend_requirements.md         ← requirements extracted
+stage_2_frontend_audit.md                ← audit findings (Mode B only; for Mode A: creation log)
+stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
+RE_AUDIT_CHECKLIST_RESULT.md             ← final checklist result on the final code
+```
+
+**The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
+
+Everything in one ZIP. Nothing before. Nothing after.
 
 ### CHANGELOG & VERIFICATION DOCUMENT
 1. Alongside every ZIP delivery, the AI MUST generate a dedicated Markdown file (e.g., `[module_name]_changelog_v1.md`).

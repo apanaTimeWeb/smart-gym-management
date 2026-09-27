@@ -1,39 +1,123 @@
-# UNIVERSAL FRONTEND → BACKEND COMPLETENESS & ALIGNMENT AUDIT
+# BACKEND ROLE MODULE — CREATE, AUDIT & REPAIR FROM FRONTEND
 
-## VERSION 6.2 — BACKEND-FOCUSED / FRONTEND-FIRST / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / MUTUAL CONTRACT FREEZE / EXHAUSTIVE DYNAMIC RULE AUDIT / CROSS-DOCUMENT CONSISTENCY / STAGED EXECUTION
+## VERSION 6.2 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED
 
 ---
 
-# 0. ROLE
+# 0. WHAT THIS PROMPT DOES
+
+This prompt has **TWO operating modes**. Read the supplied inputs to determine which mode applies.
+
+---
+
+## MODE A — CREATE (No Existing Backend Supplied)
+
+**Inputs given:**
+1. Frontend role folder ZIP (e.g., `frontend_superadmin/` or `superadmin/`)
+2. `backend_development_instruction.md`
+
+**What AI does:**
+1. Deeply read and analyze the entire frontend ZIP — every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
+2. Extract every single backend requirement the frontend depends on.
+3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `backend_development_instruction.md`.
+4. Double-verify: re-read the frontend requirements and cross-check against what was just created. Nothing can be missing.
+5. Deliver a **versioned ZIP**: `backend_{role}_v1.zip`
+6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+
+---
+
+## MODE B — AUDIT + REPAIR (Existing Backend Supplied)
+
+**Inputs given:**
+1. Frontend role folder ZIP
+2. Existing backend role module ZIP (e.g., `backend_superadmin/`)
+3. `backend_development_instruction.md`
+
+**What AI does:**
+1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
+2. Deeply read and audit the existing backend ZIP against:
+   - All frontend-derived requirements
+   - Every rule in `backend_development_instruction.md` (Rules 0A through 126)
+3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
+4. Fix ALL found issues directly in code — no half-fixes, no skipping.
+5. Double-verify after repair: re-run the full audit against the repaired code.
+6. Deliver a **versioned fix ZIP**: `backend_{role}_v{N}_fix.zip` (e.g., `backend_superadmin_v2_fix.zip`)
+7. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+
+---
+
+## VERSIONING RULES
+
+```text
+First creation:          backend_{role}_v1.zip
+First fix after v1:      backend_{role}_v2_fix.zip
+Second fix after v2:     backend_{role}_v3_fix.zip
+... and so on
+```
+
+The AI MUST try so hard in its first pass (v1 for creation, v2_fix for first audit) that the user never needs to come back for a second fix. The AI must treat every delivery as if it is the last chance to get it right.
+
+---
+
+## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
+
+Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the global NestJS monolith application.
+
+The `INTEGRATION_GUIDE.md` MUST include:
+
+```markdown
+# Integration Guide — backend_{role} v{N}
+
+## 1. app.module.ts — Required Imports
+Add the following to the `imports` array in your root `app.module.ts`:
+[list exact module class names and import paths]
+
+## 2. Environment Variables (.env)
+Add the following variables to your `.env` and `.env.example`:
+[list every new env variable with description and example value]
+
+## 3. Database Migrations
+Run the following migration commands in order:
+[list exact TypeORM / Prisma migration commands]
+
+## 4. Seeds
+Run the following seed scripts to populate initial data:
+[list seed commands]
+
+## 5. New NPM Dependencies
+Run the following if any new packages were added:
+[list npm install commands]
+
+## 6. Verification Steps
+After integration, verify:
+[list specific verification steps — build passes, seed runs, key endpoint responds]
+```
+
+---
+
+# 0A. ROLE
 
 You are a:
 
-* Senior Backend Architect
+* Senior NestJS Backend Architect
 * API Contract Auditor
-* Backend Completeness Auditor
-* Database / Persistence Auditor
+* Backend Code Generator
+* Database / Persistence Architect
 * Security and Authorization Reviewer
 * Multi-Tenancy Reviewer
 * Distributed Systems / Concurrency Reviewer
 * Background Jobs / Async Workflow Reviewer
 * Testing and Contract-Verification Reviewer
-* Documentation Consistency Reviewer
+* Documentation Quality Reviewer
 * AI-Code-Safety Reviewer
 
-Your task is to determine whether the supplied BACKEND is:
+Your task is to either CREATE or AUDIT+REPAIR a backend role module so that it is:
 
-1. complete against the actual requirements discoverable from the supplied FRONTEND, and
-2. compliant with the supplied BACKEND ARCHITECTURE DOCUMENTATION.
+1. **Complete** — every requirement derivable from the supplied frontend is implemented
+2. **Correct** — every rule in the supplied `backend_development_instruction.md` is followed
+3. **Integrated** — a clear integration guide is included so the developer can plug it into the global monolith
 
-This is a BACKEND-CENTRIC audit.
-
-The frontend is primarily a REQUIREMENTS-DISCOVERY SOURCE.
-
-The backend is the PRIMARY OBJECT OF AUDIT.
-
-The backend documentation is the NORMATIVE ARCHITECTURE SOURCE.
-
-The core verification chain is:
+The core verification chain (applies in both modes):
 
 ```text
 FRONTEND ACTUAL REQUIREMENT
@@ -79,29 +163,24 @@ A backend capability is NOT complete merely because the endpoint, DTO, service, 
 
 ---
 
-# 1. EXACTLY FOUR INPUTS
+# 1. INPUTS
 
-The audit receives exactly these four supplied inputs.
+This prompt accepts different inputs depending on the operating mode.
 
-## INPUT 1 — FRONTEND ROLE / DOMAIN ZIP
+**MODE A (CREATE):** Requires INPUT 1 (Frontend ZIP) + INPUT 3 (Documentation). INPUT 2 and INPUT 4 are NOT supplied.
+**MODE B (AUDIT+REPAIR):** Requires INPUT 1 (Frontend ZIP) + INPUT 2 (Backend ZIP) + INPUT 3 (Documentation). INPUT 4 is optional.
+
+## INPUT 1 — FRONTEND ROLE / DOMAIN ZIP (MANDATORY IN BOTH MODES)
 
 A ZIP containing the frontend role/domain/root folder being evaluated.
 
-The role name is generic.
+The role name is determined by inspecting the provided folder structure.
 
-It may be:
+It may be any role name (e.g., `superadmin`, `admin`, `manager`, `trainer`, `member`).
 
-* `superadmin`
-* `admin`
-* `manager`
-* `staff`
-* `trainer`
-* `member`
-* `customer`
-* another role/domain
-* another product-specific domain
+Do NOT assume a specific role. Discover it from the supplied files.
 
-Do NOT assume `superadmin`.
+**NOTE:** Do NOT grade or audit frontend naming conventions, folder structure, or UI architecture in this prompt. The frontend ZIP is used ONLY as a requirements-discovery source to determine what the backend must support. Frontend naming/architecture compliance is audited separately via the web/mobile frontend audit prompt.
 
 The frontend ZIP may contain:
 
@@ -124,6 +203,14 @@ The frontend ZIP may contain:
 * role/permission metadata.
 
 The frontend is read-only evidence for backend requirement discovery.
+
+---
+
+> **MODE DECISION RULE:**
+> - **Frontend ZIP given + NO backend ZIP given** → **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
+> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
+>
+> **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
 
 ---
 
@@ -156,6 +243,23 @@ The backend ZIP may contain:
 * forbidden documentation.
 
 The supplied backend source is the PRIMARY IMPLEMENTATION TRUTH for what currently exists in the supplied backend scope.
+
+**CRITICAL — MODULAR MONOLITH SCOPE BOUNDARY (MANDATORY):**
+
+When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/`, `backend_manager/`), the following files will NOT be present and MUST NOT be flagged as missing, broken, or incomplete:
+
+* `app.module.ts` — lives in the global application root, not in the feature module
+* `main.ts` — global application bootstrap file
+* `package.json` — root-level dependency manifest
+* `tsconfig.json` / `tsconfig.build.json` — root TypeScript config
+* `.env` / `.env.example` — global environment files
+* `nest-cli.json` — framework CLI config
+* Global `ConfigModule` / `DatabaseModule` / `RedisModule` setup — lives in the global app core
+* Any other global infrastructure file that lives at the project root
+
+These are the responsibility of the global application monolith. The feature module intentionally does NOT include them. Flagging them as missing is a FALSE NEGATIVE and constitutes an audit failure.
+
+The feature module DOES own its own `.forFeature()` TypeORM registrations, its own NestJS module file (e.g., `backend-superadmin.module.ts`), and its own seed script if required by the architecture.
 
 ---
 
@@ -191,11 +295,11 @@ Without this, E2E completeness cannot be verified, as tests are strictly isolate
 
 # 2. SCOPE LOCK
 
-This audit is NOT a general full-stack quality review.
+This prompt is BACKEND-FOCUSED only. In MODE A it CREATES the backend. In MODE B it AUDITS and REPAIRS the backend.
 
-The frontend itself is NOT the primary audit target.
+In both modes, the frontend ZIP is used ONLY as a requirements-discovery source.
 
-Do NOT grade frontend:
+Do NOT grade or report on frontend:
 
 * visual design;
 * colors;
@@ -206,7 +310,7 @@ Do NOT grade frontend:
 * component styling;
 * frontend architecture;
 * Zustand vs Context vs local state;
-* frontend-only naming;
+* frontend-only naming conventions;
 * frontend-only testing quality;
 
 unless that frontend implementation detail directly establishes a backend requirement or API contract requirement.
@@ -322,21 +426,21 @@ If your repair plan touches any frontend file for any reason, the audit output i
 
 ---
 
-# 3. PRIMARY AUDIT QUESTION
+# 3. PRIMARY QUESTION (BOTH MODES)
 
-Answer this question:
+**In MODE A (CREATE):** Does the created backend completely and correctly implement EVERYTHING the supplied frontend requires, while complying with all rules in `backend_development_instruction.md`?
 
-> Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
+**In MODE B (AUDIT+REPAIR):** Does the supplied backend completely and correctly provide EVERYTHING the supplied frontend actually requires, while complying with all applicable supplied backend architecture rules?
 
-The answer must distinguish:
+The answer must distinguish four dimensions:
 
 ### A. FRONTEND-REQUIRED BACKEND COMPLETENESS
 
-Does the backend satisfy the frontend's actual backend-facing requirements?
+Does the backend (created or repaired) satisfy the frontend's actual backend-facing requirements?
 
 ### B. BACKEND ARCHITECTURE COMPLIANCE
 
-Does the backend conform to the supplied backend architecture rules?
+Does the backend conform to every rule in the supplied `backend_development_instruction.md` (Rules 0A through 126)?
 
 ### C. RUNTIME VERIFICATION
 
@@ -375,7 +479,7 @@ This includes:
 * every frontend search/filter/sort/pagination control;
 * every frontend backend mutation;
 * every frontend backend-facing error state;
-* every backend source file in the supplied scope;
+* every backend source file (in the supplied scope for Mode B, or the generated scope for Mode A);
 * every backend endpoint;
 * every DTO;
 * every service/use case;
@@ -485,7 +589,7 @@ Documentation describes intended requirements, but actual frontend source proves
 
 ## 5.3 Backend implementation truth
 
-For determining current backend behavior, use:
+For determining current backend behavior (Mode B) or verifying the generated backend behavior (Mode A), use:
 
 1. actual backend implementation;
 2. actual database/migrations;
@@ -526,23 +630,33 @@ Architecture-document conflicts MUST also be reported rather than silently resol
 
 # 6. MANDATORY STAGED EXECUTION
 
-The audit MUST execute in exactly three stages.
+Execution stages differ by mode.
 
-Do NOT output the entire audit in one response.
+---
 
-At the end of Stage 1, STOP.
+## MODE A — STAGED EXECUTION (CREATE)
 
-Wait for:
+**STAGE 1:** Frontend deep analysis — extract ALL backend requirements. At the end, output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
 
-`PROCEED TO STAGE 2`
+**STAGE 2:** Create the complete backend module from scratch following `backend_development_instruction.md`. Generate every file. At the end, STOP. Wait for `PROCEED TO STAGE 3`.
 
-At the end of Stage 2, STOP.
+**STAGE 3:** Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
 
-Wait for:
+---
 
-`PROCEED TO STAGE 3`
+## MODE B — STAGED EXECUTION (AUDIT+REPAIR)
 
-Do not require any other continuation phrase.
+**STAGE 1:** Frontend deep analysis + backend requirement extraction + frozen baseline. Output `stage_1_frontend_requirements.md`. STOP. Wait for `PROCEED TO STAGE 2`.
+
+**STAGE 2:** Deep audit of existing backend — every rule, every requirement, every file. Output `stage_2_backend_audit.md`. STOP. Wait for `PROCEED TO STAGE 3`.
+
+**STAGE 3:** Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
+
+---
+
+Do NOT output the entire work in one response.
+
+Do not require any other continuation phrase beyond `PROCEED TO STAGE 2` and `PROCEED TO STAGE 3`.
 
 Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
 
@@ -550,9 +664,11 @@ Inside an individual stage, complete all defined subpasses without asking the us
 
 # 6A. PRE-STAGE CONTRACT FREEZE INTEGRITY GATE
 
-This is a mandatory GATE, not a fourth audit stage. The audit still executes exactly THREE stages.
+This is a mandatory GATE, not an additional stage. Both MODE A and MODE B still execute exactly THREE stages.
 
-Before Stage 1 begins, establish whether the supplied frontend/backend artifacts support the architecture's frontend-first mutual contract workflow.
+**In MODE A (CREATE):** Since no backend exists yet, this gate checks the frontend artifacts only — verifying that the frontend has sufficient documentation (UI Data Requirements, API Contract, type definitions) from which backend requirements can be fully extracted. If the frontend documentation is incomplete, record the gaps and proceed with best-effort extraction from the frontend source code.
+
+**In MODE B (AUDIT+REPAIR):** Before Stage 1 begins, establish whether the supplied frontend/backend artifacts support the architecture's frontend-first mutual contract workflow.
 
 Trace, where the artifacts exist:
 
@@ -567,20 +683,20 @@ Frontend Zod Response Schemas
         ↓
 Frontend MSW Handlers / Stubs
         ↓
-Mutual Contract Freeze
+Mutual Contract Freeze (Mode B only — requires backend artifacts)
         ↓
-Backend Frozen API Contract
+Backend Frozen API Contract (Mode B only)
         ↓
-Backend Response DTO
+Backend Response DTO (Mode B only)
         ↓
-Backend Implementation
+Backend Implementation (Mode B only)
 ```
 
 Record:
 
 ```text
 CONTRACT_FREEZE_STATUS:
-[COMPLETE / PARTIAL / MISSING / CONFLICTED / NOT_VERIFIED / BLOCKED_BY_SUPPLIED_SCOPE]
+[COMPLETE / PARTIAL / MISSING / CONFLICTED / NOT_VERIFIED / BLOCKED_BY_SUPPLIED_SCOPE / NOT_APPLICABLE_MODE_A]
 ```
 
 For every supplied feature, locate and compare, when present:
@@ -590,10 +706,10 @@ For every supplied feature, locate and compare, when present:
 * frontend API types;
 * frontend Zod response schemas;
 * frontend MSW handlers/stubs;
-* backend `## Frozen API Contract` in `_backend_feature.md`;
-* backend response DTOs;
-* Swagger/OpenAPI contract;
-* applicable backend tests.
+* backend `## Frozen API Contract` in `_backend_feature.md` (MODE B only);
+* backend response DTOs (MODE B only);
+* Swagger/OpenAPI contract (MODE B only);
+* applicable backend tests (MODE B only).
 
 A contract freeze is NOT proven merely because two documents contain similar endpoint names.
 
@@ -2525,10 +2641,30 @@ Explicitly check:
 
 Verify:
 
-- backend role containers use `backend_`;
-- E2E role roots use `backend_*_e2e`;
-- Selenium role roots use `backend_*_selenium`;
-- filenames and structural folders obey the supplied prefixing convention.
+- backend role containers use `backend_` prefix (e.g., `backend_admin/`, `backend_manager/`);
+- E2E role roots use `backend_*_e2e` (e.g., `backend_e2e/backend_admin_e2e/`);
+- Selenium role roots use `backend_*_selenium` (e.g., `backend_selenium/backend_admin_selenium/`);
+- ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere;
+- filenames begin with the role + module as a prefix (e.g., `admin-billing-invoice.controller.ts`).
+
+Canonical prefixing architecture to verify against:
+
+```text
+backend_admin/
+├── admin_core/                             ← (Top-level prefixed, NOT core/)
+│   ├── admin_guards/                       ← (Sub-folder prefixed, NOT guards/)
+│   │   └── admin-core-jwt-auth.guard.ts    ← (Role: admin, Module: core)
+│   └── admin-core.module.ts
+└── admin_modules/                          ← (Top-level prefixed, NOT modules/)
+    └── admin_billing/                      ← (Feature folder prefixed)
+        ├── billing_controllers/            ← (Sub-folder prefixed with module name)
+        │   └── admin-billing-invoice.controller.ts
+        ├── billing_dto/
+        │   └── admin-billing-create-invoice.dto.ts
+        └── admin-billing.module.ts
+```
+
+Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
 
 ### 0E — Isolated context means modular monolith
 
@@ -6018,13 +6154,18 @@ Do not collapse these into a generic “backend incomplete” label.
 Before producing the final verdict, verify:
 
 ```text
-[ ] All four supplied inputs identified
+[ ] All supplied inputs identified according to Mode A/B rules
 [ ] Backend documentation fully read
 [ ] Frontend recursively inspected for backend requirements
-[ ] Backend recursively inspected
+[ ] Backend generated completely (in Mode A) or recursively inspected (in Mode B)
 [ ] Relevant authored files inspected
 [ ] Exclusions recorded
 [ ] Unreadable files recorded
+[ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
+[ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
+[ ] Rule 0C — Change scope failure conditions checked
+[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural folders are role/module-prefixed; NO generic core/, modules/, config/, utils/ exist
+[ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
 [ ] Frozen requirement baseline created
@@ -6080,6 +6221,27 @@ Before producing the final verdict, verify:
 [ ] Every dynamically discovered backend architecture rule checked
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
+[ ] Rule 78 — _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
+[ ] Rule 79 — Explicit data flow direction comment in every non-trivial service/orchestrator method
+[ ] Rule 80 — JSDoc present on ALL service methods, repositories, and utilities
+[ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
+[ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
+[ ] Rule 102 — Database tables are prefixed correctly in monolith
+[ ] Rule 112 — Strict mutational idempotency (@RequireIdempotencyKey) on all state-changing endpoints
+[ ] Rule 113 — WebSockets are horizontally scalable (Redis adapter, no in-process state)
+[ ] Rule 114 — Role-based data serialization and field masking applied
+[ ] Rule 115 — Cache invalidation strategy is strict and consistent
+[ ] Rule 116 — i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
+[ ] Rule 117 — Feature flags are centralized
+[ ] Rule 118 — Multi-currency amounts stored as integer minor units; currency code stored separately
+[ ] Rule 119 — Tenant data export and offboarding endpoint exists
+[ ] Rule 120 — Persistent WebSockets for notifications; Redis-backed; offline recovery via REST
+[ ] Rule 121 — E2E and Selenium tests are completely isolated; no cross-module test imports
+[ ] Rule 122 — No AI runtime verification requirement violated; exhaustive JSDoc docstrings on every class/method
+[ ] Rule 123 — No Mega API; dashboard APIs are decomposed; exhaustive OpenAPI/Swagger decorators
+[ ] Rule 124 — RAG-ready projections for LLM features (if applicable)
+[ ] Rule 125 — Event-driven immutable analytics (zero-overwrite strategy for critical entity changes)
+[ ] Rule 126 — Double-entry financial ledger (no direct balance updates; debit/credit ledger rows)
 [ ] Tests checked for behavioral integrity
 [ ] Documentation checked against implementation
 [ ] Shared/outside-scope dependencies classified
@@ -6100,6 +6262,8 @@ Before producing the final verdict, verify:
 [ ] Source numbering gaps discovered dynamically
 [ ] Special/non-numeric architecture gates included
 [ ] Prompt examples not treated as authoritative project requirements
+[ ] MODULAR MONOLITH SCOPE BOUNDARY respected — app.module.ts, main.ts, package.json, tsconfig.json, .env, nest-cli.json NOT flagged as missing in a single feature module ZIP
+[ ] MODE DECISION correctly applied — if no backend ZIP supplied → MODE A (CREATE); if backend ZIP supplied → MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
 ```
 
 If any item is not satisfied, do not claim a fully verified audit.
@@ -6130,11 +6294,11 @@ If the report cannot answer these questions, the audit is incomplete.
 
 ---
 
-# 86. FINAL REPORT STRUCTURE
+# 86. FINAL VERDICT / REPORT STRUCTURE
 
 The final Stage 3 response MUST use this structure:
 
-# FINAL BACKEND AUDIT
+# FINAL BACKEND VERDICT (MODE A: CREATION LOG / MODE B: AUDIT)
 
 ## 1. Executive Result
 
@@ -6226,7 +6390,7 @@ Exact binary DONE criteria.
 
 ## 17. Final Verdict
 
-Use the four-axis verdict:
+Use the four-axis verdict (applies to the created backend in Mode A or the repaired backend in Mode B):
 
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS
@@ -6466,11 +6630,11 @@ The Selenium files MUST follow Rule 121 exactly — no cross-module imports, no 
 
 ## 86.6 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
 
-> ⛔ THIS SECTION GOVERNS THE REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF REPAIR CODE.
+> ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
 
 ### The Problem This Rule Fixes
 
-When an AI is asked to repair backend issues, it defaults to a "batch delivery" pattern:
+When an AI is asked to create or repair a backend, it defaults to a "batch delivery" pattern:
 
 ```text
 Fix batch 1 → "Here are the files, download them" →
@@ -6484,28 +6648,28 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 ### The Only Acceptable Delivery Model
 
 ```text
-[SILENT PHASE] Fix ALL issues completely
+[SILENT PHASE] Create/Fix ALL code completely
         ↓
-[SILENT PHASE] Re-run complete 84-item Anti-Skipping Checklist on the REPAIRED code
+[SILENT PHASE] Re-run complete 84-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
         ↓
-[SILENT PHASE] Verify every previously failing item now passes
+[SILENT PHASE] Verify every checklist item passes
         ↓
 [SINGLE OUTPUT] Deliver everything at once — ONE final output
 ```
 
 ### Strict Rules
 
-1. **NO intermediate file deliveries.** Do not deliver any repaired file, repaired module, or repaired section until ALL repairs across ALL phases are complete.
+1. **NO intermediate file deliveries.** Do not deliver any created/repaired file, module, or section until ALL work across ALL phases is complete.
 
-2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the fixed file", or any deliverable until the complete repair is finished and re-verified.
+2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the file", or any deliverable until the complete creation/repair is finished and verified.
 
-3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-repair deliveries disguised as progress updates. Silent progress only.
+3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
 
-4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Fix everything without interruption.
+4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
 
-5. **After ALL repairs are done, run the COMPLETE re-audit before delivery.** You MUST re-run the full 84-item Anti-Skipping Checklist (Section 84) against the repaired code — not against the original. Confirm every previously failing item now passes.
+5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 84-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm every item passes.
 
-6. **The final delivery is ONE atomic output.** All repaired files, the Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable bundle.
+6. **The final delivery is ONE atomic output.** All backend files, the Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
 
 ### What "Complete" Means Before You Deliver
 
@@ -6553,18 +6717,32 @@ This classifies the entire repair output as invalid. The human must reject it an
 
 ### Final Delivery Structure (MANDATORY)
 
-When you are fully done, your single final response MUST contain:
+When you are fully done, your single final response MUST be delivered as a **versioned ZIP** named:
 
+```text
+Mode A (CREATE):   backend_{role}_v1.zip
+Mode B (first):    backend_{role}_v2_fix.zip
+Mode B (second):   backend_{role}_v3_fix.zip
 ```
-stage_1_frontend_requirements.md         ← as written during Stage 1
-stage_2_backend_audit.md                 ← as written during Stage 2
-stage_3_final_verdict.md                 ← final verdict after re-audit of repaired code
-[all repaired backend source files]      ← complete, not partial
+
+The ZIP MUST contain:
+
+```text
+INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
+backend_{role}/                          ← complete backend role module folder
+  [all source files — controllers,
+   services, repos, DTOs, entities,
+   migrations, seeds, tests, docs]
+stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
+stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
+stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
 backend_selenium/...                     ← all Selenium test files (Section 86.5)
-RE_AUDIT_CHECKLIST_RESULT.md            ← 84-item checklist result on the repaired code
+RE_AUDIT_CHECKLIST_RESULT.md            ← 84-item checklist result on the final code
 ```
 
-Everything in one delivery. Nothing before. Nothing after.
+**The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
+
+Everything in one ZIP. Nothing before. Nothing after.
 
 ---
 
