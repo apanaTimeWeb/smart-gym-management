@@ -474,7 +474,7 @@ Accessibility requirements:
 
 ### Loading State
 - Show skeleton loaders (using `--skeleton-base` and `--skeleton-highlight`) that match the exact layout of the page content
-- Tables: show 5–8 skeleton rows with random widths
+- Tables: show 5–8 skeleton rows with deterministic varied widths (not purely random per render, to avoid layout shift thrashing)
 - Stat cards: show shimmer blocks the size of the card
 
 ### Empty State
@@ -499,7 +499,7 @@ Destructive and irreversible actions require an appropriate confirmation UI acco
 | Type | Style | Usage |
 |---|---|---|
 | **Primary** | Solid `--primary` background, `--text-on-primary` text, border-radius: var(--radius-md), padding: 10px 20px | Main CTA per page (one per view) |
-| **Danger Primary** | Solid `--danger-bg` background, `--text-on-danger` text | Destructive confirm actions (Delete, Blacklist, Exit) |
+| **Danger Primary** | Solid `--danger` background, `--text-on-danger` text | Destructive confirm actions (Delete, Blacklist, Exit) |
 | **Ghost / Outlined** | Transparent bg, `--border` border, `--text-primary` text | Secondary actions (Cancel, Export, Back) |
 | **Ghost Danger** | Transparent bg, `--danger-text` border, `--danger-text` text | Soft destructive (Mark Lost, Deactivate) |
 | **Icon Button** | Visual `32px` (icon `18px`), minimum interactive hit area `var(--touch-target-min)` | Inline table row actions (Edit ✏️, Delete 🗑️) |
@@ -693,8 +693,8 @@ Enterprise users have different preferences for how much data fits on a screen.
 - **Filled/Success:** `border-color: var(--success-text)` with a small checkmark icon inside the input.
 
 ## 21. NUMBER & CURRENCY FORMATTING RULES
-- **Currency:** Always format using the Indian Numbering System: `₹1,23,456.00` (never `₹123456`).
-- **Large Numbers (KPIs):** Abbreviate: `₹12.4L`, `₹2.3Cr`.
+- **Currency:** Format INR using the Indian Numbering System: `₹1,23,456.00`. Other currencies must use their approved locale-aware formatting.
+- **Large Numbers (KPIs):** Abbreviate appropriately (e.g., `₹12.4L`, `₹2.3Cr` for INR).
 - **Percentages:** Always 1 decimal place: `12.5%`.
 - **Negative Numbers:** Red color (`--danger-text`) with minus sign: `-₹500`.
 - **Implementation:** Use the application's approved number/currency formatting utility.
@@ -840,12 +840,12 @@ Each layer of depth gets a slightly brighter background. The base page is the da
 1. **Add `--bg-floating`, `--bg-overlay`, and `--bg-popover`** to your `globals.css` `:root` (light) and `.dark` blocks alongside the existing tokens.
 2. **Map them in `tailwind.config.ts`** as `bg-floating`, `bg-overlay`, `bg-popover` tokens.
 3. **Modals and Dialogs** must use `bg-overlay` (not `bg-card`) so they visually lift above the card layer behind them.
-4. **Dropdowns and Tooltips** must use `bg-popover` so they lift above modals in the stacking context.
+4. **Dropdowns and Tooltips** must use `bg-popover`.
 5. **Combine with subtle borders:** In dark mode, elevation alone is often not enough. Always add `border-border` to floating elements to provide a crisp edge definition, especially on lower-brightness monitors.
 6. **Shadow is still used for Light Mode** — In light mode where shadows work, modals should still use `shadow-dialog`. This is the dual strategy: elevation for dark, shadow for light.
 
 ### Updated Z-Index Scale (Cross-Referenced with Section 12)
-The elevation scale maps 1:1 with the z-index scale from Section 12:
+The elevation scale works together with the z-index scale from Section 12, but they are conceptually separate (Z-index controls stacking; elevation controls surface brightness):
 | Z-Index | Elevation Layer | Background Token |
 |---|---|---|
 | `z-10` | Sticky headers | `bg-card` (Layer 1) |
@@ -879,7 +879,7 @@ The file must list:
 * The module may consume global semantic tokens.
 * If copied into another project, the receiving project must only need to satisfy this documented token contract plus approved zero-business UI infrastructure.
 
-**Canonical Example: `/superadmin/plans/plans_theme_contract.md`**
+**Canonical Example: `src/app/frontend_superadmin/superadmin_plans/superadmin_plans_theme_contract.md`**
 
 Theme tokens required:
 * `--primary`, `--primary-hover`

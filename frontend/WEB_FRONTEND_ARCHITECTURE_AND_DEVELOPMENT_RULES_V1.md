@@ -316,13 +316,13 @@ ONLY FEATURE FILES ARE CHANGED
 For example, if a bug exists in:
 
 ```text
-/frontend_admin/billing/
+src/app/frontend_admin/admin_billing/
 ```
 
 the preferred AI context is:
 
 ```text
-/frontend_admin/billing/
+src/app/frontend_admin/admin_billing/
 ```
 
 NOT:
@@ -369,13 +369,13 @@ If two independent features need similar business behavior, they MAY contain dup
 Example:
 
 ```text
-/frontend_admin/billing/billing_utils/
+src/app/frontend_admin/admin_billing/admin_billing_utils/
 ```
 
 and
 
 ```text
-/frontend_manager/billing/billing_utils/
+/frontend_manager/billing/admin_billing_utils/
 ```
 
 may contain similar code.
@@ -433,7 +433,7 @@ Rename all components, files, and folders to be extremely descriptive based on e
 - **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface ManagerInquiriesTableProps`).
 
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
 ### 3B.1 Static UI Configuration vs Server/API Data
@@ -616,7 +616,7 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
-Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `auth_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
+Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
 12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
@@ -667,9 +667,9 @@ Sibling feature modules MUST be treated as isolated business systems even when t
 For example:
 
 ```text
-/frontend_admin/members/
-/frontend_admin/billing/
-/frontend_admin/reports/
+src/app/frontend_admin/admin_members/
+src/app/frontend_admin/admin_billing/
+src/app/frontend_admin/admin_reports/
 ```
 
 are independent business modules.
@@ -756,18 +756,18 @@ Example:
 
 ```text
 Task:
-Fix bug in `/frontend_admin/billing/`
+Fix bug in `src/app/frontend_admin/admin_billing/`
 
 Allowed by default:
 
-/frontend_admin/billing/**
+src/app/frontend_admin/admin_billing/**
 ```
 
 Not allowed:
 
 ```text
-/frontend_admin/members/**
-/frontend_admin/reports/**
+src/app/frontend_admin/admin_members/**
+src/app/frontend_admin/admin_reports/**
 /frontend_superadmin/**
 /frontend_manager/**
 ```
@@ -1163,7 +1163,7 @@ Minimum expectations:
 - Custom hooks: 80% coverage
 - Core components: interaction tests for all user events (clicks, typing, dropdowns), loading, success, empty, error, and disabled states.
 
-**Component Testing Philosophy (No Playwright):**
+**Component Testing vs Frontend E2E Philosophy (No Playwright for Components):**
 1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
 2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `frontend_e2e/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
    - Buttons trigger the correct actions and loading states.
@@ -1758,8 +1758,8 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
-- ❌ **BAD:** `import { MemberTableProps } from '@/app/frontend_admin/members/members_types/member.types'`
-- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/frontend_admin/members/members_types/member.types'`
+- ❌ **BAD:** `import { MemberTableProps } from '@/appsrc/app/frontend_admin/admin_members/members_types/member.types'`
+- ✅ **GOOD:** `import type { MemberTableProps } from '@/appsrc/app/frontend_admin/admin_members/members_types/member.types'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
@@ -2263,18 +2263,21 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 - **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
 - ❌ **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
-- ✅ **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from './UserComponent'`.
+- ✅ **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from '@/components/UserComponent'`.
 
 ---
-Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!
+*INTERNAL INSTRUCTION: Think step-by-step and create a detailed internal implementation plan. Do NOT stop for user review. Execute it perfectly without breaking existing data flows.*
 
-## Rule 14 — Idempotency for API Mutations
+## Extended Rule 14 — Idempotency for API Mutations
 
 All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY frontend API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
 
 Example:
 ```typescript
-export const updateProfile = async (id: string, body: any, idempotencyKey?: string) => apiFetch('/profile', {
+import { apiFetch } from '@/lib/api';
+import { MEMBER_URLS } from './manager_members_url_config';
+
+export const updateMemberProfile = async (id: string, body: unknown, idempotencyKey?: string) => apiFetch(MEMBER_URLS.PROFILE(id), {
   method: 'PATCH',
   body: JSON.stringify(body),
   headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
@@ -2347,12 +2350,12 @@ When writing a new feature module, the AI MUST:
 3. Translations must be **contextually correct** for a Gym Management SaaS.
 
 ```json
-// _locales/nl.json — AI writes this, context-aware
+// _locales/hi.json — AI writes this, context-aware
 {
   "MEMBERS": {
-    "PAGE_TITLE": "Leden",
-    "ADD_MEMBER": "Lid toevoegen",
-    "EMPTY_STATE": "Geen leden gevonden. Voeg uw eerste lid toe om te beginnen."
+    "PAGE_TITLE": "सदस्य",
+    "ADD_MEMBER": "सदस्य जोड़ें",
+    "EMPTY_STATE": "कोई सदस्य नहीं मिला। शुरू करने के लिए अपना पहला सदस्य जोड़ें।"
   }
 }
 ```
@@ -2476,7 +2479,7 @@ The backend sends all monetary amounts as **integers in the smallest currency un
 ### Canonical Formatting Utility
 Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
 ``````typescript
-// utils/formatCurrency.ts (co-located inside the feature module)
+// admin_billing_utils/admin_billing_formatCurrency.ts (co-located inside the feature module)
 /**
  * Formats a monetary amount from its smallest unit to a locale-aware display string.
  * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
