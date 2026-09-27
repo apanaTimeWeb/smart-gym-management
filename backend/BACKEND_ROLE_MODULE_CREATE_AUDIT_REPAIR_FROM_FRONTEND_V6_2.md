@@ -3134,9 +3134,9 @@ HTTP interceptors alone are not sufficient if non-HTTP mutations exist.
 
 ---
 
-## RULE 31 â€” CRITICAL MUTATION IDEMPOTENCY
+## RULE 31 � LEGACY (SUPERSEDED BY RULE 103)
 
-Verify critical mutations independently of the broader Rule 112 strict mutation rule.
+Verify critical mutations independently of the broader Rule 103 strict mutation rule.
 
 Where critical mutations exist, verify:
 
@@ -4278,7 +4278,7 @@ cross-document discrepancy instead of inventing or deleting the rule.
 Future versions of the architecture document may insert, remove, rename, split, or add
 rules. The dynamic rule ledger is always authoritative over this prompt's current examples.
 
-# RULE 112 â€” STRICT MUTATIONAL IDEMPOTENCY
+## RULE 103 - STRICT MUTATIONAL IDEMPOTENCY
 
 Apply exactly as defined by the supplied architecture:
 
@@ -4290,7 +4290,7 @@ Apply exactly as defined by the supplied architecture:
 
 ---
 
-## RULE 113 â€” HORIZONTALLY SCALABLE WEBSOCKETS
+## RULE 104 - HORIZONTALLY SCALABLE WEBSOCKETS
 
 Verify:
 
@@ -4304,7 +4304,7 @@ Verify:
 
 ---
 
-## RULE 114 â€” ROLE-BASED SERIALIZATION / FIELD MASKING
+## RULE 105 - ROLE-BASED SERIALIZATION / FIELD MASKING
 
 Verify sensitive fields are excluded at serialization layer.
 
@@ -4318,7 +4318,7 @@ Check:
 
 ---
 
-## RULE 115 â€” CACHE INVALIDATION
+## RULE 106 - CACHE INVALIDATION
 
 For every cached query verify:
 
@@ -4335,7 +4335,7 @@ TTL alone is insufficient where this rule requires explicit invalidation.
 
 ---
 
-## RULE 116 â€” I18N / LOCALIZATION
+## RULE 107 - I18N / LOCALIZATION
 
 Verify:
 
@@ -4353,7 +4353,7 @@ Do not invent supported languages. Read the actual authoritative configured list
 
 ---
 
-## RULE 117 â€” CENTRAL FEATURE FLAGS
+## RULE 108 - CENTRAL FEATURE FLAGS
 
 Verify:
 
@@ -4366,7 +4366,7 @@ Verify:
 
 ---
 
-## RULE 118 â€” MULTI-CURRENCY
+## RULE 109 - MULTI-CURRENCY
 
 Verify:
 
@@ -4384,7 +4384,7 @@ Reject:
 
 ---
 
-## RULE 119 â€” TENANT EXPORT / OFFBOARDING
+## RULE 110 - TENANT EXPORT / OFFBOARDING
 
 When applicable, verify the complete lifecycle:
 
@@ -4416,7 +4416,7 @@ Also verify:
 
 ---
 
-## RULE 120 â€” PERSISTENT WEBSOCKETS
+## RULE 111 - PERSISTENT WEBSOCKETS
 
 Verify critical notifications/chats:
 
@@ -4435,7 +4435,7 @@ And:
 
 ---
 
-## RULE 121 â€” COMPLETE E2E / SELENIUM ISOLATION
+## RULE 112 - COMPLETE E2E / SELENIUM ISOLATION
 
 Verify EXACTLY:
 
@@ -4458,7 +4458,7 @@ Do not merely check whether E2E files exist.
 
 ---
 
-## RULE 122 â€” NO AI RUNTIME VERIFICATION REQUIREMENT
+## RULE 113 - NO AI RUNTIME VERIFICATION REQUIREMENT
 
 Do not treat inability to run the application as an automatic failure.
 
@@ -4475,7 +4475,7 @@ Never claim runtime verification unless actually executed.
 
 ---
 
-## RULE 123 â€” NO MEGA API
+## RULE 114 - NO MEGA API
 
 For dashboards verify widget/feature-sliced APIs.
 
@@ -6280,10 +6280,10 @@ Before producing the final verdict, verify:
 [ ] Rule 82A â€” Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
 [ ] Rule 101 â€” Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
 [ ] Rule 102 â€” Database tables are prefixed correctly in monolith
-[ ] Rule 112 â€” Strict mutational idempotency (@RequireIdempotencyKey) on all state-changing endpoints
-[ ] Rule 113 â€” WebSockets are horizontally scalable (Redis adapter, no in-process state)
-[ ] Rule 114 â€” Role-based data serialization and field masking applied
-[ ] Rule 115 â€” Cache invalidation strategy is strict and consistent
+[ ] Rule 103 - Strict mutational idempotency (@RequireIdempotencyKey) on all state-changing endpoints
+[ ] Rule 104 - WebSockets are horizontally scalable (Redis adapter, no in-process state)
+[ ] Rule 105 - Role-based data serialization and field masking applied
+[ ] Rule 106 - Cache invalidation strategy is strict and consistent
 [ ] Rule 107 â€” i18n module-co-located locales; no central src/messages/ bucket; AI translations generated
 [ ] Rule 108 â€” Feature flags are centralized
 [ ] Rule 109 â€” Multi-currency amounts stored as integer minor units; currency code stored separately
@@ -6627,7 +6627,7 @@ Each test file MUST:
 # RESPONSIBILITY: [what this test file validates in one sentence]
 # FLOW: [Browser â†’ Route â†’ UI Interaction â†’ Assert Visible Result]
 # MODULE: [role]_[module]
-# RULE: Rule 121 â€” Complete E2E/Selenium isolation
+# RULE: Rule 112 â€” Complete E2E/Selenium isolation
 
 import pytest
 from selenium import webdriver
@@ -6654,7 +6654,7 @@ class Test[Role][Module]UI:
         ...
 ```
 
-* No cross-module imports (Rule 121 WET requirement);
+* No cross-module imports (Rule 112 WET requirement);
 * No shared helper files between modules;
 * Self-contained fixtures;
 * Real browser, real HTTP to backend;
@@ -6679,7 +6679,7 @@ backend_e2e/backend_[role]_selenium/_test_forbidden.md
 
 These files are DELIVERABLES, not optional suggestions.
 
-The Selenium files MUST follow Rule 121 exactly â€” no cross-module imports, no shared utilities, self-contained, behavioral assertions only.
+The Selenium files MUST follow Rule 112 exactly â€” no cross-module imports, no shared utilities, self-contained, behavioral assertions only.
 
 ---
 

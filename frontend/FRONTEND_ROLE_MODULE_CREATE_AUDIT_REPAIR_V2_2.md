@@ -3396,7 +3396,7 @@ Report the source conflict and verify whether the project has an explicit supers
 
 ### Example 4 — Language rollout contradiction
 
-The frontend instruction contains an authoritative target-language table while also
+The frontend instruction contains an authoritative ACTIVE_LANGUAGES/SUPPORTED_LANGUAGES tables while also
 describing phased rollout rather than shipping every language at launch.
 
 Do NOT infer the launch state.
@@ -4104,7 +4104,7 @@ Verify:
 - `next-intl` for Next.js or documented alternative;
 - module-local `_locales/`;
 - English source file;
-- configured target-language files;
+- currently active-language (`ACTIVE_LANGUAGES`) files;
 - translation key usage through `t()`;
 - no hardcoded English JSX;
 - build-time locale merging;

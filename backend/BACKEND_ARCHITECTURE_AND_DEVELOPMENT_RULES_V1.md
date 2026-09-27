@@ -317,7 +317,7 @@ Never call BillingWalletRepository directly from outside this module.
   SELECT FOR UPDATE or concurrent requests will produce negative balances.
 - Plan purchase and wallet deduction MUST be in the same transaction
   (BillingOrchestratorService) — splitting them causes partial charge bugs.
-- Idempotency-Key header is mandatory on /wallet/topup (Rule 31) —
+- Idempotency-Key header is mandatory on /wallet/topup (Rule 103) —
   removing it will cause double-charges on network retries.
 ```
 *Why this works: An AI can read this and immediately know the invariants, the danger zones, and exactly which rules apply — without reading a single source file.*
@@ -349,9 +349,9 @@ should an AI NEVER do in this module?]
 |---|---|
 | [module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
 | [module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
-| services/[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| repositories/[module].repository.ts | [REQUIRED: what queries it owns] |
-| dtos/[module]-create.dto.ts | [REQUIRED: what it validates] |
+| [role]_[module]_services/[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
+| [role]_[module]_repositories/[module].repository.ts | [REQUIRED: what queries it owns] |
+| [role]_[module]_dtos/[module]-create.dto.ts | [REQUIRED: what it validates] |
 | [module].entity.ts | [REQUIRED: what DB table it maps to] |
 
 ## Feature Inventory
@@ -371,7 +371,7 @@ should an AI NEVER do in this module?]
 - Redis Caching Keys: [key patterns and TTLs, e.g., `billing:wallet:{memberId}` TTL 5min]
 - Event Emitters: [event names from event-registry.constants.ts, e.g., BILLING.PAYMENT.FAILED]
 - Background Jobs: [queue names and what triggers them]
-- Idempotency Keys: [which endpoints require Idempotency-Key header — Rule 31]
+- Idempotency Keys: [which endpoints require Idempotency-Key header — Rule 103]
 
 ## Business Flow / Key Sequences
 [REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
@@ -440,7 +440,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
 - [ ] Rule 29: Soft deletes only — no hard DELETE calls
-- [ ] Rule 31: Idempotency-Key supported on all financial mutation endpoints
+- [ ] Rule 103: Idempotency-Key supported on all financial mutation endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
 - [ ] Rule 41: Pessimistic locking on all concurrent balance/inventory mutations
@@ -607,7 +607,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 34. Database Query Optimization (The N+1 Rule & Index Strategy)
 * **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
   1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, Prisma `include`, TypeORM `relations`). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
-  2. **Index Strategy:** Every foreign key column, every column used in a `WHERE` clause, and every column used in an `ORDER BY` clause MUST have a database index. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
+  2. **Index Strategy:** Indexing should be based on actual query patterns, cardinality, and query plans. Foreign keys and frequently queried columns (in `WHERE` or `ORDER BY` clauses) should be evaluated for indexing. Do not blindly index every column, as this impacts write performance. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
   3. **Slow Query Logging:** Enable slow query logging in the database (queries > 100ms). Review this log weekly.
 * **Why:** An AI asked to write a "Get all members with their plans" repository method will often produce an N+1 query by default. This rule forces a review gate.
 
@@ -1381,7 +1381,7 @@ This rule MUST remain consistent with Rule 99.
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
       failureBehavior: 'CRITICAL — moves to DLQ. Triggers alert to ops team. Member is NOT charged until manual retry.',
-      idempotent: true,               // Uses Idempotency-Key per Rule 31
+      idempotent: true,               // Uses Idempotency-Key per Rule 103
       lastReviewedBy: 'backend-team',
     },
   ] as const;
@@ -1580,7 +1580,7 @@ This rule MUST remain consistent with Rule 99.
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
    - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
    - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
-   - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 31)
+   - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 103)
    - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
    - If the change touches `auth/`, `billing/`, `webhooks/`, or `tenant-provisioning/`, has a human reviewed it? (Rule 93)
 6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
@@ -1808,7 +1808,7 @@ Add to `package.json`:
 
 ### Developer Workflow
 1. AI agent writes a new module and creates `_locales/en/` JSON files.
-2. AI agent, in the **same response**, creates all target-language `_locales/{lang}/` files using its own translation capability.
+2. AI agent, in the **same response**, creates all currently active-language (`ACTIVE_LANGUAGES`) `_locales/{lang}/` files using its own translation capability.
 3. Run `npm run i18n:merge` (or let CI do it automatically at build time).
 4. Commit all `_locales/` files alongside the module code.
 5. **Never** put locale files in a central `src/i18n/` folder — that breaks module isolation.
@@ -2013,5 +2013,5 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 
-* **Why:** This makes financial discrepancies mathematically impossible and provides a perfect, tamper-proof audit trail for accounting.
+* **Why:** This provides a strong accounting control and makes unbalanced journals detectable/preventable when enforced transactionally, providing a perfect, tamper-proof audit trail for accounting.
 

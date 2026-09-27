@@ -2354,7 +2354,7 @@ export const apiFetch = (url: string, options?: RequestInit) =>
 
 ### Developer Workflow
 1. AI writes a new feature module and creates `_locales/en.json`.
-2. AI, in the **same response**, creates all target-language `_locales/{lang}.json` files.
+2. AI, in the **same response**, creates all currently active-language (`ACTIVE_LANGUAGES`) `_locales/{lang}.json` files.
 3. Run `npm run i18n:merge` (CI/build does this automatically).
 4. Commit all `_locales/` files alongside the feature code.
 5. **Never** put locale files in a central `src/i18n/locales/` folder.
