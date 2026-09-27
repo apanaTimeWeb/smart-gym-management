@@ -19,7 +19,7 @@ import { BackendAdminModule as AdminDomainModule } from '@/backend_admin/backend
 import { AuthModule } from '@/backend_auth/auth_modules/auth/auth.module';
 import { BackendSuperadminModule as SuperadminDomainModule } from '@/backend_superadmin/backend-superadmin.module';
 import { LandingModule } from '@/backend_landing/landing_modules/landing/landing.module';
-import { ManagerDomainModule } from '@/backend_manager/modules/backend_manager/manager-domain.module';
+import { BackendManagerModule as ManagerDomainModule } from '@/backend_manager/backend-manager.module';
 import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)

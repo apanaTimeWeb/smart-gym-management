@@ -1,0 +1,13 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Ressource nicht gefunden.",
+    "RESOURCE_ID_REQUIRED": "Die Ressourcen-ID ist erforderlich.",
+    "TRANSACTION_NO_RESULT": "Die Transaktion wurde ohne Ergebnis abgeschlossen.",
+    "VALIDATION_FAILED": "Validierung fehlgeschlagen. Überprüfen Sie die markierten Felder.",
+    "MONEY_INVALID": "Der Geldbetrag muss in der kleinsten Währungseinheit eine nichtnegative sichere Ganzzahl sein.",
+    "CIRCUIT_OPEN": "Der externe Anbieter ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "UNSUPPORTED_QUERY": "Die angeforderte Abfrage wird nicht unterstützt.",
+    "ENCRYPTION_KEY_INVALID": "Die Verschlüsselungskonfiguration ist ungültig.",
+    "ENCRYPTED_VALUE_INVALID": "Der verschlüsselte Wert ist ungültig oder beschädigt."
+  }
+}

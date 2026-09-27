@@ -1,0 +1,11 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "CREATE_FAILED": "Unable to create resource.",
+    "UPDATE_FAILED": "Unable to update resource.",
+    "DELETE_FAILED": "Unable to delete resource.",
+    "PAYROLL_MONTH_INVALID": "Payroll month must use YYYY-MM format.",
+    "LEDGER_INPUT_INVALID": "Staff and amount are required.",
+    "LEDGER_EXCEEDS_DUE": "The payment exceeds the current staff due."
+  }
+}

@@ -1,0 +1,30 @@
+// RESPONSIBILITY: Retains the legacy idempotency route catalogue for historical traceability.
+// FLOW: Route catalogue → documentation only; ManagerCoreIdempotencyInterceptor → method-wide mutation enforcement.
+
+export const MANAGER_CORE_IDEMPOTENT_ROUTES: readonly RegExp[] = [
+  new RegExp('^manager/notifications/:id$', 'i'),
+  new RegExp('^manager/inquiries/:id$', 'i'),
+  new RegExp('^manager/expenses/:id$', 'i'),
+  new RegExp('^manager/finance/payments$', 'i'),
+  new RegExp('^manager/hr/staff/:id$', 'i'),
+  new RegExp('^manager/hr/payrolls/generate$', 'i'),
+  new RegExp('^manager/hr/payrolls$', 'i'),
+  new RegExp('^manager/hr/payrolls/:id$', 'i'),
+  new RegExp('^manager/hr/ledger/advance$', 'i'),
+  new RegExp('^manager/hr/ledger/paydue$', 'i'),
+  new RegExp('^manager/plans/:id$', 'i'),
+  new RegExp('^manager/plans/membership-activate$', 'i'),
+  new RegExp('^manager/plans/membership-renew$', 'i'),
+  new RegExp('^manager/plans/membership-freeze$', 'i'),
+  new RegExp('^manager/members/:id$', 'i'),
+  new RegExp('^manager/members/:id/renew$', 'i'),
+  new RegExp('^manager/members/:memberId/payments$', 'i'),
+  new RegExp('^manager/library/exercises/:id$', 'i'),
+  new RegExp('^manager/library/diet-plans/:id$', 'i'),
+  new RegExp('^manager/schedule/shifts/:id$', 'i'),
+  new RegExp('^manager/store/products/:id$', 'i'),
+  new RegExp('^manager/store/orders$', 'i'),
+  new RegExp('^manager/workouts/:id$', 'i'),
+  new RegExp('^manager/workouts/exercises/:id$', 'i'),
+  new RegExp('^manager/referrals/:referralId/claim$', 'i'),
+];

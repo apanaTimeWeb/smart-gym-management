@@ -1,0 +1,5 @@
+// RESPONSIBILITY: Defines the exact frontend-consumed response contract for the owning Manager feature.
+// FLOW: Repository/domain projection -> canonical response DTO -> HTTP envelope.
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+export class ManagerReferralsCreateReferralItemResponseDto { @ApiProperty() id!: string; @ApiProperty() referrerName!: string; @ApiProperty() referrerId!: string; @ApiProperty() refereeName!: string; @ApiProperty() refereePhone!: string; @ApiProperty() dateReferred!: string; @ApiProperty({enum:['PENDING','JOINED','REJECTED']}) status!: string; @ApiProperty({enum:['PENDING','CLAIMED','N/A']}) rewardStatus!: string; @ApiProperty({type:Number}) rewardAmount!: number; @ApiProperty({enum:['CASH','DISCOUNT','CREDIT']}) rewardType!: string; @ApiPropertyOptional() rewardExpiryDate?: string; @ApiPropertyOptional() conversionDate?: string; @ApiPropertyOptional() planJoined?: string; }
+export { ManagerReferralsCreateReferralItemResponseDto as ReferralsCreateReferralItemResponseDto };

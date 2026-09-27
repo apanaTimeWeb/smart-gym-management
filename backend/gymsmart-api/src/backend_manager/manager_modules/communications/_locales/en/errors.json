@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "CREATE_FAILED": "Unable to create resource.",
+    "UPDATE_FAILED": "Unable to update resource.",
+    "DELETE_FAILED": "Unable to delete resource.",
+    "PROVIDER_NOT_CONFIGURED": "The requested delivery provider is not configured.",
+    "PROVIDER_HTTP_FAILURE": "The delivery provider returned an upstream error."
+  }
+}

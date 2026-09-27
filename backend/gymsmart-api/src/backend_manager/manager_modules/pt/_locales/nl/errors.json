@@ -1,0 +1,9 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource niet gevonden.",
+    "CREATE_FAILED": "Resource kan niet worden aangemaakt.",
+    "UPDATE_FAILED": "Resource kan niet worden bijgewerkt.",
+    "DELETE_FAILED": "Resource kan niet worden verwijderd.",
+    "SESSIONS_EXHAUSTED": "Alle toegewezen sessies zijn al voltooid."
+  }
+}

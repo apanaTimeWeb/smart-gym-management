@@ -1,0 +1,5 @@
+// RESPONSIBILITY: Defines the exact frontend-consumed response contract for the owning Manager feature.
+// FLOW: Repository/domain projection -> canonical response DTO -> HTTP envelope.
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+export class ManagerPtAssignmentItemResponseDto { @ApiProperty() id!: string; @ApiProperty() memberId!: string; @ApiProperty() memberName!: string; @ApiProperty() trainerId!: string; @ApiProperty() trainerName!: string; @ApiProperty() packageId!: string; @ApiProperty() packageName!: string; @ApiProperty({type:Number}) totalSessions!: number; @ApiProperty({type:Number}) completedSessions!: number; @ApiProperty() startDate!: string; @ApiProperty() endDate!: string; @ApiProperty({type:Number}) sessionsRemaining!: number; @ApiPropertyOptional() nextSessionDate?: string; @ApiProperty({enum:['PAID','PARTIAL','PENDING']}) paymentStatus!: string; @ApiProperty({type:Number}) amountPaid!: number; @ApiProperty({type:Number}) totalAmount!: number; }
+export { ManagerPtAssignmentItemResponseDto as PtAssignmentItemResponseDto };

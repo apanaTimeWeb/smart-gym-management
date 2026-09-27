@@ -1,0 +1,13 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "RESOURCE_ID_REQUIRED": "Resource id is required.",
+    "TRANSACTION_NO_RESULT": "The transaction completed without a result.",
+    "VALIDATION_FAILED": "Validation failed. Please check the highlighted fields.",
+    "MONEY_INVALID": "Monetary amount must be a non-negative safe integer in the smallest currency unit.",
+    "CIRCUIT_OPEN": "The external provider is temporarily unavailable. Please try again later.",
+    "UNSUPPORTED_QUERY": "The requested query is not supported.",
+    "ENCRYPTION_KEY_INVALID": "Encryption configuration is invalid.",
+    "ENCRYPTED_VALUE_INVALID": "Encrypted value is invalid or corrupted."
+  }
+}

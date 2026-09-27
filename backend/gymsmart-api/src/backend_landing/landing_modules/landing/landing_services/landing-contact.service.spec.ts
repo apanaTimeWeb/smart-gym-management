@@ -1,5 +1,5 @@
-﻿// RESPONSIBILITY: Proves the contact service persists the message and its audit event through named boundaries.
-// FLOW: Unit test â†’ LandingContactService.createContact â†’ repositories.
+// RESPONSIBILITY: Proves the contact service persists the message and its audit event through named boundaries.
+// FLOW: Unit test → LandingContactService.createContact → repositories.
 import { LandingContactService } from '@/backend_landing/landing_modules/landing/landing_services/landing-contact.service';
 
 describe('LandingContactService', () => {

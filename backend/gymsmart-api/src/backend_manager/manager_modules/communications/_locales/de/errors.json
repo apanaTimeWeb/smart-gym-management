@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Ressource nicht gefunden.",
+    "CREATE_FAILED": "Ressource konnte nicht erstellt werden.",
+    "UPDATE_FAILED": "Ressource konnte nicht aktualisiert werden.",
+    "DELETE_FAILED": "Ressource konnte nicht gelöscht werden.",
+    "PROVIDER_NOT_CONFIGURED": "Der angeforderte Zustellungsanbieter ist nicht konfiguriert.",
+    "PROVIDER_HTTP_FAILURE": "Der Zustellungsanbieter hat einen Upstream-Fehler zurückgegeben."
+  }
+}
