@@ -105,15 +105,15 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--warning` | `#F59E0B` | `#F59E0B` |
 | `--danger` | `#B91C1C` | `#B91C1C` |
 | `--info` | `#1D4ED8` | `#1D4ED8` |
-| `--success-text` | `#22C55E` (Stronger Fitness Green) | `#10B981` |
+| `--success-text` | `#4ADE80` | `#065F46` |
 | `--success-bg` | `#064E3B` | `#D1FAE5` |
-| `--warning-text` | `#F59E0B` (Amber) | `#F59E0B` |
+| `--warning-text` | `#FBBF24` | `#92400E` |
 | `--warning-bg` | `#451A03` | `#FEF3C7` |
-| `--danger-text` | `#EF4444` (Red) | `#EF4444` |
+| `--danger-text` | `#F87171` | `#991B1B` |
 | `--danger-bg` | `#450A0A` | `#FEE2E2` |
-| `--info-text` | `#3B82F6` (Blue) | `#3B82F6` |
-| `--info-bg` | `#1E3A5F` | `#DBEAFE` |
-| `--purple-text` | `#C084FC` | `#8B5CF6` |
+| `--info-text` | `#60A5FA` | `#1E40AF` |
+| `--info-bg` | `#172554` | `#DBEAFE` |
+| `--purple-text` | `#D8B4FE` | `#7E22CE` |
 | `--purple-bg` | `#3B0764` | `#EDE9FE` |
 
 ### Payment Mode Tokens

@@ -1709,7 +1709,6 @@ AI agents frequently install redundant packages. **An AI cannot add a new depend
   - `src/components/ui/` — dumb reusable UI primitives
   - `src/lib/api.ts` — canonical network/API infrastructure
   - `src/lib/logger.ts` — centralized logging infrastructure
-  - `src/lib/formatters.ts` — canonical formatting infrastructure (`formatCurrencyFromMinorUnits`, `formatNumber`, `displayValue`, `maskSensitiveData`)
   - authentication/session infrastructure
   - approved configuration and observability infrastructure
 - `src/lib/` MUST NOT become a generic business-logic dumping ground. Feature-specific business logic MUST remain inside the owning feature/module.
@@ -2211,13 +2210,13 @@ Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to pr
 
 80. **Currency & Number Formatting Standardization**:
 Never manually concatenate currency symbols, format numbers with raw `.toFixed()`, or build locale strings directly inside JSX or component logic. All financial values and large numeric metrics MUST be piped through a centralized formatting utility.
-- **Minor-unit contract:** API monetary values are stored as minor units (paise, cents). Use `formatCurrencyFromMinorUnits(value, currencyCode)` which divides by 100 before formatting. Never pass a raw API minor-unit value to a display formatter that expects major units — this causes a 100× display error.
-- **Required utilities:** Define `formatCurrencyFromMinorUnits(amountMinor: number, currencyCode?: string): string` and `formatNumber(value: number): string` in `src/lib/formatters.ts`. This is the single source of truth for all numeric display formatting across the entire application.
+- **Minor-unit contract:** API monetary values are stored as minor units (paise, cents). Always divide by the appropriate currency subunit divisor (e.g., 100 for INR) before formatting. Never pass a raw API minor-unit value to a display formatter that expects major units — this causes a 100× display error.
+- **Required utilities:** Define `[module]FormatCurrency(amountMinor: number, currencyCode: string, locale: string): string` locally inside the feature module. **Do NOT use a global `src/lib/formatters.ts`.** Each feature module must own its own formatting utility to prevent cross-module coupling. This is the single source of truth for numeric display formatting within that feature.
 - **Locale consistency:** The utility must use the `Intl.NumberFormat` API to ensure consistent comma separators, decimal places, and currency symbol placement based on the app's configured locale — never hardcoded.
-- **Decimal precision:** Financial values MUST use the centralized currency formatter. Default precision is 2 decimals unless the product/UI contract explicitly specifies another precision. Metric counts (e.g., total members) must display with comma separators but no decimals.
+- **Decimal precision:** Financial values MUST use the feature-local currency formatter. Metric counts (e.g., total members) must display with comma separators but no decimals.
 - **This rule is the numeric parallel to Rule 24** (which standardizes date/time formatting via `date-fns`/`dayjs`). Just as Rule 24 forbids raw `new Date()` in JSX, this rule forbids raw number concatenation.
 - ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>` — `payment.amount` is in paise; this displays 100× too large.
-- ✅ **GOOD:** `<td>{formatCurrencyFromMinorUnits(payment.amount, 'INR')}</td>`
+- ✅ **GOOD:** `<td>{adminBillingFormatCurrency(payment.amount, 'INR', locale)}</td>`
 - **ESLint enforcement:** Add a custom ESLint rule or `no-restricted-syntax` pattern to flag direct `.toFixed()` calls and currency symbol string concatenation in `.tsx` files.
 
 81. **Button Loading Width Stability (No Layout Shifts)**:
@@ -2480,7 +2479,7 @@ The backend sends all monetary amounts as **integers in the smallest currency un
 ### Canonical Formatting Utility
 Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
 ``````typescript
-// admin_billing_utils/admin_billing_formatCurrency.ts (co-located inside the feature module)
+// admin_billing_utils/adminBillingFormatCurrency.ts (co-located inside the feature module)
 /**
  * Formats a monetary amount from its smallest unit to a locale-aware display string.
  * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
@@ -2526,7 +2525,7 @@ const locale = useLocale();
 <Text>{adminBillingFormatCurrency(plan.amount, plan.currency, locale)}</Text>
 ``````
 
-> **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
+> **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `[module]FormatCurrency()` utility (e.g., `adminBillingFormatCurrency()`). The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
 
 
 ## Rule 21 — Tenant Data Export & Offboarding UX
