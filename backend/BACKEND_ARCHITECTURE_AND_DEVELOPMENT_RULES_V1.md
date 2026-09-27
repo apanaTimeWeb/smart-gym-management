@@ -227,7 +227,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
+* **The Rule:** Never use raw print statements (e.g., `logger.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `method` (HTTP method: GET, POST, PATCH, etc.)
   - `route` / `path` (the matched route template, e.g., `/api/v1/members/:id` — **not** the raw URL with substituted values)
@@ -371,7 +371,7 @@ should an AI NEVER do in this module?]
 5. Calls BillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
 6. Calls MemberPlanRepository.createPlanRecord()
 7. Commits transaction — emits BILLING.PLAN.PURCHASED event
-8. EventBus listener triggers NotificationService (decoupled — Rule 8A)
+8. EventBus listener triggers NotificationService (decoupled — Rule 8)
 
 ## File Responsibility Map
 [REQUIRED: One line per file stating its single responsibility and what it must NOT do.]
@@ -393,7 +393,7 @@ CODEOWNERS path: `src/backend_[role]/[role]_[module]/` → @[reviewer-handle]
 the exact consequence of violating it — not just "be careful".]
 - [Specific invariant]: [What breaks if violated] — see Rule [N]
 - [Concurrency risk]: [Race condition scenario] — requires pessimistic lock (Rule 41)
-- [Transaction boundary]: [What must be atomic and why] — see Rule 8B
+- [Transaction boundary]: [What must be atomic and why] — see Rule 8
 
 ## Frozen API Contract
 [REQUIRED at API Contract Freeze (Rule 67). Copy the exact frozen contract from the frontend
@@ -479,8 +479,8 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** An enterprise API must never be released without a versioning strategy. Always prefix routes with a version (e.g., `/api/v1/users`). In frameworks like NestJS, enable URI versioning globally.
 * **Why:** If the business scales and requires mobile apps or external integrations, releasing a breaking `v2` API should not crash the legacy mobile apps that still rely on `v1`.
 
-## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
-* **The Rule:** This project uses a strict two-tier testing strategy:
+## 27. API Testing Strategy (Three-Tier: Jest Unit + API E2E + Selenium UI)
+* **The Rule:** This project uses a strict three-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
   2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_superadmin_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
@@ -1136,7 +1136,7 @@ This rule MUST remain consistent with Rule 99.
 * **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
-  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBERS.MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
+  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBERS.MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
 * **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
 * **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBERS.MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
 
@@ -1147,7 +1147,7 @@ This rule MUST remain consistent with Rule 99.
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `@prisma/client`, `class-validator`, `bcrypt`)
-  4. **Internal absolute imports — Infrastructure** (e.g., `@/src/infrastructure/config/`, `@/src/infrastructure/database/`)
+  4. **Internal absolute imports — Infrastructure** (e.g., `@/infrastructure/config/`, `@/infrastructure/database/`)
   5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
   7. **Type-only imports** (`import type { ... }`) must always be last
@@ -1405,7 +1405,7 @@ This rule MUST remain consistent with Rule 99.
   } as const;
   ```
 * **Enforcement Rules:**
-  - Every `axios` / `fetch` / `HttpService` call in an adapter (Rule 8D) MUST pass `timeout: TIMEOUT_CONFIG.EXTERNAL_API_DEFAULT_MS` (or the appropriate tier). No raw `axios.get(url)` without a timeout is permitted.
+  - Every `axios` / `fetch` / `HttpService` call in an adapter (Rule 8) MUST pass `timeout: TIMEOUT_CONFIG.EXTERNAL_API_DEFAULT_MS` (or the appropriate tier). No raw `axios.get(url)` without a timeout is permitted.
   - ORM/DB query timeouts MUST be configured for all non-trivial queries using the appropriate timeout value from `TIMEOUT_CONFIG`. For Prisma, use `$transaction` with a timeout option; for raw queries, set statement_timeout at the connection or query level. Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
   - When a timeout fires, the adapter MUST catch the `ECONNABORTED` / `ETIMEDOUT` error and throw a typed custom exception (Rule 6) — e.g., `PaymentGatewayTimeoutException` — never let the raw Axios error propagate to the service layer.
   - ❌ **BAD:** `await this.httpService.get('https://api.stripe.com/charges').toPromise()`
@@ -1641,7 +1641,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom implicit global naming strategies.
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` (TypeORM) or `@@map()` (Prisma) decorator rather than relying on a custom implicit global naming strategies.
 * **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
@@ -1703,8 +1703,8 @@ src/
             messages.json
         admin-members.controller.ts
         admin-members.service.ts
-    superadmin/
-      tenants/
+    superadmin_tenants/
+
         _locales/
           en/
             errors.json
@@ -1757,8 +1757,8 @@ This script walks every `_locales/` folder in the project, merges all JSON files
 ```typescript
 // scripts/merge-locales.ts
 // Usage: npx ts-node scripts/merge-locales.ts
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as glob from 'glob';
 
 const OUTPUT_DIR = 'dist/i18n';
@@ -1780,7 +1780,7 @@ for (const file of localeFiles) {
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 for (const [lang, data] of Object.entries(mergedByLang)) {
   fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
-  console.log(`✅ Merged ${lang}.json`);
+  logger.log(`✅ Merged ${lang}.json`);
 }
 ```
 

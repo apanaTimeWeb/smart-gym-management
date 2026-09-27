@@ -6550,11 +6550,7 @@ backend_selenium/
     [module]/
       test_[role]_[module]_ui.py
       test_[role]_[module]_ui_edge.py
-  _test_forbidden.md
-    [module]/
-      test_[role]_[module]_ui.py        ← Selenium UI flow tests
-      test_[role]_[module]_ui_edge.py   ← Selenium edge case / negative UI tests  
-      _test_forbidden.md                ← Selenium forbidden patterns doc
+  _test_forbidden.md                  ← Selenium forbidden patterns doc
 ```
 
 Examples:
@@ -6838,6 +6834,7 @@ backend_{role}/                          ← complete backend role module folder
 stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
 stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
+backend_e2e/...                          ← all API E2E test files
 backend_selenium/...  ← all Selenium test files (Section 86.5)
 RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 ```
@@ -6870,10 +6867,15 @@ It is a targeted verification pass:
 
 3. **Produce the final verdict axes (Section 79):**
    ```
-   FRONTEND-REQUIRED BACKEND COMPLETENESS: [updated verdict]
-   BACKEND ARCHITECTURE COMPLIANCE:        [updated verdict]
-   RUNTIME VERIFICATION:                   [updated verdict]
-   OVERALL READINESS:                      [updated verdict]
+   FRONTEND-REQUIRED BACKEND COMPLETENESS:    [updated verdict]
+   BACKEND ARCHITECTURE COMPLIANCE:           [updated verdict]
+   FRONTEND ↔ BACKEND CONTRACT STATUS:        [updated verdict]
+   CONTRACT FREEZE STATUS:                    [updated verdict]
+   UI DATA CONTRACT STATUS:                   [updated verdict]
+   RESPONSE/ERROR/PAGINATION CONTRACT STATUS: [updated verdict]
+   RUNTIME VERIFICATION:                      [updated verdict]
+   SCOPE/EVIDENCE COMPLETENESS:               [updated verdict]
+   OVERALL READINESS:                         [updated verdict]
    ```
 
 4. **If the re-audit reveals any remaining issue:**
@@ -6898,7 +6900,7 @@ Write results to `RE_AUDIT_CHECKLIST_RESULT.md`:
 ## 112-item Anti-Skipping Checklist (Post-Repair)
 [✅] All applicable/supplied inputs identified
 [✅] Backend documentation fully read
-... (You MUST explicitly reproduce and check off ALL 112 items here. Do not use ellipses or omit rows.)
+[INSERT ALL 112 ROWS FROM SECTION 84 VERBATIM HERE]
 [❌] [any still-failing item with reason]
 
 ## Updated Final Verdict
