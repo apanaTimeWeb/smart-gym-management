@@ -244,30 +244,31 @@ when those files contain business behavior belonging to individual features.
 Instead, feature-specific responsibilities MUST remain inside the owning feature:
 
 ```text
-superadmin/
-├── plans/
-│   ├── plans_components/
-│   ├── plans_hooks/
-│   ├── plans_api/
-│   ├── plans_types/
-│   ├── plans_schemas/
-│   ├── plans_constants/
-│   ├── plans_utils/
-│   ├── plans_mocks/
-│   └── plans_tests/
-│
-├── invoices/
-│   ├── invoices_components/
-│   ├── invoices_hooks/
-│   ├── invoices_api/
-│   ├── invoices_types/
-│   ├── invoices_schemas/
-│   ├── invoices_utils/
-│   ├── invoices_mocks/
-│   └── invoices_tests/
-│
-└── reports/
-    └── ...
+src/app/
+└── frontend_superadmin/
+    ├── superadmin_plans/
+    │   ├── superadmin_plans_components/
+    │   ├── superadmin_plans_hooks/
+    │   ├── superadmin_plans_api/
+    │   ├── superadmin_plans_types/
+    │   ├── superadmin_plans_schemas/
+    │   ├── superadmin_plans_constants/
+    │   ├── superadmin_plans_utils/
+    │   ├── superadmin_plans_mocks/
+    │   └── superadmin_plans_tests/
+    │
+    ├── superadmin_invoices/
+    │   ├── superadmin_invoices_components/
+    │   ├── superadmin_invoices_hooks/
+    │   ├── superadmin_invoices_api/
+    │   ├── superadmin_invoices_types/
+    │   ├── superadmin_invoices_schemas/
+    │   ├── superadmin_invoices_utils/
+    │   ├── superadmin_invoices_mocks/
+    │   └── superadmin_invoices_tests/
+    │
+    └── superadmin_reports/
+        └── ...
 ```
 
 The same principle applies to every role and every domain.
@@ -425,7 +426,7 @@ Rename all components, files, and folders to be extremely descriptive based on e
   - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
   - ✅ **GOOD:** `useManagerMembers.ts`, `manager-members.api.ts`, `manager-members.store.ts`, `ManagerMembersTable.tsx`
   This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin-members.api.ts` and `manager-members.api.ts`.
-- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. All non-reserved module-owned files MUST use the Role + Module prefix.
+- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `_locales/{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
 - Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
 - **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
 - **No Abbreviations**: Never use `Btn`, `Nav`, `Utils`. Use `Button`, `Navigation`, `Utilities`.
@@ -1758,8 +1759,8 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
-- ❌ **BAD:** `import { MemberTableProps } from '@/appsrc/app/frontend_admin/admin_members/members_types/member.types'`
-- ✅ **GOOD:** `import type { MemberTableProps } from '@/appsrc/app/frontend_admin/admin_members/members_types/member.types'`
+- ❌ **BAD:** `import { MemberTableProps } from '@/app/frontend_admin/admin_members/members_types/member.types'`
+- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/frontend_admin/admin_members/members_types/member.types'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
@@ -2430,7 +2431,7 @@ export const apiFetch = async (url: string, options?: RequestInit) => {
 
 ### Developer Workflow
 1. AI writes a new feature module and creates `_locales/en.json`.
-2. AI, in the **same response**, creates all target-language `_locales/{lang}.json` files.
+2. AI, in the **same response**, creates all currently active target-language `_locales/{lang}.json` files.
 3. Run `npm run i18n:merge` (or let CI/build do it automatically).
 4. Commit all `_locales/` files alongside the feature module code.
 5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
@@ -2486,7 +2487,7 @@ Create ONE shared utility per feature module. All currency display in that modul
  * @param currency ISO 4217 currency code (e.g., 'INR', 'USD', 'EUR')
  * @param locale  BCP 47 locale string (e.g., 'en-IN', 'nl-NL', 'en-US')
  */
-export const formatCurrency = (
+export const adminBillingFormatCurrency = (
   amount: number,
   currency: string,
   locale: string = 'en-IN'
@@ -2498,15 +2499,15 @@ export const formatCurrency = (
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
-    minimumFractionDigits: divisor === 1 ? 0 : 2,
+    minimumFractionDigits: divisor === 1000 ? 3 : (divisor === 1 ? 0 : 2),
   }).format(amount / divisor);
 };
 
 // Usage:
-// formatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
-// formatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
-// formatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
-// formatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
+// adminBillingFormatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
+// adminBillingFormatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
+// adminBillingFormatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
+// adminBillingFormatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
 ``````
 
 ### Rules
@@ -2522,7 +2523,7 @@ export const formatCurrency = (
 // ✅ GOOD
 import { useLocale } from 'next-intl';
 const locale = useLocale();
-<Text>{formatCurrency(plan.amount, plan.currency, locale)}</Text>
+<Text>{adminBillingFormatCurrency(plan.amount, plan.currency, locale)}</Text>
 ``````
 
 > **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.

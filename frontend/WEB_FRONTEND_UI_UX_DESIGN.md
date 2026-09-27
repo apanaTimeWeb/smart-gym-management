@@ -91,20 +91,20 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--text-secondary` | `#A1A1AA` | `#52525B` | Labels, captions, placeholder text |
 | `--text-disabled` | `#52525B` | `#A1A1AA` | Disabled states |
 | `--text-on-primary` | `#111111` | `#111111` | Text on primary buttons |
-| `--text-on-danger` | `#FFFFFF` | `#7F1D1D` | Text on danger actions |
-| `--text-on-warning` | `#111111` | `#78350F` | Text on warning states |
-| `--text-on-success` | `#FFFFFF` | `#064E3B` | Text on success states |
-| `--text-on-info` | `#FFFFFF` | `#1E3A8A` | Text on info states |
+| `--text-on-danger` | `#FFFFFF` | `#FFFFFF` | Text on danger actions |
+| `--text-on-warning` | `#111111` | `#111111` | Text on warning states |
+| `--text-on-success` | `#FFFFFF` | `#FFFFFF` | Text on success states |
+| `--text-on-info` | `#FFFFFF` | `#FFFFFF` | Text on info states |
 | `--skeleton-base` | `#111111` | `#E4E4E7` | Loading skeleton base color |
 | `--skeleton-highlight`| `#1A1A1A` | `#F4F4F5` | Loading skeleton shimmer highlight |
 
 ### Status Tokens (Separated Text & Background)
 | Token | Dark Mode (Default) | Light Mode |
 |---|---|---|
-| `--success` | `#22C55E` | `#10B981` |
+| `--success` | `#15803D` | `#047857` |
 | `--warning` | `#F59E0B` | `#F59E0B` |
-| `--danger` | `#EF4444` | `#EF4444` |
-| `--info` | `#3B82F6` | `#3B82F6` |
+| `--danger` | `#B91C1C` | `#B91C1C` |
+| `--info` | `#1D4ED8` | `#1D4ED8` |
 | `--success-text` | `#22C55E` (Stronger Fitness Green) | `#10B981` |
 | `--success-bg` | `#064E3B` | `#D1FAE5` |
 | `--warning-text` | `#F59E0B` (Amber) | `#F59E0B` |
