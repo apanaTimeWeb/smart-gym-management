@@ -21,6 +21,6 @@ export default new DataSource({
   database: env.TENANT_DB_FALLBACK ?? env.SEED_TENANT_DATABASE ?? 'buildronix_tenant_default',
   entities: AdminCoreTenantEntityRegistry,
   migrations: [join(__dirname, 'admin_core_migrations/admin_core_tenant/*{.js,.ts}')],
-  synchronize: false,
+  synchronize: true,
   extra: { max: 20, connectionTimeoutMillis: 30000, idleTimeoutMillis: 10000, statement_timeout: 3000 },
 });

@@ -75,7 +75,7 @@ async function seedTenant(): Promise<void> {
   await tenantDataSource.destroy();
 }
 
-void seedTenant().catch(async () => {
+void seedTenant().catch(async (err) => { console.error(err);
   if (tenantDataSource.isInitialized) await tenantDataSource.destroy();
   process.exitCode = 1;
 });

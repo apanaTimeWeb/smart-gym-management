@@ -31,19 +31,29 @@ async function seedMaster(): Promise<void> {
       name: env.SEED_TENANT_NAME ?? 'Demo Gym',
       slug: env.SEED_TENANT_SLUG ?? 'demo-gym',
       databaseName: env.SEED_TENANT_DATABASE ?? 'buildronix_tenant_default',
-      isActive: true,
+      displayName: 'Demo Gym',
+      ownerName: 'Seed Owner',
+      adminEmail: 'admin@gymsmart.com',
+      phone: '9999999999',
+      status: 'ACTIVE',
+      plan: 'Enterprise',
+      databaseVersion: 'v1.0',
+      city: 'Demo City',
+      state: 'Demo State',
+      country: 'India',
+      gstin: '',
     });
     await tenantRepo.save(tenant);
   }
 
-  const email = (env.SEED_ADMIN_EMAIL ?? 'admin@example.com').trim().toLowerCase();
+  const email = (env.SEED_ADMIN_EMAIL ?? 'admin@gymsmart.com').trim().toLowerCase();
   let admin = await adminRepo.findOne({ where: { id: ADMIN_ID } });
   if (!admin) {
     admin = adminRepo.create({
       id: ADMIN_ID,
       tenantId: tenant.id,
       email,
-      passwordHash: await argon2.hash(env.SEED_ADMIN_PASSWORD ?? 'ChangeMe123!'),
+      passwordHash: await argon2.hash(env.SEED_ADMIN_PASSWORD ?? 'demo123'),
       name: 'Buildronix Admin',
       phone: '9999999999',
       role: 'ADMIN' as any,
@@ -94,7 +104,8 @@ async function seedMaster(): Promise<void> {
   await masterDataSource.destroy();
 }
 
-void seedMaster().catch(async () => {
+void seedMaster().catch(async (e) => {
+  console.error("Seeding failed:", e);
   if (masterDataSource.isInitialized) await masterDataSource.destroy();
   process.exitCode = 1;
 });
