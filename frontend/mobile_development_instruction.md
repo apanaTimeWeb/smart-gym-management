@@ -26,13 +26,29 @@ Whichever is chosen, mandate the framework's **current-generation architecture**
 
 ```text
 APPLICATION
-  └── ROLE CONTAINER
+  └── ROLE CONTAINER (Prefixed with frontend_)
         └── FEATURE MODULE
               └── SUB-FEATURE / USE CASE
 ```
 
 AI Repair Boundary = FEATURE MODULE
 Role Container = NOT the repair boundary
+
+## Rule 0A.1 — FRONTEND NAMESPACE PREFIXING (MANDATORY)
+
+Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders.
+- **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
+- **Primary Examples:** `frontend_admin/`, `frontend_manager/`, `frontend_superadmin/`.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend Flutter/React Native file. By strictly enforcing `frontend_manager/billing/`, there is zero ambiguity for the AI or the human developer.
+
+Examples of ROLE CONTAINERS:
+```text
+features/frontend_admin/
+features/frontend_manager/
+features/frontend_superadmin/
+features/frontend_trainer/
+```
+The exact names will differ by project, but the `frontend_` prefix is non-negotiable for root containers.
 
 ## Rule 0B — Hard Feature Write Boundary
 
@@ -56,7 +72,7 @@ If an AI repair attempts to modify business logic in a sibling feature module to
 ## Rule 1 — Micro-Modularization (One Feature = One Self-Contained Folder)
 
 This is the most important structural rule. **One feature = one self-contained folder.**
-If there is a bug in `members`, you drag ONLY the `features/members/` folder to the AI.
+If there is a bug in `members`, you drag ONLY the `features/frontend_manager/members/` folder to the AI.
 Everything the AI needs — components, hooks/controllers, schemas, types, API, state,
 tests, and the context file — lives inside that single folder. Zero need to open any other folder.
 
@@ -850,11 +866,11 @@ All calls go through the central network client. Response envelope:
 
 | Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/api/v1/manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
-| `fetchMemberById(id)` | GET | `/api/v1/manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/api/v1/manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/api/v1/manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/api/v1/manager/members/:id` | — | `null` |
+| `fetchMembers(params)` | GET | `/api/v1/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
+| `fetchMemberById(id)` | GET | `/api/v1/frontend_manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/api/v1/frontend_manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/frontend_manager/members/:id` | — | `null` |
 
 ## Approved External Dependencies
 [REQUIRED: Must list all cross-layer and external packages. AI must not import anything outside this list.]
@@ -926,7 +942,7 @@ which file to open for any task without reading all files.]
 [REQUIRED: Mark honestly. An honest [ ] is better than a false [x].]
 
 - [ ] Rule 1: Micro-modularization — module-prefixed files, size ceilings respected
-- [ ] Rule 1: Role isolation — zero cross-role imports (admin/manager/trainer isolated)
+- [ ] Rule 1: Role isolation — zero cross-role imports (admin/frontend_manager/trainer isolated)
 - [ ] Rule 2: Navigation uses typed params — no full objects passed through routes
 - [ ] Rule 3: All styles use design tokens — no magic hex/dp values
 - [ ] Rule 4: State placed per Server/Client decision matrix
@@ -1702,7 +1718,7 @@ import React from 'react';
 //   manage UI state (filter panel open/close lives in useMembersFilters.ts).
 //
 // FLOW: MembersListScreen → useMembers(params) → members.api.ts → fetchMembers()
-//   → GET /api/v1/manager/members → ApiResponse<Member[]> + PaginationMeta
+//   → GET /api/v1/frontend_manager/members → ApiResponse<Member[]> + PaginationMeta
 import { useQuery } from '@tanstack/react-query';
 ...
 ```
@@ -1807,10 +1823,10 @@ const client = axios.create({ timeout: TIMEOUT_CONFIG.DEFAULT });
 
 ```typescript
 // ❌ BAD — no timeout; hangs indefinitely on poor mobile networks
-const response = await axios.get('/api/v1/manager/members');
+const response = await axios.get('/api/v1/frontend_manager/members');
 
 // ✅ GOOD — explicit timeout per call category
-const response = await client.get('/api/v1/manager/members');                          // inherits DEFAULT
+const response = await client.get('/api/v1/frontend_manager/members');                          // inherits DEFAULT
 const response = await client.post('/reports/export', dto,
   { timeout: TIMEOUT_CONFIG.REPORT });                                          // explicit override
 ```

@@ -119,38 +119,43 @@ The project MUST use the following architectural hierarchy:
 
 ```text
 APPLICATION
-  └── ROLE CONTAINER
+  └── ROLE CONTAINER (Prefixed with frontend_)
         └── FEATURE MODULE
               └── FEATURE SUB-FEATURES / CHILD COMPONENTS
 ```
 
 This hierarchy applies to EVERY frontend project regardless of business domain.
 
-Examples:
+### 1C. FRONTEND NAMESPACE PREFIXING (MANDATORY)
+
+Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders. 
+- **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
+- **Primary Examples:** `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_superadmin/`.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/billing/`, there is zero ambiguity for the AI or the human developer.
+
+Examples of ROLE CONTAINERS:
 
 ```text
-src/app/admin/
-src/app/manager/
-src/app/superadmin/
-src/app/trainer/
+src/app/frontend_admin/
+src/app/frontend_manager/
+src/app/frontend_superadmin/
+src/app/frontend_trainer/
 ```
-
-are ROLE CONTAINERS.
 
 Examples of FEATURE MODULES may include:
 
 ```text
-src/app/admin/members/
-src/app/admin/billing/
-src/app/manager/attendance/
-src/app/superadmin/plans/
-src/app/superadmin/reports/
-src/app/superadmin/gyms/
-src/app/settings/profile/
-src/app/analytics/
+src/app/frontend_admin/admin_members/
+src/app/frontend_admin/admin_billing/
+src/app/frontend_manager/manager_attendance/
+src/app/frontend_superadmin/superadmin_plans/
+src/app/frontend_superadmin/superadmin_reports/
+src/app/frontend_superadmin/superadmin_gyms/
+src/app/frontend_settings/settings_profile/
+src/app/frontend_analytics/
 ```
 
-The exact names will differ by project.
+The exact names will differ by project, but the `frontend_` prefix is non-negotiable for root containers.
 
 IMPORTANT:
 
@@ -162,16 +167,16 @@ For example:
 
 ```text
 ROLE CONTAINER:
-`/superadmin/`
+`/frontend_superadmin/`
 
 FEATURE MODULE:
-`/superadmin/plans/`
+`/frontend_superadmin/superadmin_plans/`
 ```
 
 Therefore:
 
 ```text
-/superadmin/
+/frontend_superadmin/
 ```
 
 is not the normal context that should be provided to an AI for a Plans bug.
@@ -179,7 +184,7 @@ is not the normal context that should be provided to an AI for a Plans bug.
 The normal repair context is:
 
 ```text
-/superadmin/plans/
+/frontend_superadmin/superadmin_plans/
 ```
 
 ---
@@ -311,19 +316,19 @@ ONLY FEATURE FILES ARE CHANGED
 For example, if a bug exists in:
 
 ```text
-/admin/billing/
+/frontend_admin/billing/
 ```
 
 the preferred AI context is:
 
 ```text
-/admin/billing/
+/frontend_admin/billing/
 ```
 
 NOT:
 
 ```text
-/admin/
+/frontend_admin/
 ```
 
 and NOT:
@@ -364,13 +369,13 @@ If two independent features need similar business behavior, they MAY contain dup
 Example:
 
 ```text
-/admin/billing/billing_utils/
+/frontend_admin/billing/billing_utils/
 ```
 
 and
 
 ```text
-/manager/billing/billing_utils/
+/frontend_manager/billing/billing_utils/
 ```
 
 may contain similar code.
@@ -412,17 +417,20 @@ AI Repair Boundary
 The term "module" in all isolation, portability, dependency, and AI repair rules MUST refer to the FEATURE MODULE unless a rule explicitly states otherwise.
 
 2. **Total Role Isolation (No Shared Business Components)**:
-To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `/admin/members/`, `ManagerMembersTable.tsx` inside `/manager/members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `/frontend_admin/members/`, `ManagerMembersTable.tsx` inside `/frontend_manager/members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
 
-3. **Hyper-Descriptive Naming & Mandatory Module Prefix**: 
+3. **Hyper-Descriptive Naming & Mandatory Role + Module Prefix (CRITICAL)**: 
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
-- **Module Name Prefixing (CRITICAL):** Every file name (not just the containing folder) MUST begin with the module name as a prefix. Example: `AdminBillingInvoiceSearchBox.tsx`.
-- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. All non-reserved module-owned files MUST use the module prefix.
-- Test files are also module-owned files and MUST follow module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`, `ManagerMembersFormatting.test.ts`.
-- **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension). Utility/schema/constants files are exempt from this exact-name matching rule unless a single primary export is intentionally defined.
+- **Role + Module Name Prefixing (CRITICAL):** EVERY single file name (not just the containing folder) MUST begin with the parent Role name (e.g., `Manager`, `Admin`) followed by the Module name as a prefix. This applies to EVERYTHING: components, hooks, api services, stores, schemas, constants, and utilities. 
+  - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
+  - ✅ **GOOD:** `useManagerMembers.ts`, `manager-members.api.ts`, `manager-members.store.ts`, `ManagerMembersTable.tsx`
+  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin-members.api.ts` and `manager-members.api.ts`.
+- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. All non-reserved module-owned files MUST use the Role + Module prefix.
+- Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
+- **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
 - **No Abbreviations**: Never use `Btn`, `Nav`, `Utils`. Use `Button`, `Navigation`, `Utilities`.
-- **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`, `...Card.tsx`, `...Dropdown.tsx`).
-- **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface InquiriesTableProps`).
+- **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`).
+- **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface ManagerInquiriesTableProps`).
 
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
 Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
@@ -604,7 +612,7 @@ Error fallback hierarchy:
 - **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
-Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/superadmin/gyms/gyms_context/GymsContext`).
+Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/gyms/gyms_context/GymsContext`).
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
@@ -633,9 +641,9 @@ Preferred AI context:
 NOT:
 
 ```text
-/admin/
-/manager/
-/superadmin/
+/frontend_admin/
+/frontend_manager/
+/frontend_superadmin/
 ```
 
 and NOT the entire application.
@@ -659,9 +667,9 @@ Sibling feature modules MUST be treated as isolated business systems even when t
 For example:
 
 ```text
-/admin/members/
-/admin/billing/
-/admin/reports/
+/frontend_admin/members/
+/frontend_admin/billing/
+/frontend_admin/reports/
 ```
 
 are independent business modules.
@@ -748,20 +756,20 @@ Example:
 
 ```text
 Task:
-Fix bug in `/admin/billing/`
+Fix bug in `/frontend_admin/billing/`
 
 Allowed by default:
 
-/admin/billing/**
+/frontend_admin/billing/**
 ```
 
 Not allowed:
 
 ```text
-/admin/members/**
-/admin/reports/**
-/superadmin/**
-/manager/**
+/frontend_admin/members/**
+/frontend_admin/reports/**
+/frontend_superadmin/**
+/frontend_manager/**
 ```
 
 even if those modules contain similar code.
@@ -832,16 +840,16 @@ subscription tier, and drill into per-gym usage metrics. It is the entry point f
 tenant lifecycle operations (create → activate → suspend → delete).
 
 ## Feature Inventory
-| Gym List        | /superadmin/gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /superadmin/gyms?page&limit&search&status | ✅ Live |
-| Add Gym         | /superadmin/gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /superadmin/gyms                         | ✅ Live |
-| Gym Detail      | /superadmin/gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /superadmin/gyms/:id                      | ✅ Live |
-| Suspend/Restore | /superadmin/gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /superadmin/gyms/:id/status             | ✅ Live |
+| Gym List        | /frontend_superadmin/gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /frontend_superadmin/gyms?page&limit&search&status | ✅ Live |
+| Add Gym         | /frontend_superadmin/gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /frontend_superadmin/gyms                         | ✅ Live |
+| Gym Detail      | /frontend_superadmin/gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /frontend_superadmin/gyms/:id                      | ✅ Live |
+| Suspend/Restore | /frontend_superadmin/gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /frontend_superadmin/gyms/:id/status             | ✅ Live |
 
 ## Edge Cases / AI Warnings
 - Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
   irreversible until manually restored. Always use useConfirm() with a typed warning message.
 - The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
-  GET /superadmin/plans — do NOT hardcode plan options.
+  GET /frontend_superadmin/plans — do NOT hardcode plan options.
 - Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
 - The status badge color mapping lives in SuperadminGymsConstants.ts — do not inline colors.
 ```
@@ -962,12 +970,12 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: b
 
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
-| `fetchMemberById(id)` | GET | `/manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/manager/members/:id` | — | `null` |
-| `renewMembership(id, dto)` | POST | `/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
+| `fetchMembers(params)` | GET | `/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
+| `fetchMemberById(id)` | GET | `/frontend_manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/frontend_manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/frontend_manager/members/:id` | — | `null` |
+| `renewMembership(id, dto)` | POST | `/frontend_manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
 
 ## UI Data Requirements
 [REQUIRED: List every table column, KPI, chart series, filter, dropdown, detail field,
@@ -977,10 +985,10 @@ Generic entries like "All fields" are forbidden — name every column and field 
 
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
 |---|---|---|---|---|---|
-| Table: Member Name | `name` | `GET /manager/members` | `data.items[].name` | No | Yes |
-| Table: Status Badge | `status` | `GET /manager/members` | `data.items[].status` | No | Yes |
-| KPI: Total Members | `totalCount` | `GET /manager/members/stats` | `data.totalCount` | No | Yes |
-| Filter: Status | `status` | `GET /manager/members` | `data.items[].status` | No | Yes |
+| Table: Member Name | `name` | `GET /frontend_manager/members` | `data.items[].name` | No | Yes |
+| Table: Status Badge | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
+| KPI: Total Members | `totalCount` | `GET /frontend_manager/members/stats` | `data.totalCount` | No | Yes |
+| Filter: Status | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
 
 *(Replace the example rows above with the real field names, endpoint names, and response
 paths for this specific module. Every rendered UI element must have a row here.)*
@@ -1462,7 +1470,7 @@ Any field displaying a unique, non-sensitive identifier or tracking code may hav
 Every list/table MUST have a dedicated empty state component (`[Module]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
 
 49. **Strict Import Order Convention**:
-Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/superadmin/gyms/...`), Types-only.
+Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/gyms/...`), Types-only.
 
 50. **Prop Spreading is Forbidden (`...props` ban)**:
 Never write `<Component {...props} />`. All props must be explicitly named, except for primitive HTML wrappers.
@@ -1750,8 +1758,8 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
-- ❌ **BAD:** `import { MemberTableProps } from '@/app/admin/members/members_types/member.types'`
-- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/admin/members/members_types/member.types'`
+- ❌ **BAD:** `import { MemberTableProps } from '@/app/frontend_admin/members/members_types/member.types'`
+- ✅ **GOOD:** `import type { MemberTableProps } from '@/app/frontend_admin/members/members_types/member.types'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
