@@ -165,7 +165,7 @@ ORM
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `modules/finance/utils/`. If the HR module needs the exact same utility, **duplicate the code** into `modules/hr/utils/`. 
+Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `backend_finance/finance_utils/`. If the HR module needs the exact same utility, **duplicate the code** into `backend_hr/hr_utils/`. 
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
@@ -666,7 +666,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
   - **Spring Boot (Java):** Implement `AbstractRoutingDataSource` and use a `ThreadLocal` context holder populated via a HandlerInterceptor to route database connections dynamically.
-* **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, queries are infinitely faster because a table only contains the data of one specific gym, avoiding massive billion-row bottlenecks.
+* **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it can reduce dataset size per tenant and improve isolation/performance characteristics, avoiding massive multi-tenant table bottlenecks.
 
 ---
 
@@ -1159,8 +1159,8 @@ This rule MUST remain consistent with Rule 99.
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `@prisma/client`, `class-validator`, `bcrypt`)
-  4. **Internal absolute imports — Infrastructure** (e.g., `@/config/`, `@/database/`)
-  5. **Internal absolute imports — Module-specific** (e.g., `@/modules/billing/...`)
+  4. **Internal absolute imports — Infrastructure** (e.g., `@/src/infrastructure/config/`, `@/src/infrastructure/database/`)
+  5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
   7. **Type-only imports** (`import type { ... }`) must always be last
 * **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
@@ -1173,7 +1173,7 @@ This rule MUST remain consistent with Rule 99.
   import { PrismaService } from '@/core/database/prisma.service';
   import * as bcrypt from 'bcrypt';
 
-  import { DatabaseConfig } from '@/config/database.config';
+  import { DatabaseConfig } from '@/src/infrastructure/config/database.config';
 
   import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
   import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
@@ -1701,9 +1701,8 @@ The backend uses `nestjs-i18n` with **co-located locale files inside each NestJS
 Each module owns its own `_locales/` folder:
 ```
 src/
-  modules/
-    admin/
-      members/
+  backend_admin/
+    admin_members/
         _locales/
           en/
             errors.json   ← AI writes this when creating the module
@@ -1730,7 +1729,7 @@ scripts/
 ### AI Agent Translation Rule
 When an AI agent writes a new module or adds new error/message keys, it MUST:
 1. Create `_locales/en/errors.json` with the English strings.
-2. In the **same commit**, create `_locales/nl/errors.json`, `_locales/fr/errors.json`, etc. for all configured target languages, using its own translation capability.
+2. In the **same commit**, create `_locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Do not generate files for the full `SUPPORTED_LANGUAGES` list yet.
 3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
 
 ```json
@@ -1971,11 +1970,11 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 **Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized. Tests must be real and resilient, not just "green" checkboxes.
 
-## Rule 122 — No AI Runtime Verification Requirement
+## Rule 113 — No AI Runtime Verification Requirement
 * **The Rule:** AI agents are NOT required to execute code, run servers, or perform runtime verification to validate their changes, as they often lack the necessary local environment variables, database connections, or API keys.
 * **The Expectation:** Instead of failing or complaining about missing environments, the AI MUST rely on its deep knowledge of the framework, TypeScript, and these architectural guidelines to write syntactically and logically correct code. The AI should aim to write code that is "correct by construction" so that when the human developer runs it locally, it works with zero or minimal issues. Do not attempt to spin up local servers or run `npm run start` if the environment is incomplete.
 
-## Rule 123 — Dashboard & UI Data APIs (Avoid "Mega APIs")
+## Rule 114 — Dashboard & UI Data APIs (Avoid "Mega APIs")
 * **The Rule:** Never create a single "Mega API" endpoint that fetches an entire dashboard's worth of data (e.g., all KPIs, all charts, and all recent table lists) in one massive response payload. You MUST fragment complex dashboards into **widget-based / feature-sliced APIs** (e.g., `/dashboard/kpis`, `/dashboard/charts`, `/dashboard/recent-members`).
 * **Why:**
   1. **Fault Isolation (Debugging):** If the database query for the revenue chart fails, it should not crash the entire dashboard. The user should still see their KPIs and Tables, with only the chart showing an error state. Mega APIs make identifying the failing query extremely difficult.
@@ -1986,16 +1985,16 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
 * **The Rule:** EVERY single construct in the codebase—Classes, Controllers, Service Methods, DTOs, Entities, Database Columns, Enums, and Config Variables—MUST have an exhaustive, multi-line docstring. 
-* **Why:** AI agents must not guess. When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The docstring must explicitly declare it.
+* **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included:**
   1. **Primary Intent:** Deep explanation of the business context.
   2. **Edge Cases:** Explicit mapping of failure states and constraints.
   3. **Side-Effects:** Mention cache invalidations, webhooks, or event emissions.
-  4. **AI-Note (Crucial):** Warnings or routing instructions for future AIs.
+  4. **AI-Note (Crucial):** Required documentation metadata, warnings, or routing instructions for future AIs.
 
 ## Rule 116 - MCP-Ready API Design & AI Introspection
 * **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
-* **Implementation:** Every REST endpoint, DTO, and Response object must be heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`). The resulting `swagger.json` must be 100% strictly typed with no missing fields.
+* **Implementation:** Every REST endpoint, DTO, and Response object/schema must be heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`). The resulting `swagger.json` must be 100% strictly typed with no missing fields, explicitly documenting the response payload structure.
 * **Why:** This allows an MCP Server to ingest the backend's API specification and dynamically convert all your endpoints into **LLM Tools**. An AI agent can then connect to your backend and intuitively execute commands (e.g., `create_member`, `fetch_dashboard_kpis`) natively, treating your backend as an extension of its own brain rather than just static code.
 
 ## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
@@ -2013,6 +2012,6 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
-* **Implementation:** You must insert two rows into a `ledger_entries` table for every transaction: a Credit (+500 to Gym Revenue account) and a Debit (-500 from Member Wallet account). The current balance is always dynamically calculated as `SUM(credits) - SUM(debits)`. 
+* **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 
 * **Why:** This makes financial discrepancies mathematically impossible and provides a perfect, tamper-proof audit trail for accounting.
 

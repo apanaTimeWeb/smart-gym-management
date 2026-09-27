@@ -2265,7 +2265,7 @@ src/
 ### AI Agent Translation Rule
 When writing a new feature module, the AI MUST:
 1. Create `_locales/en.json` with all English UI strings used in the module.
-2. In the **same commit**, create `_locales/nl.json`, `_locales/fr.json`, etc. for all configured target languages using its own translation capability.
+2. In the **same commit**, create `_locales/hi.json` (and any other currently `ACTIVE_LANGUAGES`) using its own translation capability. Do not generate files for the full `SUPPORTED_LANGUAGES` list yet.
 3. Translations must be **contextually correct** for a Gym Management SaaS — not literal.
 
 ```json
