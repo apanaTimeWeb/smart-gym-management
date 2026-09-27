@@ -6482,7 +6482,9 @@ Exact binary DONE criteria.
 
 ## 17. Final Verdict
 
-Use the Multi-Axis Final Verdict (applies to the created backend in Mode A or the repaired backend in Mode B):
+*(Note: Section 79 is the canonical verdict schema. The following is a supplementary projection only — use for orientation, not as the final deliverable schema.)*
+
+Supplementary Multi-Axis Projection (not canonical — see Section 79 for the canonical schema):
 
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS
@@ -6571,9 +6573,9 @@ backend_selenium/
 Examples:
 
 ```
-backend_selenium/backend_admin_selenium/members/test_admin_members_ui.py
-backend_selenium/backend_admin_selenium/members/test_admin_members_ui_edge.py
-backend_selenium/backend_trainer_selenium/attendance/test_trainer_attendance_ui.py
+backend_selenium/backend_admin_selenium/admin_members/test_admin_members_ui.py
+backend_selenium/backend_admin_selenium/admin_members/test_admin_members_ui_edge.py
+backend_selenium/backend_trainer_selenium/trainer_attendance/test_trainer_attendance_ui.py
 ```
 
 ### What Each Selenium Test File MUST Cover
@@ -7112,7 +7114,7 @@ The V6 audit standard is exhaustive:
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
 - BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86B.2);
-- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.6);
-- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86B.7).
+- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.3);
+- no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86B.4).
 
 

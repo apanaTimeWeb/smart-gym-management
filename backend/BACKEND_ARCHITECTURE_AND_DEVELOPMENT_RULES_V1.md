@@ -118,7 +118,7 @@ AI relies heavily on data shapes to write correct code. If the AI knows the exac
 * **Why?** When you want the AI to write a new function, you just feed it the `interfaces` file. The AI instantly knows exactly what properties are available without having to read 500 lines of implementation code.
 
 ## 5. Centralized Constants (Single Source of Truth)
-Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[ModuleName].constants.ts` (or `.py`).
+Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[role]-[module].constants.ts` (or `[role]_[module]_constants.py`).
 - ❌ **BAD:** `throw new Error("User age must be over 18")`
 - ✅ **GOOD:** `throw new Error(MEMBER_ERRORS.AGE_RESTRICTION)`
 - **Why?** Tomorrow, if the business requirement changes from 18 to 21, or if you need to translate error messages to a different language, you only feed the AI `admin-members.constants.ts`. The business logic remains untouched.
@@ -139,6 +139,9 @@ Extract complex queries into a dedicated Repository or Query file (e.g., `admin-
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
+
+
+> **MODE A (CREATE) STACK BASELINE:** Before creating any backend module in Mode A, the AI MUST read and confirm the project stack from the architecture document or the prompt inputs. Required: (1) ORM + DB engine, (2) message broker/queue, (3) Redis use, (4) auth mechanism, (5) path alias (e.g., `@/`), (6) migration tool. If any of these are not explicitly specified, the AI MUST raise a MISSING_STACK_DEFINITION error before writing any code. Do NOT guess.
 
 ## 8. Handling Edge Cases & Complex Scenarios
 
@@ -639,7 +642,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
-* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/erp/billing`, `/api/v1/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
 * **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
@@ -707,8 +710,8 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
 
 ## 49. Explicit Module Dependency Graph (Including Runtime Events)
-* **The Rule:** Every module must have a `[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
-* **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in `[module]_dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
+* **The Rule:** Every module must have a `[role]_[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
+* **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in the module's `[role]_[module]_dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
 
 ## 50. Standardized Event Naming Convention
 * **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`, `MEMBERS.MEMBER.REGISTERED`, `ATTENDANCE.SESSION.CLOSED`) and be registered in a centralized `event-registry.constants.ts`. Two-part forms like `MEMBER_REGISTERED` or `MEMBER.REGISTERED` are non-compliant.
@@ -868,7 +871,7 @@ Backend implementation (services, repositories, DB queries)
 1. **Never call AdminBillingWalletRepository directly from outside AdminBillingOrchestratorService.**
    Consequence: Wallet deductions outside the Orchestrator bypass the DB transaction
    boundary, causing partial charges where balance is deducted but plan is not activated.
-   Rule: 8B (Orchestrator Pattern), Rule 41 (Pessimistic Locking).
+   Rule: 8 — Edge Case B (Orchestrator Pattern), Rule 41 (Pessimistic Locking).
 
 2. **Never remove the SELECT FOR UPDATE lock from deductBalance().**
    Consequence: Concurrent top-up + deduction requests will race, producing negative
@@ -878,7 +881,7 @@ Backend implementation (services, repositories, DB queries)
 3. **Never process a plan purchase and wallet deduction in separate transactions.**
    Consequence: A crash between the two operations leaves the member charged but
    without an active plan — a financial discrepancy requiring manual reconciliation.
-   Rule: 8B (Orchestrator Pattern).
+   Rule: 8 — Edge Case B (Orchestrator Pattern).
 
 4. **Never omit the Idempotency-Key check on /billing/wallet/topup.**
    Consequence: Network retries from mobile clients will double-charge the member.
@@ -1179,7 +1182,8 @@ This rule MUST remain consistent with Rule 99.
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
   1. **ORM Model / Entity** (`admin-member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
-  2. **Domain Object vs API Response DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
+  2. **Domain Model** (`member.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
+  2b. **Response DTO** (`member-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
   3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
 * **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
@@ -1254,7 +1258,7 @@ This rule MUST remain consistent with Rule 99.
   6. **Tenant Provisioning & Connection Routing** — Any code that creates a new tenant database, runs migrations programmatically, or resolves the `x-tenant-id` to a DataSource (Rule 39). A bug here risks cross-tenant data leakage — the single most severe failure mode in this architecture. This includes both the provisioning flow AND any modification to the request-scoped connection resolver.
 * **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
 * **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
-* **Why:** Industry research confirms that ~45% of AI-generated code can introduce vulnerabilities, and the risk is highest in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
+* **Why:** AI code suggestions can frequently introduce security vulnerabilities, especially in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
 
 ---
 
@@ -1524,7 +1528,8 @@ This rule MUST remain consistent with Rule 99.
                    // FK: FK_members_branches_branch_id
     status   MemberStatus @default(PENDING) @map("status")
                    // IDX: IDX_members_status
-    balance  BigInt @default(0) @map("balance")
+    // DERIVED READ-MODEL ONLY — see Rule 119; never directly mutated
+    balance  BigInt @default(0) @map("balance")  *(IMPORTANT: The `balance` field shown in the Rule 100 schema example is a derived read-model projection for display/check-constraint enforcement ONLY. The financial source of truth is always the immutable `ledger_entries` table (Rule 119). The stored balance MUST be recomputed from ledger rows; it is never directly updated — see Rule 119.)*
                    // CHK: CHK_wallets_balance_non_negative (explicitly declared in the ORM schema where the ORM supports it, otherwise explicitly named in the migration/DDL)
     branch   Branch @relation(fields: [branchId], references: [id],
                               map: "FK_members_branches_branch_id")
@@ -1536,7 +1541,7 @@ This rule MUST remain consistent with Rule 99.
   }
   ```
 * **Rules:**
-  - All constraint names MUST be explicitly declared in the entity definition — never rely on ORM auto-generated names.
+  - Constraint names MUST be explicitly declared in the ORM schema/decorator where the ORM supports it; otherwise declared explicitly and immutably in migration/DDL. Never rely on ORM auto-generated names regardless of ORM choice.
   - Constraint names must be unique across the entire database — prefix with the table name to guarantee this.
   - When a constraint is dropped and recreated in a migration (e.g., adding a column to a composite unique constraint), the migration MUST reference the constraint by its exact name. Auto-generated names make this impossible.
   - Check constraints for business invariants (e.g., `balance >= 0`, `age >= 18`) are MANDATORY for all financial and safety-critical columns. Application-level validation (Rule 3) is the first line of defense; DB check constraints are the last.
@@ -1643,6 +1648,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 
 ## 102. Database Table Naming & Prefixing in Monoliths
+* **Scope Note:** Rule 102 applies to tables within the master/shared database only. Tenant-isolated databases (Rule 39) contain standard un-prefixed table names within their own isolated schema — Rule 102 domain-prefixes do not apply inside a tenant DB.
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
 * **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` (TypeORM) or `@@map()` (Prisma) decorator rather than relying on a custom implicit global naming strategies.
 * **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
@@ -1672,7 +1678,7 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 
 ## Rule 106 — Strict Cache Invalidation Strategy
 * **The Rule:** Caching data in Redis (Rule 20) is mandatory for high-traffic read operations, but stale data in an enterprise app is dangerous. Every cached query MUST have a strict, programmatic invalidation strategy.
-* **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
+* **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Cache invalidation MUST happen only after the database transaction commits, not inside the transaction body. The Orchestrator/UnitOfWork (Rule 8 — Edge Case B) is responsible for triggering cache invalidation in an `afterCommit` callback, not the repository method itself. Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
 
 ## Rule 107 — Internationalization (i18n) & Localization
 
@@ -1899,12 +1905,25 @@ All data exports MUST be processed asynchronously via background jobs and delive
 2. **Trigger:** `POST /api/v1/superadmin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
 3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
-5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/admin/download-export?token=xyz`) that streams the file.
+5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/superadmin/download-export?token=xyz`) that streams the file.
 6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
 
 ### Data Retention & Hard Deletion
 - When a tenant cancels, their account is **Soft Deleted** (suspended).
 - Maintain a **90-day grace period** in case they return.
+
+#### Explicit Retention Hierarchy (applies to all tenant off-boarding)
+
+| Record Type | After Soft-Delete (90-day grace) | After 90-day Hard-Delete | Authority |
+|---|---|---|---|
+| `members`, `staff`, `plans`, `attendances` | Soft-deleted (accessible) | Hard-deleted | Rule 29 / 110 |
+| `audit_logs` | Retained read-only | Anonymized (actor/entity ids pseudonymized) | GDPR / Rule 29 |
+| `events_log` (Rule 118) | Retained read-only | Retained — append-only; archive to regulated storage | Rule 118 / 119 |
+| `ledger_entries` (Rule 119) | Retained read-only | Retained — must archive; never deleted | Financial law |
+| Tenant database | Active | Rows purged per above; schema preserved 30 additional days, then dropped | Rule 39 |
+| S3/local export zips | Deleted after 48h download window | N/A | Rule 110 |
+
+An AI agent MUST apply this retention hierarchy. Blanket deletion of all tenant data is a Rule 118/119 violation.
 - A scheduled cron job MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws. *(Exception: See Rule 29 for retention hierarchy. Legally required financial/audit ledgers must be explicitly archived/retained rather than blindly deleted.)*
 
 > **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.
@@ -1919,7 +1938,7 @@ WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('n
 Never emit a critical WebSocket event (like "Export Ready", "Payment Received", or a "Chat Message") without **first saving it to the database**.
 
 1. **Save First:** Insert a record into the `Notifications` or `Chats` table within your database transaction.
-2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL WAL tailing or Listen-Notify) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
+2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL a Transactional Outbox pattern (write to an `outbox` table in the same transaction, relay via durable worker), PostgreSQL WAL logical replication, or a proper message broker. NOTE: `LISTEN/NOTIFY` is only a wake-up hint — it does NOT guarantee durable delivery and MUST NOT be used as the sole real-time relay mechanism) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
 3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/v1/notifications` or `GET /api/v1/chats`).
 4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions (subject only to the legal-erasure exception defined in Rule 29 / Rule 110).
 
@@ -1932,7 +1951,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
    - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/` (API) or `backend_selenium/backend_superadmin_selenium/` (UI)
-   - **Feature Level:** `src/backend_superadmin/superadmin_dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/dashboard/` (UI)
+   - **Feature Level:** `src/backend_superadmin/superadmin_dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/superadmin_dashboard/` (UI)
    - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
@@ -1978,9 +1997,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 ## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
-* **The Rule:** EVERY single construct in the codebase MUST carry exhaustive, multi-line documentation. The form varies by construct:
+* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The form varies by construct:
   - **Classes / methods / DTOs / services / controllers** → JSDoc block comments
-  - **Database columns** → entity `@Column({ comment: '...' })` and schema/migration field documentation
+  - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })`, Prisma `///` doc comment); otherwise documented in migration/DDL
   - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included in every documented construct:**
@@ -2004,7 +2023,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 * **The Problem:** Standard CRUD operations (like updating a subscription status from 'Active' to 'Cancelled') overwrite historical state, completely destroying the ability to perform deep, time-series analytics (e.g., "How many users cancelled exactly on day 14?").
 * **The Rule:** For any critical domain entity (Billing, Attendance, Subscription, Member Lifecycle), apply a **Zero-Overwrite** rule for analytics. 
 * **Implementation:** Every critical state change MUST publish an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`) to a message broker (Redis Streams/Kafka) and store it in an append-only `events_log` or timeseries table. 
-* **Why:** All AI Analytics engines, forecasting models, and for historical/state-transition analytics, Dashboards MUST query this immutable event log (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
+* **Why:** All AI Analytics engines, forecasting models, and **historical/state-transition analytics (e.g., member lifecycle, revenue trends, forecasting) MUST query this immutable event log**. Current operational widgets (e.g., live attendance, active sessions) MAY query the transactional read model directly (see Rule 114). Dashboards that mix both widget types must source each widget from its appropriate layer (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
 
 ## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
