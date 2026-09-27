@@ -227,7 +227,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `logger.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
+* **The Rule:** Never use raw print statements (e.g., `logger.info()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `method` (HTTP method: GET, POST, PATCH, etc.)
   - `route` / `path` (the matched route template, e.g., `/api/v1/members/:id` — **not** the raw URL with substituted values)
@@ -483,7 +483,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** This project uses a strict three-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
   2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/dashboard/test_superadmin_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
-* **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
+* **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These three tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
 1. Identify the exact layer where the bug/feature resides (Validation? DB Query? Business Logic?).
@@ -1710,7 +1710,7 @@ src/
             errors.json
           nl/
             errors.json
-scripts/
+scripts/                  ← (Global tooling folder exception allowed under Rule 2)
   merge-locales.ts        ← Merges all module _locales into one bundle at build time
 ```
 
@@ -1759,6 +1759,9 @@ This script walks every `_locales/` folder in the project, merges all JSON files
 // Usage: npx ts-node scripts/merge-locales.ts
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import pino from 'pino';
+
+const logger = pino();
 import * as glob from 'glob';
 
 const OUTPUT_DIR = 'dist/i18n';
@@ -1780,7 +1783,7 @@ for (const file of localeFiles) {
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 for (const [lang, data] of Object.entries(mergedByLang)) {
   fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
-  logger.log(`✅ Merged ${lang}.json`);
+  logger.info(`✅ Merged ${lang}.json`);
 }
 ```
 
