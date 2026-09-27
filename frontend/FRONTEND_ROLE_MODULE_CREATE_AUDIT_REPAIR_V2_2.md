@@ -140,6 +140,20 @@ Do not mark the target interaction PASS solely because navigation code exists.
 
 ---
 
+# 1B. STRICT ANTI-HALLUCINATION & NO GUESSING RULE
+
+You are acting as a precision compiler and an exact auditor. You MUST NOT hallucinate, guess, or assume anything.
+
+* Do NOT invent UI components that are not requested in the feature doc.
+* Do NOT invent backend endpoints; if a feature requires an API call, you must define it strictly based on the provided requirements or actual frontend mock layer.
+* Do NOT assume a CSS class or design token exists unless it is explicitly defined in `web_global_design.md` or standard Tailwind.
+* Do NOT hallucinate rules that are not present in `web_frontend_development_instruction.md`.
+* Do NOT replace a working, rule-compliant implementation with another pattern just because you prefer it.
+
+If any requirement is ambiguous, you must rely on the explicit documented rules rather than inventing a solution.
+
+---
+
 # 2. IMPORTANT: DO NOT ASSUME THE DOCUMENTATION IS ALREADY IMPLEMENTED
 
 This is extremely important.

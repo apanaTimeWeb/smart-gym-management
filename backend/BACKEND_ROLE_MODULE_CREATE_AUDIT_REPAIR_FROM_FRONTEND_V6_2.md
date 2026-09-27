@@ -507,15 +507,17 @@ Every exclusion MUST be recorded.
 
 ---
 
-## 4.2 NO GUESSING
+## 4.2 STRICT ANTI-HALLUCINATION & NO GUESSING
+
+You are acting as a precision compiler and an exact auditor. You MUST NOT hallucinate, guess, or assume anything.
 
 Never:
 
-* invent a filename;
-* invent an endpoint;
-* invent a response field;
-* invent a missing rule;
-* invent a database table;
+* hallucinate or invent a filename;
+* hallucinate or invent an endpoint;
+* hallucinate or invent a response field;
+* hallucinate or invent a missing rule;
+* hallucinate or invent a database table;
 * assume a service exists;
 * assume a DTO is wired;
 * assume a documented endpoint works;
