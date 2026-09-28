@@ -91,33 +91,33 @@ features/
 ├── frontend_manager/
 │   └── members/
 └── frontend_trainer/
-    └── members/                              ← entire feature lives here
-    ├── screens/                          ← thin composition only
-    │   ├── MembersListScreen.tsx         
-    │   ├── MembersDetailScreen.tsx
-    │   └── MembersAddScreen.tsx
-    ├── components/                       
-    │   ├── MembersMemberCard.tsx         ← module-prefixed component
-    │   ├── MembersMemberCard.test.tsx    ← co-located test
-    │   ├── MembersMemberListItem.tsx
-    │   └── MembersEmptyState.tsx
-    ├── hooks/                            
-    │   ├── useMembers.ts                 ← server-state data-fetching hook
-    │   ├── useMembers.test.ts
-    │   ├── useMembersFilters.ts          ← client-state UI filter hook
-    │   └── useMembersFilters.test.ts
-    ├── schemas/                          
-    │   └── members.schema.ts             ← Zod schema / validator class
-    ├── types/                            
-    │   └── members.types.ts              ← all interfaces, enums, type unions
-    ├── api/
-    │   └── members.api.ts                ← ALL network calls for this feature ONLY
-    ├── state/                            ← only if UI state shared across 2+ components
-    │   └── members.store.ts              ← 
-    ├── tests/                            ← integration-level tests (unit = co-located)
-    │   └── members.integration.test.ts
-    ├── members_features.md               ← MANDATORY — see Rule 24
-    └── members_forbidden.md             ← MANDATORY — see Rule 29
+    └── members/                          ← entire feature lives here
+        ├── screens/                      ← thin composition only
+        │   ├── MembersListScreen.tsx         
+        │   ├── MembersDetailScreen.tsx
+        │   └── MembersAddScreen.tsx
+        ├── components/                       
+        │   ├── MembersMemberCard.tsx     ← module-prefixed component
+        │   ├── MembersMemberCard.test.tsx← co-located test
+        │   ├── MembersMemberListItem.tsx
+        │   └── MembersEmptyState.tsx
+        ├── hooks/                            
+        │   ├── useMembers.ts             ← server-state data-fetching hook
+        │   ├── useMembers.test.ts
+        │   ├── useMembersFilters.ts      ← client-state UI filter hook
+        │   └── useMembersFilters.test.ts
+        ├── schemas/                          
+        │   └── members.schema.ts         ← Zod schema / validator class
+        ├── types/                            
+        │   └── members.types.ts          ← all interfaces, enums, type unions
+        ├── api/
+        │   └── members.api.ts            ← ALL network calls for this feature ONLY
+        ├── state/                        ← only if UI state shared across 2+ components
+        │   └── members.store.ts          
+        ├── tests/                        ← integration-level tests (unit = co-located)
+        │   └── members.integration.test.ts
+        ├── members_features.md           ← MANDATORY — see Rule 24
+        └── members_forbidden.md          ← MANDATORY — see Rule 29
 ```
 
 ### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
@@ -251,8 +251,8 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native. Never duplicated into a separate "client" state container. |
-| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for React Native. One container per feature — never one giant global store. |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native). Never duplicated into a separate "client" state container. |
+| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for React Native). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `React Component` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
@@ -263,8 +263,7 @@ data-fetching layer, which handles request de-duplication and caching itself.
 ## Rule 5 — Forms & Validation
 
 - All non-trivial forms use a form-management library + a schema-validation
-  library, kept separate from each other (e.g. React Hook Form + Zod for RN;
-  a form controller pattern like React Hook Form.
+  library, kept separate from each other (e.g. React Hook Form + Zod).
 - Validation schema/rules live in the feature's `schemas/` (or `validators/`)
   folder — never written inline inside the widget/component.
 - Client-side validation messages are for immediate UX feedback only. The
@@ -278,8 +277,8 @@ stored data and route it accordingly:
 
 | Data type | Storage requirement |
 |---|---|
-| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a react-native-keychain. Never anywhere else. |
-| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an react-native-mmkv. |
+| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. `react-native-keychain`). Never anywhere else. |
+| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. `react-native-mmkv`). |
 | Temporary session-only data | In-memory state only — cleared on app kill, never persisted. |
 
 - Create exactly ONE central storage-access module per app. No other file may
@@ -359,7 +358,7 @@ Schema / Validator (Zod schema or validator class)
       ↓
 Mock / Stub Response (test boundary mock or backend stub)
       ↓
-Server-State Cache (TanStack Query /  AsyncNotifier)
+Server-State Cache (TanStack Query)
       ↓
 UI Rendering
 ```
@@ -1089,7 +1088,7 @@ feature with CRUD operations.
 
 - NEVER import from any other feature folder (frontend_admin/members/, frontend_trainer/members/, etc.) — zero cross-feature imports, Rule 28
 - NEVER call the HTTP client directly — always use members.api.ts which goes through the central network client
-- NEVER store API response data in members.store.ts — the TanStack Query /  cache is the single source of truth for server data
+- NEVER store API response data in members.store.ts — the TanStack Query cache is the single source of truth for server data
 - NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
 - NEVER add a new dependency without checking approved-dependencies.md first (Rule 22)
 - NEVER hardcode hex colors, dp values, or font sizes — use design tokens from MOBILE_UI_UX_DESIGN.md only (Rule 3)
@@ -1506,17 +1505,21 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
 // ❌ BAD — no guard; user loses data on back swipe
 function MembersAddScreen() { ... }
 
-// ✅ GOOD — guard wired to form dirty state
+// ✅ GOOD — guard wired to form dirty state via hook
+function useMemberForm() {
+  const form = useForm();
+  return { form, isDirty: form.formState.isDirty };
+}
+
 function MembersAddScreen() {
-  const { formState: { isDirty } } = useForm();
+  const { isDirty } = useMemberForm();
   useUnsavedChangesGuard(isDirty);
-  ...
+  // ...
 }
 ```
 
 Rules:
-- The guard fires on hardware back button (Android), swipe-back gesture (iOS),
-  and tab switches — all navigation exit paths.
+- The guard MUST cover every supported exit path, using the navigator-specific event/mechanism required for stack back, swipe-back, tab changes, etc.
 - For multi-step forms, the guard MUST activate whenever the form contains
   unsaved value changes.
 - React Hook Form `isDirty` represents changes relative to the configured default
@@ -1935,7 +1938,7 @@ Every mutating API call (POST, PUT, PATCH, DELETE) MUST generate an `Idempotency
 3. **Lifecycle:** Generate exactly once per user intent. Reuse the same key for retries. Generate a new key only for a new user intent. Never generate a new key on retry.
 
 ```typescript
-// features/frontend_manager/billing/api/processPaymentApi.ts
+// features/frontend_manager/billing/api/billing.api.ts
 export interface ProcessPaymentRequest {
   memberId: string;
   amountMinor: number;
@@ -1991,7 +1994,7 @@ The mobile architecture MUST enforce the following security and robustness const
 
 - **Offline Cache Security**: Any persisted server state containing sensitive PII MUST use encrypted storage or explicitly exclude the data from OS-level backups.
 - **Network Retry Policy**: Failed requests (timeout/5xx) must use exponential backoff with jitter. Financial or destructive mutations MUST NOT blind auto-retry; they require explicit user confirmation.
-- **Request Cancellation**: All data-fetching hooks and screen navigations must wire an AbortSignal. Navigating away from a loading screen (e.g., search, detail, or upload) MUST cancel the stale request.
+- **Request Cancellation**: All requests initiated by a screen/hook must accept an `AbortSignal`, and navigation/unmount must cancel stale in-flight requests. Navigating away from a loading screen (e.g., search, detail, or upload) MUST cancel the stale request.
 - **Deep-Link Authorization**: Matching a route is not enough. Deep-link resolution MUST re-evaluate auth status, role, tenant, and resource authorization before rendering the target screen.
 - **Notification Payload Validation**: Treat all push notification payloads as untrusted user input. Validate the payload against a schema before triggering any navigation or side effects.
 - **Clipboard Policy**: Sensitive IDs, credentials, reset tokens, OTPs, and full Aadhaar/bank identifiers MUST be excluded from copy-to-clipboard functionality.
@@ -2137,10 +2140,11 @@ import { currencyMetadata } from '@/core/config/currencyMetadata';
  * @throws If the currency is not in the approved metadata.
  */
 export function formatCurrency(
-  amountMinor: number,
+  amountMinor: number | null | undefined,
   currency: string,
   locale: string,
 ): string {
+  if (amountMinor == null) return '-';
   const meta = currencyMetadata[currency];
   if (!meta) throw new Error(`Unsupported currency: ${currency}`);
   

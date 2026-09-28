@@ -12,10 +12,8 @@ Android elevation is defined separately by the shadow/elevation token system.
 > **AI-readable catalogue** derived from this file; it lists every token name,
 > value, and usage context in one scannable table. The two-layer hierarchy is:
 > `MOBILE_UI_UX_DESIGN.md` (values specification) →
-> `MOBILE_UI_UX_DESIGN.md` (executable AI reference) →
 > React Native theme module → Feature UI.
-> Implementation differs by framework (a theme object/config for React
-> Native, a `ThemeData`/`ColorScheme` extension for ) — but the VALUES
+> The VALUES
 > below and the "no magic values anywhere" discipline are universal.
 
 ## Global Token Enforcement Rule
@@ -35,13 +33,13 @@ Every visual value must resolve through a documented global token, unless the ex
 ## Token Architecture Chain
 
 `MOBILE_UI_UX_DESIGN.md`
-→ framework theme module
+→ React Native theme module
 → `MOBILE_UI_UX_DESIGN.md`
 → feature UI
 
 - This file owns canonical visual values.
-- The framework theme module implements them.
-- The theme contract catalogs the exact dependencies.
+- The React Native theme module implements them.
+- The theme module catalogs the exact dependencies.
 - Feature UI consumes semantic tokens only.
 - Feature UI never hardcodes global values.
 - Feature UI never guesses token names.
@@ -53,7 +51,7 @@ Every visual value must resolve through a documented global token, unless the ex
 ## 1A. Contrast Validation (WCAG AA)
 
 Every semantic foreground/background pair used for normal UI text MUST meet WCAG AA contrast requirements (4.5:1 for normal text).
-The theme contract MUST be contrast-tested for all Light/Dark semantic pairs.
+The theme module MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
 Ensure `primary` (#4F46E5 dark) and `destructive` (#DC2626 dark) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
@@ -107,7 +105,7 @@ Feature UI must use these named spacing tokens and may not invent arbitrary spac
   - `letter-spacing-heading = -0.5`
 
 Every typography visual value must resolve to a named token unless an explicit exception is documented.
-Size values are expressed in platform-independent typography units; framework theme modules MUST translate them to native text units.
+Size values are expressed in platform-independent typography units; React Native theme modules MUST translate them to native text units.
 
 | Token | Size | Weight | Usage |
 |---|---|---|---|
@@ -205,7 +203,7 @@ Series color order (applied consistently across every chart in the app). Charts 
 
 | Token | Light | Dark |
 |---|---|---|
-| `chart-primary` | `#4F46E5` | `#4F46E5` |
+| `chart-primary` | `#4F46E5` | `#818CF8` |
 | `chart-success` | `#10B981` | `#86EFAC` |
 | `chart-warning` | `#F59E0B` | `#F59E0B` |
 | `chart-danger` | `#EF4444` | `#EF4444` |
@@ -413,11 +411,10 @@ scannable table that AI agents read before writing any styled component.
 - Press-scale/spring tokens (Section 7)
 - Opacity tokens (Section 1)
 - Skeleton tokens (Section 1)
-- Elevation/shadow tokens (Section 9)
-- Z-index/elevation stack (Section 14)
+- Elevation/shadow tokens (Section 10)
+- Z-index/elevation stack (Section 15)
 
 **CI Check Requirements (Mandatory Sync):**
 CI MUST fail when:
-- a global token exists in this file but is omitted from `MOBILE_UI_UX_DESIGN.md`
 - the contract references an unknown token
 - a required Light/Dark token pair is incomplete
