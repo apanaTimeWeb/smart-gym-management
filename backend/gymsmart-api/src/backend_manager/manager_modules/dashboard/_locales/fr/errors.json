@@ -1,0 +1,8 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Ressource introuvable.",
+    "CREATE_FAILED": "Impossible de créer la ressource.",
+    "UPDATE_FAILED": "Impossible de mettre à jour la ressource.",
+    "DELETE_FAILED": "Impossible de supprimer la ressource."
+  }
+}

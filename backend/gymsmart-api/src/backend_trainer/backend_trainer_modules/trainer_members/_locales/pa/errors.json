@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "ਬਿਲਿੰਗ ਚੱਕਰ ਮੁੱਲ ਗਲਤ ਹੈ।",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "ਤਰੱਕੀ ਸਟੇਟਸ ਮੁੱਲ ਗਲਤ ਹੈ।",
+  "MEMBERS.ENUM.STATUS_INVALID": "ਸਟੇਟਸ ਮੁੱਲ ਗਲਤ ਹੈ।"
+}

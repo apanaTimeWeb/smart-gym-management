@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "ವರ್ಕೌಟ್ ವ್ಯಾಯಾಮವನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಲಿಲ್ಲ.",
+  "DOMAIN.WORKOUT.PLAN": "ವರ್ಕೌಟ್ ಯೋಜನೆಯನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಲಿಲ್ಲ.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "ವ್ಯಾಯಾಮದ ಕಠಿಣತೆ ಅಮಾನ್ಯವಾಗಿದೆ.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "ವರ್ಕೌಟ್ ಮಟ್ಟ ಅಮಾನ್ಯವಾಗಿದೆ."
+}

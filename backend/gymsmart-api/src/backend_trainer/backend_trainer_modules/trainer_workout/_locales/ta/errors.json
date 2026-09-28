@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "பயிற்சி உடற்பயிற்சியை செயலாக்க முடியவில்லை.",
+  "DOMAIN.WORKOUT.PLAN": "பயிற்சி திட்டத்தை செயலாக்க முடியவில்லை.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "உடற்பயிற்சி சிரம நிலை தவறானது.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "பயிற்சி நிலை தவறானது."
+}

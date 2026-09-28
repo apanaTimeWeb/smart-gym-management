@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "L’exercice de la séance ne peut pas être traité.",
+  "DOMAIN.WORKOUT.PLAN": "Le plan d’entraînement ne peut pas être traité.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "La difficulté de l’exercice est invalide.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "Le niveau d’entraînement est invalide."
+}

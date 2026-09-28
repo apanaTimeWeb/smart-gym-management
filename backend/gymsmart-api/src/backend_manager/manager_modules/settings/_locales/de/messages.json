@@ -1,0 +1,7 @@
+{
+  "MESSAGES": {
+    "CREATED": "Ressource konnte nicht erstellt werden.",
+    "UPDATED": "Ressource konnte nicht aktualisiert werden.",
+    "DELETED": "Ressource konnte nicht gelöscht werden."
+  }
+}

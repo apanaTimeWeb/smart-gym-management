@@ -1,0 +1,16 @@
+// RESPONSIBILITY: Owns backend core database entity boundary.
+// FLOW: Domain persistence contract → ORM metadata → tenant database table with soft-delete lifecycle.
+import { Column, Entity, Index, Unique } from 'typeorm';
+
+import { CoreBaseEntity } from '@/backend_manager/manager_core/manager_core_database/manager-core-base.entity';
+
+@Entity({ name: 'user_tenants' })
+@Unique('UQ_user_tenants_user_id_tenant_id', ['userId', 'tenantId'])
+@Index('IDX_user_tenants_user_id', ['userId'])
+@Index('IDX_user_tenants_tenant_id', ['tenantId'])
+export class MasterUserTenantEntity extends CoreBaseEntity {
+  @Column({ name: 'user_id', type: 'uuid' }) userId!: string;
+  @Column({ name: 'tenant_id', type: 'uuid' }) tenantId!: string;
+  @Column({ name: 'database_name', type: 'varchar', length: 120 }) databaseName!: string;
+  @Column({ name: 'is_active', type: 'boolean', default: true }) isActive!: boolean;
+}

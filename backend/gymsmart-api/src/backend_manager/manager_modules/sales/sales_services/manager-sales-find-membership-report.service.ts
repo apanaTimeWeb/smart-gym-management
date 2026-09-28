@@ -1,0 +1,27 @@
+// RESPONSIBILITY: Owns the backend application business use-case/service boundary.
+// FLOW: Validated input → focused business use case → repository/orchestrator boundary → typed result.
+import { Injectable } from '@nestjs/common';
+
+import { SalesRepository } from '@/backend_manager/manager_modules/sales/manager-sales.repository';
+
+import type { ManagerCoreJsonObject } from '@/backend_manager/manager_core/manager_core_types/manager-core-json-value.types';
+import type { PaginationMeta } from '@/backend_manager/manager_core/manager_core_types/manager-core-pagination.types';
+
+export interface ManagerSalesFindMembershipReportServiceFindMembershipReportResult {
+  data: unknown;
+  meta: PaginationMeta;
+}
+
+@Injectable()
+export class ManagerSalesFindMembershipReportService {
+  constructor(private readonly repository: SalesRepository) {}
+
+  /** @description Loads the sales collection for the requested Manager scope. @param query - Validated pagination/filter query. @returns Contract-compatible payload with canonical pagination metadata. */
+  async findMembershipReport(query: ManagerCoreJsonObject = {}): Promise<ManagerSalesFindMembershipReportServiceFindMembershipReportResult> {
+    const result = await this.repository.findAll(query);
+    const rows = result.data.map((row: any) => ({ id: row.id, ...row.payload }));
+    return { data: { report: rows,  }, meta: result.meta  };
+  }
+}
+
+export { ManagerSalesFindMembershipReportService as SalesFindMembershipReportService };

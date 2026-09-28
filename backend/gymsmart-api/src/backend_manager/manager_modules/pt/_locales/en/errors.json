@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "CREATE_FAILED": "Unable to create resource.",
+    "UPDATE_FAILED": "Unable to update resource.",
+    "DELETE_FAILED": "Unable to delete resource.",
+    "ASSIGNMENT_ID_REQUIRED": "Assignment id is required.",
+    "SESSIONS_EXHAUSTED": "All assigned sessions have already been completed."
+  }
+}

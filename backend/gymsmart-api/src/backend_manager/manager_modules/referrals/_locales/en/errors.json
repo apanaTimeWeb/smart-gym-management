@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "CREATE_FAILED": "Unable to create resource.",
+    "UPDATE_FAILED": "Unable to update resource.",
+    "DELETE_FAILED": "Unable to delete resource.",
+    "REWARD_ALREADY_CLAIMED": "The referral reward has already been claimed.",
+    "REWARD_NOT_ELIGIBLE": "The referral is not eligible for reward claim."
+  }
+}

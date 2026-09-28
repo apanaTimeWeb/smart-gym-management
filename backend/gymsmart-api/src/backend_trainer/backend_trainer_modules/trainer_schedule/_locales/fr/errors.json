@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "La demande ne peut pas être traitée.",
+  "SCHEDULE.ENUM.DAY_INVALID": "Le jour du planning est invalide.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "Le type de congé est invalide.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "La date de fin du congé ne peut pas précéder la date de début."
+}

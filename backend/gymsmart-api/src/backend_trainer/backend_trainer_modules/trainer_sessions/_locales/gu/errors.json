@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "પુનરાવર્તન મૂલ્ય અમાન્ય છે.",
+  "SESSIONS.ENUM.STATUS_INVALID": "સ્ટેટસ મૂલ્ય અમાન્ય છે.",
+  "SESSIONS.ENUM.TYPE_INVALID": "સેશન પ્રકાર અમાન્ય છે."
+}

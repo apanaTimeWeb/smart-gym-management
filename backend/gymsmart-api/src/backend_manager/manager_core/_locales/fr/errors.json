@@ -1,0 +1,13 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Ressource introuvable.",
+    "RESOURCE_ID_REQUIRED": "L’identifiant de la ressource est requis.",
+    "TRANSACTION_NO_RESULT": "La transaction s’est terminée sans résultat.",
+    "VALIDATION_FAILED": "Échec de la validation. Vérifiez les champs indiqués.",
+    "MONEY_INVALID": "Le montant monétaire doit être un entier sûr non négatif dans la plus petite unité monétaire.",
+    "CIRCUIT_OPEN": "Le fournisseur externe est temporairement indisponible. Réessayez plus tard.",
+    "UNSUPPORTED_QUERY": "La requête demandée n’est pas prise en charge.",
+    "ENCRYPTION_KEY_INVALID": "La configuration du chiffrement est invalide.",
+    "ENCRYPTED_VALUE_INVALID": "La valeur chiffrée est invalide ou corrompue."
+  }
+}

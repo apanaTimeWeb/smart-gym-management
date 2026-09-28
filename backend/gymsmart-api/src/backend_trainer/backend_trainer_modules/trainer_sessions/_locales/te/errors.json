@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "పునరావృత విలువ చెల్లదు.",
+  "SESSIONS.ENUM.STATUS_INVALID": "స్థితి విలువ చెల్లదు.",
+  "SESSIONS.ENUM.TYPE_INVALID": "సెషన్ రకం చెల్లదు."
+}

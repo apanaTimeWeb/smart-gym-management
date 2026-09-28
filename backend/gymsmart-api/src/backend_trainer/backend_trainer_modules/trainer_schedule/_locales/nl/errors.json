@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "Het verzoek kan niet worden voltooid.",
+  "SCHEDULE.ENUM.DAY_INVALID": "De dag van het rooster is ongeldig.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "Het verloftype is ongeldig.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "De einddatum van het verlof mag niet voor de begindatum liggen."
+}

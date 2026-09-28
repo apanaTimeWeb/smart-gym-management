@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "மறுமுறை மதிப்பு தவறானது.",
+  "SESSIONS.ENUM.STATUS_INVALID": "நிலை மதிப்பு தவறானது.",
+  "SESSIONS.ENUM.TYPE_INVALID": "அமர்வு வகை மதிப்பு தவறானது."
+}

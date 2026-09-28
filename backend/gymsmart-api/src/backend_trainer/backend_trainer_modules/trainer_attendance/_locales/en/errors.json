@@ -1,0 +1,11 @@
+{
+  "DOMAIN.ATTENDANCE.ACTOR_REQUIRED": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.MEMBER_REQUIRED": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.OPEN_STAFF_RECORD_EXISTS": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.RECORD.ALREADY_CLOSED": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.RECORD.INVALID_CHECKOUT_TIME": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.RECORD.NOT_FOUND": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.RECORD.OWNERSHIP_REQUIRED": "The requested operation could not be completed.",
+  "DOMAIN.ATTENDANCE.TYPE_REQUIRED": "The requested operation could not be completed."
+}

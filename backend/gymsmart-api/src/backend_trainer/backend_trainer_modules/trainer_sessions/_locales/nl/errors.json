@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "De herhalingswaarde is ongeldig.",
+  "SESSIONS.ENUM.STATUS_INVALID": "De statuswaarde is ongeldig.",
+  "SESSIONS.ENUM.TYPE_INVALID": "Het sessietype is ongeldig."
+}

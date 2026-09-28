@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource niet gevonden.",
+    "CREATE_FAILED": "Resource kan niet worden aangemaakt.",
+    "UPDATE_FAILED": "Resource kan niet worden bijgewerkt.",
+    "DELETE_FAILED": "Resource kan niet worden verwijderd.",
+    "PROVIDER_NOT_CONFIGURED": "De gevraagde leveringsprovider is niet geconfigureerd.",
+    "PROVIDER_HTTP_FAILURE": "De leveringsprovider heeft een upstream-fout geretourneerd."
+  }
+}

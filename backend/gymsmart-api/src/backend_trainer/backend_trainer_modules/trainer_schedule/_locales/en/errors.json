@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "Request could not be completed.",
+  "SCHEDULE.ENUM.DAY_INVALID": "The schedule day value is invalid.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "The leave type value is invalid.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "The leave end date cannot be before the start date."
+}

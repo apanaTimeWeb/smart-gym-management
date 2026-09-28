@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "Die Anfrage kann nicht verarbeitet werden.",
+  "SCHEDULE.ENUM.DAY_INVALID": "Der Planungstag ist ungültig.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "Der Urlaubstyp ist ungültig.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "Das Enddatum des Urlaubs darf nicht vor dem Startdatum liegen."
+}

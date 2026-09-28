@@ -1,0 +1,10 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Resource not found.",
+    "CREATE_FAILED": "Unable to create resource.",
+    "UPDATE_FAILED": "Unable to update resource.",
+    "DELETE_FAILED": "Unable to delete resource.",
+    "MEMBERSHIP_INPUT_INVALID": "Member and plan are required.",
+    "MEMBERSHIP_ALREADY_ACTIVE": "An active membership already exists for this member."
+  }
+}

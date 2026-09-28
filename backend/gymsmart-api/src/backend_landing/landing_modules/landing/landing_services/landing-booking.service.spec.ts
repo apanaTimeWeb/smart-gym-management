@@ -1,5 +1,5 @@
-﻿// RESPONSIBILITY: Proves the booking service invokes the named repository mutation and audit trail.
-// FLOW: Unit test â†’ LandingBookingService.createBooking â†’ mocked repositories.
+// RESPONSIBILITY: Proves the booking service invokes the named repository mutation and audit trail.
+// FLOW: Unit test → LandingBookingService.createBooking → mocked repositories.
 import { LandingBookingService } from '@/backend_landing/landing_modules/landing/landing_services/landing-booking.service';
 
 import { LandingBookingType } from '@/backend_landing/landing_modules/landing/enums/landing-booking-type.enum';

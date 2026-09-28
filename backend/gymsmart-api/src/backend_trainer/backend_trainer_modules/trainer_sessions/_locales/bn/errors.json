@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "পুনরাবৃত্তির মান অবৈধ।",
+  "SESSIONS.ENUM.STATUS_INVALID": "স্ট্যাটাস মান অবৈধ।",
+  "SESSIONS.ENUM.TYPE_INVALID": "সেশনের ধরন অবৈধ।"
+}

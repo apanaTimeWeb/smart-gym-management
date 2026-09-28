@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "അഭ്യർത്ഥന പൂർത്തിയാക്കാനായില്ല.",
+  "SCHEDULE.ENUM.DAY_INVALID": "ഷെഡ്യൂൾ ദിവസ മൂല്യം അസാധുവാണ്.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "ലീവ് തരം അസാധുവാണ്.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "ലീവിന്റെ അവസാന തീയതി ആരംഭ തീയതിക്ക് മുമ്പാകാൻ പാടില്ല."
+}

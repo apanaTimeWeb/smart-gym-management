@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "बिलिंग चक्र अमान्य है।",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "प्रगति स्टेटस अमान्य है।",
+  "MEMBERS.ENUM.STATUS_INVALID": "स्टेटस मान अमान्य है।"
+}

@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "Der Wiederholungswert ist ungültig.",
+  "SESSIONS.ENUM.STATUS_INVALID": "Der Statuswert ist ungültig.",
+  "SESSIONS.ENUM.TYPE_INVALID": "Der Sitzungstyp ist ungültig."
+}

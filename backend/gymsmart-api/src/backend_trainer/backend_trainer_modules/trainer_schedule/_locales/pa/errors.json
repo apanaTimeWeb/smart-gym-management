@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "ਬੇਨਤੀ ਪੂਰੀ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ.",
+  "SCHEDULE.ENUM.DAY_INVALID": "ਸ਼ਡਿਊਲ ਦਿਨ ਮੁੱਲ ਗਲਤ ਹੈ।",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "ਛੁੱਟੀ ਕਿਸਮ ਗਲਤ ਹੈ।",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "ਛੁੱਟੀ ਦੀ ਅੰਤਿਮ ਤਾਰੀਖ ਸ਼ੁਰੂਆਤੀ ਤਾਰੀਖ ਤੋਂ ਪਹਿਲਾਂ ਨਹੀਂ ਹੋ ਸਕਦੀ।"
+}

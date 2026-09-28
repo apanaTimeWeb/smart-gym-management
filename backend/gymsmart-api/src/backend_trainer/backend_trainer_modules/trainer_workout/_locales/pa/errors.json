@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "ਵਰਕਆਉਟ ਕਸਰਤ ਪ੍ਰਕਿਰਿਆ ਨਹੀਂ ਹੋ ਸਕੀ।",
+  "DOMAIN.WORKOUT.PLAN": "ਵਰਕਆਉਟ ਯੋਜਨਾ ਪ੍ਰਕਿਰਿਆ ਨਹੀਂ ਹੋ ਸਕੀ।",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "ਕਸਰਤ ਦੀ ਮੁਸ਼ਕਲ ਗਲਤ ਹੈ.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "ਵਰਕਆਉਟ ਪੱਧਰ ਗਲਤ ਹੈ।"
+}

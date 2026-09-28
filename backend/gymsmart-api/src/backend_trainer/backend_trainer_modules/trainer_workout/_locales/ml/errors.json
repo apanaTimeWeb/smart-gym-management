@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "വർക്ഔട്ട് വ്യായാമം പ്രോസസ്സ് ചെയ്യാനായില്ല.",
+  "DOMAIN.WORKOUT.PLAN": "വർക്ഔട്ട് പ്ലാൻ പ്രോസസ്സ് ചെയ്യാനായില്ല.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "വ്യായാമത്തിന്റെ ബുദ്ധിമുട്ട് മൂല്യം അസാധുവാണ്.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "വർക്ഔട്ട് ലെവൽ അസാധുവാണ്."
+}

@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "ওয়ার্কআউট ব্যায়াম প্রক্রিয়া করা যায়নি।",
+  "DOMAIN.WORKOUT.PLAN": "ওয়ার্কআউট পরিকল্পনা প্রক্রিয়া করা যায়নি।",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "ব্যায়ামের কঠিনতা অবৈধ।",
+  "WORKOUT.ENUM.LEVEL_INVALID": "ওয়ার্কআউট স্তর অবৈধ।"
+}

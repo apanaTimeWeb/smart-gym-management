@@ -1,0 +1,13 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Bron niet gevonden.",
+    "RESOURCE_ID_REQUIRED": "Bron-ID is vereist.",
+    "TRANSACTION_NO_RESULT": "De transactie is zonder resultaat voltooid.",
+    "VALIDATION_FAILED": "Validatie mislukt. Controleer de gemarkeerde velden.",
+    "MONEY_INVALID": "Het geldbedrag moet een niet-negatief veilig geheel getal zijn in de kleinste munteenheid.",
+    "CIRCUIT_OPEN": "De externe provider is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    "UNSUPPORTED_QUERY": "De gevraagde query wordt niet ondersteund.",
+    "ENCRYPTION_KEY_INVALID": "De encryptieconfiguratie is ongeldig.",
+    "ENCRYPTED_VALUE_INVALID": "De versleutelde waarde is ongeldig of beschadigd."
+  }
+}

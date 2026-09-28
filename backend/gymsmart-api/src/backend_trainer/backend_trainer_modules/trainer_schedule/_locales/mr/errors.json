@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "विनंती पूर्ण करता आली नाही.",
+  "SCHEDULE.ENUM.DAY_INVALID": "वेळापत्रकातील दिवस अवैध आहे.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "रजेचा प्रकार अवैध आहे.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "रजेची समाप्ती तारीख प्रारंभ तारखेपूर्वी असू शकत नाही."
+}

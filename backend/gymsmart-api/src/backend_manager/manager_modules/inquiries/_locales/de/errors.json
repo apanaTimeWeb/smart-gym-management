@@ -1,0 +1,9 @@
+{
+  "ERRORS": {
+    "NOT_FOUND": "Ressource nicht gefunden.",
+    "CREATE_FAILED": "Ressource konnte nicht erstellt werden.",
+    "UPDATE_FAILED": "Ressource konnte nicht aktualisiert werden.",
+    "DELETE_FAILED": "Ressource konnte nicht gelöscht werden.",
+    "LEAD_ALREADY_CONVERTED": "Der Lead wurde bereits konvertiert."
+  }
+}
