@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "De trainingsoefening kon niet worden verwerkt.",
+  "DOMAIN.WORKOUT.PLAN": "Het trainingsplan kon niet worden verwerkt.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "De moeilijkheidsgraad van de oefening is ongeldig.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "Het trainingsniveau is ongeldig."
+}

@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "ವಿನಂತಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಲಿಲ್ಲ.",
+  "SCHEDULE.ENUM.DAY_INVALID": "ವೇಳಾಪಟ್ಟಿ ದಿನ ಅಮಾನ್ಯವಾಗಿದೆ.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "ರಜೆ ಪ್ರಕಾರ ಅಮಾನ್ಯವಾಗಿದೆ.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "ರಜೆ ಅಂತಿಮ ದಿನಾಂಕ ಆರಂಭ ದಿನಾಂಕಕ್ಕಿಂತ ಮುಂಚೆ ಇರಬಾರದು."
+}

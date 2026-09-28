@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "Request could not be completed.",
+  "SCHEDULE.ENUM.DAY_INVALID": "शेड्यूल का दिन अमान्य है।",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "लीव प्रकार अमान्य है।",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "लीव की अंतिम तिथि प्रारंभ तिथि से पहले नहीं हो सकती।"
+}

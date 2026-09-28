@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "బిల్లింగ్ సైకిల్ విలువ చెల్లదు.",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "ప్రగతి స్థితి విలువ చెల్లదు.",
+  "MEMBERS.ENUM.STATUS_INVALID": "స్థితి విలువ చెల్లదు."
+}

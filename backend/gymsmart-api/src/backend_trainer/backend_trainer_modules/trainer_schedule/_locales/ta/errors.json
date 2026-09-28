@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "கோரிக்கையை நிறைவேற்ற முடியவில்லை.",
+  "SCHEDULE.ENUM.DAY_INVALID": "அட்டவணை நாள் மதிப்பு தவறானது.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "விடுப்பு வகை மதிப்பு தவறானது.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "விடுப்பு முடிவு தேதி தொடக்க தேதிக்கு முன் இருக்க முடியாது."
+}

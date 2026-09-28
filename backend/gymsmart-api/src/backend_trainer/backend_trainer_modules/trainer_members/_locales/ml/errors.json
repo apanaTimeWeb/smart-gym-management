@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "ബില്ലിംഗ് സൈക്കിൾ മൂല്യം അസാധുവാണ്.",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "പുരോഗതി സ്റ്റാറ്റസ് മൂല്യം അസാധുവാണ്.",
+  "MEMBERS.ENUM.STATUS_INVALID": "സ്റ്റാറ്റസ് മൂല്യം അസാധുവാണ്."
+}

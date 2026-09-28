@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "বিলিং চক্র অবৈধ।",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "অগ্রগতি স্ট্যাটাস অবৈধ।",
+  "MEMBERS.ENUM.STATUS_INVALID": "স্ট্যাটাস মান অবৈধ।"
+}

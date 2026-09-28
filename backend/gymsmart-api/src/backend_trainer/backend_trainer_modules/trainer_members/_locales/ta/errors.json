@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "கட்டணச் சுழற்சி மதிப்பு தவறானது.",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "முன்னேற்ற நிலை மதிப்பு தவறானது.",
+  "MEMBERS.ENUM.STATUS_INVALID": "நிலை மதிப்பு தவறானது."
+}

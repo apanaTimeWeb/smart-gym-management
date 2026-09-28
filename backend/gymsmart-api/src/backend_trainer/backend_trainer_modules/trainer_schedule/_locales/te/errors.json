@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "అభ్యర్థనను పూర్తి చేయలేకపోయాం.",
+  "SCHEDULE.ENUM.DAY_INVALID": "షెడ్యూల్ రోజు విలువ చెల్లదు.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "లీవ్ రకం విలువ చెల్లదు.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "లీవ్ ముగింపు తేదీ ప్రారంభ తేదికి ముందు ఉండకూడదు."
+}

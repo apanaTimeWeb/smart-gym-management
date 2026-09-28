@@ -1,0 +1,5 @@
+{
+  "DOMAIN.PROFILE.PASSWORD.CONFIRMATION_MISMATCH": "The requested operation could not be completed.",
+  "DOMAIN.PROFILE.PASSWORD.CURRENT_PASSWORD_INVALID": "The requested operation could not be completed.",
+  "DOMAIN.PROFILE.TRAINER_PROFILE.NOT_FOUND": "The requested operation could not be completed."
+}

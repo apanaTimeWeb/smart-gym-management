@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "The workout exercise could not be processed.",
+  "DOMAIN.WORKOUT.PLAN": "The workout plan could not be processed.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "The exercise difficulty value is invalid.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "The workout level value is invalid."
+}

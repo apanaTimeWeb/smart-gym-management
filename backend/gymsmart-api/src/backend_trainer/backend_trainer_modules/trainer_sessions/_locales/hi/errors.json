@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "रीकरेंस मान अमान्य है।",
+  "SESSIONS.ENUM.STATUS_INVALID": "स्टेटस मान अमान्य है।",
+  "SESSIONS.ENUM.TYPE_INVALID": "सेशन प्रकार अमान्य है।"
+}

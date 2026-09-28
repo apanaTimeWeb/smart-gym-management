@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "ആവർത്തന മൂല്യം അസാധുവാണ്.",
+  "SESSIONS.ENUM.STATUS_INVALID": "സ്റ്റാറ്റസ് മൂല്യം അസാധുവാണ്.",
+  "SESSIONS.ENUM.TYPE_INVALID": "സെഷൻ തരം അസാധുവാണ്."
+}

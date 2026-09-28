@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "La valeur de récurrence est invalide.",
+  "SESSIONS.ENUM.STATUS_INVALID": "La valeur du statut est invalide.",
+  "SESSIONS.ENUM.TYPE_INVALID": "Le type de session est invalide."
+}

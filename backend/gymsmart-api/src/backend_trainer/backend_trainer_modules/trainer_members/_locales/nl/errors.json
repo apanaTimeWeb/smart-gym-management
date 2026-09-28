@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "De factureringsperiode is ongeldig.",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "De voortgangsstatus is ongeldig.",
+  "MEMBERS.ENUM.STATUS_INVALID": "De statuswaarde is ongeldig."
+}

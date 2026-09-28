@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "वर्कआउट व्यायाम प्रक्रिया करता आली नाही.",
+  "DOMAIN.WORKOUT.PLAN": "वर्कआउट योजना प्रक्रिया करता आली नाही.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "व्यायामाची कठीणता अवैध आहे.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "वर्कआउट स्तर अवैध आहे."
+}

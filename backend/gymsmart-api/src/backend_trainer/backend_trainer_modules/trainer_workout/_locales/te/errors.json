@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "వర్కౌట్ వ్యాయామాన్ని ప్రాసెస్ చేయలేకపోయాం.",
+  "DOMAIN.WORKOUT.PLAN": "వర్కౌట్ ప్లాన్‌ను ప్రాసెస్ చేయలేకపోయాం.",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "వ్యాయామ కష్టం విలువ చెల్లదు.",
+  "WORKOUT.ENUM.LEVEL_INVALID": "వర్కౌట్ స్థాయి చెల్లదు."
+}

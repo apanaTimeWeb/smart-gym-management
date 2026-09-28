@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "অনুরোধটি সম্পন্ন করা যায়নি।",
+  "SCHEDULE.ENUM.DAY_INVALID": "শিডিউলের দিন অবৈধ।",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "ছুটির ধরন অবৈধ।",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "ছুটির শেষ তারিখ শুরু তারিখের আগে হতে পারে না।"
+}

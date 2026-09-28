@@ -1,0 +1,6 @@
+{
+  "DOMAIN.MEMBERS.MEMBER.NOT_FOUND": "The requested operation could not be completed.",
+  "MEMBERS.ENUM.BILLING_INVALID": "The billing-cycle value is invalid.",
+  "MEMBERS.ENUM.PROGRESS_INVALID": "The progress status value is invalid.",
+  "MEMBERS.ENUM.STATUS_INVALID": "The status value is invalid."
+}

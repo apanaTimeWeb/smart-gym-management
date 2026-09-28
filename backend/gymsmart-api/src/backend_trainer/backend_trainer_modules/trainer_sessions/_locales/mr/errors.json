@@ -1,0 +1,7 @@
+{
+  "DOMAIN.SESSIONS.MEMBER_FORBIDDEN": "The requested operation could not be completed.",
+  "DOMAIN.SESSIONS.SESSION.NOT_FOUND": "The requested operation could not be completed.",
+  "SESSIONS.ENUM.RECURRENCE_INVALID": "पुनरावृत्ती मूल्य अवैध आहे.",
+  "SESSIONS.ENUM.STATUS_INVALID": "स्थिती मूल्य अवैध आहे.",
+  "SESSIONS.ENUM.TYPE_INVALID": "सेशन प्रकार अवैध आहे."
+}

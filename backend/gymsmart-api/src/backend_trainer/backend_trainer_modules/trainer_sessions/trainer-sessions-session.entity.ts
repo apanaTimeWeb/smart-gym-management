@@ -1,0 +1,12 @@
+// RESPONSIBILITY: Maps trainer session scheduling records with typed finite states.
+// FLOW: Sessions repository → TrainerSessionsSessionEntity → sessions.
+
+import { Column, Entity } from 'typeorm'; import { CoreBaseEntity } from '@/backend_trainer/backend_core/core_database/core-base.entity'; import { SessionRecurrence, SessionStatus, SessionType } from '@/backend_trainer/backend_trainer_modules/trainer_sessions/trainer-sessions-enums';
+
+/**
+ * Intent: Defines the TrainerSessionsSessionEntity boundary for the modules architecture.
+ * Edge Cases: Preserve tenant scope, validation, authorization, nullability, transactions, and canonical errors when changing this construct.
+ * Side Effects: Preserve the owning construct’s existing persistence, cache, event, and audit behavior without introducing cross-module state changes.
+ * AI Note: Keep this construct isolated from unrelated modules and preserve frozen contracts; never bypass repository/domain boundaries.
+ */
+@Entity('trainer_sessions') export class TrainerSessionsSessionEntity extends CoreBaseEntity { @Column({name:'trainer_id',type:'uuid'}) trainerId!: string; @Column() title!: string; @Column({type:'enum',enum:SessionType,enumName:'session_type_enum'}) type!: SessionType; @Column() time!: string; @Column({name:'session_date',type:'date'}) sessionDate!: string; @Column() duration!: string; @Column({type:'enum',enum:SessionStatus,enumName:'session_status_enum'}) status!: SessionStatus; @Column({default:0}) attendees!: number; @Column({name:'max_attendees',nullable:true}) maxAttendees!: number|null; @Column({name:'member_id',type:'uuid',nullable:true}) memberId!: string|null; @Column({name:'is_online',default:false}) isOnline!: boolean; @Column({name:'enrolled_members',type:'jsonb',nullable:true}) enrolledMembers!: {id:string;name:string}[]|null; @Column({name:'session_notes',nullable:true}) sessionNotes!: string|null; @Column({nullable:true}) location!: string|null; @Column({nullable:true}) room!: string|null; @Column({name:'trainer_notes',nullable:true}) trainerNotes!: string|null; @Column({name:'member_rating',type:'numeric',nullable:true}) memberRating!: number|null; @Column({name:'cancellation_reason',nullable:true}) cancellationReason!: string|null; @Column({name:'recurrence_rule',type:'enum',enum:SessionRecurrence,enumName:'session_recurrence_enum',nullable:true}) recurrenceRule!: SessionRecurrence|null; @Column({name:'recurrence_end_date',type:'date',nullable:true}) recurrenceEndDate!: string|null; }

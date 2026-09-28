@@ -1,0 +1,11 @@
+// RESPONSIBILITY: Registers profile read/update/password flows and the master user repository dependency.
+// FLOW: Profile HTTP → profile services → tenant profile/master identity repositories.
+
+import { Module } from '@nestjs/common'; import { TrainerProfileQueryController } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_controllers/trainer-profile-query.controller'; import { TrainerProfileCommandController } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_controllers/trainer-profile-command.controller'; import { TrainerProfileTrainerProfileReadService } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_services/trainer-profile-trainer-profile-read.service'; import { TrainerProfileTrainerProfileUpdateService } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_services/trainer-profile-trainer-profile-update.service'; import { TrainerProfileTrainerPasswordChangeService } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_services/trainer-profile-trainer-password-change.service'; import { TrainerProfileTrainerProfileRepository } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_repositories/trainer-profile-trainer-profile.repository';
+ /**
+ * Intent: Defines the TrainerProfileModule boundary for the modules architecture.
+ * Edge Cases: Preserve tenant scope, validation, authorization, nullability, transactions, and canonical errors when changing this construct.
+ * Side Effects: Preserve the owning construct’s existing persistence, cache, event, and audit behavior without introducing cross-module state changes.
+ * AI Note: Keep this construct isolated from unrelated modules and preserve frozen contracts; never bypass repository/domain boundaries.
+ */
+@Module({imports:[],controllers:[TrainerProfileQueryController,TrainerProfileCommandController],providers:[TrainerProfileTrainerProfileReadService,TrainerProfileTrainerProfileUpdateService,TrainerProfileTrainerPasswordChangeService,TrainerProfileTrainerProfileRepository]}) export class TrainerProfileModule {}

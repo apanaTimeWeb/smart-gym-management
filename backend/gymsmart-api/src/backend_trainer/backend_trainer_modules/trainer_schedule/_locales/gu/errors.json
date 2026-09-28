@@ -1,0 +1,6 @@
+{
+  "DOMAIN.SCHEDULE.GENERIC_ERROR": "વિનંતી પૂર્ણ કરી શકાઈ નથી.",
+  "SCHEDULE.ENUM.DAY_INVALID": "શેડ્યૂલનો દિવસ અમાન્ય છે.",
+  "SCHEDULE.ENUM.LEAVE_TYPE_INVALID": "રજા પ્રકાર અમાન્ય છે.",
+  "SCHEDULE.LEAVE.INVALID_DATE_RANGE": "રજાની અંતિમ તારીખ શરૂઆતની તારીખ પહેલાં હોઈ શકતી નથી."
+}

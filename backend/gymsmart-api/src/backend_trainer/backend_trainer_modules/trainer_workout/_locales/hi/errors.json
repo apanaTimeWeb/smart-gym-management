@@ -1,0 +1,6 @@
+{
+  "DOMAIN.WORKOUT.EXERCISE": "वर्कआउट एक्सरसाइज़ प्रोसेस नहीं की जा सकी।",
+  "DOMAIN.WORKOUT.PLAN": "वर्कआउट प्लान प्रोसेस नहीं किया जा सका।",
+  "WORKOUT.ENUM.DIFFICULTY_INVALID": "एक्सरसाइज़ कठिनाई अमान्य है।",
+  "WORKOUT.ENUM.LEVEL_INVALID": "वर्कआउट स्तर अमान्य है।"
+}
