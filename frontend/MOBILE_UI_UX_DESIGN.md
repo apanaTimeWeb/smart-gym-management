@@ -172,8 +172,8 @@ values inline. Global design defines only semantic visual meaning such as succes
 | `status-success-bg` | `#D1FAE5` | `#064E3B` |
 | `status-warning-text` | `#92400E` | `#F59E0B` |
 | `status-warning-bg` | `#FEF3C7` | `#451A03` |
-| `status-danger-text` | `#7F1D1D` | `#DC2626` |
-| `status-danger-bg` | `#FEE2E2` | `#FCA5A5` |
+| `status-danger-text` | `#7F1D1D` | `#450A0A` |
+| `status-danger-bg` | `#FEE2E2` | `#450A0A` |
 | `status-info-text` | `#1E3A8A` | `#93C5FD` |
 | `status-info-bg` | `#DBEAFE` | `#1E3A5F` |
 | `status-neutral-text` | `#3F3F46` | `#A1A1AA` |
@@ -206,7 +206,7 @@ Series color order (applied consistently across every chart in the app). Charts 
 | `chart-primary` | `#4F46E5` | `#4F46E5` |
 | `chart-success` | `#10B981` | `#86EFAC` |
 | `chart-warning` | `#F59E0B` | `#F59E0B` |
-| `chart-danger` | `#DC2626` | `#DC2626` |
+| `chart-danger` | `#450A0A` | `#450A0A` |
 | `chart-secondary`| `#DB2777` | `#EC4899` |
 | `chart-info` | `#0891B2` | `#06B6D4` |
 
@@ -377,7 +377,7 @@ When any button triggers an async action it MUST transition to a loading state i
 | Error | Revert to default state — error shown in toast or inline field |
 
 **Token:** Loading spinner uses `on-primary` / `on-destructive` on primary/destructive fill buttons.
-Spinner size: `icon-sm` (`icon-sm`).
+Spinner size: `icon-sm`.
 
 ---
 

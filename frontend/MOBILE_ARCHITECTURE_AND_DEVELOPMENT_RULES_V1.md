@@ -52,7 +52,7 @@ If an AI repair attempts to modify business logic in a sibling feature module to
 ## Rule 1 — Micro-Modularization (One Feature = One Self-Contained Folder)
 
 This is the most important structural rule. **One feature = one self-contained folder.**
-If there is a bug in `members`, you drag ONLY the `features/frontend_manager/members/` folder to the AI.
+If there is a bug in `members`, you drag ONLY the `features/frontend_frontend_manager/members/` folder to the AI.
 Everything the AI needs — components, hooks/controllers, schemas, types, API, state,
 tests, and the context file — lives inside that single folder. Zero need to open any other folder.
 
@@ -92,19 +92,19 @@ features/
     │   ├── MembersListScreen.tsx         
     │   ├── MembersDetailScreen.tsx
     │   └── MembersAddScreen.tsx
-    ├── components/                       (or widgets/ in )
+    ├── components/                       
     │   ├── MembersMemberCard.tsx         ← module-prefixed component
     │   ├── MembersMemberCard.test.tsx    ← co-located test
     │   ├── MembersMemberListItem.tsx
     │   └── MembersEmptyState.tsx
-    ├── hooks/                            (or controllers/ / notifiers/ in )
+    ├── hooks/                            
     │   ├── useMembers.ts                 ← server-state data-fetching hook
     │   ├── useMembers.test.ts
     │   ├── useMembersFilters.ts          ← client-state UI filter hook
     │   └── useMembersFilters.test.ts
-    ├── schemas/                          (or validators/ in )
+    ├── schemas/                          
     │   └── members.schema.ts             ← Zod schema / validator class
-    ├── types/                            (or models/ in )
+    ├── types/                            
     │   └── members.types.ts              ← all interfaces, enums, type unions
     ├── api/
     │   └── members.api.ts                ← ALL network calls for this feature ONLY
@@ -182,8 +182,8 @@ in the rest of the filename. The following are allowed:
 ### Role Isolation (Mirror of Web Architecture)
 
 Just as the web has isolated `/admin`, `/manager`, `/trainer` root folders, the mobile
-app MUST follow the same pattern. A `MemberCard` in `frontend_admin/members/` is **never** imported
-into `manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
+app MUST follow the same pattern. A `MemberCard` in `frontend_frontend_admin/members/` is **never** imported
+into `frontend_manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
 zero but isolation value is massive.
 
 > **CRITICAL WARNING TO AI AGENTS:** 
@@ -193,8 +193,12 @@ zero but isolation value is massive.
 
 ```
 features/
-├── admin/
-│   └── members/      ← AdminMembers — completely isolated
+├── frontend_admin/
+│   └── members/
+├── frontend_manager/
+│   └── members/
+└── frontend_trainer/
+    └── members/│   └── members/      ← AdminMembers — completely isolated
 ├── manager/
 │   └── members/      ← ManagerMembers — isolated, even if visually similar
 └── trainer/
@@ -212,8 +216,7 @@ features/
   pass IDs and re-fetch inside the destination screen (see Rule 4).
 - Deep linking must resolve through the SAME central route definition used for
   in-app navigation — never a second, separately maintained linking map.
-- Framework examples: React Navigation (React Native bare-metal) or go_router /
-  Navigator 2.0 () — either is acceptable as long as the rules above hold.
+- Framework examples: React Navigation (React Native bare-metal)  as long as the rules above hold.
 - Modals, bottom sheets, and nested tab/stack navigators must be defined once at
   the top of the navigation tree, not re-implemented per screen.
 
@@ -263,7 +266,7 @@ data-fetching layer, which handles request de-duplication and caching itself.
 
 - All non-trivial forms use a form-management library + a schema-validation
   library, kept separate from each other (e.g. React Hook Form + Zod for RN;
-  a form controller pattern + a validator class for ).
+  a form controller pattern + a .
 - Validation schema/rules live in the feature's `schemas/` (or `validators/`)
   folder — never written inline inside the widget/component.
 - Client-side validation messages are for immediate UX feedback only. The
@@ -473,10 +476,10 @@ visually renders with placeholder values.
 ## Rule 8 — Lists & Rendering Performance
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
-  component (e.g. a high-performance list library for RN; `ListView.builder`
+  component (e.g. a high-performance list library for RN; `FlatList`
   for  — never a naively-mapped, fully-rendered list of widgets).
 - List item components must be render-stable (memoized in RN; using `const`
-  constructors and stable keys in ) to avoid unnecessary re-renders.
+  constructors and  to avoid unnecessary re-renders.
 
 ## Rule 9 — Images & Media Assets
 
@@ -849,10 +852,10 @@ All calls go through the central network client. Response envelope:
 | Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
 | `fetchMembers(params)` | GET | `/api/v1/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
-| `fetchMemberById(id)` | GET | `/api/v1/frontend_manager/members/:id` | — | `MemberDetail` |
+| `fetchMemberById(id)` | GET | `/api/v1/frontend_frontend_manager/members/:id` | — | `MemberDetail` |
 | `createMember(dto)` | POST | `/api/v1/frontend_manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/api/v1/frontend_manager/members/:id` | — | `null` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/frontend_frontend_manager/members/:id` | — | `null` |
 
 ## Approved External Dependencies
 [REQUIRED: Must list all cross-layer and external packages. AI must not import anything outside this list.]
@@ -1090,7 +1093,7 @@ feature with CRUD operations.
 ```markdown
 # members — Forbidden Patterns
 
-- NEVER import from any other feature folder (admin/members/, trainer/members/, etc.) — zero cross-feature imports, Rule 28
+- NEVER import from any other feature folder (frontend_admin/members/, frontend_trainer/members/, etc.) — zero cross-feature imports, Rule 28
 - NEVER call the HTTP client directly — always use members.api.ts which goes through the central network client
 - NEVER store API response data in members.store.ts — the TanStack Query / Riverpod cache is the single source of truth for server data
 - NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
@@ -1329,7 +1332,7 @@ value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/c
 
 ## Rule 37 — Currency and Number Formatting Utility (Mobile Equivalent of Frontend Rule 80)
 
-All generic numeric and percentage formatting MUST go through a central feature-local utility.
+All generic numeric and percentage formatting MUST go through the central zero-business formatter utility at src/core/utils/formatters.ts.
 Do not use raw `.toFixed()` or inline `new Intl.NumberFormat` anywhere in JSX/components.
 
 ```typescript
@@ -1398,8 +1401,9 @@ export function displayValue(
 Applies to: detail screens, list cards, table cells, summary rows, PDF/export
 previews. Every data-display component uses `displayValue()` — no exceptions.
 
-Cross-reference: Frontend Rule 78, Rule 37 (formatCurrency already returns `—`
-for null amounts).
+Cross-reference: Frontend Rule 78, Rule 63.
+Currency values that may be null MUST follow the documented Rule 63 null-value
+handling and must never render blank or `"N/A"`.
 
 ---
 
@@ -1460,7 +1464,7 @@ export function showToast(message: string, type: 'error' | 'success', dedupKey?:
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey } // Or platform-specific implementation suppressing identical keys
+    props: { dedupKey } // Pseudocode: central adapter MUST actively suppress/replace matching keys
   });
 }
 
@@ -1601,7 +1605,7 @@ function level what Rule 24 applies at the feature level.
 
 ## Rule 44 — `RESPONSIBILITY:` + `FLOW:` Comment Mandate on Every File
 
-Every file in a feature folder (component, hook, API, store, schema) MUST begin
+Every executable .ts / .tsx source file in a feature folder (component, hook, API, store, schema) MUST begin
 with a two-line structured comment block at the very top of the file (before any imports):
 
 ```typescript
@@ -1831,7 +1835,7 @@ ListView(children: members.map((m) =>
 ```
 
 Consequence of violation: inserting or deleting a list item causes every
-subsequent item to re-render (React) or lose widget state (). For
+subsequent item to re-render (React) or lose component state. For
 financial lists this can cause visible flicker and incorrect loading states.
 
 Rule: if an entity has no stable ID from the backend, that is a backend contract
@@ -2089,7 +2093,7 @@ The mobile frontend uses a co-located locale file architecture. The active launc
 ### Module-Co-located Locales
 Each feature module owns its own translation keys.
 ```json
-// features/frontend_manager/members/_locales/en.json
+// features/frontend_frontend_manager/members/_locales/en.json
 {
   "members": {
     "PAGE_TITLE": "Members",
@@ -2122,7 +2126,8 @@ Runtime feature flags are accessed through `useFeatureFlag()`.
 
 ```typescript
 // ❌ BAD: Reading raw process/env values directly in components
-if (readBuildConfig().enableFeature) { ... }
+❌ BAD: reading build/config values directly inside a feature component
+✅ GOOD: const enabled = useFeatureFlag('NEW_BILLING_UI');
 
 // ✅ GOOD:
 const isNewBillingEnabled = useFeatureFlag('NEW_BILLING_UI');
@@ -2192,7 +2197,7 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
 
 ### The Rule
-The React Native mobile application MUST implement a hybrid notification architecture implement a hybrid notification architecture:
+The React Native mobile application MUST implement a hybrid notification architecture::
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
 
@@ -2218,5 +2223,5 @@ the gesture interaction.
 
 ### Rule 66 — Component-Level AI Docstrings (JSDoc / Doc)
 * **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
-* **The Rule:** Every Custom Hook (RN), Controller/Bloc (), complex Widget/Component, and State Store MUST have an exhaustive docstring block directly above its declaration.
-* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/// @description Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`
+* **The Rule:** Every Custom Hook (RN), , complex React Native component, and State Store MUST have an exhaustive docstring block directly above its declaration.
+* **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** ... */ Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`
