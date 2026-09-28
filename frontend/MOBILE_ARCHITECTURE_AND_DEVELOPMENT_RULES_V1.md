@@ -30,6 +30,26 @@ features/frontend_trainer/
 ```
 The exact names will differ by project, but the `frontend_` prefix is non-negotiable for root containers.
 
+## Rule 0A.2 — MOBILE CONTEXT ISOLATION (MANDATORY)
+
+For every mobile create, audit, repair, or implementation task, the AI MUST use only:
+
+1. This mobile architecture/development document.
+2. `MOBILE_UI_UX_DESIGN.md` when the design system is supplied as a separate document.
+3. The supplied target feature/requirements document and its API contract.
+
+The AI MUST NOT require, import, infer, or reference rule numbers from:
+- Web frontend architecture documents
+- Web frontend UI/UX documents
+- Backend architecture documents
+- Backend create/audit/repair prompts
+
+Mobile rules are authoritative for mobile.
+
+If a required mobile behavior is not defined by these mobile documents or the supplied feature contract, the AI MUST mark the requirement as `CONTRACT_MISSING` / `BLOCKED_BY_SUPPLIED_SCOPE` rather than inventing behavior.
+
+---
+
 ## Rule 0B — Hard Feature Write Boundary
 
 For a feature-specific task:
@@ -184,16 +204,19 @@ in the rest of the filename. The following are allowed:
   No default exports with a different name — this prevents AI hallucination.
 - **Props interfaces prefixed:** `export interface MembersMemberCardProps` — never generic `Props`.
 
-### Role Isolation (Mirror of Web Architecture)
+### Role Isolation
 
-Just as the web has isolated `/admin`, `/manager`, `/trainer` root folders, the mobile
-app MUST follow the same pattern. A `MemberCard` in `frontend_admin/members/` is **never** imported
-into `frontend_manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
-zero but isolation value is massive.
+Mobile role containers MUST remain isolated from one another.
 
-> **CRITICAL WARNING TO AI AGENTS:** 
-> Do NOT attempt to "DRY up" business components by moving them to global folders like `src/components/ui/` or `widgets/common/`. 
-> Components that contain domain-specific data/constants MUST be duplicated per feature, NEVER globalized. 
+A feature inside `frontend_admin/` MUST NOT be imported into
+`frontend_manager/`, `frontend_superadmin/`, or `frontend_trainer/`.
+
+Duplicate business-aware components when required for isolation.
+Global UI primitives are permitted only when they contain zero business logic.
+
+> **CRITICAL WARNING TO AI AGENTS:**
+> Do NOT attempt to "DRY up" business components by moving them to global folders like `src/components/ui/` or `widgets/common/`.
+> Components that contain domain-specific data/constants MUST be duplicated per feature, NEVER globalized.
 > Global folders are strictly for dumb, zero-business primitives (like raw Buttons, Inputs, Dialogs).
 
 ```
@@ -308,13 +331,13 @@ stored data and route it accordingly:
   ```
   This matches the backend's canonical envelope exactly. There is NO second or partial mobile version.
   Every feature's API layer returns this shape — never raw, un-normalized responses.
-- User-facing error messages come from the backend's `message` field —
+- User-facing error messages come from the API `message` field —
   never hardcoded strings duplicated across screens.
 - Authentication expiry (401) is handled by ONE centralized
   logout/token-refresh interceptor — never ad-hoc inside individual screens.
 
 **Typed API Verb Contract:** Every function in a feature's `*.api.ts` MUST follow
-the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
+the same explicit verb naming defined by the supplied feature API contract:
 - `fetchMembers(params)` — paginated list
 - `fetchMemberById(id)` — single entity
 - `createMember(dto)` — POST creation
@@ -323,7 +346,9 @@ the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
 - `exportMembersReport(params)` — report/export
 
 **Non-CRUD Domain Action Verbs:** For domain actions that are not standard CRUD operations,
-use the **exact API endpoint operation/contract name** as defined by the external API specification. Mobile architecture MUST remain decoupled from internal backend service method names. If the backend renames an internal service class or method, the mobile API contract should not break.
+use the **exact operation name defined by the supplied feature/API contract**. Mobile architecture
+MUST remain decoupled from server-side implementation details.
+Only the external API operation/contract is authoritative.
 
 ```typescript
 // Domain action verb examples — match the external API contract exactly:
@@ -339,9 +364,9 @@ AI agents must never invent arbitrary function names like `loadData()`, `getData
 
 ## Rule 7A — Complete API Contract & UI Data Coverage
 
-This rule is the mobile equivalent of Web Rule 75A and Backend Rule 82A. It closes
-the same gap on mobile: API/mock responses being incomplete while the UI silently
-renders empty cards, lists, and charts.
+This rule defines the complete API-to-UI data coverage contract for mobile.
+It closes the gap where incomplete API/mock responses cause mobile UI fields,
+cards, lists, KPIs, charts, or relationships to render empty or undefined.
 
 ### The Required Chain
 
@@ -357,7 +382,7 @@ Type / Model (*.types.ts / models/*.)
       ↓
 Schema / Validator (Zod schema or validator class)
       ↓
-Mock / Stub Response (test boundary mock or backend stub)
+Mock / Stub Response (test boundary mock or API/server stub)
       ↓
 Server-State Cache (TanStack Query)
       ↓
@@ -383,7 +408,7 @@ MUST inspect the complete consuming UI and identify the exact data required by:
 
 ### Mock / Stub Response Completeness
 
-During the frontend-first development phase (before a real backend endpoint exists),
+During the **feature-first development phase** (before a real API endpoint exists),
 the mock response used in tests and development MUST:
 
 1. Contain **every field** that the UI actually consumes — not just the fields
@@ -437,12 +462,12 @@ UI requires field
 → render from response
 ```
 
-### Backend Transition Rule
+### API Endpoint Transition Rule
 
-When the real backend endpoint becomes available:
+When the real API endpoint becomes available:
 - The UI MUST continue consuming the same API contract — no screen rewrites.
 - The feature API client MUST remain the same unless the backend contract
-  legitimately changes (see Backend Rule 67).
+  legitimately changes (see the supplied feature API contract).
 - Any contract change MUST update the corresponding Type/Model, Schema/Validator,
   mock response, `_features.md` API Contract, and tests in the same change.
 
@@ -1209,7 +1234,7 @@ inline — always import from this central hook.
 
 ---
 
-## Rule 33 — Canonical `PaginationMeta` Shape (Mobile Equivalent of Backend Rule 94 / Frontend Rule 59)
+## Rule 33 — Canonical `PaginationMeta` Shape
 
 Every paginated API response MUST include a `meta` field typed as `PaginationMeta`.
 No feature may invent its own pagination shape — one canonical type, used everywhere.
@@ -1242,7 +1267,7 @@ const { data } = useMembers(params);
 const hasNextPage = data?.meta?.hasNextPage ?? false;
 ```
 
-Cross-reference: Backend Rule 94, Frontend Rule 59, Mobile Rule 7.
+Cross-reference: Rule 7 (`ApiResponse.meta`).
 
 ---
 
@@ -1271,14 +1296,14 @@ if (member.status === MemberStatus.ACTIVE) { ... }
 ```
 
 Rules:
-- Enum values MUST exactly match backend API wire values (typically `SCREAMING_SNAKE_CASE`) — verified against the backend's enum definition (Backend Rule 95). If the backend contract changes, mobile type/schema/tests must update in the same change.
+- Enum values MUST exactly match the API wire value defined by the supplied feature contract. If the feature API contract changes enum values, mobile type/schema/tests must update in the same change.
 - Never use numeric enums for API-bound fields — string enums survive serialization.
 - Filter dropdowns, badge colors, and conditional rendering all branch on the enum,
   never on a raw string.
 - If the backend adds a new status, the TypeScript compiler surfaces every
   unhandled case — this is the point.
 
-Cross-reference: Backend Rule 95, Frontend Rule 34 (status badge pattern).
+Cross-reference: Rule 7 and the feature API contract.
 
 ---
 
@@ -1330,7 +1355,7 @@ constants are a `core/` primitive, not a feature file).
 Any import that brings in ONLY a TypeScript type, interface, or enum (no runtime
 value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/consistent-type-imports`).
 
-## Rule 37 — Currency and Number Formatting Utility (Mobile Equivalent of Frontend Rule 80)
+## Rule 37 — Currency and Number Formatting Utility
 
 All generic numeric and percentage formatting MUST go through the central zero-business formatter utility at src/core/utils/formatters.ts.
 Do not use raw `.toFixed()` or inline `new Intl.NumberFormat` anywhere in JSX/components.
@@ -1371,7 +1396,7 @@ export function formatPercent(value: number | null | undefined, locale: string):
 
 Rule 63 supersedes the currency portion of Rule 37. Currency formatting is feature-local. Rule 37 remains authoritative only for generic number and percentage formatting.
 
-## Rule 38 — En-Dash Fallback for Null / Empty Data (Mobile Equivalent of Frontend Rule 78)
+## Rule 38 — En-Dash Fallback for Null / Empty Data
 
 Any field that may be `null`, `undefined`, or an empty string MUST render an
 en-dash (`—`) rather than blank space, `"N/A"`, `"null"`, or `undefined`.
@@ -1401,13 +1426,13 @@ export function displayValue(
 Applies to: detail screens, list cards, table cells, summary rows, PDF/export
 previews. Every data-display component uses `displayValue()` — no exceptions.
 
-Cross-reference: Frontend Rule 78, Rule 63.
+Cross-reference: Rule 63.
 Currency values that may be null MUST follow the documented Rule 63 null-value
 handling and must never render blank or `"N/A"`.
 
 ---
 
-## Rule 39 — Button Loading Width Stability (Mobile Equivalent of Frontend Rule 81)
+## Rule 39 — Button Loading Width Stability
 
 When a button transitions to a loading state, its width MUST NOT change.
 Replacing button text with a spinner that has different dimensions causes layout
@@ -1439,11 +1464,11 @@ Rules:
 - React Native: wrap `TouchableOpacity/Pressable` in a `View` with a fixed width,
   or apply `minWidth` via style.
 
-Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
+Cross-reference: Rule 31 (loading state on confirm button).
 
 ---
 
-## Rule 40 — Toast / Snackbar Deduplication (Mobile Equivalent of Frontend Rule 82)
+## Rule 40 — Toast / Snackbar Deduplication
 
 `showToast()` is the ONLY toast entry point.
 
@@ -1488,7 +1513,7 @@ showToast(
 );
 ```
 
-## Rule 41 — Unsaved Changes Guard for Multi-Step Forms (Mobile Equivalent of Frontend Rule 79)
+## Rule 41 — Unsaved Changes Guard for Multi-Step Forms
 
 Any screen containing a form with user-entered data MUST warn the user before
 navigating away with unsaved changes. On mobile, the back gesture/button is the
@@ -1542,7 +1567,7 @@ Rules:
   values; merely focusing or touching a field does not necessarily mean the form
   is dirty.
 
-Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (forms).
+Cross-reference: Rule 31 (centralized confirmation), Rule 5 (forms).
 
 ---
 
@@ -1715,15 +1740,13 @@ Rules:
 - Any task that can run while the app is in the background (not just foregrounded)
   must be noted explicitly — these have different lifecycle constraints on iOS vs Android.
 
-Cross-reference: Backend Rule 96 (scheduled job registry), Rule 7 (API layer),
-Rule 6 (secure storage), Rule 24 (_features.md documentation).
+Cross-reference: Rule 7 (API layer), Rule 6 (secure storage), Rule 24 (_features.md documentation).
 
 ---
 
 ## Rule 47 — API Call Timeout Policy
 
-Every API request MUST execute with a timeout defined by `TIMEOUT_CONFIG`. The default timeout is inherited automatically unless a category-specific override applies. Silent hangs on mobile are worse
-than on web — the user has no browser loading indicator and no way to cancel.
+Every API request MUST execute with a timeout defined by `TIMEOUT_CONFIG`. The default timeout is inherited automatically unless a category-specific override applies. Silent hangs on mobile are especially harmful because the user has limited visibility into network activity and request cancellation.
 
 Define once in `src/core/network/networkClient.ts`:
 
@@ -1751,22 +1774,21 @@ const response = await client.post('/reports/export', dto,
   { timeout: TIMEOUT_CONFIG.REPORT });                                          // explicit override
 ```
 
-On timeout: surface `showToast('Request timed out. Please try again.', 'error')`
+On timeout: surface `showToast(t('COMMON.REQUEST_TIMED_OUT'), 'error')`
 (Rule 40) — never a blank screen or silent failure.
 
-Cross-reference: Backend Rule 97 (server-side timeout policy), Rule 7 (API layer),
-Rule 40 (toast utility).
+Cross-reference: Rule 7 (API layer), Rule 40 (toast utility).
 
 ---
 
-## Rule 48 — Structured Validation Error Handling Shape (Mobile Equivalent of Backend Rule 98)
+## Rule 48 — Structured Validation Error Handling Shape
 
-When the backend returns the canonical validation error response (statusCode `400`;
+When the API returns the canonical validation error response (statusCode `400`;
 a `422` is only valid if an explicitly approved API contract requires it), the
 response MUST be parsed into a structured shape and mapped to individual form
 fields — never displayed as a raw string dump.
 
-The backend's canonical validation error envelope (Backend Rule 98):
+The canonical mobile API validation-error envelope:
 
 ```typescript
 // Shape returned by backend on 400 validation failure
@@ -1815,7 +1837,7 @@ const onSubmit = async (dto: CreateMemberDto) => {
 };
 ```
 
-Cross-reference: Backend Rule 98, Rule 5 (forms), Rule 40 (toast for non-field errors).
+Cross-reference: Rule 5 (forms), Rule 40 (toast for non-field errors).
 
 ---
 
@@ -2197,7 +2219,8 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 
 ### Interaction Flow
 1. **Button:** Display a clear `[ Request Full Data Export ]` button.
-2. **Action:** When clicked, call the backend `POST /export-data`.
+2. **Action:** When clicked, call the exact export endpoint defined by the supplied feature API contract. The AI MUST NOT invent or shorten the endpoint path.
+   Canonical project pattern: `POST /api/v1/superadmin/export-data`
 3. **Feedback:** Do NOT show a continuous loading spinner. Since the API returns `202 Accepted` immediately, show a success toast/alert: 
    *"Export started. A secure download link will be sent to your email within a few minutes."*
 4. **Format Expectation:** The UI should inform the user that their data will be sent via email as a ZIP file containing Excel (CSV) files, which are best viewed on a computer.
@@ -2209,12 +2232,15 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 ## Rule 58A — Notification & WebSocket Recovery
 
 ### The Problem
-If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
+If the user's app is closed or loses internet connection when a server notification event is emitted, the event is lost.
 
 ### The Rule
-The React Native mobile application MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
-2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+2. **Offline Recovery:** Whenever the application mounts or comes to the foreground, it MUST call the exact notification-recovery endpoint defined by the supplied feature API contract. The AI MUST NOT invent, shorten, or substitute the endpoint path.
+
+   Canonical project pattern: `GET /api/v1/{role}/notifications`
+
+   Do not rely 100% on WebSocket delivery for critical notifications.
 
 
 ## AI Introspection & Agentic Compatibility Rules

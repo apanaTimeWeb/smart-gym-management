@@ -1515,7 +1515,7 @@ Example:
 `APP_DASHBOARD_LAYOUT_V1`
 
 59. **Standardized `ApiResponse<T>` Generic (The API Contract)**:
-Every API call must be typed using a global `ApiResponse<T>` generic interface that perfectly matches the backend response envelope (Backend Rule 28). Both Success and Error responses must share this exact canonical shape:
+Every API call must be typed using a global `ApiResponse<T>` generic interface that matches the canonical `ApiResponse<T>` envelope defined in this Rule 59. Both Success and Error responses must share this exact canonical shape:
 
 ```typescript
 export interface ApiResponse<T> {
@@ -1760,10 +1760,10 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
 - ❌ **BAD:** `import { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
 - ✅ **GOOD:** `import type { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
-- **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This mirrors Backend Rule 88's `import type` mandate for the backend.
+- **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This requirement exists to guarantee predictable TypeScript module behavior, reduce accidental runtime imports, and prevent circular dependency problems.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
-Rule 61 mandates ESLint, `tsc --noEmit`, and pre-commit hooks. This rule adds mandatory **security gates** to the frontend CI/CD pipeline, mirroring Backend Rules 90 & 91:
+Rule 61 mandates ESLint, `tsc --noEmit`, and pre-commit hooks. This rule adds mandatory **security gates** to the frontend CI/CD pipeline. These security gates are mandatory frontend CI/CD controls for this project:
 - **Gate 1 — SCA (Dependency Vulnerability Scan):** Run `npm audit --audit-level=high` or an approved SCA tool on every PR. Any `Critical` or `High` severity CVE in a frontend dependency MUST block the merge. Frontend packages (including `react`, `axios`, `next`) have real CVEs that AI agents will never proactively check for.
 - **Gate 2 — Secrets Detection:** Run `gitleaks detect` on every PR diff. Frontend code frequently contains accidentally committed API keys, Stripe public keys, or environment variables. This gate is non-negotiable.
 - **Gate 3 — Pre-Commit Secret Scan:** Add `gitleaks detect --no-git` (staged files only) to the existing `husky + lint-staged` pre-commit hook so secrets are caught locally before pushing.
@@ -2145,7 +2145,7 @@ required by the finished UI."
 ```
 
 76. **`CODEOWNERS` Human Review Gate for Security-Critical Frontend Code**:
-Just as Backend Rule 93 mandates human review for `auth/`, `billing/`, and `permissions/` backend modules, the frontend MUST implement a `CODEOWNERS` file requiring mandatory human reviewer approval on PRs that touch security-critical frontend paths. AI agents cannot self-certify security-critical UI changes.
+Security-critical frontend changes require mandatory human review. The frontend MUST implement a `CODEOWNERS` file requiring mandatory human reviewer approval on PRs that touch security-critical frontend paths. AI agents cannot self-certify security-critical UI changes.
 - **Mandatory Human Review Required For:**
   1. **Auth UI** — Any changes to `src/app/auth/` (login form, logout, refresh logic).
   2. **API Interceptor & Token Logic** — Any changes to the centralized `api.ts` wrapper, the token refresh interceptor, or `middleware.ts`.
@@ -2256,7 +2256,7 @@ Rule 14 establishes that applicable mutation API clients require an Idempotency-
 - **Implementation:** Generate the key in the confirm handler, store it (e.g., in a `useRef`), and reuse it on all retries until the mutation succeeds or is explicitly abandoned.
 - ❌ **BAD:** Generating `crypto.randomUUID()` on every retry attempt.
 
-Cross-reference: Backend Rule 31 (idempotency contract), Mobile Rule 53 (same requirement on mobile).
+This rule is the authoritative web frontend rule for Idempotency-Key generation and retry lifecycle.
 
 84. **Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)**:
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
@@ -2270,17 +2270,23 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## Extended Rule 14 — Idempotency for API Mutations
 
-All mutating API endpoints (POST, PATCH, PUT, DELETE) on the backend strictly enforce idempotency (`@RequireIdempotencyKey()`). Therefore, EVERY frontend API client function that performs a mutation MUST accept an optional `idempotencyKey?: string` parameter and inject it into the HTTP headers as `{'Idempotency-Key': idempotencyKey}`. Failure to do so will result in an immediate HTTP 400 rejection from the backend.
+EVERY frontend API client function that performs a mutation MUST require an `idempotencyKey: string` parameter and MUST always inject it into HTTP headers as `{'Idempotency-Key': idempotencyKey}`. The key MUST be generated exactly once per user intent, reused for retries, and regenerated only for a new user intent.
 
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
 import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
-export const updateMemberProfile = async (id: string, body: unknown, idempotencyKey?: string) => apiFetch(MEMBER_URLS.PROFILE(id), {
+export const updateMemberProfile = async (
+  id: string,
+  body: unknown,
+  idempotencyKey: string,
+) => apiFetch(MEMBER_URLS.PROFILE(id), {
   method: 'PATCH',
   body: JSON.stringify(body),
-  headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+  headers: {
+    'Idempotency-Key': idempotencyKey,
+  },
 });
 ```
 
@@ -2539,7 +2545,8 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
 
 ### Interaction Flow
 1. **Button:** Display a clear `[ Request Full Data Export ]` button.
-2. **Action:** When clicked, call the backend `POST /export-data`.
+2. **Action:** When clicked, call the exact export endpoint defined by the supplied feature API contract. The AI MUST NOT invent or shorten the endpoint path.
+   Canonical project pattern: `POST /api/v1/superadmin/export-data`
 3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
    *"Export started. You will receive an email with a secure download link within a few minutes."*
 4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
@@ -2551,12 +2558,16 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
 ## Notification & WebSocket Recovery Rule
 
 ### The Problem
-If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
+If the user's browser tab is closed or loses internet connection when a WebSocket event is fired, the event is lost.
 
 ### The Rule
-The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
-1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
-2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
+The WEB application MUST implement a hybrid notification architecture:
+1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the web UI immediately.
+2. **Recovery:** On initial application load and after a recovered WebSocket/session connection, fetch missed notifications using the exact endpoint defined by the supplied feature API contract. The AI MUST NOT invent or shorten the notification endpoint.
+
+   Canonical project pattern: `GET /api/v1/{role}/notifications`
+
+   Do not depend exclusively on WebSocket delivery for critical notifications.
 
 
 ## AI Introspection & Agentic Compatibility Rules

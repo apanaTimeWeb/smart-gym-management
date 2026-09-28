@@ -131,6 +131,27 @@ When an AI is provided with a single feature module or domain folder in isolatio
 
 ---
 
+## FRAMEWORK APPLICABILITY GATE \u2014 MANDATORY
+
+Before implementing or auditing code, the AI MUST determine the active backend
+framework from the supplied project/repository evidence.
+
+Only the rule set applicable to that framework may be enforced.
+
+NestJS-specific requirements apply only to NestJS/TypeScript.
+Django-specific requirements apply only to Django/Python.
+
+The AI MUST NOT combine framework-specific implementations.
+
+If the active framework cannot be determined from supplied evidence,
+mark `FRAMEWORK_NOT_VERIFIED` rather than guessing.
+
+> **IMPORTANT:** Supported backend frameworks for this project are ONLY NestJS/TypeScript and Django/Python.
+> No Spring Boot/Java implementation is part of the normative project architecture.
+> AI MUST NOT introduce any Spring Boot/Java code.
+
+---
+
 ## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
 Do not create monolithic Services, Controllers, or Views. A generic `UserService` or `MemberController` will quickly grow to 1000+ lines. When you feed a 1000-line file to an AI, token costs explode, and the AI loses focus, increasing the chance of collateral damage.
 
@@ -336,7 +357,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 
 ## 15. Dependency Injection & Inversion of Control
-* **The Rule:** Avoid instantiating complex service classes directly using `new MyService()` or `MyService()`. Rely on the framework's Dependency Injection system if it has one (NestJS, Spring Boot), or construct dependencies at the highest possible level (module/route boundaries) and pass them in.
+* **The Rule:** Avoid instantiating complex service classes directly using `new MyService()` or `MyService()`. Rely on the framework's Dependency Injection system if it has one (NestJS), or construct dependencies at the highest possible level (module/route boundaries) and pass them in.
 * **Why:** AI might take shortcuts and manually instantiate classes inside business logic, creating tight coupling. Enforcing Dependency Injection ensures that tests can easily mock out databases, external APIs, and child services.
 
 ## 16. Module-Specific API Collections (Postman/Insomnia)
@@ -541,7 +562,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
 * **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
   1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis to handle rate limiting and to cache expensive, frequently requested data.
-  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django, or `server.compression.enabled` in Spring Boot) to drastically reduce JSON response sizes and save bandwidth.
+  2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django) to drastically reduce JSON response sizes and save bandwidth.
 * **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
 
 ## 21. Asset Optimization (The WebP Rule)
@@ -673,7 +694,6 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **How:** Implement this as a cross-cutting concern using:
   - **NestJS/Express:** An interceptor, event listener, or AOP-style wrapper around repositories that fires after mutating actions.
   - **Django:** Model `post_save` / `post_delete` signals.
-  - **Spring Boot:** AOP (Aspect-Oriented Programming) with `@AfterReturning` advice.
 * **Why:** Regulators, auditors, and enterprise clients will always ask "who changed this record and when?". Building this from day one costs almost nothing. Retrofitting it onto a live production system costs weeks. It also gives AI agents an immutable history to reason about when debugging.
 
 ---
@@ -688,7 +708,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 32. Observability: The Three Pillars (Logs, Metrics, Traces)
 * **The Rule:** Logging alone is not sufficient for enterprise observability. You MUST implement all three pillars:
   1. **Structured Logs** (Rule 14): Already covered. Use JSON-formatted logs.
-  2. **Metrics:** Expose a `/metrics` endpoint (Prometheus format) tracking: request count, request latency histograms, error rates, queue depth, DB connection pool usage. Use libraries like `prom-client` (Node), `django-prometheus` (Django), or Spring Boot Actuator.
+  2. **Metrics:** Expose a `/metrics` endpoint (Prometheus format) tracking: request count, request latency histograms, error rates, queue depth, DB connection pool usage. Use libraries like `prom-client` (Node), `django-prometheus` (Django).
   3. **Distributed Traces:** Integrate OpenTelemetry to trace a single request as it flows through controllers → services → repositories → external APIs. Each span should include `correlation_id`, `duration_ms`, and `status`.
 * **Why:** When a production request is slow or fails silently, logs tell you WHAT happened, metrics tell you HOW OFTEN it happened, and traces tell you EXACTLY WHERE the bottleneck is. An AI debugging agent with access to all three can diagnose issues orders of magnitude faster.
 
@@ -775,7 +795,6 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **How to Apply to Different Frameworks:**
   - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
-  - **Spring Boot (Java):** Implement `AbstractRoutingDataSource` and use a `ThreadLocal` context holder populated via a HandlerInterceptor to route database connections dynamically.
 * **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it can reduce dataset size per tenant and improve isolation/performance characteristics, avoiding massive multi-tenant table bottlenecks.
 
 ---
@@ -919,7 +938,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ```text
 Frontend Feature Development
     ↓
-UI Data Requirements (Frontend Rule 13 / Rule 75A)
+UI Data Requirements
     ↓
 API Contract (endpoints, request shape, response DTO shape)
     ↓
@@ -1165,7 +1184,7 @@ Backend implementation (services, repositories, DB queries)
 ---
 
 ## 82A. Frontend UI Data Contract Completeness
-* **The Rule:** Every backend response DTO MUST satisfy the **complete data contract** documented by the consuming frontend feature's `## UI Data Requirements` section (Frontend Rule 13 / Rule 75A). The backend MUST NOT intentionally return a reduced or "minimal" DTO merely because the database entity contains only a subset of the fields currently visible in the UI.
+* **The Rule:** Every backend response DTO MUST satisfy the **complete data contract** documented by the consuming frontend feature's `## UI Data Requirements` section. The backend MUST NOT intentionally return a reduced or "minimal" DTO merely because the database entity contains only a subset of the fields currently visible in the UI.
 
 Before implementing an endpoint, the backend AI MUST verify the corresponding frontend feature's
 frozen API contract from the `## Frozen API Contract` section inside the backend feature's own
@@ -1255,7 +1274,7 @@ If a backend implementation cannot provide a field currently required by the fro
 4. Propose the contract change explicitly.
 5. Update the frontend `## UI Data Requirements`, API Contract, TypeScript types, Zod schema, MSW handler, and tests in the same PR before merging the breaking change.
 
-* **Why:** This prevents the exact failure mode where an MSW response or backend API returns only a few fields and the remaining table columns, KPI cards, and chart series render empty or `undefined`. Frontend Rule 75A prevents the frontend from papering over the gap with hardcoded fallback data — so the backend must provide the complete contract instead.
+* **Why:** This prevents the exact failure mode where an MSW response or API returns only a few fields and the remaining table columns, KPI cards, and chart series render empty or `undefined`. The consuming feature's UI data contract prevents the frontend from papering over the gap with hardcoded fallback data — so the backend must provide the complete contract instead.
 
 ---
 
@@ -1269,12 +1288,12 @@ If a backend implementation cannot provide a field currently required by the fro
 * **Centralized Role Registry:** All role names and permission strings MUST be defined as enums in a central `auth.roles.constants.ts` file. Never use raw strings like `'admin'` or `'manager'` directly in guards or decorators.
   - ❌ **BAD:** `@Roles('admin', 'superadmin')`
   - ✅ **GOOD:** `@Roles(UserRole.ADMIN, UserRole.SUPERADMIN)`
-* **Why:** Just as the frontend mandates `usePermissions()` for hiding restricted UI elements (Frontend Rule 25), the backend must enforce the same contract at the API layer. An AI writing a new endpoint will forget to add auth checks if there is no standard, centralized pattern to follow. A declarative decorator is impossible to forget because it's visible at the route definition.
+* **Why:** Client-side visibility is not authorization. The backend MUST independently enforce authentication, role, resource, and tenant authorization. An AI writing a new endpoint will forget to add auth checks if there is no standard, centralized pattern to follow. A declarative decorator is impossible to forget because it's visible at the route definition.
 
 ---
 
 ## 84. No Barrel File / Re-Export Index Rule
-* **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This mirrors Frontend Rule 32. Always import directly from the explicitly named source file.
+* **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This restriction exists to preserve AI context isolation and prevent dependency expansion. Always import directly from the explicitly named source file.
   - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_members'` (where `members/index.ts` re-exports everything)
   - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_members/manager_members_services/member-registration.service'`
 * **Why barrel files are dangerous in AI-driven codebases:**
@@ -1286,7 +1305,7 @@ If a backend implementation cannot provide a field currently required by the fro
 ---
 
 ## 85. Guard Clause / Early Return Pattern (No Nested Conditional Hell)
-* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. This mirrors Frontend Rule 51 which bans ternary hell. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
+* **The Rule:** Deeply nested `if/else` blocks inside service methods are strictly forbidden. Guard clauses keep service methods narrow, predictable, and AI-repairable. All service methods MUST use the **Guard Clause** (Early Return) pattern: validate inputs and exit early at the top of the function, keeping the happy path flat and readable.
   - ❌ **BAD (Nested):**
     ```typescript
     async suspendMember(id: string) {
@@ -1346,7 +1365,7 @@ This rule MUST remain consistent with Rule 99.
 ---
 
 ## 87. Single Responsibility at Method Level (The 20-Line Rule)
-* **The Rule:** Just as the frontend mandates hook separation to split logic from UI (Frontend Rule 6), the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
+* **The Rule:** Just as the frontend mandates hook separation to split logic from UI, the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
 * **The 20-Line Soft Ceiling:** A service method body (excluding method documentation) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
@@ -1357,7 +1376,7 @@ This rule MUST remain consistent with Rule 99.
 ---
 
 ## 88. Strict Import Order Convention (Mechanical ESLint Enforcement)
-* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 49. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
+* **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `class-validator`, `class-transformer`, `bcrypt`, `typeorm`)
@@ -1402,12 +1421,12 @@ This rule MUST remain consistent with Rule 99.
 * **Mandatory Gate 2 — SCA (Software Composition Analysis):** Run a dependency vulnerability scanner (e.g., `npm audit`, `safety` for Python, `Snyk`) on every PR. Any new dependency with a known `Critical` CVE must block the merge.
 * **Mandatory Gate 3 — Secrets Detection:** Run a secrets scanner (e.g., `GitLeaks`, `Trufflehog`) on every PR diff. A single hardcoded API key or database password in a commit is a catastrophic security breach. This gate must never be skipped.
 * **Mandatory Gate 4 — TypeScript Strict Compile Check:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
-* **Why:** Frontend Rule 61 mandates mechanical tooling gates for the frontend. The backend requires the exact same discipline but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
+* **Why:** The backend requires the same discipline as the frontend but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
 
 ---
 
 ## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Commit)
-* **The Rule:** This mirrors Frontend Rule 61's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git commit`. A pre-push hook is an optional additional gate, but pre-commit is mandatory. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
+* **The Rule:** The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git commit`. A pre-push hook is an optional additional gate, but pre-commit is mandatory. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
 * **Required Pre-Commit Checks (must all pass):**
   1. `tsc --noEmit` — TypeScript type check. Zero errors required.
   2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
@@ -1525,7 +1544,7 @@ This rule MUST remain consistent with Rule 99.
     }
   }
   ```
-* **Why:** The frontend's `PaginationMeta` TypeScript type (Frontend Rule 59) must map 1:1 to this shape. If the backend returns `total_count` instead of `total`, the frontend type breaks silently and pagination controls show `NaN` pages. One canonical shape, defined once, used everywhere.
+* **Why:** All API consumers MUST treat `PaginationMeta` as the canonical pagination shape. If the backend returns `total_count` instead of `total`, the consumer type breaks silently and pagination controls show `NaN` pages. One canonical shape, defined once, used everywhere.
 
 ---
 
@@ -1660,7 +1679,7 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
 ---
 
 ## 98. Structured Validation Error Response Shape (The `400` Contract)
-* **The Rule:** Rule 3 mandates DTO validation, and Rule 28 mandates a standard response envelope. But neither defines what the response looks like when validation fails. Every AI agent will produce a different `400 Bad Request` shape — some return `{ message: "validation failed" }`, some return `{ errors: ["email must be an email"] }`, some return NestJS's raw default `{ statusCode: 400, message: [...], error: "Bad Request" }`. The frontend's inline field error display (Frontend Rule 15B) requires a **predictable, field-keyed error shape**.
+* **The Rule:** Rule 3 mandates DTO validation, and Rule 28 mandates a standard response envelope. But neither defines what the response looks like when validation fails. Every AI agent will produce a different `400 Bad Request` shape — some return `{ message: "validation failed" }`, some return `{ errors: ["email must be an email"] }`, some return NestJS's raw default `{ statusCode: 400, message: [...], error: "Bad Request" }`. API consumers need a **predictable, field-keyed error shape** to map inline field errors without any custom parsing logic per-form.
 * **The Canonical Validation Error Shape:**
   ```typescript
   // This is what EVERY 400 validation error response must look like
@@ -1698,7 +1717,7 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
   - Nested DTO errors (e.g., `address.city`) must use dot-notation for the `field` key so the frontend can map them to nested form fields.
   - ❌ **BAD:** Returning NestJS's raw default `{ statusCode: 400, message: ["email must be an email"], error: "Bad Request" }`
   - ✅ **GOOD:** The global filter transforms this into `{ success: false, validationErrors: [{ field: "email", message: "email must be a valid email address" }], ... }`
-* **Frontend Contract:** The frontend's React Hook Form + Zod integration (Frontend Rule 15B) must handle this shape by iterating `validationErrors` and calling `form.setError(item.field, { message: item.message })` for each entry. This maps backend validation errors directly to inline field errors without any custom parsing logic per-form.
+* **API Consumer Contract:** API consumers can map `validationErrors` directly to field-level validation UI. This maps backend validation errors directly to inline field errors without any custom parsing logic per-form.
 * **Why:** Without this rule, every module's validation errors look different. The frontend team ends up writing custom error-parsing logic for every form, and AI agents on the frontend generate brittle one-off parsers. One canonical shape means one shared `handleValidationErrors(form, res)` utility handles every form in the entire application.
 
 ---

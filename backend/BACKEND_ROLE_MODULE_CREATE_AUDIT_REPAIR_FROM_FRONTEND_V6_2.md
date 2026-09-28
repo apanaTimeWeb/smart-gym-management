@@ -112,9 +112,17 @@ The `INTEGRATION_GUIDE.md` MUST include:
 ```markdown
 # Integration Guide — backend_{role} v{N}
 
-## 1. app.module.ts — Required Imports
-Add the following to the `imports` array in your root `app.module.ts`:
-[list exact module class names and import paths]
+## 1. Framework-Specific Application Registration
+
+### NestJS
+- Add the module class to the root `app.module.ts` imports array.
+- Provide exact module class name and import path.
+
+### Django
+- Add the app to `INSTALLED_APPS` in `settings.py` if required.
+- Register required root URL configuration in the project `urls.py`.
+- Register any framework-specific application wiring required by the supplied project.
+- Do not invent root configuration files that are outside the supplied scope.
 
 ## 2. Environment Variables (.env)
 Add the following variables to your `.env` and `.env.example`:

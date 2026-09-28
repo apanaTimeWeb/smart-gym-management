@@ -69,6 +69,27 @@ The AI MUST try so hard in its first pass that the user never needs to come back
 
 ---
 
+## FRONTEND CONTEXT ISOLATION — MANDATORY
+
+For Web frontend CREATE or AUDIT+REPAIR work, the AI MUST use only:
+
+1. The supplied feature/requirements document.
+2. `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+3. `WEB_FRONTEND_UI_UX_DESIGN.md`
+4. The supplied target frontend module/ZIP when operating in AUDIT+REPAIR mode.
+
+The AI MUST NOT require or import:
+- Mobile architecture rules
+- Mobile UI/UX rules
+- Backend architecture rules
+- Backend create/audit/repair prompts
+
+API behavior MUST be derived only from the supplied feature/API contract or verified frontend artifacts.
+
+Missing contract information MUST be reported as `BLOCKED BY SUPPLIED SCOPE` rather than invented.
+
+---
+
 ## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
 
 Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the main React/Next.js/Vite application.
@@ -4046,7 +4067,7 @@ where required by the supplied backend contract.
 
 Check:
 
-- optional `idempotencyKey`;
+- required `idempotencyKey` (never optional);
 - `Idempotency-Key` header injection;
 - exact same key on retry;
 - new key only for new user intent;
@@ -4168,7 +4189,7 @@ When applicable verify the entire documented UX:
 ```text
 Authorized user
 → Request Full Data Export
-→ POST /export-data
+→ POST exact export endpoint from supplied feature/API contract (canonical project pattern: `POST /api/v1/superadmin/export-data`)
 → 202 Accepted
 → success confirmation
 → background completion
