@@ -538,7 +538,9 @@ You MUST NOT:
 
 * create any new frontend file;
 * edit any existing frontend file;
-* suggest a frontend code change as a repair action for a backend issue;
+* execute, apply, or submit any frontend source-code change as a repair action;
+* do NOT modify the frontend source;
+* frontend changes MAY be documented as required integration instructions inside `FRONTEND_CHANGE_REQUIRED.md` when backend-only resolution is genuinely impossible;
 * "fix" a contract mismatch by modifying the frontend type, Zod schema, MSW handler, or hook;
 * rename a frontend constant or URL to match the backend;
 * silently resolve a frontend/backend mismatch by touching the frontend side.
@@ -7524,11 +7526,13 @@ It is a targeted verification pass:
    OVERALL READINESS:                             [updated verdict]
    ```
 
-4. **If the re-audit reveals any remaining issue:**
+4. **If the re-audit reveals any remaining unresolved actionable backend issue or unresolved repairable defect within the supplied writable scope:**
    - Do NOT deliver yet.
    - Fix the remaining issue.
    - Re-run the affected checklist items.
-   - Only deliver when the re-audit is fully clean.
+   - Only deliver when the re-audit is CLEAN according to the CLEAN RE-AUDIT DEFINITION above.
+
+Documented evidence limitations such as `NOT_VERIFIED` or `BLOCKED_BY_SUPPLIED_SCOPE`, and a documented `FRONTEND_CHANGE_REQUIRED` status, do not by themselves make the re-audit non-clean; however, they MUST prevent `FULLY VERIFIED` where applicable.
 
 ### Re-Audit Output File
 
@@ -7740,7 +7744,7 @@ The V6 audit standard is exhaustive:
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
 - BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86B.2);
-- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit passes; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.3);
+- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit is CLEAN according to Section 86B.4; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.3);
 - no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86B.4).
 
 
