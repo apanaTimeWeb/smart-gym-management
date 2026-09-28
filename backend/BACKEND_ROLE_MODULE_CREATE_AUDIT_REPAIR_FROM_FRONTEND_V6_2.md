@@ -61,7 +61,7 @@ The AI MUST try so hard in its first pass (v1 for creation, v2_fix for first aud
 
 ## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
 
-Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the global application monolith application.
+Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the global application monolith.
 
 The `INTEGRATION_GUIDE.md` MUST include:
 
@@ -84,9 +84,14 @@ Run the following migration commands in order:
 Run the following seed scripts to populate initial data:
 [list seed commands]
 
-## 5. New NPM Dependencies
-Run the following if any new packages were added:
-[list npm install commands]
+## 5. New Runtime Dependencies
+For NestJS:
+[list npm install commands for any new npm packages]
+
+For Django:
+[list pip/Poetry install commands for any new Python packages]
+
+Only list dependencies actually introduced by this module.
 
 ## 6. Verification Steps
 After integration, verify:
@@ -100,6 +105,9 @@ After integration, verify:
 You are a:
 
 * Senior NestJS Backend Architect
+* Senior Django Backend Architect
+* Python Backend Architect
+* Framework Mapping Reviewer
 * API Contract Auditor
 * Backend Code Generator
 * Database / Persistence Architect
@@ -265,6 +273,26 @@ The feature module DOES own its own `module-scoped ORM registrations, its own Ne
 
 ## INPUT 3 — BACKEND DOCUMENTATION ZIP
 
+A ZIP containing the backend architecture and backend documentation.
+
+It may contain:
+
+* `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+* `[role]_[module]_backend_feature.md`
+* `[role]_[module]_dependencies.md`
+* `[role]_[module]_forbidden.md`
+* related backend architecture documents.
+
+The backend documentation is the NORMATIVE ARCHITECTURE SOURCE.
+
+Read the relevant documentation completely.
+
+Do not rely on memory when the supplied documents define the rule.
+
+Do not invent rules that are not present in the supplied backend documentation.
+
+---
+
 ## INPUT 3A — VERIFIED PROJECT STACK
 
 The supplied backend architecture document contains the normative project stack.
@@ -299,23 +327,6 @@ If the architecture stack itself is missing:
 `MISSING_STACK_DEFINITION`
 
 No backend implementation code may be created under `MISSING_STACK_DEFINITION`.
-A ZIP containing the backend architecture and backend documentation.
-
-It may contain:
-
-* `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
-* `[role]_[module]_backend_feature.md`
-* `[role]_[module]_dependencies.md`
-* `[role]_[module]_forbidden.md`
-* related backend architecture documents.
-
-The backend documentation is the NORMATIVE ARCHITECTURE SOURCE.
-
-Read the relevant documentation completely.
-
-Do not rely on memory when the supplied documents define the rule.
-
-Do not invent rules that are not present in the supplied backend documentation.
 
 ---
 
@@ -3466,10 +3477,11 @@ where forbidden.
 Verify:
 
 - distributed scheduler;
-- NestJS → BullMQ backed by Redis
-Django → Celery Beat backed by Redis
-Redis distributed locking MAY be used where explicitly required by the architecture.
-No RabbitMQ, Kafka, Memcached, or alternative broker is permitted.;
+- NestJS → BullMQ + Redis;
+- Django → Celery Beat + Redis;
+- Redis distributed locking where explicitly required by the architecture;
+- no RabbitMQ;
+- no Kafka;
 - exactly-once execution semantics or documented at-least-once + idempotency;
 - cluster-safe execution.
 
@@ -3511,17 +3523,12 @@ Verify:
 
 Verify:
 
-- cryptographic signature verification;
-- exact signed payload handling;
 - provider-documented cryptographic signature verification;
-- exact signed payload handling;
-- HMAC ONLY when the provider explicitly specifies HMAC;
-- timestamp/replay window;
+- exact signed-payload handling;
+- HMAC only when the provider explicitly requires HMAC;
+- timestamp/replay protection where specified;
 - idempotency;
-- failure before business processing.
-- timestamp/replay window;
-- idempotency;
-- failure before business processing.
+- reject invalid webhook requests before business processing.
 
 ---
 
@@ -3548,72 +3555,100 @@ For outbound external services verify:
 - typed exceptions;
 - timeout interaction;
 - recovery behavior;
+- no cascading retry storm.
+
 When the breaker is OPEN:
 
 - fail fast;
 - return HTTP 503 where the request is exposed synchronously;
 - do not continue retrying the failing dependency;
 - trigger the defined fallback queue where the architecture requires it.
-- no cascading retry storm.
 
 ---
 
 ## RULE 48 — CQRS LITE
 
-Verify separation of:
+Verify mandatory CQRS Lite separation:
 
 ```text
-Query Controller
-Command Controller
+GET / read operations → Query Controller
+POST / PATCH / PUT / DELETE → Command Controller
 ```
 
-where the architecture requires it.
+The separation is mandatory.
 
-Queries must not accidentally perform mutations.
-Commands must not become giant read aggregators.
+Queries MUST NOT mutate state.
+
+Commands MUST NOT become giant read aggregators.
 
 ---
 
 ## RULE 49 — EXPLICIT MODULE DEPENDENCY GRAPH
 
-Verify:
+Every module MUST contain:
 
+`[role]_[module]_dependencies.md`
+
+It MUST list:
+
+- upstream modules;
+- downstream consumers;
 - direct business dependencies;
 - infrastructure dependencies;
+- published events;
+- consumed events;
 - runtime event dependencies;
-- allowed vs forbidden dependencies;
 - dependency direction;
-- cycles;
-- undocumented imports;
-- event-based dependencies use named registry constants.
+- forbidden dependencies.
+
+Undeclared event subscriptions are forbidden.
+
+Event payloads MUST be validated at the consumer boundary.
 
 ---
 
 ## RULE 50 — EVENT NAMING
 
-Verify event names follow the central convention exactly.
+Event names MUST follow exactly:
 
-Check:
+`DOMAIN.ENTITY.ACTION`
 
-- namespace/domain;
-- entity/action structure;
-- spelling;
+using SCREAMING_SNAKE_CASE.
+
+Exactly three semantic segments are required.
+
+Verify:
+
+- domain;
+- entity;
+- action;
 - casing;
-- registry constants;
+- spelling;
+- central `event-registry.constants.ts`;
 - producer/consumer agreement.
+
+Invalid (non-compliant examples):
+
+`MEMBER_REGISTERED`
+`MEMBER.REGISTERED`
+`SUBSCRIPTION_CANCELLED_EVENT`
+
+Valid example:
+
+`BILLING.SUBSCRIPTION.CANCELLED`
 
 ---
 
 ## RULE 51 — API CHANGELOG / DEPRECATION
 
-Verify:
+For destructive API changes verify:
 
-- API breaking changes documented;
-- deprecated routes/fields recorded;
-- removal policy;
+- `Deprecation` response header;
+- sunset date;
+- CHANGELOG.md;
+- deprecation window;
 - migration guidance;
-- contract version handling;
-- frontend compatibility window.
+- frontend compatibility during the deprecation window.
 
 A changed response field without changelog/deprecation handling is a governance finding when required.
 
@@ -3621,22 +3656,17 @@ A changed response field without changelog/deprecation handling is a governance 
 
 ## RULE 52 — JWT REFRESH ROTATION / REVOCATION
 
-For auth modules verify:
+For authentication modules verify:
 
-- refresh-token rotation;
-- token-family handling;
-- revocation;
-- reuse detection where required;
-- logout/session invalidation;
+- JWT authentication;
 - short-lived access tokens;
-- refresh token in HttpOnly cookie;
+- refresh token stored in HttpOnly cookie;
 - refresh-token rotation;
 - old refresh-token invalidation;
-- Redis denylist for manual revocation;
-- reuse detection;
+- token-family/reuse detection;
+- Redis denylist for immediate manual revocation;
 - logout/session invalidation;
 - no long-lived refresh-token replay.
-- no long-lived refresh token replay.
 
 This is security-critical code and must also pass the human-review gate.
 
@@ -3773,9 +3803,13 @@ Verify:
 
 ## RULE 62 — EXPLICIT RETURN TYPES
 
-Verify all service methods have explicit return types where required.
+Every service method MUST have an explicit declared return type.
 
-Do not accept inferred `any`/broad return types as a substitute.
+Every repository method MUST have an explicit declared return type.
+
+Inferred return types are not acceptable for these methods.
+
+Implicit `any` is forbidden.
 
 ---
 
@@ -3790,6 +3824,14 @@ Verify:
 - leak prevention;
 - queueing behavior;
 - pool exhaustion handling.
+
+Additionally verify:
+
+GLOBAL CONNECTION BUDGET ≥ GLOBAL CONNECTIONS + ALL ACTIVE TENANT DATASOURCE CONNECTIONS
+
+Never blindly configure the same large max-pool value independently for every tenant.
+
+Verify aggregate PostgreSQL connection budget.
 
 ---
 
@@ -3863,6 +3905,16 @@ Do not equate `/health` existence with complete health-probe compliance.
 
 ## RULE 69 — STRICT TSCONFIG
 
+Applicability:
+- NestJS / TypeScript → applicable.
+- Django / Python → NOT_APPLICABLE unless a corresponding Python configuration rule is explicitly defined by the architecture.
+
+If `tsconfig.json` or global build configuration is outside the supplied feature scope:
+
+STATUS = `BLOCKED_BY_SUPPLIED_SCOPE`
+
+Do NOT fail the feature module solely because global tsconfig was not supplied.
+
 Inspect `tsconfig.json` and applicable build configs.
 
 Verify required strictness including:
@@ -3931,6 +3983,12 @@ Verify:
 
 ## RULE 74 — MECHANICAL ISOLATION TOOLING GATE
 
+If CI/lint/dependency-isolation tooling is global and outside the supplied feature scope:
+
+STATUS = `BLOCKED_BY_SUPPLIED_SCOPE`
+
+Do not convert missing global tooling evidence into an automatic feature-module failure.
+
 Inspect tooling that mechanically enforces architecture where supplied.
 
 Verify:
@@ -3990,40 +4048,50 @@ For new packages verify:
 
 ## RULE 78 — FORBIDDEN PATTERNS DOCUMENT
 
-Verify each module's `_forbidden.md` exists and is accurate.
+Every module MUST contain:
 
-Check source for every forbidden pattern actually listed.
+`[role]_[module]_forbidden.md`
+
+It MUST contain at least 5 concrete module-specific forbidden patterns.
+
+Every pattern MUST contain:
+
+- forbidden behavior;
+- concrete module context;
+- consequence;
+- Rule reference.
+
+Generic boilerplate does not count toward the 5-entry minimum.
 
 ---
 
 ## RULE 79 — DATA FLOW DIRECTION COMMENTS
 
-Where mandated, verify source files contain concise AI-context comments showing:
+Every service, controller, and repository source file MUST contain:
 
-```text
-Controller
-→ DTO
-→ Orchestrator
-→ Service
-→ Repository
-→ Mapper
-→ Response
-```
+`// RESPONSIBILITY:`
 
-Comments must describe actual ownership and not be decorative.
+immediately followed by:
+
+`// FLOW:`
+
+The FLOW must represent the actual ownership/execution path.
+
+Decoration or generic FLOW comments are non-compliant.
 
 ---
 
 ## RULE 80 — JSDOC
 
-Verify required JSDoc exists on:
+Applicable service/repository/utility/private-helper documentation MUST include:
 
-- service methods;
-- repository methods;
-- utilities;
-- private helpers when required.
+- `@description`
+- `@param`
+- `@returns`
+- `@throws`
+- `@remarks` for complex business logic
 
-Check that JSDoc is meaningful and matches current behavior.
+Documentation MUST match actual behavior.
 
 ---
 
@@ -4319,24 +4387,36 @@ Reject raw external calls with no timeout where architecture forbids them.
 
 ## RULE 98 — STRUCTURED VALIDATION ERROR
 
-Verify exact:
+Verify exact validation response:
 
-```text
-success = false
-data = null
-error = VALIDATION_ERROR
-errorCode = VALIDATION.DTO.FAILED
-validationErrors[]
+```json
+{
+  "success": false,
+  "message": "Validation failed. Please check the highlighted fields.",
+  "data": null,
+  "error": "VALIDATION_ERROR",
+  "errorCode": "VALIDATION.DTO.FAILED",
+  "statusCode": 400,
+  "validationErrors": [
+    {
+      "field": "email",
+      "message": "Invalid email"
+    }
+  ]
+}
 ```
 
-Each validation error:
+Verify:
 
-```text
-field
-message
-```
-
-Nested paths use dot notation where required.
+- `success` = false;
+- `message` is present;
+- `data` is null;
+- `error` = VALIDATION_ERROR;
+- `errorCode` = VALIDATION.DTO.FAILED;
+- `statusCode` = 400;
+- `validationErrors[]` present for validation failures;
+- each entry has `field` + `message`;
+- nested field paths use dot notation.
 
 ---
 
@@ -4449,15 +4529,18 @@ Apply exactly as defined by the supplied architecture:
 
 ## RULE 104 - HORIZONTALLY SCALABLE WEBSOCKETS
 
+Redis Pub/Sub-backed horizontal realtime fan-out is mandatory.
+
 Verify:
 
-- Redis Pub/Sub or approved horizontal adapter;
+- Redis Pub/Sub adapter;
 - cross-instance delivery;
-- auth;
+- authentication;
 - tenant scope;
 - subscription lifecycle;
-- event shape;
-- reconnect.
+- strict event shape;
+- reconnect behavior;
+- no in-process-only broadcast state.
 
 ---
 
@@ -4477,18 +4560,22 @@ Check:
 
 ## RULE 106 - CACHE INVALIDATION
 
-For every cached query verify:
+For every cached query verify the exact ownership flow:
 
 ```text
 Read
-→ deterministic key
-→ Mutation
-→ DB commit
-→ Explicit invalidation
-→ Next read
+→ deterministic cache key
+→ mutation
+→ DB transaction
+→ successful commit
+→ Orchestrator/UnitOfWork afterCommit
+→ explicit cache invalidation
+→ next read
 ```
 
-TTL alone is insufficient where this rule requires explicit invalidation.
+Repository MUST NOT invalidate cache before commit.
+
+TTL alone is insufficient where explicit invalidation is required.
 
 ---
 
@@ -4498,7 +4585,7 @@ Verify:
 
 - `nestjs-i18n` or documented framework equivalent;
 - module-co-located `_locales`;
-- `en` plus all currently `ACTIVE_LANGUAGES` (`hi`);
+- `en` plus every language currently declared in the authoritative `ACTIVE_LANGUAGES` configuration;
 - new keys translated in the same change;
 - no central `src/i18n/` folder where forbidden;
 - exceptions use translation keys, not hardcoded English;
@@ -4601,6 +4688,9 @@ Verify EXACTLY:
 - role/module-prefixed filenames (exempt from prefix rules ONLY for the `test_` prefix exception);
 - `test_[role]_[module]_api.py`;
 - `test_[role]_[module]_ui.py`;
+- `test_[role]_[module]_ui_edge.py`;
+- negative-flow coverage;
+- edge-state coverage;
 - no shared helpers/utilities;
 - no cross-module imports;
 - `_test_forbidden.md`;
@@ -4652,15 +4742,24 @@ Flag endpoints that combine unrelated KPI/chart/table workloads when the archite
 
 ## RULE 115 — AI-CONTEXTUAL DOCSTRINGS
 
-Verify:
+Verify exhaustive documentation for:
 
-- Classes / methods / DTOs / services / controllers → JSDoc block comments.
+- classes;
+- controllers;
+- services;
+- DTOs;
+- entities;
+- repository methods;
+- event handlers;
+- middleware;
+- guards.
 
-- Database columns → entity `@Column({ comment: '...' })` and schema/migration documentation.
+Required metadata for each:
 
-- Config variables → Joi/Zod configuration-schema documentation and `.env.example` annotations.
-
-- All of the above MUST include: Intent + Edge Cases + Side Effects + AI Notes (primary intent, edge cases, side-effects, routing instructions for future AIs).
+- Intent
+- Edge Cases
+- Side Effects
+- AI Notes
 
 ---
 
@@ -4695,12 +4794,16 @@ Verify:
 Verify:
 
 - Critical entity changes (Billing, Attendance, Subscription, Member Lifecycle) use a zero-overwrite strategy.
-
-- Instead of mutating historical facts, append an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`).
-
-- Events are emitted to a message broker (Redis Streams / Kafka) AND stored in an append-only `events_log` or timeseries table.
-
+- Immutable domain events follow `DOMAIN.ENTITY.ACTION` naming.
+- Durable event transport is Redis Streams (not Kafka; not in-process event bus).
+- Events are stored in append-only `events_log`.
 - Analytics queries MUST read from the immutable event log (CQRS read-replica), NOT the live transactional DB.
+- Historical analytics use immutable event history.
+- Operational widgets may use transactional read models where architecture permits.
+
+Valid event name example:
+
+`BILLING.SUBSCRIPTION.CANCELLED`
 
 ---
 
@@ -6170,7 +6273,7 @@ ONLY when ALL applicable conditions below are satisfied:
 46. File-size ceilings, JSDoc, method naming, method responsibility, import ordering and barrel-file restrictions are verified.
 47. Internal consistency of the normative backend documentation is verified, or conflicts are explicitly reported.
 48. Complete numbered/special rule ledger is audited without silent rule omission.
-49. No applicable requirement remains:
+49. No actionable requirement remains:
 
 * FAIL
 * PARTIAL
@@ -6182,8 +6285,10 @@ ONLY when ALL applicable conditions below are satisfied:
 * TENANT_MISMATCH
 * ASYNC_MISMATCH
 * DATA_PROVENANCE_MISMATCH
-* NOT_VERIFIED
-* BLOCKED_BY_SUPPLIED_SCOPE
+
+`BLOCKED_BY_SUPPLIED_SCOPE` is NOT classified as an automatic failure. It is classified separately as scope-limited evidence.
+
+`FULLY VERIFIED` is prohibited while any NOT_VERIFIED or BLOCKED_BY_SUPPLIED_SCOPE item remains unresolved.
 
 IMPORTANT:
 

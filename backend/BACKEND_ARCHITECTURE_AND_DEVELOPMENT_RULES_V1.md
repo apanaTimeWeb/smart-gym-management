@@ -1,80 +1,13 @@
 # Enterprise-Grade, AI-Friendly Backend Architecture Guidelines
 
 ## The Core Philosophy
-This document outlines the strict architectural rules for building the backend using **NestJS (TypeScript)**. The primary goal is **Extreme Isolation**.
+This document outlines the strict architectural rules for building the backend using the approved project framework, primarily **NestJS (TypeScript)** or **Django (Python)**, while preserving the same isolation and architectural principles. The primary goal is **Extreme Isolation**.
 
 Currently, human developers act as orchestrators, while AI (LLMs) writes the code. Because of this, the architecture must be designed to accommodate the AI's constraints (context limits, hallucination risks) and strengths (laser-focused problem solving).
 
 Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the primary AI context MUST be restricted to the owning feature module. The preferred code repair is a single file, but multi-file repairs within the feature's dependency graph are allowed when genuinely required. The default writable scope is the owning feature module only.
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
-
-## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
-
-This project uses a fixed production stack. AI agents MUST NOT invent, substitute, or introduce alternative infrastructure when implementing or repairing backend code.
-
-### NestJS / TypeScript
-
-- Framework: NestJS
-- Language: TypeScript
-- ORM: TypeORM
-- Database: PostgreSQL
-- Cache / distributed state: Redis
-- Background job queue: BullMQ backed by Redis
-- Durable domain-event transport: Redis Streams
-- Real-time horizontal fan-out: Redis Pub/Sub
-- Authentication: JWT
-- Migration tool: TypeORM migrations
-- TypeScript path alias: `@/` → `src/`
-- API documentation: OpenAPI / Swagger
-- Unit testing: Jest
-- API E2E testing: Python pytest
-- UI E2E testing: Python Selenium
-
-### Django / Python
-
-When the backend framework is Django:
-
-- Framework: Django
-- Language: Python
-- ORM: Django ORM
-- Database: PostgreSQL
-- Cache / distributed state: Redis
-- Background task queue: Celery backed by Redis
-- Durable domain-event transport: Redis Streams
-- Real-time horizontal fan-out: Redis Pub/Sub
-- Authentication: JWT
-- Migration tool: Django migrations
-- API documentation: the Django framework mapping defined by this document
-
-### Fixed Infrastructure Policy
-
-The following are NOT approved alternatives for this project:
-
-- Prisma
-- MySQL
-- Memcached
-- RabbitMQ
-- Kafka
-- a second ORM
-- a second primary cache/message-broker system
-
-Redis responsibilities MUST remain separated:
-
-- Redis cache → caching
-- BullMQ + Redis → NestJS background jobs
-- Celery + Redis → Django background jobs
-- Redis Streams → durable domain events
-- Redis Pub/Sub → real-time horizontal fan-out
-- Redis distributed locks → distributed locking where explicitly required
-
-Redis Pub/Sub MUST NOT be treated as a durable replacement for Redis Streams.
-
-When a supplied repository uses a conflicting technology, record:
-
-`STACK_CONFLICT`
-
-Do not silently accept or introduce a competing stack.
 
 ## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
 
@@ -265,11 +198,12 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
 Extract complex queries into a dedicated Repository or Query file (e.g., `admin-member-analytics.repository.ts`).
-* **The Rule:** If the backend is built with JavaScript/TypeScript, it MUST use the project's single approved ORM. The repository pattern is mandatory; the specific ORM implementation is an architectural project decision and MUST NOT be changed per module.
-  - If Prisma is selected for the project, ALL modules use Prisma.
-  - If TypeORM is selected for the project, ALL modules use TypeORM.
-  - If another approved ORM is selected, ALL modules use that ORM consistently.
-  AI agents MUST NOT introduce a second ORM into an existing backend. The ORM implementation MUST remain behind the repository/data-access boundary so business services do not become coupled to ORM-specific APIs.
+* **The Rule:** The project has a fixed ORM per supported framework. The repository pattern is mandatory.
+  - NestJS / TypeScript → TypeORM + PostgreSQL.
+  - Django / Python → Django ORM + PostgreSQL.
+  - No second ORM is permitted.
+  - Prisma is not permitted in this project.
+  - ORM-specific implementation MUST remain behind the repository/data-access boundary so business services do not become coupled to ORM-specific APIs.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
 
 ---
@@ -377,8 +311,12 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django). The configuration service MUST validate all environment variables at application startup using a strict schema (e.g., Zod or `class-validator`). The app must throw a fatal error and refuse to boot if any required environment variable is missing or incorrectly typed.
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
-## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
+## 14. Standardized Logging & Correlation IDs (nestjs-pino / Python structured logging & OpenTelemetry)
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The approved loggers per framework are:
+  - NestJS: **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
+  - Django: Python structured logging using the project's approved structured logging configuration. Do not use ad-hoc `print()` calls.
+
+  Both MUST provide: request ID, trace ID, span ID, tenant context where permitted, route, status, response time, and redaction rules.
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
   - `method` (HTTP method: GET, POST, PATCH, etc.)
   - `route` / `path` (the matched route template, e.g., `/api/v1/members/:id` — **not** the raw URL with substituted values)
@@ -615,10 +553,29 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
 ## 23. Background Jobs & Queues (No Hanging Requests)
 * **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
-* **Why:** Use a Message Queue or Task Broker (e.g., BullMQ for Node, Celery for Python/Django, or Spring AMQP/RabbitMQ). The controller should immediately return `202 Accepted: Job Started`, and the background worker handles the heavy lifting safely. This prevents server timeouts and crashed requests.
+* **Implementation:**
+
+  NestJS: BullMQ backed by Redis
+
+  Django: Celery backed by Redis
+
+  The controller MUST immediately return `202 Accepted` for intentionally asynchronous operations, while the worker performs the heavy processing.
+
+  RabbitMQ and Kafka are NOT approved project infrastructure.
 
 ## 24. Database Migrations (No Auto-Syncing & Backward Compatibility)
-* **The Rule:** In development, auto-syncing tools (like Prisma schema push, TypeORM `synchronize: true`, or Hibernate `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Prisma Migrate, Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
+* **The Rule:** Database schemas MUST be strictly version-controlled using migrations.
+
+  NestJS: TypeORM migrations
+
+  Django: Django migrations
+
+  Production schema auto-synchronization is forbidden.
+
+  NestJS MUST use: `synchronize: false`
+
+  No Prisma Migrate, Flyway, Liquibase, Hibernate schema-update, or alternate migration system is approved for this project.
+
 * **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
 * **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
 
@@ -1521,7 +1478,7 @@ Use Django's enum/Choices mechanism and map it to the PostgreSQL database repres
 
 PostgreSQL MUST enforce valid enum/state values at the database layer where the architecture requires finite state enforcement.
 
-Remove all Prisma and MySQL examples from this rule.
+
 
 * **Rules:**
   - ❌ **BAD:** A plain string column for status — accepts any string, including typos.
