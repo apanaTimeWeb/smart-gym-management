@@ -655,7 +655,13 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   1. **Audit & Recovery:** If an admin accidentally deletes 1,000 members, the data is instantly recoverable.
   2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
   3. **AI Safety:** An AI asked to "implement the delete endpoint" will set a flag, not wipe database rows. This prevents catastrophic, irreversible data loss.
-* **Implementation:** Add a global query filter (e.g., Prisma's `where: { deletedAt: null }` applied in a base repository method, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records. For ORM-specific soft-delete column hooks (TypeORM `@DeleteDateColumn`, Prisma middleware), apply them at the repository layer only — never in services.
+* **Implementation:** Add a global soft-delete query filter at the repository layer so that all standard `find` queries automatically exclude soft-deleted records.
+
+  NestJS (TypeORM): use a base repository class that wraps `createQueryBuilder` with `.andWhere('entity.deletedAt IS NULL')`, or apply `@DeleteDateColumn()` combined with `withDeleted(false)` as the default in base query helpers.
+
+  Django: use a custom QuerySet with a `delete_at__isnull=True` default filter, or `django-softdelete`.
+
+  Soft-delete mechanics MUST be applied at the repository layer only — never in service methods. Column hooks (`@DeleteDateColumn` in TypeORM) apply to governed entities only.
 * **Data Privacy / Legal Erasure Exception:** Soft-delete is the normal operational mechanism. Legally required data retention and right-to-erasure workflows (Rule 35, Rule 110) are the ONLY explicit hard-deletion/anonymization exceptions, and must be performed via dedicated background jobs with strict audit logging.
 
 ---
@@ -704,7 +710,13 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
 ## 34. Database Query Optimization (The N+1 Rule & Index Strategy)
 * **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
-  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, Prisma `include`, TypeORM `relations`). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
+  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data.
+
+     NestJS (TypeORM): use `relations: ['plan']` or `leftJoinAndSelect` in the query builder.
+
+     Django: use `select_related()` for ForeignKey / OneToOne and `prefetch_related()` for ManyToMany / reverse relations.
+
+     Never fetch a list of 100 members and then loop to fetch each one's plan separately.
   2. **Index Strategy:** Indexing should be based on actual query patterns, cardinality, and query plans. Foreign keys and frequently queried columns (in `WHERE` or `ORDER BY` clauses) should be evaluated for indexing. Do not blindly index every column, as this impacts write performance. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
   3. **Slow Query Logging:** Enable slow query logging in the database (queries > 100ms). Review this log weekly.
 * **Why:** An AI asked to write a "Get all members with their plans" repository method will often produce an N+1 query by default. This rule forces a review gate.
@@ -776,7 +788,15 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ---
 
 ## 41. Transaction Locks & Race Condition Prevention
-* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via Prisma's `$transaction` with `isolationLevel`, raw SQL in a repository, or `select_for_update()` in Django) or **Optimistic Locking** (using a version/revision column checked on update).
+* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** or **Optimistic Locking**.
+
+  **Pessimistic Locking:**
+
+  NestJS (TypeORM): use `queryRunner.manager.getRepository(Entity).findOne({ where: ..., lock: { mode: 'pessimistic_write' } })` inside a transaction managed by a `QueryRunner`.
+
+  Django: use `select_for_update()` within a `transaction.atomic()` block.
+
+  **Optimistic Locking:** use a `version` or `revision` integer column checked on update — reject writes where the version no longer matches the read version.
 * **Why:** If two concurrent requests try to deduct money at the exact same millisecond, a standard transaction might allow both to succeed based on stale read data, causing negative balances. Enforcing this rule ensures AI always explicitly handles concurrency.
 
 ---
@@ -867,7 +887,13 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
 
 ## 60. Strict Foreign Key Naming Convention
-* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition (e.g., Prisma `@map("member_id")`, TypeORM `@Column({ name: 'member_id' })`). Foreign key constraints MUST follow the canonical 3-part form `FK_[table]_[referenced_table]_[column]` (e.g., `FK_subscriptions_members_member_id`). This is the same pattern as Rule 100 — the 2-part form `FK_[table]_[referenced_table]` is deprecated and non-compliant.
+* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition.
+
+  NestJS (TypeORM): `@Column({ name: 'member_id' })` and `@JoinColumn({ name: 'branch_id' })`.
+
+  Django: snake_case column names are the default; use `db_column=` on a `Field` only when overriding.
+
+  Foreign key constraints MUST follow the canonical 3-part form `FK_[table]_[referenced_table]_[column]` (e.g., `FK_subscriptions_members_member_id`). This is the same pattern as Rule 100 — the 2-part form `FK_[table]_[referenced_table]` is deprecated and non-compliant.
 
 ## 61. Dead Letter Queue (DLQ) for Failed Background Jobs
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
@@ -1274,7 +1300,7 @@ This rule MUST remain consistent with Rule 99.
 * **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 49. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
-  3. **Third-party packages** (e.g., `@prisma/client`, `class-validator`, `bcrypt`)
+  3. **Third-party packages** (e.g., `class-validator`, `class-transformer`, `bcrypt`, `typeorm`)
   4. **Internal absolute imports — Infrastructure** (e.g., `@/infrastructure/config/`, `@/infrastructure/database/`)
   5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
@@ -1558,7 +1584,13 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
   ```
 * **Enforcement Rules:**
   - Every `axios` / `fetch` / `HttpService` call in an adapter (Rule 8) MUST pass `timeout: TIMEOUT_CONFIG.EXTERNAL_API_DEFAULT_MS` (or the appropriate tier). No raw `axios.get(url)` without a timeout is permitted.
-  - ORM/DB query timeouts MUST be configured for all non-trivial queries using the appropriate timeout value from `TIMEOUT_CONFIG`. For Prisma, use `$transaction` with a timeout option; for raw queries, set statement_timeout at the connection or query level. Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
+  - ORM/DB query timeouts MUST be configured for all non-trivial queries using the appropriate timeout value from `TIMEOUT_CONFIG`.
+
+    NestJS (TypeORM): configure `statement_timeout` via the `QueryRunner` or pass a raw `SET LOCAL statement_timeout = N` before the query in a transaction block. For repository-level timeouts, use `createQueryBuilder().timeout(TIMEOUT_CONFIG.DB_QUERY_DEFAULT_MS)`.
+
+    Django: set `CONN_MAX_AGE` and use `transaction.atomic()` with Django's database options for statement timeouts where the driver supports it.
+
+    Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
   - When a timeout fires, the adapter MUST catch the `ECONNABORTED` / `ETIMEDOUT` error and throw a typed custom exception (Rule 6) — e.g., `PaymentGatewayTimeoutException` — never let the raw Axios error propagate to the service layer.
   - ❌ **BAD:** `await this.httpService.get('https://api.stripe.com/charges').toPromise()`
   - ✅ **GOOD:** `await this.httpService.get('https://api.stripe.com/charges', { timeout: TIMEOUT_CONFIG.PAYMENT_GATEWAY_MS }).toPromise()`
@@ -1663,29 +1695,37 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
   | Check Constraint | `CHK_[table]_[rule_description]` | `CHK_members_age_min_18`, `CHK_wallets_balance_non_negative` |
   | Composite Index | `IDX_[table]_[col1]_[col2]` | `IDX_members_branch_id_status` |
 
-* **Implementation (Prisma-equivalent naming in `schema.prisma`):**
-  ```prisma
-  model Member {
-    id       String @id(map: "PK_members") @default(uuid()) @map("id")
-    email    String @map("email")
-                   // @@unique(["email"], name: "UQ_members_email")
-    branchId String @map("branch_id")
-                   // FK: FK_members_branches_branch_id
-    status   MemberStatus @default(PENDING) @map("status")
-                   // IDX: IDX_members_status
-    // DERIVED READ-MODEL ONLY — see Rule 119; never directly mutated.
-    // The financial source of truth is always ledger_entries. This field is a
-    // cached projection for display/check-constraint only. Never directly mutated.
-    balance  BigInt @default(0) @map("balance")
-                   // CHK: CHK_wallets_balance_non_negative (explicitly declared in the ORM schema where the ORM supports it, otherwise explicitly named in the migration/DDL)
-    branch   Branch @relation(fields: [branchId], references: [id],
-                              map: "FK_members_branches_branch_id")
+* **Implementation (TypeORM entity example):**
+  ```typescript
+  @Entity({ name: 'members' })
+  export class MemberEntity {
+    @PrimaryGeneratedColumn('uuid', { name: 'id' })
+    // PK_members
+    id: string;
 
-    @@unique([email], name: "UQ_members_email")
-    @@index([status], name: "IDX_members_status")
-    @@index([branchId, status], name: "IDX_members_branch_id_status")
-    @@map("members")
+    @Column({ name: 'email', unique: false })
+    email: string;
+    // UQ constraint: UQ_members_email — declared in migration
+
+    @Column({ name: 'branch_id', type: 'uuid' })
+    branchId: string;
+    // FK_members_branches_branch_id — declared via @JoinColumn
+
+    @Column({ name: 'status', type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
+    status: MemberStatus;
+    // IDX_members_status — declared in migration
+
+    @Column({ name: 'balance', type: 'bigint', default: 0, comment: 'Cached balance projection (minor units). Source of truth is ledger_entries (Rule 119). Never mutate directly.' })
+    // CHK_wallets_balance_non_negative — enforced via migration DDL
+    balance: bigint;
+
+    @ManyToOne(() => BranchEntity)
+    @JoinColumn({ name: 'branch_id', referencedColumnName: 'id',
+      foreignKeyConstraintName: 'FK_members_branches_branch_id' })
+    branch: BranchEntity;
   }
+  // Indexes and composite unique constraints are declared in the migration file,
+  // not via @Index/@Unique decorators, to ensure exact constraint names.
   ```
 * **Rules:**
   - Constraint names MUST be explicitly declared in the ORM schema/decorator where the ORM supports it; otherwise declared explicitly and immutably in migration/DDL. Never rely on ORM auto-generated names regardless of ORM choice.
@@ -2195,7 +2235,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
 * **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The form varies by construct:
   - **Classes / methods / DTOs / services / controllers** → JSDoc block comments
-  - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })`, Prisma `///` doc comment); otherwise documented in migration/DDL
+  - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })` for NestJS, Django model field `help_text='...'` for Django); otherwise documented in migration/DDL
   - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included in every documented construct:**

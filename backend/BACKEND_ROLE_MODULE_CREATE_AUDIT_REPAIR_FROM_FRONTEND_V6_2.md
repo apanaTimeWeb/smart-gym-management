@@ -739,6 +739,7 @@ Redis Streams
 Redis Pub/Sub
 JWT
 TypeORM migrations
+Path alias: `@/` → `src/`
 
 Django:
 Django ORM
@@ -4662,21 +4663,26 @@ Also verify:
 
 ## RULE 111 - PERSISTENT WEBSOCKETS
 
-Verify critical notifications/chats:
+For every real-time notification or chat feature, verify the complete durable delivery chain:
 
 ```text
 DB insert
 → transaction commit
-→ transactional outbox / reliable relay
-→ WebSocket emit
-→ REST recovery
+→ transactional outbox (append-only relay table committed in the same transaction)
+→ Redis Pub/Sub fan-out across all horizontal instances
+→ WebSocket emit to connected clients
+→ REST recovery endpoint for offline clients
 ```
 
-And:
+Verify:
 
+- transactional outbox committed atomically with the business write;
+- Redis Pub/Sub is the horizontal relay mechanism (not PostgreSQL LISTEN/NOTIFY as the sole durable mechanism);
+- PostgreSQL LISTEN/NOTIFY MUST NOT be used as the only durable relay;
 - notification/chat soft delete;
-- offline user can recover history;
-- no WebSocket-only persistence.
+- offline user can recover missed history via REST recovery endpoint;
+- no WebSocket-only persistence (WebSocket delivery is best-effort; outbox is the durable record);
+- cross-instance delivery is verified.
 
 ---
 
