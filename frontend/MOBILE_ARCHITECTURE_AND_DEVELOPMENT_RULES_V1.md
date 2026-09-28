@@ -251,8 +251,8 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; 's `AsyncNotifier` or a repository+cache pattern for ). Never duplicated into a separate "client" state container. |
-| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`` scoped to the feature for ). One container per feature — never one giant global store. |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native. Never duplicated into a separate "client" state container. |
+| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for React Native. One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `React Component` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
@@ -278,8 +278,8 @@ stored data and route it accordingly:
 
 | Data type | Storage requirement |
 |---|---|
-| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN. Never anywhere else. |
-| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN. |
+| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a react-native-keychain. Never anywhere else. |
+| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an react-native-mmkv. |
 | Temporary session-only data | In-memory state only — cleared on app kill, never persisted. |
 
 - Create exactly ONE central storage-access module per app. No other file may
@@ -474,7 +474,7 @@ visually renders with placeholder values.
 ## Rule 8 — Lists & Rendering Performance
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
-  component (e.g. a high-performance list library for RN; `FlatList`
+  component (e.g. `FlatList` or `@shopify/flash-list`
   — never a naively-mapped, fully-rendered list of widgets).
 - List item components must be render-stable (memoized in RN; using `const`
   constructors and  to avoid unnecessary re-renders.
@@ -494,7 +494,7 @@ visually renders with placeholder values.
 
 - Use ONE icon library/family for the entire app — never mix icon sets.
 - Icon sizes and stroke/weight values must reference tokens from
-  `mobile_theme_contract.md` — never arbitrary numeric values per usage.
+  `MOBILE_UI_UX_DESIGN.md` — never arbitrary numeric values per usage.
 
 ## Rule 11 — Animations & Gestures
 
@@ -511,7 +511,7 @@ visually renders with placeholder values.
 ## Rule 12 — Charts & Data Visualization
 
 - Use a native-rendering charting library appropriate to the framework (Skia-
-  or React Native SVG-based for RN; a -native charting package) — never a
+  or a React Native charting package) — never a
   DOM/SVG/Canvas-web-only charting library, none of which render on mobile.
 - Chart color palettes must pull from the design system's chart tokens — never
   hardcoded hex values per chart instance.
@@ -519,8 +519,7 @@ visually renders with placeholder values.
 ## Rule 13 — Platform-Specific Code
 
 - Isolate genuinely divergent iOS/Android implementations into separate
-  platform files (platform-suffix files in RN; conditional platform channels
-  or separate  — not scattered inline
+  platform-specific files (e.g. `.ios.ts`, `.android.ts`) — not scattered inline
   platform checks throughout shared files.
 - A trivial one-line platform difference (e.g. a shadow property) may remain
   inline; once a component accumulates three or more such checks, split it.
@@ -963,7 +962,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 49: List items keyed by entity ID — no array index keys
 - [ ] Rule 50: Permitted record identifiers have copy-to-clipboard affordance in detail screens
 - [ ] Rule 51: Every list screen has a dedicated named `EmptyState` component
-- [ ] Rule 52: New design tokens added to `mobile_theme_contract.md` before implementation
+- [ ] Rule 52: New design tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation
 
 ## Known Issues / Tech Debt
 [REQUIRED: "None" is acceptable. Never leave blank without explicitly stating no known issues.]
@@ -983,7 +982,7 @@ future AI agents.
 - Every interactive element exposes an accessible role/label — no exceptions
   for "obviously self-explanatory" icons or buttons.
 - Minimum touch target: 44×44pt (iOS) / 48×48dp (Android) — enforced via the
-  shared minimum-touch-target token in `mobile_theme_contract.md`, not
+  shared minimum-touch-target token in `MOBILE_UI_UX_DESIGN.md`, not
   per-component guesses.
 - Respect system font-scaling accessibility settings — never disable dynamic
   text scaling unless a specific pixel-perfect element requires it, and
@@ -1093,7 +1092,7 @@ feature with CRUD operations.
 - NEVER store API response data in members.store.ts — the TanStack Query /  cache is the single source of truth for server data
 - NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
 - NEVER add a new dependency without checking approved-dependencies.md first (Rule 22)
-- NEVER hardcode hex colors, dp values, or font sizes — use design tokens from mobile_theme_contract.md only (Rule 3)
+- NEVER hardcode hex colors, dp values, or font sizes — use design tokens from MOBILE_UI_UX_DESIGN.md only (Rule 3)
 - NEVER log auth tokens, phone numbers, payment amounts, or full API response bodies — sanitize before any log call (Rule 6)
 - NEVER display raw phone numbers or payment amounts in list/card views — use maskSensitiveData() (Rule 30)
 ```
@@ -1459,7 +1458,7 @@ export function showToast(message: string, type: 'error' | 'success', dedupKey?:
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey } // PSEUDOCODE: The central toast adapter MUST explicitly suppress/replace duplicate active keys based on dedupKey.
+    props: { dedupKey } // ⚠️ PSEUDOCODE / CONTRACT: The central adapter MUST explicitly suppress/replace duplicate active keys based on dedupKey.
   });
 }
 
@@ -1498,7 +1497,8 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
       // If confirmed, dispatch e.data.action to proceed
     });
     return unsubscribe;
-  }, [navigation, isDirty]);
+  // navigation: current navigator; isDirty: enables/disables unsaved-change interception
+    }, [navigation, isDirty]);
 }
 ```
 
@@ -1817,17 +1817,7 @@ members.map((member) => (
 ))
 ```
 
- equivalent:
 
-```
-// ❌ BAD
-FlatList(children: members.asMap().entries.map((e) =>
-  MemberCard(key: keyExtractor(e.key), member: e.value)).toList())
-
-// ✅ GOOD
-FlatList(children: members.map((m) =>
-  MemberCard(key: keyExtractor(m.id), member: m)).toList())
-```
 
 Consequence of violation: inserting or deleting a list item causes every
 subsequent item to re-render (React) or lose component state. For
@@ -2053,7 +2043,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - List items keyed by entity ID — no index keys? (Rule 49)
    - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
-   - New tokens added to `mobile_theme_contract.md` before implementation? (Rule 52)
+   - New tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation? (Rule 52)
    - Irreversible mutations use stable Idempotency-Keys on retry? (Rule 53)
    - Token refresh is single-flight? (Rule 54)
    - x-tenant-id derived from secure context only? (Rule 55)

@@ -8,12 +8,12 @@ Layering is controlled by named `zIndex` tokens.
 Android elevation is defined separately by the shadow/elevation token system.
 
 > This file is the **canonical visual values source** — it defines what every
-> token is worth in light and dark mode. `mobile_theme_contract.md` is the
+> token is worth in light and dark mode. `MOBILE_UI_UX_DESIGN.md` is the
 > **AI-readable catalogue** derived from this file; it lists every token name,
 > value, and usage context in one scannable table. The two-layer hierarchy is:
 > `MOBILE_UI_UX_DESIGN.md` (values specification) →
-> `mobile_theme_contract.md` (executable AI reference) →
-> Framework theme module → Feature UI.
+> `MOBILE_UI_UX_DESIGN.md` (executable AI reference) →
+> React Native theme module → Feature UI.
 > Implementation differs by framework (a theme object/config for React
 > Native, a `ThemeData`/`ColorScheme` extension for ) — but the VALUES
 > below and the "no magic values anywhere" discipline are universal.
@@ -36,7 +36,7 @@ Every visual value must resolve through a documented global token, unless the ex
 
 `MOBILE_UI_UX_DESIGN.md`
 → framework theme module
-→ `mobile_theme_contract.md`
+→ `MOBILE_UI_UX_DESIGN.md`
 → feature UI
 
 - This file owns canonical visual values.
@@ -226,8 +226,8 @@ Every color token has ONE canonical usage. Never apply a token outside its role.
 
 | Token | Foreground (text/icon) | Background | Border |
 |---|---|---|---|
-| `primary` | Active tab label, selected icon | Primary button fill | — |
-| `destructive` | Error message text, delete icon | Destructive button fill | Error input border |
+| `primary` | Primary button fill, selected primary icon | Primary button fill | — |
+| `destructive` | Destructive button fill, delete icon | Destructive button fill | Error input border |
 | `muted` | Placeholder text, disabled label | — | Disabled input border |
 | `foreground` | All body text | — | — |
 | `background` | — | Screen root background | — |
@@ -242,7 +242,7 @@ Every color token has ONE canonical usage. Never apply a token outside its role.
 | `pay-*-bg` | — | Payment badge background | — |
 | `chart-*` | Chart series data | Chart fill | Chart border |
 
-**Rule:** Never use `primary` for body text. Never use `foreground` as a background.
+**Rule:** Never use `primary` for body text. Never use `destructive` for error text (use `status-danger-text` instead). Never use `foreground` as a background.
 Token names describe intent, not appearance — they resolve differently in light vs dark mode.
 
 ## 12. Form Interaction States (All 9 States — No Invented Colors)
@@ -388,7 +388,7 @@ Spinner size: `icon-sm`.
 This file (`MOBILE_UI_UX_DESIGN.md`) is the VALUES source — it defines what every
 token is worth in light and dark mode.
 
-`mobile_theme_contract.md` (required by mobile Rule 52) is the CATALOGUE — it lists
+`MOBILE_UI_UX_DESIGN.md` (required by mobile Rule 52) is the CATALOGUE — it lists
 every token name, its value from this file, and its exact usage context in one
 scannable table that AI agents read before writing any styled component.
 
@@ -418,6 +418,6 @@ scannable table that AI agents read before writing any styled component.
 
 **CI Check Requirements (Mandatory Sync):**
 CI MUST fail when:
-- a global token exists in this file but is omitted from `mobile_theme_contract.md`
+- a global token exists in this file but is omitted from `MOBILE_UI_UX_DESIGN.md`
 - the contract references an unknown token
 - a required Light/Dark token pair is incomplete
