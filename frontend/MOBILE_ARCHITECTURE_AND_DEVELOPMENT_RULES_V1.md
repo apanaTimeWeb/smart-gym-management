@@ -264,7 +264,7 @@ data-fetching layer, which handles request de-duplication and caching itself.
 
 - All non-trivial forms use a form-management library + a schema-validation
   library, kept separate from each other (e.g. React Hook Form + Zod for RN;
-  a form controller pattern + a .
+  a form controller pattern like React Hook Form.
 - Validation schema/rules live in the feature's `schemas/` (or `validators/`)
   folder — never written inline inside the widget/component.
 - Client-side validation messages are for immediate UX feedback only. The
@@ -278,8 +278,8 @@ stored data and route it accordingly:
 
 | Data type | Storage requirement |
 |---|---|
-| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN; `React Native KeyChain` for ). Never anywhere else. |
-| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN; `AsyncStorage`/`WatermelonDB`/`MMKV` for ). |
+| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN. Never anywhere else. |
+| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN. |
 | Temporary session-only data | In-memory state only — cleared on app kill, never persisted. |
 
 - Create exactly ONE central storage-access module per app. No other file may
@@ -475,7 +475,7 @@ visually renders with placeholder values.
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
   component (e.g. a high-performance list library for RN; `FlatList`
-  for  — never a naively-mapped, fully-rendered list of widgets).
+  — never a naively-mapped, fully-rendered list of widgets).
 - List item components must be render-stable (memoized in RN; using `const`
   constructors and  to avoid unnecessary re-renders.
 
@@ -534,7 +534,7 @@ visually renders with placeholder values.
   screen calls a native permission API directly.
 - Before adding any new native dependency, verify it fully supports the
   framework's current-generation architecture (New Architecture for RN;
-  current  engine for  plugins) — do not add a package flagged
+  React Native engine for native modules) — do not add a package flagged
   legacy-only without a documented, reviewed exception.
 - Maintain an approved-dependency list per category (networking, forms,
   validation, state, storage, lists, images, icons, animation, charts,
@@ -1462,7 +1462,7 @@ export function showToast(message: string, type: 'error' | 'success', dedupKey?:
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey } // Note: The central toast adapter MUST actively suppress/replace matching keys
+    props: { dedupKey } // PSEUDOCODE: The central toast adapter MUST explicitly suppress/replace duplicate active keys based on dedupKey.
   });
 }
 
@@ -1520,10 +1520,11 @@ function MembersAddScreen() {
 Rules:
 - The guard fires on hardware back button (Android), swipe-back gesture (iOS),
   and tab switches — all navigation exit paths.
-- Multi-step wizard forms: `isDirty` is true from Step 1 onward once any field
-  is touched — not just on the final step.
--  equivalent: use `BackHandler` (formerly `WillBackHandler`) with an
-  `onPopInvoked` callback that shows the confirmation dialog.
+- For multi-step forms, the guard MUST activate whenever the form contains
+  unsaved value changes.
+- React Hook Form `isDirty` represents changes relative to the configured default
+  values; merely focusing or touching a field does not necessarily mean the form
+  is dirty.
 
 Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (forms).
 
@@ -1531,8 +1532,7 @@ Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (f
 
 ## Rule 42 — `useEffect` Dependency Audit Comment
 
-Every `useEffect` (or equivalent reactive side-effect in : `ref.listen`,
-`StreamBuilder`, `didChangeDependencies`) MUST include a one-line comment
+Every `useEffect` MUST include a one-line comment
 explaining WHY each dependency is listed — or explicitly why the array is empty.
 
 ```typescript
@@ -2195,7 +2195,7 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
 
 ### The Rule
-The React Native mobile application MUST implement a hybrid notification architecture::
+The React Native mobile application MUST implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
 
@@ -2221,5 +2221,5 @@ the gesture interaction.
 
 ### Rule 66 — Component-Level AI Docstrings (JSDoc / Doc)
 * **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
-* **The Rule:** Every Custom Hook (RN), , complex React Native component, and State Store MUST have an exhaustive docstring block directly above its declaration.
+* **The Rule:** Every custom hook, complex React Native component, and State Store MUST have an exhaustive docstring block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** ... */ Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`
