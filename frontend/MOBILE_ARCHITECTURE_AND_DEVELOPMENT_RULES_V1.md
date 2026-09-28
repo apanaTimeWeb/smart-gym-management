@@ -1,26 +1,10 @@
-# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+# React Native Mobile Development Instructions — Enterprise / Industry Scale
 
-> Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
-> Swift/Kotlin). This document defines architectural discipline, not a specific
-> library mandate — where a decision genuinely differs by framework, both paths
-> are given explicitly. No managed/hosted vendor toolchain (e.g. Expo) is assumed.
+This document defines the canonical architecture and development rules for a React Native bare-metal application. React Native is the normative implementation target for this project. Use React Native New Architecture (Fabric + TurboModules). Framework-specific alternatives such as  or native / are not part of the normative implementation rules in this document.
 
 ## Rule 0 — Framework Decision (Made Once, Documented, Not Re-Litigated Per Feature)
 
-Choose ONE framework for the whole app and record the decision + reasoning in
-`/docs/decisions/framework-choice.md`. Use this criteria table to decide:
-
-| Criteria | React Native (bare-metal) | Flutter | Native (Swift/Kotlin, separate codebases) |
-|---|---|---|---|
-| Team's existing skill (JS/TS vs Dart vs Swift/Kotlin) | Best if team is React/web-heavy | Best if team wants one language, no JS bridge overhead | Best if platform-specific perfection is the top priority |
-| Code sharing across iOS/Android | High | Highest (one rendering engine, no platform widgets) | None — two full codebases |
-| Native module / SDK availability | Good, growing | Good, growing, occasionally behind RN for very new SDKs | Best — always first-class |
-| Long-term hiring pool | Large (JS ecosystem) | Growing, smaller than JS | Two separate specialist pools needed |
-| Performance ceiling | Very good with New Architecture (Fabric/TurboModules) | Very good with Impeller rendering engine | Highest, but rarely the bottleneck in practice |
-
-Whichever is chosen, mandate the framework's **current-generation architecture**
-(e.g. RN's New Architecture — Fabric + TurboModules; Flutter's Impeller renderer)
-— never start a new enterprise project on a legacy/deprecated engine.
+React Native (bare-metal) is the chosen framework. Use the current-generation architecture (Fabric + TurboModules).  and native / are not part of the normative rules.
 
 ## Rule 0A — Feature Module Is the AI Repair Boundary
 
@@ -39,7 +23,7 @@ Role Container = NOT the repair boundary
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders.
 - **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
 - **Primary Examples:** `frontend_admin/`, `frontend_manager/`, `frontend_superadmin/`.
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend Flutter/React Native file. By strictly enforcing `frontend_manager/billing/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend /React Native file. By strictly enforcing `frontend_manager/billing/`, there is zero ambiguity for the AI or the human developer.
 
 Examples of ROLE CONTAINERS:
 ```text
@@ -102,7 +86,7 @@ Keep all split files inside the **same feature folder**.
 
 ### Canonical Feature Folder Structure
 
-Adapt file extensions to the framework (`*.ts`/`*.tsx` for React Native; `*.dart` for Flutter):
+Adapt file extensions to the framework (`*.ts`/`*.tsx` for React Native; `*.` for ):
 
 ```
 features/
@@ -111,24 +95,24 @@ features/
     │   ├── MembersListScreen.tsx         
     │   ├── MembersDetailScreen.tsx
     │   └── MembersAddScreen.tsx
-    ├── components/                       (or widgets/ in Flutter)
+    ├── components/                       (or widgets/ in )
     │   ├── MembersMemberCard.tsx         ← module-prefixed component
     │   ├── MembersMemberCard.test.tsx    ← co-located test
     │   ├── MembersMemberListItem.tsx
     │   └── MembersEmptyState.tsx
-    ├── hooks/                            (or controllers/ / notifiers/ in Flutter)
+    ├── hooks/                            (or controllers/ / notifiers/ in )
     │   ├── useMembers.ts                 ← server-state data-fetching hook
     │   ├── useMembers.test.ts
     │   ├── useMembersFilters.ts          ← client-state UI filter hook
     │   └── useMembersFilters.test.ts
-    ├── schemas/                          (or validators/ in Flutter)
+    ├── schemas/                          (or validators/ in )
     │   └── members.schema.ts             ← Zod schema / validator class
-    ├── types/                            (or models/ in Flutter)
+    ├── types/                            (or models/ in )
     │   └── members.types.ts              ← all interfaces, enums, type unions
     ├── api/
     │   └── members.api.ts                ← ALL network calls for this feature ONLY
     ├── state/                            ← only if UI state shared across 2+ components
-    │   └── members.store.ts              ← Zustand (RN) / Riverpod provider (Flutter)
+    │   └── members.store.ts              ← Zustand (RN) / Riverpod provider ()
     ├── tests/                            ← integration-level tests (unit = co-located)
     │   └── members.integration.test.ts
     ├── members_features.md               ← MANDATORY — see Rule 24
@@ -232,20 +216,20 @@ features/
 - Deep linking must resolve through the SAME central route definition used for
   in-app navigation — never a second, separately maintained linking map.
 - Framework examples: React Navigation (React Native bare-metal) or go_router /
-  Navigator 2.0 (Flutter) — either is acceptable as long as the rules above hold.
+  Navigator 2.0 () — either is acceptable as long as the rules above hold.
 - Modals, bottom sheets, and nested tab/stack navigators must be defined once at
   the top of the navigation tree, not re-implemented per screen.
 
 ## Rule 3 — Styling & Design Tokens (No Magic Values, Anywhere)
 
-- `mobile_global_design.md` serves as the design specification. However, every color, spacing value, font size, radius, and shadow used in the code MUST come from the executable token contract defined in `mobile_theme_contract.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
+- `MOBILE_UI_UX_DESIGN.md` serves as the design specification. However, every color, spacing value, font size, radius, and shadow used in the code MUST come from the executable token contract defined in `mobile_theme_contract.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
 - Implementation mechanism differs by framework but the discipline is identical:
   - React Native: a central theming module (e.g. NativeWind config, or a plain
     TypeScript theme object) that every component imports from.
-  - Flutter: a central `ThemeData`/`ColorScheme` + custom `ThemeExtension`
+  - : a central `ThemeData`/`ColorScheme` + custom `ThemeExtension`
     consumed via `Theme.of(context)` — never inline `Color(0xFF...)` literals.
-- There is no hover state on touch devices — design and implement only
-  press/active and disabled states, never hover-dependent interactions.
+- There is no press state on touch devices — design and implement only
+  press/active and disabled states, never press-dependent interactions.
 - Dark mode must use the SAME token names in light and dark variants so no
   component ever branches manually on "is dark mode" — the token resolves itself.
 
@@ -268,8 +252,8 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; Riverpod's `AsyncNotifier` or a repository+cache pattern for Flutter). Never duplicated into a separate "client" state container. |
-| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`Riverpod` scoped to the feature for Flutter). One container per feature — never one giant global store. |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; Riverpod's `AsyncNotifier` or a repository+cache pattern for ). Never duplicated into a separate "client" state container. |
+| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`Riverpod` scoped to the feature for ). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `StatefulWidget` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
@@ -281,7 +265,7 @@ data-fetching layer, which handles request de-duplication and caching itself.
 
 - All non-trivial forms use a form-management library + a schema-validation
   library, kept separate from each other (e.g. React Hook Form + Zod for RN;
-  a form controller pattern + a validator class for Flutter).
+  a form controller pattern + a validator class for ).
 - Validation schema/rules live in the feature's `schemas/` (or `validators/`)
   folder — never written inline inside the widget/component.
 - Client-side validation messages are for immediate UX feedback only. The
@@ -295,8 +279,8 @@ stored data and route it accordingly:
 
 | Data type | Storage requirement |
 |---|---|
-| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN; `flutter_secure_storage` for Flutter). Never anywhere else. |
-| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN; `shared_preferences`/`Hive`/`Isar` for Flutter). |
+| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN; `_secure_storage` for ). Never anywhere else. |
+| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN; `shared_preferences`/`Hive`/`Isar` for ). |
 | Temporary session-only data | In-memory state only — cleared on app kill, never persisted. |
 
 - Create exactly ONE central storage-access module per app. No other file may
@@ -370,7 +354,7 @@ UI Requirement
       ↓
 Feature API Contract (_features.md § API Contract)
       ↓
-Type / Model (*.types.ts / models/*.dart)
+Type / Model (*.types.ts / models/*.)
       ↓
 Schema / Validator (Zod schema or validator class)
       ↓
@@ -435,8 +419,8 @@ id, name, phone, membershipPlan, status, expiryDate, paymentStatus
 
 This pattern is **forbidden**:
 
-```dart
-// ❌ Flutter — FORBIDDEN
+```
+// ❌  — FORBIDDEN
 final planName = member.planName ?? 'Basic Plan';
 final revenue = stats.revenue ?? 125000;
 ```
@@ -492,15 +476,15 @@ visually renders with placeholder values.
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
   component (e.g. a high-performance list library for RN; `ListView.builder`
-  for Flutter — never a naively-mapped, fully-rendered list of widgets).
+  for  — never a naively-mapped, fully-rendered list of widgets).
 - List item components must be render-stable (memoized in RN; using `const`
-  constructors and stable keys in Flutter) to avoid unnecessary re-renders.
+  constructors and stable keys in ) to avoid unnecessary re-renders.
 
 ## Rule 9 — Images & Media Assets
 
 - Use the framework's optimized image-loading mechanism exclusively — one that
   supports caching, placeholders, and format negotiation (a dedicated image
-  library for RN rather than the bare core `Image`; Flutter's `Image` with a
+  library for RN rather than the bare core `Image`; 's `Image` with a
   caching package like `cached_network_image`).
 - Always specify explicit dimensions or aspect ratio for network images to
   prevent layout shift while loading.
@@ -517,7 +501,7 @@ visually renders with placeholder values.
 
 - Use the framework's high-performance animation system (a UI-thread-driven
   animation library for RN rather than the legacy JS-thread animation API;
-  Flutter's native `AnimationController`/implicit animations).
+  's native `AnimationController`/implicit animations).
 - Use the framework's dedicated gesture-handling system for swipe/pan/pinch —
   never reconstruct gesture recognition manually from raw touch events.
 - Respect the OS-level reduced-motion accessibility setting — skip or shorten
@@ -528,7 +512,7 @@ visually renders with placeholder values.
 ## Rule 12 — Charts & Data Visualization
 
 - Use a native-rendering charting library appropriate to the framework (Skia-
-  or Canvas-based for RN; a Flutter-native charting package) — never a
+  or Canvas-based for RN; a -native charting package) — never a
   DOM/SVG/Canvas-web-only charting library, none of which render on mobile.
 - Chart color palettes must pull from the design system's chart tokens — never
   hardcoded hex values per chart instance.
@@ -537,7 +521,7 @@ visually renders with placeholder values.
 
 - Isolate genuinely divergent iOS/Android implementations into separate
   platform files (platform-suffix files in RN; conditional platform channels
-  or separate implementation classes in Flutter) — not scattered inline
+  or separate implementation classes in ) — not scattered inline
   platform checks throughout shared files.
 - A trivial one-line platform difference (e.g. a shadow property) may remain
   inline; once a component accumulates three or more such checks, split it.
@@ -551,7 +535,7 @@ visually renders with placeholder values.
   screen calls a native permission API directly.
 - Before adding any new native dependency, verify it fully supports the
   framework's current-generation architecture (New Architecture for RN;
-  current Flutter engine for Flutter plugins) — do not add a package flagged
+  current  engine for  plugins) — do not add a package flagged
   legacy-only without a documented, reviewed exception.
 - Maintain an approved-dependency list per category (networking, forms,
   validation, state, storage, lists, images, icons, animation, charts,
@@ -579,16 +563,16 @@ visually renders with placeholder values.
 
 ## Rule 17 — Testing (Full Pyramid)
 
-- **Unit tests:** Pure business logic, validators, formatters, and utility functions
+- **Unit tests (Jest):** Pure business logic, validators, formatters, and utility functions
   are co-located directly beside the source file they test.
-- **Component/widget tests:** Every non-trivial component/widget MUST have its
+- **Component/widget tests (@testing-library/react-native):** Every non-trivial component/widget MUST have its
   matching test file co-located directly beside the component/widget file it tests.
   The feature-level `tests/` directory is reserved ONLY for integration-level tests
   that exercise multiple feature files together.
 - **Integration tests:** Live inside the feature's `tests/` directory and verify
   multi-file feature flows, API/mock integration, state coordination, and critical
   feature behavior.
-- **E2E tests (Maestro / Detox) - AI Zip Principle:**
+- **E2E tests (Maestro) - AI Zip Principle:**
   1. **Top-Level Mirrored Folders:** E2E tests MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders.
   2. **WET Over DRY (Module-Level Isolation):** Mobile E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `dashboard` test need a login helper script, duplicate it directly into BOTH the `members` and `dashboard` test folders.
      - **Why:** If a bug occurs in the Members mobile flow, a developer must be able to ZIP only the `mobile_e2e/mobile_admin_e2e/members/` folder and feed it to an AI. If the AI is missing parent helpers, it loses context and breaks the test.
@@ -734,9 +718,9 @@ approved library (e.g. `react-native-keychain`, `zustand`, `react-hook-form`,
 
 ## Rule 23 — Observability & Crash Reporting
 
-- Crash reporting and JS/Dart exception tracking wired at app root, before
+- Crash reporting and JS/ exception tracking wired at app root, before
   any other initialization — use a framework-supported crash-reporting SDK
-  (e.g. Sentry or Firebase Crashlytics both support RN and Flutter).
+  (e.g. Sentry or Firebase Crashlytics both support RN and ).
 - Every centralized module (network client, storage, permissions) reports
   errors with enough context (feature name, action attempted) to trace an
   issue without needing physical device logs.
@@ -1075,7 +1059,7 @@ rather than moving it into `src/core/`. This preserves portability without
 artificially duplicating mandatory application infrastructure.
 
 Enforce mechanically via `eslint-plugin-boundaries` (React Native) or equivalent
-static analysis / import linter (Flutter) so violations are caught in CI, not in
+static analysis / import linter () so violations are caught in CI, not in
 code review.
 
 ---
@@ -1144,7 +1128,7 @@ crash-report breadcrumb (Rule 6 and Rule 23).
 ## Rule 31 — Double Verification for Destructive and Financial Actions
 
 On mobile, accidental taps on destructive actions are more likely than on desktop
-(small targets, no hover state, no right-click). This makes double-verification
+(small targets, no press state, no right-click). This makes double-verification
 more critical on mobile, not less.
 
 **Any action that does any of the following MUST show a confirmation bottom sheet
@@ -1345,9 +1329,9 @@ constants are a `core/` primitive, not a feature file).
 Any import that brings in ONLY a TypeScript type, interface, or enum (no runtime
 value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/consistent-type-imports`).
 
-## Rule 36B — Flutter / Dart
+## Rule 36B —  / 
 
-Follow Dart's explicit import/export rules; no TypeScript `import type` rule applies.
+Follow 's explicit import/export rules; no TypeScript `import type` rule applies.
 
 ```typescript
 // ❌ BAD — runtime import for a type-only symbol
@@ -1357,8 +1341,8 @@ import { Member } from '../types/members.types';
 import type { Member } from '../types/members.types';
 ```
 
-Why it matters on mobile: Metro bundler (React Native) and the Dart AOT compiler
-(Flutter) both benefit from clear type-erasure boundaries. Mixing runtime and
+Why it matters on mobile: Metro bundler (React Native) and the  AOT compiler
+() both benefit from clear type-erasure boundaries. Mixing runtime and
 type-only imports in the same statement obscures tree-shaking and increases the
 risk of circular-dependency bugs.
 
@@ -1372,58 +1356,44 @@ Cross-reference: Frontend Rule 36 (same mandate on web).
 
 ## Rule 37 — Currency and Number Formatting Utility (Mobile Equivalent of Frontend Rule 80)
 
-All monetary amounts, percentages, and large numbers displayed in the UI MUST be
-formatted through ONE central utility. No UI component may call `toFixed()` / `toLocaleString()` directly. Central formatter utilities may use them internally where appropriate.
-
-Define in `src/core/utils/formatters.ts`:
+All generic numeric and percentage formatting MUST go through a central feature-local utility.
+Do not use raw `.toFixed()` or inline `new Intl.NumberFormat` anywhere in JSX/components.
 
 ```typescript
-// src/core/utils/formatters.ts
 /**
- * API monetary values = minor units (e.g., paise, cents)
- * UI formatter converts minor units → display amount
+ * Formats a generic number according to the specified locale.
+ *
+ * @param value - The number to format.
+ * @param locale - The active locale string (e.g., 'en', 'hi').
+ * @returns The formatted number string.
  */
-export function formatCurrencyFromMinorUnits(
-  amountMinor: number | null | undefined,
-  currency = 'INR',
-): string {
-  if (amountMinor == null || isNaN(amountMinor)) return '—';
-  const factors: Record<string, number> = { INR: 100, USD: 100, JPY: 1 };
-  const factor = factors[currency] || 100;
-  const amount = amountMinor / factor;
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency,
+export function formatNumber(value: number | null | undefined, locale: string): string {
+  if (value == null) return displayValue(value);
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
-  }).format(amount);
+  }).format(value);
 }
 
-export function formatNumber(value: number | null | undefined): string {
-  if (value == null || isNaN(value)) return '—';
-  return new Intl.NumberFormat('en-IN').format(value);
-}
-
-export function formatPercent(value: number | null | undefined): string {
-  if (value == null || isNaN(value)) return '—';
-  return `${value.toFixed(1)}%`;
+/**
+ * Formats a number as a percentage.
+ *
+ * @param value - The decimal or percentage value.
+ * @param locale - The active locale string.
+ * @returns The formatted percentage string.
+ */
+export function formatPercent(value: number | null | undefined, locale: string): string {
+  if (value == null) return displayValue(value);
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 ```
 
-```typescript
-// ❌ BAD — inline formatting
-<Text>₹{member.fee.toFixed(2)}</Text>
-
-// ✅ GOOD — central utility
-<Text>{formatCurrencyFromMinorUnits(member.fee)}</Text>
-```
-
-Note: `Intl.NumberFormat` is available in Hermes (React Native ≥ 0.70) and Dart's
-`intl` package. Confirm the runtime supports it before use; if not, use the `intl`
-npm package as a polyfill.
-
-Cross-reference: Frontend Rule 80, Rule 38 (en-dash fallback).
-
----
+Rule 63 supersedes the currency portion of Rule 37. Currency formatting is feature-local. Rule 37 remains authoritative only for generic number and percentage formatting.
 
 ## Rule 38 — En-Dash Fallback for Null / Empty Data (Mobile Equivalent of Frontend Rule 78)
 
@@ -1477,7 +1447,7 @@ touch targets.
   disabled={isLoading}
 >
   {isLoading
-    ? <ActivityIndicator color={tokens.color.white} size="small" />
+    ? <ActivityIndicator color={tokens.color.onPrimary} size="small" />
     : <Text style={styles.buttonText}>Save Member</Text>
   }
 </TouchableOpacity>
@@ -1489,7 +1459,7 @@ Rules:
 - The button MUST be `disabled` while loading to prevent double-submission
   (Rule 31 and Rule 32 already mandate this for destructive actions — this rule
   extends it to ALL async-submit buttons).
-- Flutter equivalent: wrap `ElevatedButton` in a `SizedBox` with a fixed width,
+-  equivalent: wrap `ElevatedButton` in a `SizedBox` with a fixed width,
   or use `ConstrainedBox` with `minWidth`.
 
 Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
@@ -1498,68 +1468,34 @@ Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
 
 ## Rule 40 — Toast / Snackbar Deduplication (Mobile Equivalent of Frontend Rule 82)
 
-The app MUST NOT show duplicate toast/snackbar messages when the same action is
-triggered multiple times in rapid succession (e.g. double-tap, retry spam).
-
-Implement through ONE central toast utility in `src/core/utils/toast.ts`:
+All actionable toasts MUST pass a stable `dedupKey` representing the semantic intent.
 
 ```typescript
-// src/core/utils/toast.ts
-
-// Deduplication uses a SEMANTIC identity key, not the raw message string.
-// Two different actions (e.g. payment failure for member A vs member B)
-// that produce the same message text are DIFFERENT events and must NOT be collapsed.
-//
-// Build the key as: module + action + entityId + errorCode
-// Fall back to a simple message hash ONLY when semantic context is unavailable.
-//
-// Example: toastKey('members', 'suspend', memberId, 'MEMBER.ALREADY_SUSPENDED')
-//          → "members:suspend:abc-123:MEMBER.ALREADY_SUSPENDED"
-
-const activeToasts = new Set<string>();
-
-export function toastKey(
-  module: string,
-  action: string,
-  entityId?: string,
-  errorCode?: string,
-): string {
-  return [module, action, entityId ?? '', errorCode ?? ''].join(':');
+/**
+ * Displays a global toast message safely handling semantic deduplication.
+ *
+ * @param message - The text to display.
+ * @param type - The semantic level (e.g. 'error', 'success').
+ * @param dedupKey - A unique string representing the action intent.
+ */
+export function showToast(message: string, type: 'error' | 'success', dedupKey?: string) {
+  Toast.show({
+    type,
+    text1: message,
+    props: { dedupKey }
+  });
 }
 
-export function showToast(
-  message: string,
-  type: 'success' | 'error' | 'info' = 'info',
-  dedupKey?: string,   // semantic dedup key mandatory for actionable toasts
-) {
-  // Use semantic key if provided, else generate a deterministic string hash fallback
-  const key = dedupKey ?? String(message.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
-  if (activeToasts.has(key)) return;
-  activeToasts.add(key);
-  // call your toast library here (e.g. react-native-toast-message)
-  const timeoutDuration = type === 'error' ? 5000 : 3000;
-  Toast.show({ type, text1: message, visibilityTime: timeoutDuration });
-  setTimeout(() => activeToasts.delete(key), timeoutDuration);
-}
-```
-
-```typescript
-// ❌ BAD — direct library call in a component; no deduplication
-Toast.show({ type: 'error', text1: response.message });
-
-// ✅ GOOD — central utility with deduplication
+// ❌ BAD: Stacking 5 duplicate network error toasts
 showToast(response.message, 'error');
+
+// ✅ GOOD: Passing a stable semantic identity
+showToast(
+  response.message,
+  'error',
+  toastKey('members', 'suspend', memberId, response.errorCode)
+);
 ```
-
-Rules:
-- No component or hook calls the toast library directly — always `showToast()`.
-- For backend operations, toast messages MUST come from `response.message` (Rule 7). For purely local system feedback (e.g. "Copied to clipboard"), hardcoded system strings are acceptable.
-- Success toasts auto-dismiss after 3 s; error toasts persist until dismissed or
-  5 s, whichever comes first — configure once in the central utility.
-
-Cross-reference: Frontend Rule 82, Rule 7 (messages from backend), Rule 31.
-
----
 
 ## Rule 41 — Unsaved Changes Guard for Multi-Step Forms (Mobile Equivalent of Frontend Rule 79)
 
@@ -1606,7 +1542,7 @@ Rules:
   and tab switches — all navigation exit paths.
 - Multi-step wizard forms: `isDirty` is true from Step 1 onward once any field
   is touched — not just on the final step.
-- Flutter equivalent: use `PopScope` (formerly `WillPopScope`) with an
+-  equivalent: use `PopScope` (formerly `WillPopScope`) with an
   `onPopInvoked` callback that shows the confirmation dialog.
 
 Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (forms).
@@ -1615,7 +1551,7 @@ Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (f
 
 ## Rule 42 — `useEffect` Dependency Audit Comment
 
-Every `useEffect` (or equivalent reactive side-effect in Flutter: `ref.listen`,
+Every `useEffect` (or equivalent reactive side-effect in : `ref.listen`,
 `StreamBuilder`, `didChangeDependencies`) MUST include a one-line comment
 explaining WHY each dependency is listed — or explicitly why the array is empty.
 
@@ -1727,48 +1663,36 @@ Cross-reference: Rule 24 (feature-level documentation), Rule 43 (JSDoc on functi
 
 ---
 
-## Rule 45 — Network State Enum (No Boolean `isLoading` / `isError` Flags)
+## Rule 45 — Network State Model (No Boolean `isLoading` / `isError` Flags)
 
-Network request state MUST be represented as a discriminated union or enum —
-never as a combination of boolean flags (`isLoading`, `isError`, `isSuccess`).
-Boolean flags allow impossible states (e.g. `isLoading: true` AND `isError: true`).
+For any async operation managed in local component state or a custom hook, use a discriminated union.
 
-Define once in `src/core/types/network.types.ts`:
+- `idle` → initial/neutral UI;
+- `loading` → loading/skeleton;
+- `success` + empty data → EmptyState;
+- `success` + data → content;
+- `error` → ErrorFallback.
 
 ```typescript
-// src/core/types/network.types.ts
 export type NetworkState<T> =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'success'; data: T }
-  | { status: 'error';   error: { message: string; code?: string; validationErrors?: ValidationErrorItem[] } };
-```
+  | { status: 'error'; error: string; errorCode?: string };
 
-```typescript
-// ❌ BAD — boolean flags allow impossible states
-const [isLoading, setIsLoading] = useState(false);
-const [isError, setIsError]     = useState(false);
-const [data, setData]           = useState(null);
-
-// ✅ GOOD — one state variable, exhaustive switch, impossible states eliminated
-const [state, setState] = useState<NetworkState<Member[]>>({ status: 'idle' });
-
+// Inside component render:
 switch (state.status) {
-  case 'idle':    return <MembersEmptyState />;
-  case 'loading': return <MembersListSkeleton />;
-  case 'success': return <MembersList data={state.data} />;
-  case 'error':   return <MembersErrorFallback message={state.error.message} />;
+  case 'idle':
+    return <NeutralInitialState />;
+  case 'loading':
+    return <MembersSkeleton />;
+  case 'error':
+    return <ErrorFallback message={state.error} />;
+  case 'success':
+    if (state.data.length === 0) return <MembersEmptyState />;
+    return <MembersList data={state.data} />;
 }
 ```
-
-Note: TanStack Query already exposes `status` as a discriminated union
-(`'pending' | 'error' | 'success'`). Use it directly — do not re-wrap in
-additional boolean flags. The rule applies to any manually managed async state
-outside of TanStack Query / Riverpod.
-
-Cross-reference: Rule 4 (state management matrix), Rule 34 (enum-driven fields).
-
----
 
 ## Rule 46 — Background Task / Scheduled Job Documentation
 
@@ -1916,9 +1840,9 @@ members.map((member) => (
 ))
 ```
 
-Flutter equivalent:
+ equivalent:
 
-```dart
+```
 // ❌ BAD
 ListView(children: members.asMap().entries.map((e) =>
   MemberCard(key: ValueKey(e.key), member: e.value)).toList())
@@ -1929,7 +1853,7 @@ ListView(children: members.map((m) =>
 ```
 
 Consequence of violation: inserting or deleting a list item causes every
-subsequent item to re-render (React) or lose widget state (Flutter). For
+subsequent item to re-render (React) or lose widget state (). For
 financial lists this can cause visible flicker and incorrect loading states.
 
 Rule: if an entity has no stable ID from the backend, that is a backend contract
@@ -2008,101 +1932,66 @@ Cross-reference: Rule 1 (module-prefixed naming), Rule 24 (_features.md template
 
 ## Rule 52 — Theme Contract File (`mobile_theme_contract.md`)
 
-The mobile app MUST have a single `mobile_theme_contract.md` file at the project
-root (alongside `mobile_global_design.md`) that documents every design token
-category, its token names, and the exact values for light and dark variants.
+Every project MUST define a `mobile_theme_contract.md` that acts as the single source of truth for the codebase's theme implementation.
+The theme contract MUST reproduce every token/value defined in `MOBILE_UI_UX_DESIGN.md`; empty category headings are non-compliant.
 
-This file is the equivalent of the web's `_theme_contract.md` — it is the
-authoritative reference an AI uses when writing any styled component, ensuring
-it never invents a token name or hardcodes a value.
+The theme contract must contain complete values for:
+- colors
+- status colors
+- payment colors
+- spacing
+- typography
+- line-height
+- letter-spacing
+- radius
+- icons
+- icon stroke
+- touch targets
+- motion
+- opacity
+- shadow/elevation
+- z-index/layering
+- skeleton tokens
 
-Minimum required sections:
-
-```markdown
-# Mobile Theme Contract
-
-## Color Tokens
-| Token | Light value | Dark value | Usage |
-|---|---|---|---|
-| `background` | #FFFFFF | #0B0B0F | Screen background |
-| `foreground` | #0B0B0F | #F5F5F7 | Primary text |
-| `card` | #F8F8FA | #16161C | Card/surface background |
-| `primary` | #4F46E5 | #6366F1 | Primary actions, active states |
-| `destructive` | #DC2626 | #EF4444 | Errors, delete actions |
-| `on-primary` | #FFFFFF | #FFFFFF | Text/icon on primary fill |
-| `on-destructive` | #FFFFFF | #FFFFFF | Text/icon on destructive fill |
-| `focus-ring` | #A16207 | #EAB308 | Input/keyboard focus ring |
-| `status-success-text` | #064E3B | #22C55E | Success badge text |
-| `status-success-bg` | #D1FAE5 | #064E3B | Success badge background |
-| `skeleton-base` | #E5E5EA | #2A2A32 | Skeleton shimmer base |
-| `skeleton-highlight` | #F5F5F7 | #3F3F46 | Skeleton shimmer highlight |
-
-## Spacing Tokens
-| Token | Value | Usage |
-|---|---|---|
-| `space-1` | 4dp | Tight gaps, icon padding |
-| `space-2` | 8dp | Component internal padding |
-| `space-4` | 16dp | Screen horizontal padding, card padding |
-| `space-6` | 24dp | Section gaps |
-| `space-7` | 32dp | Screen top padding |
-
-## Typography Tokens
-| Token | Size | Weight | Line height | Usage |
-|---|---|---|---|---|
-| `heading-lg` | 22 | 700 | 1.2× | Screen titles |
-| `body` | 16 | 400 | 1.5× | Body copy, list items |
-| `body-sm` | 14 | 400 | 1.5× | Body secondary |
-| `caption` | 12 | 400 | 1.5× | Timestamps, secondary labels |
-
-## Border Radius Tokens
-## Shadow / Elevation Tokens
-## Icon Size Tokens
-## Touch Target Tokens (minimum 44pt / 48dp)
-## Z-Index / Elevation Layer Tokens
-## Motion / Duration Tokens
-## Opacity Tokens
-```
-
-Rules:
-- Every token in `mobile_theme_contract.md` MUST have a corresponding
-  implementation in the framework's theme module (Rule 3).
-- When a new token is needed, it is added to this file FIRST, then implemented —
-  never the reverse.
-- AI agents writing styled components MUST reference this file before choosing
-  any color, spacing, or typography value.
-
-Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
-(touch target tokens), web `_theme_contract.md` equivalent.
-
----
+It must remain synchronized with `MOBILE_UI_UX_DESIGN.md`. Any values missing from the contract will cause CI/Design validation failure.
 
 ## Rule 53 — Idempotency for ALL API Mutations
 
-The backend strictly enforces idempotency on **all** state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) via `@RequireIdempotencyKey()`. Omitting the header causes an immediate **HTTP 400** rejection. Therefore, every mobile API client function that performs a mutation MUST attach an `Idempotency-Key` header.
+Every mutating API call (POST, PUT, PATCH, DELETE) MUST generate an `Idempotency-Key` at the moment of user intent.
 
-### 53A — General Mutations
-Every mutating API client function MUST accept an optional `idempotencyKey?: string` parameter and inject it as a header:
+### A. The Required Contract
+
+1. **API Signature:** The mutation API client MUST require an `idempotencyKey: string` parameter.
+2. **HTTP Header:** The HTTP client MUST always attach `headers: { 'Idempotency-Key': idempotencyKey }`.
+3. **Lifecycle:** Generate exactly once per user intent. Reuse the same key for retries. Generate a new key only for a new user intent. Never generate a new key on retry.
 
 ```typescript
-export const updateProfile = async (id: string, body: UpdateProfileDto, idempotencyKey?: string) =>
-  apiFetch('/profile', {
-    method: 'PATCH',
-    body: JSON.stringify(body),
-    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+// features/frontend_manager/billing/api/processPaymentApi.ts
+export interface ProcessPaymentRequest {
+  memberId: string;
+  amountMinor: number;
+  paymentMethodId: string;
+  idempotencyKey: string;
+}
+
+export async function processPaymentApi(
+  req: ProcessPaymentRequest
+): Promise<ProcessPaymentResponse> {
+  return await networkClient.post('/manager/billing/payments', {
+    memberId: req.memberId,
+    amountMinor: req.amountMinor,
+    paymentMethodId: req.paymentMethodId,
+  }, {
+    headers: {
+      'Idempotency-Key': req.idempotencyKey,
+    }
   });
+}
 ```
 
-### 53B — Irreversible / Financial Mutations (Stricter Rules)
-For financial or irreversible actions (payment, renewal, payroll, purchase), the key policy is stricter:
+### B. Double Verification for Financial / Irreversible Actions (Extending Rule 31)
 
-- Generate a `crypto.randomUUID()` **once**, at the moment the user confirms the action (e.g., in the confirmation bottom sheet).
-- Store the key in a `useRef` — do NOT regenerate it on re-renders.
-- On network timeout or 5xx failure, the app MUST retry with the **exact same key** — never a fresh one.
-- Only generate a new key if the user explicitly cancels and re-opens the confirmation dialog (new user intent = new key).
-
-> **AI NOTE:** Generating a fresh `randomUUID()` on every retry is a critical bug — the backend will process the request twice, creating duplicate payments or records. The key must survive retries.
-
----
+Financial mutations require the strict double-verification flow in addition to the generic idempotency key.
 
 ## Rule 54 — Single-Flight Token Refresh
 
@@ -2214,237 +2103,87 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## Rule 61 — Internationalization (i18n) & Localization
 
-### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
+The mobile frontend uses a co-located locale file architecture. The active launch languages are `en` and `hi`.
 
-The mobile app uses `react-i18next` with **co-located locale files inside each feature module folder** — NOT in a central `src/i18n/locales/` directory. This preserves **Extreme Isolation**: each feature module owns its own strings and can be moved, deleted, or versioned independently.
-
-**Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic — and faster than any external service.
-
-### Stack
-- **Library:** `react-i18next` + `i18next`
-- **Locale detection:** `react-native-localize` (auto-detects device language)
-- **Base language:** English (`en.json`) — written by AI agent when creating the module
-- **Other languages:** Written by the AI agent in the same commit
-- **Runtime cost:** Zero — all files are static JSON, bundled inside the app
-
-### Module-Level File Structure
-Each feature module owns its own `_locales/` folder:
-```
-src/features/
-  admin/
-    members/
-      _locales/
-        en.json   ← AI writes this when creating the module
-        nl.json   ← AI translates this in the same commit
-        fr.json
-      components/
-      hooks/
-  trainer/
-    schedule/
-      _locales/
-        en.json
-        nl.json
-scripts/
-  merge-locales.ts   ← Merges all _locales into one bundle, run at build time
-src/
-  i18n/
-    i18n.ts          ← i18next init file (loads merged bundle)
-```
-
-### `_locales/en.json` (Source of Truth per Module)
+### Module-Co-located Locales
+Each feature module owns its own translation keys.
 ```json
+// features/frontend_manager/members/_locales/en.json
 {
-  "MEMBERS": {
+  "members": {
     "PAGE_TITLE": "Members",
-    "ADD_MEMBER": "Add Member",
-    "EMPTY_STATE": "No members found. Add your first member to get started."
+    "ADD_MEMBER": "Add Member"
   }
 }
 ```
 
-### AI Agent Translation Rule
-When writing a new feature module, the AI MUST:
-1. Create `_locales/en.json` with all English UI strings used in the module.
-2. In the **same commit**, create `_locales/hi.json` (and any other currently `ACTIVE_LANGUAGES`) using its own translation capability. Do not generate files for the full `SUPPORTED_LANGUAGES` list yet.
-3. Translations must be **contextually correct** for a Gym Management SaaS — not literal.
-
-```json
-// _locales/nl.json — AI writes this, context-aware
-{
-  "MEMBERS": {
-    "PAGE_TITLE": "Leden",
-    "ADD_MEMBER": "Lid toevoegen",
-    "EMPTY_STATE": "Geen leden gevonden. Voeg uw eerste lid toe om te beginnen."
-  }
-}
-```
-
-### Using Translations in Components
-Always use `useTranslation` hook — **never** hardcode English strings in JSX/TSX:
-```tsx
-import { useTranslation } from 'react-i18next';
-
-export const MembersScreen = () => {
-  const { t } = useTranslation('MEMBERS');
-  // ❌ BAD: <Text>Members</Text>
-  // ✅ GOOD:
-  return (
-    <>
-      <Text>{t('PAGE_TITLE')}</Text>
-      <Button title={t('ADD_MEMBER')} />
-    </>
-  );
-};
-```
-
-### `src/i18n/i18n.ts` (Initialization — loads merged bundle)
+### Generated Resources
+Merged locale resources are generated under `src/i18n/generated/`:
 ```typescript
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import * as RNLocalize from 'react-native-localize';
-// Merged bundles are generated by scripts/merge-locales.ts at build time
-import en from '../../public/locales/en.json';
-import nl from '../../public/locales/nl.json';
-
-const bestLang = RNLocalize.findBestAvailableLanguage(['en', 'nl', 'fr']) ?? { languageTag: 'en' };
-
-i18n.use(initReactI18next).init({
-  resources: { en: { translation: en }, nl: { translation: nl } },
-  lng: bestLang.languageTag,
-  fallbackLng: 'en',
-  interpolation: { escapeValue: false },
-});
-
-export default i18n;
+import en from './generated/en';
+import hi from './generated/hi';
 ```
 
-### `scripts/merge-locales.ts` (Build-Time Merge Script)
+### Component Usage
 ```typescript
-// Usage: npx ts-node scripts/merge-locales.ts
-import * as fs from 'fs';
-import * as path from 'path';
-import { globSync } from 'glob';
-
-const OUTPUT_DIR = 'public/locales';
-const merged: Record<string, Record<string, any>> = {};
-
-for (const file of globSync('src/features/**/_locales/*.json')) {
-  const lang = path.basename(file, '.json');
-  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
-  merged[lang] = { ...merged[lang], ...content };
-}
-
-fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [lang, data] of Object.entries(merged)) {
-  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
-  console.log(`✅ Merged ${lang}.json`);
-}
+const { t } = useTranslation();
+t('members.PAGE_TITLE'); // MUST use t('NAMESPACE.KEY')
 ```
 
-### API Client: `Accept-Language` Header
-```typescript
-import i18n from '@/i18n/i18n';
-
-export const apiFetch = (url: string, options?: RequestInit) =>
-  fetch(url, {
-    ...options,
-    headers: { 'Accept-Language': i18n.language, ...options?.headers },
-  });
-```
-
-### Developer Workflow
-1. AI writes a new feature module and creates `_locales/en.json`.
-2. AI, in the **same response**, creates all currently active-language (`ACTIVE_LANGUAGES`) `_locales/{lang}.json` files.
-3. Run `npm run i18n:merge` (CI/build does this automatically).
-4. Commit all `_locales/` files alongside the feature code.
-5. **Never** put locale files in a central `src/i18n/locales/` folder.
-
-### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every language in this list.
-
-| Code | Language | Region | Script | Priority |
-|------|----------|--------|--------|----------|
-| `en` | English | Global | Latin | **Base — always first** |
-| `nl` | Dutch | Netherlands, Belgium | Latin | High |
-| `fr` | French | France, Belgium, Canada | Latin | High |
-| `de` | German | Germany, Austria, Switzerland | Latin | High |
-| `hi` | Hindi | India (North) | Devanagari | High |
-| `mr` | Marathi | Maharashtra, India | Devanagari | Medium |
-| `ta` | Tamil | Tamil Nadu, Sri Lanka | Tamil | Medium |
-| `te` | Telugu | Andhra Pradesh, Telangana | Telugu | Medium |
-| `kn` | Kannada | Karnataka, India | Kannada | Medium |
-| `bn` | Bengali | West Bengal, Bangladesh | Bengali | Medium |
-| `gu` | Gujarati | Gujarat, India | Gujarati | Low |
-| `ml` | Malayalam | Kerala, India | Malayalam | Low |
-| `pa` | Punjabi | Punjab, India/Pakistan | Gurmukhi | Low |
-
-> **Phased Rollout:**
-> - `SUPPORTED_LANGUAGES`: The full table above represents all future supported languages.
-> - `ACTIVE_LANGUAGES`: We currently only ship `en` (English) + `hi` (Hindi) at launch.
-
-> **Indian Script Note (Mobile):** Indian script fonts (Devanagari, Tamil, Telugu, etc.) are bundled inside the APK/IPA. Use `react-native-localize` to detect the active script and load the correct font family from the app bundle. All Indian scripts are Left-to-Right (LTR) — no RTL layout changes are needed. Ensure fonts are declared in `react-native.config.js` and linked correctly for both iOS and Android.
-
-> **AI AGENT NOTE:** Every UI string inside <Text> or component props MUST use 	('NAMESPACE.KEY'). When creating a new feature module, you MUST create _locales/en.json AND _locales/hi.json (the `ACTIVE_LANGUAGES`). Do not generate files for the full `SUPPORTED_LANGUAGES` list yet. Use your own translation capability - do NOT call any external translation API. Hardcoding English strings is a critical rule violation.
+### Network Client Header
+`src/core/network/networkClient.ts` remains the only network transport and must automatically add the `Accept-Language` header from the active locale state.
 
 ## Rule 62 — Centralized Feature Flags
-* **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements.
-* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
 
+Components must not read raw environment/build values.
+Build config goes through the central mobile config module.
+Runtime feature flags are accessed through `useFeatureFlag()`.
+
+```typescript
+// ❌ BAD: Reading raw process/env values directly in components
+if (process.env.EXPO_PUBLIC_ENABLE_FEATURE) { ... }
+
+// ✅ GOOD:
+const isNewBillingEnabled = useFeatureFlag('NEW_BILLING_UI');
+if (isNewBillingEnabled) { ... }
+```
 
 ## Rule 63 — Multi-Currency Monetary Amounts
 
-### The Rule
-The backend sends all monetary amounts as **integers in the smallest currency unit** (paise for INR, cents for USD/EUR) alongside an ISO 4217 currency code. The mobile app is solely responsible for formatting. Never hardcode a currency symbol or divide raw amounts manually.
+Rule 63 supersedes the currency portion of Rule 37. Currency formatting is feature-local.
+Currency formatting MUST be feature-local (`[feature]/utils/formatCurrency.ts`).
 
-### Canonical Formatting Utility
-Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
-``````typescript
-// utils/formatCurrency.ts (co-located inside the feature module)
+Only currencies present in the project's approved currency metadata are supported. Unsupported currency codes MUST fail validation. Never silently default an unknown currency to divisor 100.
+
+```typescript
+import { currencyMetadata } from '@/core/config/currencyMetadata';
+
 /**
- * Formats a monetary amount from its smallest unit to a locale-aware display string.
- * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
- * @param currency ISO 4217 currency code (e.g., 'INR', 'USD', 'EUR')
- * @param locale  BCP 47 locale string (e.g., 'en-IN', 'nl-NL')
+ * Formats a monetary amount from minor units into a localized currency string.
+ *
+ * @param amountMinor - The amount in minor units (e.g., cents).
+ * @param currency - The 3-letter currency code (e.g., 'USD', 'INR').
+ * @param locale - The active locale string (e.g., 'en', 'hi').
+ * @returns The formatted currency string.
+ * @throws If the currency is not in the approved metadata.
  */
-export const formatCurrency = (
-  amount: number,
+export function formatCurrency(
+  amountMinor: number,
   currency: string,
-  locale: string = 'en-IN'
-): string => {
-  const subunitMap: Record<string, number> = {
-    JPY: 1, KWD: 1000, BHD: 1000,
-  };
-  const divisor = subunitMap[currency] ?? 100;
+  locale: string,
+): string {
+  const meta = currencyMetadata[currency];
+  if (!meta) throw new Error(`Unsupported currency: ${currency}`);
+  
+  const divisor = meta.divisor;
+  const majorValue = amountMinor / divisor;
+
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
-    minimumFractionDigits: divisor === 1 ? 0 : 2,
-  }).format(amount / divisor);
-};
-
-// Usage:
-// formatCurrency(9999, 'INR', 'en-IN')  →  '₹99.99'
-// formatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
-// formatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
-``````
-
-### Rules
-- ❌ Never do `amount / 100` inline inside a `<Text>` component.
-- ❌ Never hardcode `₹`, `$`, or `€` symbols anywhere in JSX.
-- ❌ Never store the formatted string in state or React Query cache — store the raw integer.
-- ✅ Always derive the locale from the active i18n language (`i18n.language` from `react-i18next`).
-
-``````tsx
-// ❌ BAD
-<Text>₹{plan.amount / 100}</Text>
-
-// ✅ GOOD
-import i18n from '@/i18n/i18n';
-<Text>{formatCurrency(plan.amount, plan.currency, i18n.language)}</Text>
-``````
-
-> **AI AGENT NOTE:** Every time you display a monetary amount inside a `<Text>` component, use the module-local `formatCurrency()` utility. The raw integer from the API must never be rendered directly. The locale MUST come from `i18n.language` — never hardcode `'en-IN'`. No currency symbol may appear as a literal character anywhere in JSX.
-
+  }).format(majorValue);
+}
+```
 
 ## Rule 64 — Tenant Data Export & Offboarding UX
 
@@ -2480,12 +2219,12 @@ The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
 ## AI Introspection & Agentic Compatibility Rules
 
 ### Rule 65 — AI-Testable UI (Mandatory testID)
-* **The Problem:** When an AI agent writes or executes Mobile E2E tests (using Maestro, Detox, or Appium), it cannot visually inspect the screen perfectly. Without explicit accessibility identifiers, the AI test scripts will break constantly.
-* **The Rule:** Every single interactive widget (Buttons, TextFields, Switches, Gestures) and critical state indicator (Status Badges, Empty States) MUST have a strictly formatted `testID` (in React Native) or `Key` (in Flutter).
+* **The Problem:** When an AI agent writes or executes Mobile E2E tests (using Maestro, ), it cannot visually inspect the screen perfectly. Without explicit accessibility identifiers, the AI test scripts will break constantly.
+* **The Rule:** Every single interactive widget (Buttons, TextFields, Switches, Gestures) and critical state indicator (Status Badges, Empty States) MUST have a strictly formatted `testID` (in React Native) or `Key` (in ).
 * **Format:** `[module]-[component]-[action/state]`. Example: `testID="members-addform-submit"` or `key=Key('billing-invoice-status-paid')`.
 * **Why:** This makes the mobile UI programmatically introspectable for autonomous AI testing agents.
 
-### Rule 66 — Component-Level AI Docstrings (JSDoc / DartDoc)
+### Rule 66 — Component-Level AI Docstrings (JSDoc / Doc)
 * **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
-* **The Rule:** Every Custom Hook (RN), Controller/Bloc (Flutter), complex Widget/Component, and State Store MUST have an exhaustive docstring block directly above its declaration.
+* **The Rule:** Every Custom Hook (RN), Controller/Bloc (), complex Widget/Component, and State Store MUST have an exhaustive docstring block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/// @description Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`

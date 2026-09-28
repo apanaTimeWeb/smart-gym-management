@@ -1,14 +1,20 @@
-# Mobile Global Design System — Framework-Agnostic Token Source
+# React Native Global Design System — Token Source
+
+Spacing / radius / icon / touch-target values → dp-equivalent React Native layout units.
+Typography → React Native text scale / fontSize.
+Animation durations → milliseconds.
+Opacity → normalized 0–1.
+Layering → zIndex + Android elevation mapping through theme tokens.
 
 > This file is the **canonical visual values source** — it defines what every
 > token is worth in light and dark mode. `mobile_theme_contract.md` is the
 > **AI-readable catalogue** derived from this file; it lists every token name,
 > value, and usage context in one scannable table. The two-layer hierarchy is:
-> `mobile_global_design.md` (values specification) →
+> `MOBILE_UI_UX_DESIGN.md` (values specification) →
 > `mobile_theme_contract.md` (executable AI reference) →
 > Framework theme module → Feature UI.
 > Implementation differs by framework (a theme object/config for React
-> Native, a `ThemeData`/`ColorScheme` extension for Flutter) — but the VALUES
+> Native, a `ThemeData`/`ColorScheme` extension for ) — but the VALUES
 > below and the "no magic values anywhere" discipline are universal.
 
 ## Global Token Enforcement Rule
@@ -27,7 +33,7 @@ Every visual value must resolve through a documented global token, unless the ex
 
 ## Token Architecture Chain
 
-`mobile_global_design.md`
+`MOBILE_UI_UX_DESIGN.md`
 → framework theme module
 → `mobile_theme_contract.md`
 → feature UI
@@ -42,6 +48,14 @@ Every visual value must resolve through a documented global token, unless the ex
 > **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION):**
 > Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text) by moving them to global folders like `widgets/common/` or `ui/`. 
 > Global UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature.
+
+## 1A. Contrast Validation (WCAG AA)
+
+Every semantic foreground/background pair used for normal UI text MUST meet WCAG AA contrast requirements (4.5:1 for normal text).
+The theme contract MUST be contrast-tested for all Light/Dark semantic pairs.
+CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
+
+Ensure `primary` (#6366F1 dark) and `destructive` (#EF4444 dark) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
 
 ## 1. Color Tokens
 
@@ -129,9 +143,9 @@ must meet this via minimum height/width or padding.
   - React Native: `import { AccessibilityInfo } from 'react-native'` — use
     `AccessibilityInfo.isReduceMotionEnabled()` or the `useReduceMotion()` hook
     from `react-native-reanimated` to skip or shorten animations.
-  - Flutter: `MediaQuery.of(context).disableAnimations` — if `true`, skip
+  - : `MediaQuery.of(context).disableAnimations` — if `true`, skip
     all non-essential `AnimationController` transitions.
-  - **Rule:** Any animation that is purely decorative (card hover lift, skeleton
+  - **Rule:** Any animation that is purely decorative (card press / active / focus lift, skeleton
     shimmer, screen transition) MUST be skipped or reduced to an instant
     state-change when reduced-motion is enabled. Functional animations (e.g.
     a spinner indicating in-progress work) may remain.
@@ -142,7 +156,7 @@ All animation durations MUST use these named tokens — never arbitrary inline v
 | Token | Duration | Usage |
 |---|---|---|
 | `duration-fast` | 150ms | Micro-interactions: button press, checkbox toggle |
-| `duration-base` | 200ms | Standard transitions: hover/press states, dropdown open |
+| `duration-base` | 200ms | Standard transitions: press / active / focus/press states, dropdown open |
 | `duration-slow` | 300ms | Screen-level transitions: bottom sheet open, modal appear |
 | `duration-xslow` | 500ms | Complex layout shifts: skeleton → content swap |
 
@@ -195,7 +209,7 @@ Series color order (applied consistently across every chart in the app). Charts 
 | `chart-secondary`| `#DB2777` | `#EC4899` |
 | `chart-info` | `#0891B2` | `#06B6D4` |
 
-## 9. Elevation / Shadow
+## 10. Elevation / Shadow
 
 | Level | Effect (iOS-style shadow) | Effect (Android-style elevation) |
 |---|---|---|
@@ -203,7 +217,7 @@ Series color order (applied consistently across every chart in the app). Charts 
 | `shadow-md` | opacity 0.1, radius 6 | elevation 3 |
 | `shadow-lg` | opacity 0.15, radius 12 | elevation 8 |
 
-## 10. Core Semantic Color Usage (How to Apply Tokens — No Guessing)
+## 11. Core Semantic Color Usage (How to Apply Tokens — No Guessing)
 
 Every color token has ONE canonical usage. Never apply a token outside its role.
 
@@ -228,7 +242,7 @@ Every color token has ONE canonical usage. Never apply a token outside its role.
 **Rule:** Never use `primary` for body text. Never use `foreground` as a background.
 Token names describe intent, not appearance — they resolve differently in light vs dark mode.
 
-## 11. Form Interaction States (All 9 States — No Invented Colors)
+## 12. Form Interaction States (All 9 States — No Invented Colors)
 
 Every input field (text, select, date picker) MUST support all applicable states.
 Token values below are used for the input **border and label color** only.
@@ -247,7 +261,7 @@ Token values below are used for the input **border and label color** only.
 
 Inline validation error messages appear **below** the field in `caption` typography, `destructive` color.
 
-## 12. Async / Content UI States (Mandatory — No Component is Exempt)
+## 13. Async / Content UI States (Mandatory — No Component is Exempt)
 
 Every screen section that loads data MUST implement all applicable states.
 No component may ship without its loading, empty, and error states.
@@ -260,23 +274,23 @@ No component may ship without its loading, empty, and error states.
 | **Permission denied** | User lacks role access to the resource | A `[Feature]PermissionDenied` component explaining the access restriction. Never show a blank screen or a cryptic error code. |
 | **Offline** | No network detected (if offline is a declared feature) | An inline offline banner (not a full-screen takeover) with the last-cached data still visible. Only for features that explicitly declare offline support in `_features.md`. |
 
-## 13. Safe Area & Notch Handling
+## 14. Safe Area & Notch Handling
 
 Mobile screens have physical obstructions (notch, Dynamic Island, home indicator, status bar).
 Every screen MUST account for safe areas — never let interactive content sit under them.
 
 - Wrap screen roots in the platform's safe-area provider:
   - RN: `<SafeAreaView>` from `react-native-safe-area-context` — never the core `SafeAreaView`.
-  - Flutter: `SafeArea` widget at the scaffold level.
+  - : `SafeArea` widget at the scaffold level.
 - **Bottom tab bars and floating action buttons** MUST add bottom safe-area inset padding
   so they are not hidden behind the home indicator on notchless devices.
 - **Full-screen modals and bottom sheets** MUST respect top safe area inset (status bar height).
 - Never hardcode a numeric inset value (e.g. `paddingTop: 44`) — always read from the
-  platform's `useSafeAreaInsets()` hook (RN) or `MediaQuery.of(context).padding` (Flutter).
+  platform's `useSafeAreaInsets()` hook (RN) or `MediaQuery.of(context).padding` ().
 - `SafeAreaView` must be applied at the **screen level**, not inside individual components —
   components are unaware of screen geometry.
 
-## 14. Z-Index / Elevation Stack
+## 15. Z-Index / Elevation Stack
 
 Define a named z-index scale so overlapping elements are never resolved with arbitrary numbers.
 
@@ -294,7 +308,7 @@ Define a named z-index scale so overlapping elements are never resolved with arb
 **Rule:** Never use a raw z-index / elevation number outside this table.
 If a new layer type is needed, extend this table — don't invent an arbitrary value inline.
 
-## 15. Sensitive Data Masking — Visual Specification
+## 16. Sensitive Data Masking — Visual Specification
 
 Any field displaying sensitive personal or financial data MUST be masked by default
 in list views, card components, and summary screens. Full values appear ONLY in
@@ -312,7 +326,7 @@ from real data without being invisible.
 
 ---
 
-## 16. Confirmation Bottom Sheet — Visual Specification
+## 17. Confirmation Bottom Sheet — Visual Specification
 
 ### Layout
 ```
@@ -342,7 +356,7 @@ from real data without being invisible.
 
 ---
 
-## 17. Button Visual Hierarchy & Loading State
+## 18. Button Visual Hierarchy & Loading State
 
 ### General Button Visual Hierarchy
 
@@ -356,13 +370,12 @@ from real data without being invisible.
 | Text button / link | `primary` text |
 
 ### Loading Button State
-When any button triggers an async action it MUST transition to a loading state
-immediately on tap — retaining its size so the layout does not shift.
+When any button triggers an async action it MUST transition to a loading state immediately on tap. The button width MUST remain unchanged. The accessible label MUST remain available. Prefer showing the label with a spinner rather than removing the label. Prevent double submission.
 
 | State | Visual |
 |---|---|
 | Default | Label text, `primary` fill |
-| Loading | Label hidden (or shifted), `Loader` icon `animate-spin`, `disabled=true`, same fill color at `opacity-loading` |
+| Loading | Label hidden (or shifted), `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading` |
 | Success | Brief checkmark flash (`duration-fast`), then revert or navigate |
 | Error | Revert to default state — error shown in toast or inline field |
 
@@ -371,9 +384,9 @@ Spinner size: `icon-sm` (16px).
 
 ---
 
-## 18. Theme Contract Cross-Reference
+## 19. Theme Contract Cross-Reference
 
-This file (`mobile_global_design.md`) is the VALUES source — it defines what every
+This file (`MOBILE_UI_UX_DESIGN.md`) is the VALUES source — it defines what every
 token is worth in light and dark mode.
 
 `mobile_theme_contract.md` (required by mobile Rule 52) is the CATALOGUE — it lists
