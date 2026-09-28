@@ -394,14 +394,12 @@ scannable table that AI agents read before writing any styled component.
 
 **Relationship:**
 - When a new token is needed: add it to THIS file first (with light + dark values
-  and a usage description), then add it to `mobile_theme_contract.md`, then
-  implement it in the framework's theme module (Rule 3).
-- AI agents writing components MUST reference `mobile_theme_contract.md` to pick
+  and a usage description), then implement it in the framework's theme module (Rule 3).
+- AI agents writing components MUST reference THIS document (`MOBILE_UI_UX_DESIGN.md`) to pick
   token names — never guess a token name or hardcode a value from memory.
-- The two files must stay in sync. A token present in one but not the other is a
-  documentation bug — fix it in the same commit.
+- This file acts as the SINGLE source of truth for the codebase's theme implementation.
 
-**Token categories that MUST appear in `mobile_theme_contract.md`:**
+**Token categories that MUST be explicitly declared in the React Native theme module:**
 - Color tokens (Section 1)
 - Status text/background tokens (Section 8)
 - Payment text/background tokens (Section 8a)

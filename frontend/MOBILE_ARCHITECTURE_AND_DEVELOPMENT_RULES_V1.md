@@ -223,7 +223,7 @@ features/
 
 ## Rule 3 — Styling & Design Tokens (No Magic Values, Anywhere)
 
-- `MOBILE_UI_UX_DESIGN.md` serves as the design specification. However, every color, spacing value, font size, radius, and shadow used in the code MUST come from the executable token contract defined in `mobile_theme_contract.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
+- `MOBILE_UI_UX_DESIGN.md` serves as the single source of truth for both design specification and the executable token contract. Every color, spacing value, font size, radius, and shadow used in the code MUST come from the tokens defined in `MOBILE_UI_UX_DESIGN.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
 - Implementation uses React Native theme objects/configuration.
   The values and "no magic values" discipline are universal within the React Native application.
 - There is no hover state on touch devices.
@@ -666,17 +666,15 @@ the feature can be broken and PASS at the same time.
 
 ## Rule 20 — Environment & Configuration Management
 
-- All secrets, base URLs, and feature flags are defined per build
-  environment (dev/staging/production) through the framework's native build
-  variant/flavor/scheme mechanism — never through a single shared config file
-  edited manually before each release.
+- Base URLs and non-sensitive build configuration MUST be defined per environment
+  through the native iOS scheme / Android build-variant mechanism.
+- Secrets MUST exist only in CI/CD protected secret storage and MUST NOT be bundled
+  into the application binary.
+- Runtime feature flags MUST be fetched from the backend and accessed only through
+  the centralized `useFeatureFlag()` mechanism.
 - No component or screen reads a raw environment variable or config file
-  directly — always go through one central config-access module that
-  validates presence/shape of required values at app startup, failing fast
-  with a clear error rather than silently proceeding with `undefined`/`null`.
-- Only genuinely public, non-sensitive values may ever end up in the shipped
-  binary. Anything sensitive is fetched from a secured backend endpoint at
-  runtime, never bundled into the client.
+  directly — always go through the central config-access module or feature flag hook
+  which validates presence/shape at app startup or runtime.
 
 ## Rule 21 — Over-The-Air (OTA) Updates & Hotfix Strategy
 
@@ -1057,8 +1055,7 @@ If business logic is required by two features, duplicate it inside each feature
 rather than moving it into `src/core/`. This preserves portability without
 artificially duplicating mandatory application infrastructure.
 
-Enforce mechanically via `eslint-plugin-boundaries` (React Native) or equivalent
-static analysis / import linter () so violations are caught in CI, not in
+Enforce mechanically via `eslint-plugin-boundaries` so violations are caught in CI, not in
 code review.
 
 ---
@@ -1434,8 +1431,8 @@ Rules:
 - The button MUST be `disabled` while loading to prevent double-submission
   (Rule 31 and Rule 32 already mandate this for destructive actions — this rule
   extends it to ALL async-submit buttons).
--  equivalent: wrap `TouchableOpacity/Pressable` in a `View` with a fixed width,
-  or use `ConstrainedBox` with `minWidth`.
+- React Native: wrap `TouchableOpacity/Pressable` in a `View` with a fixed width,
+  or apply `minWidth` via style.
 
 Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
 
@@ -1913,12 +1910,11 @@ Cross-reference: Rule 1 (module-prefixed naming), Rule 24 (_features.md template
 
 ---
 
-## Rule 52 — Theme Contract File (`mobile_theme_contract.md`)
+## Rule 52 — Theme Token Enforcement
 
-Every project MUST define a `mobile_theme_contract.md` that acts as the single source of truth for the codebase's theme implementation.
-The theme contract MUST reproduce every token/value defined in `MOBILE_UI_UX_DESIGN.md`; empty category headings are non-compliant.
+The file `MOBILE_UI_UX_DESIGN.md` acts as the single source of truth for the codebase's theme implementation. There is no separate contract file. 
 
-The theme contract must contain complete values for:
+The React Native application's theme module MUST exactly implement the complete token values for:
 - colors
 - status colors
 - payment colors
@@ -1936,7 +1932,7 @@ The theme contract must contain complete values for:
 - z-index/layering
 - skeleton tokens
 
-It must remain synchronized with `MOBILE_UI_UX_DESIGN.md`. Any values missing from the contract will cause CI/Design validation failure.
+Any raw values or tokens missing from the code's theme configuration that are present in `MOBILE_UI_UX_DESIGN.md` will cause CI/Design validation failure.
 
 ## Rule 53 — Idempotency for ALL API Mutations
 
@@ -1960,7 +1956,7 @@ export interface ProcessPaymentRequest {
 export async function processPaymentApi(
   req: ProcessPaymentRequest
 ): Promise<ProcessPaymentResponse> {
-  return await networkClient.post('/manager/billing/payments', {
+  return await networkClient.post('/api/v1/frontend_manager/billing/payments', {
     memberId: req.memberId,
     amountMinor: req.amountMinor,
     paymentMethodId: req.paymentMethodId,
@@ -2067,10 +2063,10 @@ The mobile architecture MUST enforce the following security and robustness const
 
 ## Rule 57 — Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., ` 	rainer_url_config `) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
+- **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
-- [?] **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
-- [?] **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from './UserComponent'`.
+- ❌ **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
+- ✅ **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from './UserComponent'`.
 
 ## Rule 58 — WebSockets & Real-Time Communication
 * **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components.
@@ -2123,9 +2119,8 @@ Build config goes through the central mobile config module.
 Runtime feature flags are accessed through `useFeatureFlag()`.
 
 ```typescript
-// ❌ BAD: Reading raw process/env values directly in components
-❌ BAD: reading build/config values directly inside a feature component
-✅ GOOD: const enabled = useFeatureFlag('NEW_BILLING_UI');
+// ❌ BAD: reading build/config values directly inside a feature component
+if (readBuildConfig().enableFeature) { ... }
 
 // ✅ GOOD:
 const isNewBillingEnabled = useFeatureFlag('NEW_BILLING_UI');
