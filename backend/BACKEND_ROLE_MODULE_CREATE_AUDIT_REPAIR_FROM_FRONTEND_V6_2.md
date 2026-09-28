@@ -260,7 +260,7 @@ The frontend is read-only evidence for backend requirement discovery.
 
 > **MODE DECISION RULE:**
 > - **Frontend ZIP given + NO backend ZIP given** → **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
-> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all issues, and delivers `backend_{role}_v{N}_fix.zip`.
+> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all actionable backend issues within the supplied writable scope, documents any genuinely required frontend changes, and delivers `backend_{role}_v{N}_fix.zip`.
 >
 > **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
 
@@ -866,7 +866,14 @@ Deep audit of existing backend — every rule, every requirement, every file. St
 *Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
 
 **STAGE 3 — FINAL REPAIR & DELIVERY:**
-Repair ALL identified issues. Re-audit repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
+Repair ALL actionable backend issues that are repairable within the supplied writable backend scope.
+No actionable in-scope backend issue may be skipped.
+
+If an issue genuinely requires a frontend modification, complete the backend repair as far as possible and document the exact required frontend work in `FRONTEND_CHANGE_REQUIRED.md`.
+
+If an issue requires an artifact outside the supplied writable backend scope, do not invent or recreate that artifact; classify it according to the applicable scope/evidence status and provide the exact integration instruction.
+
+Re-audit the repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
 
 ---
 
