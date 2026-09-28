@@ -270,9 +270,9 @@ A ZIP containing the backend architecture and backend documentation.
 It may contain:
 
 * `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
-* `[module]_backend_feature.md`
-* `[module]_dependencies.md`
-* `[module]_forbidden.md`
+* `[role]_[module]_backend_feature.md`
+* `[role]_[module]_dependencies.md`
+* `[role]_[module]_forbidden.md`
 * related backend architecture documents.
 
 The backend documentation is the NORMATIVE ARCHITECTURE SOURCE.
@@ -287,7 +287,7 @@ Do not invent rules that are not present in the supplied backend documentation.
 
 ## INPUT 4 — BACKEND E2E TEST ZIP
 
-A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend_e2e/backend_admin_e2e/members`). 
+A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend_e2e/backend_admin_e2e/admin_members`). 
 
 Without this, E2E completeness cannot be verified, as tests are strictly isolated from the backend source code directory.
 
@@ -694,9 +694,9 @@ Frontend Zod Response Schemas
         ↓
 Frontend MSW Handlers / Stubs
         ↓
-Mutual Contract Freeze (Mode B only — requires backend artifacts)
+Frozen Frontend Contract Baseline (Mode A) / Mutual Contract Freeze (Mode B — requires backend artifacts)
         ↓
-Backend Frozen API Contract (Mode B only)
+Backend Frozen API Contract (Mode B) / Frontend-Derived API Contract (Mode A)
         ↓
 Backend Response DTO (Mode B only)
         ↓
@@ -2670,26 +2670,6 @@ backend_admin/
 ```
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
-
-### 0B — Hard feature write boundary
-
-For feature-specific work, default writable scope is:
-
-```text
-[owning-feature]/**
-```
-
-Detect changes or dependencies crossing sibling business feature boundaries without an explicitly documented infrastructure exception.
-
-### 0C — Change-scope failure conditions
-
-Explicitly check:
-
-- unrelated business module changes;
-- new sibling-feature business dependencies;
-- business logic moved into domain-level folders;
-- queries/mock handlers modified in sibling modules.
-
 ### 0E — Isolated context means modular monolith
 
 Verify feature modules do NOT independently bootstrap global:
@@ -6251,7 +6231,7 @@ Before producing the final verdict, verify:
 [ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
 [ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
 [ ] Rule 0C — Change scope failure conditions checked
-[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ exception verified)
+[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)
 [ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
@@ -6309,8 +6289,8 @@ Before producing the final verdict, verify:
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
 [ ] Rule 78 — _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
-[ ] Rule 79 — Explicit data flow direction comment in every non-trivial service/orchestrator method
-[ ] Rule 80 — JSDoc present on ALL service methods, repositories, and utilities
+[ ] Rule 79 — Explicit `// FLOW:` data-flow direction comment in every service, controller, and repository file
+[ ] Rule 80 — Multi-line JSDoc on ALL service methods, repository methods, adapter methods, and utility functions
 [ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
 [ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
 [ ] Rule 102 — Database tables are prefixed correctly in monolith
@@ -6872,7 +6852,7 @@ The re-audit is NOT a full repeat of Stage 1 and Stage 2.
 
 It is a targeted verification pass:
 
-1. **For every issue recorded in Stage 2 with status FAIL, PARTIAL, MISSING_BACKEND, REQUEST_MISMATCH, RESPONSE_MISMATCH, AUTHORIZATION_MISMATCH, or SEMANTIC_MISMATCH:**
+1. **For every issue recorded in Stage 2 with status FAIL, PARTIAL, MISSING_BACKEND, REQUEST_MISMATCH, RESPONSE_MISMATCH, AUTHORIZATION_MISMATCH, SEMANTIC_MISMATCH, ERROR_CONTRACT_MISMATCH, TENANT_MISMATCH, ASYNC_MISMATCH, or DATA_PROVENANCE_MISMATCH:**
    - Confirm the repair was applied.
    - Confirm the repair is correct against the frontend requirement.
    - Confirm no new violation was introduced by the repair.

@@ -83,7 +83,7 @@ Rename all controllers, services, and models to be extremely descriptive based o
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
 - ✅ **GOOD:** `admin-billing-jwt-token-generator.utils.ts`, `admin-billing-stripe-payment-webhook.controller.ts`, `admin-attendance-member-registration-validator.py`
-* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exception: Global configuration, constants, types, utilities, and root tooling files like `api-response.types.ts`, `database.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
+* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exception: Global configuration, constants, types, utilities, and root tooling files like `api-response.types.ts`, `database.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories such as `src/core/`, `src/infrastructure/`, or root-level tooling folders like `scripts/`.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
@@ -547,6 +547,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
 ## 29. Soft Deletes (Never Hard-Delete Production Data)
 * **The Rule:** Never use destructive `DELETE` SQL / ORM calls directly on production data. Instead, all entities must have an `is_deleted: boolean` (or `deleted_at: timestamp`) column. A "delete" operation only sets this flag — the data is never physically removed.
+* **Exemptions (CRITICAL):** Rule 118 immutable event logs (`events_log`) and Rule 119 financial ledger rows (`ledger_entries`) are append-only and permanently exempt from soft-delete mechanics — they must NEVER carry a `deleted_at` column or be filtered by one. See Rule 110 for the full per-record-type retention hierarchy.
 * **Why:**
   1. **Audit & Recovery:** If an admin accidentally deletes 1,000 members, the data is instantly recoverable.
   2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
@@ -642,7 +643,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
-* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager_billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
 * **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
@@ -902,7 +903,7 @@ Backend implementation (services, repositories, DB queries)
 * **Format:**
   ```
   // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
-  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBER.SUSPENDED')
+  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
 * **Why:** When an AI agent is given a single file to fix a bug, the `// FLOW:` comment instantly tells it the full chain of execution — what came before this file, and what happens after — without the AI needing to read any other file. This eliminates the single biggest cause of AI hallucination: not knowing what calls what.
 
@@ -1528,8 +1529,10 @@ This rule MUST remain consistent with Rule 99.
                    // FK: FK_members_branches_branch_id
     status   MemberStatus @default(PENDING) @map("status")
                    // IDX: IDX_members_status
-    // DERIVED READ-MODEL ONLY — see Rule 119; never directly mutated
-    balance  BigInt @default(0) @map("balance")  *(IMPORTANT: The `balance` field shown in the Rule 100 schema example is a derived read-model projection for display/check-constraint enforcement ONLY. The financial source of truth is always the immutable `ledger_entries` table (Rule 119). The stored balance MUST be recomputed from ledger rows; it is never directly updated — see Rule 119.)*
+    // DERIVED READ-MODEL ONLY — see Rule 119; never directly mutated.
+    // The financial source of truth is always ledger_entries. This field is a
+    // cached projection for display/check-constraint only. Never directly mutated.
+    balance  BigInt @default(0) @map("balance")
                    // CHK: CHK_wallets_balance_non_negative (explicitly declared in the ORM schema where the ORM supports it, otherwise explicitly named in the migration/DDL)
     branch   Branch @relation(fields: [branchId], references: [id],
                               map: "FK_members_branches_branch_id")
@@ -1704,20 +1707,20 @@ src/
           en/
             errors.json   ← AI writes this when creating the module
             messages.json
-          nl/
-            errors.json   ← AI translates this in the same commit
+          nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
+            errors.json
             messages.json
-          fr/
+          fr/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
             errors.json
             messages.json
         admin-members.controller.ts
         admin-members.service.ts
-    superadmin_tenants/
+    superadmin_tenants/  ← NOTE: superadmin-scoped; should live under backend_superadmin/ not backend_admin/
 
         _locales/
           en/
             errors.json
-          nl/
+          nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE
             errors.json
 scripts/                  ← (Global tooling folder exception allowed under Rule 2)
   merge-locales.ts        ← Merges all module _locales into one bundle at build time
@@ -1738,7 +1741,7 @@ When an AI agent writes a new module or adds new error/message keys, it MUST:
   }
 }
 
-// _locales/nl/errors.json  ← AI writes this, context-aware
+// _locales/nl/errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Lid niet gevonden.",
@@ -1924,7 +1927,7 @@ All data exports MUST be processed asynchronously via background jobs and delive
 | S3/local export zips | Deleted after 48h download window | N/A | Rule 110 |
 
 An AI agent MUST apply this retention hierarchy. Blanket deletion of all tenant data is a Rule 118/119 violation.
-- A scheduled cron job MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws. *(Exception: See Rule 29 for retention hierarchy. Legally required financial/audit ledgers must be explicitly archived/retained rather than blindly deleted.)*
+- A distributed scheduled job, executed through the Rule 42 distributed scheduler (NEVER a local @Cron() or similar), MUST permanently hard-delete all tenant data (including generated `.zip` files on disk/S3) after 90 days to comply with GDPR Right to Erasure / Data Portability laws. *(Exception: See Rule 29 for retention hierarchy. Legally required financial/audit ledgers must be explicitly archived/retained rather than blindly deleted.)*
 
 > **AI AGENT NOTE:** Never implement data export as a synchronous API. Always use a Background Job / Message Broker, stream data to CSV, save to secure local disk or S3, email a time-limited download link, and emit a WebSocket completion event. Raw JSON/SQL dumps are forbidden for tenant exports.
 
