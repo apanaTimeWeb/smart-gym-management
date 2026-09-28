@@ -4057,13 +4057,15 @@ Audit:
 Verify every module mutation API function supports the backend idempotency contract:
 
 ```text
+Every mutation using:
 POST
 PATCH
 PUT
 DELETE
 ```
 
-where required by the supplied backend contract.
+MUST satisfy the required Idempotency-Key contract defined by the supplied
+Web frontend architecture.
 
 Check:
 

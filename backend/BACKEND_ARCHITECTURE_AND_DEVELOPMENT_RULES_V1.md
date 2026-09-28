@@ -300,22 +300,16 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ---
 
-## Framework Reference Appendix (Non-NestJS Projects Only)
+## Django Framework Reference Appendix
 
 For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
 
-*(Note: In non-NestJS frameworks like Django or Express, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
+*(Note: In non-NestJS frameworks like Django, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
 
 ### In Django (Python) — Reference Only
 - Avoid massive `views.py`. Create a `my_module_views/` folder and split class-based views into individual files (e.g., `admin_member_registration_view.py`).
 - Avoid "fat models". Move complex business logic from `models.py` into a `my_module_services/` directory.
 - Keep `serializers.py` strictly for validation and data formatting.
-
-### In Express.js (Node.js) — Reference Only
-- Avoid putting logic inside route definitions.
-- `my_module_routes/` should only map URLs to Controllers.
-- `my_module_controllers/` handle HTTP (req, res).
-- `my_module_services/` handle the heavy lifting and should be highly split up (e.g., `adminPaymentService.js`, `adminRefundService.js`).
 
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
@@ -325,7 +319,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 
 ## 12. Strict API Documentation (Swagger/OpenAPI)
-* **The Rule:** Every endpoint MUST be documented using the framework's native OpenAPI/Swagger tools (e.g., `@ApiTags` and `@ApiResponse` in NestJS, `drf-spectacular` in Django, or `swagger-jsdoc` in Express).
+* **The Rule:** Every endpoint MUST be documented using the framework's native OpenAPI/Swagger tools (e.g., `@ApiTags` and `@ApiResponse` in NestJS, `drf-spectacular` in Django).
 * **Why:** AI relies heavily on interface contracts. Keeping them mandatory and co-located with the controllers ensures frontend developers (and AI frontend agents) always have a mathematically accurate, up-to-date API contract to work with.
 
 ## 13. Environment & Configuration Management
@@ -570,7 +564,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **Why:** WebP reduces image file sizes by up to 80% compared to JPEG/PNG without visible quality loss. This drastically reduces cloud storage costs and speeds up frontend loading times, resulting in a much faster app.
 
 ## 22. Security Headers, CORS, & Protection
-* **The Rule:** An enterprise app cannot go to production naked. Always implement security middleware (e.g., `Helmet.js` in Node, `SecurityMiddleware` in Django, or `Spring Security`) to set strict HTTP headers. Configure strict CORS policies (only allowing exact frontend domains). Ensure inputs are stripped of executable scripts (XSS protection) and standard ORMs are used to natively prevent SQL injection.
+* **The Rule:** An enterprise app cannot go to production naked. Always implement security middleware (NestJS: Helmet / framework-approved security middleware, Django: SecurityMiddleware / framework-approved security middleware) to set strict HTTP headers. Configure strict CORS policies (only allowing exact frontend domains). Ensure inputs are stripped of executable scripts (XSS protection) and standard ORMs are used to natively prevent SQL injection.
 
 ## 23. Background Jobs & Queues (No Hanging Requests)
 * **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
@@ -692,7 +686,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **Sensitive Data Redaction (CRITICAL):** The `old_value` and `new_value` JSON payloads MUST be scrubbed of sensitive PII (passwords, payment tokens, government IDs) before saving to the audit log. Audit logs must have strict access control, defined retention limits, and encryption for highly sensitive payloads.
 * **Completeness Rule:** Mutations occur from HTTP requests, Background Jobs, Event Consumers, Scheduled Jobs, Webhooks, and Internal Commands. The audit trail architecture MUST integrate with the mutation layer (e.g., repository or orchestrator) rather than relying solely on HTTP interceptors to guarantee completeness.
 * **How:** Implement this as a cross-cutting concern using:
-  - **NestJS/Express:** An interceptor, event listener, or AOP-style wrapper around repositories that fires after mutating actions.
+  - **NestJS:** An interceptor, event listener, or AOP-style wrapper around repositories that fires after mutating actions.
   - **Django:** Model `post_save` / `post_delete` signals.
 * **Why:** Regulators, auditors, and enterprise clients will always ask "who changed this record and when?". Building this from day one costs almost nothing. Retrofitting it onto a live production system costs weeks. It also gives AI agents an immutable history to reason about when debugging.
 
@@ -1283,7 +1277,6 @@ If a backend implementation cannot provide a field currently required by the fro
 * **How to implement per framework:**
   - **NestJS:** Use a `@Roles(...)` custom decorator paired with a global `RolesGuard` that reads the JWT payload. Never check `req.user.role` inside a service.
   - **Django:** Use Django REST Framework's `IsAuthenticated` + custom `Permission` classes (e.g., `IsAdminOrManager`). Never check `request.user.is_staff` inside a view's business logic.
-  - **Express:** Implement a `requireRoles(...roles)` middleware factory that is mounted per-route. Never check roles inside a controller handler.
 * **Fine-Grained Resource Permissions:** For resource-level checks (e.g., "Can this manager see only their branch's members?"), create a dedicated `[role]-[module]-authorization.service.ts`. This service receives the actor and the resource and returns a boolean. The controller calls this service before delegating to the business service.
 * **Centralized Role Registry:** All role names and permission strings MUST be defined as enums in a central `auth.roles.constants.ts` file. Never use raw strings like `'admin'` or `'manager'` directly in guards or decorators.
   - ❌ **BAD:** `@Roles('admin', 'superadmin')`
@@ -1297,7 +1290,7 @@ If a backend implementation cannot provide a field currently required by the fro
   - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_members'` (where `members/index.ts` re-exports everything)
   - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_members/manager_members_services/member-registration.service'`
 * **Why barrel files are dangerous in AI-driven codebases:**
-  1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Express projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
+  1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Django projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
   2. **AI Context Pollution:** When an AI imports `from '@/backend_manager/manager_members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
   3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
 * **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
@@ -1921,25 +1914,36 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
-All state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) across the entire backend architecture MUST enforce strict idempotency by applying the `@RequireIdempotencyKey()` decorator to the controller method. 
+All state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) across the entire backend architecture MUST enforce strict idempotency.
 This is a non-negotiable enterprise requirement designed to prevent duplicate payments, duplicate record creation, and partial transaction failures from network retries.
 
-- The `@RequireIdempotencyKey()` decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
-- **Atomic Concurrency Lock:** The interceptor MUST perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
-- **Payload Verification:** If a cached response exists for the key, the system MUST verify that the request body matches the original request body (hash comparison). If the body differs, reject with `400 Bad Request`.
-- **Transaction Safety:** The idempotency record MUST only be marked as completed (storing the final response payload) AFTER the primary database transaction successfully commits.
-- **Degradation:** If Redis is unavailable, mutating requests should fail closed (return `503 Service Unavailable`) rather than risk double-processing financial transactions.
+### NestJS implementation
+Use the centralized `@RequireIdempotencyKey()` decorator/interceptor. The decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
+
+### Django implementation
+Use the project's centralized middleware/decorator/request enforcement mechanism to enforce the same Idempotency-Key contract.
+
+### Framework-independent requirements
+- all POST/PATCH/PUT/DELETE mutations require the key
+- missing key is rejected
+- request-body hash must match on retry
+- same key = same operation
+- Atomic Concurrency Lock: perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
+- completion recorded only after DB commit (storing the final response payload)
+- fail closed if the idempotency store is unavailable (return `503 Service Unavailable`)
 - Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
 
 ## Rule 104 — WebSockets & Real-Time Communication
 * **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
-* **Implementation:** Use a Redis Pub/Sub adapter. Use a WebSocket transport (e.g., `@nestjs/platform-ws` or `@nestjs/platform-socket.io`) paired with a transport-specific adapter for Redis-backed cross-instance fan-out (e.g., `redis-adapter` for socket.io) to ensure that WebSocket events scale across multiple backend instances.
+* **NestJS implementation:** Use a WebSocket transport (e.g., `@nestjs/platform-ws` or `@nestjs/platform-socket.io`) paired with a transport-specific adapter for Redis-backed cross-instance fan-out (e.g., `redis-adapter` for socket.io).
+* **Django implementation:** Use Django Channels with a Redis channel layer for cross-instance fan-out.
 * **Payload Strictness:** WebSocket emitted events and payloads MUST follow a strict shape similar to the `ApiResponse<T>` envelope, avoiding arbitrary, untyped object broadcasts.
 
 ## Rule 105 — Role-Based Data Serialization & Field Masking
 * **The Rule:** Data intended to be hidden from specific user roles (e.g., hiding internal revenue metrics from a basic Member, but showing it to a Superadmin) MUST be masked at the serialization layer.
-* **Implementation:** Use `class-transformer` decorators such as `@Exclude()` or `@Expose({ groups: ['admin'] })` on the DTO. The controller must pass the current user's role to the serialization interceptor so that the DTO automatically strips forbidden fields before sending the JSON response.
+* **NestJS implementation:** Use `class-transformer` decorators such as `@Exclude()` or `@Expose({ groups: ['admin'] })` on the DTO. The controller must pass the current user's role to the serialization interceptor so that the DTO automatically strips forbidden fields before sending the JSON response.
+* **Django implementation:** Use DRF serializer Context or dynamic field removal within the Serializer `to_representation` or `__init__` methods based on the `request.user` passed in via context.
 * **Why:** This ensures data hiding is centralized and declarative, preventing developers from manually trying to `delete user.revenue` in various service methods, which is error-prone.
 
 ## Rule 106 — Strict Cache Invalidation Strategy
@@ -1972,12 +1976,12 @@ Read
 
 ### Strategy: Module-Co-located Locales + AI-Generated Translations (Zero External Cost)
 
-The backend uses `nestjs-i18n` with **co-located locale files inside each NestJS module folder** — NOT in a central `src/i18n/` directory. This preserves **Extreme Isolation**: each module owns its own strings and can be moved, deleted, or versioned independently.
+The backend uses framework-native internationalization (e.g., `nestjs-i18n` for NestJS, or `Django translation framework` for Django) with **co-located locale files inside each module folder** — NOT in a central `src/i18n/` directory. This preserves **Extreme Isolation**: each module owns its own strings and can be moved, deleted, or versioned independently.
 
 **Translations are written by the AI agent at the time it writes the module code.** No external API is needed. The AI already has full context of the Gym Management domain, making translations accurate and idiomatic.
 
 ### Stack
-- **Library:** `nestjs-i18n`
+- **Library:** `nestjs-i18n` (NestJS) or Django native translation framework (Django)
 - **Base language:** English (`en/errors.json` and `en/messages.json`) — written by developer / AI agent
 - **Other languages:** Written by the AI agent in the same commit that creates the module
 - **Runtime cost:** Zero — all files are static JSON, bundled with the app

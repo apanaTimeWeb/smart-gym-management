@@ -862,11 +862,11 @@ All calls go through the central network client. Response envelope:
 
 | Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/api/v1/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
-| `fetchMemberById(id)` | GET | `/api/v1/frontend_manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/api/v1/frontend_manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/api/v1/frontend_manager/members/:id` | — | `null` |
+| `fetchMembers(params)` | GET | `/api/v1/{role}/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
+| `fetchMemberById(id)` | GET | `/api/v1/{role}/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/api/v1/{role}/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/{role}/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/{role}/members/:id` | — | `null` |
 
 ## Approved External Dependencies
 [REQUIRED: Must list all cross-layer and external packages. AI must not import anything outside this list.]
@@ -979,13 +979,13 @@ which file to open for any task without reading all files.]
 - [ ] Rule 50: Permitted record identifiers have copy-to-clipboard affordance in detail screens
 - [ ] Rule 51: Every list screen has a dedicated named `EmptyState` component
 - [ ] Rule 52: New design tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation
-- [ ] Rule 53: Irreversible/financial mutations use stable `Idempotency-Key` — same key reused on retry, new key only for new user intent
+- [ ] Rule 53: Every POST/PATCH/PUT/DELETE mutation uses a required stable Idempotency-Key; the same key is reused on retry and a new key is generated only for a new user intent
 - [ ] Rule 54: Token refresh is single-flight — concurrent 401s share the same refresh promise
 - [ ] Rule 55: `x-tenant-id` derived from trusted session context only — never from route params or local state
 - [ ] Rule 56: Enterprise security constraints respected (encrypted offline cache, exponential backoff with jitter, AbortSignal on unmount, deep-link re-authorization, notification payload validation, clipboard policy)
 - [ ] Rule 57: All import paths exactly match file casing on disk — CI/Linux compatible
 - [ ] Rule 58: WebSockets managed via centralized `WebSocketContext` / `SocketProvider` — no direct `new WebSocket()` in components
-- [ ] Rule 58A: App foreground resume calls `GET /api/notifications` to recover missed push events
+- [ ] Rule 58A: App foreground resume calls the exact notification-recovery endpoint defined by the feature API contract; canonical project pattern: `GET /api/v1/{role}/notifications`
 - [ ] Rule 59: Role-masked fields typed as optional in TypeScript interfaces and Zod schemas; UI handles `undefined` gracefully
 - [ ] Rule 60: Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys
 - [ ] Rule 61: All client-authored/static user-visible strings use `t('NAMESPACE.KEY')`; backend-supplied `response.message` values are displayed as-is and NOT passed through `t()`; `Accept-Language` header attached by central network client
@@ -1284,7 +1284,8 @@ Define enums in the feature's `*.types.ts` file:
 if (member.status === 'active') { ... }
 if (member.status === 'suspended') { ... }
 
-// ✅ GOOD — enum-driven, refactor-safe, matches backend SCREAMING_SNAKE_CASE exactly
+// ✅ GOOD — enum-driven, refactor-safe, matches the exact API wire values
+// defined by the supplied feature/API contract.
 export enum MemberStatus {
   ACTIVE    = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
@@ -1296,11 +1297,11 @@ if (member.status === MemberStatus.ACTIVE) { ... }
 ```
 
 Rules:
-- Enum values MUST exactly match the API wire value defined by the supplied feature contract. If the feature API contract changes enum values, mobile type/schema/tests must update in the same change.
+- Enum values MUST exactly match the API wire values defined by the supplied feature/API contract. If the feature API contract changes enum values, mobile type/schema/tests must update in the same change.
 - Never use numeric enums for API-bound fields — string enums survive serialization.
 - Filter dropdowns, badge colors, and conditional rendering all branch on the enum,
   never on a raw string.
-- If the backend adds a new status, the TypeScript compiler surfaces every
+- If the supplied API contract adds a new status, the TypeScript compiler surfaces every
   unhandled case — this is the point.
 
 Cross-reference: Rule 7 and the feature API contract.
@@ -1675,7 +1676,7 @@ import React from 'react';
 //   manage UI state (filter panel open/close lives in useMembersFilters.ts).
 //
 // FLOW: MembersListScreen → useMembers(params) → members.api.ts → fetchMembers()
-//   → GET /api/v1/frontend_manager/members → ApiResponse<Member[]> + PaginationMeta
+//   → GET /api/v1/{role}/members → ApiResponse<Member[]> + PaginationMeta
 import { useQuery } from '@tanstack/react-query';
 ...
 ```
@@ -1766,10 +1767,10 @@ const client = networkClient.create({ timeout: TIMEOUT_CONFIG.DEFAULT });
 
 ```typescript
 // ❌ BAD — no timeout; hangs indefinitely on poor mobile networks
-const response = await networkClient.get('/api/v1/frontend_manager/members');
+const response = await networkClient.get(MEMBERS_URLS.LIST);
 
 // ✅ GOOD — explicit timeout per call category
-const response = await client.get('/api/v1/frontend_manager/members');                          // inherits DEFAULT
+const response = await client.get(MEMBERS_URLS.LIST);                          // inherits DEFAULT
 const response = await client.post('/reports/export', dto,
   { timeout: TIMEOUT_CONFIG.REPORT });                                          // explicit override
 ```
@@ -1886,9 +1887,12 @@ text from a non-input element without explicit support.
 // src/core/utils/copyToClipboard.ts
 import Clipboard from '@react-native-clipboard/clipboard';
 
-export async function copyToClipboard(value: string, label = 'Copied'): Promise<void> {
+export async function copyToClipboard(
+  value: string,
+  successMessage: string,
+): Promise<void> {
   await Clipboard.setString(value);
-  showToast(`${label} copied to clipboard`, 'success');   // Rule 40
+  showToast(successMessage, 'success');
 }
 ```
 
@@ -1897,7 +1901,10 @@ export async function copyToClipboard(value: string, label = 'Copied'): Promise<
 <Text>{member.id}</Text>
 
 // ✅ GOOD — tap to copy with feedback
-<TouchableOpacity onPress={() => copyToClipboard(member.id, 'Member ID')}>
+<TouchableOpacity onPress={() => copyToClipboard(
+  member.id,
+  t('COMMON.COPIED_TO_CLIPBOARD', { label: t('MEMBERS.MEMBER_ID') }),
+)}>
   <Text>{member.id}</Text>
   <CopyIcon size={tokens.icon.sm} />
 </TouchableOpacity>
@@ -1987,7 +1994,7 @@ export interface ProcessPaymentRequest {
 export async function processPaymentApi(
   req: ProcessPaymentRequest
 ): Promise<ProcessPaymentResponse> {
-  return await networkClient.post('/api/v1/frontend_manager/billing/payments', {
+  return await networkClient.post(PAYMENT_URLS.PROCESS, {
     memberId: req.memberId,
     amountMinor: req.amountMinor,
     paymentMethodId: req.paymentMethodId,
@@ -2085,13 +2092,13 @@ The mobile architecture MUST enforce the following security and robustness const
    - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
    - New tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation? (Rule 52)
-   - Irreversible mutations use stable Idempotency-Keys on retry? (Rule 53)
+   - Every POST/PATCH/PUT/DELETE mutation uses a required stable Idempotency-Key; the same key is reused on retry and a new key is generated only for a new user intent? (Rule 53)
    - Token refresh is single-flight? (Rule 54)
    - x-tenant-id derived from secure context only? (Rule 55)
    - Enterprise security constraints respected? (Rule 56)
    - Exact import path casing matches the file on disk — CI/Linux compatible? (Rule 57)
    - WebSocket instantiated only through centralized `WebSocketContext` / `SocketProvider`? (Rule 58)
-   - App foreground resume triggers `GET /api/notifications` REST recovery call? (Rule 58A)
+   - App foreground resume triggers the exact notification-recovery endpoint from the feature API contract? (Rule 58A)
    - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
    - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys? (Rule 60)
    - All client-authored/static user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)

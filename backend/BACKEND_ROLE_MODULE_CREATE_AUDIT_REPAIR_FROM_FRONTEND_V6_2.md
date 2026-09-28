@@ -5192,14 +5192,12 @@ First determine the actual backend framework from the supplied repository.
 Classify:
 
 ```text
-NESTJS_PRIMARY
-DJANGO_REFERENCE_MAPPING
-EXPRESS_REFERENCE_MAPPING
-OTHER_FRAMEWORK_REFERENCE_MAPPING
+NESTJS
+DJANGO
 UNKNOWN
 ```
 
-If the project is NOT NestJS:
+If the project is Django:
 
 - do NOT declare NestJS-specific tooling names as missing merely because the equivalent
   framework mechanism has a different name;
@@ -5222,13 +5220,7 @@ services/ for business logic
 serializers.py for validation/data formatting
 ```
 
-For Express verify:
 
-```text
-routes → Controllers
-controllers → HTTP handling
-services → business logic
-```
 
 For NestJS verify the primary mappings:
 
