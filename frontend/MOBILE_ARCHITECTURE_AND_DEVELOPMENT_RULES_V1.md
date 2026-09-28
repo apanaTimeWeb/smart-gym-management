@@ -1,10 +1,6 @@
 # React Native Mobile Development Instructions — Enterprise / Industry Scale
 
-This document defines the canonical architecture and development rules for a React Native bare-metal application. React Native is the normative implementation target for this project. Use React Native New Architecture (Fabric + TurboModules). Framework-specific alternatives such as  or native / are not part of the normative implementation rules in this document.
-
-## Rule 0 — Framework Decision (Made Once, Documented, Not Re-Litigated Per Feature)
-
-React Native (bare-metal) is the chosen framework. Use the current-generation architecture (Fabric + TurboModules).  and native / are not part of the normative rules.
+This document defines the canonical architecture and development rules for a React Native bare-metal application. React Native is the normative implementation target for this project. Use React Native New Architecture (Fabric + TurboModules). No alternative framework is part of the normative implementation rules. React Native bare-metal is the only supported implementation target.
 
 ## Rule 0A — Feature Module Is the AI Repair Boundary
 
@@ -86,11 +82,12 @@ Keep all split files inside the **same feature folder**.
 
 ### Canonical Feature Folder Structure
 
-Adapt file extensions to the framework (`*.ts`/`*.tsx` for React Native; `*.` for ):
-
+All application source examples in this document use React Native TypeScript:
+`*.ts` / `*.tsx`.
 ```
 features/
-└── members/                              ← entire feature lives here
+└── frontend_manager/
+    └── members/                              ← entire feature lives here
     ├── screens/                          ← thin composition only
     │   ├── MembersListScreen.tsx         
     │   ├── MembersDetailScreen.tsx
@@ -112,7 +109,7 @@ features/
     ├── api/
     │   └── members.api.ts                ← ALL network calls for this feature ONLY
     ├── state/                            ← only if UI state shared across 2+ components
-    │   └── members.store.ts              ← Zustand (RN) / Riverpod provider ()
+    │   └── members.store.ts              ← 
     ├── tests/                            ← integration-level tests (unit = co-located)
     │   └── members.integration.test.ts
     ├── members_features.md               ← MANDATORY — see Rule 24
@@ -185,7 +182,7 @@ in the rest of the filename. The following are allowed:
 ### Role Isolation (Mirror of Web Architecture)
 
 Just as the web has isolated `/admin`, `/manager`, `/trainer` root folders, the mobile
-app MUST follow the same pattern. A `MemberCard` in `admin/members/` is **never** imported
+app MUST follow the same pattern. A `MemberCard` in `frontend_admin/members/` is **never** imported
 into `manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
 zero but isolation value is massive.
 
@@ -228,7 +225,8 @@ features/
     TypeScript theme object) that every component imports from.
   - : a central `ThemeData`/`ColorScheme` + custom `ThemeExtension`
     consumed via `Theme.of(context)` — never inline `Color(0xFF...)` literals.
-- There is no press state on touch devices — design and implement only
+- There is no hover state on touch devices.
+React Native press/active states are allowed and MUST use the canonical press/active interaction tokens. — design and implement only
   press/active and disabled states, never press-dependent interactions.
 - Dark mode must use the SAME token names in light and dark variants so no
   component ever branches manually on "is dark mode" — the token resolves itself.
@@ -926,7 +924,7 @@ which file to open for any task without reading all files.]
 [REQUIRED: Mark honestly. An honest [ ] is better than a false [x].]
 
 - [ ] Rule 1: Micro-modularization — module-prefixed files, size ceilings respected
-- [ ] Rule 1: Role isolation — zero cross-role imports (admin/frontend_manager/trainer isolated)
+- [ ] Rule 1: Role isolation — zero cross-role imports (frontend_admin/frontend_manager/frontend_superadmin/frontend_trainer isolated)
 - [ ] Rule 2: Navigation uses typed params — no full objects passed through routes
 - [ ] Rule 3: All styles use design tokens — no magic hex/dp values
 - [ ] Rule 4: State placed per Server/Client decision matrix
@@ -951,7 +949,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 34: Status/type fields use string enums — no magic string literals
 - [ ] Rule 35: All navigation calls use `ROUTES` constants — no hardcoded route strings
 - [ ] Rule 36: Type-only imports use `import type`
-- [ ] Rule 37: Currency/numbers formatted via `formatCurrencyFromMinorUnits()` / `formatNumber()` — no inline `toFixed()`
+- [ ] Rule 37: Currency/numbers formatted via `formatCurrency()` / `formatNumber()` — no inline `toFixed()`
 - [ ] Rule 38: Null/empty fields use `displayValue()` — no blank cells or "N/A" strings
 - [ ] Rule 39: Async-submit buttons have `minWidth` — no layout shift on loading state
 - [ ] Rule 40: All toasts go through `showToast()` — no direct library calls
@@ -1128,7 +1126,7 @@ crash-report breadcrumb (Rule 6 and Rule 23).
 ## Rule 31 — Double Verification for Destructive and Financial Actions
 
 On mobile, accidental taps on destructive actions are more likely than on desktop
-(small targets, no press state, no right-click). This makes double-verification
+(small touch targets, no hover/right-click interaction). This makes double-verification
 more critical on mobile, not less.
 
 **Any action that does any of the following MUST show a confirmation bottom sheet
@@ -1324,35 +1322,10 @@ constants are a `core/` primitive, not a feature file).
 
 ---
 
-## Rule 36A — React Native / TypeScript: `import type` Mandate
+## Rule 36 — React Native / TypeScript: `import type` Mandate
 
 Any import that brings in ONLY a TypeScript type, interface, or enum (no runtime
 value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/consistent-type-imports`).
-
-## Rule 36B —  / 
-
-Follow 's explicit import/export rules; no TypeScript `import type` rule applies.
-
-```typescript
-// ❌ BAD — runtime import for a type-only symbol
-import { Member } from '../types/members.types';
-
-// ✅ GOOD — erased at compile time, zero bundle impact
-import type { Member } from '../types/members.types';
-```
-
-Why it matters on mobile: Metro bundler (React Native) and the  AOT compiler
-() both benefit from clear type-erasure boundaries. Mixing runtime and
-type-only imports in the same statement obscures tree-shaking and increases the
-risk of circular-dependency bugs.
-
-Exception: enums used as runtime values (e.g. `MemberStatus.Active` in a
-conditional) are runtime imports — `import type` is incorrect there. Use
-`import type` only when the symbol is used exclusively as a type annotation.
-
-Cross-reference: Frontend Rule 36 (same mandate on web).
-
----
 
 ## Rule 37 — Currency and Number Formatting Utility (Mobile Equivalent of Frontend Rule 80)
 
@@ -1468,7 +1441,12 @@ Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
 
 ## Rule 40 — Toast / Snackbar Deduplication (Mobile Equivalent of Frontend Rule 82)
 
-All actionable toasts MUST pass a stable `dedupKey` representing the semantic intent.
+`showToast()` is the ONLY toast entry point.
+
+`showToast()` MUST enforce semantic deduplication.
+Passing a deduplication key to the toast library is not sufficient unless
+the central adapter demonstrably suppresses or refreshes an already-visible
+toast with the same semantic key.
 
 ```typescript
 /**
@@ -1482,7 +1460,7 @@ export function showToast(message: string, type: 'error' | 'success', dedupKey?:
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey }
+    props: { dedupKey } // Or platform-specific implementation suppressing identical keys
   });
 }
 
@@ -1614,7 +1592,7 @@ Minimum JSDoc fields for hooks: `@param`, `@returns`, cache key (if server state
 and any non-obvious side effects or constraints.
 
 Minimum JSDoc fields for utilities: `@param`, `@returns`, and one example if the
-output format is non-obvious (e.g. `formatCurrencyFromMinorUnits(150000) → "₹1,500.00"`).
+output format is non-obvious (e.g. `formatNumber(150000, 'en-IN') → "1,50,000"`).
 
 Cross-reference: Rule 24 (documentation quality standard), Rule 43 applies at the
 function level what Rule 24 applies at the feature level.
@@ -1742,12 +1720,12 @@ export const TIMEOUT_CONFIG = {
 
 // Applied at the HTTP client level — every request inherits DEFAULT
 // unless the specific call overrides it:
-const client = axios.create({ timeout: TIMEOUT_CONFIG.DEFAULT });
+const client = networkClient.create({ timeout: TIMEOUT_CONFIG.DEFAULT });
 ```
 
 ```typescript
 // ❌ BAD — no timeout; hangs indefinitely on poor mobile networks
-const response = await axios.get('/api/v1/frontend_manager/members');
+const response = await networkClient.get('/api/v1/frontend_manager/members');
 
 // ✅ GOOD — explicit timeout per call category
 const response = await client.get('/api/v1/frontend_manager/members');                          // inherits DEFAULT
@@ -1865,6 +1843,9 @@ paginated lists always have entity IDs).
 ---
 
 ## Rule 50 — Copy-to-Clipboard for Permitted Record Identifiers
+
+Exception:
+Identifiers classified as sensitive under Rule 56 MUST NOT receive a copy affordance, even when displayed on a detail screen.
 
 Any screen displaying a record ID, transaction reference, invoice number, or
 other identifier that a user may need to share or reference MUST provide a
@@ -2059,7 +2040,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - Status/type fields use enums — no magic strings? (Rule 34)
    - Navigation calls use `ROUTES` constants — no hardcoded strings? (Rule 35)
    - Type-only imports use `import type`? (Rule 36)
-   - Currency/numbers formatted via `formatCurrencyFromMinorUnits()` / `formatNumber()`? (Rule 37)
+   - Currency/numbers formatted via `formatCurrency()` / `formatNumber()`? (Rule 37)
    - Null/empty fields render `displayValue()` en-dash fallback? (Rule 38)
    - Async buttons have `minWidth` — no layout shift on loading? (Rule 39)
    - Toasts go through `showToast()` — no direct library calls? (Rule 40)
@@ -2141,7 +2122,7 @@ Runtime feature flags are accessed through `useFeatureFlag()`.
 
 ```typescript
 // ❌ BAD: Reading raw process/env values directly in components
-if (process.env.EXPO_PUBLIC_ENABLE_FEATURE) { ... }
+if (readBuildConfig().enableFeature) { ... }
 
 // ✅ GOOD:
 const isNewBillingEnabled = useFeatureFlag('NEW_BILLING_UI');
@@ -2211,18 +2192,29 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
 
 ### The Rule
-The frontend (Web and Mobile) MUST implement a hybrid notification architecture:
+The React Native mobile application MUST implement a hybrid notification architecture implement a hybrid notification architecture:
 1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
 2. **Offline Recovery:** Whenever the application mounts (or comes to the foreground on mobile), it MUST make a REST API call to `GET /api/notifications` to fetch any missed notifications. Do not rely 100% on WebSockets for critical alerts.
 
 
 ## AI Introspection & Agentic Compatibility Rules
 
-### Rule 65 — AI-Testable UI (Mandatory testID)
-* **The Problem:** When an AI agent writes or executes Mobile E2E tests (using Maestro, ), it cannot visually inspect the screen perfectly. Without explicit accessibility identifiers, the AI test scripts will break constantly.
-* **The Rule:** Every single interactive widget (Buttons, TextFields, Switches, Gestures) and critical state indicator (Status Badges, Empty States) MUST have a strictly formatted `testID` (in React Native) or `Key` (in ).
-* **Format:** `[module]-[component]-[action/state]`. Example: `testID="members-addform-submit"` or `key=Key('billing-invoice-status-paid')`.
-* **Why:** This makes the mobile UI programmatically introspectable for autonomous AI testing agents.
+### Rule 65 — AI-Testable UI (Mandatory `testID`)
+
+Every interactive React Native control and every critical state indicator MUST
+have a deterministic `testID`.
+
+Canonical format:
+
+`testID="[module]-[component]-[action/state]"`
+
+Examples:
+
+`members-addform-submit`
+`billing-invoice-status-paid`
+
+Gesture-driven surfaces MUST expose a `testID` on the view that receives
+the gesture interaction.
 
 ### Rule 66 — Component-Level AI Docstrings (JSDoc / Doc)
 * **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.

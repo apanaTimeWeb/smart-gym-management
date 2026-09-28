@@ -4,7 +4,8 @@ Spacing / radius / icon / touch-target values → dp-equivalent React Native lay
 Typography → React Native text scale / fontSize.
 Animation durations → milliseconds.
 Opacity → normalized 0–1.
-Layering → zIndex + Android elevation mapping through theme tokens.
+Layering is controlled by named `zIndex` tokens.
+Android elevation is defined separately by the shadow/elevation token system.
 
 > This file is the **canonical visual values source** — it defines what every
 > token is worth in light and dark mode. `mobile_theme_contract.md` is the
@@ -55,7 +56,7 @@ Every semantic foreground/background pair used for normal UI text MUST meet WCAG
 The theme contract MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
-Ensure `primary` (#6366F1 dark) and `destructive` (#EF4444 dark) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
+Ensure `primary` (#4F46E5 dark) and `destructive` (#DC2626 dark) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
 
 ## 1. Color Tokens
 
@@ -64,8 +65,8 @@ Ensure `primary` (#6366F1 dark) and `destructive` (#EF4444 dark) against `on-pri
 | `background` | #FFFFFF | #0B0B0F | Screen background |
 | `foreground` | #0B0B0F | #F5F5F7 | Primary text |
 | `card` | #F8F8FA | #16161C | Card/surface background |
-| `primary` | #4F46E5 | #6366F1 | Primary actions, active states |
-| `destructive` | #DC2626 | #EF4444 | Errors, delete actions |
+| `primary` | #4F46E5 | #4F46E5 | Primary actions, active states |
+| `destructive` | #DC2626 | #DC2626 | Errors, delete actions |
 | `border` | #E5E5EA | #2A2A32 | Dividers, input borders |
 | `muted` | #71717A | #A1A1AA | Secondary/disabled text |
 | `on-primary` | #FFFFFF | #FFFFFF | Text/icon on primary fill |
@@ -167,13 +168,13 @@ values inline. Global design defines only semantic visual meaning such as succes
 
 | Token | Light | Dark |
 |---|---|---|
-| `status-success-text` | `#064E3B` | `#22C55E` |
+| `status-success-text` | `#064E3B` | `#86EFAC` |
 | `status-success-bg` | `#D1FAE5` | `#064E3B` |
 | `status-warning-text` | `#92400E` | `#F59E0B` |
 | `status-warning-bg` | `#FEF3C7` | `#451A03` |
-| `status-danger-text` | `#7F1D1D` | `#EF4444` |
-| `status-danger-bg` | `#FEE2E2` | `#450A0A` |
-| `status-info-text` | `#1E3A8A` | `#3B82F6` |
+| `status-danger-text` | `#7F1D1D` | `#DC2626` |
+| `status-danger-bg` | `#FEE2E2` | `#FCA5A5` |
+| `status-info-text` | `#1E3A8A` | `#93C5FD` |
 | `status-info-bg` | `#DBEAFE` | `#1E3A5F` |
 | `status-neutral-text` | `#3F3F46` | `#A1A1AA` |
 | `status-neutral-bg` | `#F4F4F5` | `#1E1E2E` |
@@ -194,7 +195,7 @@ Payment mode colors are separated from status colors to avoid visual collision. 
 | `pay-upi-bg` | `#CFFAFE` | `#164E63` |
 | `pay-card-text` | `#334155` | `#94A3B8` |
 | `pay-card-bg` | `#F1F5F9` | `#1E293B` |
-| `pay-bank-text` | `#0369A1` | `#38BDF8` |
+| `pay-bank-text` | `#0369A1` | `#7DD3FC` |
 | `pay-bank-bg` | `#E0F2FE` | `#0C4A6E` |
 
 ## 9. Chart Palette
@@ -202,10 +203,10 @@ Series color order (applied consistently across every chart in the app). Charts 
 
 | Token | Light | Dark |
 |---|---|---|
-| `chart-primary` | `#4F46E5` | `#6366F1` |
-| `chart-success` | `#10B981` | `#22C55E` |
+| `chart-primary` | `#4F46E5` | `#4F46E5` |
+| `chart-success` | `#10B981` | `#86EFAC` |
 | `chart-warning` | `#F59E0B` | `#F59E0B` |
-| `chart-danger` | `#EF4444` | `#EF4444` |
+| `chart-danger` | `#DC2626` | `#DC2626` |
 | `chart-secondary`| `#DB2777` | `#EC4899` |
 | `chart-info` | `#0891B2` | `#06B6D4` |
 
@@ -279,16 +280,12 @@ No component may ship without its loading, empty, and error states.
 Mobile screens have physical obstructions (notch, Dynamic Island, home indicator, status bar).
 Every screen MUST account for safe areas — never let interactive content sit under them.
 
-- Wrap screen roots in the platform's safe-area provider:
-  - RN: `<SafeAreaView>` from `react-native-safe-area-context` — never the core `SafeAreaView`.
-  - : `SafeArea` widget at the scaffold level.
-- **Bottom tab bars and floating action buttons** MUST add bottom safe-area inset padding
-  so they are not hidden behind the home indicator on notchless devices.
-- **Full-screen modals and bottom sheets** MUST respect top safe area inset (status bar height).
-- Never hardcode a numeric inset value (e.g. `paddingTop: 44`) — always read from the
-  platform's `useSafeAreaInsets()` hook (RN) or `MediaQuery.of(context).padding` ().
-- `SafeAreaView` must be applied at the **screen level**, not inside individual components —
-  components are unaware of screen geometry.
+- Screen roots MUST use `SafeAreaView` from `react-native-safe-area-context`.
+- Bottom tab bars and FABs MUST account for bottom safe-area insets.
+- Full-screen modals and bottom sheets MUST account for top safe-area insets.
+- Never hardcode inset values.
+- `useSafeAreaInsets()` MUST be used wherever explicit inset handling is required.
+- Safe-area handling belongs at screen/container level, not inside reusable business components.
 
 ## 15. Z-Index / Elevation Stack
 
@@ -375,12 +372,12 @@ When any button triggers an async action it MUST transition to a loading state i
 | State | Visual |
 |---|---|
 | Default | Label text, `primary` fill |
-| Loading | Label hidden (or shifted), `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading` |
+| Loading | Label remains available; spinner may be shown before or beside the label, `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading` |
 | Success | Brief checkmark flash (`duration-fast`), then revert or navigate |
 | Error | Revert to default state — error shown in toast or inline field |
 
 **Token:** Loading spinner uses `on-primary` / `on-destructive` on primary/destructive fill buttons.
-Spinner size: `icon-sm` (16px).
+Spinner size: `icon-sm` (`icon-sm`).
 
 ---
 
