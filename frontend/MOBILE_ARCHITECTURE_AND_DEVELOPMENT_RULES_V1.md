@@ -52,7 +52,7 @@ If an AI repair attempts to modify business logic in a sibling feature module to
 ## Rule 1 — Micro-Modularization (One Feature = One Self-Contained Folder)
 
 This is the most important structural rule. **One feature = one self-contained folder.**
-If there is a bug in `members`, you drag ONLY the `features/frontend_frontend_manager/members/` folder to the AI.
+If there is a bug in `members`, you drag ONLY the `features/frontend_manager/members/` folder to the AI.
 Everything the AI needs — components, hooks/controllers, schemas, types, API, state,
 tests, and the context file — lives inside that single folder. Zero need to open any other folder.
 
@@ -86,7 +86,11 @@ All application source examples in this document use React Native TypeScript:
 `*.ts` / `*.tsx`.
 ```
 features/
-└── frontend_manager/
+├── frontend_admin/
+│   └── members/
+├── frontend_manager/
+│   └── members/
+└── frontend_trainer/
     └── members/                              ← entire feature lives here
     ├── screens/                          ← thin composition only
     │   ├── MembersListScreen.tsx         
@@ -182,7 +186,7 @@ in the rest of the filename. The following are allowed:
 ### Role Isolation (Mirror of Web Architecture)
 
 Just as the web has isolated `/admin`, `/manager`, `/trainer` root folders, the mobile
-app MUST follow the same pattern. A `MemberCard` in `frontend_frontend_admin/members/` is **never** imported
+app MUST follow the same pattern. A `MemberCard` in `frontend_admin/members/` is **never** imported
 into `frontend_manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
 zero but isolation value is massive.
 
@@ -194,14 +198,10 @@ zero but isolation value is massive.
 ```
 features/
 ├── frontend_admin/
-│   └── members/
+│   └── members/      ← AdminMembers — completely isolated
 ├── frontend_manager/
-│   └── members/
-└── frontend_trainer/
-    └── members/│   └── members/      ← AdminMembers — completely isolated
-├── manager/
 │   └── members/      ← ManagerMembers — isolated, even if visually similar
-└── trainer/
+└── frontend_trainer/
     └── members/      ← TrainerMembers — isolated
 ```
 
@@ -216,21 +216,19 @@ features/
   pass IDs and re-fetch inside the destination screen (see Rule 4).
 - Deep linking must resolve through the SAME central route definition used for
   in-app navigation — never a second, separately maintained linking map.
-- Framework examples: React Navigation (React Native bare-metal)  as long as the rules above hold.
+- React Navigation is the canonical navigation framework for this React Native project.
+  All navigation requirements in this document apply to React Navigation.
 - Modals, bottom sheets, and nested tab/stack navigators must be defined once at
   the top of the navigation tree, not re-implemented per screen.
 
 ## Rule 3 — Styling & Design Tokens (No Magic Values, Anywhere)
 
 - `MOBILE_UI_UX_DESIGN.md` serves as the design specification. However, every color, spacing value, font size, radius, and shadow used in the code MUST come from the executable token contract defined in `mobile_theme_contract.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
-- Implementation mechanism differs by framework but the discipline is identical:
-  - React Native: a central theming module (e.g. NativeWind config, or a plain
-    TypeScript theme object) that every component imports from.
-  - : a central `ThemeData`/`ColorScheme` + custom `ThemeExtension`
-    consumed via `Theme.of(context)` — never inline `Color(0xFF...)` literals.
+- Implementation uses React Native theme objects/configuration.
+  The values and "no magic values" discipline are universal within the React Native application.
 - There is no hover state on touch devices.
-React Native press/active states are allowed and MUST use the canonical press/active interaction tokens. — design and implement only
-  press/active and disabled states, never press-dependent interactions.
+  React Native press/active states are allowed and MUST use the canonical press/active interaction tokens.
+  Design and implement only press/active and disabled states, never hover-dependent interactions.
 - Dark mode must use the SAME token names in light and dark variants so no
   component ever branches manually on "is dark mode" — the token resolves itself.
 
@@ -253,9 +251,9 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; Riverpod's `AsyncNotifier` or a repository+cache pattern for ). Never duplicated into a separate "client" state container. |
-| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`Riverpod` scoped to the feature for ). One container per feature — never one giant global store. |
-| UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `StatefulWidget` local fields). |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; 's `AsyncNotifier` or a repository+cache pattern for ). Never duplicated into a separate "client" state container. |
+| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`` scoped to the feature for ). One container per feature — never one giant global store. |
+| UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `React Component` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
 **Hard rule:** never copy API response data into the shared client-state
@@ -280,8 +278,8 @@ stored data and route it accordingly:
 
 | Data type | Storage requirement |
 |---|---|
-| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN; `_secure_storage` for ). Never anywhere else. |
-| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN; `shared_preferences`/`Hive`/`Isar` for ). |
+| Auth tokens (JWT, refresh token), biometric keys, any credential | Hardware-backed secure storage ONLY — iOS Keychain / Android Keystore, accessed via a secure-storage library (e.g. a Keychain-wrapper package for RN; `React Native KeyChain` for ). Never anywhere else. |
+| App preferences, non-sensitive cached data | Fast key-value or embedded database storage (e.g. an MMKV-style store for RN; `AsyncStorage`/`WatermelonDB`/`MMKV` for ). |
 | Temporary session-only data | In-memory state only — cleared on app kill, never persisted. |
 
 - Create exactly ONE central storage-access module per app. No other file may
@@ -361,7 +359,7 @@ Schema / Validator (Zod schema or validator class)
       ↓
 Mock / Stub Response (test boundary mock or backend stub)
       ↓
-Server-State Cache (TanStack Query / Riverpod AsyncNotifier)
+Server-State Cache (TanStack Query /  AsyncNotifier)
       ↓
 UI Rendering
 ```
@@ -486,7 +484,7 @@ visually renders with placeholder values.
 - Use the framework's optimized image-loading mechanism exclusively — one that
   supports caching, placeholders, and format negotiation (a dedicated image
   library for RN rather than the bare core `Image`; 's `Image` with a
-  caching package like `cached_network_image`).
+  caching package like `react-native-fast-image`).
 - Always specify explicit dimensions or aspect ratio for network images to
   prevent layout shift while loading.
 - Bundled assets are referenced statically — never construct a dynamically
@@ -502,7 +500,7 @@ visually renders with placeholder values.
 
 - Use the framework's high-performance animation system (a UI-thread-driven
   animation library for RN rather than the legacy JS-thread animation API;
-  's native `AnimationController`/implicit animations).
+  's native `Reanimated shared values`/implicit animations).
 - Use the framework's dedicated gesture-handling system for swipe/pan/pinch —
   never reconstruct gesture recognition manually from raw touch events.
 - Respect the OS-level reduced-motion accessibility setting — skip or shorten
@@ -513,7 +511,7 @@ visually renders with placeholder values.
 ## Rule 12 — Charts & Data Visualization
 
 - Use a native-rendering charting library appropriate to the framework (Skia-
-  or Canvas-based for RN; a -native charting package) — never a
+  or React Native SVG-based for RN; a -native charting package) — never a
   DOM/SVG/Canvas-web-only charting library, none of which render on mobile.
 - Chart color palettes must pull from the design system's chart tokens — never
   hardcoded hex values per chart instance.
@@ -522,7 +520,7 @@ visually renders with placeholder values.
 
 - Isolate genuinely divergent iOS/Android implementations into separate
   platform files (platform-suffix files in RN; conditional platform channels
-  or separate implementation classes in ) — not scattered inline
+  or separate  — not scattered inline
   platform checks throughout shared files.
 - A trivial one-line platform difference (e.g. a shadow property) may remain
   inline; once a component accumulates three or more such checks, split it.
@@ -779,7 +777,7 @@ assigned members with no financial data visible.
   — do NOT hardcode plan options in the form.
 - Phone numbers must be masked (98****2310) in MembersMemberCard — full number visible
   only in MembersDetailScreen. Never remove masking from the list view.
-- Member IDs are UUIDs. Never use array index as a FlatList/ListView key.
+- Member IDs are UUIDs. Never use array index as a FlatList/FlatList key.
 ```
 
 **The rule:** if a section contains "TBD", "Handles X operations", "Do not bypass API
@@ -852,10 +850,10 @@ All calls go through the central network client. Response envelope:
 | Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
 | `fetchMembers(params)` | GET | `/api/v1/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
-| `fetchMemberById(id)` | GET | `/api/v1/frontend_frontend_manager/members/:id` | — | `MemberDetail` |
+| `fetchMemberById(id)` | GET | `/api/v1/frontend_manager/members/:id` | — | `MemberDetail` |
 | `createMember(dto)` | POST | `/api/v1/frontend_manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/api/v1/frontend_frontend_manager/members/:id` | — | `null` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/frontend_manager/members/:id` | — | `null` |
 
 ## Approved External Dependencies
 [REQUIRED: Must list all cross-layer and external packages. AI must not import anything outside this list.]
@@ -1095,7 +1093,7 @@ feature with CRUD operations.
 
 - NEVER import from any other feature folder (frontend_admin/members/, frontend_trainer/members/, etc.) — zero cross-feature imports, Rule 28
 - NEVER call the HTTP client directly — always use members.api.ts which goes through the central network client
-- NEVER store API response data in members.store.ts — the TanStack Query / Riverpod cache is the single source of truth for server data
+- NEVER store API response data in members.store.ts — the TanStack Query /  cache is the single source of truth for server data
 - NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
 - NEVER add a new dependency without checking approved-dependencies.md first (Rule 22)
 - NEVER hardcode hex colors, dp values, or font sizes — use design tokens from mobile_theme_contract.md only (Rule 3)
@@ -1436,7 +1434,7 @@ Rules:
 - The button MUST be `disabled` while loading to prevent double-submission
   (Rule 31 and Rule 32 already mandate this for destructive actions — this rule
   extends it to ALL async-submit buttons).
--  equivalent: wrap `ElevatedButton` in a `SizedBox` with a fixed width,
+-  equivalent: wrap `TouchableOpacity/Pressable` in a `View` with a fixed width,
   or use `ConstrainedBox` with `minWidth`.
 
 Cross-reference: Frontend Rule 81, Rule 31 (loading state on confirm button).
@@ -1464,7 +1462,7 @@ export function showToast(message: string, type: 'error' | 'success', dedupKey?:
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey } // Pseudocode: central adapter MUST actively suppress/replace matching keys
+    props: { dedupKey } // Note: The central toast adapter MUST actively suppress/replace matching keys
   });
 }
 
@@ -1524,7 +1522,7 @@ Rules:
   and tab switches — all navigation exit paths.
 - Multi-step wizard forms: `isDirty` is true from Step 1 onward once any field
   is touched — not just on the final step.
--  equivalent: use `PopScope` (formerly `WillPopScope`) with an
+-  equivalent: use `BackHandler` (formerly `WillBackHandler`) with an
   `onPopInvoked` callback that shows the confirmation dialog.
 
 Cross-reference: Frontend Rule 79, Rule 31 (centralized confirmation), Rule 5 (forms).
@@ -1826,12 +1824,12 @@ members.map((member) => (
 
 ```
 // ❌ BAD
-ListView(children: members.asMap().entries.map((e) =>
-  MemberCard(key: ValueKey(e.key), member: e.value)).toList())
+FlatList(children: members.asMap().entries.map((e) =>
+  MemberCard(key: keyExtractor(e.key), member: e.value)).toList())
 
 // ✅ GOOD
-ListView(children: members.map((m) =>
-  MemberCard(key: ValueKey(m.id), member: m)).toList())
+FlatList(children: members.map((m) =>
+  MemberCard(key: keyExtractor(m.id), member: m)).toList())
 ```
 
 Consequence of violation: inserting or deleting a list item causes every
@@ -2093,7 +2091,7 @@ The mobile frontend uses a co-located locale file architecture. The active launc
 ### Module-Co-located Locales
 Each feature module owns its own translation keys.
 ```json
-// features/frontend_frontend_manager/members/_locales/en.json
+// features/frontend_manager/members/_locales/en.json
 {
   "members": {
     "PAGE_TITLE": "Members",

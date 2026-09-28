@@ -122,6 +122,8 @@ Size values are expressed in platform-independent typography units; framework th
 — cards default to `radius-lg`, buttons/inputs to `radius-md`.
 
 ## 5. Icon Sizes
+
+`button-min-width = 120`
 `icon-sm (16)`, `icon-md (20)`, `icon-lg (24)` — default stroke/weight `1.75`.
 
 Never use 17, 18, 21, 22, 23 etc. 
@@ -144,8 +146,8 @@ must meet this via minimum height/width or padding.
   - React Native: `import { AccessibilityInfo } from 'react-native'` — use
     `AccessibilityInfo.isReduceMotionEnabled()` or the `useReduceMotion()` hook
     from `react-native-reanimated` to skip or shorten animations.
-  - : `MediaQuery.of(context).disableAnimations` — if `true`, skip
-    all non-essential `AnimationController` transitions.
+  - : `AccessibilityInfo` — if `true`, skip
+    all non-essential `Reanimated` transitions.
   - **Rule:** Any animation that is purely decorative (card press / active / focus lift, skeleton
     shimmer, screen transition) MUST be skipped or reduced to an instant
     state-change when reduced-motion is enabled. Functional animations (e.g.
@@ -172,7 +174,7 @@ values inline. Global design defines only semantic visual meaning such as succes
 | `status-success-bg` | `#D1FAE5` | `#064E3B` |
 | `status-warning-text` | `#92400E` | `#F59E0B` |
 | `status-warning-bg` | `#FEF3C7` | `#451A03` |
-| `status-danger-text` | `#7F1D1D` | `#450A0A` |
+| `status-danger-text` | `#7F1D1D` | `#FCA5A5` |
 | `status-danger-bg` | `#FEE2E2` | `#450A0A` |
 | `status-info-text` | `#1E3A8A` | `#93C5FD` |
 | `status-info-bg` | `#DBEAFE` | `#1E3A5F` |
@@ -206,7 +208,7 @@ Series color order (applied consistently across every chart in the app). Charts 
 | `chart-primary` | `#4F46E5` | `#4F46E5` |
 | `chart-success` | `#10B981` | `#86EFAC` |
 | `chart-warning` | `#F59E0B` | `#F59E0B` |
-| `chart-danger` | `#450A0A` | `#450A0A` |
+| `chart-danger` | `#EF4444` | `#EF4444` |
 | `chart-secondary`| `#DB2777` | `#EC4899` |
 | `chart-info` | `#0891B2` | `#06B6D4` |
 
