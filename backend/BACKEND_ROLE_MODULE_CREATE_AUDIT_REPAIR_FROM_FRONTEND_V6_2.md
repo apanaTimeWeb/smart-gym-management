@@ -37,7 +37,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
 2. Deeply read and audit the existing backend ZIP against:
    - All frontend-derived requirements
-   - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 119)
+   - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (all applicable numbered, lettered, and special architecture rules/gates discovered from the supplied normative architecture document)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
 4. Fix ALL found issues directly in code — no half-fixes, no skipping.
 5. Double-verify after repair: re-run the full audit against the repaired code.
@@ -61,7 +61,7 @@ The AI MUST try so hard in its first pass (v1 for creation, v2_fix for first aud
 
 ## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
 
-Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the global NestJS monolith application.
+Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the global application monolith application.
 
 The `INTEGRATION_GUIDE.md` MUST include:
 
@@ -78,7 +78,7 @@ Add the following variables to your `.env` and `.env.example`:
 
 ## 3. Database Migrations
 Run the following migration commands in order:
-[list exact TypeORM / Prisma migration commands]
+[list exact migration commands for the VERIFIED project ORM and migration tool]
 
 ## 4. Seeds
 Run the following seed scripts to populate initial data:
@@ -265,6 +265,40 @@ The feature module DOES own its own `module-scoped ORM registrations, its own Ne
 
 ## INPUT 3 — BACKEND DOCUMENTATION ZIP
 
+## INPUT 3A — VERIFIED PROJECT STACK
+
+The supplied backend architecture document contains the normative project stack.
+
+Before any backend implementation begins, the AI MUST establish:
+
+- actual framework;
+- ORM;
+- database;
+- Redis;
+- background queue;
+- durable event transport;
+- realtime transport;
+- authentication;
+- migration tool;
+- path alias where applicable.
+
+For this project:
+
+NestJS → TypeORM + PostgreSQL + Redis + BullMQ/Redis + Redis Streams + Redis Pub/Sub + JWT + TypeORM migrations.
+
+Django → Django ORM + PostgreSQL + Redis + Celery/Redis + Redis Streams + Redis Pub/Sub + JWT + Django migrations.
+
+Do NOT introduce Prisma, MySQL, Memcached, RabbitMQ, or Kafka.
+
+If supplied backend differs:
+
+`STACK_CONFLICT`
+
+If the architecture stack itself is missing:
+
+`MISSING_STACK_DEFINITION`
+
+No backend implementation code may be created under `MISSING_STACK_DEFINITION`.
 A ZIP containing the backend architecture and backend documentation.
 
 It may contain:
@@ -287,6 +321,12 @@ Do not invent rules that are not present in the supplied backend documentation.
 
 ## INPUT 4 — BACKEND E2E TEST ZIP
 
+If INPUT 4 is absent:
+
+- existing external API E2E/Selenium suite audit status = `BLOCKED_BY_SUPPLIED_SCOPE`;
+- the AI MUST NOT claim that the missing external suite was inspected;
+- Stage 3 MAY generate the required API E2E and Selenium files;
+- generated tests are deliverables, not proof that a previously existing external suite was audited.
 A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend_e2e/backend_admin_e2e/admin_members`). 
 
 Without this, E2E completeness cannot be verified, as tests are strictly isolated from the backend source code directory.
@@ -440,7 +480,7 @@ Does the backend (created or repaired) satisfy the frontend's actual backend-fac
 
 ### B. BACKEND ARCHITECTURE COMPLIANCE
 
-Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A through 119)?
+Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (all applicable numbered, lettered, and special architecture rules/gates discovered from the supplied normative architecture document)?
 
 ### C. RUNTIME VERIFICATION
 
@@ -674,6 +714,45 @@ Inside an individual stage, complete all defined subpasses without asking the us
 ---
 
 # 6A. PRE-STAGE CONTRACT FREEZE INTEGRITY GATE
+
+### PROJECT STACK GATE — EXECUTE BEFORE STAGE 1
+
+Before Stage 1 or Stage 2 implementation work, confirm the fixed project stack.
+
+NestJS:
+TypeORM
+PostgreSQL
+Redis
+BullMQ + Redis
+Redis Streams
+Redis Pub/Sub
+JWT
+TypeORM migrations
+
+Django:
+Django ORM
+PostgreSQL
+Redis
+Celery + Redis
+Redis Streams
+Redis Pub/Sub
+JWT
+Django migrations
+
+The AI MUST NOT substitute:
+Prisma
+MySQL
+Memcached
+RabbitMQ
+Kafka
+
+A stack conflict MUST be recorded as:
+
+`STACK_CONFLICT`
+
+and repaired when the supplied scope allows.
+
+A missing stack definition MUST block backend code creation.
 
 This is a mandatory GATE, not an additional stage. Both MODE A and MODE B still execute exactly THREE stages.
 
@@ -2525,7 +2604,25 @@ When supplied, inspect:
 - ConfigModule / configuration schema;
 - database bootstrap / DataSource factory;
 - ORM configuration;
-- connection pool configuration;
+- connection pool configuration
+Verify:
+
+GLOBAL DB CONNECTION BUDGET
+≥
+GLOBAL CONNECTIONS
++
+ALL ACTIVE TENANT DATASOURCE CONNECTIONS
+
+Never blindly apply `max: 20` independently to every tenant DataSource.
+
+Check:
+- pool max;
+- pool min;
+- acquire timeout;
+- idle timeout;
+- exhaustion handling;
+- tenant pool lifecycle;
+- aggregate PostgreSQL connection budget.;
 - Redis bootstrap;
 - cache manager;
 - rate-limit configuration;
@@ -2578,6 +2675,19 @@ Trace the actual provider registration and bootstrap wiring where source is supp
 # 47C. STAGE 2Z-C — COMPLETE ARCHITECTURE RULE ENFORCEMENT MATRIX
 
 The supplied backend architecture document is normative.
+
+The architecture document is the SOLE NORMATIVE SOURCE OF TRUTH.
+
+This rule matrix is only an audit/verification representation.
+
+If this matrix, a checklist, a late-rule section, or any example conflicts with the architecture document:
+
+1. the architecture document wins;
+2. the conflict MUST be recorded;
+3. this matrix MUST be corrected;
+4. the implementation MUST follow the architecture document.
+
+No duplicated audit section may silently redefine an architecture rule.
 Build a rule matrix from the COMPLETE document.
 
 For EACH discovered rule or special architecture gate, identify:
@@ -3097,6 +3207,15 @@ Verify:
 - no accidental hard-delete path;
 - background/export/audit flows account for deleted state.
 
+IMPORTANT EXCEPTIONS:
+
+- Rule 118 `events_log` → immutable append-only; no soft-delete.
+- Rule 119 `ledger_entries` → immutable financial records; no soft-delete.
+- Legal erasure/anonymization → governed by Rule 35 and Rule 110.
+
+Do NOT report these immutable structures as soft-delete violations.
+
+
 ---
 
 ## RULE 30 — AUDIT TRAIL
@@ -3112,6 +3231,23 @@ For EVERY meaningful critical mutation verify audit records include, as applicab
 - new value;
 - IP;
 - timestamp.
+
+Also verify:
+
+- sensitive PII/token redaction;
+- audit-log access control;
+- retention policy;
+- encryption for highly sensitive audit payloads;
+- mutation-layer audit coverage.
+
+Audit coverage MUST include:
+
+HTTP
+Jobs
+Events
+Schedulers
+Webhooks
+Internal Commands
 
 Trace audit coverage from:
 
@@ -3130,7 +3266,17 @@ HTTP interceptors alone are not sufficient if non-HTTP mutations exist.
 
 ## RULE 31 — LEGACY (SUPERSEDED BY RULE 103)
 
-- Skip legacy Rule 31 verification. Verify idempotency strictly under Rule 103 instead.
+Record:
+
+RULE 31
+STATUS: SUPERSEDED
+SUPERSEDING RULE: RULE 103
+
+Do not independently score Rule 31 as a current implementation requirement.
+
+Verify all current mutational idempotency behavior under Rule 103.
+
+The final rule ledger MUST still contain Rule 31 with status `SUPERSEDED`. Verify idempotency strictly under Rule 103 instead.
 
 ---
 
@@ -3320,7 +3466,10 @@ where forbidden.
 Verify:
 
 - distributed scheduler;
-- Redis/BullMQ/Celery Beat/ShedLock/Redlock or approved equivalent;
+- NestJS → BullMQ backed by Redis
+Django → Celery Beat backed by Redis
+Redis distributed locking MAY be used where explicitly required by the architecture.
+No RabbitMQ, Kafka, Memcached, or alternative broker is permitted.;
 - exactly-once execution semantics or documented at-least-once + idempotency;
 - cluster-safe execution.
 
@@ -3364,7 +3513,12 @@ Verify:
 
 - cryptographic signature verification;
 - exact signed payload handling;
-- HMAC verification;
+- provider-documented cryptographic signature verification;
+- exact signed payload handling;
+- HMAC ONLY when the provider explicitly specifies HMAC;
+- timestamp/replay window;
+- idempotency;
+- failure before business processing.
 - timestamp/replay window;
 - idempotency;
 - failure before business processing.
@@ -3394,6 +3548,12 @@ For outbound external services verify:
 - typed exceptions;
 - timeout interaction;
 - recovery behavior;
+When the breaker is OPEN:
+
+- fail fast;
+- return HTTP 503 where the request is exposed synchronously;
+- do not continue retrying the failing dependency;
+- trigger the defined fallback queue where the architecture requires it.
 - no cascading retry storm.
 
 ---
@@ -3468,7 +3628,14 @@ For auth modules verify:
 - revocation;
 - reuse detection where required;
 - logout/session invalidation;
-- secure storage;
+- short-lived access tokens;
+- refresh token in HttpOnly cookie;
+- refresh-token rotation;
+- old refresh-token invalidation;
+- Redis denylist for manual revocation;
+- reuse detection;
+- logout/session invalidation;
+- no long-lived refresh-token replay.
 - no long-lived refresh token replay.
 
 This is security-critical code and must also pass the human-review gate.
@@ -5904,7 +6071,50 @@ Never turn static evidence into runtime proof.
 
 ---
 
-# 78. 100% BACKEND COMPLETENESS DEFINITION
+# 78. BACKEND COMPLETENESS AND VERIFICATION DEFINITION
+
+The audit MUST distinguish two statuses.
+
+## A. COMPLETE AGAINST SUPPLIED SCOPE
+
+The backend may be declared:
+
+`COMPLETE AGAINST FRONTEND REQUIREMENTS`
+
+when:
+
+- every actionable frontend-derived backend requirement is implemented;
+- every actionable architecture requirement inside supplied scope is satisfied;
+- no actionable implementation/contract/security defect remains;
+- all missing external/global evidence is explicitly classified.
+
+`BLOCKED_BY_SUPPLIED_SCOPE` is allowed ONLY when the required evidence genuinely belongs outside the supplied feature scope.
+
+## B. FULLY VERIFIED
+
+The backend may be declared:
+
+`FULLY VERIFIED`
+
+ONLY when all relevant evidence sources are available and verified.
+
+A FULLY VERIFIED result MUST NOT contain unresolved:
+- NOT_VERIFIED
+- BLOCKED_BY_SUPPLIED_SCOPE
+
+## IMPORTANT
+
+Never treat:
+
+`BLOCKED_BY_SUPPLIED_SCOPE`
+
+as equivalent to:
+
+`FAIL`
+
+when the artifact is intentionally outside the supplied feature scope.
+
+Never claim FULLY VERIFIED when required global evidence was not supplied.
 
 The backend may be declared:
 
@@ -6460,6 +6670,29 @@ Only discovered real invariants.
 
 Exact binary DONE criteria.
 
+
+## FINAL STACK CONTAMINATION CHECK
+
+After all edits, search the complete architecture document and audit prompt.
+
+For project-specific normative implementation sections, there MUST be zero remaining references to:
+
+- Prisma
+- MySQL
+- Memcached
+- RabbitMQ
+- Kafka
+
+except where a historical conflict/finding must be explicitly documented as evidence.
+
+Final project infrastructure MUST resolve to:
+
+NestJS:
+TypeORM + PostgreSQL + Redis + BullMQ/Redis + Redis Streams + Redis Pub/Sub + JWT
+
+Django:
+Django ORM + PostgreSQL + Redis + Celery/Redis + Redis Streams + Redis Pub/Sub + JWT
+
 ## 17. Final Verdict
 
 *(Note: Section 79 is the canonical verdict schema. The following is a supplementary projection only — use for orientation, not as the final deliverable schema.)*
@@ -6483,19 +6716,21 @@ SCOPE / EVIDENCE COMPLETENESS
 ---
 
 
-# 85B. ENTERPRISE AI, RAG & FINANCIAL ARCHITECTURE AUDIT (RULES 115-119)
+# 85B. LATE-RULE COMPLETENESS SMOKE CHECK
 
-During the alignment and backend audit, you MUST explicitly verify the following Agentic/Enterprise rules:
+Confirm that Rules 115–119 are present in the dynamic rule ledger and were included in:
 
-1. **AI Docstrings (Rule 115):** Verify every Class, Controller, DTO, Entity, and Service method has a detailed multi-line Docstring capturing Intent, Edge Cases, and AI Notes.
+- applicability;
+- evidence collection;
+- findings;
+- repair plan;
+- tests;
+- documentation;
+- final verdict.
 
-2. **MCP-Ready APIs (Rule 116):** Verify all REST endpoints, DTOs, and Response Objects have exhaustive OpenAPI/Swagger decorators (`@ApiProperty`, `@ApiOperation`, etc.) ensuring 100% strict JSON schema introspectability for AI agents.
-3. **RAG-Ready Projections (Rule 117):**  verify it exposes specialized RAG endpoints returning token-optimized markdown/text, not raw deep JSON.
-4. **Immutable Analytics (Rule 118):** For critical entity changes (Billing, Subscriptions, Attendance...etc), verify the backend uses a Zero-Overwrite strategy (emitting domain events to a log/message broker) instead of erasing historical state via standard CRUD updates.
-5. **Double-Entry Ledger (Rule 119):** For ALL financial or wallet mutations, verify the code never updates a balance directly (e.g. `UPDATE balance = balance - X`). It MUST write paired Debit/Credit rows into a `ledger_entries` table.
+Do not define a second independent interpretation of Rules 115–119 here.
 
-For every violation, list the file, the missing architectural pattern, and the exact architectural guidance required to repair it.
-
+The supplied architecture document remains authoritative.
 
 # 86B. PROJECT-SPECIFIC STRICT CONSTRAINTS
 

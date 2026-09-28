@@ -1,4 +1,4 @@
-# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
+# Enterprise-Grade, AI-Friendly Backend Architecture Guidelines
 
 ## The Core Philosophy
 This document outlines the strict architectural rules for building the backend using **NestJS (TypeScript)**. The primary goal is **Extreme Isolation**.
@@ -8,6 +8,140 @@ Currently, human developers act as orchestrators, while AI (LLMs) writes the cod
 Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the primary AI context MUST be restricted to the owning feature module. The preferred code repair is a single file, but multi-file repairs within the feature's dependency graph are allowed when genuinely required. The default writable scope is the owning feature module only.
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
+
+## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
+
+This project uses a fixed production stack. AI agents MUST NOT invent, substitute, or introduce alternative infrastructure when implementing or repairing backend code.
+
+### NestJS / TypeScript
+
+- Framework: NestJS
+- Language: TypeScript
+- ORM: TypeORM
+- Database: PostgreSQL
+- Cache / distributed state: Redis
+- Background job queue: BullMQ backed by Redis
+- Durable domain-event transport: Redis Streams
+- Real-time horizontal fan-out: Redis Pub/Sub
+- Authentication: JWT
+- Migration tool: TypeORM migrations
+- TypeScript path alias: `@/` → `src/`
+- API documentation: OpenAPI / Swagger
+- Unit testing: Jest
+- API E2E testing: Python pytest
+- UI E2E testing: Python Selenium
+
+### Django / Python
+
+When the backend framework is Django:
+
+- Framework: Django
+- Language: Python
+- ORM: Django ORM
+- Database: PostgreSQL
+- Cache / distributed state: Redis
+- Background task queue: Celery backed by Redis
+- Durable domain-event transport: Redis Streams
+- Real-time horizontal fan-out: Redis Pub/Sub
+- Authentication: JWT
+- Migration tool: Django migrations
+- API documentation: the Django framework mapping defined by this document
+
+### Fixed Infrastructure Policy
+
+The following are NOT approved alternatives for this project:
+
+- Prisma
+- MySQL
+- Memcached
+- RabbitMQ
+- Kafka
+- a second ORM
+- a second primary cache/message-broker system
+
+Redis responsibilities MUST remain separated:
+
+- Redis cache → caching
+- BullMQ + Redis → NestJS background jobs
+- Celery + Redis → Django background jobs
+- Redis Streams → durable domain events
+- Redis Pub/Sub → real-time horizontal fan-out
+- Redis distributed locks → distributed locking where explicitly required
+
+Redis Pub/Sub MUST NOT be treated as a durable replacement for Redis Streams.
+
+When a supplied repository uses a conflicting technology, record:
+
+`STACK_CONFLICT`
+
+Do not silently accept or introduce a competing stack.
+
+## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
+
+This project uses a fixed production stack. AI agents MUST NOT invent, substitute, or introduce alternative infrastructure when implementing or repairing backend code.
+
+### NestJS / TypeScript
+
+- Framework: NestJS
+- Language: TypeScript
+- ORM: TypeORM
+- Database: PostgreSQL
+- Cache / distributed state: Redis
+- Background job queue: BullMQ backed by Redis
+- Durable domain-event transport: Redis Streams
+- Real-time horizontal fan-out: Redis Pub/Sub
+- Authentication: JWT
+- Migration tool: TypeORM migrations
+- TypeScript path alias: `@/` → `src/`
+- API documentation: OpenAPI / Swagger
+- Unit testing: Jest
+- API E2E testing: Python pytest
+- UI E2E testing: Python Selenium
+
+### Django / Python
+
+When the backend framework is Django:
+
+- Framework: Django
+- Language: Python
+- ORM: Django ORM
+- Database: PostgreSQL
+- Cache / distributed state: Redis
+- Background task queue: Celery backed by Redis
+- Durable domain-event transport: Redis Streams
+- Real-time horizontal fan-out: Redis Pub/Sub
+- Authentication: JWT
+- Migration tool: Django migrations
+- API documentation: the Django framework mapping defined by this document
+
+### Fixed Infrastructure Policy
+
+The following are NOT approved alternatives for this project:
+
+- Prisma
+- MySQL
+- Memcached
+- RabbitMQ
+- Kafka
+- a second ORM
+- a second primary cache/message-broker system
+
+Redis responsibilities MUST remain separated:
+
+- Redis cache → caching
+- BullMQ + Redis → NestJS background jobs
+- Celery + Redis → Django background jobs
+- Redis Streams → durable domain events
+- Redis Pub/Sub → real-time horizontal fan-out
+- Redis distributed locks → distributed locking where explicitly required
+
+Redis Pub/Sub MUST NOT be treated as a durable replacement for Redis Streams.
+
+When a supplied repository uses a conflicting technology, record:
+
+`STACK_CONFLICT`
+
+Do not silently accept or introduce a competing stack.
 
 ### 0A. HIERARCHICAL MODULE BOUNDARY — FEATURE MODULE IS THE AI REPAIR UNIT
 
@@ -148,7 +282,19 @@ Extract complex queries into a dedicated Repository or Query file (e.g., `admin-
 ### Edge Case A: Cross-Module Dependencies (Tight Coupling)
 *Scenario:* The `MemberRegistrationService` needs to trigger the `FinanceService` to generate an invoice, and the `EmailService` to send a welcome email. If they are tightly coupled, the AI will need all three files to understand the flow.
 *Solution:* **Event-Driven Architecture (Pub/Sub).**
-The `MemberRegistrationService` should only save the user and emit an event: `EventBus.emit('MEMBERS.MEMBER.REGISTERED', user)`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
+The `MemberRegistrationService` should only save the user and emit an event: `EventBus.emit('MEMBERS.MEMBER.REGISTERED', user)
+
+For events that require durable delivery or cross-instance processing, the application event contract MUST be backed by Redis Streams.
+
+In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
+
+Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.
+
+For events that require durable delivery or cross-instance processing, the application event contract MUST be backed by Redis Streams.
+
+In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
+
+Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
 
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
@@ -456,7 +602,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
 * **The Rule:** Enterprise APIs must protect their bandwidth and server load. 
-  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis (or similar caching layers like Memcached) to handle rate limiting and to cache expensive, frequently requested data.
+  1. **Rate Limiting / Redis:** Implement strict rate limiters on all public endpoints (especially Auth and generic GET routes). Use Redis to handle rate limiting and to cache expensive, frequently requested data.
   2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django, or `server.compression.enabled` in Spring Boot) to drastically reduce JSON response sizes and save bandwidth.
 * **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
 
@@ -653,7 +799,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms or whatever the project is ' data into a single database with a `tenant_id` column (row-level multi-tenancy).
 * **Architecture Strategy:**
   1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
-  2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
+  2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single PostgreSQL server infrastructure unless the infrastructure architecture explicitly defines otherwise; do not spin up new physical servers/VPS per tenant).*
   3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
   4. **Strict Tenant Authorization (CRITICAL):** `x-tenant-id` MUST NOT be trusted merely because the client supplied it. The server MUST verify that the authenticated actor is explicitly authorized to access that tenant in the master database before selecting the tenant DataSource. The flow must be: `Request → Authentication → Tenant Authorization → Trusted Tenant Context → DataSource Resolver`.
   5. **Connection Pool Limits:** **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
@@ -739,8 +885,26 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** Use Node's `AsyncLocalStorage` to store context (tenant_id, user_id, trace_id) at the request boundary. Deep services/repositories must pull from this context rather than prop-drilling parameters through 5 layers of functions.
 
 ## 58. Standardized Database Entity Base Abstraction
-* **The Rule:** All database entities MUST implement a common standard abstraction for `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). For TypeORM, use a common `BaseEntity` class inheritance. For Prisma, use a common mixin/schema middleware, or explicit schema base models. AI must never manually define these fields per entity from scratch without reusing the core abstraction.
-* **Base Repository Enforcement:** The global query filter for soft deletes (from Rule 29) MUST be implemented as a base repository method that ALL repositories extend from. Never duplicate the soft-delete query scope logic per-repository.
+
+* **The Rule:** All SOFT-DELETABLE database entities MUST implement the common base abstraction for:
+  - `id` (UUID)
+  - `createdAt`
+  - `updatedAt`
+  - `deletedAt`
+
+* **NestJS / TypeORM:** Use the approved common BaseEntity abstraction for soft-deletable entities.
+
+* **Django:** Use the approved abstract base model for soft-deletable entities.
+
+* **Immutable Entity Exception:** Rule 118 `events_log` and Rule 119 `ledger_entries` are immutable records and MUST NOT contain or depend on `deletedAt` / soft-delete behavior.
+
+  Immutable record types may use a dedicated immutable base abstraction containing only the common immutable metadata required by the architecture.
+
+* AI agents MUST NOT manually redefine common base fields inconsistently across entities.
+
+* Base repository soft-delete filtering applies only to entities governed by soft-delete semantics.
+
+* Immutable event and financial records MUST bypass soft-delete filtering while remaining permanently append-only.
 
 ## 59. API Response Time SLA Categories
 * **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
@@ -1161,19 +1325,17 @@ This rule MUST remain consistent with Rule 99.
 * **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
 * **Example:**
   ```typescript
-  import * as crypto from 'node:crypto';
-
   import { Injectable } from '@nestjs/common';
 
-  import * as bcrypt from 'bcrypt';
+  import { InjectableRepository } from 'typeorm';
 
-  import { PrismaService } from '@/infrastructure/prisma/prisma.service';
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
   import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
   import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
 
   import type { CreateMemberDto } from '@/backend_manager/manager_members/dtos/member-create.dto';
+  ```
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
 
@@ -1182,7 +1344,7 @@ This rule MUST remain consistent with Rule 99.
 ## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
-  1. **ORM Model / Entity** (`admin-member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
+  1. **ORM Model / Entity** (`admin-member.entity.ts` for TypeORM, or the corresponding Django ORM model): Contains only database schema definition. Lives in the repository layer only.
   2. **Domain Model** (`member.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
   2b. **Response DTO** (`member-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
   3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
@@ -1238,10 +1400,19 @@ This rule MUST remain consistent with Rule 99.
     ```
   - ✅ **GOOD (Parameterized query):**
     ```typescript
-    // Prisma
-    prisma.member.findMany({ where: { name: req.query.name } });
-    // Raw SQL with parameterization
-    db.query('SELECT * FROM members WHERE name = $1', [req.query.name]);
+    const allowedSortFields = {
+      name: 'member.name',
+      createdAt: 'member.created_at',
+      status: 'member.status',
+    } as const;
+
+    const sortColumn = allowedSortFields[validatedSortField];
+
+    const members = await repository
+      .createQueryBuilder('member')
+      .where('member.name = :name', { name: validatedName })
+      .orderBy(sortColumn, validatedSortOrder)
+      .getMany();
     ```
 * **Allowlist-First Mandate:** Any query that uses a user-supplied column name, sort field, or filter key MUST validate it against a strict allowlist defined in the module's constants file before passing it to the ORM.
 * **Why:** ORM query builders that accept raw column name strings for `orderBy`, `select`, and `where` do NOT automatically parameterize field names. An AI will generate dynamic field interpolation as a clean, "logical" pattern without realizing it's an injection vulnerability. This rule makes the safe pattern the only acceptable pattern.
@@ -1318,24 +1489,40 @@ This rule MUST remain consistent with Rule 99.
 ## 95. Enum-Driven Entity Status Fields (No Raw String Columns)
 * **The Rule:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a TypeScript `enum` — never raw string literals. Saving `member.status = 'actve'` (a typo) to the database must be a **compile-time error**, not a silent data corruption bug discovered in production.
 * **The Pattern:**
-  ```typescript
-  // In the module's constants file: admin-members.constants.ts
-  export enum MemberStatus {
-    ACTIVE = 'ACTIVE',
-    SUSPENDED = 'SUSPENDED',
-    EXPIRED = 'EXPIRED',
-    PENDING = 'PENDING',
-  }
-  ```
-  ```typescript
-  // In the entity/model: admin-member.entity.ts (TypeORM) or Prisma schema
-  // TypeORM:
-  // @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
-  // status: MemberStatus;
-  //
-  // Prisma schema:
-  // status MemberStatus @default(PENDING)
-  ```
+### NestJS / TypeORM
+
+Use a TypeScript enum and map it to a PostgreSQL enum column.
+
+Example:
+
+```typescript
+export enum MemberStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  EXPIRED = 'EXPIRED',
+  PENDING = 'PENDING',
+}
+```
+
+```typescript
+@Column({
+  type: 'enum',
+  enum: MemberStatus,
+  default: MemberStatus.PENDING,
+})
+status: MemberStatus;
+```
+
+### Django
+
+Use Django's enum/Choices mechanism and map it to the PostgreSQL database representation defined by Django.
+
+### Database-Level Enforcement
+
+PostgreSQL MUST enforce valid enum/state values at the database layer where the architecture requires finite state enforcement.
+
+Remove all Prisma and MySQL examples from this rule.
+
 * **Rules:**
   - ❌ **BAD:** A plain string column for status — accepts any string, including typos.
   - ❌ **BAD:** Inline union type (`'active' | 'suspended'`) — not reusable, not a runtime guard.
@@ -1344,7 +1531,7 @@ This rule MUST remain consistent with Rule 99.
   - Enum values MUST be `SCREAMING_SNAKE_CASE` strings (e.g., `'ACTIVE'`, `'IN_PROGRESS'`) so they are human-readable in raw database queries.
   - When adding a new enum value, a database migration MUST be generated to update the DB enum type. Never rely on ORM auto-sync in production (Rule 24).
   - DTO validation for enum fields MUST use `@IsEnum(MemberStatus)` from `class-validator` — never `@IsString()`.
-* **Database-Level Enforcement:** For PostgreSQL, use `type: 'enum'` which creates a native PG enum type. For MySQL, use `type: 'enum'` which creates a column-level CHECK constraint. Both enforce valid values at the DB layer as a second line of defense.
+
 * **Why:** AI agents default to `string` columns for status fields because it's the path of least resistance. A single typo (`'actve'` instead of `'active'`) silently corrupts data — the record is saved, no error is thrown, but every `WHERE status = 'ACTIVE'` query silently excludes that record. TypeScript enums make this a compile-time error that is caught before the code ever runs.
 
 ---
@@ -1653,7 +1840,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **Scope Note:** Rule 102 applies to tables within the master/shared database only. Tenant-isolated databases (Rule 39) contain standard un-prefixed table names within their own isolated schema — Rule 102 domain-prefixes do not apply inside a tenant DB.
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` (TypeORM) or `@@map()` (Prisma) decorator rather than relying on a custom implicit global naming strategies.
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the entity decorator / model configuration rather than relying on a custom implicit global naming strategies.
 * **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
@@ -1680,8 +1867,30 @@ This is a non-negotiable enterprise requirement designed to prevent duplicate pa
 * **Why:** This ensures data hiding is centralized and declarative, preventing developers from manually trying to `delete user.revenue` in various service methods, which is error-prone.
 
 ## Rule 106 — Strict Cache Invalidation Strategy
-* **The Rule:** Caching data in Redis (Rule 20) is mandatory for high-traffic read operations, but stale data in an enterprise app is dangerous. Every cached query MUST have a strict, programmatic invalidation strategy.
-* **Implementation:** All cached queries must use explicit, deterministic Cache Keys (e.g., `member:{id}:profile`). Cache invalidation MUST happen only after the database transaction commits, not inside the transaction body. The Orchestrator/UnitOfWork (Rule 8 — Edge Case B) is responsible for triggering cache invalidation in an `afterCommit` callback, not the repository method itself. Any mutation method in the repository MUST explicitly invalidate the corresponding cache keys immediately after the database transaction commits. Do not rely solely on time-to-live (TTL).
+
+* **The Rule:** Every cached query MUST have deterministic cache keys and an explicit invalidation strategy.
+
+* Cache invalidation MUST happen only after the corresponding database transaction successfully commits.
+
+* The Orchestrator / UnitOfWork owns the transaction lifecycle and MUST trigger the cache invalidation through an `afterCommit` mechanism.
+
+* Repositories MUST NOT invalidate cache before transaction commit.
+
+* Repositories MUST NOT contain independent pre-commit cache invalidation side effects.
+
+* Mutation operations MUST provide enough information for the Orchestrator / UnitOfWork to deterministically invalidate all affected cache keys after commit.
+
+* TTL alone is insufficient when explicit invalidation is required.
+
+Required flow:
+
+Read
+→ deterministic cache key
+→ mutation
+→ DB transaction
+→ commit
+→ afterCommit invalidation
+→ next read
 
 ## Rule 107 — Internationalization (i18n) & Localization
 
@@ -1858,7 +2067,11 @@ Storing monetary amounts as floats (e.g., `99.99`) causes rounding errors in fin
   - INR: store `9999` for ₹99.99 (paise)
   - USD/EUR: store `9999` for $99.99 (cents)
   - JPY: store `100` for ¥100 (yen has no subunit)
-- Use `INT` or `BIGINT` column type in your chosen ORM (TypeORM or Prisma). Never use `DECIMAL` or `FLOAT` for money.
+- For NestJS/TypeORM, use PostgreSQL `integer` or `bigint` mapping as appropriate.
+
+For Django, use the corresponding integer/big-integer field.
+
+Never use FLOAT/DOUBLE for monetary amounts.
 - Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
 
 ``````typescript
@@ -1904,9 +2117,13 @@ When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchron
 All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
 - **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
 
-1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder or Prisma Fluent API) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
+1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder for NestJS or the corresponding Django ORM query facilities) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
 2. **Trigger:** `POST /api/v1/superadmin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
-3. **Background Job (Message Broker / Task Queue):** A worker processes the job (using BullMQ, Redis Pub/Sub, RabbitMQ, or any standard broker). It executes paginated queries to gather data without blowing up RAM, writes to CSV streams, and zips the files.
+3. **Background Job (Project Message Infrastructure):** A worker processes the job using:
+   - NestJS → BullMQ backed by Redis
+   - Django → Celery backed by Redis
+
+Redis Pub/Sub MUST NOT be used as the durable job queue.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
 5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/superadmin/download-export?token=xyz`) that streams the file.
 6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
@@ -1941,8 +2158,27 @@ WebSockets are "fire-and-forget". If the backend emits an event (`socket.emit('n
 Never emit a critical WebSocket event (like "Export Ready", "Payment Received", or a "Chat Message") without **first saving it to the database**.
 
 1. **Save First:** Insert a record into the `Notifications` or `Chats` table within your database transaction.
-2. **Transactional Outbox / Relay:** To guarantee delivery without a failure window (where the DB commits but the process crashes before emitting), the architecture MUST implement a **Transactional Outbox** pattern (e.g., writing an event to an `outbox_events` table in the same transaction) OR rely on a reliable event relay (e.g., PostgreSQL a Transactional Outbox pattern (write to an `outbox` table in the same transaction, relay via durable worker), PostgreSQL WAL logical replication, or a proper message broker. NOTE: `LISTEN/NOTIFY` is only a wake-up hint — it does NOT guarantee durable delivery and MUST NOT be used as the sole real-time relay mechanism) which independently reads the committed changes and forwards them to the WebSocket broker. Never rely on in-memory `await db.commit(); socket.emit()` as a strict reliability guarantee.
-3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/v1/notifications` or `GET /api/v1/chats`).
+2. **Transactional Outbox / Relay:**
+
+The transaction MUST write the persistent notification/chat record AND the corresponding outbox event atomically.
+
+A background relay worker MUST read committed outbox events and publish the real-time notification through Redis Pub/Sub.
+
+For NestJS, the relay worker MUST use BullMQ + Redis where background job processing is required.
+
+For Django, the relay worker MUST use Celery + Redis where background job processing is required.
+
+Do NOT use PostgreSQL LISTEN/NOTIFY as the sole durable event mechanism.
+
+Do NOT rely on:
+
+`await db.commit(); socket.emit(...)`
+
+as the reliability mechanism.
+
+Redis Pub/Sub provides transient real-time fan-out.
+The database remains the source of truth for offline recovery.
+3. **Recovery:** This ensures that if the user is online, they get the live WebSocket blast. If they are offline, they will see the message when they open the app and the frontend fetches historical data via REST (`GET /api/v1/{role}/notifications` or `GET /api/v1/{role}/chats`).
 4. **Soft Delete Mandatory:** All notifications and chat messages MUST use **Soft Deletion** (e.g., `deleted_at: timestamp` or `is_deleted: true`). Never hard-delete chat histories or notifications, as they are crucial for audits, tenant data exports, and dispute resolutions (subject only to the legal-erasure exception defined in Rule 29 / Rule 110).
 
 ## Rule 112 — Complete Isolation for E2E and Selenium Testing
@@ -2025,7 +2261,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ## Rule 118 - Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
 * **The Problem:** Standard CRUD operations (like updating a subscription status from 'Active' to 'Cancelled') overwrite historical state, completely destroying the ability to perform deep, time-series analytics (e.g., "How many users cancelled exactly on day 14?").
 * **The Rule:** For any critical domain entity (Billing, Attendance, Subscription, Member Lifecycle), apply a **Zero-Overwrite** rule for analytics. 
-* **Implementation:** Every critical state change MUST publish an immutable Domain Event (e.g., `SUBSCRIPTION_CANCELLED_EVENT`) to a message broker (Redis Streams/Kafka) and store it in an append-only `events_log` or timeseries table. 
+* **Implementation:** Every critical state change MUST publish an immutable Domain Event (e.g., `BILLING.SUBSCRIPTION.CANCELLED`) to a message broker (Redis Streams) and store it in an append-only `events_log` or timeseries table. 
 * **Why:** All AI Analytics engines, forecasting models, and **historical/state-transition analytics (e.g., member lifecycle, revenue trends, forecasting) MUST query this immutable event log**. Current operational widgets (e.g., live attendance, active sessions) MAY query the transactional read model directly (see Rule 114). Dashboards that mix both widget types must source each widget from its appropriate layer (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
 
 ## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
