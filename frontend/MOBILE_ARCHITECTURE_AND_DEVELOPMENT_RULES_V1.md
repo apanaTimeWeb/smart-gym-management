@@ -166,6 +166,7 @@ in the rest of the filename. The following are allowed:
 | dot-notation API/type files | `members.api.ts` | Feature name IS the prefix, separated by dot |
 | `*.integration.test.ts` suffix | `members.integration.test.ts` | Test type suffix is structural, feature still prefixed |
 | `*_features.md`, `*_forbidden.md` | `members_features.md` | Mandatory doc format — feature name leads |
+| `_locales/{lang}.json` | `_locales/en.json` | Standardized locale filename; feature ownership is established by the containing feature folder |
 
 **What is forbidden regardless:**
 ```
@@ -962,7 +963,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 58A: App foreground resume calls `GET /api/notifications` to recover missed push events
 - [ ] Rule 59: Role-masked fields typed as optional in TypeScript interfaces and Zod schemas; UI handles `undefined` gracefully
 - [ ] Rule 60: Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys
-- [ ] Rule 61: All user-visible strings use `t('NAMESPACE.KEY')`; `Accept-Language` header attached by central network client
+- [ ] Rule 61: All client-authored/static user-visible strings use `t('NAMESPACE.KEY')`; backend-supplied `response.message` values are displayed as-is and NOT passed through `t()`; `Accept-Language` header attached by central network client
 - [ ] Rule 62: Feature flags accessed via `useFeatureFlag()` — no raw build/env reads inside components
 - [ ] Rule 63: Currency formatting is feature-local (`formatCurrency.ts`); approved currency metadata used; unsupported codes throw
 - [ ] Rule 64: Tenant data export triggers async backend call + `202 Accepted` success feedback — no in-app download
@@ -2019,7 +2020,7 @@ The mobile architecture MUST enforce the following security and robustness const
 ## Updated Workflow Checklist — What to Verify After AI Writes Code
 
 > Replaces the original checklist at the end of Rule 32. All prior items retained;
-> new items for Rules 33–52 appended.
+> new items for Rules 33–66 appended, including Rule 58A.
 
 1. Read the feature's `_features.md` and then `_forbidden.md` before giving the AI any files.
 2. Identify the exact layer (UI? Hook? API? Schema? State?) and pass only those files.
@@ -2071,7 +2072,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - App foreground resume triggers `GET /api/notifications` REST recovery call? (Rule 58A)
    - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
    - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys? (Rule 60)
-   - All user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text? (Rule 61)
+   - All client-authored/static user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)
    - `Accept-Language` header attached automatically by central network client? (Rule 61)
    - Feature flags accessed via `useFeatureFlag()` — no raw build/env reads in components? (Rule 62)
    - Currency formatting is feature-local `formatCurrency.ts`; approved currency metadata used; unknown codes throw? (Rule 63)
