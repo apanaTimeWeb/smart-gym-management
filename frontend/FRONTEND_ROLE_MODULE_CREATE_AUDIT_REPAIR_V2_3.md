@@ -5676,7 +5676,7 @@ It MUST pass:
 3. Exact test verification.
 4. Exact completion condition.
 
-The code MUST be production-ready and fully adhere to all rules without requiring human intervention.
+The code MUST be production-ready and fully adhere to all rules without requiring additional implementation clarification; mandatory human review gates remain applicable where required by the architecture.
 
 ---
 
