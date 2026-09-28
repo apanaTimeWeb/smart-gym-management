@@ -344,7 +344,7 @@ When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/
 * `app.module.ts` — lives in the global application root, not in the feature module
 * `main.ts` — global application bootstrap file
 * `package.json` — root-level dependency manifest
-* `tsconfig.json` / `tsconfig.build.json` — root TypeScript config
+* `tsconfig.json` / `tsconfig.build.json` — root TypeScript config (NestJS) or equivalent root project configuration (Django)
 * `.env` / `.env.example` — global environment files
 * `nest-cli.json` — framework CLI config
 * Global `ConfigModule` / `DatabaseModule` / `RedisModule` setup — lives in the global app core
@@ -2848,10 +2848,10 @@ Check:
 - feature flag service;
 - i18n bootstrap;
 - API versioning;
-- `tsconfig.json`;
-- ESLint configuration;
-- Prettier configuration;
-- Husky / pre-commit configuration;
+- `tsconfig.json` (NestJS) or equivalent root configuration (Django);
+- Linting configuration (ESLint for NestJS, Ruff for Django);
+- Formatting configuration (Prettier for NestJS, Black/Ruff for Django);
+- Pre-commit configuration (Husky for NestJS, pre-commit for Django);
 - CI/CD workflows;
 - SAST/SCA/secrets scanning;
 - CODEOWNERS;
@@ -4425,7 +4425,7 @@ Node built-ins
 → type-only imports last
 ```
 
-Verify ESLint mechanically enforces this.
+Verify ESLint (NestJS) or Ruff/isort (Django) mechanically enforces this.
 
 ---
 
@@ -4465,8 +4465,8 @@ Inspect Husky/pre-commit configuration.
 Verify:
 
 - `tsc --noEmit` (NestJS) or `mypy --strict` (Django);
-- ESLint;
-- Prettier;
+- ESLint (NestJS) or Ruff/lint check (Django);
+- Prettier (NestJS) or formatting check (Django);
 - Gitleaks;
 - staged-files execution;
 - blocking behavior.
@@ -6903,7 +6903,7 @@ Before producing the final verdict, verify:
 [ ] Source numbering gaps discovered dynamically
 [ ] Special/non-numeric architecture gates included
 [ ] Prompt examples not treated as authoritative project requirements
-[ ] MODULAR MONOLITH SCOPE BOUNDARY respected — app.module.ts, main.ts, package.json, tsconfig.json, .env, nest-cli.json NOT flagged as missing in a single feature module ZIP
+[ ] MODULAR MONOLITH SCOPE BOUNDARY respected — root infrastructure files (e.g., app.module.ts, settings.py, main.ts, package.json, tsconfig.json, .env) NOT flagged as missing in a single feature module ZIP
 [ ] MODE DECISION correctly applied — if no backend ZIP supplied → MODE A (CREATE); if backend ZIP supplied → MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
 ```
 

@@ -1835,7 +1835,7 @@ When adding a new enum value, a database migration MUST be generated to update t
    - Is the permission guard at the controller layer using typed enums? (Rule 83)
    - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
    - Does every paginated endpoint use `PaginationQueryDto` and return the canonical `PaginationMeta` shape via `buildPaginationMeta()`? (Rule 94)
-   - Are all status/type/role entity columns using TypeScript enums with `@IsEnum()` DTO validation — never raw `string` columns? (Rule 95)
+   - Are all status/type/role entity columns using strictly typed enums (TypeScript Enum + `@IsEnum()` for NestJS, or `TextChoices` + `ChoiceField` for Django) — never raw `string` columns? (Rule 95)
    - Is every new scheduled job registered in `src/core/scheduled-jobs.registry.ts` with all mandatory fields? (Rule 96)
    - Do all outbound HTTP calls and DB queries have explicit timeouts from `TIMEOUT_CONFIG`? (Rule 97)
    - Does the global `ValidationExceptionFilter` transform `400` errors into the canonical `validationErrors` shape? (Rule 98)
@@ -1850,7 +1850,7 @@ When adding a new enum value, a database migration MUST be generated to update t
    - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 103)
    - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
    - If the change touches `auth/`, `billing/`, `webhooks/`, or `tenant-provisioning/`, has a human reviewed it? (Rule 93)
-6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit`. (Rule 90)
+6. Run automated CI gates: SAST, SCA, secrets scan, `tsc --noEmit` (NestJS) or `mypy --strict` (Django). (Rule 90)
 7. Generate `pytest` tests for the live API (execution optional/handled by CI) to confirm contract compliance.
 8. For security-critical modules, ensure `CODEOWNERS` human approval is obtained. (Rule 93)
 9. Review the AI's isolated changes one final time.
@@ -2102,7 +2102,7 @@ The AI MUST implement only the branch corresponding to the verified
 active framework.
 
 ### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every currently active language.
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`_locales/` JSON for NestJS, or `locale/` message files for Django).
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2124,9 +2124,9 @@ This is the **authoritative list of languages** this project supports. There is 
 > - `SUPPORTED_LANGUAGES`: The full table above represents all future supported languages.
 > - `ACTIVE_LANGUAGES`: We currently only ship `en` (English) + `hi` (Hindi) at launch.
 
-> **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. `nestjs-i18n` handles this natively — no extra configuration needed.
+> **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. The native framework translation system handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new NestJS module, you MUST create its _locales/en/errors.json AND _locales/hi/errors.json (the `ACTIVE_LANGUAGES`). Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name (e.g., members.ERRORS.NOT_FOUND). Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `_locales/.../errors.json` for NestJS or `locale/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
