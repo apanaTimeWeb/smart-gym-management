@@ -74,7 +74,7 @@ The AI MUST try so hard in its first pass that the user never needs to come back
 Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the main React/Next.js/Vite application.
 
 The `INTEGRATION_GUIDE.md` MUST include:
-- Required route additions in the main router.
+- Required route registration / route-file placement for the host application, according to its framework's routing model.
 - Any new environment variables needed.
 - New NPM dependencies added.
 - Verification steps to ensure the module loads correctly.
@@ -334,13 +334,7 @@ Create a Documentation Rule Coverage Matrix:
 | Document | Section / Rule | Requirement | Applicable? | Evidence | Status |
 | -------- | -------------- | ----------- | ----------- | -------- | ------ |
 
-Allowed statuses:
-
-* PASS
-* FAIL
-* PARTIAL
-* NOT VERIFIED
-* NOT APPLICABLE
+Allowed statuses are defined by the canonical Source Coverage Engine in Section 43A.
 
 Rules marked NOT APPLICABLE MUST include a reason.
 
@@ -2486,23 +2480,27 @@ This allows you (the coding agent) to complete them independently.
 
 # 34. BEFORE / AFTER MODULE SCORE
 
+The scoring model depends on the mode of operation.
+
+MODE B (AUDIT + REPAIR):
 The audit MUST always produce a BEFORE REPAIR SCORE.
-
 If the same agent performs repairs in the same execution context, it MUST also produce an AFTER REPAIR SCORE.
-
 If repair is performed later by another agent, the first report provides:
-
 BEFORE REPAIR SCORE
-
 and the repairing/final-verification agent MUST rerun the same scoring procedure to produce:
-
 AFTER REPAIR SCORE
+
+MODE A (CREATE):
+Since there is no existing code, produce:
+CREATION BASELINE / REQUIREMENT READINESS SCORE
+and after creation is completed:
+FINAL VERIFIED SCORE
 
 ## BASELINE SCORE — BEFORE REPAIR
 
 First calculate:
 
-# BEFORE REPAIR SCORE: X/10
+# BEFORE REPAIR SCORE: X/10 (For Mode B) or CREATION BASELINE SCORE (For Mode A)
 
 This score represents the actual repository state BEFORE any fixes are applied.
 
@@ -3355,7 +3353,10 @@ AUDIT STATUS:
 SOURCE_CONFLICT — HUMAN_ARCHITECTURAL_DECISION_REQUIRED
 ```
 
-Known examples that MUST be checked when these exact source texts are supplied include:
+The following are examples of conflict PATTERNS only.
+Report them only when the exact supplied source text actually contains both conflicting requirements.
+
+Do not treat these examples as evidence that the current supplied documents contain the conflict.
 
 ### Example 1 — Frontend E2E contradiction
 
@@ -5798,7 +5799,11 @@ The ZIP MUST contain:
 ```text
 INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
 [module_name]_changelog_vN.md            ← detailed changelog
-frontend_{role}/                         ← complete frontend role module folder
+frontend_{role}/
+└── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
+frontend_e2e/                            ← (when applicable) isolated E2E tests for the feature
+└── [role]_e2e/
+    └── [target_feature]/
 stage_1_frontend_requirements.md         ← requirements extracted
 stage_2_frontend_audit.md                ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
