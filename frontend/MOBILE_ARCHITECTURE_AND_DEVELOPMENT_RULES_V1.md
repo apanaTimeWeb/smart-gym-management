@@ -65,7 +65,20 @@ Only explicitly approved core/infrastructure files may be changed.
 
 CI Mechanical Gate: The CI pipeline MUST include a mechanical diff gate (e.g., a script or tool) that explicitly fails the build if changes leak outside `[owning-feature]/**` without an authorized infrastructure exception. Import linting is insufficient; file modifications themselves must be constrained.
 
-## Rule 0C — Change Scope Failure Condition
+---
+
+## Rule 0C — Explicit Expected-Product-Surface Audit Procedure
+
+When the AI is tasked with auditing or repairing an existing mobile codebase (e.g., an existing ZIP), it MUST execute the following completeness protocol before generating code:
+
+1. **EXPECTED MOBILE UI:** Analyze the supplied product requirements, API contract, and UI/UX design to discover the exact expected product surface. This includes discovering all necessary screens, modals, bottom sheets, navigation flows, forms, buttons, dropdowns, list views, and error states required by the feature.
+2. **ACTUAL MOBILE UI:** Compare the `EXPECTED MOBILE UI` against the actual UI elements implemented in the supplied mobile codebase.
+3. **MISSING:** Document any elements present in the `EXPECTED MOBILE UI` that are missing from the `ACTUAL MOBILE UI` (e.g., "The API contract expects a Superadmin chart and role-selection dropdown, but the existing codebase only implements a list view without a dropdown").
+4. **REPAIR:** Implement the missing UI elements, integrating them correctly into the existing feature using the Mobile Architecture and Mobile UI/UX Design System. Do not merely report the missing elements — repair them.
+
+The AI is explicitly forbidden from inventing missing features that are not defined by the supplied product requirements, API contract, or UI/UX design. The AI must preserve existing compliant functionality during the repair.
+
+## Rule 0D — Change Scope Failure Condition
 
 If an AI repair attempts to modify business logic in a sibling feature module to fulfill a requirement of the current feature module, the architecture gate FAILS. Feature isolation is absolute.
 

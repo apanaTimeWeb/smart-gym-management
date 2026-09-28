@@ -4452,7 +4452,7 @@ Inspect CI config for:
 - SAST;
 - SCA;
 - secrets scanner;
-- `tsc --noEmit`;
+- `tsc --noEmit` (NestJS) or `mypy --strict` (Django);
 - blocking behavior for critical/high findings;
 - no bypass path.
 
@@ -4464,7 +4464,7 @@ Inspect Husky/pre-commit configuration.
 
 Verify:
 
-- `tsc --noEmit`;
+- `tsc --noEmit` (NestJS) or `mypy --strict` (Django);
 - ESLint;
 - Prettier;
 - Gitleaks;
@@ -4549,7 +4549,7 @@ Check:
 - no raw string columns;
 - no inline union substitute;
 - DB-level enum/check enforcement;
-- DTO uses `@IsEnum`;
+- DTO uses `@IsEnum` (NestJS) or `ChoiceField` (Django);
 - migrations accompany enum changes.
 
 ---
@@ -4970,13 +4970,13 @@ Required metadata for each:
 
 Verify:
 
-- Every REST endpoint is heavily annotated (`@ApiTags`, `@ApiOperation`, `@ApiResponse`).
+- Every REST endpoint is heavily annotated (e.g., `@ApiTags`, `@ApiOperation`, `@ApiResponse` for NestJS or `drf-spectacular`'s `@extend_schema` for Django).
 
-- Every DTO is heavily annotated (`@ApiProperty` on every field).
+- Every DTO/Serializer is heavily annotated.
 
-- Every Response object/schema is explicitly defined and heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, typed generics). No `any` return types.
+- Every Response object/schema is explicitly defined and heavily annotated using OpenAPI decorators. No `any` return types.
 
-- The resulting `swagger.json` is 100% strictly typed with no missing fields, no implicit `any` schemas.
+- The resulting `swagger.json` or OpenAPI schema is 100% strictly typed with no missing fields, no implicit `any` schemas.
 
 ---
 

@@ -125,8 +125,10 @@ A feature repair FAILS the architecture gate when the AI:
 ### 0E. ISOLATED CONTEXT IMPLIES MODULAR MONOLITH, NOT MICROSERVICE (CRITICAL)
 
 When an AI is provided with a single feature module or domain folder in isolation (e.g., a developer zips only the `backend_manager` folder or provides only the `dashboard` module), the AI MUST assume the module operates within a **Modular Monolith architecture**, NOT as an independent Microservice.
-* **The Rule:** Never attempt to bootstrap independent database connections, independent framework `.forRoot()` / `.forRootAsync()` configurations, or isolated global infrastructure (like Config or Redis setup) within a feature module. 
-* **Implementation:** Rely on the global application monolith to provide the core infrastructure. Feature modules should strictly rely on `.forFeature()` registrations, and should bundle/export their domain-specific providers into a module so the global Monolithic App can safely consume them.
+* **The Rule:** Never attempt to bootstrap independent database connections, isolated global infrastructure (like Config or Redis setup), or framework-level root configurations within a feature module. 
+* **Framework-independent contract:** Rely on the global application monolith to provide the core infrastructure.
+* **NestJS implementation:** Feature modules should strictly rely on `.forFeature()` registrations and should bundle/export their domain-specific providers into a module so the global Monolithic App can safely consume them. Never use `.forRoot()` / `.forRootAsync()` in a feature module.
+* **Django implementation:** Feature apps must rely on `settings.py` for all database and infrastructure configuration. Do not attempt to initialize new database connections or Redis pools inside `apps.py` or feature views.
 * **Why:** If the AI assumes the folder is a standalone microservice, it will attempt to instantiate redundant database connection pools and global infrastructure inside the local module, which instantly crashes the global monolith on startup due to duplicated context boundaries.
 
 ---
@@ -1551,14 +1553,14 @@ This rule MUST remain consistent with Rule 99.
 ---
 
 ## 95. Enum-Driven Entity Status Fields (No Raw String Columns)
-* **The Rule:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a TypeScript `enum` — never raw string literals. Saving `member.status = 'actve'` (a typo) to the database must be a **compile-time error**, not a silent data corruption bug discovered in production.
-* **The Pattern:**
+* **Framework-independent contract:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a strictly typed enum structure — never raw string literals. Saving a typo (e.g. `'actve'`) to the database must be a **compile-time or strict validation error**, not a silent data corruption bug discovered in production. Enum values MUST be `SCREAMING_SNAKE_CASE` strings (e.g., `'ACTIVE'`, `'IN_PROGRESS'`) so they are human-readable in raw database queries.
 
 ### NestJS implementation
-Use a TypeScript enum and map it to a PostgreSQL enum column.
+* **Definition:** Use a TypeScript enum. All enums MUST be defined in the module's `[role]-[module].constants.ts` file (Rule 5) — never inline inside the entity file.
+* **Database:** Map it to a PostgreSQL enum column.
+* **Validation:** DTO validation for enum fields MUST use `@IsEnum(MemberStatus)` from `class-validator` — never `@IsString()`.
 
 Example:
-
 ```typescript
 export enum MemberStatus {
   ACTIVE = 'ACTIVE',
@@ -1566,22 +1568,7 @@ export enum MemberStatus {
   EXPIRED = 'EXPIRED',
   PENDING = 'PENDING',
 }
-```
 
-### Django implementation
-Use Django's `models.TextChoices`.
-
-Example:
-
-```python
-class MemberStatus(models.TextChoices):
-    ACTIVE = 'ACTIVE', 'Active'
-    SUSPENDED = 'SUSPENDED', 'Suspended'
-    EXPIRED = 'EXPIRED', 'Expired'
-    PENDING = 'PENDING', 'Pending'
-```
-
-```typescript
 @Column({
   type: 'enum',
   enum: MemberStatus,
@@ -1590,24 +1577,24 @@ class MemberStatus(models.TextChoices):
 status: MemberStatus;
 ```
 
-### Django
+### Django implementation
+* **Definition:** Use Django's `models.TextChoices`. Enums must be defined in `constants.py` or closely co-located with the model.
+* **Database:** Map it to a `CharField` with `choices=MemberStatus.choices`.
+* **Validation:** Serializer validation for enum fields MUST use `ChoiceField(choices=MemberStatus.choices)` or rely on the ModelSerializer mapping.
 
-Use Django's enum/Choices mechanism and map it to the PostgreSQL database representation defined by Django.
+Example:
+```python
+class MemberStatus(models.TextChoices):
+    ACTIVE = 'ACTIVE', 'Active'
+    SUSPENDED = 'SUSPENDED', 'Suspended'
+    EXPIRED = 'EXPIRED', 'Expired'
+    PENDING = 'PENDING', 'Pending'
+    
+status = models.CharField(max_length=20, choices=MemberStatus.choices, default=MemberStatus.PENDING)
+```
 
 ### Database-Level Enforcement
-
-PostgreSQL MUST enforce valid enum/state values at the database layer where the architecture requires finite state enforcement.
-
-
-
-* **Rules:**
-  - ❌ **BAD:** A plain string column for status — accepts any string, including typos.
-  - ❌ **BAD:** Inline union type (`'active' | 'suspended'`) — not reusable, not a runtime guard.
-  - ✅ **GOOD:** ORM enum column mapped to the `MemberStatus` enum — compile-time AND database-level enforcement.
-  - All enums MUST be defined in the module's `[role]-[module].constants.ts` file (Rule 5) — never inline inside the entity file.
-  - Enum values MUST be `SCREAMING_SNAKE_CASE` strings (e.g., `'ACTIVE'`, `'IN_PROGRESS'`) so they are human-readable in raw database queries.
-  - When adding a new enum value, a database migration MUST be generated to update the DB enum type. Never rely on ORM auto-sync in production (Rule 24).
-  - DTO validation for enum fields MUST use `@IsEnum(MemberStatus)` from `class-validator` — never `@IsString()`.
+When adding a new enum value, a database migration MUST be generated to update the DB type or constraint. Never rely on ORM auto-sync in production (Rule 24).
 
 * **Why:** AI agents default to `string` columns for status fields because it's the path of least resistance. A single typo (`'actve'` instead of `'active'`) silently corrupts data — the record is saved, no error is thrown, but every `WHERE status = 'ACTIVE'` query silently excludes that record. TypeScript enums make this a compile-time error that is caught before the code ever runs.
 
@@ -2012,7 +1999,18 @@ The backend uses framework-native internationalization (e.g., `nestjs-i18n` for 
 - **Other languages:** Written by the AI agent in the same commit that creates the module
 - **Runtime cost:** Zero — all files are static JSON, bundled with the app
 
-### Module-Level File Structure
+### Framework-independent requirements
+- Locale files MUST remain inside the owning feature/module.
+- No central global business-locale folder.
+- Translation keys MUST be namespaced by module.
+- `Accept-Language` MUST be respected by the API.
+- Validation/error messages MUST resolve through the centralized i18n mechanism.
+- Every active launch language MUST have the required locale files.
+- Hardcoded user-facing business strings in backend exceptions/responses are forbidden when an i18n key is required.
+
+### NestJS implementation
+
+**Module-Level File Structure**
 Each module owns its own `_locales/` folder:
 ```
 src/
@@ -2041,7 +2039,7 @@ scripts/                  ← (Global tooling folder exception allowed under Rul
   merge-locales.ts        ← Merges all module _locales into one bundle at build time
 ```
 
-### AI Agent Translation Rule
+**AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST:
 1. Create `_locales/en/errors.json` with the English strings.
 2. In the **same commit**, create `_locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
@@ -2065,7 +2063,7 @@ When an AI agent writes a new module or adds new error/message keys, it MUST:
 }
 ```
 
-### Throwing Errors (Correct Pattern)
+**Throwing Errors (Correct Pattern)**
 Always throw with a module-scoped translation key — never a hardcoded English string:
 ```typescript
 // ❌ FORBIDDEN
@@ -2075,30 +2073,28 @@ throw new NotFoundException('Member not found.');
 throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 ```
 
-### Framework-independent requirements
-
-- Locale files MUST remain inside the owning feature/module.
-- No central global business-locale folder.
-- Translation keys MUST be namespaced by module.
-- `Accept-Language` MUST be respected by the API.
-- Validation/error messages MUST resolve through the centralized i18n mechanism.
-- Every active launch language MUST have the required locale files.
-- Hardcoded user-facing business strings in backend exceptions/responses are forbidden
-  when an i18n key is required.
-
-### NestJS implementation
-
-Use `nestjs-i18n` and the approved NestJS validation/i18n integration.
-Use the NestJS-specific interceptor/filter and build-time locale merge process
-defined for NestJS projects.
-
 ### Django implementation
 
-Use Django's native translation framework and the project's approved
-Django middleware/translation integration.
+Use Django's native translation framework and the project's approved Django middleware/translation integration.
 
-Do NOT create NestJS interceptors, NestJS decorators, `nestjs-i18n`,
-`nest build`, or NestJS-specific locale merge scripts in a Django project.
+**App-Level File Structure**
+Each app owns its own `locale/` folder containing `.po`/`.mo` message files.
+
+**AI Agent Translation Rule**
+When an AI agent writes a new module or adds new error/message keys, it MUST generate translations using standard `gettext` syntax and ensure locale messages are updated for ALL active languages using `django-admin makemessages`.
+
+**Throwing Errors / Validation (Correct Pattern)**
+Always use `gettext_lazy` (or `_`) for user-facing strings — never a hardcoded English string:
+```python
+# ❌ FORBIDDEN
+raise ValidationError('Member not found.')
+
+# ✅ CORRECT
+from django.utils.translation import gettext_lazy as _
+raise ValidationError(_('Member not found.'))
+```
+
+Do NOT create NestJS interceptors, NestJS decorators, `nestjs-i18n`, `nest build`, JSON locale bundles, or NestJS-specific locale merge scripts (like `merge-locales.ts`) in a Django project.
 
 ### Framework gate
 
