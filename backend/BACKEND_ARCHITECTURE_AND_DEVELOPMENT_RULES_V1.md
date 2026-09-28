@@ -964,8 +964,9 @@ Backend implementation (services, repositories, DB queries)
 ## 68. Health Check Depth Levels
 * **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
 
-## 69. Strict `tsconfig.json` Enforcement
-* **The Rule:** The backend MUST run with `strict: true`. No `implicitAny`, no `implicitThis`. AI must never add `@ts-ignore` or `@ts-nocheck` to bypass type errors.
+## 69. Strict Compilation / Type Checking
+* **NestJS implementation:** The backend MUST run with `strict: true` in `tsconfig.json`. No `implicitAny`, no `implicitThis`. AI must never add `@ts-ignore` or `@ts-nocheck` to bypass type errors.
+* **Django implementation:** The backend MUST enforce strict type hinting (e.g., via `mypy --strict`). AI must never use `# type: ignore` to bypass type errors.
 
 ## 70. No Raw `any` from ORM
 * **The Rule:** Never allow raw `any` types to escape the ORM layer. Query builder results or raw SQL executions must immediately be mapped to a strictly typed DTO or Entity class.
@@ -1413,7 +1414,9 @@ This rule MUST remain consistent with Rule 99.
 * **Mandatory Gate 1 — SAST (Static Application Security Testing):** Run a SAST scanner (e.g., `Semgrep`, `SonarQube`, `CodeQL`) on every PR. Any `Critical` or `High` severity finding MUST block the merge. AI agents cannot self-certify their own code as secure.
 * **Mandatory Gate 2 — SCA (Software Composition Analysis):** Run a dependency vulnerability scanner (e.g., `npm audit`, `safety` for Python, `Snyk`) on every PR. Any new dependency with a known `Critical` CVE must block the merge.
 * **Mandatory Gate 3 — Secrets Detection:** Run a secrets scanner (e.g., `GitLeaks`, `Trufflehog`) on every PR diff. A single hardcoded API key or database password in a commit is a catastrophic security breach. This gate must never be skipped.
-* **Mandatory Gate 4 — TypeScript Strict Compile Check:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
+* **Mandatory Gate 4 — Strict Type Check:**
+  - **NestJS:** Run `tsc --noEmit` on every PR. The build must pass with zero type errors — no `@ts-ignore` bypasses allowed (Rule 69).
+  - **Django:** Run `mypy --strict` on every PR. The build must pass with zero type errors — no `# type: ignore` bypasses allowed (Rule 69).
 * **Why:** The backend requires the same discipline as the frontend but with an added focus on security. An AI writing authentication or payment code must have its output automatically vetted before it reaches production.
 
 ---
@@ -1421,11 +1424,17 @@ This rule MUST remain consistent with Rule 99.
 ## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Commit)
 * **The Rule:** The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git commit`. A pre-push hook is an optional additional gate, but pre-commit is mandatory. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
 * **Required Pre-Commit Checks (must all pass):**
-  1. `tsc --noEmit` — TypeScript type check. Zero errors required.
-  2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
-  3. `prettier --check` — Code format verification.
-  4. `gitleaks detect --no-git` — Secret scanning on staged files only (fast).
-* **Staged Files Only:** Use `lint-staged` for file-scoped checks; however, `tsc --noEmit` is intentionally project-wide.
+  - **NestJS implementation:**
+    1. `tsc --noEmit` — TypeScript type check. Zero errors required.
+    2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
+    3. `prettier --check` — Code format verification.
+    4. `gitleaks detect --no-git` — Secret scanning on staged files only (fast).
+  - **Django implementation:**
+    1. `mypy --strict` — Python type check. Zero errors required.
+    2. `ruff check --fix` (or equivalent) — Auto-fix lint violations; fail if unfixable violations remain.
+    3. `ruff format --check` (or `black --check`) — Code format verification.
+    4. `gitleaks detect --no-git` — Secret scanning on staged files only (fast).
+* **Staged Files Only:** Use `lint-staged` (or `pre-commit`) for file-scoped checks; however, strict type checking (`tsc --noEmit` / `mypy`) is intentionally project-wide.
 * **Why:** CI/CD gates (Rule 90) catch issues at the PR stage, which means an AI agent can push broken/insecure code to the remote branch. Pre-commit hooks catch the same issues before the push ever happens, providing instant feedback and preventing noise in the PR history.
 
 ---
@@ -1544,8 +1553,8 @@ This rule MUST remain consistent with Rule 99.
 ## 95. Enum-Driven Entity Status Fields (No Raw String Columns)
 * **The Rule:** All entity columns that represent a finite set of states (e.g., `status`, `type`, `role`, `medium`, `priority`) MUST use a TypeScript `enum` — never raw string literals. Saving `member.status = 'actve'` (a typo) to the database must be a **compile-time error**, not a silent data corruption bug discovered in production.
 * **The Pattern:**
-### NestJS / TypeORM
 
+### NestJS implementation
 Use a TypeScript enum and map it to a PostgreSQL enum column.
 
 Example:
@@ -1557,6 +1566,19 @@ export enum MemberStatus {
   EXPIRED = 'EXPIRED',
   PENDING = 'PENDING',
 }
+```
+
+### Django implementation
+Use Django's `models.TextChoices`.
+
+Example:
+
+```python
+class MemberStatus(models.TextChoices):
+    ACTIVE = 'ACTIVE', 'Active'
+    SUSPENDED = 'SUSPENDED', 'Suspended'
+    EXPIRED = 'EXPIRED', 'Expired'
+    PENDING = 'PENDING', 'Pending'
 ```
 
 ```typescript
@@ -1593,9 +1615,10 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
 
 ## 96. Scheduled Job Documentation & Centralized Inventory
 * **The Rule:** Rule 42 mandates distributed cron jobs technically, but in a large system with 10+ scheduled jobs across multiple modules, nobody — human or AI — knows what jobs exist, when they run, what data they touch, or what happens if they fail. This is a critical operational blind spot. Every scheduled job MUST be registered in a centralized inventory.
-* **Required File:** `src/core/scheduled-jobs.registry.ts` — a single file that serves as the master inventory of ALL background scheduled jobs across the entire application.
+* **Required File (NestJS):** `src/core/scheduled-jobs.registry.ts` — a single file that serves as the master inventory of ALL background scheduled jobs.
+* **Required File (Django):** `core/scheduled_jobs_registry.py` (or central Celery Beat schedule configuration) — serves as the master inventory.
   ```typescript
-  // src/core/scheduled-jobs.registry.ts
+  // Example for NestJS: src/core/scheduled-jobs.registry.ts
   // RESPONSIBILITY: Master inventory of all scheduled jobs. Update this file whenever
   // a new job is added, modified, or removed anywhere in the application.
 
@@ -1672,7 +1695,9 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
 ---
 
 ## 98. Structured Validation Error Response Shape (The `400` Contract)
-* **The Rule:** Rule 3 mandates DTO validation, and Rule 28 mandates a standard response envelope. But neither defines what the response looks like when validation fails. Every AI agent will produce a different `400 Bad Request` shape — some return `{ message: "validation failed" }`, some return `{ errors: ["email must be an email"] }`, some return NestJS's raw default `{ statusCode: 400, message: [...], error: "Bad Request" }`. API consumers need a **predictable, field-keyed error shape** to map inline field errors without any custom parsing logic per-form.
+* **The Rule:** Rule 3 mandates DTO/Serializer validation, and Rule 28 mandates a standard response envelope. But neither defines what the response looks like when validation fails. Every AI agent will produce a different `400 Bad Request` shape. API consumers need a **predictable, field-keyed error shape** to map inline field errors without any custom parsing logic per-form.
+* **NestJS implementation:** Implement a global `ValidationExceptionFilter` (and properly configured `ValidationPipe`) to transform raw `class-validator` errors into the canonical shape.
+* **Django implementation:** Implement a custom DRF Exception Handler to transform `ValidationError` into the canonical shape.
 * **The Canonical Validation Error Shape:**
   ```typescript
   // This is what EVERY 400 validation error response must look like
@@ -1908,8 +1933,9 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 
 ## 102. Database Table Naming & Prefixing in Monoliths
 * **Scope Note:** Rule 102 applies to tables within the master/shared database only. Tenant-isolated databases (Rule 39) contain standard un-prefixed table names within their own isolated schema — Rule 102 domain-prefixes do not apply inside a tenant DB.
-* **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
-* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the entity decorator / model configuration rather than relying on a custom implicit global naming strategies.
+* **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the framework's entity/model definition (e.g., `admin_campaigns`, `superadmin_saas_invoices`).
+* **NestJS implementation:** Use the `@Entity('prefix_table')` decorator. Always explicitly hardcode the name rather than using implicit global naming strategies.
+* **Django implementation:** Use `class Meta: db_table = 'prefix_table'`. Always explicitly hardcode the name rather than relying on app-label prefixing defaults.
 * **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
@@ -2304,7 +2330,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ## Rule 116 - MCP-Ready API Design & AI Introspection
 * **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
-* **Implementation:** Every REST endpoint, DTO, and Response object/schema must be heavily annotated using Swagger/OpenAPI decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`). The resulting `swagger.json` must be 100% strictly typed with no missing fields, explicitly documenting the response payload structure.
+* **NestJS implementation:** Every REST endpoint, DTO, and Response object/schema must be heavily annotated using Swagger decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`).
+* **Django implementation:** Every REST endpoint, Serializer, and Response object/schema must be heavily annotated using OpenAPI decorators (e.g., `drf-spectacular`'s `@extend_schema`).
+* **Framework-independent requirement:** The resulting OpenAPI/Swagger schema must be 100% strictly typed with no missing fields, explicitly documenting the response payload structure.
 * **Why:** This allows an MCP Server to ingest the backend's API specification and dynamically convert all your endpoints into **LLM Tools**. An AI agent can then connect to your backend and intuitively execute commands (e.g., `create_member`, `fetch_dashboard_kpis`) natively, treating your backend as an extension of its own brain rather than just static code.
 
 ## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)

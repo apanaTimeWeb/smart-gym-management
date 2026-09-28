@@ -4715,7 +4715,7 @@ rules. The dynamic rule ledger is always authoritative over this prompt's curren
 Apply exactly as defined by the supplied architecture:
 
 - all POST/PATCH/PUT/DELETE mutations;
-- controller-level `@RequireIdempotencyKey()`;
+- framework-appropriate idempotency enforcement (e.g., `@RequireIdempotencyKey()` for NestJS or equivalent Django middleware);
 - missing-key rejection;
 - request-body hash verification;
 - atomic in-progress locking;
@@ -4732,7 +4732,7 @@ Redis Pub/Sub-backed horizontal realtime fan-out is mandatory.
 
 Verify:
 
-- Redis Pub/Sub adapter;
+- framework-appropriate Redis horizontal scaling adapter (e.g., Redis Pub/Sub adapter for NestJS, Django Channels Redis layer for Django);
 - cross-instance delivery;
 - authentication;
 - tenant scope;
@@ -4749,8 +4749,7 @@ Verify sensitive fields are excluded at serialization layer.
 
 Check:
 
-- DTO groups;
-- serialization interceptor;
+- framework-appropriate serialization masking (e.g., DTO groups/serialization interceptor for NestJS, DRF Serializer Context for Django);
 - role propagation;
 - no service-level `delete response.secret` hacks;
 - frontend cannot unhide forbidden data because backend never sends it.
@@ -4782,14 +4781,14 @@ TTL alone is insufficient where explicit invalidation is required.
 
 Verify:
 
-- `nestjs-i18n` or documented framework equivalent;
-- module-co-located `_locales`;
+- framework-native translation library (`nestjs-i18n` for NestJS, Django translation framework for Django);
+- module-co-located `_locales` (or Django app-level `locale/`);
 - `en` plus every language currently declared in the authoritative `ACTIVE_LANGUAGES` configuration;
 - new keys translated in the same change;
 - no central `src/i18n/` folder where forbidden;
 - exceptions use translation keys, not hardcoded English;
 - `Accept-Language` handling;
-- merged locale build step;
+- merged locale build step (NestJS only);
 - namespace correctness.
 
 Do not invent supported languages. Read the actual authoritative configured list.
@@ -6867,11 +6866,11 @@ Before producing the final verdict, verify:
 [ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
 [ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
 [ ] Rule 102 — Database tables are prefixed correctly in monolith
-[ ] Rule 103 - Strict mutational idempotency (@RequireIdempotencyKey) on all state-changing endpoints
-[ ] Rule 104 - WebSockets are horizontally scalable (Redis adapter, no in-process state)
-[ ] Rule 105 - Role-based data serialization and field masking applied
-[ ] Rule 106 - Cache invalidation strategy is strict and consistent
-[ ] Rule 107 — i18n module-co-located locales; no central src/i18n/ bucket; AI translations generated
+[ ] Rule 103 — Strict mutational idempotency (Idempotency-Key contract) on all state-changing endpoints
+[ ] Rule 104 — WebSockets are horizontally scalable (Redis scaling layer, no in-process state)
+[ ] Rule 105 — Role-based data serialization and field masking applied (NestJS DTOs or Django DRF)
+[ ] Rule 106 — Cache invalidation strategy is strict and consistent
+[ ] Rule 107 — i18n module-co-located locales (no central dictionary); AI translations generated
 [ ] Rule 108 — Feature flags are centralized
 [ ] Rule 109 — Multi-currency amounts stored as integer minor units; currency code stored separately
 [ ] Rule 110 — Tenant data export and offboarding endpoint exists
