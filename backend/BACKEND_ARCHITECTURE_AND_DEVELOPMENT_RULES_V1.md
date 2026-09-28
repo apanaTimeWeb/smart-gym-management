@@ -2049,61 +2049,35 @@ throw new NotFoundException('Member not found.');
 throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 ```
 
-### The Interceptor
-The global `I18nValidationExceptionFilter` (from `nestjs-i18n`) automatically reads the `Accept-Language` header from the request and resolves the namespaced key to the correct translated string before sending the `ApiResponse<T>` to the client.
+### Framework-independent requirements
 
-### `scripts/merge-locales.ts` (Build-Time Merge Script)
-This script walks every `_locales/` folder in the project, merges all JSON files by language, and outputs a single bundle per language. Run it as part of the build step.
+- Locale files MUST remain inside the owning feature/module.
+- No central global business-locale folder.
+- Translation keys MUST be namespaced by module.
+- `Accept-Language` MUST be respected by the API.
+- Validation/error messages MUST resolve through the centralized i18n mechanism.
+- Every active launch language MUST have the required locale files.
+- Hardcoded user-facing business strings in backend exceptions/responses are forbidden
+  when an i18n key is required.
 
-```typescript
-// scripts/merge-locales.ts
-// Usage: npx ts-node scripts/merge-locales.ts
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import pino from 'pino';
+### NestJS implementation
 
-import * as glob from 'glob';
-const logger = pino();
+Use `nestjs-i18n` and the approved NestJS validation/i18n integration.
+Use the NestJS-specific interceptor/filter and build-time locale merge process
+defined for NestJS projects.
 
-const OUTPUT_DIR = 'dist/i18n';
-const mergedByLang: Record<string, Record<string, any>> = {};
+### Django implementation
 
-const localeFiles = glob.sync('src/backend_*/**/_locales/**/*.json');
+Use Django's native translation framework and the project's approved
+Django middleware/translation integration.
 
-for (const file of localeFiles) {
-  const parts = file.split(path.sep);
-  const localesIdx = parts.indexOf('_locales');
-  const lang = parts[localesIdx + 1];           // 'en', 'nl', etc.
-  const namespace = parts[localesIdx - 1];      // module name as namespace
-  const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
+Do NOT create NestJS interceptors, NestJS decorators, `nestjs-i18n`,
+`nest build`, or NestJS-specific locale merge scripts in a Django project.
 
-  mergedByLang[lang] ??= {};
-  mergedByLang[lang][namespace] = { ...mergedByLang[lang][namespace], ...content };
-}
+### Framework gate
 
-fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [lang, data] of Object.entries(mergedByLang)) {
-  fs.writeFileSync(`${OUTPUT_DIR}/${lang}.json`, JSON.stringify(data, null, 2));
-  logger.info(`✅ Merged ${lang}.json`);
-}
-```
-
-Add to `package.json`:
-```json
-{
-  "scripts": {
-    "i18n:merge": "npx ts-node scripts/merge-locales.ts",
-    "build": "npm run i18n:merge && nest build"
-  }
-}
-```
-
-### Developer Workflow
-1. AI agent writes a new module and creates `_locales/en/` JSON files.
-2. AI agent, in the **same response**, creates all currently active-language (`ACTIVE_LANGUAGES`) `_locales/{lang}/` files using its own translation capability.
-3. Run `npm run i18n:merge` (or let CI do it automatically at build time).
-4. Commit all `_locales/` files alongside the module code.
-5. **Never** put locale files in a central `src/i18n/` folder — that breaks module isolation.
+The AI MUST implement only the branch corresponding to the verified
+active framework.
 
 ### Configured Target Languages
 This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate `_locales/` files for every currently active language.
