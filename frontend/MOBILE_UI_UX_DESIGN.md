@@ -34,7 +34,6 @@ Every visual value must resolve through a documented global token, unless the ex
 
 `MOBILE_UI_UX_DESIGN.md`
 → React Native theme module
-→ `MOBILE_UI_UX_DESIGN.md`
 → feature UI
 
 - This file owns canonical visual values.
@@ -64,6 +63,7 @@ Ensure `primary` (#4F46E5 dark) and `destructive` (#DC2626 dark) against `on-pri
 | `foreground` | #0B0B0F | #F5F5F7 | Primary text |
 | `card` | #F8F8FA | #16161C | Card/surface background |
 | `primary` | #4F46E5 | #4F46E5 | Primary actions, active states |
+| `primary-text` | #4F46E5 | #818CF8 | Text links, primary text buttons |
 | `destructive` | #DC2626 | #DC2626 | Errors, delete actions |
 | `border` | #E5E5EA | #2A2A32 | Dividers, input borders |
 | `muted` | #71717A | #A1A1AA | Secondary/disabled text |
@@ -96,7 +96,7 @@ Feature UI must use these named spacing tokens and may not invent arbitrary spac
 
 ## 3. Typography Scale
 
-- **Font-family strategy:** System UI font stack is default. Framework may substitute platform-native equivalent.
+- **Font-family strategy:** System UI font stack is default. React Native will substitute the platform-native equivalent (San Francisco/Roboto).
 - **Line-height:**
   - `line-height-body = 1.5`
   - `line-height-heading = 1.2`
@@ -134,7 +134,7 @@ must meet this via minimum height/width or padding.
 ## 7. Motion
 - **Press configuration:** 
   - `press-scale = 0.96`
-  - `spring-medium` = canonical framework-specific preset defined in the shared animation-config module. Feature UI MUST never define its own spring parameters.
+  - `spring-medium` = canonical React Native preset defined in the shared animation-config module. Feature UI MUST never define its own spring parameters.
 - Standard screen-transition fade/slide: `duration-slow` (300ms) duration, ease-out curve.
 - All presets centralized in one shared animation-config module — never
   redefined inline per screen.
@@ -144,8 +144,7 @@ must meet this via minimum height/width or padding.
   - React Native: `import { AccessibilityInfo } from 'react-native'` — use
     `AccessibilityInfo.isReduceMotionEnabled()` or the `useReduceMotion()` hook
     from `react-native-reanimated` to skip or shorten animations.
-  - : `AccessibilityInfo` — if `true`, skip
-    all non-essential `Reanimated` transitions.
+
   - **Rule:** Any animation that is purely decorative (card press / active / focus lift, skeleton
     shimmer, screen transition) MUST be skipped or reduced to an instant
     state-change when reduced-motion is enabled. Functional animations (e.g.
@@ -251,16 +250,16 @@ Token values below are used for the input **border and label color** only.
 | State | Border color token | Label color token | Notes |
 |---|---|---|---|
 | `default` | `border` | `muted` | Resting state |
-| `focused` | `focus-ring` | `primary` | Active input — platform focus ring |
+| `focused` | `focus-ring` | `primary-text` | Active input — platform focus ring |
 | `filled` | `border` | `foreground` | Has a value, not focused |
-| `error` | `destructive` | `destructive` | After validation failure |
+| `error` | `destructive` | `status-danger-text` | After validation failure |
 | `success` | `status-success-text` | `status-success-text` | After successful validation |
 | `disabled` | `border` (`opacity-disabled`) | `muted` (`opacity-disabled`) | Non-interactive |
 | `read-only` | `border` (dashed) | `muted` | Displayed but not editable |
 | `loading` | `border` | `muted` | Async options loading (e.g. remote select) |
 | `warning` | `status-warning-text` | `status-warning-text` | Soft advisory — not a hard error |
 
-Inline validation error messages appear **below** the field in `caption` typography, `destructive` color.
+Inline validation error messages appear **below** the field in `caption` typography, `status-danger-text` color.
 
 ## 13. Async / Content UI States (Mandatory — No Component is Exempt)
 
@@ -349,7 +348,7 @@ from real data without being invisible.
 | Confirm button | `destructive` fill, `on-destructive` text |
 | Confirm (loading) | `destructive` fill, `Loader` spinner, `disabled` |
 
-**Z-index:** `z-bottom-sheet` (40) from Section 14.
+**Z-index:** `z-bottom-sheet` (40) from Section 15.
 
 ---
 
@@ -364,7 +363,7 @@ from real data without being invisible.
 | Ghost | transparent fill + `foreground` text |
 | Destructive | `destructive` fill + `on-destructive` text |
 | Icon button | icon token + `min-touch-target` |
-| Text button / link | `primary` text |
+| Text button / link | `primary-text` |
 
 ### Loading Button State
 When any button triggers an async action it MUST transition to a loading state immediately on tap. The button width MUST remain unchanged. The accessible label MUST remain available. Prefer showing the label with a spinner rather than removing the label. Prevent double submission.

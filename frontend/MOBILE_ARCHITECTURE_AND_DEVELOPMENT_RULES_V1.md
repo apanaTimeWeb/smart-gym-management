@@ -72,7 +72,7 @@ tests, and the context file — lives inside that single folder. Zero need to op
 | Custom Hook / Controller / Notifier | **150 lines** |
 | Validation Schema / Validator class | **150 lines** |
 | API service file | **150 lines** |
-| State store / Provider / Bloc | **180 lines** |
+| State store / Provider | **180 lines** |
 | Type / Model file | **150 lines** |
 | Utility / Formatter file | **120 lines** |
 
@@ -417,11 +417,6 @@ id, name, phone, membershipPlan, status, expiryDate, paymentStatus
 
 This pattern is **forbidden**:
 
-```
-// ❌  — FORBIDDEN
-final planName = member.planName ?? 'Basic Plan';
-final revenue = stats.revenue ?? 125000;
-```
 
 ```typescript
 // ❌ React Native — FORBIDDEN
@@ -475,15 +470,14 @@ visually renders with placeholder values.
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
   component (e.g. `FlatList` or `@shopify/flash-list`
   — never a naively-mapped, fully-rendered list of widgets).
-- List item components must be render-stable (memoized in RN; using `const`
-  constructors and  to avoid unnecessary re-renders.
+- List item components must be render-stable (memoized with `React.memo` or `useMemo`)
+  to avoid unnecessary re-renders.
 
 ## Rule 9 — Images & Media Assets
 
-- Use the framework's optimized image-loading mechanism exclusively — one that
-  supports caching, placeholders, and format negotiation (a dedicated image
-  library for RN rather than the bare core `Image`; 's `Image` with a
-  caching package like `react-native-fast-image`).
+- Use React Native's optimized image-loading mechanism exclusively — one that
+  supports caching, placeholders, and format negotiation (e.g., `react-native-fast-image`
+  or Expo Image rather than the bare core `Image`).
 - Always specify explicit dimensions or aspect ratio for network images to
   prevent layout shift while loading.
 - Bundled assets are referenced statically — never construct a dynamically
@@ -497,10 +491,9 @@ visually renders with placeholder values.
 
 ## Rule 11 — Animations & Gestures
 
-- Use the framework's high-performance animation system (a UI-thread-driven
-  animation library for RN rather than the legacy JS-thread animation API;
-  's native `Reanimated shared values`/implicit animations).
-- Use the framework's dedicated gesture-handling system for swipe/pan/pinch —
+- Use React Native's high-performance animation system (a UI-thread-driven
+  animation library like `react-native-reanimated` rather than the legacy JS-thread animation API).
+- Use `react-native-gesture-handler` for swipe/pan/pinch —
   never reconstruct gesture recognition manually from raw touch events.
 - Respect the OS-level reduced-motion accessibility setting — skip or shorten
   non-essential animations when the user has that setting enabled.
@@ -509,8 +502,7 @@ visually renders with placeholder values.
 
 ## Rule 12 — Charts & Data Visualization
 
-- Use a native-rendering charting library appropriate to the framework (Skia-
-  or a React Native charting package) — never a
+- Use a native-rendering React Native charting package (e.g., Skia-based) — never a
   DOM/SVG/Canvas-web-only charting library, none of which render on mobile.
 - Chart color palettes must pull from the design system's chart tokens — never
   hardcoded hex values per chart instance.
@@ -530,10 +522,9 @@ visually renders with placeholder values.
 - All permission requests (camera, location, notifications, media, contacts,
   biometrics) go through ONE central permissions module — no component or
   screen calls a native permission API directly.
-- Before adding any new native dependency, verify it fully supports the
-  framework's current-generation architecture (New Architecture for RN;
-  React Native engine for native modules) — do not add a package flagged
-  legacy-only without a documented, reviewed exception.
+- Before adding any new native dependency, verify it fully supports React Native's
+  current-generation architecture (New Architecture / Fabric / TurboModules) —
+  do not add a package flagged legacy-only without a documented, reviewed exception.
 - Maintain an approved-dependency list per category (networking, forms,
   validation, state, storage, lists, images, icons, animation, charts,
   notifications, crash reporting) in `/docs/decisions/approved-dependencies.md`
@@ -705,7 +696,7 @@ the feature can be broken and PASS at the same time.
   4. Adding a written justification for why no existing approved library suffices.
 
 **AI Dependency-Addition Guardrail:** An AI agent CANNOT add a new dependency
-(`npm install` / `pub add`) without first checking the approved-dependency list.
+(`npm install` / `yarn add`) without first checking the approved-dependency list.
 Before proposing a new library, the AI must explicitly explain why an existing
 approved library (e.g. `react-native-keychain`, `zustand`, `react-hook-form`,
 `zod`, `@tanstack/react-query`, `react-native-fast-image`, `date-fns`,
@@ -713,9 +704,9 @@ approved library (e.g. `react-native-keychain`, `zustand`, `react-hook-form`,
 
 ## Rule 23 — Observability & Crash Reporting
 
-- Crash reporting and JS/ exception tracking wired at app root, before
-  any other initialization — use a framework-supported crash-reporting SDK
-  (e.g. Sentry or Firebase Crashlytics both support RN and ).
+- Crash reporting and JS exception tracking wired at app root, before
+  any other initialization — use a React Native crash-reporting SDK
+  (e.g. Sentry or Firebase Crashlytics).
 - Every centralized module (network client, storage, permissions) reports
   errors with enough context (feature name, action attempted) to trace an
   issue without needing physical device logs.
@@ -1453,11 +1444,20 @@ toast with the same semantic key.
  * @param type - The semantic level (e.g. 'error', 'success').
  * @param dedupKey - A unique string representing the action intent.
  */
+const activeToasts = new Set<string>();
+
 export function showToast(message: string, type: 'error' | 'success', dedupKey?: string) {
+  if (dedupKey) {
+    if (activeToasts.has(dedupKey)) return;
+    activeToasts.add(dedupKey);
+  }
+
   Toast.show({
     type,
     text1: message,
-    props: { dedupKey } // ⚠️ PSEUDOCODE / CONTRACT: The central adapter MUST explicitly suppress/replace duplicate active keys based on dedupKey.
+    onHide: () => {
+      if (dedupKey) activeToasts.delete(dedupKey);
+    }
   });
 }
 
@@ -2144,7 +2144,7 @@ export function formatCurrency(
   currency: string,
   locale: string,
 ): string {
-  if (amountMinor == null) return '-';
+  if (amountMinor == null) return '—';
   const meta = currencyMetadata[currency];
   if (!meta) throw new Error(`Unsupported currency: ${currency}`);
   
