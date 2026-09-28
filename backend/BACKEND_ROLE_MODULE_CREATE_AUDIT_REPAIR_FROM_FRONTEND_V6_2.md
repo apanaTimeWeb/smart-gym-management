@@ -29,9 +29,42 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 ## MODE B — AUDIT + REPAIR (Existing Backend Supplied)
 
 **Inputs given:**
-- INPUT 1: Frontend role folder ZIP
-- INPUT 2: Existing backend role module ZIP (e.g., `backend_superadmin/`)
-- INPUT 3: Backend Documentation ZIP (containing `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`)
+
+* INPUT 1: Frontend role/domain ZIP
+* INPUT 2: Existing backend scope ZIP
+* INPUT 3: Backend Documentation ZIP (containing `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`)
+* INPUT 4: Optional external Backend E2E/Selenium ZIP
+
+**IMPORTANT BACKEND SCOPE RULE:**
+
+INPUT 2 MAY contain:
+
+* a complete backend role/domain folder, OR
+* ONLY the exact feature module being audited/repaired.
+
+Examples:
+
+```text
+backend_manager/
+```
+
+OR:
+
+```text
+backend_manager/manager_members/
+```
+
+OR, when the feature folder itself is supplied as the ZIP root:
+
+```text
+manager_members/
+```
+
+When only one feature module is supplied, THAT FEATURE MODULE is the writable backend repair scope.
+
+The AI MUST NOT require sibling feature modules merely to repair the supplied feature.
+
+The AI MAY inspect every file inside the supplied backend scope, but MUST NOT invent or recreate omitted sibling modules.
 
 **What AI does:**
 1. Deeply read the frontend ZIP — extract all backend requirements (same as Mode A).
@@ -39,7 +72,18 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
    - All frontend-derived requirements
    - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (all applicable numbered, lettered, and special architecture rules/gates discovered from the supplied normative architecture document)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
-4. Fix ALL found issues directly in code — no half-fixes, no skipping.
+4. Fix ALL actionable backend issues that are repairable within the supplied writable backend scope. No actionable in-scope issue may be skipped.
+
+   If an issue requires a file outside the supplied writable backend scope:
+
+   - do NOT invent that file;
+   - do NOT recreate missing global infrastructure;
+   - do NOT fabricate implementation details;
+   - classify it as BLOCKED_BY_SUPPLIED_SCOPE when the required artifact is genuinely outside the supplied scope;
+   - provide the exact required integration/change instruction in the final deliverables.
+
+   If the issue cannot be correctly resolved through backend-only changes and genuinely requires a frontend change, follow the FRONTEND_CHANGE_REQUIRED workflow defined in Section 2A.
+
 5. Double-verify after repair: re-run the full audit against the repaired code.
 6. Deliver a **versioned fix ZIP**: `backend_{role}_v{N}_fix.zip` (e.g., `backend_superadmin_v2_fix.zip`)
 7. Include `INTEGRATION_GUIDE.md` inside the ZIP.
@@ -222,9 +266,9 @@ The frontend is read-only evidence for backend requirement discovery.
 
 ---
 
-## INPUT 2 — BACKEND ROLE / DOMAIN ZIP
+## INPUT 2 — SUPPLIED BACKEND SCOPE ZIP
 
-A ZIP containing the corresponding backend role/domain/root folder.
+A ZIP containing the exact backend scope supplied for this task. This may be a complete role/domain folder or a single feature module.
 
 The backend ZIP may contain:
 
@@ -252,6 +296,39 @@ The backend ZIP may contain:
 
 The supplied backend source is the PRIMARY IMPLEMENTATION TRUTH for what currently exists in the supplied backend scope.
 
+### SUPPLIED WRITE SCOPE
+
+The supplied backend ZIP defines the maximum normal backend write scope for this task.
+
+If the ZIP contains:
+
+```text
+backend_manager/
+    manager_members/
+```
+
+then the writable feature scope is the owning feature module:
+
+```text
+backend_manager/manager_members/**
+```
+
+If the ZIP root itself is:
+
+```text
+manager_members/
+```
+
+then that supplied feature directory is the writable feature scope.
+
+The AI MUST NOT expand the writable scope merely because sibling modules or global files exist elsewhere in the overall application architecture.
+
+The AI MAY inspect only files actually supplied or explicitly available through approved repository/tool access.
+
+The absence of global application files such as `app.module.ts`, `main.ts`, `package.json`, root `tsconfig`, `.env`, or global infrastructure MUST NOT cause a false missing-file finding when those artifacts are intentionally outside the supplied feature scope.
+
+A feature-only ZIP is still assumed to operate inside the project's Modular Monolith architecture.
+
 **CRITICAL — MODULAR MONOLITH SCOPE BOUNDARY (MANDATORY):**
 
 When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/`, `backend_manager/`), the following files will NOT be present and MUST NOT be flagged as missing, broken, or incomplete:
@@ -267,7 +344,8 @@ When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/
 
 These are the responsibility of the global application monolith. The feature module intentionally does NOT include them. Flagging them as missing is a FALSE NEGATIVE and constitutes an audit failure.
 
-The feature module DOES own its own `module-scoped ORM registrations, its own NestJS module file (e.g., `backend-superadmin.module.ts`), and its own seed script if required by the architecture.
+The feature module DOES own its own module-scoped ORM registrations, its own NestJS module file (e.g., `backend-superadmin.module.ts`), and its own seed script if required by the architecture.
+
 
 ---
 
@@ -465,11 +543,84 @@ You MUST NOT:
 * rename a frontend constant or URL to match the backend;
 * silently resolve a frontend/backend mismatch by touching the frontend side.
 
-If a contract mismatch exists between frontend and backend:
+## BACKEND-FIRST FRONTEND INTEGRATION RESOLUTION
 
-* Report it as a FINDING.
-* The repair direction is ALWAYS: fix the BACKEND to match what the frontend requires.
-* If the frontend contract itself appears incorrect, report it as a SOURCE CONFLICT and flag it for human decision — do NOT silently fix the frontend.
+The frontend source remains READ-ONLY.
+
+For every frontend/backend mismatch or missing capability:
+
+1. FIRST attempt to satisfy the frontend requirement entirely through the backend.
+2. Prefer a backend-only solution whenever it can correctly satisfy the frontend's actual requirement without changing frontend source.
+3. The AI MUST NOT modify frontend source files.
+4. The AI MUST NOT invent a fake backend workaround merely to avoid a frontend change.
+5. The AI MUST evaluate whether the mismatch is genuinely backend-resolvable before declaring a frontend change necessary.
+
+### When backend-only resolution is genuinely impossible
+
+If the requirement cannot be correctly satisfied without modifying frontend source, the AI MUST create a final-delivery file:
+
+`FRONTEND_CHANGE_REQUIRED.md`
+
+This file MUST be created at the ROOT of the final ZIP.
+
+The file MUST contain a separate entry for EVERY required frontend change.
+
+Each entry MUST include:
+
+- FRONTEND FILE PATH
+- exact folder/path context
+- exact component/hook/schema/type/API-client/module involved
+- exact current behavior
+- exact required frontend change
+- exact location/symbol where the change is required
+- the backend capability/contract involved
+- why the requirement cannot be correctly solved through backend-only changes
+- why a backend workaround would be incorrect or unsafe
+- exact expected request/response contract after the change
+- authorization/tenant implications if applicable
+- test/verification steps after the frontend change
+- integration dependencies, if any
+
+Example structure:
+
+```markdown
+# Frontend Change Required
+
+## Change 1
+
+### Frontend File
+frontend_manager/manager_members/components/MemberTable.tsx
+
+### Exact Location
+MemberTableColumns → status column
+
+### Current Behavior
+...
+
+### Required Change
+...
+
+### Backend Contract
+GET /api/v1/manager/members
+
+### Why Backend-Only Resolution Is Impossible
+...
+
+### Required Verification
+...
+```
+
+The AI MUST NOT edit the referenced frontend files.
+
+If `FRONTEND_CHANGE_REQUIRED.md` exists:
+
+* backend-only repair work must still be completed as far as possible;
+* the frontend change must be fully documented;
+* this is NOT an excuse to leave a repairable backend defect unresolved;
+* the final verdict MUST explicitly report `FRONTEND_CHANGE_REQUIRED`;
+* the AI MUST NOT claim `FULLY VERIFIED`.
+
+`FRONTEND_CHANGE_REQUIRED` is a cross-boundary integration requirement, not permission to modify frontend source.
 
 VIOLATION OF THIS RULE IS AN AUDIT FAILURE.
 
@@ -768,7 +919,33 @@ A missing stack definition MUST block backend code creation.
 
 This is a mandatory GATE, not an additional stage. Both MODE A and MODE B still execute exactly THREE stages.
 
-**In MODE A (CREATE):** Since no backend exists yet, this gate checks the frontend artifacts only — verifying that the frontend has sufficient documentation (UI Data Requirements, API Contract, type definitions) from which backend requirements can be fully extracted. If the frontend documentation is incomplete, record the gaps and proceed with best-effort extraction from the frontend source code.
+**In MODE A (CREATE):** The project stack MUST be established from the supplied normative backend architecture documentation BEFORE frontend-derived backend requirements are implemented.
+
+The authority order is:
+
+```text
+BACKEND ARCHITECTURE DOCUMENT
+        ↓
+APPROVED PROJECT STACK
+        ↓
+FRONTEND ANALYSIS
+        ↓
+BACKEND REQUIREMENTS
+        ↓
+BACKEND IMPLEMENTATION
+```
+
+The frontend ZIP does NOT define, override, or select the backend technology stack.
+
+Frontend artifacts are used to determine backend requirements and API behavior only.
+
+If the normative architecture document does not provide a complete stack definition, emit:
+
+`MISSING_STACK_DEFINITION`
+
+and do not create backend implementation code.
+
+If frontend evidence is incomplete, record the documentation gap and continue best-effort requirement extraction from the actual frontend source where possible.
 
 **In MODE B (AUDIT+REPAIR):** Before Stage 1 begins, establish whether the supplied frontend/backend artifacts support the architecture's frontend-first mutual contract workflow.
 
@@ -4070,11 +4247,15 @@ Generic boilerplate does not count toward the 5-entry minimum.
 
 Every service, controller, and repository source file MUST contain:
 
-`// RESPONSIBILITY:`
+```text
+TypeScript / JavaScript:
+  // RESPONSIBILITY:
+  // FLOW:
 
-immediately followed by:
-
-`// FLOW:`
+Python / Django:
+  # RESPONSIBILITY:
+  # FLOW:
+```
 
 The FLOW must represent the actual ownership/execution path.
 
@@ -4082,15 +4263,15 @@ Decoration or generic FLOW comments are non-compliant.
 
 ---
 
-## RULE 80 — JSDOC
+## RULE 80 — FRAMEWORK-APPROPRIATE METHOD DOCUMENTATION
 
-Applicable service/repository/utility/private-helper documentation MUST include:
+Applicable service/repository/utility/private-helper documentation MUST semantically include:
 
-- `@description`
-- `@param`
-- `@returns`
-- `@throws`
-- `@remarks` for complex business logic
+- description of what the method does
+- documentation for every non-trivial argument
+- the exact return type / return value semantics
+- the exact custom exception(s) / error condition(s) it can produce
+- for complex business logic, the reason behind important design decisions
 
 Documentation MUST match actual behavior.
 
@@ -4429,7 +4610,7 @@ Verify:
 - named repository mutation methods;
 - protected/private generic persistence primitive;
 - repository accepts domain/application inputs rather than raw HTTP DTOs;
-- JSDoc;
+- framework-appropriate method documentation;
 - feature documentation lists mutation responsibilities.
 
 ---
@@ -4946,7 +5127,7 @@ Inspect:
 - no generic shared business folders;
 - file size;
 - method responsibility;
-- JSDoc;
+- framework-appropriate method documentation;
 - import order;
 - mechanical dependency/tooling gates.
 
@@ -6276,7 +6457,7 @@ ONLY when ALL applicable conditions below are satisfied:
 43. Feature flags, i18n, scheduled-job inventory, distributed cron, DLQ and operational governance are verified where applicable.
 44. CI/CD and pre-commit architecture/security gates are verified where supplied/required.
 45. Mechanical isolation/tooling guards are verified where mandated.
-46. File-size ceilings, JSDoc, method naming, method responsibility, import ordering and barrel-file restrictions are verified.
+46. File-size ceilings, framework-appropriate method documentation (JSDoc for TypeScript/JavaScript; Python docstrings for Django/Python), method naming, method responsibility, import ordering and barrel-file restrictions are verified.
 47. Internal consistency of the normative backend documentation is verified, or conflicts are explicitly reported.
 48. Complete numbered/special rule ledger is audited without silent rule omission.
 49. No actionable requirement remains:
@@ -6319,7 +6500,7 @@ The final verdict MUST separately report:
 
 ```text
 FRONTEND-REQUIRED BACKEND COMPLETENESS:
-[COMPLETE / PARTIAL / INCOMPLETE / NOT VERIFIED]
+[COMPLETE / PARTIAL / INCOMPLETE / NOT VERIFIED / BLOCKED_PENDING_FRONTEND_CHANGE]
 
 BACKEND ARCHITECTURE COMPLIANCE:
 [COMPLIANT / PARTIALLY COMPLIANT / NON-COMPLIANT / NOT VERIFIED]
@@ -6342,6 +6523,9 @@ UNVERIFIED REQUIREMENTS:
 BLOCKED_BY_SUPPLIED_SCOPE ITEMS:
 [count]
 
+FRONTEND CHANGE REQUIRED:
+[YES / NO]
+
 FRONTEND-DERIVED BACKEND REQUIREMENTS:
 [discovered / verified]
 
@@ -6352,8 +6536,52 @@ BACKEND RULES:
 [discovered / audited / passed / failed / not verified]
 
 OVERALL READINESS:
-[READY / NOT READY / READY ONLY AFTER SPECIFIED REPAIRS]
+[READY / NOT READY / READY ONLY AFTER SPECIFIED REPAIRS / BACKEND_READY_PENDING_FRONTEND_CHANGE]
 ```
+
+### FRONTEND_CHANGE_REQUIRED Status Definition
+
+`FRONTEND_CHANGE_REQUIRED` means:
+
+> The backend has been repaired as far as correctly possible within the supplied backend scope, but frontend source modification is genuinely required for final end-to-end integration.
+
+Rules:
+
+- It is NOT equivalent to PASS.
+- It is NOT equivalent to an arbitrary backend FAIL.
+- It prevents `FULLY VERIFIED`.
+- It MUST be fully documented in `FRONTEND_CHANGE_REQUIRED.md`.
+- It MUST be included in the final verdict and blocker/readiness counts.
+- It MUST NOT be silently downgraded to `SOURCE CONFLICT` merely to make the audit appear cleaner.
+
+### Conditional Verdict When FRONTEND_CHANGE_REQUIRED.md Exists
+
+If `FRONTEND_CHANGE_REQUIRED.md` exists, the verdict MUST include:
+
+```text
+FRONTEND-REQUIRED BACKEND COMPLETENESS:
+  BLOCKED_PENDING_FRONTEND_CHANGE
+
+BACKEND ARCHITECTURE COMPLIANCE:
+  [actual result]
+
+RUNTIME VERIFICATION:
+  [actual result]
+
+SCOPE:
+  [actual result]
+
+FRONTEND CHANGE REQUIRED:
+  YES
+
+FULLY VERIFIED:
+  NO
+
+OVERALL READINESS:
+  BACKEND_READY_PENDING_FRONTEND_CHANGE
+```
+
+If no frontend change is required, do not use `BLOCKED_PENDING_FRONTEND_CHANGE` or `BACKEND_READY_PENDING_FRONTEND_CHANGE`.
 
 Do NOT use arbitrary numerical scores unless the user explicitly requests scoring.
 
@@ -6541,6 +6769,21 @@ Do not collapse these into a generic “backend incomplete” label.
 
 Before producing the final verdict, verify:
 
+> **IMPORTANT CHECKLIST DISTINCTION:**
+>
+> The 112-item Anti-Skipping Checklist is a FIXED OPERATIONAL CHECKLIST.
+>
+> It is NOT the number of backend architecture rules.
+>
+> The authoritative architecture-rule count MUST always be derived dynamically from the COMPLETE supplied normative backend architecture document.
+>
+> Therefore:
+>
+> - the checklist may remain 112 items;
+> - the architecture rule ledger may contain a different number;
+> - newly discovered architecture rules MUST still be audited even if they do not have a dedicated row in the 112-item checklist;
+> - passing the 112-item checklist alone does NOT prove complete architecture compliance.
+
 ```text
 [ ] All supplied inputs identified according to Mode A/B rules
 [ ] Backend documentation fully read
@@ -6610,8 +6853,8 @@ Before producing the final verdict, verify:
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
 [ ] Rule 78 — _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
-[ ] Rule 79 — Explicit `// FLOW:` data-flow direction comment in every service, controller, and repository file
-[ ] Rule 80 — Multi-line JSDoc on ALL service methods, repository methods, adapter methods, and utility functions
+[ ] Rule 79 — Language-appropriate RESPONSIBILITY + FLOW annotation in every service, controller, and repository file (TypeScript/JavaScript: `// RESPONSIBILITY:` + `// FLOW:`; Python/Django: `# RESPONSIBILITY:` + `# FLOW:`)
+[ ] Rule 80 — Framework-appropriate method documentation on ALL service methods, repository methods, adapter methods, and utility functions (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings)
 [ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
 [ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
 [ ] Rule 102 — Database tables are prefixed correctly in monolith
@@ -6627,7 +6870,7 @@ Before producing the final verdict, verify:
 [ ] Rule 112 — E2E and Selenium tests are completely isolated; no cross-module test imports
 [ ] Rule 113 — No AI runtime verification requirement violated
 [ ] Rule 114 — No Mega API; dashboard APIs are decomposed
-[ ] Rule 115 — Documentation for classes/methods/DTOs/controllers/services (JSDoc), database columns (@Column/schema), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
+[ ] Rule 115 — Exhaustive framework-appropriate documentation for classes/methods/DTOs/controllers/services (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings), database columns (@Column/schema/help_text), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
 [ ] Rule 116 — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
 [ ] Rule 117 — Dedicated RAG namespace (/api/v1/_rag/ or format=rag) and token-optimized markdown representation
 [ ] Rule 118 — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
@@ -6656,7 +6899,17 @@ Before producing the final verdict, verify:
 [ ] MODE DECISION correctly applied — if no backend ZIP supplied → MODE A (CREATE); if backend ZIP supplied → MODE B (AUDIT+REPAIR); frontend ZIP is always required in both modes
 ```
 
-If any item is not satisfied, do not claim a fully verified audit.
+For every checklist item:
+
+- `[✅]` = PASS / satisfied
+- `[❌]` = unresolved actionable failure
+- `[⚠️]` = PARTIAL, NOT VERIFIED, or BLOCKED_BY_SUPPLIED_SCOPE when explicitly justified and documented
+
+The final checklist is considered CLEAN only when there are NO unresolved actionable failures.
+
+A documented evidence limitation is not automatically an implementation failure.
+
+However, evidence limitations MUST prevent `FULLY VERIFIED` when the required evidence is unavailable.
 
 ---
 
@@ -7092,7 +7345,7 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
         ↓
 [SILENT PHASE] Re-run complete 112-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
         ↓
-[SILENT PHASE] Verify every checklist item passes
+[SILENT PHASE] Verify the checklist is clean (no unresolved actionable failures)
         ↓
 [SINGLE OUTPUT] Deliver everything at once — ONE final output
 ```
@@ -7107,7 +7360,7 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 
 4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
 
-5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 112-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm every item passes.
+5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 112-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm the checklist is clean.
 
 6. **The final delivery is ONE atomic output.** All backend files, the API E2E and Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
 
@@ -7116,8 +7369,9 @@ This is WRONG. Each intermediate delivery is incomplete. The user cannot determi
 Before you deliver anything, ALL of the following must be true simultaneously:
 
 ```text
-[ ] Every issue identified in Stage 1 has a backend repair implemented
-[ ] Every issue identified in Stage 2 has a backend repair implemented
+[ ] Every actionable backend issue inside the supplied writable scope is repaired
+[ ] Every issue that genuinely requires frontend modification is documented completely in FRONTEND_CHANGE_REQUIRED.md
+[ ] No repairable backend issue is left unresolved
 [ ] Every architecture rule violation has been corrected
 [ ] Every missing endpoint has been created
 [ ] Every missing field in every response DTO is now present
@@ -7128,8 +7382,8 @@ Before you deliver anything, ALL of the following must be true simultaneously:
 [ ] Every documentation drift has been corrected
 [ ] All API E2E test files have been written
 [ ] All Selenium test files (Section 86B.2) have been written
-[ ] The 112-item Anti-Skipping Checklist re-run is complete and clean
-[ ] No previously failing item remains failing
+[ ] The 112-item Anti-Skipping Checklist has been re-run and contains no unresolved actionable failure
+[ ] No previously failing actionable item remains unresolved
 [ ] No new violation was introduced by a repair
 [ ] The Final Verdict (stage_3_final_verdict.md) is complete
 ```
@@ -7170,21 +7424,67 @@ The ZIP MUST contain:
 
 ```text
 INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
-backend_{role}/                          ← complete backend role module folder
-  [all source files — controllers,
-   services, repos, DTOs, entities,
-   migrations, seeds, tests, docs]
+
+Mode A:
+  backend_{role}/
+    [all source files — controllers,
+     services, repos, DTOs, entities,
+     migrations, seeds, tests, docs]
+
+Mode B:
+  [preserve the supplied backend scope root/path]
+    [repaired feature module or supplied backend scope]
+  Do NOT fabricate omitted sibling modules merely to make the ZIP appear to be a complete role container.
+  The final ZIP must contain exactly the repaired supplied backend scope plus the required verification/documentation deliverables.
+
 stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
 stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
 stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
 backend_e2e/...                          ← all API E2E test files
-backend_selenium/...  ← all Selenium test files (Section 86B.2)
+backend_selenium/...                     ← all Selenium test files (Section 86B.2)
 RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
+FRONTEND_CHANGE_REQUIRED.md             ← ONLY when backend-only resolution was genuinely impossible
+                                            and frontend modification is actually required.
+                                            Do NOT create if no frontend change is needed.
+                                            INTEGRATION_GUIDE.md must reference this file when it exists.
 ```
 
 **The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
 
 Everything in one ZIP. Nothing before. Nothing after.
+
+---
+
+### CLEAN RE-AUDIT DEFINITION
+
+For this prompt, a CLEAN RE-AUDIT means:
+
+- no unresolved actionable backend FAIL;
+- no unresolved actionable PARTIAL;
+- no unresolved MISSING_BACKEND;
+- no unresolved REQUEST_MISMATCH;
+- no unresolved RESPONSE_MISMATCH;
+- no unresolved AUTHORIZATION_MISMATCH;
+- no unresolved SEMANTIC_MISMATCH;
+- no unresolved ERROR_CONTRACT_MISMATCH;
+- no unresolved TENANT_MISMATCH;
+- no unresolved ASYNC_MISMATCH;
+- no unresolved DATA_PROVENANCE_MISMATCH;
+- no new architecture violation introduced by repair;
+- no unresolved repairable backend defect remaining within supplied writable scope.
+
+The following statuses MAY remain when genuinely supported and explicitly documented:
+
+- NOT_APPLICABLE
+- NOT_VERIFIED
+- BLOCKED_BY_SUPPLIED_SCOPE
+- FRONTEND_CHANGE_REQUIRED
+
+These statuses do NOT mean the backend is fully verified.
+
+`FULLY VERIFIED` remains prohibited whenever required runtime/global evidence is unavailable or a required frontend change remains unapplied.
+
+If `FRONTEND_CHANGE_REQUIRED` exists, the final readiness status MUST explicitly indicate that backend completion is pending the documented frontend change.
 
 ---
 

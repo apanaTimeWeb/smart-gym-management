@@ -526,7 +526,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 62: Explicit return types on all service and repository methods
 - [ ] Rule 76: Every file starts with // RESPONSIBILITY: comment
 - [ ] Rule 79: Every file has // FLOW: comment below RESPONSIBILITY
-- [ ] Rule 80: JSDoc on all service methods, repositories, and utilities
+- [ ] Rule 80: Framework-appropriate method documentation on all service methods, repositories, and utilities
 - [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
 - [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
 - [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements from the Frozen API Contract section in this `_backend_feature.md` — no missing table columns, KPI fields, chart series, or relationship fields
@@ -1046,25 +1046,61 @@ Backend implementation (services, repositories, DB queries)
 ---
 
 ## 79. Explicit Data Flow Direction Comment (AI Context Chain)
-* **The Rule:** Just as the frontend mandates `// DATA FLOW: API → hook → Context → Component` on every hook file (Frontend Rule 39), every backend **service, controller, and repository** file MUST begin with an explicit data flow annotation comment below the responsibility comment.
-* **Format:**
-  ```
+* **The Rule:** Every backend service, controller, and repository source file MUST begin with an explicit responsibility annotation followed immediately by an explicit data-flow annotation.
+
+* **Framework-specific syntax:**
+
+  * TypeScript / JavaScript:
+    `// RESPONSIBILITY:`
+    immediately followed by
+    `// FLOW:`
+  * Python / Django:
+    `# RESPONSIBILITY:`
+    immediately followed by
+    `# FLOW:`
+
+* **The semantic requirement is identical across frameworks. Only the source-language comment syntax changes.**
+
+* **Format example — TypeScript / JavaScript:**
+
+  ```text
   // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
   // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
-* **Why:** When an AI agent is given a single file to fix a bug, the `// FLOW:` comment instantly tells it the full chain of execution — what came before this file, and what happens after — without the AI needing to read any other file. This eliminates the single biggest cause of AI hallucination: not knowing what calls what.
+
+* **Format example — Python / Django:**
+
+  ```text
+  # RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
+  # FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
+  ```
+
+* The FLOW must represent the actual ownership and execution path.
+
+* Generic, decorative, copied, or inaccurate FLOW comments are non-compliant.
+
+* **Why:** When an AI agent is given a single file to repair, the responsibility + flow annotation must provide enough execution-context information to reduce unnecessary context expansion and hallucinated dependencies.
 
 ---
 
-## 80. Mandatory JSDoc on All Service Methods, Repositories & Utilities
-* **The Rule:** Every service method, repository method, adapter method, and utility function MUST be prefixed with a JSDoc block. This mirrors Frontend Rule 37 which mandates JSDoc on all hooks and utilities.
-* **What the JSDoc must include:**
-  1. A one-line `@description` of what the method does.
-  2. `@param` for every non-trivial argument.
-  3. `@returns` with the exact type.
-  4. `@throws` with the exact custom exception(s) it can throw (from Rule 6).
-  5. For complex business logic: a `@remarks` note explaining the *why* behind a design decision (e.g., "Uses pessimistic lock because concurrent wallet deductions caused negative balances in load testing").
-* **Example:**
+## 80. Mandatory Method Documentation on All Service Methods, Repositories & Utilities
+
+* **The Rule:** Every service method, repository method, adapter method, and utility/private-helper function MUST have exhaustive method documentation.
+
+* **Framework-specific documentation format:**
+
+  * TypeScript / JavaScript → JSDoc block
+  * Python / Django → Python docstring
+
+* **The documentation MUST include:**
+
+  1. proper description of what the method does.
+  2. Documentation for every non-trivial argument.
+  3. The exact return type / return value semantics.
+  4. The exact custom exception(s) / error condition(s) it can produce.
+  5. For complex business logic, the reason behind important design decisions.
+
+* **TypeScript / JavaScript example (JSDoc):**
   ```typescript
   /**
    * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
@@ -1077,7 +1113,31 @@ Backend implementation (services, repositories, DB queries)
    */
   async suspendMember(memberId: string, actorId: string): Promise<MemberDomainModel> { ... }
   ```
-* **Why:** An AI fixing a bug in a billing service shouldn't need to read 300 lines to understand what `chargeWallet()` can throw. The JSDoc block is the file's self-contained API contract, drastically reducing token usage and hallucination risk.
+
+* **Python / Django example (docstring):**
+  ```python
+  def suspend_member(self, member_id: str, actor_id: str) -> MemberDomainModel:
+      """
+      Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
+
+      Args:
+          member_id: The UUID of the member to suspend.
+          actor_id: The UUID of the staff member performing the action (for audit log).
+
+      Returns:
+          The updated MemberDomainModel with status SUSPENDED.
+
+      Raises:
+          MemberNotFoundException: If the member_id does not exist.
+          MemberAlreadySuspendedException: If the member is already suspended.
+
+      Note:
+          Uses a database transaction to ensure the audit log write and status update are atomic.
+      """
+      ...
+  ```
+
+* Documentation MUST describe the actual behavior. Generic, stale, copied, or misleading documentation is non-compliant.
 
 ---
 
@@ -1287,11 +1347,11 @@ This rule MUST remain consistent with Rule 99.
 
 ## 87. Single Responsibility at Method Level (The 20-Line Rule)
 * **The Rule:** Just as the frontend mandates hook separation to split logic from UI (Frontend Rule 6), the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
-* **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
+* **The 20-Line Soft Ceiling:** A service method body (excluding method documentation) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
   - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBERS.MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
-* **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
+* **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own framework-appropriate method documentation (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
 * **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBERS.MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
 
 ---
@@ -1676,7 +1736,7 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
   - Services may call named repository mutation methods (e.g., `suspendById`, `updateEmail`, `markAsDeleted`).
   - Services must NEVER call the generic `repo.save(entity)` directly after mutating entity properties inline.
   - The generic `save()` method on the repository is `protected` or `private` — only callable from within the repository class itself.
-  - Every repository mutation method must have its own JSDoc (Rule 80) and be listed in the module's `_backend_feature.md` File Responsibility Map (Rule 19).
+  - Every repository mutation method must have its own framework-appropriate method documentation (Rule 80) and be listed in the module's `_backend_feature.md` File Responsibility Map (Rule 19).
 * **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: MemberUpdateInput): Promise<MemberDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `UpdateMemberDto` directly, ensuring the domain layer remains decoupled from the API layer.
 * **Why:** When an AI is asked to "add an audit log entry whenever a member is suspended", the correct answer is to add it inside `memberRepo.suspendById()`. If suspension logic is scattered across 5 different service methods that all do `member.status = 'SUSPENDED'; repo.save(member)`, the AI must find and modify all 5 — and will inevitably miss one. A single named repository method is the single place to add cross-cutting concerns.
 
@@ -1761,7 +1821,7 @@ PostgreSQL MUST enforce valid enum/state values at the database layer where the 
    - Are there any barrel file imports or relative path imports?
    - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
    - Is every new method ≤ 20 lines using Guard Clauses? (Rule 85/87)
-   - Does every new file have `// RESPONSIBILITY:` + `// FLOW:` + JSDoc on every method? (Rules 76/79/80)
+   - Does every new file have language-appropriate RESPONSIBILITY + FLOW annotations and framework-appropriate method documentation on every method? (TypeScript/JavaScript: `// RESPONSIBILITY:` + `// FLOW:` + JSDoc; Python/Django: `# RESPONSIBILITY:` + `# FLOW:` + Python docstrings) (Rules 76/79/80)
    - Is a Mapper used to translate between ORM entities and domain objects? (Rule 89)
    - For mutation endpoints: is an `Idempotency-Key` header supported to prevent double-execution? (Rule 103)
    - For background job queues: is a Dead Letter Queue configured for all retry-exhausted jobs? (Rule 61)
@@ -2232,17 +2292,18 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 
-## Rule 115 - Exhaustive, AI-Contextual Docstrings for EVERYTHING (The "No-Guessing" Rule)
-* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The form varies by construct:
-  - **Classes / methods / DTOs / services / controllers** → JSDoc block comments
+## Rule 115 - Exhaustive, AI-Contextual Documentation for EVERYTHING (The "No-Guessing" Rule)
+* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The documentation syntax is framework-specific:
+  - **TypeScript / JavaScript classes, methods, DTOs, services, controllers** → JSDoc block comments
+  - **Python / Django classes, methods, DTO-equivalent constructs, services, controllers** → Python docstrings
   - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })` for NestJS, Django model field `help_text='...'` for Django); otherwise documented in migration/DDL
   - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included in every documented construct:**
-  1. **Primary Intent:** Deep explanation of the business context.
+  1. **Intent:** Deep explanation of the business context.
   2. **Edge Cases:** Explicit mapping of failure states and constraints.
-  3. **Side-Effects:** Mention cache invalidations, webhooks, or event emissions.
-  4. **AI-Note (Crucial):** Required documentation metadata, warnings, or routing instructions for future AIs.
+  3. **Side Effects:** Mention cache invalidations, webhooks, or event emissions.
+  4. **AI Notes (Crucial):** Required documentation metadata, warnings, or routing instructions for future AIs.
 
 ## Rule 116 - MCP-Ready API Design & AI Introspection
 * **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
