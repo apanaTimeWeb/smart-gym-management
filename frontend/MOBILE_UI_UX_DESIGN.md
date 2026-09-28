@@ -7,14 +7,18 @@ Opacity → normalized 0–1.
 Layering is controlled by named `zIndex` tokens.
 Android elevation is defined separately by the shadow/elevation token system.
 
-> This file is the **canonical visual values source** — it defines what every
-> token is worth in light and dark mode. `MOBILE_UI_UX_DESIGN.md` is the
-> **AI-readable catalogue** derived from this file; it lists every token name,
-> value, and usage context in one scannable table. The two-layer hierarchy is:
-> `MOBILE_UI_UX_DESIGN.md` (values specification) →
-> React Native theme module → Feature UI.
-> The VALUES
-> below and the "no magic values anywhere" discipline are universal.
+> `MOBILE_UI_UX_DESIGN.md` is the **canonical visual-values source** and the
+> **AI-readable token catalogue**. It defines what every token is worth in light
+> and dark mode, and lists every token name, value, and usage context in one
+> scannable table that AI agents read before writing any styled component.
+>
+> Hierarchy:
+>
+> `MOBILE_UI_UX_DESIGN.md`
+> → React Native theme module
+> → Feature UI
+>
+> The VALUES below and the "no magic values anywhere" discipline are universal.
 
 ## Global Token Enforcement Rule
 
@@ -415,5 +419,5 @@ scannable table that AI agents read before writing any styled component.
 
 **CI Check Requirements (Mandatory Sync):**
 CI MUST fail when:
-- the contract references an unknown token
-- a required Light/Dark token pair is incomplete
+- the React Native theme implementation references an unknown token;
+- a required Light/Dark token pair is incomplete.

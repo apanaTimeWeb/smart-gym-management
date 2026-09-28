@@ -953,6 +953,21 @@ which file to open for any task without reading all files.]
 - [ ] Rule 50: Permitted record identifiers have copy-to-clipboard affordance in detail screens
 - [ ] Rule 51: Every list screen has a dedicated named `EmptyState` component
 - [ ] Rule 52: New design tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation
+- [ ] Rule 53: Irreversible/financial mutations use stable `Idempotency-Key` — same key reused on retry, new key only for new user intent
+- [ ] Rule 54: Token refresh is single-flight — concurrent 401s share the same refresh promise
+- [ ] Rule 55: `x-tenant-id` derived from trusted session context only — never from route params or local state
+- [ ] Rule 56: Enterprise security constraints respected (encrypted offline cache, exponential backoff with jitter, AbortSignal on unmount, deep-link re-authorization, notification payload validation, clipboard policy)
+- [ ] Rule 57: All import paths exactly match file casing on disk — CI/Linux compatible
+- [ ] Rule 58: WebSockets managed via centralized `WebSocketContext` / `SocketProvider` — no direct `new WebSocket()` in components
+- [ ] Rule 58A: App foreground resume calls `GET /api/notifications` to recover missed push events
+- [ ] Rule 59: Role-masked fields typed as optional in TypeScript interfaces and Zod schemas; UI handles `undefined` gracefully
+- [ ] Rule 60: Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys
+- [ ] Rule 61: All user-visible strings use `t('NAMESPACE.KEY')`; `Accept-Language` header attached by central network client
+- [ ] Rule 62: Feature flags accessed via `useFeatureFlag()` — no raw build/env reads inside components
+- [ ] Rule 63: Currency formatting is feature-local (`formatCurrency.ts`); approved currency metadata used; unsupported codes throw
+- [ ] Rule 64: Tenant data export triggers async backend call + `202 Accepted` success feedback — no in-app download
+- [ ] Rule 65: Every interactive control and critical state indicator has a deterministic `testID` in canonical format
+- [ ] Rule 66: Every custom hook, complex component, and state store has an exhaustive JSDoc / docstring block
 
 ## Known Issues / Tech Debt
 [REQUIRED: "None" is acceptable. Never leave blank without explicitly stating no known issues.]
@@ -2051,6 +2066,18 @@ The mobile architecture MUST enforce the following security and robustness const
    - Token refresh is single-flight? (Rule 54)
    - x-tenant-id derived from secure context only? (Rule 55)
    - Enterprise security constraints respected? (Rule 56)
+   - Exact import path casing matches the file on disk — CI/Linux compatible? (Rule 57)
+   - WebSocket instantiated only through centralized `WebSocketContext` / `SocketProvider`? (Rule 58)
+   - App foreground resume triggers `GET /api/notifications` REST recovery call? (Rule 58A)
+   - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
+   - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys? (Rule 60)
+   - All user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text? (Rule 61)
+   - `Accept-Language` header attached automatically by central network client? (Rule 61)
+   - Feature flags accessed via `useFeatureFlag()` — no raw build/env reads in components? (Rule 62)
+   - Currency formatting is feature-local `formatCurrency.ts`; approved currency metadata used; unknown codes throw? (Rule 63)
+   - Tenant data export triggers async backend call + `202 Accepted` toast — no in-app download? (Rule 64)
+   - Every interactive control and critical state indicator has a deterministic `testID`? (Rule 65)
+   - Every custom hook, complex component, and state store has an exhaustive JSDoc / docstring? (Rule 66)
 4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan, hard-write-boundary diff check.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
 
@@ -2178,7 +2205,7 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 > **AI AGENT NOTE:** Never attempt to download, parse, or open the `.zip` file directly within the mobile app's file system or using a Webview. The mobile app's ONLY responsibility is to hit the export endpoint and display a confirmation message indicating that an email is on the way.
 
 
-## Notification & WebSocket Recovery Rule
+## Rule 58A — Notification & WebSocket Recovery
 
 ### The Problem
 If the user's app is closed or loses internet connection when a WebSocket event is fired from the backend, the event is lost.
