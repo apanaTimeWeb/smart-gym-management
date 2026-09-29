@@ -5806,11 +5806,29 @@ They MUST NOT be included in the final frontend ZIP unless explicitly required.
 
 `progress.json` is the authoritative execution-state record.
 
+The execution state MUST contain sufficient persisted information for the AI to determine, without guessing:
+
+* what was planned;
+* what has completed;
+* what is currently in progress;
+* what remains;
+* what requirements are verified;
+* what issues were discovered;
+* what issues were fixed;
+* what issues remain;
+* what is blocked;
+* what design/architecture evidence exists;
+* what changed since the previous checkpoint;
+* the last durable action;
+* the next recovery action;
+* whether the execution plan changed;
+* whether final delivery is ready.
+
 Minimum structure:
 
 ```json
 {
-  "workflow_version": "2.0",
+  "workflow_version": "2.1",
   "mode": "CREATE_OR_AUDIT_REPAIR",
   "role": "",
   "module": "",
@@ -5818,26 +5836,128 @@ Minimum structure:
   "status": "IN_PROGRESS",
   "scope_root": "",
   "source_inputs": [],
+
+  "baseline_frozen": false,
+
+  "plan_revision": 0,
+
+  "work_units_total": 0,
   "work_units": [],
   "completed_work_units": [],
+  "completed_work_units_count": 0,
+  "blocked_work_units": [],
+  "blocked_work_units_count": 0,
   "current_work_unit": null,
   "pending_work_units": [],
+  "next_work_unit": null,
+
+  "requirements_total": 0,
+  "requirements_completed": [],
+  "requirements_verified_count": 0,
+  "requirements_pending": [],
+  "requirements_blocked": [],
+  "requirements_blocked_count": 0,
+
   "files_completed": [],
   "files_modified": [],
   "files_pending": [],
-  "requirements_completed": [],
+
   "issues_total": 0,
+  "issues_discovered": 0,
   "issues_completed": 0,
   "issues_remaining": 0,
+  "new_issues_since_checkpoint": [],
+
   "blocked_items": [],
-  "verification_status": {},
+
+  "verification_status": {
+    "static_analysis": "NOT_STARTED",
+    "automated_tests": "NOT_STARTED",
+    "browser_e2e": "NOT_STARTED",
+    "accessibility": "NOT_STARTED",
+    "design_system": "NOT_STARTED",
+    "functional_closure": "NOT_STARTED",
+    "final_reaudit": "NOT_STARTED"
+  },
+
+  "checkpoint_sequence": 0,
+  "previous_checkpoint_sequence": 0,
+  "checkpoint_created_at": "",
   "last_verified_checkpoint": "",
+
+  "last_checkpoint_summary": "",
+
+  "last_checkpoint_delta": {
+    "completed_work_units": [],
+    "fixed_issues": [],
+    "new_issues": [],
+    "new_blockers": [],
+    "new_evidence": [],
+    "files_changed": []
+  },
+
+  "interruption": {
+    "status": "NONE",
+    "reason": "",
+    "timestamp": "",
+    "safe_stop_recorded": false
+  },
+
+  "last_safe_point": {
+    "work_unit_id": "",
+    "substep_id": "",
+    "description": "",
+    "verified": false,
+    "timestamp": ""
+  },
+
+  "current_work_unit_state": {
+    "work_unit_id": "",
+    "status": "NOT_STARTED",
+    "substeps_completed": [],
+    "substeps_pending": [],
+    "substeps_unverified": [],
+    "files_definitely_persisted": [],
+    "files_requiring_reverification": [],
+    "files_with_uncertain_state": [],
+    "last_durable_action": "",
+    "next_recovery_action": ""
+  },
+
+  "delivery_state": "NOT_READY",
+
   "final_reaudit_complete": false,
   "final_packaging_ready": false
 }
 ```
 
-Additional fields MAY be added when necessary.
+### State Integrity Rules
+
+The AI MUST NOT guess or manually invent:
+
+```text
+work_units_total
+completed_work_units_count
+blocked_work_units_count
+requirements_total
+requirements_verified_count
+requirements_blocked_count
+issues_total
+issues_completed
+issues_remaining
+checkpoint_sequence
+delivery_state
+```
+
+`requirements_total` MUST become frozen once the Stage 1 requirement baseline is frozen.
+
+`work_units_total` MUST become frozen after the initial work-unit plan.
+
+If genuinely necessary additional work is discovered later, the AI MUST increment `plan_revision`, record the reason, identify the affected requirement/issue, and expose the revision in the next checkpoint dashboard.
+
+The AI MUST NEVER silently move the goalposts.
+
+A 100% work-unit completion rate MUST NOT by itself change `delivery_state`.
 
 ## 44.3 Atomic Checkpoint Writes
 
@@ -5859,6 +5979,97 @@ A work unit MUST NOT be marked COMPLETED until:
 2. its applicable local verification has completed;
 3. its filesystem state has been checked;
 4. its checkpoint has been persisted successfully.
+
+## 44.3A STOP-SAFE / INTERRUPTION-SAFE EXECUTION
+
+The execution system MUST remain recoverable under:
+
+```text
+MANUAL_USER_STOP
+CONNECTION_INTERRUPTION
+TOOL_FAILURE
+RUNTIME_ERROR
+PROCESS_INTERRUPTION
+CONTEXT_INTERRUPTION
+ENVIRONMENT_FAILURE
+UNEXPECTED_EXECUTION_TERMINATION
+```
+
+The AI MUST NOT rely solely on chat history to reconstruct execution progress.
+
+Before starting a work unit, persist:
+
+```text
+CURRENT WORK UNIT
+OBJECTIVE
+DEPENDENCIES
+REQUIRED SUBSTEPS
+EXPECTED FILES
+REQUIRED VERIFICATION
+COMPLETION CRITERIA
+```
+
+During execution, after every meaningful atomic filesystem or verification boundary, persist meaningful durable progress.
+
+### Manual Stop
+
+If the user requests:
+
+```text
+stop
+pause
+halt
+save and stop
+```
+
+the AI MUST:
+
+1. stop starting new work;
+2. safely finish only the current atomic operation if required to prevent corruption;
+3. persist current state;
+4. record `MANUAL_USER_STOP`;
+5. append the event to `checkpoint_log.md`;
+6. generate the Recovery Dashboard;
+7. stop.
+
+The AI MUST NOT continue into another work unit.
+
+### Unexpected Interruption
+
+If execution terminates before the normal dashboard can be delivered, the next execution MUST enter recovery mode:
+
+```text
+READ progress.json
+→ READ work_units.json
+→ READ checkpoint_log.md
+→ INSPECT ACTUAL FILESYSTEM
+→ COMPARE DURABLE STATE VS ACTUAL STATE
+→ IDENTIFY UNCERTAIN CHANGES
+→ RE-VERIFY
+→ RESUME FROM FIRST UNVERIFIED / INCOMPLETE SUBSTEP
+```
+
+An `IN_PROGRESS` work unit MUST NOT be treated as automatically completed.
+
+### Recovery Truth
+
+Only persisted evidence may establish:
+
+```text
+VERIFIED_AND_PERSISTED
+```
+
+Any:
+
+```text
+IN_PROGRESS
+UNCERTAIN
+NOT_VERIFIED
+```
+
+state requires reconciliation or re-verification.
+
+The AI MUST prefer re-verification over assumption.
 
 ## 44.4 Work-Unit Granularity
 
@@ -5882,6 +6093,66 @@ As a secondary safety limit, approximately 3–5 small/medium files MAY be used.
 A large or highly coupled file MUST be isolated into its own work unit when necessary.
 
 Dependency coherence takes priority over file count.
+
+## 44.4A Work-Unit Record Contract
+
+Every work unit MUST be explicitly represented in `work_units.json`.
+
+Each work unit MUST contain at minimum:
+
+```json
+{
+  "id": "WU-001",
+  "stage": "STAGE_2",
+  "title": "",
+  "objective": "",
+  "status": "PLANNED",
+  "depends_on": [],
+  "requirement_ids": [],
+  "issue_ids": [],
+  "scope_paths": [],
+  "substeps": [],
+  "verification_required": [],
+  "evidence": [],
+  "completion_criteria": [],
+  "blockers": [],
+  "files_changed": [],
+  "started_at": "",
+  "completed_at": ""
+}
+```
+
+Allowed states:
+
+```text
+PLANNED
+IN_PROGRESS
+IMPLEMENTED_OR_REPAIRED
+VERIFIED
+CHECKPOINTED
+COMPLETED
+BLOCKED
+NOT_VERIFIED
+```
+
+A work unit MUST have explicit `completion_criteria`.
+
+A work unit MUST NOT be considered complete merely because code was edited.
+
+Completion requires:
+
+```text
+IMPLEMENTATION / REPAIR
+→ REQUIRED SUBSTEPS
+→ APPLICABLE VERIFICATION
+→ REQUIRED EVIDENCE
+→ FILESYSTEM CONFIRMATION
+→ CHECKPOINT PERSISTENCE
+```
+
+`BLOCKED` and `NOT_VERIFIED` work units MUST NOT be counted as completed.
+
+`requirement_ids` and `issue_ids` MUST connect execution work with requirement coverage and issue closure.
 
 ## 44.5 Work-Unit Lifecycle
 
@@ -5911,24 +6182,385 @@ At completion:
 5. mark COMPLETED;
 6. persist the checkpoint.
 
-## 44.6 Safe Stop
+## 44.6 SAFE STOP + MANDATORY PROGRESS / RECOVERY DASHBOARD
 
-The AI MUST be allowed to stop after a VERIFIED work unit.
-
-Do NOT attempt to force the entire task into one uninterrupted execution.
-
-The safe-stop response MUST NOT contain:
-
-- source files;
-- source-code delivery;
-- partial ZIPs;
-- download links;
-- claims of final completion.
-
-The only allowed intermediate communication is a concise status message such as:
+The AI MUST support:
 
 ```text
-⚙ Checkpoint saved — 17/63 work units verified. Reply "continue" to resume.
+NORMAL CHECKPOINT
+INTERRUPTION / MANUAL STOP
+```
+
+A checkpoint is execution state, not product delivery.
+
+The AI MUST NOT deliver:
+
+* source files;
+* partial ZIPs;
+* download links;
+* incomplete artifacts;
+* claims of final completion.
+
+### A. NORMAL CHECKPOINT
+
+After a VERIFIED work unit, the AI MUST persist the checkpoint and display:
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHECKPOINT PROGRESS DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TASK:
+[role / module]
+
+MODE:
+[CREATE / AUDIT + REPAIR]
+
+STAGE:
+[STAGE 1 / STAGE 2 / STAGE 3]
+
+CHECKPOINT:
+#[checkpoint_sequence]
+
+PLAN REVISION:
+#[plan_revision]
+
+━━━━━━━━ EXECUTION ━━━━━━━━
+
+WORK UNITS:
+[completed] / [total]
+
+Remaining:
+[remaining]
+
+Blocked:
+[blocked]
+
+Current:
+[WU-ID] — [title]
+
+Next:
+[WU-ID] — [title]
+
+━━━━━━━━ REQUIREMENTS ━━━━━━━━
+
+Verified:
+[verified] / [total]
+
+Pending:
+[pending]
+
+Blocked:
+[blocked]
+
+━━━━━━━━ ISSUES ━━━━━━━━
+
+Discovered:
+[total]
+
+Fixed:
+[completed]
+
+Remaining:
+[remaining]
+
+New Since Previous Checkpoint:
+[count + IDs]
+
+━━━━━━━━ FRONTEND VERIFICATION ━━━━━━━━
+
+Static Analysis:
+[status]
+
+Automated Tests:
+[status]
+
+Browser E2E:
+[status]
+
+Accessibility:
+[status]
+
+Design System:
+[status]
+
+Functional Closure:
+[status]
+
+Final Re-Audit:
+[status]
+
+━━━━━━━━ JUST COMPLETED ━━━━━━━━
+
+Work Units:
+- [WU-ID] — [description]
+
+Requirements:
+- [requirement IDs / descriptions]
+
+Issues:
+- [issue IDs / descriptions]
+
+Verification:
+- [exact verification]
+
+━━━━━━━━ CHECKPOINT DELTA ━━━━━━━━
+
+Completed:
+[count]
+
+Fixed:
+[count]
+
+New Issues:
+[count]
+
+New Blockers:
+[count]
+
+New Evidence:
+[count]
+
+Files Changed:
+[count]
+
+━━━━━━━━ PENDING / NEXT ━━━━━━━━
+
+1. [WU-ID] — [title]
+2. [WU-ID] — [title]
+3. [WU-ID] — [title]
+
+Remaining Work Units:
+[count]
+
+━━━━━━━━ BLOCKERS / LIMITATIONS ━━━━━━━━
+
+BLOCKED_BY_SUPPLIED_SCOPE:
+[count + IDs]
+
+NOT_VERIFIED:
+[count + IDs]
+
+DOWNSTREAM DEPENDENCY:
+[count + IDs]
+
+SOURCE_CONFLICT:
+[count + IDs]
+
+Other:
+[count + IDs]
+
+━━━━━━━━ FILE DELTA ━━━━━━━━
+
+Files Modified Since Previous Checkpoint:
+[count]
+
+Key Paths:
+- [path]
+- [path]
+
+━━━━━━━━ DELIVERY STATE ━━━━━━━━
+
+Execution:
+[IN_PROGRESS / BLOCKED]
+
+Final Readiness:
+[NOT_READY / READY_FOR_FINAL_REAUDIT]
+
+Checkpoint progress is NOT final delivery status.
+
+━━━━━━━━ USER ACTION ━━━━━━━━
+
+Reply `continue` to resume.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### B. INTERRUPTION / MANUAL STOP
+
+Before any new implementation/repair work after an interruption, display:
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RECOVERY DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STOP REASON:
+[MANUAL_USER_STOP / CONNECTION_INTERRUPTION /
+ TOOL_FAILURE / RUNTIME_ERROR / PROCESS_INTERRUPTION /
+ CONTEXT_INTERRUPTION / ENVIRONMENT_FAILURE / OTHER]
+
+LAST DURABLE CHECKPOINT:
+#[checkpoint_sequence]
+
+LAST COMPLETED WORK UNIT:
+[WU-ID] — [title]
+
+INTERRUPTED WORK UNIT:
+[WU-ID] — [title]
+
+RESUME STATUS:
+[SAFE_TO_RESUME / RECOVERY_REQUIRED]
+
+━━━━━━━━ CURRENT UNIT ━━━━━━━━
+
+Completed Substeps:
+- [substep]
+
+Pending Substeps:
+- [substep]
+
+Unverified Substeps:
+- [substep]
+
+Last Durable Action:
+[action]
+
+Next Recovery Action:
+[action]
+
+━━━━━━━━ FILE SAFETY ━━━━━━━━
+
+Definitely Persisted:
+- [path]
+
+Requires Re-Verification:
+- [path]
+
+Uncertain:
+- [path]
+
+━━━━━━━━ OVERALL STATE ━━━━━━━━
+
+Work Units:
+[completed] / [total]
+
+Requirements:
+[verified] / [total]
+
+Issues:
+[fixed] / [total]
+
+Remaining Issues:
+[count]
+
+━━━━━━━━ VERIFICATION ━━━━━━━━
+
+Static:
+[status]
+
+Tests:
+[status]
+
+Browser E2E:
+[status]
+
+Accessibility:
+[status]
+
+Design System:
+[status]
+
+Functional Closure:
+[status]
+
+Final Re-Audit:
+[status]
+
+━━━━━━━━ BLOCKERS ━━━━━━━━
+
+[all blocker categories + IDs]
+
+━━━━━━━━ RECOVERY PLAN ━━━━━━━━
+
+1. [reconciliation step]
+2. [remaining interrupted substep]
+3. [next work unit]
+
+IMPORTANT:
+No interrupted or uncertain work is automatically complete.
+
+━━━━━━━━ USER ACTION ━━━━━━━━
+
+Reply `continue` to enter recovery/resume execution.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Progress Truth Rules
+
+The AI MUST NOT reduce execution to one overall completion percentage.
+
+Keep these separate:
+
+```text
+WORK UNIT COMPLETION
+REQUIREMENT COVERAGE
+ISSUE CLOSURE
+VERIFICATION STATUS
+DELIVERY READINESS
+```
+
+No one dimension may be used as a substitute for another.
+
+### Initial Execution Plan
+
+Immediately after Stage 1 baseline and initial work-unit planning are frozen:
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INITIAL EXECUTION PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MODE:
+[CREATE / AUDIT + REPAIR]
+
+TOTAL STAGES:
+[3]
+
+TOTAL WORK UNITS:
+[count]
+
+TOTAL REQUIREMENTS:
+[count]
+
+KNOWN ISSUES:
+[count]
+
+PLANNED VERIFICATION AREAS:
+[count]
+
+INITIAL BLOCKERS:
+[count]
+
+PLAN REVISION:
+1
+
+NEXT:
+[WU-ID] — [title]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+The Initial Execution Plan MUST be persisted before execution continues.
+
+### Checkpoint Log
+
+Every normal checkpoint, manual stop, and recovery event MUST be appended to:
+
+```text
+checkpoint_log.md
+```
+
+Each entry MUST include:
+
+```text
+checkpoint sequence
+timestamp
+event type
+work unit
+summary
+checkpoint delta
+verification status
+blockers
+next action
 ```
 
 ## 44.7 Resume
@@ -5954,6 +6586,45 @@ the AI MUST:
 The AI MUST NOT ask the user to manually describe completed work when that information exists in the checkpoint.
 
 The AI MUST NOT restart from zero merely because the previous response was interrupted.
+
+### 44.7A Resume Integrity Validation
+
+After loading checkpoint state, the AI MUST validate:
+
+1. checkpoint sequence continuity;
+2. work-unit counts against `work_units.json`;
+3. requirement counters against the frozen Stage 1 baseline;
+4. issue counters against persisted issue records;
+5. current work-unit state against the filesystem;
+6. interruption state against the latest `checkpoint_log.md` entry.
+
+If persisted state and filesystem state disagree, report:
+
+```text
+CHECKPOINT STATE CONFLICT
+```
+
+The AI MUST reconcile the conflict before additional implementation/repair work.
+
+The AI MUST NOT repair a state conflict by changing dashboard numbers alone.
+
+If `plan_revision > 0`, the AI MUST explain:
+
+```text
+PLAN REVISION:
+[revision]
+
+WHAT CHANGED:
+[added / reordered / newly required work]
+
+WHY:
+[evidence]
+
+IMPACT:
+[effect on remaining work]
+```
+
+before continuing.
 
 ## 44.8 Interrupted Work-Unit Recovery
 
@@ -5982,6 +6653,49 @@ The AI MUST avoid duplicate:
 - MSW handlers;
 - imports;
 - documentation entries.
+
+## 44.8A Recovery Reconciliation
+
+Before resuming an interrupted work unit, classify every affected artifact as:
+
+```text
+VERIFIED_AND_PERSISTED
+REQUIRES_REVERIFICATION
+UNCERTAIN
+MISSING
+EXPECTED_BUT_NOT_PRESENT
+UNEXPECTED_CHANGE
+```
+
+Only:
+
+```text
+VERIFIED_AND_PERSISTED
+```
+
+may be reused without re-verification.
+
+For every other classification:
+
+1. inspect the filesystem;
+2. compare against expected state;
+3. perform the applicable verification;
+4. update `progress.json`;
+5. append the recovery event to `checkpoint_log.md`.
+
+The AI MUST produce:
+
+```text
+LAST DURABLE STATE
+→ ACTUAL FILESYSTEM STATE
+→ DIFFERENCES
+→ RE-VERIFICATION
+→ RECOVERED STATE
+```
+
+The first remaining unverified substep becomes the resume point.
+
+The AI MUST NOT silently discard uncertainty.
 
 ## 44.9 Final Completeness Protection
 
