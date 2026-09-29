@@ -1,6 +1,6 @@
 # BACKEND ROLE MODULE — CREATE, AUDIT & REPAIR FROM FRONTEND
 
-## VERSION 6.2 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED
+## VERSION 6.3 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED / BOUNDED CHECKPOINTED EXECUTION
 
 ---
 
@@ -842,53 +842,376 @@ Architecture-document conflicts MUST also be reported rather than silently resol
 
 ---
 
-# 6. MANDATORY STAGED EXECUTION
+# 6. MANDATORY BOUNDED EXECUTION + PERSISTENT CHECKPOINT WORKFLOW
 
-Execution stages differ by mode.
+Execution MUST be performed through bounded, resumable work units.
 
----
+This section modifies EXECUTION CONTROL ONLY.
 
-## MODE A — INTERNAL STAGED WORKFLOW (CREATE)
+It MUST NOT reduce or weaken:
 
-**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
-Frontend deep analysis — extract ALL backend requirements. Store the result as `stage_1_frontend_requirements.md`.
-*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
+- frontend-derived backend requirements;
+- backend architecture rules;
+- security requirements;
+- tenant-isolation requirements;
+- transaction requirements;
+- concurrency requirements;
+- API contract requirements;
+- database requirements;
+- API E2E requirements;
+- Selenium requirements;
+- documentation requirements;
+- final verification requirements.
 
-**STAGE 2 — INTERNAL CREATION:**
-Create the complete backend module from scratch following `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Generate every file.
-*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
+Execution flow:
 
-**STAGE 3 — FINAL VERIFICATION & DELIVERY:**
-Double-verify — re-read stage 1 requirements and cross-check against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v1.zip`.
+```text
+REQUIREMENT BASELINE
+        ↓
+WORK-UNIT PLAN
+        ↓
+BOUNDED EXECUTION
+        ↓
+LOCAL VERIFICATION
+        ↓
+CHECKPOINT
+        ↓
+SAFE STOP
+        ↓
+USER REPLIES "continue"
+        ↓
+READ CHECKPOINT
+        ↓
+FIRST UNVERIFIED WORK UNIT
+        ↓
+CONTINUE
+        ↓
+...
+        ↓
+FULL FINAL RE-AUDIT
+        ↓
+FINAL CHECKLIST
+        ↓
+FINAL PACKAGING
+        ↓
+FINAL ZIP
+```
 
----
+## 6.1 Execution-State Location
 
-## MODE B — INTERNAL STAGED WORKFLOW (AUDIT+REPAIR)
+Execution state MUST remain outside the supplied backend source scope.
 
-**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
-Frontend deep analysis + backend requirement extraction + frozen baseline. Store the result as `stage_1_frontend_requirements.md`.
-*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
+Use:
 
-**STAGE 2 — INTERNAL AUDIT:**
-Deep audit of existing backend — every rule, every requirement, every file. Store the findings internally (output as `stage_2_backend_audit.md` inside final zip).
-*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
+```text
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
+```
 
-**STAGE 3 — FINAL REPAIR & DELIVERY:**
-Repair ALL actionable backend issues that are repairable within the supplied writable backend scope.
-No actionable in-scope backend issue may be skipped.
+Required control files:
 
-If an issue genuinely requires a frontend modification, complete the backend repair as far as possible and document the exact required frontend work in `FRONTEND_CHANGE_REQUIRED.md`.
+```text
+progress.json
+work_units.json
+checkpoint_log.md
+```
 
-If an issue requires an artifact outside the supplied writable backend scope, do not invent or recreate that artifact; classify it according to the applicable scope/evidence status and provide the exact integration instruction.
+These files are NOT backend business artifacts.
 
-Re-audit the repaired code. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, `RE_AUDIT_CHECKLIST_RESULT.md`. Deliver `backend_{role}_v{N}_fix.zip`.
+Do NOT move them into the feature module.
 
----
+Do NOT include them in the final backend ZIP unless explicitly required.
 
-Do NOT output intermediate code.
-Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
+## 6.2 Authoritative State
 
+`progress.json` is the authoritative execution-state record.
 
+Minimum structure:
+
+```json
+{
+  "workflow_version": "2.0",
+  "mode": "CREATE_OR_AUDIT_REPAIR",
+  "role": "",
+  "module": "",
+  "target_version": "",
+  "status": "IN_PROGRESS",
+  "scope_root": "",
+  "source_inputs": [],
+  "work_units": [],
+  "completed_work_units": [],
+  "current_work_unit": null,
+  "pending_work_units": [],
+  "files_completed": [],
+  "files_modified": [],
+  "files_pending": [],
+  "issues_total": 0,
+  "issues_completed": 0,
+  "issues_remaining": 0,
+  "blocked_items": [],
+  "frontend_change_required": [],
+  "verification_status": {},
+  "last_verified_checkpoint": "",
+  "final_reaudit_complete": false,
+  "final_packaging_ready": false
+}
+```
+
+## 6.3 Atomic Checkpointing
+
+Checkpoint writes MUST be atomic:
+
+```text
+write temporary state
+→ validate
+→ replace progress.json
+```
+
+A work unit MUST NOT be marked COMPLETED until its:
+
+- filesystem changes;
+- local verification;
+- issue state;
+- changed-file state
+
+have been persisted successfully.
+
+## 6.4 Dependency-Bounded Work Units
+
+A work unit MUST represent one coherent dependency-bounded backend task.
+
+Preferred boundaries include:
+
+- one frontend-required API contract family;
+- one controller/DTO/request-validation family;
+- one service/use-case responsibility;
+- one repository/query family;
+- one entity/migration/constraint family;
+- one authorization/tenant-scope responsibility;
+- one transaction/concurrency responsibility;
+- one background-job lifecycle;
+- one webhook/external-adapter workflow;
+- one coherent repair set;
+- one test-verification group.
+
+Do NOT use file count as the only batching rule.
+
+As a secondary safety boundary:
+
+approximately 3–5 small/medium files MAY be processed together.
+
+A large or highly coupled file MAY form its own work unit.
+
+Dependency coherence is more important than file count.
+
+## 6.5 Work-Unit Lifecycle
+
+```text
+PLANNED
+→ IN_PROGRESS
+→ IMPLEMENTED_OR_REPAIRED
+→ VERIFIED
+→ CHECKPOINTED
+→ COMPLETED
+```
+
+At start:
+
+1. mark IN_PROGRESS;
+2. persist checkpoint;
+3. execute.
+
+At completion:
+
+1. verify filesystem;
+2. run applicable verification;
+3. record changed files;
+4. record blockers;
+5. mark COMPLETED;
+6. persist checkpoint.
+
+## 6.6 Safe Stop
+
+The AI MAY stop after a VERIFIED work unit.
+
+The AI MUST NOT deliver:
+
+- source files;
+- partial repairs;
+- partial ZIPs;
+- download links;
+- incomplete final artifacts.
+
+The only allowed progress message is a concise status such as:
+
+```text
+⚙ Checkpoint saved — 17/63 work units verified. Reply "continue" to resume.
+```
+
+## 6.7 Resume
+
+When the user replies:
+
+```text
+continue
+```
+
+the AI MUST:
+
+1. read `progress.json`;
+2. read `work_units.json`;
+3. validate checkpoint;
+4. inspect filesystem;
+5. compare checkpoint against filesystem;
+6. find first unverified or incomplete work unit;
+7. reuse already-verified work;
+8. continue from that point;
+9. persist the next checkpoint.
+
+Do NOT restart from zero merely because the previous response was interrupted.
+
+## 6.8 Interrupted Work-Unit Recovery
+
+If `current_work_unit` is IN_PROGRESS:
+
+DO NOT treat it as automatically completed.
+
+Instead:
+
+```text
+READ CHECKPOINT
+→ INSPECT FILESYSTEM
+→ COMPARE EXPECTED VS ACTUAL
+→ RE-VERIFY EXISTING CHANGES
+→ COMPLETE ONLY THE MISSING/UNVERIFIED PART
+```
+
+Avoid duplicate:
+
+- imports;
+- routes;
+- DTO fields;
+- entities;
+- migrations;
+- providers;
+- event handlers;
+- tests;
+- documentation;
+- seed logic.
+
+## 6.9 Audit Completeness Protection
+
+Checkpointing MUST NOT become permission to:
+
+- sample files;
+- skip rules;
+- skip architecture checks;
+- skip frontend-derived requirements;
+- skip database checks;
+- skip security checks;
+- skip tenant isolation;
+- skip concurrency checks;
+- skip async lifecycle checks;
+- skip E2E/Selenium generation;
+- skip documentation.
+
+The final result MUST still satisfy the complete applicable backend V6.3 requirements and normative backend architecture.
+
+## 6.10 Mode A — CREATE
+
+STAGE 1:
+
+Create:
+
+```text
+stage_1_frontend_requirements.md
+```
+
+Freeze the complete frontend-derived backend requirement baseline.
+
+Checkpoint the baseline.
+
+STAGE 2:
+
+Create the backend through bounded work units.
+
+Every work unit MUST be verified and checkpointed.
+
+STAGE 3:
+
+After all creation units are complete:
+
+1. re-read Stage 1;
+2. perform complete final re-audit;
+3. repair remaining issues;
+4. generate final documentation;
+5. generate API E2E/Selenium deliverables;
+6. generate `RE_AUDIT_CHECKLIST_RESULT.md`;
+7. only then create `backend_{role}_v1.zip`.
+
+## 6.11 Mode B — AUDIT + REPAIR
+
+STAGE 1:
+
+Create and freeze:
+
+```text
+stage_1_frontend_requirements.md
+```
+
+STAGE 2:
+
+Audit the supplied backend scope through bounded work units.
+
+Maintain:
+
+```text
+stage_2_backend_audit.md
+```
+
+STAGE 3:
+
+Repair every actionable in-scope issue through bounded work units.
+
+If frontend modification is genuinely required:
+
+```text
+FRONTEND_CHANGE_REQUIRED.md
+```
+
+If an artifact is genuinely outside writable scope:
+
+```text
+BLOCKED_BY_SUPPLIED_SCOPE
+```
+
+After repairs:
+
+1. perform complete final re-audit;
+2. verify every applicable rule;
+3. verify frontend-derived requirements;
+4. verify API E2E/Selenium requirements;
+5. generate final documentation;
+6. only then package `backend_{role}_v{N}_fix.zip`.
+
+## 6.12 Final State
+
+```text
+ALL WORK UNITS COMPLETE
+        ↓
+FULL FINAL RE-AUDIT
+        ↓
+FULL CHECKLIST CLEAN
+        ↓
+FINAL DOCUMENTATION COMPLETE
+        ↓
+FINAL PACKAGING
+        ↓
+FINAL ZIP
+```
+
+Checkpointing changes HOW work is executed.
+
+It does NOT change WHAT must be verified.
 
 ---
 
@@ -7329,106 +7652,167 @@ The Selenium files MUST follow Rule 112 exactly — no cross-module imports, no 
 
 ---
 
-## 86B.3 COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
+## 86B.3 COMPLETE-BEFORE-DELIVER + CHECKPOINTED EXECUTION COMPATIBILITY
 
-> ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
+This section governs FINAL DELIVERY.
 
-### The Problem This Rule Fixes
+Execution MAY occur through bounded checkpointed work units under Section 6.
 
-When an AI is asked to create or repair a backend, it defaults to a "batch delivery" pattern:
-
-```text
-Fix batch 1 → "Here are the files, download them" →
-Fix batch 2 → "Here are the files, download them" →
-Fix batch 3 → "Here are the files, download them" →
-...
-```
-
-This is WRONG. Each intermediate delivery is incomplete. The user cannot determine if the system is actually fixed until all repairs are done and verified as a whole.
-
-### The Only Acceptable Delivery Model
+The mandatory distinction is:
 
 ```text
-[SILENT PHASE] Create/Fix ALL code completely
-        ↓
-[SILENT PHASE] Re-run complete 112-item Anti-Skipping Checklist on the GENERATED/REPAIRED code
-        ↓
-[SILENT PHASE] Verify the checklist is clean (no unresolved actionable failures)
-        ↓
-[SINGLE OUTPUT] Deliver everything at once — ONE final output
+BATCHED EXECUTION          = ALLOWED
+CHECKPOINTING             = REQUIRED
+PARTIAL PRODUCT DELIVERY  = FORBIDDEN
+FINAL DELIVERY            = ATOMIC
 ```
 
-### Strict Rules
+## 86B.3.1 Intermediate Communication
 
-1. **NO intermediate file deliveries.** Do not deliver any created/repaired file, module, or section until ALL work across ALL phases is complete.
+While work remains incomplete:
 
-2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the file", or any deliverable until the complete creation/repair is finished and verified.
+DO NOT deliver:
 
-3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
+- source files;
+- partial modules;
+- partial ZIPs;
+- download links;
+- partial final reports.
 
-4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
-
-5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full 112-item Anti-Skipping Checklist (Section 84) against the generated/repaired code. Confirm the checklist is clean.
-
-6. **The final delivery is ONE atomic output.** All backend files, the API E2E and Selenium test files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE response or a SINGLE downloadable ZIP.
-
-### What "Complete" Means Before You Deliver
-
-Before you deliver anything, ALL of the following must be true simultaneously:
+The AI MAY emit one concise checkpoint status:
 
 ```text
-[ ] Every actionable backend issue inside the supplied writable scope is repaired
-[ ] Every issue that genuinely requires frontend modification is documented completely in FRONTEND_CHANGE_REQUIRED.md
-[ ] No repairable backend issue is left unresolved
-[ ] Every architecture rule violation has been corrected
-[ ] Every missing endpoint has been created
-[ ] Every missing field in every response DTO is now present
-[ ] Every auth/RBAC gap has been closed
-[ ] Every idempotency gap has been closed
-[ ] Every missing migration/DB field has been added
-[ ] Every missing test has been written
-[ ] Every documentation drift has been corrected
-[ ] All API E2E test files have been written
-[ ] All Selenium test files (Section 86B.2) have been written
-[ ] The 112-item Anti-Skipping Checklist has been re-run and contains no unresolved actionable failure
-[ ] No previously failing actionable item remains unresolved
-[ ] No new violation was introduced by a repair
-[ ] The Final Verdict (stage_3_final_verdict.md) is complete
+⚙ Checkpoint saved — 17/63 work units verified. Reply "continue" to resume.
 ```
 
-If ANY item above is not yet done, you are NOT done. Do NOT deliver yet.
+## 86B.3.2 No Premature Completion
 
-### The Only Acceptable Mid-Task Communication
-
-While repairs are in progress, the ONLY acceptable communication to the user is a brief, non-deliverable status line such as:
-
-```
-⚙ Repairing: 47/89 issues resolved. Continuing...
-```
-
-No files. No code blocks. No download links. Just a status count.
-
-### Violation Classification
-
-If the repair output contains ANY intermediate batch delivery, download link between phases, or partial file set before all repairs are complete:
-
-```
-DELIVERY_VIOLATION: BATCH_DELIVERY_BEFORE_COMPLETE_REPAIR
-```
-
-This classifies the entire repair output as invalid. The human must reject it and request a restart.
-
-### Final Delivery Structure (MANDATORY)
-
-When you are fully done, your single final response MUST be delivered as a **versioned ZIP** named:
+Do NOT claim:
 
 ```text
-Mode A (CREATE):   backend_{role}_v1.zip
-Mode B (first):    backend_{role}_v2_fix.zip
-Mode B (second):   backend_{role}_v3_fix.zip
+COMPLETE
+FULLY VERIFIED
+FINAL
+READY FOR DELIVERY
 ```
 
-The ZIP MUST contain:
+until final verification has passed.
+
+## 86B.3.3 Full Final Verification
+
+Before final packaging, the AI MUST:
+
+1. verify all planned work units are complete;
+2. verify actual filesystem state against `progress.json`;
+3. re-run frontend-derived backend requirement verification;
+4. re-run the complete applicable backend architecture rule ledger;
+5. re-run the complete Anti-Skipping Checklist;
+6. re-check repaired files for regressions;
+7. confirm API E2E deliverables;
+8. confirm Selenium deliverables;
+9. confirm documentation;
+10. confirm no actionable in-scope issue remains unresolved;
+11. confirm no new architecture violation was introduced;
+12. confirm all scope-blocked findings are correctly classified.
+
+## 86B.3.4 Final Verification MUST ALSO Be BOUNDED
+
+The final verification phase MUST NOT be one giant uninterrupted operation.
+
+Split final verification into checkpointed verification work units.
+
+Preferred verification groups:
+
+1. frontend-contract verification;
+2. architecture-rule verification;
+3. security/auth/tenant verification;
+4. transaction/concurrency verification;
+5. database/migration/constraint verification;
+6. async/job/webhook/realtime verification;
+7. API E2E verification;
+8. Selenium verification;
+9. documentation verification;
+10. final omission sweep;
+11. final checklist consolidation.
+
+Each verification unit MUST:
+
+```text
+VERIFY
+→ RECORD EVIDENCE
+→ CHECKPOINT
+→ COMPLETE
+```
+
+Only after all verification work units and the final checklist consolidation are complete may:
+
+```text
+final_reaudit_complete = true
+```
+
+be recorded.
+
+## 86B.3.5 Final Packaging Manifest
+
+Before ZIP creation:
+
+1. generate a deterministic final manifest;
+2. verify every required artifact exists;
+3. verify only the supplied target scope plus required deliverables will be packaged;
+4. exclude transient execution state;
+5. validate documentation and changelog against actual files.
+
+## 86B.3.6 Packaging Recovery
+
+Packaging state MUST be tracked in `progress.json`.
+
+At minimum record:
+
+- manifest generated;
+- packaging status;
+- packaging attempt;
+- expected artifact list;
+- final ZIP path;
+- final ZIP verification status.
+
+If packaging is interrupted:
+
+DO NOT redo code repair.
+
+DO NOT redo the completed audit.
+
+DO NOT redo completed verification units.
+
+Resume from the existing verified filesystem and manifest.
+
+The final ZIP MUST be validated after creation.
+
+## 86B.3.7 Execution-State Exclusion
+
+Do NOT include:
+
+```text
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
+```
+
+inside the final backend ZIP unless explicitly required.
+
+## 86B.3.8 Final Delivery
+
+Only after all final verification passes:
+
+```text
+Mode A:
+backend_{role}_v1.zip
+
+Mode B first repair:
+backend_{role}_v2_fix.zip
+
+Mode B second repair:
+backend_{role}_v3_fix.zip
+```
+
+The ZIP MUST contain the required final artifacts already mandated by this prompt:
 
 ```text
 INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
@@ -7459,7 +7843,60 @@ FRONTEND_CHANGE_REQUIRED.md             ← ONLY when backend-only resolution wa
 
 **The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
 
-Everything in one ZIP. Nothing before. Nothing after.
+## 86B.3.9 Final Chat Response Size Rule
+
+The final chat response MUST be concise.
+
+Do NOT reproduce:
+
+- full audit;
+- full 112-item checklist;
+- complete changelog;
+- source code;
+- large file manifest;
+- full verification tables.
+
+Those belong inside the ZIP.
+
+The final chat response should contain only:
+
+1. final status;
+2. final ZIP link;
+3. concise blocker/scope note if applicable.
+
+Example:
+
+```text
+COMPLETE — final verification passed.
+[final ZIP]
+```
+
+## 86B.3.10 Interrupted Execution
+
+If execution stops before final delivery:
+
+DO NOT restart from zero.
+DO NOT deliver a partial ZIP.
+DO NOT claim completion.
+
+Instead:
+
+```text
+READ progress.json
+→ inspect filesystem
+→ identify first unverified work unit or packaging state
+→ resume
+```
+
+## 86B.3.11 Final Rule
+
+COMPLETE-BEFORE-DELIVER remains mandatory.
+
+The prompt no longer requires:
+
+```text
+COMPLETE-IN-ONE-UNINTERRUPTED-EXECUTION
+```
 
 ---
 
@@ -7750,7 +8187,7 @@ The V6 audit standard is exhaustive:
 - no frontend business-semantic reconstruction where backend support is required;
 - no frontend file created, edited, renamed, or deleted under any circumstances — the frontend is READ-ONLY evidence (Section 2A); violation of this rule invalidates the entire audit output;
 - BOTH API E2E and Selenium test generation are strictly required and none skipped — Selenium test files are mandatory deliverables in Stage 3, generated from the frontend flows you have read during Stage 1 and Stage 2 (Section 86B.2);
-- no batch delivery — do NOT deliver any file, code block, or download link until ALL repairs are complete and the full 112-item re-audit is CLEAN according to Section 86B.4; every intermediate delivery is a DELIVERY_VIOLATION (Section 86B.3);
+- no partial product delivery — do NOT deliver any source file, partial ZIP, code block intended as a deliverable, or download link before ALL repairs are complete and the full re-audit is CLEAN according to Section 86B.4; checkpoint state and concise non-deliverable progress messages are permitted under Section 6 and Section 86B.3;
 - no delivery without re-audit — after all repairs are done, the complete 112-item Anti-Skipping Checklist MUST be re-run on the repaired code and produce a clean RE_AUDIT_CHECKLIST_RESULT.md before ANY output is given to the user (Section 86B.4).
 
 

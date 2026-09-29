@@ -1,5 +1,5 @@
 # FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR SPECIFICATION
-VERSION 2.3 FINAL — WEB-FRONTEND / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY
+VERSION 2.4 FINAL — WEB-FRONTEND / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION
 
 ---
 
@@ -5725,96 +5725,482 @@ For every missing AI introspection artifact:
 * Provide the EXACT `data-testid` or `JSDoc` string that must be added during repair.
 
 
-# 44. MANDATORY STAGED EXECUTION
+# 44. MANDATORY BOUNDED EXECUTION + PERSISTENT CHECKPOINT WORKFLOW
 
-Execution stages differ by mode.
+Execution MUST be performed through bounded, resumable work units.
 
-## MODE A — INTERNAL STAGED WORKFLOW (CREATE)
+This section modifies EXECUTION CONTROL ONLY.
 
-**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
-Deeply analyze the Feature Document + Instruction/Design Documents. Extract ALL required frontend UI elements, API calls, types, permissions, flows, states, and design requirements. Store the result as `stage_1_frontend_requirements.md`.
-*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
+It MUST NOT reduce, skip, weaken, or reinterpret any:
 
-**STAGE 2 — INTERNAL CREATION:**
-Create the complete frontend module from scratch. Generate every component, route, hook, page, and styling file. Strictly adhere to `WEB_FRONTEND_UI_UX_DESIGN.md` and `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
-*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
+- frontend requirement;
+- feature requirement;
+- API contract requirement;
+- architecture rule;
+- UI/UX design rule;
+- accessibility requirement;
+- functional-closure requirement;
+- test requirement;
+- documentation requirement;
+- final verification requirement.
 
-**STAGE 3 — FINAL VERIFICATION & DELIVERY:**
-Double-verify — re-run the final Anti-Skipping Checklist against all created files. Fix anything missing. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, and `RE_AUDIT_CHECKLIST_RESULT.md`. Only after Stage 3 is complete may the final `frontend_{role}_v1.zip` be delivered.
-
----
-
-## MODE B — INTERNAL STAGED WORKFLOW (AUDIT+REPAIR)
-
-**STAGE 1 — INTERNAL REQUIREMENT BASELINE:**
-Analyze the existing frontend ZIP + documentation to establish the frozen requirement baseline. Extract ALL required flows, states, and design requirements. Store the result as `stage_1_frontend_requirements.md`.
-*This is an INTERNAL execution stage. Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 2.*
-
-**STAGE 2 — INTERNAL AUDIT:**
-Deep audit of the existing frontend codebase — check every rule, every requirement, every design token. Store the findings internally. (You will output them in `stage_2_frontend_audit.md` inside the final zip).
-*Do NOT stop. Do NOT ask the user for confirmation. Proceed automatically to Stage 3.*
-
-**STAGE 3 — FINAL REPAIR & DELIVERY:**
-Repair ALL identified issues directly in the code. Re-audit repaired code using the Anti-Skipping Checklist. Generate `INTEGRATION_GUIDE.md`, `stage_3_final_verdict.md`, and `RE_AUDIT_CHECKLIST_RESULT.md`. Only after Stage 3 is complete may the final `frontend_{role}_v{N}_fix.zip` be delivered.
-
----
-
-Do NOT output intermediate code.
-Inside an individual stage, complete all defined subpasses without asking the user to authorize each subpass.
-
----
-
-# 45. COMPLETE-BEFORE-DELIVER RULE — NO BATCH DELIVERY, NO INTERMEDIATE OUTPUTS
-
-> ⛔ THIS SECTION GOVERNS THE CREATION/REPAIR AND DELIVERY WORKFLOW. READ IT BEFORE WRITING A SINGLE LINE OF CODE.
-
-### The Problem This Rule Fixes
-
-When an AI is asked to create or repair a frontend, it defaults to a "batch delivery" pattern:
+The execution model is:
 
 ```text
-Fix batch 1 → "Here are the files, download them" →
-Fix batch 2 → "Here are the files, download them" →
-Fix batch 3 → "Here are the files, download them" →
+REQUIREMENT BASELINE
+        ↓
+WORK-UNIT PLAN
+        ↓
+BOUNDED EXECUTION
+        ↓
+LOCAL VERIFICATION
+        ↓
+PERSIST CHECKPOINT
+        ↓
+SAFE STOP
+        ↓
+USER REPLIES "continue"
+        ↓
+READ CHECKPOINT
+        ↓
+FIRST UNVERIFIED WORK UNIT
+        ↓
+CONTINUE
+        ↓
 ...
+        ↓
+FULL FINAL RE-AUDIT
+        ↓
+FINAL PACKAGING
+        ↓
+FINAL ZIP
 ```
 
-This is WRONG. Each intermediate delivery is incomplete. The user cannot determine if the system is actually fixed/created until all work is done and verified as a whole.
+## 44.1 Execution-State Location
 
-### The Only Acceptable Delivery Model
+Execution-control state MUST remain OUTSIDE the supplied frontend project/module.
+
+Use:
 
 ```text
-[SILENT PHASE] Create/Fix ALL code completely
-        ↓
-[SILENT PHASE] Re-run complete Anti-Skipping Checklist on the GENERATED/REPAIRED code
-        ↓
-[SILENT PHASE] Verify every applicable checklist item passes and exceptions are documented
-        ↓
-[SINGLE OUTPUT] Deliver everything at once — ONE final versioned ZIP output
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
 ```
 
-### Strict Rules
-
-1. **NO intermediate file deliveries.** Do not deliver any created/repaired file, module, or section until ALL work across ALL phases is complete.
-2. **NO download links between phases.** Do not produce a download link, a file attachment, a code block labeled "here is the file", or any deliverable until the complete creation/repair is finished and verified.
-3. **NO "batch complete" messages.** Do not write "Phase 1 complete, here are the changes" or "Batch 1 done — proceeding to batch 2". These are forbidden mid-task deliveries disguised as progress updates. Silent progress only.
-4. **NO per-phase confirmations asked from the user.** Do not ask "Shall I proceed to the next batch?" or "Confirm before I continue". Write everything without interruption.
-5. **After ALL work is done, run the COMPLETE verification before delivery.** You MUST re-run the full Anti-Skipping Checklist against the generated/repaired code. Confirm that:
-   - every APPLICABLE checklist item is PASS;
-   - every NOT APPLICABLE item contains an explicit reason;
-   - no required item remains NOT VERIFIED;
-   - any OUTSIDE_TARGET_SCOPE or BLOCKED_BY_SUPPLIED_SCOPE item has an explicit boundary/evidence explanation;
-   - any SOURCE_CONFLICT is explicitly recorded and prevents a false compliance claim.
-6. **The final delivery is ONE atomic output.** All frontend files, the Stage 3 verdict, and the updated documentation are delivered in a SINGLE downloadable ZIP.
-
-### Final Delivery Structure (MANDATORY)
-
-When you are fully done, your single final response MUST be delivered as a **versioned ZIP** named:
+The directory MUST contain at minimum:
 
 ```text
-Mode A (CREATE):   frontend_{role}_v1.zip
-Mode B (first):    frontend_{role}_v2_fix.zip
-Mode B (second):   frontend_{role}_v3_fix.zip
+progress.json
+work_units.json
+checkpoint_log.md
+```
+
+These are execution-control artifacts only.
+
+They are NOT frontend business artifacts.
+
+They MUST NOT be moved into the feature module.
+
+They MUST NOT be included in the final frontend ZIP unless explicitly required.
+
+## 44.2 Authoritative Resume State
+
+`progress.json` is the authoritative execution-state record.
+
+Minimum structure:
+
+```json
+{
+  "workflow_version": "2.0",
+  "mode": "CREATE_OR_AUDIT_REPAIR",
+  "role": "",
+  "module": "",
+  "target_version": "",
+  "status": "IN_PROGRESS",
+  "scope_root": "",
+  "source_inputs": [],
+  "work_units": [],
+  "completed_work_units": [],
+  "current_work_unit": null,
+  "pending_work_units": [],
+  "files_completed": [],
+  "files_modified": [],
+  "files_pending": [],
+  "requirements_completed": [],
+  "issues_total": 0,
+  "issues_completed": 0,
+  "issues_remaining": 0,
+  "blocked_items": [],
+  "verification_status": {},
+  "last_verified_checkpoint": "",
+  "final_reaudit_complete": false,
+  "final_packaging_ready": false
+}
+```
+
+Additional fields MAY be added when necessary.
+
+## 44.3 Atomic Checkpoint Writes
+
+Checkpoint updates MUST be atomic.
+
+Use:
+
+```text
+write temporary state
+→ validate temporary state
+→ atomically replace progress.json
+```
+
+Never knowingly leave `progress.json` partially written or structurally invalid.
+
+A work unit MUST NOT be marked COMPLETED until:
+
+1. its implementation/audit work exists;
+2. its applicable local verification has completed;
+3. its filesystem state has been checked;
+4. its checkpoint has been persisted successfully.
+
+## 44.4 Work-Unit Granularity
+
+A work unit MUST represent a coherent dependency-bounded task.
+
+Preferred boundaries:
+
+- one complete user flow;
+- one related component group;
+- one API contract family;
+- one hook plus its direct tests;
+- one state/store responsibility;
+- one validation-schema family;
+- one mock/MSW contract family;
+- one coherent repair set.
+
+Do NOT define work units only by file count.
+
+As a secondary safety limit, approximately 3–5 small/medium files MAY be used.
+
+A large or highly coupled file MUST be isolated into its own work unit when necessary.
+
+Dependency coherence takes priority over file count.
+
+## 44.5 Work-Unit Lifecycle
+
+Each work unit MUST use:
+
+```text
+PLANNED
+→ IN_PROGRESS
+→ IMPLEMENTED_OR_REPAIRED
+→ VERIFIED
+→ CHECKPOINTED
+→ COMPLETED
+```
+
+At the start:
+
+1. mark the work unit IN_PROGRESS;
+2. persist the checkpoint;
+3. execute the work.
+
+At completion:
+
+1. inspect resulting filesystem state;
+2. perform applicable verification;
+3. record changed files;
+4. record blockers/unresolved issues;
+5. mark COMPLETED;
+6. persist the checkpoint.
+
+## 44.6 Safe Stop
+
+The AI MUST be allowed to stop after a VERIFIED work unit.
+
+Do NOT attempt to force the entire task into one uninterrupted execution.
+
+The safe-stop response MUST NOT contain:
+
+- source files;
+- source-code delivery;
+- partial ZIPs;
+- download links;
+- claims of final completion.
+
+The only allowed intermediate communication is a concise status message such as:
+
+```text
+⚙ Checkpoint saved — 17/63 work units verified. Reply "continue" to resume.
+```
+
+## 44.7 Resume
+
+When the user replies:
+
+```text
+continue
+```
+
+the AI MUST:
+
+1. read `progress.json`;
+2. read `work_units.json`;
+3. validate checkpoint state;
+4. inspect actual filesystem state;
+5. compare expected state against actual state;
+6. identify the first UNVERIFIED or incomplete work unit;
+7. reuse verified work;
+8. continue from that exact point;
+9. persist the next checkpoint before another safe stop.
+
+The AI MUST NOT ask the user to manually describe completed work when that information exists in the checkpoint.
+
+The AI MUST NOT restart from zero merely because the previous response was interrupted.
+
+## 44.8 Interrupted Work-Unit Recovery
+
+If the task is interrupted while a work unit is IN_PROGRESS:
+
+DO NOT automatically mark it completed.
+
+Instead:
+
+```text
+READ CHECKPOINT
+→ INSPECT FILESYSTEM
+→ COMPARE EXPECTED VS ACTUAL STATE
+→ RE-VERIFY EXISTING CHANGES
+→ COMPLETE ONLY THE MISSING/UNVERIFIED PORTION
+```
+
+The AI MUST avoid duplicate:
+
+- components;
+- hooks;
+- API functions;
+- schema fields;
+- route registrations;
+- tests;
+- MSW handlers;
+- imports;
+- documentation entries.
+
+## 44.9 Final Completeness Protection
+
+Checkpointing MUST NOT become a reason to:
+
+- sample the codebase;
+- audit only recent changes;
+- skip design sections;
+- skip architecture sections;
+- skip functional flows;
+- skip API contracts;
+- skip accessibility;
+- skip tests;
+- skip documentation.
+
+The final result MUST still satisfy the full V2.4 applicable requirement set.
+
+## 44.10 Mode A — CREATE
+
+STAGE 1:
+
+Create:
+
+```text
+stage_1_frontend_requirements.md
+```
+
+Freeze the complete requirement baseline.
+
+Checkpoint the completed baseline.
+
+STAGE 2:
+
+Create the frontend through bounded work units.
+
+Each work unit MUST be verified and checkpointed.
+
+STAGE 3:
+
+After all creation work units are complete:
+
+1. re-read Stage 1 requirements;
+2. perform complete final re-audit;
+3. repair any remaining issue;
+4. generate final documentation;
+5. generate the changelog;
+6. generate the final checklist;
+7. only then package `frontend_{role}_v1.zip`.
+
+## 44.11 Mode B — AUDIT + REPAIR
+
+STAGE 1:
+
+Freeze:
+
+```text
+stage_1_frontend_requirements.md
+```
+
+STAGE 2:
+
+Audit the complete supplied target module through bounded work units.
+
+Generate:
+
+```text
+stage_2_frontend_audit.md
+```
+
+STAGE 3:
+
+Repair every actionable issue inside the allowed writable scope.
+
+Re-audit the repaired module.
+
+Generate:
+
+```text
+INTEGRATION_GUIDE.md
+stage_3_final_verdict.md
+RE_AUDIT_CHECKLIST_RESULT.md
+[module_name]_changelog_vN.md
+```
+
+Only after final verification may the versioned fix ZIP be generated.
+
+## 44.12 Final State
+
+```text
+ALL WORK UNITS COMPLETE
+        ↓
+FULL MODULE RE-AUDIT
+        ↓
+FULL CHECKLIST CLEAN
+        ↓
+FINAL DOCUMENTATION COMPLETE
+        ↓
+FINAL PACKAGING
+        ↓
+FINAL ZIP
+```
+
+Checkpointing changes HOW the work is executed.
+
+Checkpointing does NOT change WHAT must be verified.
+
+---
+
+# 45. COMPLETE-BEFORE-DELIVER + FINAL ATOMIC DELIVERY
+
+This section governs FINAL DELIVERY.
+
+Execution MAY happen through multiple checkpointed work units under Section 44.
+
+## 45.1 Execution and Delivery Are Separate
+
+The mandatory distinction is:
+
+```text
+BOUNDED EXECUTION  = ALLOWED
+CHECKPOINTS        = REQUIRED
+PARTIAL DELIVERY   = FORBIDDEN
+FINAL DELIVERY     = ATOMIC
+```
+
+A checkpoint is execution state.
+
+A checkpoint is NOT a product delivery.
+
+## 45.2 No Premature Completion
+
+The AI MUST NOT claim:
+
+```text
+COMPLETE
+FULLY VERIFIED
+FINAL
+READY FOR DELIVERY
+```
+
+until the entire target module has passed final verification.
+
+A checkpoint progress message is NOT a final status.
+
+## 45.3 Final Verification Gate
+
+Before final ZIP creation, the AI MUST:
+
+1. verify all planned work units are complete;
+2. verify filesystem state against `progress.json`;
+3. re-run the complete frontend requirement audit;
+4. re-run all applicable architecture rules;
+5. re-run all applicable UI/UX design rules;
+6. re-run all functional-closure checks;
+7. verify loading, empty, error, success, recovery, and repeated-action behavior;
+8. verify API-contract mappings;
+9. verify accessibility;
+10. verify all required tests;
+11. verify all required documentation;
+12. verify all scope-boundary conditions;
+13. verify no actionable issue remains unresolved;
+14. verify no new architecture/design violation was introduced.
+
+Final verification MUST cover the complete target module.
+
+## 45.4 Final Verification MUST Itself Be Bounded
+
+The final verification phase MUST NOT be treated as one giant uninterrupted operation.
+
+Divide final verification into checkpointed verification work units.
+
+Preferred verification units:
+
+1. frontend requirement coverage;
+2. architecture-rule coverage;
+3. UI/UX design coverage;
+4. user-flow / functional-closure coverage;
+5. API-contract coverage;
+6. accessibility coverage;
+7. testing coverage;
+8. documentation coverage;
+9. omission sweep;
+10. final checklist consolidation.
+
+Each verification unit MUST follow:
+
+```text
+VERIFY
+→ RECORD EVIDENCE
+→ CHECKPOINT
+→ COMPLETE
+```
+
+Set:
+
+```text
+final_reaudit_complete = true
+```
+
+ONLY after every required verification work unit and the final checklist consolidation are complete.
+
+## 45.5 Final Packaging
+
+Before packaging:
+
+1. generate a deterministic final file manifest;
+2. verify every manifest entry exists;
+3. confirm only the required target scope and required final artifacts are included;
+4. confirm no unrelated project files are included;
+5. verify the changelog is consistent with actual changes.
+
+Only then package:
+
+```text
+Mode A:
+frontend_{role}_v1.zip
+
+Mode B:
+frontend_{role}_v{N}_fix.zip
 ```
 
 The ZIP MUST contain:
@@ -5835,9 +6221,106 @@ RE_AUDIT_CHECKLIST_RESULT.md             ← final checklist result on the final
 
 **The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
 
-Everything in one ZIP. Nothing before. Nothing after.
+## 45.6 Packaging Recovery
+
+Packaging MUST be based on the deterministic file manifest.
+
+Persist packaging state in `progress.json`.
+
+At minimum record:
+
+- manifest generated;
+- packaging status;
+- packaging attempt;
+- expected artifact list;
+- final ZIP path;
+- final ZIP verification status.
+
+If packaging is interrupted:
+
+DO NOT redo code repair.
+
+DO NOT redo the audit.
+
+DO NOT redo completed verification units.
+
+Resume from the packaging state using the existing verified filesystem and manifest.
+
+The final ZIP MUST be opened/validated before being declared complete.
+
+## 45.7 Execution-State Exclusion
+
+Do NOT include:
+
+```text
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
+```
+
+inside the final frontend ZIP unless explicitly required.
+
+Execution state is not application code.
+
+## 45.8 Final Chat Response Size Rule
+
+The final chat response MUST be concise.
+
+Do NOT reproduce in chat:
+
+- complete audit report;
+- complete checklist;
+- source code;
+- large changelog;
+- entire file manifest;
+- complete verification tables.
+
+Those belong inside the final ZIP.
+
+Final chat output should contain only:
+
+1. final status;
+2. final ZIP link;
+3. concise blocker/scope note, if applicable.
+
+Example:
+
+```text
+COMPLETE — final verification passed.
+[final ZIP]
+```
+
+This rule exists to reduce message-delivery and response-size failures.
+
+## 45.9 Interrupted Execution
+
+If execution stops before final delivery:
+
+DO NOT restart from zero.
+DO NOT deliver a partial ZIP.
+DO NOT claim completion.
+
+Instead:
+
+```text
+READ progress.json
+→ verify filesystem
+→ identify first unverified work unit or packaging state
+→ resume
+```
+
+## 45.10 Final Principle
+
+The system remains:
+
+```text
+COMPLETE-BEFORE-DELIVER
+```
+
+but it is NOT required to perform all work inside one uninterrupted execution.
+
+Bounded execution improves reliability without weakening completeness.
 
 ### CHANGELOG & VERIFICATION DOCUMENT
 1. Every ZIP delivery MUST contain a dedicated changelog file: `[module_name]_changelog_vN.md`. The changelog MUST be delivered inside the same atomic ZIP. No separate changelog delivery is permitted.
 2. This document MUST detail **exactly what was fixed** in this specific version, mapped directly to the original audit findings.
 3. **Purpose:** The human developer will provide this `.md` file and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
+
