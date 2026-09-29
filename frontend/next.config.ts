@@ -8,11 +8,20 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/',
-        destination: '/frontend_public/landing',
+        destination: '/landing',
         permanent: true,
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/landing',
+        destination: '/frontend_public/landing',
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
