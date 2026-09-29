@@ -28,6 +28,6 @@ export class SuperadminDashboardBusinessOverviewService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findDashboardBusinessOverview(input: Record<string, unknown> = {}): Promise<SuperadminDashboardBusinessOverviewResponseDto> {
-    return await this.repository.getLiveBusinessOverview(this.config.get<string>('app.defaultCurrency') ?? 'INR', input) as unknown as SuperadminDashboardBusinessOverviewResponseDto;
+    return await this.repository.getLiveBusinessOverview(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', input) as unknown as SuperadminDashboardBusinessOverviewResponseDto;
   }
 }

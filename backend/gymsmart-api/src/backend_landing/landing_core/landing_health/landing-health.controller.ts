@@ -75,7 +75,7 @@ constructor(
   @ApiOkResponse({ schema: { example: { success: true, message: 'Request completed successfully.', data: { status: 'ok', postgres: 'up', redis: 'up', tenantDatabase: 'up' } } } })
   @ApiNotFoundResponse({ schema: { example: { success: false, message: 'Not Found', data: null, error: 'HTTP_ERROR', errorCode: 'CORE.HTTP.REQUEST_FAILED', statusCode: HttpStatus.NOT_FOUND } } })
   async getDeep(@Headers('x-health-deep-token') token?: string): Promise<{ status: 'ok'; postgres: 'up'; redis: 'up'; tenantDatabase: 'up' }> {
-    if (token !== this.config.getOrThrow<string>('app.healthDeepToken')) {
+    if (token !== this.config.getOrThrow<string>('landing.healthDeepToken')) {
       throw new HttpException({
         message: CORE_ERROR_MESSAGES.HEALTH_DEEP_NOT_FOUND,
         error: 'HEALTH_NOT_FOUND',

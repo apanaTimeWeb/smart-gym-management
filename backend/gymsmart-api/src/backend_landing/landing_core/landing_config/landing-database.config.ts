@@ -20,12 +20,12 @@ export interface LandingDatabasePoolConfig {
  */
 export function getLandingDatabasePoolConfig(config: ConfigService): LandingDatabasePoolConfig {
   return {
-    masterMax: config.getOrThrow<number>('app.database.masterMax'),
-    tenantMax: config.getOrThrow<number>('app.database.tenantMax'),
-    masterAcquireTimeoutMs: config.getOrThrow<number>('app.database.masterAcquireTimeoutMs'),
-    tenantAcquireTimeoutMs: config.getOrThrow<number>('app.database.tenantAcquireTimeoutMs'),
-    masterIdleTimeoutMs: config.getOrThrow<number>('app.database.masterIdleTimeoutMs'),
-    tenantIdleTimeoutMs: config.getOrThrow<number>('app.database.tenantIdleTimeoutMs'),
-    totalTenantMax: config.getOrThrow<number>('app.database.totalTenantMax'),
+    masterMax: config.getOrThrow<number>('landing.database.masterMax'),
+    tenantMax: config.getOrThrow<number>('landing.database.tenantMax'),
+    masterAcquireTimeoutMs: config.getOrThrow<number>('landing.database.masterAcquireTimeoutMs'),
+    tenantAcquireTimeoutMs: config.getOrThrow<number>('landing.database.tenantAcquireTimeoutMs'),
+    masterIdleTimeoutMs: config.getOrThrow<number>('landing.database.masterIdleTimeoutMs'),
+    tenantIdleTimeoutMs: config.getOrThrow<number>('landing.database.tenantIdleTimeoutMs'),
+    totalTenantMax: config.getOrThrow<number>('landing.database.totalTenantMax'),
   };
 }

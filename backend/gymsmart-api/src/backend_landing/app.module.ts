@@ -31,25 +31,6 @@ import { LandingLandingModule } from '@/backend_landing/landing_modules/landing/
  */
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-      load: [buildValidatedConfig],
-      validate: validateLandingEnvironment,
-    }),
-    LoggerModule.forRootAsync({
-      imports: [ConfigModule, LandingCoreContextModule],
-      inject: [ConfigService, LandingRequestContextService],
-      useFactory: buildLandingLoggerOptions,
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => buildMasterDataSourceOptions(
-        config.getOrThrow('app.masterDb'),
-        getLandingDatabasePoolConfig(config),
-      ),
-    }),
     LandingCoreModule,
     LandingLandingModule,
   ],

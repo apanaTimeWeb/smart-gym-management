@@ -22,7 +22,7 @@ import { LandingTypeormUnitOfWorkService } from '@/backend_landing/landing_core/
     LandingTypeormUnitOfWorkService,
     { provide: LANDING_UNIT_OF_WORK, useExisting: LandingTypeormUnitOfWorkService },
   ],
-  exports: [LANDING_UNIT_OF_WORK, LandingTypeormUnitOfWorkService],
+  exports: [LANDING_UNIT_OF_WORK, LandingTypeormUnitOfWorkService, LandingOrmTransactionContextService],
 })
 /**
  * Intent: Defines the landing core database module boundary for this supplied Landing backend scope.

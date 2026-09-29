@@ -34,6 +34,6 @@ export class SuperadminDashboardKpisService {
  * AI-Note: Keep ORM access behind this repository boundary and preserve typed return contracts.
  */
   async getDashboardKpis(query: SuperadminDashboardWidgetQuery = {}): Promise<SuperadminDashboardKpisProjection> {
-    return this.repository.getDashboardKpis(this.config.get<string>('app.defaultCurrency') ?? 'INR', query);
+    return this.repository.getDashboardKpis(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', query);
   }
 }

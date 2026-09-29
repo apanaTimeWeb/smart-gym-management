@@ -28,6 +28,6 @@ export class SuperadminDashboardRevenueByGeographyService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async getRevenueByGeography(): Promise<SuperadminDashboardRevenueByGeographyProjection[]> {
-    return this.repository.getDashboardRevenueByGeography(this.config.get<string>('app.defaultCurrency') ?? 'INR');
+    return this.repository.getDashboardRevenueByGeography(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR');
   }
 }

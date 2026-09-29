@@ -20,7 +20,7 @@ export function buildLandingLoggerOptions(
 ): LandingLoggerOptions {
   return {
     pinoHttp: {
-      level: config.getOrThrow<string>('app.nodeEnv') === 'production' ? 'info' : 'debug',
+      level: config.getOrThrow<string>('landing.nodeEnv') === 'production' ? 'info' : 'debug',
       redact: ['req.headers.authorization', 'req.headers.cookie', 'req.headers.x-api-key'],
       mixin: () => {
         try {

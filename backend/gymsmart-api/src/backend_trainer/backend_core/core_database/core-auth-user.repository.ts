@@ -15,7 +15,7 @@ import { CoreUserEntity } from '@/backend_trainer/backend_core/core_database/cor
  */
 @Injectable()
 export class CoreAuthUserRepository {
-  constructor(@InjectRepository(CoreUserEntity, 'master') private readonly repository: Repository<CoreUserEntity>) {}
+  constructor(@InjectRepository(CoreUserEntity) private readonly repository: Repository<CoreUserEntity>) {}
 
   /** Finds an active master user by normalized email. */
   /**

@@ -44,7 +44,7 @@ export class SuperadminCoreTenantDatabaseProvisionerService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private buildDatabaseName(tenantId:string):string { const prefix=this.config.getOrThrow<string>('app.tenantDatabasePrefix'); return `${prefix}${tenantId.replace(/[^a-zA-Z0-9_]/g,'_')}`; }
+  private buildDatabaseName(tenantId:string):string { const prefix=this.config.getOrThrow<string>('superadmin.tenantDatabasePrefix'); return `${prefix}${tenantId.replace(/[^a-zA-Z0-9_]/g,'_')}`; }
 
   /**
  * Primary Intent: Executes the ensureTenantDatabase use case within its owning backend boundary.
@@ -60,7 +60,7 @@ export class SuperadminCoreTenantDatabaseProvisionerService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private async runTenantMigrations(databaseName:string):Promise<void>{ const tenant=new DataSource({type:'postgres',url:this.tenantUrl(databaseName),synchronize:false,migrationsRun:false,entities:[],migrations:[SuperadminCoreTenantSchemaMigration],extra:{max:this.config.getOrThrow<number>('app.tenantPoolMaxPerDatabase'),connectionTimeoutMillis:this.config.getOrThrow<number>('app.databaseAcquireTimeoutMs'),idleTimeoutMillis:this.config.getOrThrow<number>('app.databaseIdleTimeoutMs'),statement_timeout:this.config.getOrThrow<number>('app.databaseStatementTimeoutMs')}}); await tenant.initialize(); try{ await tenant.runMigrations(); } finally { await tenant.destroy(); } }
+  private async runTenantMigrations(databaseName:string):Promise<void>{ const tenant=new DataSource({type:'postgres',url:this.tenantUrl(databaseName),synchronize:false,migrationsRun:false,entities:[],migrations:[SuperadminCoreTenantSchemaMigration],extra:{max:this.config.getOrThrow<number>('superadmin.tenantPoolMaxPerDatabase'),connectionTimeoutMillis:this.config.getOrThrow<number>('superadmin.databaseAcquireTimeoutMs'),idleTimeoutMillis:this.config.getOrThrow<number>('superadmin.databaseIdleTimeoutMs'),statement_timeout:this.config.getOrThrow<number>('superadmin.databaseStatementTimeoutMs')}}); await tenant.initialize(); try{ await tenant.runMigrations(); } finally { await tenant.destroy(); } }
 
   /**
  * Primary Intent: Executes the `drop` responsibility owned by this superadmin-core-tenant-database-provisioner.service construct.
@@ -87,7 +87,7 @@ export class SuperadminCoreTenantDatabaseProvisionerService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private tenantUrl(databaseName:string):string{const url=new URL(this.config.getOrThrow<string>('app.databaseUrl')); url.pathname=`/${databaseName}`; return url.toString();}
+  private tenantUrl(databaseName:string):string{const url=new URL(this.config.getOrThrow<string>('superadmin.databaseUrl')); url.pathname=`/${databaseName}`; return url.toString();}
   /**
  * Primary Intent: Executes the `acquireProvisionLock` responsibility owned by this superadmin-core-tenant-database-provisioner.service construct.
    * Edge Cases: Invalid or unavailable dependencies must fail fast according to the owning module contract.

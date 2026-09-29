@@ -70,7 +70,7 @@ export function validateLandingEnvironment(env: Record<string, unknown>): Record
   return env;
 }
 
-export const buildValidatedConfig = registerAs('app', () => ({
+export const buildValidatedConfig = registerAs('landing', () => ({
   nodeEnv: process.env.NODE_ENV ?? 'development',
   port: integer('PORT', '3000'),
   apiPrefix: process.env.API_PREFIX ?? 'api',

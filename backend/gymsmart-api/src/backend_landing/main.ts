@@ -29,7 +29,7 @@ async function bootstrap(): Promise<void> {
 
   app.enableShutdownHooks();
   app.useLogger(app.get(Logger));
-  app.enableCors({ origin: config.getOrThrow<string[]>('app.corsOrigins') });
+  app.enableCors({ origin: config.getOrThrow<string[]>('landing.corsOrigins') });
   app.use(helmet());
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe({
@@ -39,22 +39,22 @@ async function bootstrap(): Promise<void> {
     transformOptions: { enableImplicitConversion: true },
   }));
 
-  app.setGlobalPrefix(config.getOrThrow<string>('app.apiPrefix'));
+  app.setGlobalPrefix(config.getOrThrow<string>('landing.apiPrefix'));
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: config.getOrThrow<string>('app.apiVersion'),
+    defaultVersion: config.getOrThrow<string>('landing.apiVersion'),
   });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('GymSmart Landing API')
     .setDescription('Versioned Landing backend API contract.')
-    .setVersion(config.getOrThrow<string>('app.apiVersion'))
+    .setVersion(config.getOrThrow<string>('landing.apiVersion'))
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(config.getOrThrow<number>('app.port'));
+  await app.listen(config.getOrThrow<number>('landing.port'));
 }
 
 bootstrap();

@@ -42,7 +42,7 @@ constructor(
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const tier = this.reflector.get<string>(RATE_LIMIT_TIER_KEY, context.getHandler());
-    if (!tier || !this.configService.getOrThrow<boolean>('app.rateLimit.enabled')) return true;
+    if (!tier || !this.configService.getOrThrow<boolean>('landing.rateLimit.enabled')) return true;
 
     const tierConfig = RATE_LIMIT_CONFIG[tier as keyof typeof RATE_LIMIT_CONFIG];
     if (!tierConfig) {

@@ -16,7 +16,7 @@ export class SuperadminCoreRedisService implements OnModuleDestroy {
   private readonly client: Redis;
 
   constructor(config: ConfigService) {
-    const url = config.getOrThrow<string>('app.redisUrl');
+    const url = config.getOrThrow<string>('superadmin.redisUrl');
     console.log(`[${Date.now()}] SuperadminCoreRedisService INIT url: ${url}`);
     this.client = (url === 'mock' || url === 'redis://mock')
       ? new RedisMock() as unknown as Redis

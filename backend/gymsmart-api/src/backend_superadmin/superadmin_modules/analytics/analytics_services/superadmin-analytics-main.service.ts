@@ -28,6 +28,6 @@ export class SuperadminAnalyticsMainService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findAnalyticsData(input: Record<string, unknown> = {}): Promise<SuperadminAnalyticsResponseDto> {
-    return await this.repository.getLiveAnalytics(this.config.get<string>('app.defaultCurrency') ?? 'INR', input) as unknown as SuperadminAnalyticsResponseDto;
+    return await this.repository.getLiveAnalytics(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', input) as unknown as SuperadminAnalyticsResponseDto;
   }
 }

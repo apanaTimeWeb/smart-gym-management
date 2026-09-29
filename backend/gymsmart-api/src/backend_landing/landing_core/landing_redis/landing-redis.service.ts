@@ -24,8 +24,8 @@ export class LandingRedisService implements OnModuleDestroy {
    * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
    */
 constructor(config: ConfigService) {
-    const url = config.getOrThrow<string>('app.redis.url');
-    const connectTimeout = config.getOrThrow<number>('app.redis.connectTimeoutMs');
+    const url = config.getOrThrow<string>('landing.redis.url');
+    const connectTimeout = config.getOrThrow<number>('landing.redis.connectTimeoutMs');
     this.client = url === 'redis://mock' ? new RedisMock() as unknown as Redis : new Redis(url, { connectTimeout, maxRetriesPerRequest: 2 });
   }
 

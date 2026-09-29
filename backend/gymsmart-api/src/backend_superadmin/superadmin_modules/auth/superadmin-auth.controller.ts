@@ -182,5 +182,5 @@ export class SuperadminAuthController {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private isProduction(): boolean { return this.config.get<string>('app.nodeEnv') === 'production'; }
+  private isProduction(): boolean { return this.config.get<string>('superadmin.nodeEnv') === 'production'; }
 }

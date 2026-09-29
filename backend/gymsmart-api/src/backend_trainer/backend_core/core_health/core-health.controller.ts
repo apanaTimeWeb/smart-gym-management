@@ -21,7 +21,7 @@ import { CoreTenantDatasourceResolver } from '@/backend_trainer/backend_core/cor
 @ApiTags('health')
 export class CoreHealthController {
   constructor(
-    @InjectDataSource('master') private readonly master: DataSource,
+    @InjectDataSource() private readonly master: DataSource,
     private readonly redis: CoreRedisService,
     private readonly tenants: CoreTenantDatasourceResolver,
   ) {}

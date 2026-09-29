@@ -29,6 +29,6 @@ export class SuperadminBroadcastsAudienceInsightsService {
    */
   async findBroadcastsAudienceInsights(): Promise<SuperadminBroadcastsAudienceInsightsResponseDto> {
     const result = await this.repository.getAudienceInsights();
-    return { currency: this.config.getOrThrow<string>('app.defaultCurrency'), ...result };
+    return { currency: this.config.getOrThrow<string>('superadmin.defaultCurrency'), ...result };
   }
 }

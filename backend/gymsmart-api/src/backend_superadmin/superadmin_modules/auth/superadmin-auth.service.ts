@@ -70,7 +70,7 @@ export class SuperadminAuthService {
    */
   async refresh(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
     try {
-      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { jti?: string }>(refreshToken, { secret: this.config.getOrThrow<string>('app.jwtRefreshSecret') });
+      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { jti?: string }>(refreshToken, { secret: this.config.getOrThrow<string>('superadmin.jwtRefreshSecret') });
       if (!claims.jti || await this.redis.get(`refresh:deny:${claims.jti}`)) throw new UnauthorizedException({ error: 'UNAUTHORIZED', errorCode: 'AUTH.REFRESH.REVOKED', message: { key: 'auth.ERRORS.UNAUTHORIZED' } });
       const current = await this.repository.findById(claims.sub);
       if (!current || current.tokenVersion !== claims.tokenVersion) throw new UnauthorizedException({ error: 'UNAUTHORIZED', errorCode: 'AUTH.TOKEN_VERSION.REVOKED', message: { key: 'auth.ERRORS.UNAUTHORIZED' } });
@@ -96,8 +96,8 @@ export class SuperadminAuthService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async issueTokens(claims: SuperadminJwtClaims): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = await this.jwt.signAsync(claims, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret'), expiresIn: this.config.getOrThrow<JwtSignOptions['expiresIn']>('app.jwtAccessTtl') });
-    const refreshToken = await this.jwt.signAsync({ ...claims, jti: randomUUID() }, { secret: this.config.getOrThrow<string>('app.jwtRefreshSecret'), expiresIn: this.config.getOrThrow<JwtSignOptions['expiresIn']>('app.jwtRefreshTtl') });
+    const accessToken = await this.jwt.signAsync(claims, { secret: this.config.getOrThrow<string>('superadmin.jwtAccessSecret'), expiresIn: this.config.getOrThrow<JwtSignOptions['expiresIn']>('superadmin.jwtAccessTtl') });
+    const refreshToken = await this.jwt.signAsync({ ...claims, jti: randomUUID() }, { secret: this.config.getOrThrow<string>('superadmin.jwtRefreshSecret'), expiresIn: this.config.getOrThrow<JwtSignOptions['expiresIn']>('superadmin.jwtRefreshTtl') });
     return { accessToken, refreshToken };
   }
 
@@ -115,7 +115,7 @@ export class SuperadminAuthService {
    */
   async verifyGhostHandoff(token: string): Promise<SuperadminJwtClaims & { impersonatedTenantId: string; purpose: string; exp: number }> {
     try {
-      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { impersonatedTenantId?: string; purpose?: string; exp?: number }>(token, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret') });
+      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { impersonatedTenantId?: string; purpose?: string; exp?: number }>(token, { secret: this.config.getOrThrow<string>('superadmin.jwtAccessSecret') });
       if (claims.purpose !== 'GYM_IMPERSONATION' || !claims.impersonatedTenantId || !claims.exp) throw new UnauthorizedException({ error: 'UNAUTHORIZED', errorCode: 'AUTH.GHOST_LOGIN.INVALID_HANDOFF', message: { key: 'auth.ERRORS.UNAUTHORIZED' } });
       return claims as SuperadminJwtClaims & { impersonatedTenantId: string; purpose: string; exp: number };
     } catch (error) {
@@ -139,7 +139,7 @@ export class SuperadminAuthService {
    */
   async logout(refreshToken: string): Promise<void> {
     try {
-      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { jti?: string }>(refreshToken, { secret: this.config.getOrThrow<string>('app.jwtRefreshSecret'), ignoreExpiration: true });
+      const claims = await this.jwt.verifyAsync<SuperadminJwtClaims & { jti?: string }>(refreshToken, { secret: this.config.getOrThrow<string>('superadmin.jwtRefreshSecret'), ignoreExpiration: true });
       if (claims.jti) await this.redis.set(`refresh:deny:${claims.jti}`, '1', 604800);
     } catch {
       return;

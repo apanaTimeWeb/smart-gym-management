@@ -154,8 +154,8 @@ private assertUuid(tenantId: string): void {
    * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
    */
 private assertTestAccess(token?: string): void {
-    const nodeEnv = this.config.getOrThrow<string>('app.nodeEnv');
-    const expected = this.config.get<string>('app.e2eBootstrapToken');
+    const nodeEnv = this.config.getOrThrow<string>('landing.nodeEnv');
+    const expected = this.config.get<string>('landing.e2eBootstrapToken');
     if (nodeEnv !== 'test' || !expected || token !== expected) {
       throw new UnauthorizedException({
         message: CORE_ERROR_MESSAGES.TEST_TENANT_DISABLED,

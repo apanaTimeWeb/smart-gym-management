@@ -52,17 +52,7 @@ import { BackendManagerModule } from '@/backend_manager/backend-manager.module';
 @Global()
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, validate: (env: Record<string, unknown>) => ManagerCoreEnvSchema.parse(env) }),
-    TypeOrmModule.forRootAsync({
-      inject: [ManagerCoreConfigService],
-      useFactory: (config: ManagerCoreConfigService) => ({
-        type: 'postgres',
-        url: config.masterDatabaseUrl,
-        entities: [MasterTenantEntity, MasterUserEntity, MasterUserTenantEntity, ManagerCoreFeatureFlagEntity],
-        synchronize: false,
-      }),
-    }),
-    LoggerModule.forRoot(ManagerCoreLoggerConfig),
+
     ManagerCoreModule,
     BackendManagerModule,
   ],

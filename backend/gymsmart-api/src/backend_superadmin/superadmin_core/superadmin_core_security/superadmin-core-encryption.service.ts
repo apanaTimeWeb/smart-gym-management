@@ -13,7 +13,7 @@ import { SuperadminCoreEncryptionConfigurationException } from '@/backend_supera
 @Injectable()
 export class SuperadminCoreEncryptionService {
   private readonly key: Buffer;
-  constructor(config: ConfigService) { this.key = Buffer.from(config.getOrThrow<string>('app.encryptionKeyBase64'), 'base64'); if (this.key.length !== 32) throw new SuperadminCoreEncryptionConfigurationException('ENCRYPTION_KEY_BASE64 must decode to 32 bytes'); }
+  constructor(config: ConfigService) { this.key = Buffer.from(config.getOrThrow<string>('superadmin.encryptionKeyBase64'), 'base64'); if (this.key.length !== 32) throw new SuperadminCoreEncryptionConfigurationException('ENCRYPTION_KEY_BASE64 must decode to 32 bytes'); }
 /**
  * Primary Intent: Executes the encrypt use case within the owning backend feature boundary.
  * Edge Cases: Invalid inputs, missing resources, authorization failures, tenant mismatches, retries, and concurrent state are handled according to the feature contract.

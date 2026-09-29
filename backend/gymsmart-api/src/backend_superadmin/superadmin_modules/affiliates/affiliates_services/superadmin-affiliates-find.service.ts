@@ -28,5 +28,5 @@ export class SuperadminAffiliatesFindService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findAffiliatesById(id: string): Promise<SuperadminAffiliatesResponseDto> { const entity = await this.repository.findByIdOrThrow(id); const balance = await this.ledger.findPayableBalance(entity.id, entity.currency); return SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(entity, balance), this.config.getOrThrow<string>('app.defaultCurrency')); }
+  async findAffiliatesById(id: string): Promise<SuperadminAffiliatesResponseDto> { const entity = await this.repository.findByIdOrThrow(id); const balance = await this.ledger.findPayableBalance(entity.id, entity.currency); return SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(entity, balance), this.config.getOrThrow<string>('superadmin.defaultCurrency')); }
 }

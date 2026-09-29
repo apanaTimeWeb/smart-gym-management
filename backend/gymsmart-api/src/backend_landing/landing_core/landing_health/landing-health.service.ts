@@ -5,8 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { LandingRedisService } from '@/backend_landing/landing_core/landing_redis/landing-redis.service';
 import { LandingTenantContextService } from '@/backend_landing/landing_core/landing_tenant/landing-tenant-context.service';
 
-import type { DataSource } from 'typeorm';
-
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 
 /**
  * Intent: Defines the LandingHealthService class boundary for this supplied Landing backend scope.
@@ -30,7 +30,7 @@ export class LandingHealthService {
    * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
    */
 constructor(
-    private readonly masterDataSource: DataSource,
+    @InjectDataSource() private readonly masterDataSource: DataSource,
     private readonly redis: LandingRedisService,
     private readonly tenantContext: LandingTenantContextService,
   ) {}

@@ -30,5 +30,5 @@ export class SuperadminTenantStatusService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async changeTenantStatus(id: string, status: string): Promise<SuperadminGymsResponseDto> { const row = await this.unitOfWork.run(() => this.repository.updateGymStatusWithLock(id, status as TenantStatus));
-    return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(row), this.config.getOrThrow<string>('app.defaultCurrency')); }
+    return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(row), this.config.getOrThrow<string>('superadmin.defaultCurrency')); }
 }

@@ -15,7 +15,7 @@ const MEMBER1 = '00000000-0000-0000-0000-000000001001', MEMBER2 = '00000000-0000
 async function runSeed(): Promise<void> {
   const app = await NestFactory.createApplicationContext(AppModule);
   try {
-    const master = app.get<DataSource>(getDataSourceToken('master'));
+    const master = app.get<DataSource>(getDataSourceToken());
     const provisioner = app.get(CoreTenantProvisioningService);
     const config = app.get(CoreConfigService);
     const passwordHash = await bcrypt.hash('Trainer@123', 12);

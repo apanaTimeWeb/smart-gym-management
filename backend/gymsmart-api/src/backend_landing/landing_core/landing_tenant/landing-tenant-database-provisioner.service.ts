@@ -40,7 +40,7 @@ constructor(
    * AI Notes: The tenant identifier is read only from validated configuration.
    */
   async provisionConfiguredTenant(): Promise<void> {
-    const tenantId = this.config.getOrThrow<string>('app.publicTenantId');
+    const tenantId = this.config.getOrThrow<string>('landing.publicTenantId');
     const existing = await this.tenantRepository.findActiveById(tenantId);
     if (existing) {
       await this.runTenantMigrations(existing.databaseName);
@@ -119,8 +119,8 @@ private assertDisposableTenant(tenant: LandingMasterTenantEntity): void {
   private async createRegistryRow(tenantId: string): Promise<LandingMasterTenantEntity> {
     return this.tenantRepository.createTenant({
       id: tenantId,
-      slug: this.config.getOrThrow<string>('app.publicTenantSlug'),
-      displayName: this.config.getOrThrow<string>('app.publicTenantName'),
+      slug: this.config.getOrThrow<string>('landing.publicTenantSlug'),
+      displayName: this.config.getOrThrow<string>('landing.publicTenantName'),
       databaseName: `tenant_${tenantId.replaceAll('-', '')}`,
       status: LandingMasterTenantStatus.ACTIVE,
     });
@@ -184,7 +184,7 @@ private assertDisposableTenant(tenant: LandingMasterTenantEntity): void {
    */
 private buildMasterOptions(): ReturnType<typeof buildMasterDataSourceOptions> {
     return buildMasterDataSourceOptions(
-      this.config.getOrThrow('app.masterDb'),
+      this.config.getOrThrow('landing.masterDb'),
       getLandingDatabasePoolConfig(this.config),
     );
   }
@@ -200,7 +200,7 @@ private buildMasterOptions(): ReturnType<typeof buildMasterDataSourceOptions> {
 private buildTenantOptions(databaseName: string): ReturnType<typeof buildTenantDataSourceOptions> {
     return buildTenantDataSourceOptions(
       databaseName,
-      this.config.getOrThrow('app.masterDb'),
+      this.config.getOrThrow('landing.masterDb'),
       getLandingDatabasePoolConfig(this.config),
     );
   }

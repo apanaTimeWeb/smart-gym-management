@@ -32,6 +32,6 @@ export class SuperadminGymsListService {
    */
   async findGymsPage(query: SuperadminGymsListQuery): Promise<{ data: SuperadminGymsResponseDto[]; meta: ReturnType<typeof buildPaginationMeta> }> {
     const result = await this.repository.findPage(query);
-    return { data: result.items.map(e => SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(e), this.config.getOrThrow<string>('app.defaultCurrency'))), meta: buildPaginationMeta(query.page, query.limit, result.total) };
+    return { data: result.items.map(e => SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(e), this.config.getOrThrow<string>('superadmin.defaultCurrency'))), meta: buildPaginationMeta(query.page, query.limit, result.total) };
   }
 }

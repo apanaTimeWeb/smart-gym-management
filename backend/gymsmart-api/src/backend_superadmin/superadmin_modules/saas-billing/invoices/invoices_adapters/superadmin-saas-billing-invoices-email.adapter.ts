@@ -40,7 +40,7 @@ export class SuperadminSaasBillingInvoicesEmailAdapter {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async send(recipient: string, invoice: SuperadminInvoiceEmailPayload): Promise<void> {
-    const endpoint = this.config.getOrThrow<string>('app.invoiceEmailWebhookUrl');
+    const endpoint = this.config.getOrThrow<string>('superadmin.invoiceEmailWebhookUrl');
     await this.circuitBreaker.execute('invoice-email', () => this.post(endpoint, recipient, invoice));
   }
 

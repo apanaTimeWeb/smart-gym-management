@@ -43,7 +43,7 @@ constructor(private readonly config: ConfigService) {}
       if ((this.dataSources.size + 1) * pool.tenantMax > pool.totalTenantMax) {
         throw new Error('TENANT_POOL_BUDGET_EXCEEDED');
       }
-      const masterDb = this.config.getOrThrow<{ host: string; port: number; username: string; password: string }>('app.masterDb');
+      const masterDb = this.config.getOrThrow<{ host: string; port: number; username: string; password: string }>('landing.masterDb');
       const dataSource = new DataSource(buildTenantDataSourceOptions(tenant.databaseName, masterDb, pool));
       try {
         await dataSource.initialize();

@@ -16,7 +16,7 @@ import type { CoreMasterTransactionContext } from '@/backend_trainer/backend_cor
  */
 @Injectable()
 export class CoreAuthAuditRepository {
-  constructor(@InjectRepository(CoreAuthAuditLogEntity, 'master') private readonly repository: Repository<CoreAuthAuditLogEntity>) {}
+  constructor(@InjectRepository(CoreAuthAuditLogEntity) private readonly repository: Repository<CoreAuthAuditLogEntity>) {}
 
   /** Records the security event raised when repeated login failures trigger lockout. */
   /**

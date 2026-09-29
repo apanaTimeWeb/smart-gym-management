@@ -15,7 +15,7 @@ import { CoreTenantMembershipEntity } from '@/backend_trainer/backend_core/core_
  */
 @Injectable()
 export class CoreTenantMembershipAuthorizationRepository {
-  constructor(@InjectDataSource('master') private readonly dataSource: DataSource) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   /** Returns an active membership linked to an active, non-deleted tenant. */
   /**

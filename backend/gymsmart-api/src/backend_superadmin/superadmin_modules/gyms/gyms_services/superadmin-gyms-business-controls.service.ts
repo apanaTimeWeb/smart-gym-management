@@ -33,7 +33,7 @@ export class SuperadminGymsBusinessControlsService {
     const page = await this.repository.findPage(query);
     const rawRows = page.items.map((item) => ({ id: item.id, name: item.name, status: item.status, region: item.city || item.state || item.country, plan: item.plan, income: item.monthlyRevenue, health: this.healthScore(item), usage: this.usageScore(item), trialDays: this.trialDays(item.trialEndsAt), paymentRecoveryOpen: Boolean((item.usageStats as Record<string, unknown> | null)?.paymentRecoveryOpen), lastAction: this.lastAction(item) }));
     const rows = this.applyFilter(rawRows, (input.query as Record<string, string> | undefined)?.filter) as unknown as SuperadminGymsBusinessControlsResponseDto['rows'];
-    return { currency: this.config.get<string>('app.defaultCurrency') ?? 'INR', segments: this.segments(rows), filters: this.filters(), bulk: ['Send message', 'Extend trial', 'Export selected', 'Move plan', 'Suspend selected'], saved: this.savedViews(), rows };
+    return { currency: this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', segments: this.segments(rows), filters: this.filters(), bulk: ['Send message', 'Extend trial', 'Export selected', 'Move plan', 'Suspend selected'], saved: this.savedViews(), rows };
   }
 
   /**

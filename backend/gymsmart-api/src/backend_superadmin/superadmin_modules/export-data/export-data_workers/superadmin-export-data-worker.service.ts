@@ -45,7 +45,7 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
     private readonly tenantRegistry: SuperadminCoreTenantRegistryRepository,
     private readonly config: ConfigService,
     private readonly logger: PinoLogger,
-  ) { this.secret = config.getOrThrow<string>('app.exportDownloadSecret');
+  ) { this.secret = config.getOrThrow<string>('superadmin.exportDownloadSecret');
     this.subscriberClient = this.redis.getClient().duplicate(); }
 
   /**
@@ -149,9 +149,9 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async resolveDeliveryTarget(tenantId: string | null | undefined, medium: ExportDataDeliveryMedium): Promise<{ email: string | null; phone: string | null; medium: ExportDataDeliveryMedium }> {
-    if (!tenantId) return { email: this.config.get<string>('app.seedSuperadminEmail') || null, phone: null, medium };
+    if (!tenantId) return { email: this.config.get<string>('superadmin.seedSuperadminEmail') || null, phone: null, medium };
     const contact = await this.tenantRegistry.findTenantAdminContact(tenantId);
-    return { email: contact?.email || this.config.get<string>('app.seedSuperadminEmail') || null, phone: contact?.phone || null, medium };
+    return { email: contact?.email || this.config.get<string>('superadmin.seedSuperadminEmail') || null, phone: contact?.phone || null, medium };
   }
 
   /**
@@ -166,7 +166,7 @@ export class SuperadminExportDataWorkerService implements OnModuleInit, OnModule
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private expiryDate(): Date { return new Date(Date.now() + this.config.getOrThrow<number>('app.exportDownloadTtlHours') * 3_600_000); }
+  private expiryDate(): Date { return new Date(Date.now() + this.config.getOrThrow<number>('superadmin.exportDownloadTtlHours') * 3_600_000); }
 
   /**
  * Primary Intent: Executes the `downloadToken` responsibility owned by this superadmin-export-data-worker.service construct.

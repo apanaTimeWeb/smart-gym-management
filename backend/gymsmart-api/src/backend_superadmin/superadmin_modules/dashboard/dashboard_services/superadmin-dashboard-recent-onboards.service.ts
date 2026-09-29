@@ -28,6 +28,6 @@ export class SuperadminDashboardRecentOnboardsService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async getRecentOnboards(): Promise<SuperadminDashboardRecentOnboardProjection[]> {
-    return this.repository.getDashboardRecentOnboards(this.config.get<string>('app.defaultCurrency') ?? 'INR');
+    return this.repository.getDashboardRecentOnboards(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR');
   }
 }

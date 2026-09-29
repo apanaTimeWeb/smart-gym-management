@@ -28,6 +28,6 @@ export class SuperadminDashboardRevenueByTierService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async getRevenueByTier(): Promise<SuperadminDashboardRevenueByTierProjection[]> {
-    return this.repository.getDashboardRevenueByTier(this.config.get<string>('app.defaultCurrency') ?? 'INR');
+    return this.repository.getDashboardRevenueByTier(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR');
   }
 }

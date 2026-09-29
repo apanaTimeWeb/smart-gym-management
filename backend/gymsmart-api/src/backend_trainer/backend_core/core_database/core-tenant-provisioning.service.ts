@@ -18,7 +18,7 @@ import { CoreTrainerSessionRecurrenceEndDate20260924Migration } from '@/backend_
  */
 @Injectable()
 export class CoreTenantProvisioningService {
-  constructor(@InjectDataSource('master') private readonly master: DataSource, private readonly config: CoreConfigService) {}
+  constructor(@InjectDataSource() private readonly master: DataSource, private readonly config: CoreConfigService) {}
   /** Creates a tenant database from a validated name and applies every pending versioned migration. */
   /**
  * Intent: Executes the provisionTenant operation inside the backend core service boundary.

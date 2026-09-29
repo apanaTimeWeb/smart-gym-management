@@ -27,5 +27,5 @@ export class SuperadminGymsFindService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async findGymsById(id: string): Promise<SuperadminGymsResponseDto> { return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(await this.repository.findByIdOrThrow(id)), this.config.getOrThrow<string>('app.defaultCurrency')); }
+  async findGymsById(id: string): Promise<SuperadminGymsResponseDto> { return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(await this.repository.findByIdOrThrow(id)), this.config.getOrThrow<string>('superadmin.defaultCurrency')); }
 }

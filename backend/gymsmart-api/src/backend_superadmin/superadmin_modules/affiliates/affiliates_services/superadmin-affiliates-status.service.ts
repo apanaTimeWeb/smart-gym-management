@@ -27,5 +27,5 @@ export class SuperadminAffiliatesStatusService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async changeAffiliatesStatus(id: string, status: string): Promise<SuperadminAffiliatesResponseDto> { return SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(await this.repository.updateAffiliatesById(id, { status })), this.config.getOrThrow<string>('app.defaultCurrency')); }
+  async changeAffiliatesStatus(id: string, status: string): Promise<SuperadminAffiliatesResponseDto> { return SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(await this.repository.updateAffiliatesById(id, { status })), this.config.getOrThrow<string>('superadmin.defaultCurrency')); }
 }

@@ -66,10 +66,10 @@ private isUuid(value: string): boolean {
 async use(request: Request, _response: Response, next: NextFunction): Promise<void> {
     const path = request.path;
     if (/\/(?:health\/live|health\/ready|health\/deep|metrics|docs)(?:\/|$)/.test(path)) { next(); return; }
-    const nodeEnv = this.config.getOrThrow<string>('app.nodeEnv');
+    const nodeEnv = this.config.getOrThrow<string>('landing.nodeEnv');
     if (nodeEnv === 'test' && /\/test\/tenants(?:\/|$)/.test(path)) { next(); return; }
 
-    const publicTenantId = this.config.getOrThrow<string>('app.publicTenantId');
+    const publicTenantId = this.config.getOrThrow<string>('landing.publicTenantId');
     const suppliedTenant = request.header('x-tenant-id')?.trim();
     if (suppliedTenant && !this.isUuid(suppliedTenant)) {
       next(new ForbiddenException('Tenant access is not authorized.'));
@@ -80,7 +80,7 @@ async use(request: Request, _response: Response, next: NextFunction): Promise<vo
     // This branch is unreachable outside NODE_ENV=test and therefore cannot weaken production tenant isolation.
     if (nodeEnv === 'test' && suppliedTenant) {
       const bootstrapToken = request.header('x-test-bootstrap-token')?.trim();
-      const expectedBootstrapToken = this.config.get<string>('app.e2eBootstrapToken');
+      const expectedBootstrapToken = this.config.get<string>('landing.e2eBootstrapToken');
       if (bootstrapToken && expectedBootstrapToken && bootstrapToken === expectedBootstrapToken) {
         const testTenant = await this.tenantRepository.findActiveById(suppliedTenant);
         if (!testTenant) {

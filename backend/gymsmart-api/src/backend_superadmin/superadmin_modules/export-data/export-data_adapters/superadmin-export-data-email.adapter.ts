@@ -23,7 +23,7 @@ export class SuperadminExportDataEmailAdapter {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async send(recipient: string, downloadUrl: string, expiresAt: string): Promise<void> {
-    const endpoint = this.config.getOrThrow<string>('app.exportEmailWebhookUrl');
+    const endpoint = this.config.getOrThrow<string>('superadmin.exportEmailWebhookUrl');
     await this.circuitBreaker.execute('export-email', async () => this.post(endpoint, recipient, downloadUrl, expiresAt));
   }
 

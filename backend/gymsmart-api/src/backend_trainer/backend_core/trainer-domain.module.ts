@@ -2,6 +2,7 @@
 // FLOW: AppModule → TrainerDomainModule → isolated Trainer feature modules.
 
 import { Module } from '@nestjs/common';
+import { TrainerCoreModule } from '@/backend_trainer/backend_core/trainer-core.module';
 import { TrainerAttendanceModule } from '@/backend_trainer/backend_trainer_modules/trainer_attendance/trainer-attendance.module';
 import { TrainerDashboardModule } from '@/backend_trainer/backend_trainer_modules/trainer_dashboard/trainer-dashboard.module';
 import { TrainerEarningsModule } from '@/backend_trainer/backend_trainer_modules/trainer_earnings/trainer-earnings.module';
@@ -22,7 +23,7 @@ import { TrainerWorkoutModule } from '@/backend_trainer/backend_trainer_modules/
  * AI Note: Keep this construct isolated from unrelated modules and preserve frozen contracts; never bypass repository/domain boundaries.
  */
 @Module({
-  imports: [TrainerAttendanceModule, TrainerDashboardModule, TrainerEarningsModule, TrainerLibraryModule, TrainerMembersModule, TrainerNotificationsModule, TrainerProfileModule, TrainerProgressTrackingModule, TrainerScheduleModule, TrainerSessionsModule, TrainerWorkoutModule],
+  imports: [TrainerCoreModule, TrainerAttendanceModule, TrainerDashboardModule, TrainerEarningsModule, TrainerLibraryModule, TrainerMembersModule, TrainerNotificationsModule, TrainerProfileModule, TrainerProgressTrackingModule, TrainerScheduleModule, TrainerSessionsModule, TrainerWorkoutModule],
   exports: [TrainerAttendanceModule, TrainerDashboardModule, TrainerEarningsModule, TrainerLibraryModule, TrainerMembersModule, TrainerNotificationsModule, TrainerProfileModule, TrainerProgressTrackingModule, TrainerScheduleModule, TrainerSessionsModule, TrainerWorkoutModule],
 })
 export class TrainerDomainModule {}

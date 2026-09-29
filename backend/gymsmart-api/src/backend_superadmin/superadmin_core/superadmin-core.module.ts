@@ -47,34 +47,15 @@ import { SuperadminCoreCircuitBreakerService } from '@/backend_superadmin/supera
 @Global()
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [configuration], validate: validateEnvironment }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres' as const,
-        url: config.getOrThrow<string>('app.databaseUrl'),
-        autoLoadEntities: true,
-        subscribers: [SuperadminCoreAuditTrailSubscriber],
-        synchronize: false,
-        migrationsRun: false,
-        extra: {
-          max: config.getOrThrow<number>('app.databasePoolMax'),
-          connectionTimeoutMillis: config.getOrThrow<number>('app.databaseAcquireTimeoutMs'),
-          idleTimeoutMillis: config.getOrThrow<number>('app.databaseIdleTimeoutMs'),
-          statement_timeout: config.getOrThrow<number>('app.databaseStatementTimeoutMs'),
-        },
-      }),
-    }),
+
+
     SuperadminCoreI18nModule, SuperadminCoreRealtimeModule,
-    LoggerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({ pinoHttp: { level: config.getOrThrow<string>('app.logLevel') } }),
-    }),
+
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.getOrThrow<string>('app.jwtAccessSecret'),
-        signOptions: { expiresIn: config.getOrThrow<string>('app.jwtAccessTtl') as JwtSignOptions['expiresIn'] },
+        secret: config.getOrThrow<string>('superadmin.jwtAccessSecret'),
+        signOptions: { expiresIn: config.getOrThrow<string>('superadmin.jwtAccessTtl') as JwtSignOptions['expiresIn'] },
       }),
     }),
   ],
