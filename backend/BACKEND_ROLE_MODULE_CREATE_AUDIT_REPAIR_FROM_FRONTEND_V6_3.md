@@ -1081,21 +1081,40 @@ as substitutes for execution progress.
 
 `requirements_total` MUST become frozen once the Stage 1 requirement baseline is frozen.
 
-`work_units_total` MUST become frozen after the initial work-unit plan.
+`work_units_total` MUST NOT change silently after the initial work-unit plan.
 
-If genuinely necessary additional work is discovered later, the AI MUST:
+`work_units_total` MAY change ONLY through an explicit `plan_revision`.
+
+When a plan revision occurs, the AI MUST:
 
 1. increment `plan_revision`;
-2. add the newly required work unit(s);
-3. record the exact reason;
-4. identify the requirement/issue that caused the revision;
-5. show the revision in the next checkpoint dashboard.
+2. add or modify the necessary work unit(s);
+3. update `work_units_total` atomically;
+4. record the exact reason;
+5. identify the requirement, issue, dependency, or verification finding that caused the revision;
+6. record the impact on the remaining work;
+7. expose the revision in the next checkpoint dashboard.
 
-The AI MUST NEVER silently increase or change the scope of the work plan.
+No plan revision may silently remove already-completed work or invalidate previously verified evidence.
+
+The AI MUST NEVER move the goalposts without an explicit persisted plan revision.
 
 A 100% work-unit completion rate MUST NOT by itself change `delivery_state`.
 
-`delivery_state` MAY become a final-ready state only after the existing final verification and packaging gates pass.
+Allowed `delivery_state` values are:
+
+```text
+NOT_READY
+IN_PROGRESS
+BLOCKED
+READY_FOR_FINAL_REAUDIT
+READY_FOR_PACKAGING
+READY_FOR_DELIVERY
+```
+
+The AI MUST NOT invent additional delivery states.
+
+`READY_FOR_DELIVERY` MUST NOT be assigned until all mandatory final verification, checklist, documentation, manifest, and packaging gates have passed.
 
 ## 6.3 Atomic Checkpointing
 
@@ -1165,9 +1184,9 @@ COMPLETION CRITERIA
 
 ### Durable Progress Rule
 
-During a work unit, after every meaningful atomic filesystem or verification boundary, the AI SHOULD persist the current durable state.
+During a work unit, after every meaningful atomic filesystem or verification boundary, the AI MUST persist the current durable state.
 
-The AI MUST NOT wait until the end of a large work unit to record all meaningful progress.
+The AI MUST NOT wait until the end of a large work unit to record meaningful progress.
 
 The user-facing dashboard does not need to be emitted after every micro-step, but the durable state MUST remain recoverable.
 
@@ -1347,6 +1366,25 @@ At completion:
 4. record blockers;
 5. mark COMPLETED;
 6. persist checkpoint.
+
+### Current / Next Work-Unit State Rule
+
+While a work unit is executing:
+
+```text
+current_work_unit = active work unit
+```
+
+When that work unit becomes `COMPLETED` and the checkpoint is successfully persisted:
+
+* remove the completed work unit from the active current position;
+* set `current_work_unit` to the first actionable pending work unit, if one exists;
+* set `next_work_unit` to the next actionable work unit after `current_work_unit`, if one exists;
+* if no actionable work remains, set both to `null`.
+
+`BLOCKED` work units MUST NOT be selected as the next actionable work unit when an alternative unblocked pending work unit exists.
+
+The dashboard MUST never display a stale completed work unit as the current active work unit after a successful checkpoint.
 
 ## 6.6 SAFE STOP + MANDATORY PROGRESS / RECOVERY DASHBOARD
 
@@ -1698,6 +1736,42 @@ The AI MUST NOT claim:
 
 Instead, each dimension MUST be reported independently.
 
+For each progress dimension where a valid denominator exists, the dashboard MUST display both the count and the percentage.
+
+### Work Unit Completion
+
+```text
+completed_work_units / work_units_total × 100
+```
+
+### Requirement Coverage
+
+```text
+requirements_verified_count / requirements_total × 100
+```
+
+### Issue Closure
+
+```text
+issues_completed / issues_discovered × 100
+```
+
+Percentages MUST be calculated from persisted state.
+
+The AI MUST NOT display a single combined "overall completion percentage".
+
+The following remain independent:
+
+```text
+WORK UNIT COMPLETION
+REQUIREMENT COVERAGE
+ISSUE CLOSURE
+VERIFICATION STATUS
+DELIVERY READINESS
+```
+
+A high percentage in one dimension MUST NOT imply completion in another dimension.
+
 ### Initial Execution Plan
 
 Immediately after the requirement baseline and initial work-unit plan are frozen, BEFORE implementation/audit work begins, the AI MUST display:
@@ -1827,6 +1901,37 @@ WHY:
 IMPACT:
 [effect on remaining work]
 ```
+
+### Checkpoint Sequence Rule
+
+The first persisted checkpoint MUST use:
+
+```text
+checkpoint_sequence = 1
+previous_checkpoint_sequence = 0
+```
+
+Every subsequent checkpoint MUST satisfy:
+
+```text
+new checkpoint_sequence
+=
+previous checkpoint_sequence + 1
+```
+
+Checkpoint sequence numbers MUST be strictly monotonically increasing.
+
+A checkpoint sequence number MUST NEVER be reused.
+
+If the persisted sequence is missing, duplicated, decreases unexpectedly, or conflicts with `checkpoint_log.md`, the AI MUST report:
+
+```text
+CHECKPOINT SEQUENCE CONFLICT
+```
+
+and reconcile the execution state before continuing.
+
+A failed or interrupted operation MUST NOT silently consume or reuse a checkpoint sequence number.
 
 ## 6.8 Interrupted Work-Unit Recovery
 
