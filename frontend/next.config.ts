@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/',
-        destination: '/landing',
+        destination: '/frontend_public/landing',
         permanent: true,
       },
     ];
