@@ -2,6 +2,7 @@
 // FLOW: DTO/domain input → service/repository boundary → typed workout contract.
 
 import { CoreTransactionContext } from '@/backend_trainer/backend_core/core_database/core-transaction.context';
+import type { WorkoutLevel, ExerciseDifficulty } from '@/backend_trainer/backend_trainer_modules/trainer_workout/trainer-workout-enums';
 
 export interface TrainerWorkoutCollectionResult<T> {
   workouts?: T[];
@@ -24,7 +25,7 @@ export interface TrainerWorkoutCollectionResult<T> {
 export interface TrainerWorkoutCreatePersistenceInput {
   trainerId: string;
   name: string;
-  level: string;
+  level: WorkoutLevel;
   days: number;
   exercisesCount: number;
   focus: string;
@@ -44,7 +45,7 @@ export interface TrainerWorkoutExerciseUpdatePersistenceInput {
   category?: string;
   muscleGroup?: string[];
   equipment?: string;
-  difficulty?: string;
+  difficulty?: ExerciseDifficulty;
   instructions?: string;
   videoUrl?: string;
   imageUrl?: string;
@@ -55,7 +56,7 @@ export interface TrainerWorkoutExerciseUpdatePersistenceInput {
 
 export interface TrainerWorkoutUpdatePersistenceInput {
   name?: string;
-  level?: string;
+  level?: WorkoutLevel;
   days?: number;
   exercisesCount?: number;
   focus?: string;

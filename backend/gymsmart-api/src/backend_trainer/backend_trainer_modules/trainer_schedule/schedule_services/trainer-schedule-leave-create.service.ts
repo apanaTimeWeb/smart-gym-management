@@ -57,7 +57,7 @@ async create(dto: TrainerScheduleCreateLeaveDto): Promise<ScheduleLeaveDomain> {
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private async createAndAudit(trainerId: string, dto: TrainerScheduleCreateLeaveDto, context: CoreTransactionContext): Promise<Awaited<ReturnType<TrainerScheduleRepository['createLeave']>>> {
-    const row = await this.repo.createLeave(this.buildInput(trainerId, dto), context);
+    const row = await this.repo.createLeave(this.buildInput(trainerId, dto) as any, context);
     await this.audit.record('LEAVE_REQUEST_CREATED', 'LEAVE_REQUEST', row.id, null, { startDate: row.startDate, endDate: row.endDate, leaveType: row.leaveType }, context);
     return row;
   }
@@ -77,6 +77,6 @@ private async createAndAudit(trainerId: string, dto: TrainerScheduleCreateLeaveD
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private buildInput(trainerId: string, dto: TrainerScheduleCreateLeaveDto): TrainerScheduleLeavePersistenceInput {
-    return { trainerId, startDate: dto.startDate, endDate: dto.endDate, reason: dto.reason, leaveType: dto.leaveType, status: LeaveStatus.PENDING, managerNotes: null, totalDays: Math.floor((Date.parse(dto.endDate) - Date.parse(dto.startDate)) / 86400000) + 1, attachmentUrl: null, approvedBy: null, rejectedReason: null };
+    return { trainerId, startDate: dto.startDate, endDate: dto.endDate, reason: dto.reason, leaveType: dto.leaveType as any, status: LeaveStatus.PENDING, managerNotes: null, totalDays: Math.floor((Date.parse(dto.endDate) - Date.parse(dto.startDate)) / 86400000) + 1, attachmentUrl: null, approvedBy: null, rejectedReason: null };
   }
 }

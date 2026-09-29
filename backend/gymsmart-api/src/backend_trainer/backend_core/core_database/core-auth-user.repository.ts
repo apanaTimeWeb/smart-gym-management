@@ -3,7 +3,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { CoreUserEntity } from '@/backend_trainer/backend_core/core_database/core-user.entity';
 
 
@@ -27,7 +27,7 @@ export class CoreAuthUserRepository {
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 async findActiveByEmail(email: string): Promise<CoreUserEntity | null> {
-    return this.repository.findOneBy({ email, isActive: true, deletedAt: null });
+    return this.repository.findOneBy({ email, isActive: true, deletedAt: IsNull() });
   }
 
   /** Finds an active master user by UUID. */
@@ -40,6 +40,6 @@ async findActiveByEmail(email: string): Promise<CoreUserEntity | null> {
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 async findActiveById(id: string): Promise<CoreUserEntity | null> {
-    return this.repository.findOneBy({ id, isActive: true, deletedAt: null });
+    return this.repository.findOneBy({ id, isActive: true, deletedAt: IsNull() });
   }
 }

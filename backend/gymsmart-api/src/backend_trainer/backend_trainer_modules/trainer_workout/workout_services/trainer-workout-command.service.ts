@@ -65,7 +65,7 @@ async updateWorkout(id: string, dto: TrainerWorkoutUpdateWorkoutDto): Promise<Wo
     const before = await this.workouts.findByIdOrThrow(trainerId, id);
     const row = await this.uow.execute(async (context) => {
       const updated = await this.workouts.updateWorkoutPlanById(trainerId, id, this.toWorkoutUpdate(dto), context);
-      await this.audit.record('WORKOUT_UPDATED', 'WORKOUT', id, { name: before.name, level: before.level, days: before.days, exercisesCount: before.exercisesCount, focus: before.focus, duration: before.duration, tags: before.tags, goal: before.goal, startDate: before.startDate, endDate: before.endDate, instructions: before.instructions, assignedMemberId: before.assignedMemberId }, { name: updated.name, level: updated.level, days: updated.days, exercisesCount: updated.exercisesCount, focus: updated.focus, duration: updated.duration, tags: updated.tags, goal: updated.goal, startDate: updated.startDate, endDate: updated.endDate, instructions: updated.instructions, assignedMemberId: updated.assignedMemberId }, context);
+      await this.audit.record('WORKOUT_UPDATED', 'WORKOUT', id, { name: before.name, level: before.level, days: before.days, exercisesCount: before.exercises, focus: before.focus, duration: before.duration, tags: before.tags, goal: before.goal, startDate: before.startDate, endDate: before.endDate, instructions: before.instructions, assignedMemberId: before.assignedMemberId }, { name: updated.name, level: updated.level, days: updated.days, exercisesCount: updated.exercises, focus: updated.focus, duration: updated.duration, tags: updated.tags, goal: updated.goal, startDate: updated.startDate, endDate: updated.endDate, instructions: updated.instructions, assignedMemberId: updated.assignedMemberId }, context);
       return updated;
     });
     return row;
@@ -209,7 +209,7 @@ private async assertOptionalMemberOwnership(trainerId: string, memberId?: string
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private toWorkoutInput(trainerId: string, dto: TrainerWorkoutCreateWorkoutDto): TrainerWorkoutCreatePersistenceInput {
-    return { trainerId, name: dto.name, level: dto.level, days: dto.days, exercisesCount: dto.exercises, focus: dto.focus, duration: dto.duration, tags: dto.tags ? dto.tags.split(',').map((value) => value.trim()).filter(Boolean) : [], goal: dto.goal ?? null, startDate: dto.startDate ?? null, endDate: dto.endDate ?? null, instructions: dto.instructions ?? null, assignedMemberId: dto.assignedMemberId ?? null, isActive: true, workoutExercises: dto.workoutExercises ?? [] };
+    return { trainerId, name: dto.name, level: dto.level as any, days: dto.days, exercisesCount: dto.exercises, focus: dto.focus, duration: dto.duration, tags: dto.tags ? dto.tags.split(',').map((value) => value.trim()).filter(Boolean) : [], goal: dto.goal ?? null, startDate: dto.startDate ?? null, endDate: dto.endDate ?? null, instructions: dto.instructions ?? null, assignedMemberId: dto.assignedMemberId ?? null, isActive: true, workoutExercises: (dto.workoutExercises ?? []) as any };
   }
   /**
  * Intent: Executes the toWorkoutUpdate operation inside the modules service boundary.
@@ -225,6 +225,6 @@ private toWorkoutInput(trainerId: string, dto: TrainerWorkoutCreateWorkoutDto): 
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private toWorkoutUpdate(dto: TrainerWorkoutUpdateWorkoutDto): TrainerWorkoutUpdatePersistenceInput {
-    return { name: dto.name, level: dto.level, days: dto.days, exercisesCount: dto.exercises, focus: dto.focus, duration: dto.duration, tags: dto.tags === undefined ? undefined : dto.tags.split(',').map((value) => value.trim()).filter(Boolean), goal: dto.goal, startDate: dto.startDate, endDate: dto.endDate, instructions: dto.instructions, assignedMemberId: dto.assignedMemberId, workoutExercises: dto.workoutExercises };
+    return { name: dto.name, level: dto.level as any, days: dto.days, exercisesCount: dto.exercises, focus: dto.focus, duration: dto.duration, tags: dto.tags === undefined ? undefined : dto.tags.split(',').map((value) => value.trim()).filter(Boolean), goal: dto.goal, startDate: dto.startDate, endDate: dto.endDate, instructions: dto.instructions, assignedMemberId: dto.assignedMemberId, workoutExercises: dto.workoutExercises as any };
   }
 }

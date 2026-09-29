@@ -7,7 +7,7 @@ import { getLandingDatabasePoolConfig } from '@/backend_landing/landing_core/lan
 import { buildTenantDataSourceOptions } from '@/backend_landing/landing_core/landing_database/landing-tenant-data-source-options';
 import { LandingMasterTenantEntity } from '@/backend_landing/landing_core/landing_tenant/landing-master-tenant.entity';
 
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 /**
  * Intent: Ensure tenant databases are isolated while preventing an unbounded number of PostgreSQL pools.

@@ -37,6 +37,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.80.0",
     "@opentelemetry/sdk-node": "^0.222.0",
     "@prometheus-io/client": "^0.16.1",
+    "@socket.io/redis-adapter": "^8.3.0",
     "argon2": "^0.44.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",

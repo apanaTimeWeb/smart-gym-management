@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { AppModule } from '@/backend_trainer/app.module';
+import { AppModule } from '@/app.module';
 import { CoreConfigService } from '@/backend_trainer/backend_core/core_config/core-config.service';
 import { CoreTenantProvisioningService } from '@/backend_trainer/backend_core/core_database/core-tenant-provisioning.service';
 const TENANT_ID = '00000000-0000-0000-0000-000000000001', TRAINER_ID = '00000000-0000-0000-0000-000000000010';

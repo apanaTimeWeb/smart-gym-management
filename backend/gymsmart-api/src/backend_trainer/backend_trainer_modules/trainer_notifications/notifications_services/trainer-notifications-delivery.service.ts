@@ -52,7 +52,17 @@ async deliver(input: TrainerNotificationsDeliveryInput): Promise<NotificationsNo
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private toRealtimePayload(value: NotificationsNotificationDomain): TrainerNotificationsRealtimePayload {
-    return { ...value, ...(value.metadata ? { metadata: this.toPrimitiveMetadata(value.metadata) } : {}) };
+    return {
+      id: value.id,
+      text: value.message,
+      time: value.createdAt,
+      unread: !value.isRead,
+      type: (value.type as any) ?? undefined,
+      actionUrl: value.actionUrl ?? undefined,
+      relatedEntityId: value.relatedEntityId ?? undefined,
+      relatedEntityType: value.relatedEntityType ?? undefined,
+      ...(value.metadata ? { metadata: this.toPrimitiveMetadata(value.metadata) } : {})
+    };
   }
   /** Restricts arbitrary JSON metadata to the realtime transport's primitive value contract. */
   /**
@@ -69,6 +79,6 @@ private toRealtimePayload(value: NotificationsNotificationDomain): TrainerNotifi
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 private toPrimitiveMetadata(value: Record<string, unknown>): Record<string, string | number | boolean | null> {
-    return Object.fromEntries(Object.entries(value).filter(([, item]) => item === null || typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean'));
+    return Object.fromEntries(Object.entries(value).filter(([, item]) => item === null || typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean')) as Record<string, string | number | boolean | null>;
   }
 }

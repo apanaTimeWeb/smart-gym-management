@@ -65,7 +65,7 @@ protected repositoryFor(): Repository<TEntity> {
    * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
    */
 async findById(id: string): Promise<TEntity | null> {
-    const where: FindOptionsWhere<TEntity> = { id, deletedAt: IsNull() };
+    const where = { id, deletedAt: IsNull() } as any;
     return this.repositoryFor().findOne({ where });
   }
 

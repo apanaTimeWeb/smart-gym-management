@@ -12,15 +12,15 @@ import { AdminCoreRuntimeConfig } from '@/backend_admin/admin_core/admin_core_co
 import { AdminCoreAppConfig } from '@/backend_admin/admin_core/admin_core_config/admin-core-app.config';
 import { AdminCoreMasterEntities } from '@/backend_admin/admin_core/admin_core_config/admin-core-master-entities';
 import { CoreEnvironmentConfig } from '@/backend_auth/auth_core/config/core-environment.config';
-import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
+import { buildValidatedConfig } from '@/backend_landing/landing_core/landing_config/landing-app.config';
 import superadminConfig from '@/backend_superadmin/superadmin_core/superadmin_core_config/superadmin-core-configuration';
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { BackendAdminModule as AdminDomainModule } from '@/backend_admin/backend-admin.module';
 import { AuthModule } from '@/backend_auth/auth_modules/auth/auth.module';
 import { BackendSuperadminModule as SuperadminDomainModule } from '@/backend_superadmin/backend-superadmin.module';
-import { LandingModule } from '@/backend_landing/landing_modules/landing/landing.module';
+import { AppModule as LandingModule } from '@/backend_landing/app.module';
 import { BackendManagerModule as ManagerDomainModule } from '@/backend_manager/backend-manager.module';
-import { TrainerDomainModule } from '@/backend_trainer/core/trainer-domain.module';
+import { TrainerDomainModule } from '@/backend_trainer/backend_core/trainer-domain.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
 import { AdminCoreJwtAuthGuard } from '@/backend_admin/admin_core/admin_core_auth/admin-core-jwt-auth.guard';

@@ -5,11 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { LandingRequestContextService } from '@/backend_landing/landing_core/landing_context/landing-request-context.service';
 
 export interface LandingLoggerOptions {
-  readonly pinoHttp: {
-    readonly level: string;
-    readonly redact: readonly string[];
-    readonly mixin: () => Record<string, string>;
-  };
+  readonly pinoHttp: any;
 }
 
 /**

@@ -18,7 +18,7 @@ import { TrainerWorkoutCreateWorkoutExerciseDto } from '@/backend_trainer/backen
 export class TrainerWorkoutCreateWorkoutDto {
   @ApiProperty({ type: String })
 @IsString() @MinLength(2) name!: string;
-  @ApiProperty({ type: WorkoutLevel })
+  @ApiProperty({ enum: WorkoutLevel, enumName: 'WorkoutLevel' })
 @Transform(({ value }) => TrainerWorkoutEnumMapper.toLevel(value)) @IsEnum(WorkoutLevel) level!: WorkoutLevel;
   @ApiProperty({ type: Number })
 @IsNumber() @Min(1) days!: number;

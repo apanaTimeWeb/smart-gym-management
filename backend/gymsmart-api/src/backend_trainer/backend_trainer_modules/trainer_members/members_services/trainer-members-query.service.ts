@@ -2,7 +2,8 @@
 // FLOW: Members query controller → TrainerMembersQueryService → TrainerMembersRepository → mapper/domain.
 import { Injectable } from '@nestjs/common';
 import { CoreRequestContext } from '@/backend_trainer/backend_core/core_context/core-request-context';
-import { TrainerMembersRepository, type MembersListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_members/members_repositories/trainer-members-repository';
+import { TrainerMembersRepository } from '@/backend_trainer/backend_trainer_modules/trainer_members/members_repositories/trainer-members-repository';
+import type { MembersListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_members/members_types/trainer-members-list-query.type';
 import type { MembersMemberDomain } from '@/backend_trainer/backend_trainer_modules/trainer_members/trainer-members-member.domain';
 import { buildCorePaginationMeta } from '@/backend_trainer/backend_core/core_utils/core-pagination.utils';
 import type { MembersMemberNoteDomain } from '@/backend_trainer/backend_trainer_modules/trainer_members/trainer-members-member-note.domain';

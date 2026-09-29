@@ -33,3 +33,8 @@ export class AttendanceAlreadyClosedException extends CoreDomainBadRequestExcept
  * AI Note: Keep this construct isolated from unrelated modules and preserve frozen contracts; never bypass repository/domain boundaries.
  */
 export class AttendanceInvalidCheckoutTimeException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.RECORD.INVALID_CHECKOUT_TIME');} }
+export class AttendanceActorRequiredException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.ACTOR.REQUIRED');} }
+export class AttendanceMemberForbiddenException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.MEMBER.FORBIDDEN');} }
+export class AttendanceMemberRequiredException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.MEMBER.REQUIRED');} }
+export class AttendanceOpenStaffRecordExistsException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.STAFF.OPEN_RECORD_EXISTS');} }
+export class AttendanceTypeRequiredException extends CoreDomainBadRequestException { constructor(){super('ATTENDANCE.TYPE.REQUIRED');} }

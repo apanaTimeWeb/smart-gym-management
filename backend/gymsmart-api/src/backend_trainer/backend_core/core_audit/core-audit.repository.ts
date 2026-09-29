@@ -31,6 +31,6 @@ export class CoreAuditRepository {
 async insert(input: CoreAuditRecordInput, transaction?: CoreTransactionContext): Promise<void> {
     const repository = transaction?.getRepository(CoreAuditLogEntity) ?? (await this.resolver.getDataSource()).getRepository(CoreAuditLogEntity);
     const entity = repository.create(input);
-    await repository.insert(entity);
+    await repository.insert(entity as any);
   }
 }

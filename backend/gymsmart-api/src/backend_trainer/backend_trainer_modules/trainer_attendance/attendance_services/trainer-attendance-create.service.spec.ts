@@ -10,6 +10,7 @@ describe('TrainerAttendanceCreateService', () => {
       { createRecord: jest.fn(), memberBelongsToTrainer: jest.fn() } as never,
       { record: jest.fn() } as never,
       { execute: jest.fn() } as never,
+      { execute: jest.fn() } as never,
     );
     await CoreRequestContext.run({ requestId: 'r', userId: 'u' }, async () => {
       await expect(service.create({ type: 'MEMBER', date: '2026-09-22' } as never)).rejects.toThrow('DOMAIN.ATTENDANCE.MEMBER_REQUIRED');

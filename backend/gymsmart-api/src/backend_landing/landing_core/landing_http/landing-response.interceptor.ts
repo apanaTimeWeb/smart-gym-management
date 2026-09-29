@@ -59,7 +59,8 @@ intercept(context: ExecutionContext, next: CallHandler<T>): Observable<LandingAp
 private wrap(data: T): LandingApiResponse<unknown> {
     if (this.isEnvelope(data)) return data;
     if (this.isCommandResult(data)) {
-      return { success: true, message: data.message, data: data.data };
+      const result = data as any;
+      return { success: true, message: result.message, data: result.data };
     }
     return { success: true, message: 'Request completed successfully.', data };
   }
@@ -80,5 +81,9 @@ private isEnvelope(value: unknown): value is LandingApiResponse<T> {
       'message' in value &&
       'data' in value
     );
+  }
+
+  private isCommandResult(value: unknown): value is LandingCommandResult<unknown> {
+    return typeof value === 'object' && value !== null && 'message' in value && 'data' in value;
   }
 }

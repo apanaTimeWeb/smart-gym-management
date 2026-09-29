@@ -79,7 +79,7 @@ export class TrainerLibraryDietPlanRepository extends CoreBaseRepository {
    */
   async updateDietPlanById(id: string, input: Partial<TrainerLibraryDietPlanEntity>, context?: CoreTransactionContext): Promise<LibraryDietPlanDomain> {
     const repo = context?.getRepository(TrainerLibraryDietPlanEntity) ?? await this.resolver.getRepository(TrainerLibraryDietPlanEntity);
-    const result = await repo.update({ id, deletedAt: IsNull() }, input);
+    const result = await repo.update({ id, deletedAt: IsNull() }, input as any);
     if (!result.affected) throw new CoreNotFoundException('LIBRARY.DIET_PLAN', id);
     return repo.findOneByOrFail({ id, deletedAt: IsNull() }).then(LibraryDietPlanMapper);
   }
