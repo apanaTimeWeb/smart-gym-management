@@ -1,0 +1,9 @@
+{
+  "landing": {
+    "ERRORS": {
+      "BOOKING_UNAVAILABLE": "We could not save your booking right now. Please try again.",
+      "CONTACT_UNAVAILABLE": "We could not save your message right now. Please try again.",
+      "VALIDATION_FAILED": "Please check the submitted form fields."
+    }
+  }
+}

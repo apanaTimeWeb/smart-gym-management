@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "Landing API v4",
+    "description": "Module-scoped Landing collection. Frontend-required unversioned paths and canonical versioned paths are both included. Every mutation requires Idempotency-Key.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Frontend Contract \u2014 Create Booking",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Member One\",\n  \"email\": \"member@example.org\",\n  \"phone\": \"9876543210\",\n  \"date\": \"2026-10-01T00:00:00.000Z\",\n  \"type\": \"trial\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/landing/bookings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "landing",
+            "bookings"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Frontend Contract \u2014 Create Contact",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Member One\",\n  \"email\": \"member@example.org\",\n  \"message\": \"I would like to know more about memberships.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/landing/contact",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "landing",
+            "contact"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Canonical Versioned \u2014 Create Booking",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Member One\",\n  \"email\": \"member@example.org\",\n  \"phone\": \"9876543210\",\n  \"date\": \"2026-10-01T00:00:00.000Z\",\n  \"type\": \"trial\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/landing/booking",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "landing",
+            "booking"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Canonical Versioned \u2014 Create Contact",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Member One\",\n  \"email\": \"member@example.org\",\n  \"message\": \"I would like to know more about memberships.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/landing/contact",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "landing",
+            "contact"
+          ]
+        }
+      }
+    }
+  ]
+}

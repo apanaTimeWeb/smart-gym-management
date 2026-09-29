@@ -1,47 +1,87 @@
-// RESPONSIBILITY: Composes global infrastructure and the supplied Landing business feature only.
-// FLOW: Bootstrap -> Config -> Logger -> Master DB -> Redis -> Tenant Context -> LandingModule.
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+// RESPONSIBILITY: Composes the supplied Landing role container with its allowed global infrastructure contracts.
+// FLOW: Bootstrap -> validated config -> global logger/master DB -> LandingCoreModule -> LandingLandingModule -> request middleware.
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { LoggerModule } from 'nestjs-pino';
-import { trace } from '@opentelemetry/api';
 
-import { buildValidatedConfig } from '@/backend_landing/landing_core/config/app.config';
-import { buildMasterDataSourceOptions } from '@/backend_landing/landing_core/database/master-data-source-options';
-import { RedisInfrastructureModule } from '@/backend_landing/landing_core/landing_redis/redis-infrastructure.module';
-import { CoreDatabaseModule } from '@/backend_landing/landing_core/database/core-database.module';
-import { CoreContextModule } from '@/backend_landing/landing_core/context/core-context.module';
-import { CoreObservabilityModule } from '@/backend_landing/landing_core/landing_observability/core-observability.module';
-import { CoreHealthModule } from '@/backend_landing/landing_core/health/core-health.module';
-import { CoreSecurityModule } from '@/backend_landing/landing_core/landing_security/core-security.module';
-import { IdempotencyModule } from '@/backend_landing/landing_core/landing_idempotency/idempotency.module';
-import { ResponseInterceptor } from '@/backend_landing/landing_core/http/response.interceptor';
-import { TestTenantController } from '@/backend_landing/landing_core/landing_tenant/test-tenant.controller';
-import { LandingModule } from '@/backend_landing/landing_modules/landing/landing.module';
+import { LandingValidationExceptionFilter } from '@/backend_landing/landing_core/landing_http/landing-validation-exception.filter';
+import { LandingCoreModule } from '@/backend_landing/landing_core/landing-core.module';
+import { LandingResponseInterceptor } from '@/backend_landing/landing_core/landing_http/landing-response.interceptor';
+import { buildValidatedConfig, validateLandingEnvironment } from '@/backend_landing/landing_core/landing_config/landing-app.config';
+import { getLandingDatabasePoolConfig } from '@/backend_landing/landing_core/landing_config/landing-database.config';
+import { buildMasterDataSourceOptions } from '@/backend_landing/landing_core/landing_database/landing-master-data-source-options';
+import { LandingTestTenantController } from '@/backend_landing/landing_core/landing_tenant/landing-test-tenant.controller';
+import { LandingTenantResolutionMiddleware } from '@/backend_landing/landing_core/landing_tenant/landing-tenant-resolution.middleware';
+import { LandingMetricsMiddleware } from '@/backend_landing/landing_core/landing_observability/landing-metrics.middleware';
+import { buildLandingLoggerOptions } from '@/backend_landing/landing_core/landing_observability/landing-logger.config';
+import { LandingCoreContextModule } from '@/backend_landing/landing_core/landing_context/landing-core-context.module';
+import { LandingRequestContextService } from '@/backend_landing/landing_core/landing_context/landing-request-context.service';
+import { LandingRequestContextMiddleware } from '@/backend_landing/landing_core/landing_context/landing-request-context.middleware';
 
-import { RequestContextMiddleware } from '@/backend_landing/landing_core/context/request-context.middleware';
-import { TenantResolutionMiddleware } from '@/backend_landing/landing_core/landing_tenant/tenant-resolution.middleware';
-import { MetricsMiddleware } from '@/backend_landing/landing_core/landing_observability/metrics.middleware';
+import { LandingLandingModule } from '@/backend_landing/landing_modules/landing/landing-landing.module';
 
+/**
+ * Intent: Defines the AppModule class boundary for this supplied Landing backend scope.
+ * Edge Cases: Invalid inputs and infrastructure failures are handled by the owning boundary.
+ * Side Effects: None beyond the behavior implemented by this class.
+ * AI Notes: Preserve the class responsibility and dependency direction documented by the module.
+ */
 @Module({
   imports: [
-    CoreContextModule,
-    CoreDatabaseModule,
-    RedisInfrastructureModule,
-    CoreObservabilityModule,
-    CoreHealthModule,
-    CoreSecurityModule,
-    IdempotencyModule,
-    LandingModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      load: [buildValidatedConfig],
+      validate: validateLandingEnvironment,
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule, LandingCoreContextModule],
+      inject: [ConfigService, LandingRequestContextService],
+      useFactory: buildLandingLoggerOptions,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => buildMasterDataSourceOptions(
+        config.getOrThrow('app.masterDb'),
+        getLandingDatabasePoolConfig(config),
+      ),
+    }),
+    LandingCoreModule,
+    LandingLandingModule,
   ],
-  controllers: [TestTenantController],
-  providers: [ResponseInterceptor],
-  exports: [ResponseInterceptor],
+  controllers: [LandingTestTenantController],
+  providers: [
+    { provide: APP_FILTER, useClass: LandingValidationExceptionFilter },
+    { provide: APP_INTERCEPTOR, useClass: LandingResponseInterceptor },
+    LandingRequestContextMiddleware,
+    LandingTenantResolutionMiddleware,
+    LandingMetricsMiddleware,
+  ],
 })
+/**
+ * Intent: Defines the app module boundary for this supplied Landing backend scope.
+ * Edge Cases: Invalid inputs, unavailable infrastructure, and transaction failures must fail through the owning boundary instead of being silently ignored.
+ * Side Effects: Performs only the persistence, orchestration, transport, or infrastructure effects explicitly owned by this class.
+ * AI Notes: Preserve the class's current responsibility and dependency direction; do not move business logic across feature boundaries.
+ */
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  /**
+   * Intent: Registers request-scoped infrastructure middleware through Nest's dependency-injection lifecycle.
+   * Edge Cases: Middleware order is security-sensitive; request context must exist before tenant resolution and metrics.
+   * Side Effects: Populates AsyncLocalStorage and trusted tenant state used by downstream repositories and idempotency.
+   * AI Notes: Do not instantiate these middleware classes manually in main.ts; doing so bypasses injected dependencies.
+   */
+  configure(consumer: MiddlewareConsumer): void {
     consumer
-      .apply(RequestContextMiddleware, TenantResolutionMiddleware, MetricsMiddleware)
+      .apply(
+        LandingRequestContextMiddleware,
+        LandingTenantResolutionMiddleware,
+        LandingMetricsMiddleware,
+      )
       .forRoutes('*');
   }
 }

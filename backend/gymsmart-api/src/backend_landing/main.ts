@@ -1,73 +1,60 @@
-// RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
-// FLOW: Node â†’ NestFactory â†’ Middleware â†’ Validation/Envelope â†’ Versioned API â†’ HTTP server.
+// RESPONSIBILITY: Boots the supplied NestJS application using validated configuration and global HTTP protections.
+// FLOW: NestFactory -> AppModule -> ConfigService -> security/validation/versioning/OpenAPI -> HTTP server.
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import 'reflect-metadata';
-
-import 'module-alias/register';
-
-import 'dotenv/config';
+import { json, urlencoded } from 'express';
 
 import compression from 'compression';
-
 import helmet from 'helmet';
-
 import { Logger } from 'nestjs-pino';
-
+import 'module-alias/register';
+import 'reflect-metadata';
 import { AppModule } from '@/backend_landing/app.module';
+import '@/backend_landing/landing_core/landing_observability/landing-telemetry-bootstrap';
 
-import '@/backend_landing/landing_core/landing_observability/telemetry-bootstrap';
-
-import { ValidationExceptionFilter } from '@/backend_landing/landing_core/http/validation-exception.filter';
-
-import { RequestContextMiddleware } from '@/backend_landing/landing_core/context/request-context.middleware';
-
-import { TenantResolutionMiddleware } from '@/backend_landing/landing_core/landing_tenant/tenant-resolution.middleware';
-
-import { MetricsMiddleware } from '@/backend_landing/landing_core/landing_observability/metrics.middleware';
-
-import { ResponseInterceptor } from '@/backend_landing/landing_core/http/response.interceptor';
-
-
+/**
+ * Intent: Start the Landing NestJS application with one canonical bootstrap path and validated settings.
+ * Edge Cases: Invalid environment configuration is rejected by ConfigModule before the HTTP server starts.
+ * Side Effects: Opens network listeners, initializes database/Redis infrastructure, and exposes Swagger documentation.
+ * AI Notes: Never register request middleware, global filters, or global interceptors manually here; AppModule owns DI-aware registration.
+ */
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, bodyParser: false });
+  app.use(json({ limit: '1mb' }));
+  app.use(urlencoded({ extended: true, limit: '1mb' }));
+  const config = app.get(ConfigService);
+
   app.enableShutdownHooks();
   app.useLogger(app.get(Logger));
-  app.enableCors({
-    origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map((value) => value.trim()),
-  });
+  app.enableCors({ origin: config.getOrThrow<string[]>('app.corsOrigins') });
   app.use(helmet());
   app.use(compression());
-  app.use(RequestContextMiddleware);
-  app.use(TenantResolutionMiddleware);
-  app.use(MetricsMiddleware);
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
+    transformOptions: { enableImplicitConversion: true },
   }));
-  app.useGlobalFilters(new ValidationExceptionFilter());
-  app.useGlobalInterceptors(app.get(ResponseInterceptor));
-  app.setGlobalPrefix(process.env.API_PREFIX ?? 'api');
-  app.enableVersioning({ type: VersioningType.URI, defaultVersion: process.env.API_VERSION ?? '1' });
+
+  app.setGlobalPrefix(config.getOrThrow<string>('app.apiPrefix'));
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: config.getOrThrow<string>('app.apiVersion'),
+  });
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('GymSmart Backend API')
-    .setDescription('Backend contract generated from the supplied Landing frontend.')
-    .setVersion('1.0.0')
+    .setTitle('GymSmart Landing API')
+    .setDescription('Versioned Landing backend API contract.')
+    .setVersion(config.getOrThrow<string>('app.apiVersion'))
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(Number(process.env.PORT ?? 3000));
+  await app.listen(config.getOrThrow<number>('app.port'));
 }
 
-bootstrap().catch((error: unknown) => {
-  process.stderr.write(`${error instanceof Error ? error.message : String(error)}
-`);
-  process.exitCode = 1;
-});
+bootstrap();

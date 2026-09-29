@@ -1,17 +1,29 @@
-﻿// RESPONSIBILITY: Validates and normalizes the frontend contact request body.
+// RESPONSIBILITY: Validates and normalizes the frontend contact request body.
 // FLOW: HTTP request â†’ LandingCreateContactDto â†’ ContactOrchestrator.
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Transform } from 'class-transformer';
-
 import { IsEmail, IsString, Length } from 'class-validator';
 
-import { LANDING_LIMITS } from '@/backend_landing/landing_modules/landing/landing.constants';
+import { LANDING_LIMITS } from '@/backend_landing/landing_modules/landing/landing-landing.constants';
 
 
+/**
+ * Intent: Represents one public Landing contact request and performs deterministic sanitization/validation before business logic.
+ * Edge Cases: Unexpected types are rejected by validation; strings are trimmed and free-text markup is removed.
+ * Side Effects: No persistence; transforms only affect the request DTO instance.
+ * AI Notes: Keep validation and sanitization here; do not move business persistence rules into the DTO.
+ */
 export class LandingCreateContactDto {
   /** @description Removes HTML tags and surrounding whitespace from visitor text. @param value - Raw client value. @returns Sanitized text. */
-  static sanitizeText(value: unknown): string {
+  
+  /**
+   * Intent: Preserve the single responsibility of landing-create-contact.dto.sanitizeText at its current architecture boundary.
+   * Edge Cases: Invalid inputs and infrastructure failures must propagate to the owning boundary; no silent fallback is permitted.
+   * Side Effects: Only the persistence, transport, infrastructure, or validation effects already defined by this method are allowed.
+   * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
+   */
+static sanitizeText(value: unknown): string {
     return String(value ?? '').replace(/<[^>]*>/g, '').trim();
   }
   @ApiProperty({ example: 'Member One' })
