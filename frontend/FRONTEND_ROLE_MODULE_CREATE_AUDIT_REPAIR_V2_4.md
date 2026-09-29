@@ -5887,6 +5887,15 @@ Minimum structure:
 
   "last_checkpoint_summary": "",
 
+  "last_user_visible_checkpoint": 0,
+
+  "response_delivery": {
+    "status": "NOT_STARTED",
+    "reason": "",
+    "timestamp": "",
+    "last_successfully_delivered_checkpoint": 0
+  },
+
   "last_checkpoint_delta": {
     "completed_work_units": [],
     "fixed_issues": [],
@@ -5929,6 +5938,44 @@ Minimum structure:
   "final_reaudit_complete": false,
   "final_packaging_ready": false
 }
+
+### Response Delivery State Contract
+
+`response_delivery.status` MUST use only one of:
+
+```text
+NOT_STARTED
+DELIVERED
+INTERRUPTED
+PARTIAL
+UNKNOWN
+```
+
+No arbitrary undocumented response-delivery states may be invented.
+
+Meaning:
+
+# NOT_STARTED
+
+No user-facing response has yet been attempted for the relevant execution event.
+
+# DELIVERED
+
+The corresponding user-facing response was successfully delivered.
+
+# INTERRUPTED
+
+Response delivery was interrupted or timed out before successful completion.
+
+# PARTIAL
+
+Only part of the intended user-visible response was delivered.
+
+# UNKNOWN
+
+The system cannot determine whether the complete response was delivered.
+
+Response-delivery state MUST NOT override durable execution state.
 ```
 
 ### State Integrity Rules
@@ -6024,6 +6071,45 @@ A work unit MUST NOT be marked COMPLETED until:
 3. its filesystem state has been checked;
 4. its checkpoint has been persisted successfully.
 
+### Checkpoint-Before-Response Rule
+
+For every checkpoint boundary, the durable execution state MUST be successfully persisted BEFORE the AI generates the user-facing checkpoint/recovery response.
+
+The mandatory order is:
+
+```text
+IMPLEMENT / REPAIR
+        ↓
+VERIFY
+        ↓
+UPDATE progress.json
+        ↓
+UPDATE work_units.json
+        ↓
+APPEND checkpoint_log.md
+        ↓
+UPDATE interruption / recovery state
+        ↓
+ATOMICALLY PERSIST DURABLE STATE
+        ↓
+CONFIRM PERSISTENCE
+        ↓
+GENERATE USER-FACING DASHBOARD / RESPONSE
+```
+
+The AI MUST NEVER depend on successful response generation for checkpoint durability.
+
+If response generation or response delivery fails after durable persistence:
+
+```text
+WORK STATE = PRESERVED
+USER MESSAGE = MAY BE INCOMPLETE
+```
+
+The next execution MUST recover from the durable state, not from the incomplete response.
+
+The AI MUST NEVER postpone a required durable checkpoint until after generating or delivering the user-facing response.
+
 ## 44.3A STOP-SAFE / INTERRUPTION-SAFE EXECUTION
 
 The execution system MUST remain recoverable under:
@@ -6031,6 +6117,7 @@ The execution system MUST remain recoverable under:
 ```text
 MANUAL_USER_STOP
 CONNECTION_INTERRUPTION
+RESPONSE_DELIVERY_INTERRUPTION
 TOOL_FAILURE
 RUNTIME_ERROR
 PROCESS_INTERRUPTION
@@ -6116,6 +6203,524 @@ NOT_VERIFIED
 state requires reconciliation or re-verification.
 
 The AI MUST prefer re-verification over assumption.
+
+### RESPONSE DELIVERY INTERRUPTION HANDLING
+
+### Response Delivery Interruption Rule
+
+A failure in delivering the assistant response to the user MUST NOT be treated as proof that the underlying execution failed.
+
+A response-delivery interruption includes, but is not limited to:
+
+- `Connection interrupted`
+- `Message delivery timed out. Please try again.`
+- `Waiting for the complete answer`
+- response stream interruption;
+- response truncation;
+- client disconnection;
+- transport timeout;
+- UI reconnect;
+- partial assistant response;
+- user-visible response ending before the execution status was fully displayed.
+
+These are RESPONSE DELIVERY events unless durable execution evidence proves that actual execution also failed.
+
+When response delivery is interrupted, the AI MUST:
+
+1. rely on the latest durably persisted execution state;
+2. NOT treat the last user-visible assistant message as authoritative execution state;
+3. NOT repeat or restart already persisted work merely because the previous response was incomplete or not delivered;
+4. NOT assume that the last visible dashboard represents the latest real checkpoint;
+5. reconcile:
+   - `progress.json`;
+   - `work_units.json`;
+   - `checkpoint_log.md`;
+   - actual filesystem state;
+6. identify the latest successful durable checkpoint;
+7. determine whether any work occurred after that checkpoint;
+8. determine whether that additional work is fully verified, partially persisted, or uncertain;
+9. apply the normal interrupted-work-unit recovery rules to any uncertain or incomplete work;
+10. reverify any state that is not durably and confidently verified;
+11. generate the Recovery Dashboard before starting new implementation/repair work after recovery;
+12. explicitly record that the previous response delivery was interrupted;
+13. identify the last successfully persisted checkpoint;
+14. identify the last successfully user-visible checkpoint, if known;
+15. clearly report any difference between those two states;
+16. resume ONLY from the recovered authoritative execution state.
+
+The AI MUST NOT infer execution state from the visible chat transcript.
+
+The authoritative order is:
+
+```text
+DURABLE EXECUTION STATE
+        +
+ACTUAL FILESYSTEM STATE
+        ↓
+STATE RECONCILIATION
+        ↓
+VERIFIED RECOVERY STATE
+        ↓
+NEXT WORK
+```
+
+The following invariant is mandatory:
+
+```text
+EXECUTION STATE
+≠
+LAST USER-VISIBLE RESPONSE
+```
+
+The chat transcript is informational only and MUST NOT be the source of truth for checkpoint recovery.
+
+### Message Delivery Timeout Rule
+
+The exact error:
+
+```text
+Message delivery timed out. Please try again.
+```
+
+MUST be handled as a possible response-delivery interruption.
+
+The AI MUST NOT assume:
+
+```text
+message failed
+    =
+execution failed
+```
+
+and MUST NOT assume:
+
+```text
+user did not receive response
+    =
+work did not happen
+```
+
+Instead:
+
+```text
+MESSAGE DELIVERY TIMEOUT
+        ↓
+READ DURABLE STATE
+        ↓
+CHECK ACTUAL FILESYSTEM
+        ↓
+RECONCILE CURRENT WORK UNIT
+        ↓
+IDENTIFY LAST DURABLE CHECKPOINT
+        ↓
+VERIFY ANY POST-CHECKPOINT CHANGES
+        ↓
+GENERATE RECOVERY DASHBOARD
+        ↓
+RESUME FROM VERIFIED STATE
+```
+
+If the filesystem and durable state prove that a work unit was already completed and checkpointed, that work unit MUST NOT be executed again solely because the previous response was not delivered.
+
+If the previous execution performed work after the last durable checkpoint, that work MUST be classified using the normal recovery classifications and reverified before being considered complete.
+
+### Partial Response Rule
+
+If a previous assistant response was visibly incomplete, truncated, cut off, interrupted, or only partially delivered, the AI MUST NOT infer the missing portion from the partial response.
+
+The AI MUST NOT assume that the last visible line represents the actual execution boundary.
+
+Recovery MUST follow:
+
+```text
+READ DURABLE STATE
+→ VERIFY FILESYSTEM
+→ RECONCILE CURRENT WORK UNIT
+→ IDENTIFY LATEST DURABLE CHECKPOINT
+→ IDENTIFY UNVERIFIED POST-CHECKPOINT WORK
+→ GENERATE RECOVERY DASHBOARD
+→ CONTINUE FROM VERIFIED STATE
+```
+
+The assistant MUST rebuild the user-visible status from authoritative persisted state rather than reconstructing it from the previous partial response.
+
+### No Duplicate Work Rule
+
+A failed, incomplete, truncated, or undelivered progress response MUST NOT by itself cause a completed work unit to be rerun.
+
+The following events MUST NOT independently trigger replay:
+
+- message delivery timeout;
+- connection interruption after checkpoint;
+- partial response;
+- response truncation;
+- client reconnect;
+- UI refresh;
+- user receiving only part of a checkpoint dashboard;
+- user not receiving the final portion of the assistant response.
+
+Replay or re-execution is permitted ONLY when durable-state reconciliation or fresh verification shows that the work is incomplete, invalid, uncertain, missing, or not safely checkpointed.
+
+The decision to replay MUST be based on:
+
+```text
+progress.json
++
+work_units.json
++
+checkpoint_log.md
++
+actual filesystem state
++
+verification evidence
+```
+
+NOT on the completeness of the previous assistant response.
+
+### User Resume Rule
+
+If the user sends:
+
+```text
+continue
+resume
+retry
+try again
+```
+
+after a possible response-delivery interruption, the AI MUST NOT immediately start the next work unit.
+
+The first action MUST be:
+
+```text
+RECOVERY VALIDATION
+        ↓
+STATE RECONCILIATION
+        ↓
+RECOVERY DASHBOARD
+        ↓
+RESUME
+```
+
+The AI MUST first determine whether the previous execution:
+
+1. completed and checkpointed work;
+2. partially completed a work unit;
+3. changed files after the last checkpoint;
+4. encountered a real execution failure;
+5. only failed to deliver the response.
+
+Only then may new implementation/repair work begin.
+
+### Durable vs User-Visible Checkpoint Contract
+
+The system MUST explicitly distinguish:
+
+```text
+LAST DURABLE CHECKPOINT
+```
+
+from:
+
+```text
+LAST SUCCESSFULLY USER-VISIBLE CHECKPOINT
+```
+
+The durable checkpoint is authoritative.
+
+The user-visible checkpoint is informational.
+
+These values MAY differ.
+
+Example:
+
+```text
+LAST DURABLE CHECKPOINT:
+#18
+
+LAST SUCCESSFULLY USER-VISIBLE CHECKPOINT:
+#17
+```
+
+This is a valid state when checkpoint `#18` was successfully persisted but the subsequent response was interrupted before the user received the corresponding dashboard.
+
+The AI MUST NOT roll back durable state merely because the user saw an older checkpoint.
+
+On the next interaction, the AI MUST:
+
+```text
+READ DURABLE STATE
+→ VERIFY FILESYSTEM
+→ RECONCILE
+→ REPORT AUTHORITATIVE STATE
+```
+
+The user-visible checkpoint MUST NEVER be used as the rollback point unless durable-state validation independently proves that the durable checkpoint is invalid.
+
+### Response Delivery Recovery Example
+
+Example:
+
+```text
+Work Unit:
+WU-18
+
+Execution:
+Implementation complete
+Tests complete
+Filesystem verified
+
+Durable checkpoint:
+#18 persisted successfully
+
+User-visible response:
+"Checkpoint #17..."
+then delivery stops
+
+Platform:
+"Message delivery timed out. Please try again."
+```
+
+The correct recovery state is:
+
+```text
+LAST DURABLE CHECKPOINT = #18
+LAST USER-VISIBLE CHECKPOINT = #17
+RESPONSE DELIVERY = INTERRUPTED
+```
+
+The AI MUST NOT rerun WU-18 merely because the user did not receive the #18 dashboard.
+
+On the next interaction:
+
+```text
+READ progress.json
+→ READ work_units.json
+→ READ checkpoint_log.md
+→ VERIFY filesystem
+→ CONFIRM WU-18 state
+→ GENERATE RECOVERY DASHBOARD
+→ CONTINUE FROM NEXT VERIFIED WORK
+```
+
+If WU-18 was durably marked complete and filesystem verification confirms it, WU-18 remains complete.
+
+If WU-18 was only partially persisted, it enters normal recovery and re-verification.
+
+### User-Visible Progress Must Not Define Completion
+
+The absence of a user-visible progress message MUST NOT cause the system to mark durable execution as incomplete.
+
+Conversely, a successfully delivered progress message MUST NOT by itself prove that the underlying work was durably completed.
+
+Completion MUST be determined only by:
+
+```text
+WORK-UNIT STATE
++
+VERIFICATION EVIDENCE
++
+FILESYSTEM STATE
++
+DURABLE CHECKPOINT STATE
+```
+
+User-visible messaging is a reporting layer, not the source of execution truth.
+
+### No Rollback From Response Failure
+
+The AI MUST NOT roll back a successfully persisted checkpoint because:
+
+- the user did not see it;
+- the response timed out;
+- the response stream broke;
+- the UI showed an error;
+- the assistant message was truncated;
+- the client disconnected;
+- the user clicked retry.
+
+Rollback is permitted ONLY when durable-state validation itself proves the checkpoint is invalid or corrupted.
+
+A response-delivery problem is NOT a valid rollback signal by itself.
+
+### Recovery Source-of-Truth Priority
+
+When execution state is uncertain, use this priority order:
+
+1. successfully persisted `progress.json`;
+2. successfully persisted `work_units.json`;
+3. successfully persisted `checkpoint_log.md`;
+4. actual filesystem state;
+5. verification evidence;
+6. user-visible checkpoint/dashboard;
+7. previous assistant response text.
+
+Higher-priority evidence MUST override lower-priority presentation state.
+
+The previous assistant response MUST NEVER override durable execution state.
+
+### Response Failure and Work-Unit Accounting
+
+A response-delivery interruption MUST NOT independently:
+
+- increment a work-unit counter;
+- decrement a work-unit counter;
+- duplicate a work unit;
+- mark a completed work unit pending;
+- mark a pending work unit complete;
+- increase issue counts;
+- decrease issue counts;
+- change requirement totals;
+- change checkpoint sequence;
+- change plan revision.
+
+Such state changes may occur ONLY through normal execution/checkpoint/reconciliation rules.
+
+### Response Failure and Plan Revision
+
+A message-delivery failure MUST NOT increment `plan_revision`.
+
+A response-delivery interruption is a transport/reporting event, not a planning change.
+
+`plan_revision` may change only under the existing explicit work-plan revision rules.
+
+### Response Failure and Work-Unit Total
+
+A message-delivery timeout or incomplete response MUST NOT change:
+
+```text
+work_units_total
+```
+
+The work-unit total may change ONLY through the existing explicit plan-revision mechanism.
+
+Response delivery has no authority to alter execution planning.
+
+### Retry Safety Rule
+
+If the platform or user triggers a retry after:
+
+```text
+Message delivery timed out. Please try again.
+```
+
+the AI MUST interpret retry as:
+
+```text
+RECOVER / RECONCILE FIRST
+```
+
+not:
+
+```text
+START OVER
+```
+
+The AI MUST NOT blindly replay the previous implementation step.
+
+Required sequence:
+
+```text
+RETRY
+→ READ DURABLE STATE
+→ VERIFY FILESYSTEM
+→ RECONCILE
+→ DETERMINE CURRENT WORK UNIT
+→ DETERMINE LAST DURABLE CHECKPOINT
+→ DETERMINE RESPONSE DELIVERY STATE
+→ GENERATE RECOVERY DASHBOARD
+→ CONTINUE
+```
+
+Only verified incomplete work may be resumed.
+
+### Authoritative Execution State Contract
+
+There is exactly ONE authoritative execution state:
+
+```text
+THE LATEST VALID DURABLY PERSISTED + FILESYSTEM-RECONCILED STATE
+```
+
+User-visible messages are representations of that state.
+
+They are NOT the state itself.
+
+Therefore:
+
+```text
+USER SAW OLD STATE
+```
+
+does NOT imply:
+
+```text
+SYSTEM IS IN OLD STATE
+```
+
+and:
+
+```text
+USER SAW COMPLETION MESSAGE
+```
+
+does NOT imply:
+
+```text
+COMPLETION WAS DURABLY PERSISTED
+```
+
+Both conditions require durable-state validation.
+
+### Response-Interrupted Current Work Unit Rule
+
+If response delivery is interrupted while a work unit is active:
+
+- preserve the existing durable `current_work_unit` state;
+- do not automatically mark it complete;
+- do not automatically mark it failed;
+- do not automatically reset it;
+- reconcile its substeps and filesystem state on recovery;
+- identify the first unverified or incomplete substep;
+- resume from that point only after recovery validation.
+
+A response-delivery event alone MUST NOT modify work-unit completion state.
+
+### Response Delivery Does Not Create Checkpoints
+
+A response-delivery interruption MUST NOT create a new checkpoint sequence number unless the normal checkpoint procedure itself was executed and durably persisted.
+
+In particular:
+
+```text
+response delivery failure
+≠
+new checkpoint
+```
+
+and:
+
+```text
+retrying a response
+≠
+new checkpoint
+```
+
+The checkpoint sequence advances only when a valid execution checkpoint is durably persisted under the existing checkpoint rules.
+
+### No Chat-Transcript Dependency
+
+The workflow MUST remain recoverable even if:
+
+- the previous assistant response is missing;
+- the previous response is truncated;
+- the previous response is partially delivered;
+- the client loses the conversation response;
+- the platform reports a message timeout;
+- the user only sees "Please try again";
+- the user reconnects later.
+
+Recovery MUST be possible from durable execution artifacts and the actual filesystem without relying on reconstruction of missing assistant prose.
 
 ## 44.4 Work-Unit Granularity
 
@@ -6433,6 +7038,20 @@ Key Paths:
 - [path]
 - [path]
 
+━━━━━━━━ RESPONSE DELIVERY ━━━━━━━━
+
+Response Delivery:
+[DELIVERED / INTERRUPTED / PARTIAL / UNKNOWN]
+
+Last Durable Checkpoint:
+#[checkpoint_sequence]
+
+Last User-Visible Checkpoint:
+#[checkpoint_sequence]
+
+Durability:
+[PERSISTED / NOT_PERSISTED / UNKNOWN]
+
 ━━━━━━━━ DELIVERY STATE ━━━━━━━━
 
 Execution State:
@@ -6462,8 +7081,37 @@ RECOVERY DASHBOARD
 
 STOP REASON:
 [MANUAL_USER_STOP / CONNECTION_INTERRUPTION /
- TOOL_FAILURE / RUNTIME_ERROR / PROCESS_INTERRUPTION /
- CONTEXT_INTERRUPTION / ENVIRONMENT_FAILURE / OTHER]
+ RESPONSE_DELIVERY_INTERRUPTION / TOOL_FAILURE / RUNTIME_ERROR / PROCESS_INTERRUPTION /
+ CONTEXT_INTERRUPTION / ENVIRONMENT_FAILURE / UNEXPECTED_EXECUTION_TERMINATION / OTHER]
+
+━━━━━━━━ RESPONSE DELIVERY ━━━━━━━━
+
+Response Delivery Status:
+[NOT_STARTED / DELIVERED / INTERRUPTED / PARTIAL / UNKNOWN]
+
+Response Delivery Reason:
+[reason]
+
+Last Durable Checkpoint:
+#[checkpoint_sequence]
+
+Last Successfully User-Visible Checkpoint:
+#[checkpoint_sequence]
+
+Durable State Is Authoritative:
+YES
+
+Previous Response:
+[DELIVERED / INTERRUPTED / PARTIAL / UNKNOWN]
+
+Additional Work After Last User-Visible Checkpoint:
+[YES / NO / UNKNOWN]
+
+Post-Checkpoint Work Verification:
+[VERIFIED / REQUIRES_REVERIFICATION / UNCERTAIN / NONE]
+
+Recovery Action:
+[action]
 
 LAST DURABLE CHECKPOINT:
 #[checkpoint_sequence]
@@ -7122,6 +7770,32 @@ Do NOT include:
 inside the final frontend ZIP unless explicitly required.
 
 Execution state is not application code.
+
+### Final Artifact Response Delivery Rule
+
+Creation of the final ZIP and delivery of its user-facing message are separate operations.
+
+The AI MUST ensure:
+
+1. final verification is complete;
+2. deterministic manifest is complete;
+3. final ZIP is successfully created;
+4. final ZIP existence is confirmed;
+5. final ZIP integrity is confirmed where applicable;
+6. final durable execution state is updated;
+7. final delivery state is persisted;
+8. ONLY THEN is the final user-facing response generated.
+
+If the final response is interrupted or delivery times out AFTER the final ZIP and durable final state were successfully persisted:
+
+```text
+FINAL ARTIFACT = PRESERVED
+RESPONSE DELIVERY = INTERRUPTED
+```
+
+The AI MUST NOT regenerate or modify the final artifact merely because the final response was not delivered.
+
+On retry, the AI MUST first verify the persisted final artifact and final execution state before deciding whether any action is necessary.
 
 ## 45.8 Final Chat Response Size Rule
 
