@@ -64,8 +64,7 @@ private isUuid(value: string): boolean {
    * AI Notes: Preserve the method signature, dependency direction, and existing behavior when making future repairs.
    */
 async use(request: Request, _response: Response, next: NextFunction): Promise<void> {
-    const path = request.path;
-    if (/\/(?:health\/live|health\/ready|health\/deep|metrics|docs)(?:\/|$)/.test(path)) { next(); return; }
+    const path = (request.originalUrl || '').split('?')[0];
     const nodeEnv = this.config.getOrThrow<string>('landing.nodeEnv');
     if (nodeEnv === 'test' && /\/test\/tenants(?:\/|$)/.test(path)) { next(); return; }
 
@@ -92,7 +91,7 @@ async use(request: Request, _response: Response, next: NextFunction): Promise<vo
         return;
       }
     }
-    const isPublicLanding = /\/api(?:\/v\d+)?\/landing\/(?:booking|bookings|contact)$/.test(path);
+    const isPublicLanding = /(?:\/api(?:\/v\d+)?)?\/(landing)\/(?:booking|bookings|contact)$/.test(path);
     const actor = (request as AuthenticatedRequest).user;
 
     if (isPublicLanding) {

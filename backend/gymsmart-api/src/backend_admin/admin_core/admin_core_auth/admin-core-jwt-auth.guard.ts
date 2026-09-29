@@ -43,6 +43,17 @@ export class AdminCoreJwtAuthGuard implements CanActivate {
 
   /** @description Determines whether an endpoint is intentionally unauthenticated. @param path Normalized request path. @returns True for health, metrics, login, or refresh paths. */
   private isPublicPath(path: string): boolean {
-    return path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path === '/ping' || path.startsWith('/auth') || path.startsWith('/superadmin');
+    return (
+      path === '/health/live' ||
+      path === '/health/ready' ||
+      path.startsWith('/metrics') ||
+      path === '/ping' ||
+      path.startsWith('/auth') ||
+      path.startsWith('/superadmin') ||
+      // Landing public routes — protected by LandingTenantResolutionMiddleware instead
+      path === '/landing/booking' ||
+      path === '/landing/bookings' ||
+      path === '/landing/contact'
+    );
   }
 }

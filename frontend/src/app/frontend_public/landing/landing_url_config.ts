@@ -29,8 +29,8 @@ export const PublicLandingUrlConfig = {
     SERVICE_DIET_PLAN: '#service-diet-plan',
   },
   BACKEND_API: {
-    BOOKING: '/api/landing/bookings',
-    CONTACT: '/api/landing/contact',
+    BOOKING: '/landing/bookings',
+    CONTACT: '/landing/contact',
   },
   EXTERNAL: {
     FACEBOOK: 'https://www.facebook.com/',

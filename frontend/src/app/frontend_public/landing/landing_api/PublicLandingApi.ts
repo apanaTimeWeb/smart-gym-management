@@ -43,6 +43,7 @@ export async function createPublicLandingBooking(values: PublicLandingBookingFor
   try {
     const response = await apiFetch<unknown>(PublicLandingUrlConfig.BACKEND_API.BOOKING, {
       method: 'POST',
+      auth: false,
       body: JSON.stringify(payload),
       headers: { 'Idempotency-Key': idempotencyKey },
     });
@@ -60,6 +61,7 @@ export async function sendPublicLandingContactMessage(values: PublicLandingConta
   try {
     const response = await apiFetch<unknown>(PublicLandingUrlConfig.BACKEND_API.CONTACT, {
       method: 'POST',
+      auth: false,
       body: JSON.stringify(payload),
       headers: { 'Idempotency-Key': idempotencyKey },
     });
