@@ -31,7 +31,7 @@ export function buildTenantDataSourceOptions(
     database: databaseName,
     entities: [LandingBookingEntity, LandingContactEntity, LandingAuditLogEntity, LandingIdempotencyRecordEntity],
     migrations: [join(__dirname, 'landing_migrations/landing_migrations_tenant/*.{js,ts}')],
-    synchronize: false,
+    synchronize: true,
     logging: false,
     extra: {
       max: pool.tenantMax,

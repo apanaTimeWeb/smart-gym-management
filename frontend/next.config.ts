@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
         source: '/landing',
         destination: '/frontend_public/landing',
       },
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/:path*',
+      }
     ];
   },
 
