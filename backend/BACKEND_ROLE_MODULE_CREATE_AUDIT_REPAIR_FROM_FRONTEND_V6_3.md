@@ -1116,6 +1116,23 @@ The AI MUST NOT invent additional delivery states.
 
 `READY_FOR_DELIVERY` MUST NOT be assigned until all mandatory final verification, checklist, documentation, manifest, and packaging gates have passed.
 
+Allowed top-level `status` values are:
+
+```text
+IN_PROGRESS
+PAUSED_MANUAL_STOP
+RECOVERY_REQUIRED
+BLOCKED
+COMPLETE
+```
+
+The AI MUST update `status` based on these rules:
+
+* manual stop → `PAUSED_MANUAL_STOP`
+* unexpected interruption detected on resume → `RECOVERY_REQUIRED`
+* continue + recovery reconciled → `IN_PROGRESS`
+* all execution + final gates complete → `COMPLETE`
+
 ## 6.3 Atomic Checkpointing
 
 Checkpoint writes MUST be atomic:
@@ -1365,7 +1382,10 @@ At completion:
 3. record changed files;
 4. record blockers;
 5. mark COMPLETED;
-6. persist checkpoint.
+6. calculate the next actionable work unit;
+7. update `current_work_unit`;
+8. update `next_work_unit`;
+9. atomically persist the complete checkpoint.
 
 ### Current / Next Work-Unit State Rule
 
@@ -1375,7 +1395,7 @@ While a work unit is executing:
 current_work_unit = active work unit
 ```
 
-When that work unit becomes `COMPLETED` and the checkpoint is successfully persisted:
+When a work unit becomes `COMPLETED`, the AI MUST update `current_work_unit` and `next_work_unit` BEFORE the checkpoint containing that completion is persisted.
 
 * remove the completed work unit from the active current position;
 * set `current_work_unit` to the first actionable pending work unit, if one exists;
@@ -1435,6 +1455,8 @@ PLAN REVISION:
 
 WORK UNITS:
 [completed] / [total]
+Completion:
+[percentage]%
 
 Remaining:
 [remaining]
@@ -1452,6 +1474,8 @@ Next Work Unit:
 
 Verified:
 [verified] / [total]
+Coverage:
+[percentage]%
 
 Pending:
 [pending]
@@ -1466,6 +1490,8 @@ Discovered:
 
 Fixed:
 [completed]
+Closure:
+[percentage]%
 
 Remaining:
 [remaining]
@@ -1564,11 +1590,13 @@ Key Paths:
 
 ━━━━━━━━ DELIVERY STATE ━━━━━━━━
 
-Execution:
-[IN_PROGRESS / BLOCKED]
+Execution State:
+[IN_PROGRESS / PAUSED_MANUAL_STOP / RECOVERY_REQUIRED /
+ BLOCKED / COMPLETE]
 
-Final Readiness:
-[NOT_READY / READY_FOR_FINAL_REAUDIT]
+Delivery State:
+[NOT_READY / READY_FOR_FINAL_REAUDIT /
+ READY_FOR_PACKAGING / READY_FOR_DELIVERY]
 
 IMPORTANT:
 Checkpoint progress is NOT final delivery status.
@@ -1737,6 +1765,12 @@ The AI MUST NOT claim:
 Instead, each dimension MUST be reported independently.
 
 For each progress dimension where a valid denominator exists, the dashboard MUST display both the count and the percentage.
+
+If the denominator is zero, the AI MUST display:
+
+```text
+N/A — denominator is zero
+```
 
 ### Work Unit Completion
 
