@@ -717,6 +717,25 @@ Typical exclusions may include:
 
 Every exclusion MUST be recorded.
 
+### 4.1A — CONTEXT-LIMIT CHUNKING STRATEGY
+
+> ⚠️ LARGE REPOSITORY REALITY CHECK
+
+For repositories where the total file count or token size may exceed a single LLM context window, the following chunking strategy MUST be applied:
+
+**Do NOT abandon zero-sampling.** Instead, process the scope in bounded work units (defined in Section 6).
+
+Chunking rules:
+
+1. **Frontend ZIP first:** Extract and freeze the full requirement baseline in Stage 1 before inspecting any backend files.
+2. **Per-module backend chunks:** Process each backend sub-module (e.g., `manager-members/`, `manager-billing/`) as a separate bounded work unit. Complete + checkpoint before moving to the next.
+3. **Never mix frontend reading with backend repair** in the same bounded unit — this causes context pollution and hallucination.
+4. **Checkpoint after every work unit** (see Section 6.1). The checkpoint must record which frontend-derived requirements have been satisfied so far.
+5. **Stage 3 re-audit runs in chunks too** — re-audit each previously completed work unit, not the entire scope in one pass.
+6. **If a work unit cannot fit in context:** split it by file type layer (e.g., controllers + DTOs in one pass, services + repositories in next pass for the same module). Never split a single file across passes.
+
+The zero-sampling requirement is NOT weakened. Every authored artifact MUST still be inspected — chunking only controls *when* each artifact is inspected, not *whether*.
+
 ---
 
 ## 4.2 STRICT ANTI-HALLUCINATION & NO GUESSING
@@ -6017,15 +6036,37 @@ Verify:
 
 ---
 
-## RULE 67 — MUTUAL CONTRACT FREEZE
+## RULE 67 — MUTUAL CONTRACT FREEZE (Rule 67 — Mutual Contract Freeze)
 
-Verify:
+### CONTRACT OWNERSHIP HIERARCHY (CRITICAL)
 
-- frontend contract exists first where mandated;
-- backend frozen contract mirrors it;
+The ownership of the API contract is strictly ordered and MUST NEVER be reversed:
+
+```text
+SOURCE OF TRUTH (CANONICAL OWNER):
+  [moduleName]_features.md  ← lives in the frontend module folder
+  (e.g., admin_members_features.md, manager_billing_features.md)
+
+MIRROR (READ-ONLY COPY):
+  Backend feature documentation
+  (e.g., admin-members-features.md inside backend-admin/admin-members/)
+```
+
+**Rules:**
+- The frontend `[moduleName]_features.md` is the CANONICAL API contract document. It defines what the backend MUST implement.
+- The backend feature documentation is a MIRROR-ONLY copy. It reflects what was agreed — it does NOT define what the frontend must accept.
+- If the two documents conflict, the FRONTEND `_features.md` wins unless a formal contract-break is approved and both sides updated in the same PR.
+- The backend MUST NOT silently update its own feature doc and claim a new contract — this is a contract mutation and a Rule 67 violation.
+- Contract changes MUST flow: Frontend `_features.md` updated first → Backend mirror updated → Both in same commit/PR.
+
+### VERIFY:
+
+- frontend contract (`[moduleName]_features.md`) exists first where mandated;
+- backend frozen contract mirrors it exactly — no silent additions or removals;
 - approval/lock is documented;
-- breaking changes update both sides;
-- no silent contract mutation.
+- breaking changes update BOTH sides in the same PR;
+- no silent contract mutation on either side;
+- ownership hierarchy above is respected (frontend is canonical, backend is mirror-only).
 
 ---
 
@@ -8811,29 +8852,29 @@ Before producing the final verdict, verify:
 [ ] Every dynamically discovered backend architecture rule checked
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
-[ ] Rule 78 — -forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
-[ ] Rule 79 — Language-appropriate RESPONSIBILITY + FLOW annotation in every service, controller, and repository file (TypeScript/JavaScript: `// RESPONSIBILITY:` + `// FLOW:`; Python/Django: `# RESPONSIBILITY:` + `# FLOW:`)
-[ ] Rule 80 — Framework-appropriate method documentation on ALL service methods, repository methods, adapter methods, and utility functions (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings)
-[ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
-[ ] Rule 101 — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
-[ ] Rule 102 — Database tables are prefixed correctly in monolith
-[ ] Rule 103 — Strict mutational idempotency (Idempotency-Key contract) on all state-changing endpoints
-[ ] Rule 104 — WebSockets are horizontally scalable (Redis scaling layer, no in-process state)
-[ ] Rule 105 — Role-based data serialization and field masking applied (NestJS DTOs or Django DRF)
-[ ] Rule 106 — Cache invalidation strategy is strict and consistent
-[ ] Rule 107 — i18n module-co-located locales (no central dictionary); AI translations generated
-[ ] Rule 108 — Feature flags are centralized
-[ ] Rule 109 — Multi-currency amounts stored as integer minor units; currency code stored separately
-[ ] Rule 110 — Tenant data export and offboarding endpoint exists
-[ ] Rule 111 — Persistent WebSockets for notifications; Transactional outbox/relay; offline recovery via REST
-[ ] Rule 112 — E2E and Selenium tests are completely isolated; no cross-module test imports
-[ ] Rule 113 — No AI runtime verification requirement violated
-[ ] Rule 114 — No Mega API; dashboard APIs are decomposed
-[ ] Rule 115 — Exhaustive framework-appropriate documentation for classes/methods/DTOs/controllers/services (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings), database columns (@Column/schema/help_text), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
-[ ] Rule 116 — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
-[ ] Rule 117 — Dedicated RAG namespace (/api/v1/_rag/ or format=rag) and token-optimized markdown representation
-[ ] Rule 118 — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
-[ ] Rule 119 — Immutable ledger rows, journal_id, account_id, direction, positive amount_minor_units, balanced debits/credits, reversal journals; NO direct UPDATEs
+[ ] Rule 78 (Forbidden Patterns File) — `-forbidden.md` present, specific, rule-cited, and consequence-explained (not generic)
+[ ] Rule 79 (Responsibility+Flow Annotation) — Language-appropriate `RESPONSIBILITY:` + `FLOW:` annotation in every service, controller, and repository file (TypeScript/JavaScript: `// RESPONSIBILITY:` + `// FLOW:`; Python/Django: `# RESPONSIBILITY:` + `# FLOW:`)
+[ ] Rule 80 (Method Documentation) — Framework-appropriate method documentation on ALL service methods, repository methods, adapter methods, and utility functions (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings)
+[ ] Rule 82A (Complete Response DTOs) — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
+[ ] Rule 101 (Test Integrity Gate) — Tests prove real behavior (not trivially-passing stubs or mock-only assertions)
+[ ] Rule 102 (Table Prefix Enforcement) — Database tables are prefixed correctly in monolith
+[ ] Rule 103 (Global Idempotency Enforcement) — Strict mutational idempotency (Idempotency-Key contract) on all state-changing endpoints
+[ ] Rule 104 (WebSocket Scalability) — WebSockets are horizontally scalable (Redis scaling layer, no in-process state)
+[ ] Rule 105 (Role-Based Serialization) — Role-based data serialization and field masking applied (NestJS DTOs or Django DRF)
+[ ] Rule 106 (Cache Invalidation Strictness) — Cache invalidation strategy is strict and consistent
+[ ] Rule 107 (i18n Co-location) — i18n module-co-located locales (no central dictionary); AI translations generated
+[ ] Rule 108 (Feature Flags Centralization) — Feature flags are centralized
+[ ] Rule 109 (Minor-Unit Currency) — Multi-currency amounts stored as integer minor units; currency code stored separately
+[ ] Rule 110 (Data Export & Offboarding) — Tenant data export and offboarding endpoint exists
+[ ] Rule 111 (Persistent WebSockets & Outbox) — Persistent WebSockets for notifications; Transactional outbox/relay; offline recovery via REST
+[ ] Rule 112 (E2E & Selenium Isolation) — E2E and Selenium tests are completely isolated; no cross-module test imports
+[ ] Rule 113 (AI Runtime Verification) — No AI runtime verification requirement violated
+[ ] Rule 114 (No Mega API) — No Mega API; dashboard APIs are decomposed
+[ ] Rule 115 (Exhaustive Documentation) — Exhaustive framework-appropriate documentation for classes/methods/DTOs/controllers/services (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings), database columns (@Column/schema/help_text), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
+[ ] Rule 116 (OpenAPI Annotations) — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
+[ ] Rule 117 (RAG Namespace) — Dedicated RAG namespace (`/api/v1/_rag/` or `format=rag`) and token-optimized markdown representation
+[ ] Rule 118 (Immutable Event Log) — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
+[ ] Rule 119 (Immutable Ledger) — Immutable ledger rows, `journal_id`, `account_id`, `direction`, positive `amount_minor_units`, balanced debits/credits, reversal journals; NO direct UPDATEs
 [ ] Tests checked for behavioral integrity
 [ ] Documentation checked against implementation
 [ ] Shared/outside-scope dependencies classified
