@@ -7246,7 +7246,7 @@ The final report MUST identify which framework mapping was actually used.
 
 # 47H. BACKEND FEATURE-DOCUMENT TEMPLATE COMPLETENESS GATE
 
-Rule 19 is not satisfied merely because `[module]-backend-feature.md` exists.
+Rule 19 is not satisfied merely because `[role]-[module]-backend-feature.md` exists.
 
 When a feature document is supplied, verify the COMPLETE mandatory structure:
 

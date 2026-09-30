@@ -874,7 +874,7 @@ Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into AP
 All files (Constants, Schemas, QueryKeys, API, UrlConfig, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
 
-**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `[moduleName]_url_config.ts`, and the `_features.md`, `_forbidden.md`, and `_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
+**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
@@ -1109,16 +1109,16 @@ subscription tier, and drill into per-gym usage metrics. It is the entry point f
 tenant lifecycle operations (create → activate → suspend → delete).
 
 ## Feature Inventory
-| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /frontend_superadmin/superadmin_gyms?page&limit&search&status | ✅ Live |
-| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /frontend_superadmin/superadmin_gyms                         | ✅ Live |
-| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /frontend_superadmin/superadmin_gyms/:id                      | ✅ Live |
-| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /frontend_superadmin/superadmin_gyms/:id/status             | ✅ Live |
+| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /api/v1/superadmin/gyms?page&limit&search&status | ✅ Live |
+| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /api/v1/superadmin/gyms                         | ✅ Live |
+| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |
+| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /api/v1/superadmin/gyms/:id/status             | ✅ Live |
 
 ## Edge Cases / AI Warnings
 - Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
   irreversible until manually restored. Always use useConfirm() with a typed warning message.
 - The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
-  GET /frontend_superadmin/superadmin_plans — do NOT hardcode plan options.
+  GET /api/v1/superadmin/plans — do NOT hardcode plan options.
 - Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
 - The status badge color mapping lives in SuperadminGymsConstants.ts — do not inline colors.
 ```
@@ -1354,7 +1354,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 75: Module-Owned MSW — feature-specific handlers live inside the owning module
 - [ ] Module-Owned Fixtures — feature-specific mock data lives inside the owning module
 - [ ] Global MSW Bootstrap Isolation — global MSW code contains infrastructure only
-- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `_features.md` is complete
+- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `[moduleName]_features.md` is complete
 - [ ] Module Self-Containment — all feature-specific business code, components, hooks, state, API clients, types, schemas, constants, utilities, tests, mocks, fixtures, handlers, and documentation are owned by this feature module
 - [ ] Feature Dependency Firewall — zero imports from sibling business features or role-level business folders
 - [ ] AI Portability — this feature can be provided independently to an AI as the default repair context
@@ -1385,7 +1385,7 @@ Sub-module files with only generic boilerplate content are considered **undocume
 
 ### Documentation Freshness Rule
 
-Every time a component is added, an API endpoint changes, or a new user flow is implemented, the `_features.md` for that module MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
+Every time a component is added, an API endpoint changes, or a new user flow is implemented, the `[moduleName]_features.md` for that module MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
 
 14. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
 Never hardcode success or error messages (e.g., "User created successfully" or "Invalid credentials") in the frontend components, hooks, or toast notifications. The frontend must strictly display the `message` string provided by the backend's standardized JSON response envelope.
@@ -2237,7 +2237,7 @@ The MSW response MUST contain all fields that the UI actually consumes.
 
 ### Required Data Coverage Matrix
 
-Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `_features.md` — see Rule 13):
+Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `[moduleName]_features.md` — see Rule 13):
 
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
 |---|---|---|---|---|---|
@@ -2370,7 +2370,7 @@ When the real backend endpoint becomes available:
 - The UI MUST continue consuming the same API contract.
 - The feature API client MUST remain the same unless the backend contract legitimately changes.
 - Components MUST NOT require a rewrite merely because mocked responses are replaced by real responses.
-- Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `_features.md` documentation, and tests in the same change.
+- Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `[moduleName]_features.md` documentation, and tests in the same change.
 
 Backend integration does NOT require moving module-owned mocks or handlers into a global mock folder.
 
@@ -2389,7 +2389,7 @@ Module-owned handlers and fixtures remain available for development, tests, erro
 ### AI Verification Requirement
 
 Before declaring a frontend feature complete, the AI MUST verify:
-1. Every displayed data field has a documented source (in `## UI Data Requirements` of `_features.md`).
+1. Every displayed data field has a documented source (in `## UI Data Requirements` of `[moduleName]_features.md`).
 2. Every source exists in the response type/schema.
 3. Every required response field is returned by the MSW handler.
 4. Every MSW field is consumed correctly by the UI where applicable.
@@ -2616,10 +2616,10 @@ scripts/
 ### `[moduleName]_locales/[moduleName]_en.json` (Source of Truth per Module)
 ```json
 {
-  "MEMBERS": {
-    "PAGE_TITLE": "Members",
-    "ADD_MEMBER": "Add Member",
-    "EMPTY_STATE": "No members found. Add your first member to get started."
+  "SUPERADMIN_GYMS": {
+    "PAGE_TITLE": "Gyms",
+    "ADD_GYM": "Add Gym",
+    "EMPTY_STATE": "No gyms found. Add your first gym to get started."
   }
 }
 ```
@@ -2868,6 +2868,6 @@ If this is not possible, the module FAILS the portability and architecture revie
 * **Why:** This makes the entire UI programmatically introspectable for autonomous AI testing and Web-Browsing Agents.
 
 ### Rule 23 — Component-Level AI Docstrings (JSDoc)
-* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
+* **The Problem:** The `[moduleName]_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
 * **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`

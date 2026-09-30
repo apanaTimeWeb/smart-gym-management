@@ -1150,7 +1150,7 @@ For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feat
 * **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
 
 ## 48. CQRS Lite (Query vs Command Controllers)
-* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
+* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[role]-[module]-query.controller.ts` and `[role]-[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
 
 ## 49. Explicit Module Dependency Graph (Including Runtime Events)
 * **The Rule:** Every module must have a `[role]-[module]-dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
@@ -2311,7 +2311,7 @@ Use the project's centralized middleware/decorator/request enforcement mechanism
 - Atomic Concurrency Lock: perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
 - completion recorded only after DB commit (storing the final response payload)
 - fail closed if the idempotency store is unavailable (return `503 Service Unavailable`)
-- Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
+- Idempotency must be enforced at the Command Controller level (e.g. `[role]-[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
 
 ## Rule 104 — WebSockets & Real-Time Communication
