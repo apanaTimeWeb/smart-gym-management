@@ -551,7 +551,8 @@ To eliminate AI naming hallucinations, strictly follow this pattern:
 
 
 - **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `manager_shared/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `ManagerShared/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
-- **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`, `AdminMembersContext.tsx`, `AdminMembersProvider.tsx`)
+- **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`)
+- **Business Logic Files (Constants, Schemas, QueryKeys, API, Types):** PascalCase with Role+Module (e.g., `AdminMembersConstants.ts`, `AdminMembersSchema.ts`, `AdminMembersQueryKeys.ts`, `AdminMembersCrudApi.ts`, `AdminMembersTypes.ts`).
 - **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
 - **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
 - **Special Config/Doc Files:** snake_case with role and module (e.g., `admin_members_url_config.ts`, `admin_members_features.md`, `admin_members_forbidden.md`, `admin_members_theme_contract.md`)
@@ -563,7 +564,7 @@ Every child folder MUST inherit Role + Module identity.
 - ❌ **BAD:** `table/`, `filters/`, `profile/`, `modal/`
 *Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_header_constants.ts` inside the `/header` folder) or a module-level `[module_name]_shared_constants.ts` for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingHeaderConstants.ts` inside the `/header` folder) or a module-level `[Module]SharedConstants.ts` for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
 ### Constants Organization (No Barrel Files)
@@ -670,7 +671,8 @@ Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentN
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
 
 ### Main Component Ownership Rule
-Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers.
+Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
+*(Note: `page.tsx` in the root folder is just a minimal Next.js wrapper that imports and renders `[Module]Main.tsx`).*
 - **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
 *Why:* Prevents the AI from creating a monolithic "God Component".
 
@@ -1703,8 +1705,9 @@ Every component file must have a single-line comment at the very top declaring i
 Responsibility comments MUST describe the component's rendering/orchestration responsibility and MUST NOT imply that business/API logic belongs inside the component.
 
 39. **Explicit Data Flow Direction Comments**:
-In every Context file and custom hook, document the data flow direction at the top:
-`// DATA FLOW: API → useMembersTable.ts → MembersContext → MembersTable`
+In every Zustand store and custom hook, document the data flow direction at the top:
+`// DATA FLOW: API → useMembersTable.ts → useMembersStore → MembersTable`
+*(Note: As per Rule 5, React Context MUST NOT be used for feature data or state. Use Zustand).*
 
 40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
 Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module.
@@ -2852,7 +2855,7 @@ Forbidden: having the same responsibility duplicated in multiple places.
 ### Entry Point Discovery Rule
 An AI MUST be able to discover the module architecture within 60 seconds by reading exactly two files:
 1. `admin_members_features.md`
-2. `AdminMembersMain.tsx`
+2. `admin_members_components/AdminMembersMain.tsx`
 If this is not possible, the module FAILS the portability and architecture review.
 
 
