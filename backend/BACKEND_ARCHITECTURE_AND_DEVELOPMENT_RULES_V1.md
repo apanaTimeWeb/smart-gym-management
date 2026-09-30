@@ -659,10 +659,10 @@ AdminBillingOrchestratorService to guarantee atomic DB + audit log writes.
 Never call AdminBillingWalletRepository directly from outside this module.
 
 ## Feature Inventory
-| Endpoint | Controller | Description | DTO |
-|---|---|---|---|
-| POST /billing/wallet/topup | AdminBillingWalletCommandController | Top up member wallet | AdminBillingWalletTopupDto |
-| POST /billing/plans/purchase | AdminBillingPlanCommandController | Purchase a plan | AdminBillingPlanPurchaseDto |
+| Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
+|---|---|---|---|---|---|
+| `AdminBillingWalletCommandController` | POST | `/billing/wallet/topup` | Top up member wallet with real currency | `AdminBillingWalletTopupDto` | `AdminBillingWalletTopupResponseDto` |
+| `AdminBillingPlanCommandController` | POST | `/billing/plans/purchase` | Purchase a membership plan | `AdminBillingPlanPurchaseDto` | `AdminBillingPlanPurchaseResponseDto` |
 
 ## Edge Cases / AI Warnings
 - Wallet deductions use pessimistic locking (Rule 41) — never remove the
@@ -1042,8 +1042,8 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
         └── admin-attendance/
     ```
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend, but translated to kebab-case. Renaming a feature's core semantic meaning during backend development is strictly forbidden.
-* **Casing Translation Rule (CRITICAL):** The semantic name stays identical across frontend/backend; ONLY the casing style changes per language/framework convention. Both the frontend and backend use `kebab-case` for folders (e.g., frontend `admin-billing`, backend `backend-admin/admin-modules/admin-billing`). This enforces a hard visual boundary between stacks through the mandatory `backend-` namespace prefix (Rule 0D) rather than a casing difference.
-* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager-billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named (modulo dashes/underscores).
+* **Casing Translation Rule (CRITICAL):** The semantic name stays identical across frontend/backend; ONLY the casing style changes per language/framework convention. The frontend uses `snake_case` and the backend uses `kebab-case` for folders (e.g., frontend `admin_billing`, backend `backend-admin/admin-modules/admin-billing`). This enforces a hard visual boundary between stacks through the mandatory `backend-` namespace prefix (Rule 0D) and the strict casing difference.
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `manager_billing/` → backend folder `manager-billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named (modulo dashes/underscores).
 * **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `backend-superadmin` domain MUST have exactly 5 matching modules.
 
 #### Top-Level Role Structure (MANDATORY — See also Rule 2)
