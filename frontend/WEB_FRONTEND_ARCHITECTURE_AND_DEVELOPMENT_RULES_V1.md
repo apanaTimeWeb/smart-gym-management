@@ -18,6 +18,11 @@ The component size limit alone is insufficient. AI agents also lose context in l
 - Zod Schema / type file (`*.types.ts`, `*.schema.ts`): maximum 200 lines
 - API service file (`*.api.ts`): maximum 200 lines
 
+### Child Component Size Rule
+If a component contains more than **3 major visual sections**, it MUST be split.
+- ✅ **GOOD:** `AdminMembersPage` split into `Header`, `Filters`, `KPIs`, `Table` (separate components).
+- ❌ **BAD:** A 250-line monster file containing the entire page layout.
+
 If a file exceeds its limit:
 - Split by feature responsibility, not randomly by line count.
 - Do not create generic dumping folders such as `helpers/`, `common/`, or `misc/`.
@@ -433,9 +438,30 @@ Rename all components, files, and folders to be extremely descriptive based on e
 - **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`).
 - **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface ManagerInquiriesTableProps`).
 
+### Canonical File Naming Matrix
+
+To eliminate AI naming hallucinations, strictly follow this pattern:
+
+- **Folders:** snake_case_with_ role and module (e.g., `admin_members_components/`, `admin_members_hooks/`, `admin_members_store/`)
+- **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`, `AdminMembersContext.tsx`, `AdminMembersProvider.tsx`)
+- **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
+- **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
+- **Special Config/Doc Files:** snake_case with role and module (e.g., `admin_members_url_config.ts`, `admin_members_features.md`, `admin_members_forbidden.md`, `admin_members_theme_contract.md`)
+
+### Child Folder Naming Contract
+
+Every child folder MUST inherit Role + Module identity.
+- ✅ **GOOD:** `AdminMembersTable/`, `AdminMembersFilters/`, `AdminMembersProfile/`
+- ❌ **BAD:** `Table/`, `Filters/`, `Profile/`, `Modal/`
+*Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
 Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
+
+### One Constants Entry Rule
+Every feature module MUST contain one primary constant registry:
+`AdminMembersConstants.ts`
+Feature-local constants may exist inside subfolders, but the primary module-wide constants MUST live in the root entry file so the AI search location is fixed.
 
 ### 3B.1 Static UI Configuration vs Server/API Data
 
@@ -510,14 +536,33 @@ Because the components will be heavily micro-modularized, avoid creating a massi
 - **Zustand (module-scoped store):** For UI-only shared state within a module (active filters, selected rows, wizard progress, table column preferences, local draft state). Do NOT store API response data or loading states here — see Rule 15C for the canonical Server State vs Client State decision matrix (TanStack Query is the single source of truth for all server/async data).
 - **Local `useState`:** Only for state that is strictly private to a single component and never needs to be shared.
 
+### One Store Rule
+Every feature module MUST contain a maximum of **one primary Zustand store**.
+Example: `useAdminMembersStore.ts`
+Additional stores (like `useMembersTableStore.ts`, `useMembersModalStore.ts`) are completely forbidden unless the module documentation explicitly explains why. State fragmentation causes massive AI confusion and synchronization bugs.
+
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
 Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
 Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentName].ts`). The actual `.tsx` file should act purely as a "View" layer that consumes the hook.
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
 
+### Main Component Ownership Rule
+Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component orchestrates the layout, assembles child components, and manages route-level providers.
+- **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
+*Why:* Prevents the AI from creating a monolithic "God Component".
+
+### Dependency Direction Rule
+The dependency flow within a module MUST be strictly unidirectional to prevent architectural loops:
+- ✅ **Allowed:** `Page -> Main -> Hooks -> API` OR `Page -> Main -> Store`
+- ❌ **Forbidden:** `API -> Component`, `Store -> Component`, `Component -> API` (bypassing the hook), `Schema -> Component`
+
 7. **Interface & Type Isolation (The Prop Blueprint)**: 
 Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
 - **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
+
+### One Schema Entry Rule
+Every feature module MUST contain exactly **one root schema file** (e.g., `AdminMembersSchema.ts`).
+Child schemas may exist only as implementation details within subfolders, but the root file MUST be the singular entry point to prevent AI from losing track of validations.
 
 ### TypeScript Strictness and Runtime Contract Validation
 
@@ -618,6 +663,11 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
+
+### One API Entry Rule
+Every feature module MUST contain exactly **one API entry file** (e.g., `AdminMembersApi.ts`). 
+Additional API files (like `AdminMembersCrudApi.ts`, `AdminMembersSearchApi.ts`) are forbidden unless they represent a genuinely different external service. This ensures the AI always has a single discoverable entry point for all API interactions.
+
 
 12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
@@ -2568,6 +2618,30 @@ The WEB application MUST implement a hybrid notification architecture:
    Canonical project pattern: `GET /api/v1/{role}/notifications`
 
    Do not depend exclusively on WebSocket delivery for critical notifications.
+
+### Explicit Repair Map Rule
+Every feature module MUST contain a mandatory file: `[moduleName]_repair_map.md` (e.g., `admin_members_repair_map.md`).
+This file acts as an AI repair GPS by explicitly mapping bug types to exact files:
+- Search Bug -> `AdminMembersTable.tsx`
+- API Bug -> `AdminMembersApi.ts`
+- Validation Bug -> `AdminMembersSchema.ts`
+- State Bug -> `useAdminMembersStore.ts`
+- Routing Bug -> `admin_members_url_config.ts`
+
+### No Duplicate Responsibility Rule
+Each responsibility MUST have exactly one owner to kill hallucination vectors:
+- Search State -> Store
+- Validation -> Schema
+- API Calls -> API File
+- Formatting -> Utility File
+Forbidden: having the same responsibility duplicated in multiple places.
+
+### Entry Point Discovery Rule
+An AI MUST be able to discover the module architecture within 60 seconds by reading exactly three files:
+1. `admin_members_features.md`
+2. `AdminMembersMain.tsx`
+3. `admin_members_repair_map.md`
+If this is not possible, the module FAILS the portability and architecture review.
 
 
 ## AI Introspection & Agentic Compatibility Rules
