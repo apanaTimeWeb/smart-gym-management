@@ -165,12 +165,12 @@ Do not create monolithic Services, Controllers, or Views. A generic `UserService
 Break down large files into micro-features. Every file must handle only one specific business flow.
 - ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
 - ✅ **GOOD:** 
-  - `admin-member-registration.service.ts`
-  - `admin-member-billing.service.ts`
-  - `admin-member-attendance.service.ts`
-  - `admin-member-notifications.service.ts`
+  - `admin-members-registration.service.ts`
+  - `admin-members-billing.service.ts`
+  - `admin-members-attendance.service.ts`
+  - `admin-members-notifications.service.ts`
 
-**IMPORTANT FOLDER NAMING (CRITICAL ENFORCEMENT):** ALL folders in the backend MUST use `kebab-case` (e.g., `manager-members-services/`, `admin-billing-dto/`). You are STRICTLY FORBIDDEN from using PascalCase, camelCase, or snake_case for folder names (e.g., NEVER use `ManagerMembersServices/` or `admin_billing`). Always group these micro-files logically into cohesive sub-folders within the module using this casing.
+**IMPORTANT FOLDER NAMING (CRITICAL ENFORCEMENT):** ALL folders in the backend MUST use `kebab-case` (e.g., `members-services/`, `billing-dto/`). You are STRICTLY FORBIDDEN from using PascalCase, camelCase, or snake_case for folder names (e.g., NEVER use `ManagerMembersServices/` or `admin_billing`). Always group these micro-files logically into cohesive sub-folders within the module using this casing.
 
 ### Sub-Folder Naming Standard (MANDATORY — No Exceptions)
 
@@ -266,7 +266,7 @@ The `{role}-core/` folder is strictly a **framework infrastructure container**. 
 - Any business logic service (e.g., `admin-member-suspension.service.ts`)
 - Any feature-specific helper (e.g., `admin-billing-helper.ts`)
 - Any repository (e.g., `admin-auth.repository.ts`)
-- Any DTO (e.g., `admin-create-member.dto.ts`)
+- Any DTO (e.g., `admin-members-create.dto.ts`)
 - Any entity or domain model
 
 ```text
@@ -381,7 +381,7 @@ Optional:
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
 Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
-- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-create-member.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
+- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-members-create.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
 AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
@@ -703,10 +703,10 @@ should an AI NEVER do in this module?]
 |---|---|
 | [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
 | [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
-| [role]-[module]-services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| [role]-[module]-repositories/[role]-[module]-<concern>.repository.ts | [REQUIRED: what queries it owns] |
-| [role]-[module]-dtos/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
-| [role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
+| {module}-services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
+| {module}-repositories/[role]-[module]-<concern>.repository.ts | [REQUIRED: what queries it owns] |
+| {module}-dto/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
+| {module}-repositories/[role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
 
 ## Feature Inventory
 [REQUIRED: One row per endpoint. Purpose must be a full sentence, not "Handles X".]
@@ -1621,7 +1621,7 @@ If a backend implementation cannot provide a field currently required by the fro
 ## 84. No Barrel File / Re-Export Index Rule & Facade Naming
 * **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This restriction exists to preserve AI context isolation and prevent dependency expansion. Always import directly from the explicitly named source file.
   - ❌ **BAD:** `import { MemberService } from '@/backend-manager/manager-modules/manager-members'` (where `members/index.ts` re-exports everything)
-  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend-manager/manager-modules/manager-members/manager-members-services/manager-members-registration.service'`
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend-manager/manager-modules/manager-members/members-services/manager-members-registration.service'`
 * **Facade / Re-export Naming:** If a module absolutely requires a facade or re-export file (e.g., to export multiple schemas or mappers from a sub-folder into one file), the file name MUST explicitly end with `-export.ts` to immediately signal its purpose to AI and developers.
   - Example: `manager-attendance-schema-export.ts` (placed inside `attendance-schemas/`).
 * **Why barrel files are dangerous in AI-driven codebases:**

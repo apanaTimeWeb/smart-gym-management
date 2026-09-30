@@ -7227,7 +7227,7 @@ serializers.py for validation/data formatting
 > - `admin.py` (Django admin registration)
 > - `migrations/` (Django migration folder — always unprefixed by framework convention)
 >
-> **What is NOT exempt:** Sub-folders created inside a Django app module (e.g., `services/`, `repositories/`, `utils/`) MUST still be prefixed with the module name (e.g., `manager-members-services/`). Only the framework-mandated filenames listed above are exempt — do NOT treat this as a blanket exception for arbitrary generic folders.
+> **What is NOT exempt:** Sub-folders created inside a Django app module (e.g., `services/`, `repositories/`, `utils/`) MUST still be prefixed with the module name (e.g., `members-services/`). Only the framework-mandated filenames listed above are exempt — do NOT treat this as a blanket exception for arbitrary generic folders.
 
 
 
