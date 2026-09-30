@@ -136,7 +136,7 @@ This hierarchy applies to EVERY frontend project regardless of business domain.
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders. 
 - **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
 - **Primary Examples:** `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_superadmin/`.
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager-billing/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/app/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager_billing/`, there is zero ambiguity for the AI or the human developer.
 
 Examples of ROLE CONTAINERS:
 
@@ -469,7 +469,7 @@ src/app/frontend_admin/admin_billing/admin_billing_utils/
 and
 
 ```text
-src/app/frontend_manager/manager-billing/manager_billing_utils/
+src/app/frontend_manager/manager_billing/manager_billing_utils/
 ```
 
 may contain similar code.
@@ -530,14 +530,14 @@ AI Repair Boundary
 The term "module" in all isolation, portability, dependency, and AI repair rules MUST refer to the FEATURE MODULE unless a rule explicitly states otherwise.
 
 2. **Total Role Isolation (No Shared Business Components)**:
-To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_trainer/`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `src/app/frontend_admin/admin_members/`, `ManagerMembersTable.tsx` inside `src/app/frontend_manager/manager-members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_trainer/`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `src/app/frontend_admin/admin_members/`, `ManagerMembersTable.tsx` inside `src/app/frontend_manager/manager_members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
 
 3. **Hyper-Descriptive Naming & Mandatory Role + Module Prefix (CRITICAL)**: 
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
 - **Role + Module Name Prefixing (CRITICAL):** EVERY single file name (not just the containing folder) MUST begin with the parent Role name (e.g., `Manager`, `Admin`) followed by the Module name as a prefix. This applies to EVERYTHING: components, hooks, api services, stores, schemas, constants, and utilities. 
   - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
-  - ✅ **GOOD:** `useManagerMembers.ts`, `manager-members.api.ts`, `manager-members.store.ts`, `ManagerMembersTable.tsx`
-  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin-members.api.ts` and `manager-members.api.ts`.
+  - ✅ **GOOD:** `useManagerMembers.ts`, `manager_members_api.ts`, `manager_members_store.ts`, `ManagerMembersTable.tsx`
+  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin_members_api.ts` and `manager_members_api.ts`.
 - **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `[moduleName]_locales/[moduleName]_{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
 - Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
 - **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
@@ -788,7 +788,7 @@ Every feature module MUST contain a dedicated registry for TanStack query keys:
 `AdminMembersQueryKeys.ts`
 ```typescript
 export const ADMIN_MEMBERS_QUERY_KEYS = {
-  all: ['admin-members'] as const,
+  all: ['admin_members'] as const,
   lists: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'list'] as const,
   list: (filters: Record<string, unknown>) => [...ADMIN_MEMBERS_QUERY_KEYS.lists(), filters] as const,
   details: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'detail'] as const,
@@ -908,7 +908,7 @@ Billing invoice filter is broken
 
 Preferred AI context:
 
-/billing/
+/admin_billing/
 ```
 
 NOT:
@@ -1249,12 +1249,12 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: b
 
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
-| `fetchMemberById(id)` | GET | `/frontend_manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/frontend_manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/frontend_manager/members/:id` | — | `null` |
-| `renewMembership(id, dto)` | POST | `/frontend_manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
+| `fetchMembers(params)` | GET | `/api/v1/manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
+| `fetchMemberById(id)` | GET | `/api/v1/manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/api/v1/manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/manager/members/:id` | — | `null` |
+| `renewMembership(id, dto)` | POST | `/api/v1/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
 
 ## UI Data Requirements
 [REQUIRED: List every table column, KPI, chart series, filter, dropdown, detail field,
@@ -1264,10 +1264,10 @@ Generic entries like "All fields" are forbidden — name every column and field 
 
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
 |---|---|---|---|---|---|
-| Table: Member Name | `name` | `GET /frontend_manager/members` | `data.items[].name` | No | Yes |
-| Table: Status Badge | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
-| KPI: Total Members | `totalCount` | `GET /frontend_manager/members/stats` | `data.totalCount` | No | Yes |
-| Filter: Status | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
+| Table: Member Name | `name` | `GET /api/v1/manager/members` | `data.items[].name` | No | Yes |
+| Table: Status Badge | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
+| KPI: Total Members | `totalCount` | `GET /api/v1/manager/members/stats` | `data.totalCount` | No | Yes |
+| Filter: Status | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
 
 *(Replace the example rows above with the real field names, endpoint names, and response
 paths for this specific module. Every rendered UI element must have a row here.)*
@@ -1432,10 +1432,10 @@ Co-location rule (Unit & Component Tests ONLY):
 - ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
 
 **Complete Isolation for E2E Testing (The AI Zip Principle):**
-1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/members/members.spec.ts`).
-2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `billing` test need a login helper, duplicate it directly into BOTH the `members` and `billing` test folders.
-   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
-3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/billing/`.
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
+2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `admin_members` test and `admin_billing` test need a login helper, duplicate it directly into BOTH the `admin_members` and `admin_billing` test folders.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
+3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/manager_billing/`.
 
 Minimum expectations:
 - Utilities: 90% branch coverage
@@ -2069,7 +2069,7 @@ Example:
 
 src/app/
 └── frontend_manager/
-    └── manager-members/
+    └── manager_members/
         ├── manager_members_components/
         ├── manager_members_hooks/
         ├── manager_members_api/
@@ -2556,7 +2556,7 @@ EVERY frontend API client function that performs a mutation MUST require an `ide
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MEMBER_URLS } from '@/app/frontend_manager/manager-members/manager_members_url_config';
+import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
 export const updateMemberProfile = async (
   id: string,

@@ -867,8 +867,8 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 27. API Testing Strategy (Three-Tier: Jest Unit + API E2E + Selenium UI)
 * **The Rule:** This project uses a strict three-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
-  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend-e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend-e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend-e2e/backend-superadmin-e2e/superadmin-dashboard/test_superadmin-dashboard-api.py`). Never dump test files into a flat `backend-e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
-  3. **Python Selenium (UI Behavior Tests):** Lives in a top-level `backend-selenium/` directory. Tests the complete frontend-to-backend user flow as a real browser would.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend-e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend-e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e2e files MUST end with `-e2e.py` to identify them immediately, e.g., `backend-e2e/backend-superadmin-e2e/superadmin-dashboard/test-superadmin-dashboard-e2e.py`). Never dump test files into a flat `backend-e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  3. **Python Selenium (UI Behavior Tests):** Lives in a top-level `backend-selenium/` directory. Tests the complete frontend-to-backend user flow as a real browser would. Files MUST end with `-selenium.py` (e.g., `test-superadmin-dashboard-selenium.py`).
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These three tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -2288,7 +2288,7 @@ The build passing is not equivalent to behavioral correctness.
 ### Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
+- **Rule:** A mismatch between import case (e.g., `trainer-url-config`) and file case (e.g., `Trainer-url-config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
 
 
@@ -2645,11 +2645,11 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend-e2e/backend-admin-e2e/` and `backend-selenium/backend-superadmin-selenium/`
 
-2. **Strict File Naming Convention (Testing Filename Exception — Rule 2 Exemption):** Python test discovery requires the `test_` prefix. Therefore Rule 112 test files are exempt from the role/module-first filename rule (Rule 2) **only in the leading position**. The role and module MUST immediately follow `test_`. Just like backend development files, every E2E and Selenium test file MUST encode the role and module name to prevent any ambiguity.
-   - **E2E (API) Format:** `test_[role]-[module]-api.py` (e.g., `test_superadmin-dashboard-api.py`)
-   - **Selenium (UI) Format:** `test_[role]-[module]-ui.py` (e.g., `test_superadmin-dashboard-ui.py`)
+2. **Strict File Naming Convention (Suffix Enforced):** Every E2E and Selenium test file MUST encode the role and module name to prevent any ambiguity. Additionally, they MUST end with the explicit suffix (`-e2e.py` or `-selenium.py`) to instantly identify their purpose.
+   - **E2E (API) Format:** `test-[role]-[module]-e2e.py` (e.g., `test-superadmin-dashboard-e2e.py`)
+   - **Selenium (UI) Format:** `test-[role]-[module]-selenium.py` (e.g., `test-superadmin-dashboard-selenium.py`)
    - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
-   - ✅ **GOOD:** `test_admin-members-api.py` (lives inside `backend-e2e/backend-admin-e2e/members/`)
+   - ✅ **GOOD:** `test-admin-members-e2e.py` (lives inside `backend-e2e/backend-admin-e2e/admin-members/`)
 
 3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend-manager-e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
    - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend-e2e/backend-manager-e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
