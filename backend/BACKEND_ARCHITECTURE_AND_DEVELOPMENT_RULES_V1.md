@@ -102,6 +102,10 @@ Because the project contains a 1-to-1 mapping of frontend and backend roles, the
 
 When fixing a bug in `backend_superadmin/superadmin_modules/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
+### 0F. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
+
+Never double-prefix feature names or folders. If a backend module is named `admin_billing`, its child folders must be named `billing_controllers` or `admin_billing_controllers`, NEVER `admin_billing_billing_controllers`. Double-prefixing breaks readability and violates the naming contract.
+
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
 For a feature-specific task, the default writable scope is:
