@@ -1081,6 +1081,13 @@ backend_manager/
 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
+### 0G. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
+
+All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_controllers/`, `[moduleName]_dto/`). 
+DO NOT place any of these implementation files in the root of the feature module folder. 
+
+For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[moduleName].module.ts` file itself (and perhaps `.md` documentation files). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
+
 ---
 
 ## 39. True Multi-Tenancy (Database-per-Tenant Architecture)

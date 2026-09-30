@@ -871,8 +871,14 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
+#### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
+All files (Constants, Schemas, QueryKeys, API, UrlConfig, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`). 
+DO NOT place facade files or entry-point files in the root of the feature module folder. 
+
+For example, `ManagerAttendanceSchema.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchema.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
+
 #### API FACADE RULE
-Every feature module MUST expose one primary public API entry point (e.g., `AdminMembersApi.ts`).
+Every feature module MAY expose one primary public API entry point (e.g., `AdminMembersApi.ts`), but this file MUST be placed inside the `[moduleName]_api/` folder, NEVER in the root folder.
 
 This file acts as the canonical entry point for AI discovery and module navigation.
 
@@ -881,7 +887,7 @@ Internally, the module MAY organize implementation into multiple supporting file
 - `AdminMembersExportApi.ts`
 - `AdminMembersPaymentApi.ts`
 
-The primary API entry point remains the authoritative public boundary. AI agents MUST begin their API inspection from the public API entry point. The purpose of this rule is **discoverability, not forcing all API logic into one oversized file**.
+The primary API entry point remains the authoritative public boundary. The purpose of this rule is **discoverability, not forcing all API logic into one oversized file**, but the file MUST remain inside its designated sub-folder.
 
 
 12. **No Hardcoded HTTP Status Codes**: 
