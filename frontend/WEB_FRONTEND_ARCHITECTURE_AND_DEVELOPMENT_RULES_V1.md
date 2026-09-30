@@ -156,8 +156,9 @@ src/app/frontend_manager/manager_attendance/
 src/app/frontend_superadmin/superadmin_plans/
 src/app/frontend_superadmin/superadmin_reports/
 src/app/frontend_superadmin/superadmin_gyms/
-src/app/frontend_settings/settings_profile/
-src/app/frontend_analytics/
+src/app/frontend_admin/admin_settings/
+  └── admin_settings_profile/
+src/app/frontend_superadmin/superadmin_analytics/
 ```
 
 The exact names will differ by project, but the `frontend_` prefix is non-negotiable for root containers.
@@ -550,7 +551,7 @@ Rename all components, files, and folders to be extremely descriptive based on e
 To eliminate AI naming hallucinations, strictly follow this pattern:
 
 
-- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `manager_shared/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `ManagerShared/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
+- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `admin_members_filters/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `AdminMembers/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
 - **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`)
 - **Business Logic Files (Constants, Schemas, QueryKeys, API, Types):** PascalCase with Role+Module (e.g., `AdminMembersConstants.ts`, `AdminMembersSchema.ts`, `AdminMembersQueryKeys.ts`, `AdminMembersCrudApi.ts`, `AdminMembersTypes.ts`).
 - **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
@@ -564,7 +565,7 @@ Every child folder MUST inherit Role + Module identity.
 - ❌ **BAD:** `table/`, `filters/`, `profile/`, `modal/`
 *Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingHeaderConstants.ts` inside the `/header` folder) or a module-level `[Module]SharedConstants.ts` for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingPaymentModeConstants.ts` inside the `admin_billing_constants/` folder) or a module-level constants file prefixed with the full Role+Module name (e.g., `AdminBillingConstants.ts`) for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
 ### Constants Organization (No Barrel Files)
@@ -649,7 +650,7 @@ Because the components will be heavily micro-modularized, avoid creating a massi
 
 ### One Store Rule
 **Preferred:** Single primary Zustand store (e.g. `useAdminMembersStore.ts`).
-**Allowed:** Multiple stores (like `useMembersTableStore.ts`, `useMembersSelectionStore.ts`) ONLY when they represent genuinely independent repair boundaries for large modules. Explicit documentation is required.
+**Allowed:** Multiple stores (like `useManagerMembersTableStore.ts`, `useManagerMembersSelectionStore.ts`) ONLY when they represent genuinely independent repair boundaries for large modules. Explicit documentation is required.
 *Why:* Strict single-store rules can collide with Extreme Isolation in massive modules.
 
 ### Derived Data Ownership Rule
@@ -863,7 +864,7 @@ Error fallback hierarchy:
 - **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
-Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/gyms/gyms_context/GymsContext`).
+Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_context/SuperadminGymsContext`).
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
@@ -1270,7 +1271,7 @@ paths for this specific module. Every rendered UI element must have a row here.)
 [REQUIRED: Must specify the exact role, what actions are protected, and HOW they are
 protected (which hook/component/guard). Generic statements are not acceptable.]
 
-- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `gymsmart_token` cookie]
+- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `smart_gym_token` cookie]
 - **Destructive actions and their guards:** [e.g., "Delete member → `useConfirm()` from `ManagerConfirmProvider` with message 'This will permanently delete the member and all their records.'"]
 - **Sensitive data handling:** [e.g., "Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal."]
 - **Cross-role isolation:** [e.g., "Zero imports from `src/app/frontend_admin`, `src/app/frontend_trainer`, `src/app/frontend_superadmin`. Enforced in `manager_members_forbidden.md`."]
@@ -1705,7 +1706,7 @@ Responsibility comments MUST describe the component's rendering/orchestration re
 
 39. **Explicit Data Flow Direction Comments**:
 In every Zustand store and custom hook, document the data flow direction at the top:
-`// DATA FLOW: API → useMembersTable.ts → useMembersStore → MembersTable`
+`// DATA FLOW: API → useManagerMembersTable.ts → useManagerMembersStore → ManagerMembersTable`
 *(Note: As per Rule 5, React Context MUST NOT be used for feature data or state. Use Zustand).*
 
 40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
@@ -1942,7 +1943,7 @@ evolved independently
 ```
 
 without requiring unrelated business modules.
-- `Rule 35 (magic values)` -> custom `no-restricted-syntax` / custom rule
+
 
 You MUST implement a **pre-commit hook** (`husky` + `lint-staged`) that runs `tsc --noEmit` and linters before any commit. These rules must be physically blocked by tooling to ensure extreme safety in an AI-driven codebase. Detailed test practices should reside in Rule 15A.
 
@@ -2549,13 +2550,13 @@ EVERY frontend API client function that performs a mutation MUST require an `ide
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
+import { MANAGER_MEMBERS_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
 export const updateMemberProfile = async (
   id: string,
   body: unknown,
   idempotencyKey: string,
-) => apiFetch(MEMBER_URLS.PROFILE(id), {
+) => apiFetch(MANAGER_MEMBERS_URLS.PROFILE(id), {
   method: 'PATCH',
   body: JSON.stringify(body),
   headers: {
@@ -2602,12 +2603,12 @@ src/app/
       admin_members_components/
       admin_members_hooks/
   frontend_superadmin/
-    superadmin_tenants/
+    superadmin_gyms/
       [moduleName]_locales/
-        superadmin_tenants_en.json
-        superadmin_tenants_hi.json
-      superadmin_tenants_components/
-      superadmin_tenants_hooks/
+        superadmin_gyms_en.json
+        superadmin_gyms_hi.json
+      superadmin_gyms_components/
+      superadmin_gyms_hooks/
 scripts/
   merge-locales.ts   ← Merges all _locales into one bundle at build time
 ```
@@ -2645,7 +2646,7 @@ Always use the `t()` function — **never** hardcode English strings in JSX:
 ```tsx
 import { useTranslations } from 'next-intl';
 
-export const MembersPage = () => {
+export const ManagerMembersPage = () => {
   const t = useTranslations('MEMBERS');
   // ❌ BAD: <h1>Members</h1>
   // ✅ GOOD:
@@ -2758,7 +2759,7 @@ The backend sends all monetary amounts as **integers in the smallest currency un
 
 ### Canonical Formatting Utility
 Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
-``````typescript
+```typescript
 // admin_billing_utils/adminBillingFormatCurrency.ts (co-located inside the feature module)
 /**
  * Formats a monetary amount from its smallest unit to a locale-aware display string.
@@ -2787,7 +2788,7 @@ export const adminBillingFormatCurrency = (
 // adminBillingFormatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
 // adminBillingFormatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
 // adminBillingFormatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
-``````
+```
 
 ### Rules
 - ❌ Never do `amount / 100` inline in JSX.
@@ -2795,7 +2796,7 @@ export const adminBillingFormatCurrency = (
 - ❌ Never store the formatted string in state or TanStack Query cache — store the raw integer.
 - ✅ Always derive the locale from the active i18n locale (`useLocale()` from `next-intl`).
 
-``````tsx
+```tsx
 // ❌ BAD
 <Text>₹{plan.amount / 100}</Text>
 
@@ -2803,7 +2804,7 @@ export const adminBillingFormatCurrency = (
 import { useLocale } from 'next-intl';
 const locale = useLocale();
 <Text>{adminBillingFormatCurrency(plan.amount, plan.currency, locale)}</Text>
-``````
+```
 
 > **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `[module]FormatCurrency()` utility (e.g., `adminBillingFormatCurrency()`). The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
 
@@ -2824,7 +2825,7 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
 3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
    *"Export started. You will receive an email with a secure download link within a few minutes."*
 4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
-5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `EXPORT.DATA.COMPLETED`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
 
 > **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
 
@@ -2836,7 +2837,7 @@ If the user's browser tab is closed or loses internet connection when a WebSocke
 
 ### The Rule
 The WEB application MUST implement a hybrid notification architecture:
-1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the web UI immediately.
+1. **Real-time:** Listen to WebSocket events (e.g., `NOTIFICATION.RECEIVED`) and update the web UI immediately.
 2. **Recovery:** On initial application load and after a recovered WebSocket/session connection, fetch missed notifications using the exact endpoint defined by the supplied feature API contract. The AI MUST NOT invent or shorten the notification endpoint.
 
    Canonical project pattern: `GET /api/v1/{role}/notifications`

@@ -5171,7 +5171,7 @@ Any concrete example appearing in the audit prompt — including:
 - API paths;
 - currency examples;
 - language lists;
-- GymSmart/ERP terminology;
+- Smart Gym Management terminology;
 - sample component names;
 - sample test folders;
 
