@@ -168,6 +168,42 @@ Break down large files into micro-features. Every file must handle only one spec
 
 **IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
 
+### Sub-Folder Naming Standard (MANDATORY — No Exceptions)
+
+Every feature module sub-folder MUST be named using the module name as prefix followed by the artifact type. The following table is the ONLY permitted naming convention:
+
+| Artifact Type | Mandatory Folder Name | ❌ Forbidden Alternatives |
+|---|---|---|
+| Services | `{module}_services/` | `service/`, `services/`, `svc/` |
+| Controllers | `{module}_controllers/` | `controller/`, `controllers/`, `ctrl/` |
+| Repository | `{module}_repositories/` | `repo/`, `repositories/`, `data/` |
+| DTOs | `{module}_dto/` | `dto/`, `dtos/`, `DTO/`, `schemas/` |
+| Mappers | `{module}_mappers/` | `mappers/`, `mapper/`, `utils/` |
+| Domain Models | `{module}_domain/` | `domain/`, `models/`, `entities/` |
+| Types/Interfaces | `{module}_types/` | `types/`, `interfaces/`, `typings/` |
+| Constants/Enums | `{module}_constants/` | `constants/`, `enums/`, `config/` |
+| Exceptions | `{module}_exceptions/` | `exceptions/`, `errors/`, `exception/` |
+| Locales | `{module}_locales/` | `_locales/`, `locale/`, `i18n/` |
+| Jobs | `{module}_jobs/` | `jobs/`, `workers/`, `queues/` |
+| Adapters | `{module}_adapters/` | `adapters/`, `external/`, `integrations/` |
+
+> **AI AGENT NOTE:** When creating any sub-folder inside a feature module, you MUST consult this table first. Creating a folder not following `{module}_{artifact}/` pattern is an architecture violation and MUST be flagged.
+
+**Examples (role: admin, module: members):**
+```text
+admin_members/
+├── members_services/            ✅ CORRECT
+├── members_controllers/         ✅ CORRECT
+├── members_repositories/        ✅ CORRECT
+├── members_dto/                 ✅ CORRECT
+├── members_mappers/             ✅ CORRECT
+├── members_domain/              ✅ CORRECT
+├── members_types/               ✅ CORRECT
+├── members_constants/           ✅ CORRECT (module-level constants)
+├── members_exceptions/          ✅ CORRECT
+└── members_locales/             ✅ CORRECT
+```
+
 ## 2. Highly Descriptive, AI-Contextual Filenames & Module Prefixing
 Rename all controllers, services, and models to be extremely descriptive based on exactly what they do, AND they must strictly begin with the module name as a prefix.
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
@@ -210,32 +246,113 @@ backend_admin/
 
 The `{role}_modules/` folder is **NOT optional**. All business feature modules MUST be located inside `{role}_modules/`. AI agents MUST NOT place feature modules directly under `backend_{role}/`.
 
+### {role}_core/ Scope Restriction (CRITICAL)
+
+The `{role}_core/` folder is strictly a **framework infrastructure container**. It MUST NOT contain any business logic, domain services, or feature helpers.
+
+**Permitted inside `{role}_core/`:**
+- Guards (e.g., JWT auth guards, roles guards)
+- Decorators (e.g., `@Roles()`, `@CurrentUser()`)
+- Interceptors (e.g., response interceptor, logging interceptor)
+- Pipes (e.g., validation pipe wrappers)
+- Middleware (e.g., tenant resolution middleware)
+- Framework infrastructure (e.g., the role's root NestJS module file)
+
+**FORBIDDEN inside `{role}_core/` — Architecture Violation:**
+- Any business logic service (e.g., `admin-member-suspension.service.ts`)
+- Any feature-specific helper (e.g., `admin-billing-helper.ts`)
+- Any repository (e.g., `admin-auth.repository.ts`)
+- Any DTO (e.g., `admin-create-member.dto.ts`)
+- Any entity or domain model
+
+```text
+❌ VIOLATION:
+admin_core/
+├── admin_guards/
+├── admin-member-suspension.service.ts   <-- business logic FORBIDDEN in core
+└── admin-billing-helper.ts              <-- feature helper FORBIDDEN in core
+
+✅ COMPLIANT:
+admin_core/
+├── admin_guards/
+│   └── admin-core-jwt-auth.guard.ts
+├── admin_decorators/
+│   └── admin-core-current-user.decorator.ts
+├── admin_interceptors/
+│   └── admin-core-response.interceptor.ts
+└── admin-core.module.ts
+```
+
 * **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). These root-level generic folders may contain standard un-prefixed sub-folders (like `src/core/utils/`, `src/core/dtos/`, `src/core/config/`) provided they are strictly global and cross-cutting. Never put business logic in these generic folders.
   
-  **Canonical Mandatory Backend Structure:**
+  **Canonical Mandatory Backend Structure — Complete Physical Module Tree:**
 
-  > The following structure is mandatory. Any deviation is considered architecture non-compliant.
+  > The following structure is mandatory. Any deviation is considered architecture non-compliant. AI agents MUST use this tree as the reference template when generating any backend role module.
 
   ```text
   backend_admin/
-  ├── admin_core/                                <-- (Top-level prefixed — core guards/interceptors)
-  │   ├── admin_guards/                          <-- (Sub-folder prefixed)
-  │   │   └── admin-core-jwt-auth.guard.ts       <-- (Role: admin, Module: core, Resp: jwt-auth)
-  │   └── admin-core.module.ts                   <-- (Main Core Module)
   │
-  └── admin_modules/                             <-- (Top-level prefixed — ALL features go here)
-      ├── admin_auth/                            <-- (Feature Folder prefixed)
-      │   └── admin-auth.module.ts
-      ├── admin_members/                         <-- (Feature Folder prefixed)
-      │   └── admin-members.module.ts
-      ├── admin_billing/                         <-- (Feature Folder prefixed)
-      │   ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
-      │   │   └── admin-billing-invoice.controller.ts
-      │   ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
-      │   │   └── admin-billing-create-invoice.dto.ts
-      │   └── admin-billing.module.ts            <-- (Main Feature Module)
-      └── admin_reports/                         <-- (Feature Folder prefixed)
-          └── admin-reports.module.ts
+  ├── admin_core/                                          <-- Role-level framework infrastructure ONLY
+  │   ├── admin_guards/
+  │   │   └── admin-core-jwt-auth.guard.ts                <-- RESPONSIBILITY + FLOW comment required
+  │   ├── admin_decorators/
+  │   │   └── admin-core-current-user.decorator.ts
+  │   ├── admin_interceptors/
+  │   │   └── admin-core-response.interceptor.ts
+  │   └── admin-core.module.ts                            <-- Role root NestJS module
+  │
+  └── admin_modules/                                      <-- ALL feature modules live here
+      │
+      ├── admin_auth/                                     <-- Feature module (example)
+      │   ├── auth_controllers/
+      │   │   ├── admin-auth-command.controller.ts        <-- Write operations (POST/PATCH/DELETE)
+      │   │   └── admin-auth-query.controller.ts          <-- Read operations (GET)
+      │   ├── auth_services/
+      │   │   ├── admin-auth-login.service.ts
+      │   │   ├── admin-auth-token-refresh.service.ts
+      │   │   └── admin-auth-orchestrator.service.ts      <-- Orchestrator: opens TX, calls services
+      │   ├── auth_repositories/
+      │   │   └── admin-auth.repository.ts                <-- Primary repo: {role}-{module}.repository.ts
+      │   ├── auth_mappers/
+      │   │   └── admin-auth.mapper.ts                    <-- toDomain() / toEntity() ONLY
+      │   ├── auth_domain/
+      │   │   └── admin-auth.domain.ts                    <-- Pure domain model — zero ORM imports
+      │   ├── auth_dto/
+      │   │   ├── admin-auth-login.dto.ts
+      │   │   └── admin-auth-token-response.dto.ts
+      │   ├── auth_types/
+      │   │   └── admin-auth-jwt-payload.type.ts
+      │   ├── auth_constants/
+      │   │   └── admin-auth.constants.ts
+      │   ├── auth_exceptions/
+      │   │   └── admin-auth.exceptions.ts
+      │   ├── auth_locales/
+      │   │   ├── en/
+      │   │   │   ├── errors.json
+      │   │   │   └── messages.json
+      │   │   └── hi/
+      │   │       ├── errors.json
+      │   │       └── messages.json
+      │   ├── admin-auth.module.ts                        <-- NestJS module registration
+      │   ├── admin_auth_backend_feature.md               <-- MANDATORY: module doc (Rule 19)
+      │   ├── admin_auth_dependencies.md                  <-- MANDATORY: dependency graph (Rule 49)
+      │   └── admin_auth_forbidden.md                     <-- MANDATORY: forbidden patterns (Rule 78)
+      │
+      └── admin_members/                                  <-- Another feature module (same pattern)
+          ├── members_controllers/
+          ├── members_services/
+          ├── members_repositories/
+          ├── members_mappers/
+          ├── members_domain/
+          ├── members_dto/
+          ├── members_types/
+          ├── members_constants/
+          ├── members_exceptions/
+          ├── members_locales/
+          ├── admin-members.module.ts
+          ├── admin_members_backend_feature.md
+          ├── admin_members_dependencies.md
+          └── admin_members_forbidden.md
   ```
 
 ## 3. Strict Validation & DTO Isolation
@@ -261,7 +378,7 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
-Extract complex queries into a dedicated Repository or Query file (e.g., `admin-member-analytics.repository.ts`).
+Extract complex queries into a dedicated Repository or Query file.
 * **The Rule:** The project has a fixed ORM per supported framework. The repository pattern is mandatory.
   - NestJS / TypeScript → TypeORM + PostgreSQL.
   - Django / Python → Django ORM + PostgreSQL.
@@ -269,6 +386,37 @@ Extract complex queries into a dedicated Repository or Query file (e.g., `admin-
   - Prisma is not permitted in this project.
   - ORM-specific implementation MUST remain behind the repository/data-access boundary so business services do not become coupled to ORM-specific APIs.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
+
+### Repository Naming Standard (MANDATORY)
+
+Every feature module MUST have exactly **one primary repository** following this naming pattern:
+
+```
+{role}-{module}.repository.ts
+```
+
+**Examples:**
+- `admin-members.repository.ts`
+- `manager-billing.repository.ts`
+- `superadmin-tenants.repository.ts`
+
+Additional repositories are permitted ONLY for genuinely distinct data-access concerns (e.g., heavy analytics queries). When additional repositories are needed, they MUST follow:
+
+```
+{role}-{module}-{usecase}.repository.ts
+```
+
+**Examples of allowed secondary repositories:**
+- `admin-members-analytics.repository.ts` (analytics queries)
+- `manager-billing-reports.repository.ts` (report-specific queries)
+
+All repositories MUST live inside the module's `{module}_repositories/` sub-folder.
+
+❌ **FORBIDDEN repository names:**
+- `member.repository.ts` (missing role prefix)
+- `member-read.repository.ts` (read/write split is not permitted)
+- `member-query.repository.ts` ("query" suffix reserved for CQRS controllers — Rule 48)
+- `member-write.repository.ts`
 
 ---
 
@@ -308,6 +456,30 @@ Repositories
    ↓
 ORM
 ```
+
+#### Orchestrator Naming Convention (MANDATORY)
+
+All Orchestrators MUST use the following naming pattern — no exceptions:
+
+```
+{role}-{module}-orchestrator.service.ts
+```
+
+**Examples:**
+- `admin-members-orchestrator.service.ts`
+- `manager-billing-orchestrator.service.ts`
+- `superadmin-tenants-orchestrator.service.ts`
+
+❌ **FORBIDDEN orchestrator names — AI agents MUST NOT use these:**
+- `facade.service.ts`
+- `workflow.service.ts`
+- `transaction-handler.service.ts`
+- `admin-members-transaction.service.ts`
+- `admin-members.facade.ts`
+
+The exported class MUST follow PascalCase matching the filename: `admin-billing-orchestrator.service.ts` → `class AdminBillingOrchestratorService`.
+
+Orchestrators MUST live inside the module's `{module}_services/` sub-folder alongside other micro-services.
 
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
@@ -928,6 +1100,26 @@ backend_manager/
 ## 50. Standardized Event Naming Convention
 * **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`, `MEMBERS.MEMBER.REGISTERED`, `ATTENDANCE.SESSION.CLOSED`) and be registered in a centralized `event-registry.constants.ts`. Two-part forms like `MEMBER_REGISTERED` or `MEMBER.REGISTERED` are non-compliant.
 
+### Single Event Registry Enforcement (NON-NEGOTIABLE)
+
+There MUST be exactly **one** `event-registry.constants.ts` file in the entire codebase, located at:
+
+```
+src/core/event-registry.constants.ts
+```
+
+Creation of any secondary event registry file is **strictly forbidden**, regardless of intent:
+
+❌ **FORBIDDEN — these MUST NOT exist:**
+- `billing-events.constants.ts`
+- `member-events.ts`
+- `admin-event-registry.ts`
+- Any file attempting to define a subset of domain events outside the central registry
+
+When a new event is needed, the AI MUST add it to the existing `src/core/event-registry.constants.ts` — never create a new file. If a secondary event registry file is discovered during an audit, it MUST be flagged as an architecture violation and its contents merged into the central registry.
+
+> **AI AGENT NOTE:** Before emitting or consuming any event, verify the event name exists in `src/core/event-registry.constants.ts`. If it does not exist, add it there — never inline the string or create a parallel constants file.
+
 ## 51. API Changelog & Deprecation Policy
 * **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
 
@@ -1481,6 +1673,46 @@ This rule MUST remain consistent with Rule 99.
   3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
 * **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+
+### Mapper Physical Location Rule (MANDATORY)
+
+All mappers MUST live inside the owning module's `{module}_mappers/` sub-folder. No other location is permitted.
+
+```
+{role}_{module}/
+└── {module}_mappers/
+    └── {role}-{module}.mapper.ts
+```
+
+**Examples:**
+- `admin_members/members_mappers/admin-members.mapper.ts`
+- `manager_billing/billing_mappers/manager-billing.mapper.ts`
+
+❌ **FORBIDDEN mapper locations:**
+- `admin_members/mappers/admin-members.mapper.ts` (unprefixed folder)
+- `admin_members/utils/admin-members.mapper.ts` (wrong folder type)
+- `admin_members/admin-members.mapper.ts` (root of module — not allowed)
+
+### Domain Model Physical Location Rule (MANDATORY)
+
+All domain models MUST live inside the owning module's `{module}_domain/` sub-folder. No other location is permitted.
+
+```
+{role}_{module}/
+└── {module}_domain/
+    └── {role}-{module}.domain.ts
+```
+
+**Examples:**
+- `admin_members/members_domain/admin-member.domain.ts`
+- `manager_billing/billing_domain/manager-billing.domain.ts`
+
+❌ **FORBIDDEN domain model locations:**
+- `admin_members/models/member.ts` (generic, no prefix)
+- `admin_members/domain/member.domain.ts` (unprefixed folder)
+- `admin_members/entities/member.domain.ts` (entities/ is for ORM entities only)
+
+> **AI AGENT NOTE:** ORM Entity files (`*.entity.ts`) belong ONLY inside the `{module}_repositories/` folder — never in `{module}_domain/`. The domain folder contains pure business objects with zero ORM imports. Mixing them defeats the entire purpose of Rule 89.
 
 ---
 

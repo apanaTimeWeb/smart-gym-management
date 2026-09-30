@@ -4898,6 +4898,25 @@ backend_admin/
 ```
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
+
+#### Core Folder Scope Enforcement
+
+Verify `{role}_core/` contains ONLY:
+
+- guards
+- decorators
+- interceptors
+- pipes
+- middleware
+- the role's root module file
+
+Flag as Architecture Violation if `{role}_core/` contains ANY of:
+
+- business logic services
+- feature-specific helpers
+- repositories
+- DTOs
+- entities or domain models
 ### 0E — Isolated context means modular monolith
 
 Verify feature modules do NOT independently bootstrap global:
@@ -4934,7 +4953,10 @@ Verify ALL of:
 - exported class matches filename semantics;
 - every structural folder follows required prefixing;
 - no generic `core/`, `modules/`, `common/`, `shared/`, `utils/`, `config/`, etc. unless the architecture explicitly allows an infrastructure exception;
-- file and class names remain collision-resistant for AI context.
+- file and class names remain collision-resistant for AI context;
+- every backend role container contains EXACTLY the two mandatory top-level directories: `{role}_core/` and `{role}_modules/` — any feature module placed directly under `backend_{role}/` is a Rule 2 Architecture Violation;
+- all feature module sub-folders follow the mandatory naming table (`{module}_services/`, `{module}_controllers/`, `{module}_repositories/`, `{module}_dto/`, `{module}_mappers/`, `{module}_domain/`, `{module}_types/`, `{module}_constants/`, `{module}_exceptions/`, `{module}_locales/`, `{module}_jobs/`, `{module}_adapters/`) — unprefixed alternatives (`services/`, `dto/`, `mappers/`, etc.) are Architecture Violations;
+- `{role}_core/` contains ONLY framework infrastructure (guards, decorators, interceptors, pipes, middleware, root module) — business logic in `{role}_core/` is an Architecture Violation.
 
 IMPORTANT:
 
@@ -5001,7 +5023,11 @@ Verify:
 - ORM APIs do not leak into business services;
 - repositories own queries/persistence;
 - complex queries are isolated;
-- ORM access is not hidden inside arbitrary utilities.
+- ORM access is not hidden inside arbitrary utilities;
+- each module has exactly ONE primary repository named `{role}-{module}.repository.ts`;
+- additional repositories (if present) follow `{role}-{module}-{usecase}.repository.ts` (e.g., `admin-members-analytics.repository.ts`);
+- forbidden naming patterns: `member.repository.ts` (missing role), `member-read.repository.ts` (read/write split), `member-query.repository.ts` ("query" suffix is reserved for CQRS controllers);
+- all repositories live inside `{module}_repositories/` sub-folder.
 
 ---
 
@@ -5013,7 +5039,11 @@ Verify:
 - no direct sibling business-service imports when forbidden;
 - transaction-heavy flows use Orchestrator + TransactionContext/UnitOfWork abstraction;
 - raw ORM transaction objects do not leak into business services;
-- external dependencies use adapters.
+- external dependencies use adapters;
+- all Orchestrators are named `{role}-{module}-orchestrator.service.ts` (e.g., `admin-members-orchestrator.service.ts`);
+- forbidden orchestrator names: `facade.service.ts`, `workflow.service.ts`, `transaction-handler.service.ts`, `*.facade.ts`;
+- Orchestrators live inside the module's `{module}_services/` sub-folder;
+- exported Orchestrator class name follows PascalCase of the filename (e.g., `AdminMembersOrchestratorService`).
 
 ---
 
@@ -5731,8 +5761,10 @@ Verify:
 - action;
 - casing;
 - spelling;
-- central `event-registry.constants.ts`;
-- producer/consumer agreement.
+- central `event-registry.constants.ts` at `src/core/event-registry.constants.ts`;
+- producer/consumer agreement;
+- EXACTLY ONE `event-registry.constants.ts` file in the entire codebase — any secondary event registry file (`billing-events.constants.ts`, `member-events.ts`, etc.) is an Architecture Violation;
+- new events are added to the existing central registry, never created in a new file.
 
 Invalid (non-compliant examples):
 
