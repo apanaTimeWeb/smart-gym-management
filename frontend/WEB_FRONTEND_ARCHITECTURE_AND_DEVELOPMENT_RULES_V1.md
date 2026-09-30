@@ -1111,16 +1111,16 @@ subscription tier, and drill into per-gym usage metrics. It is the entry point f
 tenant lifecycle operations (create → activate → suspend).
 
 ## Feature Inventory
-| Feature Name    | Route Path                                    | Description                                                                          | API Endpoint                                         | Status  |
-|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------------|------------------------------------------------------|---------|
-| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /api/v1/superadmin/gyms?page&limit&search&status&planId | ✅ Live |
-| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /api/v1/superadmin/gyms                         | ✅ Live |
-| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |
-| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /api/v1/superadmin/gyms/:id/status             | ✅ Live |
+| Feature         | Route                                         | What the User Can Do                                                                 | Key Components                   | Main API Calls                                       | Status  |
+|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------|------------------------------------------------------|---------|
+| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | `SuperadminGymsTable.tsx`        | GET /api/v1/superadmin/gyms?page&limit&search&status&planId | ✅ Live |
+| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | `SuperadminGymsAddWizard.tsx`    | POST /api/v1/superadmin/gyms                         | ✅ Live |
+| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | `SuperadminGymsProfile.tsx`      | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |
+| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | `SuperadminGymsSuspendModal.tsx` | PATCH /api/v1/superadmin/gyms/:id/status             | ✅ Live |
 
 ## Edge Cases / AI Warnings
 - Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
-  irreversible until manually restored. Always use useConfirm() with a typed warning message.
+  irreversible until manually restored. Always use useConfirm() from SuperadminConfirmProvider with a typed warning message.
 - The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
   GET /api/v1/superadmin/plans — do NOT hardcode plan options.
 - Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
@@ -1157,7 +1157,7 @@ each folder, not just the folder name. Example:]
 |---|---|---|
 | `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableColumns.ts` |
 | `manager_members_components/manager_members_profile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
-| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts` |
+| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersCrudApi.ts` |
 | `manager_members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
 | `manager_members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
 | `manager_members_constants/` | Hardcoded data, dropdown options, query keys, enums | `ManagerMembersConstants.ts`, `ManagerMembersQueryKeys.ts` |
@@ -1218,7 +1218,7 @@ without reading every component file. Example:]
 1. User clicks "Add Member" button in `ManagerMembersMain` toolbar
 2. `ManagerMembersAddModal` opens (managed by `useManagerMembersStore.openAddModal`)
 3. User fills 3-tab form: Personal Info → Membership Plan → Payment
-4. On submit, `createMember(dto)` is called from `ManagerMembersApi.ts`
+4. On submit, `createMember(dto)` is called from `ManagerMembersCrudApi.ts`
 5. On success: reconcile/invalidate the relevant TanStack Query cache using the authoritative backend response, modal closes, toast shows backend message
 6. On error: form preserves entered data, inline error shown from `res.message`
 
