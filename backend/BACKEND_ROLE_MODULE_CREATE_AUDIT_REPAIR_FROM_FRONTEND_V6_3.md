@@ -4917,6 +4917,7 @@ Flag as Architecture Violation if `{role}_core/` contains ANY of:
 - repositories
 - DTOs
 - entities or domain models
+
 ### 0E — Isolated context means modular monolith
 
 Verify feature modules do NOT independently bootstrap global:
