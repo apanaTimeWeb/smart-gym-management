@@ -98,9 +98,9 @@ Because the project contains a 1-to-1 mapping of frontend and backend roles, the
 - **E2E / Selenium Testing Folders:** If tests are grouped in a separate root directory, the test root AND the role subfolders inside it MUST carry the namespace to maintain context.
   - Example E2E: `backend_e2e/backend_admin_e2e/`, `backend_e2e/backend_manager_e2e/`
   - Example Selenium: `backend_selenium/backend_admin_selenium/`
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/manager_billing/` and `backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/manager_modules/manager_billing/` and `backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
 
-When fixing a bug in `backend_superadmin/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+When fixing a bug in `backend_superadmin/superadmin_modules/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
 
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
@@ -166,7 +166,7 @@ Break down large files into micro-features. Every file must handle only one spec
   - `admin-member-attendance.service.ts`
   - `admin-member-notifications.service.ts`
 
-**IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
+**IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_modules/manager_members/manager_members_services/`, `backend_manager/manager_modules/manager_members/manager_members_controllers/`).
 
 ### Sub-Folder Naming Standard (MANDATORY — No Exceptions)
 
@@ -176,7 +176,7 @@ Every feature module sub-folder MUST be named using the module name as prefix fo
 |---|---|---|
 | Services | `{module}_services/` | `service/`, `services/`, `svc/` |
 | Controllers | `{module}_controllers/` | `controller/`, `controllers/`, `ctrl/` |
-| Repository | `{module}_repositories/` | `repo/`, `repositories/`, `data/` |
+| Repositories | `{module}_repositories/` | `repo/`, `repositories/`, `data/` |
 | DTOs | `{module}_dto/` | `dto/`, `dtos/`, `DTO/`, `schemas/` |
 | Mappers | `{module}_mappers/` | `mappers/`, `mapper/`, `utils/` |
 | Domain Models | `{module}_domain/` | `domain/`, `models/`, `entities/` |
@@ -312,7 +312,8 @@ admin_core/
       │   │   ├── admin-auth-token-refresh.service.ts
       │   │   └── admin-auth-orchestrator.service.ts      <-- Orchestrator: opens TX, calls services
       │   ├── auth_repositories/
-      │   │   └── admin-auth.repository.ts                <-- Primary repo: {role}-{module}.repository.ts
+      │   │   ├── admin-auth-read.repository.ts           <-- Concern-based split (Rule 7)
+      │   │   └── admin-auth-write.repository.ts          <-- Concern-based split (Rule 7)
       │   ├── auth_mappers/
       │   │   └── admin-auth.mapper.ts                    <-- toDomain() / toEntity() ONLY
       │   ├── auth_domain/
@@ -427,6 +428,7 @@ While concern-based splitting is encouraged, **method-level over-fragmentation i
 - `member-find-by-email.repository.ts`
 - `member-find-active.repository.ts`
 - `member-update-name.repository.ts`
+- `member-delete.repository.ts` (this is method-level fragmentation)
 
 ❌ **Forbidden Naming Violations:**
 - `member-query.repository.ts` ("query" suffix reserved for CQRS controllers)
@@ -513,7 +515,7 @@ Multiple NestJS module files inside a feature module are forbidden.
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `backend_finance/finance_utils/`. If the HR module needs the exact same utility, **duplicate the code** into `backend_hr/hr_utils/`. 
+Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `backend_finance/finance_modules/finance_billing/finance_billing_utils/`. If the HR module needs the exact same utility, **duplicate the code** into `backend_hr/hr_modules/hr_payroll/hr_payroll_utils/`. 
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
@@ -599,7 +601,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** AI might take shortcuts and manually instantiate classes inside business logic, creating tight coupling. Enforcing Dependency Injection ensures that tests can easily mock out databases, external APIs, and child services.
 
 ## 16. Module-Specific API Collections (Postman/Insomnia)
-* **The Rule:** Whenever a module is created or finalized, generate a `[role]_[module]_collection.json` file directly inside the module's folder (e.g., `backend_admin/admin_auth/admin_auth_collection.json`). 
+* **The Rule:** Whenever a module is created or finalized, generate a `[role]_[module]_collection.json` file directly inside the module's folder (e.g., `backend_admin/admin_modules/admin_auth/admin_auth_collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
 ## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale - Backend Driven)
@@ -615,7 +617,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
-* **The Rule:** Every single module must contain a `[role]_[module]_backend_feature.md` file at its root (e.g., `backend_admin/admin_auth/admin_auth_backend_feature.md`). 
+* **The Rule:** Every single module must contain a `[role]_[module]_backend_feature.md` file at its root (e.g., `backend_admin/admin_modules/admin_auth/admin_auth_backend_feature.md`). 
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
 
 ### Documentation Placement Rule
@@ -698,7 +700,7 @@ should an AI NEVER do in this module?]
 | [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
 | [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
 | [role]_[module]_services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| [role]_[module]_repositories/[role]-[module].repository.ts | [REQUIRED: what queries it owns] |
+| [role]_[module]_repositories/[role]-[module]-<concern>.repository.ts | [REQUIRED: what queries it owns] |
 | [role]_[module]_dtos/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
 | [role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
 
@@ -1607,11 +1609,11 @@ If a backend implementation cannot provide a field currently required by the fro
 
 ## 84. No Barrel File / Re-Export Index Rule
 * **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This restriction exists to preserve AI context isolation and prevent dependency expansion. Always import directly from the explicitly named source file.
-  - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_members'` (where `members/index.ts` re-exports everything)
-  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_members/manager_members_services/member-registration.service'`
+  - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_modules/manager_members'` (where `members/index.ts` re-exports everything)
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_modules/manager_members/manager_members_services/manager-members-registration.service'`
 * **Why barrel files are dangerous in AI-driven codebases:**
   1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Django projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
-  2. **AI Context Pollution:** When an AI imports `from '@/backend_manager/manager_members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
+  2. **AI Context Pollution:** When an AI imports `from '@/backend_manager/manager_modules/manager_members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
   3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
 * **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
 
@@ -1694,7 +1696,7 @@ This rule MUST remain consistent with Rule 99.
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `class-validator`, `class-transformer`, `bcrypt`, `typeorm`)
   4. **Internal absolute imports — Infrastructure** (e.g., `@/infrastructure/config/`, `@/infrastructure/database/`)
-  5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_billing/...`)
+  5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_modules/manager_billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
   7. **Type-only imports** (`import type { ... }`) must always be last
 * **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
@@ -1706,10 +1708,10 @@ This rule MUST remain consistent with Rule 99.
 
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
-  import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
-  import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
+  import { MemberEntity } from '@/backend_manager/manager_modules/manager_members/manager_members_domain/manager-members.entity';
+  import { MemberNotFoundException } from '@/backend_manager/manager_modules/manager_members/manager_members_exceptions/manager-members.exceptions';
 
-  import type { CreateMemberDto } from '@/backend_manager/manager_members/dtos/member-create.dto';
+  import type { CreateMemberDto } from '@/backend_manager/manager_modules/manager_members/manager_members_dto/manager-members-create.dto';
   ```
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
@@ -1970,7 +1972,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'MembershipExpiryNotifier',
       module: 'members',
-      file: 'src/backend_manager/manager_members/jobs/manager-members-expiry-notifier.job.ts',
+      file: 'src/backend_manager/manager_modules/manager_members/manager_members_jobs/manager-members-expiry-notifier.job.ts',
       schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
       description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
       touchesEntities: ['members', 'notifications'],
@@ -1981,7 +1983,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'WalletAutoDeductionJob',
       module: 'billing',
-      file: 'src/backend_manager/manager_billing/jobs/manager-billing-wallet-auto-deduction.job.ts',
+      file: 'src/backend_manager/manager_modules/manager_billing/manager_billing_jobs/manager-billing-wallet-auto-deduction.job.ts',
       schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
@@ -2099,14 +2101,14 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **The Required Pattern — Repository owns all mutations:**
   ```typescript
   // ✅ GOOD — Repository exposes a named, intention-revealing method
-  // In member.repository.ts:
+  // In admin-members-write.repository.ts:
   async suspendById(id: string, suspendedAt: Date): Promise<MemberDomainModel> {
     // All mutation logic, audit hooks, and constraint checks live here
     const entity = await this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
     return this.mapper.toDomain(entity);
   }
 
-  // In member-suspension.service.ts:
+  // In admin-members-suspension.service.ts:
   async suspendMember(id: string): Promise<MemberDomainModel> {
     await this.memberRepo.findByIdOrThrow(id); // Existence check
     return this.memberRepo.suspendById(id, new Date()); // Repository owns the mutation
@@ -2625,7 +2627,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
    - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/` (API) or `backend_selenium/backend_superadmin_selenium/` (UI)
-   - **Feature Level:** `src/backend_superadmin/superadmin_dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/superadmin_dashboard/` (UI)
+   - **Feature Level:** `src/backend_superadmin/superadmin_modules/superadmin_dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/superadmin_dashboard/` (UI)
    - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
