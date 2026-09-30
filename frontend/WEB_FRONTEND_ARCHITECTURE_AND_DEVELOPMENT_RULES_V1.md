@@ -566,10 +566,8 @@ Every child folder MUST inherit Role + Module identity.
 Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_header_constants.ts` inside the `/header` folder) or a module-level `[module_name]_shared_constants.ts` for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
-### One Constants Entry Rule
-Every feature module MUST contain one primary constant registry:
-`AdminMembersConstants.ts`
-Feature-local constants may exist inside subfolders, but the primary module-wide constants MUST live inside the `[moduleName]_constants/` folder as a single entry file.
+### Constants Organization (No Barrel Files)
+Place all module-wide constants strictly inside the `[moduleName]_constants/` folder. Do not create barrel files or entry points to re-export constants. Import the specific constant file you need directly using absolute imports.
 
 ### Enum Registry Rule
 Business statuses MUST originate from one constants source.
@@ -712,15 +710,13 @@ A visible control without functional closure MUST be treated as a defect.
 Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
 - **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
 
-#### SCHEMA ENTRY RULE
-Every feature module MUST expose one primary schema file located strictly inside the `[moduleName]_schemas/` folder (e.g., `AdminMembersSchema.ts`).
+#### SCHEMA ORGANIZATION (NO BARREL FILES)
+Place all schema files strictly inside the `[moduleName]_schemas/` folder. Do not create barrel files or single entry points to re-export them. Import the specific schema you need directly using absolute imports.
 
-Additional schemas may exist where responsibility separation requires them. Examples:
+Separate schemas where responsibility requires them. Examples:
 - `AdminMembersCreateSchema.ts`
 - `AdminMembersUpdateSchema.ts`
 - `AdminMembersSearchSchema.ts`
-
-The root schema entry remains the canonical schema discovery point for AI agents and developers. The purpose of this rule is **discoverability, not forcing every validation concern into one oversized file**.
 
 ### TypeScript Strictness and Runtime Contract Validation
 
@@ -880,17 +876,13 @@ DO NOT place facade files or entry-point files in the root of the feature module
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
-#### API FACADE RULE
-Every feature module MAY expose one primary public API entry point (e.g., `AdminMembersApi.ts`), but this file MUST be placed inside the `[moduleName]_api/` folder, NEVER in the root folder.
+#### NO API FACADES (NO BARREL FILES)
+Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
 
-This file acts as the canonical entry point for AI discovery and module navigation.
-
-Internally, the module MAY organize implementation into multiple supporting files when required. Examples:
+Internally, the module MUST organize implementation into specific files when required. Examples:
 - `AdminMembersCrudApi.ts`
 - `AdminMembersExportApi.ts`
 - `AdminMembersPaymentApi.ts`
-
-The primary API entry point remains the authoritative public boundary. The purpose of this rule is **discoverability, not forcing all API logic into one oversized file**, but the file MUST remain inside its designated sub-folder.
 
 
 12. **No Hardcoded HTTP Status Codes**: 
