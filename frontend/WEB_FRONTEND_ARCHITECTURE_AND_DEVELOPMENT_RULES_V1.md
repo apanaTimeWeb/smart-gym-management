@@ -780,8 +780,7 @@ If initial server data is passed into a Client Component:
 - Avoid maintaining an unrelated duplicate local state copy.
 
 ### Query Key Registry Rule
-Every feature module MUST contain a dedicated registry for TanStack query keys:
-`AdminMembersQueryKeys.ts`
+Every feature module MUST contain a dedicated registry for TanStack query keys located strictly inside the `[moduleName]_constants/` or `[moduleName]_api/` folder (e.g., `AdminMembersQueryKeys.ts`):
 ```typescript
 export const ADMIN_MEMBERS_QUERY_KEYS = {
   all: ['admin_members'] as const,
@@ -791,7 +790,7 @@ export const ADMIN_MEMBERS_QUERY_KEYS = {
   detail: (id: string) => [...ADMIN_MEMBERS_QUERY_KEYS.details(), id] as const,
 };
 ```
-*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`. This factory pattern also allows surgical invalidation (e.g., `queryClient.invalidateQueries({ queryKey: ADMIN_MEMBERS_QUERY_KEYS.lists() })` clears all list caches without dropping details).
+*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`. This factory pattern also allows surgical invalidation.
 
 #### RESOURCE IDENTITY PRESERVATION RULE
 Whenever data belongs to a specific resource, query keys MUST include the resource identity.
@@ -872,7 +871,7 @@ Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into AP
 All files (Constants, Schemas, QueryKeys, API, UrlConfig, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
 
-**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, and the `_features.md`, `_forbidden.md`, and `_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
+**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `[moduleName]_url_config.ts`, and the `_features.md`, `_forbidden.md`, and `_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
@@ -1678,11 +1677,9 @@ Every **user-browsable data table** MUST implement applicable pagination, sortin
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
 
-32. **The "No Barrel File" Rule (Avoid `index.ts`) & Facade Naming**:
-Strictly avoid using `index.ts` or `index.js` files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies.
-- **Facade / Re-export Naming:** If a module requires a facade or re-export file (e.g., to consolidate multiple schemas from a sub-folder into one file), the file name MUST explicitly end with `Export` to immediately signal its purpose to AI and developers.
-  - Example: `ManagerAttendanceSchemaExport.ts` (placed inside `manager_attendance_schemas/`).
-  - Example: `ManagerAttendanceApiExport.ts` (placed inside `manager_attendance_api/`).
+32. **The "No Barrel File" Rule (Avoid `index.ts` and Re-exports)**:
+Strictly avoid using `index.ts`, `index.js`, or any other barrel/facade files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies and maintain clean tree-shaking.
+- **No Facade/Re-export Exceptions:** You MUST NOT create files like `*Export.ts` or `*Facade.ts` to consolidate exports. Direct absolute imports (`@/`) are mandatory for every file.
 
 33. **Framework-Specific Media Optimization**:
 Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit documented exceptions for third-party controlled markup, emails, SVG assets, or technically incompatible external content where standard `<img>` tags are needed.
