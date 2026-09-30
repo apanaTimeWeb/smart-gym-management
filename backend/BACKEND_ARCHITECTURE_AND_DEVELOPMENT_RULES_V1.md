@@ -104,7 +104,7 @@ When fixing a bug in `backend-superadmin/superadmin-modules/superadmin-billing`,
 
 ### 0F. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
 
-Never double-prefix feature names or folders. If a backend module is named `admin-billing`, its child folders must be named `billing-controllers` or `admin-billing-controllers`, NEVER `admin-billing-billing-controllers`. Double-prefixing breaks readability and violates the naming contract.
+Never double-prefix feature names or folders. If a backend module is named `admin-billing`, its child **sub-folders** MUST be named using the **module name only** as prefix (e.g., `billing-controllers/`, `billing-services/`), NEVER using the full role+module (e.g., NEVER `admin-billing-controllers/`). The role prefix applies to **file names** inside those folders (e.g., `admin-billing-invoice-search.service.ts`), NOT to the folder name itself. This is the single canonical rule — there is no alternative.
 
 ### 0B. HARD FEATURE WRITE BOUNDARY
 

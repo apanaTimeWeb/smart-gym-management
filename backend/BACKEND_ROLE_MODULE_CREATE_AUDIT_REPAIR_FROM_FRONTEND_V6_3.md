@@ -4,6 +4,12 @@
 
 ---
 
+> ⚡ **ARCHITECTURE DOCUMENT IS FINAL AUTHORITY**
+> If ANY rule, example, checklist item, or wording inside this prompt (V6.3) conflicts with the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, **the architecture document wins — always, without exception**. This prompt is an execution guide, not a rule definition source. Record the conflict and follow the architecture document.
+
+---
+
+
 # 0. WHAT THIS PROMPT DOES
 
 This prompt has **TWO operating modes**. Read the supplied inputs to determine which mode applies.
@@ -6901,18 +6907,20 @@ Do not merely check whether E2E files exist.
 
 ---
 
-## RULE 113 - NO AI RUNTIME VERIFICATION REQUIREMENT
+## RULE 113 (AI Runtime Verification) - NO AI RUNTIME VERIFICATION OVER-CLAIM
 
 Do not treat inability to run the application as an automatic failure.
 
-Classify separately:
+When a runtime environment is NOT available (ZIP-only scenario, no live server), the AI MUST use exactly these states:
 
 ```text
-STATICALLY VERIFIED
-RUNTIME VERIFIED
-RUNTIME NOT AVAILABLE
-BLOCKED_BY_SUPPLIED_SCOPE
+STATICALLY_VERIFIED       ← Code reviewed and correct by static analysis alone
+RUNTIME_VERIFIED          ← Confirmed by actual execution
+RUNTIME_NOT_AVAILABLE     ← Server not running; static analysis only; no over-claim
+BLOCKED_BY_SUPPLIED_SCOPE ← Required artifact not in supplied scope
 ```
+
+> ⛔ OVER-CLAIM PROHIBITION: When only a ZIP was supplied and the application was NOT started, the AI MUST NOT claim `RUNTIME_VERIFIED`. It MUST report `RUNTIME_NOT_AVAILABLE` and declare that findings are based on static analysis only. Silently treating `RUNTIME_NOT_AVAILABLE` as a PASS is an audit failure.
 
 Never claim runtime verification unless actually executed.
 
@@ -7210,6 +7218,16 @@ views/ decomposition
 services/ for business logic
 serializers.py for validation/data formatting
 ```
+
+> **Django Framework File-Name Exception (CRITICAL):** In Django projects, the following framework-native filenames are explicitly **permitted** even without a module prefix, because Django itself mandates them:
+> - `models.py` (Django ORM models)
+> - `serializers.py` (DRF serializer classes)
+> - `views.py` (Django views)
+> - `apps.py` (Django AppConfig)
+> - `admin.py` (Django admin registration)
+> - `migrations/` (Django migration folder — always unprefixed by framework convention)
+>
+> **What is NOT exempt:** Sub-folders created inside a Django app module (e.g., `services/`, `repositories/`, `utils/`) MUST still be prefixed with the module name (e.g., `manager-members-services/`). Only the framework-mandated filenames listed above are exempt — do NOT treat this as a blanket exception for arbitrary generic folders.
 
 
 
