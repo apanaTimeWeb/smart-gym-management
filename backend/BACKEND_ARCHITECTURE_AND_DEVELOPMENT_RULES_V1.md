@@ -263,7 +263,7 @@ The `{role}-core/` folder is strictly a **framework infrastructure container**. 
 - Framework infrastructure (e.g., the role's root NestJS module file)
 
 **FORBIDDEN inside `{role}-core/` — Architecture Violation:**
-- Any business logic service (e.g., `admin-member-suspension.service.ts`)
+- Any business logic service (e.g., `admin-members-suspension.service.ts`)
 - Any feature-specific helper (e.g., `admin-billing-helper.ts`)
 - Any repository (e.g., `admin-auth.repository.ts`)
 - Any DTO (e.g., `admin-members-create.dto.ts`)
@@ -273,7 +273,7 @@ The `{role}-core/` folder is strictly a **framework infrastructure container**. 
 ❌ VIOLATION:
 admin-core/
 ├── admin-guards/
-├── admin-member-suspension.service.ts   <-- business logic FORBIDDEN in core
+├── admin-members-suspension.service.ts   <-- business logic FORBIDDEN in core
 └── admin-billing-helper.ts              <-- feature helper FORBIDDEN in core
 
 ✅ COMPLIANT:
@@ -564,7 +564,7 @@ For Non-NestJS projects, strictly adhere to the role and module isolation princi
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest-tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-member-registration.service.spec.ts` next to `admin-member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend-e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-members-registration.service.spec.ts` next to `admin-members-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend-e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
 * **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
@@ -646,7 +646,7 @@ These files MUST NOT be placed inside:
 Handles billing operations.
 
 ## Feature Inventory
-| POST /billing/charge | /billing/charge | Handles charging | CreateChargeDto |
+| POST /billing/charge | /billing/charge | Handles charging | AdminBillingChargeCreateDto |
 
 ## Edge Cases / AI Warnings
 - TBD
@@ -663,8 +663,8 @@ AdminBillingOrchestratorService to guarantee atomic DB + audit log writes.
 Never call AdminBillingWalletRepository directly from outside this module.
 
 ## Feature Inventory
-| POST /billing/wallet/topup | AdminWalletCommandController | Top up member wallet | AdminWalletTopupDto |
-| POST /billing/plans/purchase | AdminPlanCommandController | Purchase a plan | AdminPlanPurchaseDto |
+| POST /billing/wallet/topup | AdminBillingWalletCommandController | Top up member wallet | AdminBillingWalletTopupDto |
+| POST /billing/plans/purchase | AdminBillingPlanCommandController | Purchase a plan | AdminBillingPlanPurchaseDto |
 
 ## Edge Cases / AI Warnings
 - Wallet deductions use pessimistic locking (Rule 41) — never remove the
@@ -730,8 +730,8 @@ should an AI NEVER do in this module?]
 ## Business Flow / Key Sequences
 [REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
 **Example — Plan Purchase:**
-1. AdminPlanCommandController receives POST /billing/plans/purchase
-2. Validates AdminPlanPurchaseDto (Rule 3)
+1. AdminBillingPlanCommandController receives POST /billing/plans/purchase
+2. Validates AdminBillingPlanPurchaseDto (Rule 3)
 3. Calls AdminBillingOrchestratorService.purchasePlan(dto)
 4. Orchestrator opens DB transaction
 5. Calls AdminBillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
@@ -1244,7 +1244,7 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
 
 ## 62. Explicit Return Types on ALL Service Methods
-* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberDomainModel>`).
+* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<ManagerMembersDomainModel>`).
 
 ## 63. Database Connection Pool Configuration
 * **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
@@ -1381,7 +1381,7 @@ Backend implementation (services, repositories, DB queries)
    Consequence: Network retries from mobile clients will double-charge the member.
    Rule: 31 (Idempotency Keys for Critical Mutations).
 
-5. **Never return raw MemberEntity or WalletEntity from billing service methods.**
+5. **Never return raw ManagerMembersEntity or ManagerBillingWalletEntity from billing service methods.**
    Consequence: ORM entity leakage means a DB column rename breaks service-layer
    callers that should be completely unaware of the schema.
    Rule: 89 (Domain Object vs ORM Entity Separation).
@@ -1411,14 +1411,14 @@ Backend implementation (services, repositories, DB queries)
 
   ```text
   // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
-  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
+  // FLOW: AdminMembersCommandController → AdminMembersSuspensionService → AdminMembersRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
 
 * **Format example — Python / Django:**
 
   ```text
   # RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
-  # FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
+  # FLOW: AdminMembersCommandController → AdminMembersSuspensionService → AdminMembersRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
 
 * The FLOW must represent the actual ownership and execution path.
@@ -1452,17 +1452,17 @@ Backend implementation (services, repositories, DB queries)
    * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
    * @param memberId - The UUID of the member to suspend.
    * @param actorId - The UUID of the staff member performing the action (for audit log).
-   * @returns The updated MemberDomainModel with status SUSPENDED.
+   * @returns The updated ManagerMembersDomainModel with status SUSPENDED.
    * @throws MemberNotFoundException if the memberId does not exist.
    * @throws MemberAlreadySuspendedException if the member is already suspended.
    * @remarks Uses a database transaction to ensure the audit log write and status update are atomic.
    */
-  async suspendMember(memberId: string, actorId: string): Promise<MemberDomainModel> { ... }
+  async suspendMember(memberId: string, actorId: string): Promise<ManagerMembersDomainModel> { ... }
   ```
 
 * **Python / Django example (docstring):**
   ```python
-  def suspend_member(self, member_id: str, actor_id: str) -> MemberDomainModel:
+  def suspend_member(self, member_id: str, actor_id: str) -> ManagerMembersDomainModel:
       """
       Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
 
@@ -1471,11 +1471,11 @@ Backend implementation (services, repositories, DB queries)
           actor_id: The UUID of the staff member performing the action (for audit log).
 
       Returns:
-          The updated MemberDomainModel with status SUSPENDED.
+          The updated ManagerMembersDomainModel with status SUSPENDED.
 
       Raises:
-          MemberNotFoundException: If the member_id does not exist.
-          MemberAlreadySuspendedException: If the member is already suspended.
+          ManagerMembersNotFoundException: If the member_id does not exist.
+          ManagerMembersAlreadySuspendedException: If the member is already suspended.
 
       Note:
           Uses a database transaction to ensure the audit log write and status update are atomic.
@@ -1501,12 +1501,12 @@ Backend implementation (services, repositories, DB queries)
 
 ## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
 * **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
-  - ❌ **BAD (Ambiguous):** `data: { member: MemberEntity, invoice: InvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
-  - ✅ **GOOD:** `data: MemberWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
-  - ❌ **BAD (Inconsistent):** One code path returns `data: MemberEntity`, another returns `data: { member: MemberEntity }`.
-  - ✅ **GOOD:** Always `data: MemberResponseDTO` — one shape, all paths.
+  - ❌ **BAD (Ambiguous):** `data: { member: ManagerMembersEntity, invoice: AdminBillingInvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
+  - ✅ **GOOD:** `data: ManagerMembersWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
+  - ❌ **BAD (Inconsistent):** One code path returns `data: ManagerMembersEntity`, another returns `data: { member: ManagerMembersEntity }`.
+  - ✅ **GOOD:** Always `data: ManagerMembersResponseDTO` — one shape, all paths.
 * **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
-* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<ManagerMembersEntity>` mapping exactly. If the backend AI returns `data: { member: ManagerMembersEntity }` instead of `data: ManagerMembersEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
 
 ---
 
@@ -1721,10 +1721,10 @@ This rule MUST remain consistent with Rule 99.
 
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
-  import { MemberEntity } from '@/backend-manager/manager-modules/manager-members/members-repositories/manager-members.entity';
-  import { MemberNotFoundException } from '@/backend-manager/manager-modules/manager-members/members-exceptions/manager-members.exceptions';
+  import { ManagerMembersEntity } from '@/backend-manager/manager-modules/manager-members/members-repositories/manager-members.entity';
+  import { ManagerMembersNotFoundException } from '@/backend-manager/manager-modules/manager-members/members-exceptions/manager-members.exceptions';
 
-  import type { CreateMemberDto } from '@/backend-manager/manager-modules/manager-members/members-dto/manager-members-create.dto';
+  import type { ManagerMembersCreateDto } from '@/backend-manager/manager-modules/manager-members/members-dto/manager-members-create.dto';
   ```
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
@@ -1739,7 +1739,7 @@ This rule MUST remain consistent with Rule 99.
   2b. **Response DTO** (`member-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
   3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
-* **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+* **Why:** AI agents default to using ORM entities everywhere — passing `ManagerMembersEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
 
 ### Mapper Physical Location Rule (MANDATORY)
 
@@ -2104,7 +2104,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **The Forbidden Pattern:**
   ```typescript
   // ❌ BAD — Service directly mutates entity and calls save()
-  async suspendMember(id: string): Promise<MemberDomainModel> {
+  async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
     const member = await this.memberRepo.findByIdOrThrow(id);
     member.status = MemberStatus.SUSPENDED;   // Direct mutation
     member.suspendedAt = new Date();           // Direct mutation
@@ -2115,14 +2115,14 @@ When adding a new enum value, a database migration MUST be generated to update t
   ```typescript
   // ✅ GOOD — Repository exposes a named, intention-revealing method
   // In admin-members-write.repository.ts:
-  async suspendById(id: string, suspendedAt: Date): Promise<MemberDomainModel> {
+  async suspendById(id: string, suspendedAt: Date): Promise<ManagerMembersDomainModel> {
     // All mutation logic, audit hooks, and constraint checks live here
     const entity = await this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
     return this.mapper.toDomain(entity);
   }
 
   // In admin-members-suspension.service.ts:
-  async suspendMember(id: string): Promise<MemberDomainModel> {
+  async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
     await this.memberRepo.findByIdOrThrow(id); // Existence check
     return this.memberRepo.suspendById(id, new Date()); // Repository owns the mutation
   }
@@ -2133,7 +2133,7 @@ When adding a new enum value, a database migration MUST be generated to update t
   - Services must NEVER call the generic `repo.save(entity)` directly after mutating entity properties inline.
   - The generic `save()` method on the repository is `protected` or `private` — only callable from within the repository class itself.
   - Every repository mutation method must have its own framework-appropriate method documentation (Rule 80) and be listed in the module's `-backend-feature.md` File Responsibility Map (Rule 19).
-* **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: MemberUpdateInput): Promise<MemberDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `UpdateMemberDto` directly, ensuring the domain layer remains decoupled from the API layer.
+* **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: ManagerMembersUpdateInput): Promise<ManagerMembersDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `ManagerMembersUpdateDto` directly, ensuring the domain layer remains decoupled from the API layer.
 * **Why:** When an AI is asked to "add an audit log entry whenever a member is suspended", the correct answer is to add it inside `memberRepo.suspendById()`. If suspension logic is scattered across 5 different service methods that all do `member.status = 'SUSPENDED'; repo.save(member)`, the AI must find and modify all 5 — and will inevitably miss one. A single named repository method is the single place to add cross-cutting concerns.
 
 ---
@@ -2154,7 +2154,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **Implementation (TypeORM entity example):**
   ```typescript
   @Entity({ name: 'members' })
-  export class MemberEntity {
+  export class ManagerMembersEntity {
     @PrimaryGeneratedColumn('uuid', { name: 'id' })
     // PK_members
     id: string;
@@ -2538,8 +2538,8 @@ Never use FLOAT/DOUBLE for monetary amounts.
 
 ### DTO Rule
 Every DTO that includes a monetary field MUST include the paired currency code:
-``````typescript
-export class CreatePlanDto {
+```typescript
+export class AdminBillingPlanCreateDto {
   @IsInt()
   @Min(0)
   price: number; // in smallest unit (paise, cents, etc.)
