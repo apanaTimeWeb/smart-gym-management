@@ -291,21 +291,21 @@ Every feature module MUST own all business-specific artifacts required to unders
 Where applicable, the feature module MUST contain:
 
 ```text
-[feature]/
-├── [feature]_components/
-├── [feature]_hooks/
-├── [feature]_store/
-├── [feature]_api/
-├── [feature]_types/
-├── [feature]_schemas/
-├── [feature]_constants/
-├── [feature]_utils/
-├── [feature]_mocks/
-├── [feature]_tests/
-├── [feature]_features.md
-├── [feature]_forbidden.md
-├── [feature]_theme_contract.md
-└── [feature]_url_config.ts
+[moduleName]/
+├── [moduleName]_components/
+├── [moduleName]_hooks/
+├── [moduleName]_store/
+├── [moduleName]_api/
+├── [moduleName]_types/
+├── [moduleName]_schemas/
+├── [moduleName]_constants/
+├── [moduleName]_utils/
+├── [moduleName]_mocks/
+├── [moduleName]_tests/
+├── [moduleName]_features.md
+├── [moduleName]_forbidden.md
+├── [moduleName]_theme_contract.md
+└── [moduleName]_url_config.ts
 ```
 
 Only folders that are actually required by the feature need to exist.
@@ -672,8 +672,8 @@ Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentN
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
 
 ### Main Component Ownership Rule
-Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
-*(Note: `page.tsx` in the root folder is just a minimal Next.js wrapper that imports and renders `[Module]Main.tsx`).*
+Every feature module MUST contain exactly one `[ModuleName]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
+*(Note: `page.tsx` in the root folder is just a minimal Next.js wrapper that imports and renders `[ModuleName]Main.tsx`).*
 - **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
 *Why:* Prevents the AI from creating a monolithic "God Component".
 
@@ -746,8 +746,8 @@ Recommended structure:
 ```text
 [moduleName]_types/
   ManagerMembersApiGenerated.ts
-  [Module]Schema.ts
-  [Module]Types.ts
+  [ModuleName]Schema.ts
+  [ModuleName]Types.ts
 ```
 
 8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
@@ -1075,7 +1075,7 @@ The expected normal result is:
 
 ```text
 Changed files:
-[feature]/**
+[moduleName]/**
 ```
 
 with only documented application-infrastructure changes allowed as exceptions.
@@ -1103,7 +1103,7 @@ Handles gyms operations, UI display, and logic isolation.
 ✅ **GOOD (what this rule mandates — gives full context to any AI or human):**
 ```
 ## Module Purpose
-The Gyms module is the master tenant registry for the GymSmart SaaS platform. Superadmins
+The Gyms module is the master tenant registry for the Smart Gym Management SaaS platform. Superadmins
 use it to onboard new gym branches, view all active/suspended tenants, manage their
 subscription tier, and drill into per-gym usage metrics. It is the entry point for all
 tenant lifecycle operations (create → activate → suspend → delete).
@@ -1373,9 +1373,9 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Design §29: `motion-safe:` prefix on all transitions and animations
 ```
 
-### Sub-Module `[feature]_features.md` Files
+### Sub-Module `[moduleName]_features.md` Files
 
-For large modules (5+ sub-features), each sub-folder MAY have its own `[feature]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
+For large modules (5+ sub-features), each sub-folder MAY have its own `[moduleName]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
 - A real Module Purpose (not "handles X operations")
 - A real Feature Inventory with actual API endpoints
 - A real Edge Cases section with module-specific warnings (minimum 3 items)
@@ -1513,11 +1513,11 @@ All non-trivial forms MUST use:
 
 Form structure:
 ```text
-[Feature]Form/
-  [Feature]Form.tsx
-  use[Feature]Form.ts
-  [Feature]Schema.ts
-  [Feature]Form.test.tsx
+[ModuleName]Form/
+  [ModuleName]Form.tsx
+  use[ModuleName]Form.ts
+  [ModuleName]Schema.ts
+  [ModuleName]Form.test.tsx
 ```
 
 Responsibilities:
@@ -1743,7 +1743,7 @@ Any modified form/modal must intercept `beforeunload` to warn the user: "You hav
 Any field displaying a unique, non-sensitive identifier or tracking code may have a small copy icon next to it. **Forbidden from copying:** credentials, OTPs, reset tokens, full Aadhaar/national ID numbers, full bank account numbers, full card numbers, and any other explicitly sensitive secret. These fields must never expose a copy affordance.
 
 48. **Consistent Empty State per Entity**:
-Every list/table MUST have a dedicated empty state component (`[Module]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
+Every list/table MUST have a dedicated empty state component (`[ModuleName]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
 
 49. **Strict Import Order Convention**:
 Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/gyms/...`), Types-only.

@@ -15,7 +15,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 1. A Feature Document / Requirements Document / Backend API Contract.
 2. The frontend development instruction document (`WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`).
 3. The global design-system document (`WEB_FRONTEND_UI_UX_DESIGN.md`).
-4. A Target Module Name (e.g., `manager_members` or any other..as said..).
+4. A Target Module Name (e.g., `manager_members`).
 
 **What AI does:**
 1. Deeply read and analyze the feature document and both instruction/design documents.
@@ -2271,9 +2271,9 @@ MECHANICALLY ENFORCED RULE
 
 Find existing:
 
-* `[module]_features.md`
-* `[module]_forbidden.md`
-* `[module]_theme_contract.md`
+* `[moduleName]_features.md`
+* `[moduleName]_forbidden.md`
+* `[moduleName]_theme_contract.md`
 
 Check whether the documentation reflects reality.
 

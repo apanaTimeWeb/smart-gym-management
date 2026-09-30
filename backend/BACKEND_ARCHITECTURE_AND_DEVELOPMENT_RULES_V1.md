@@ -1085,9 +1085,9 @@ For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feat
 ---
 
 ## 39. True Multi-Tenancy (Database-per-Tenant Architecture)
-* **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms or whatever the project is ' data into a single database with a `tenant_id` column (row-level multi-tenancy).
+* **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms' data into a single database with a `tenant_id` column (row-level multi-tenancy).
 * **Architecture Strategy:**
-  1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
+  1. **Master Database:** A central database (e.g., `smart_gym_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single PostgreSQL server infrastructure unless the infrastructure architecture explicitly defines otherwise; do not spin up new physical servers/VPS per tenant).*
   3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
   4. **Strict Tenant Authorization (CRITICAL):** `x-tenant-id` MUST NOT be trusted merely because the client supplied it. The server MUST verify that the authenticated actor is explicitly authorized to access that tenant in the master database before selecting the tenant DataSource. The flow must be: `Request → Authentication → Tenant Authorization → Trusted Tenant Context → DataSource Resolver`.
@@ -1495,12 +1495,12 @@ Backend implementation (services, repositories, DB queries)
 
 ## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
 * **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
-  - ❌ **BAD (Ambiguous):** `data: { member: ManagerMembersEntity, invoice: AdminBillingInvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
+  - ❌ **BAD (Ambiguous):** `data: { member: ManagerMembersResponseDto, invoice: AdminBillingInvoiceResponseDto }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
   - ✅ **GOOD:** `data: ManagerMembersWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
-  - ❌ **BAD (Inconsistent):** One code path returns `data: ManagerMembersEntity`, another returns `data: { member: ManagerMembersEntity }`.
+  - ❌ **BAD (Inconsistent):** One code path returns `data: ManagerMembersResponseDto`, another returns `data: { member: ManagerMembersResponseDto }`.
   - ✅ **GOOD:** Always `data: ManagerMembersResponseDTO` — one shape, all paths.
 * **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
-* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<ManagerMembersEntity>` mapping exactly. If the backend AI returns `data: { member: ManagerMembersEntity }` instead of `data: ManagerMembersEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<ManagerMembersResponseDto>` mapping exactly. If the backend AI returns `data: { member: ManagerMembersResponseDto }` instead of `data: ManagerMembersResponseDto`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
 
 ---
 

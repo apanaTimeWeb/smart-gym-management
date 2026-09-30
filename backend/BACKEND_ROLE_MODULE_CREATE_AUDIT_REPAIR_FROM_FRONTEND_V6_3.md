@@ -7438,7 +7438,7 @@ Never infer from examples that the real project uses:
 The supplied backend architecture and actual repository are authoritative.
 
 This is especially important for:
-- GymSmart/Gym Management terminology;
+- Smart Gym Management terminology;
 - `members`, `billing`, `dashboard`, etc.;
 - `/api/v1/...` examples;
 - Redis/S3/BullMQ examples;
