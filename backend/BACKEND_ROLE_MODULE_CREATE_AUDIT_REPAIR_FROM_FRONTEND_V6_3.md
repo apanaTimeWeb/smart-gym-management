@@ -21,7 +21,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 2. Extract every single backend requirement the frontend depends on.
 3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 4. Double-verify: re-read the frontend requirements and cross-check against what was just created. Nothing can be missing.
-5. Deliver a **versioned ZIP**: `backend_{role}_v1.zip`
+5. Deliver a **versioned ZIP**: `backend-{role}-v1.zip`
 6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
 ---
@@ -45,19 +45,19 @@ INPUT 2 MAY contain:
 Examples:
 
 ```text
-backend_manager/
+backend-manager/
 ```
 
 OR:
 
 ```text
-backend_manager/manager_members/
+backend-manager/manager-members/
 ```
 
 OR, when the feature folder itself is supplied as the ZIP root:
 
 ```text
-manager_members/
+manager-members/
 ```
 
 When only one feature module is supplied, THAT FEATURE MODULE is the writable backend repair scope.
@@ -85,7 +85,7 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
    If the issue cannot be correctly resolved through backend-only changes and genuinely requires a frontend change, follow the FRONTEND_CHANGE_REQUIRED workflow defined in Section 2A.
 
 5. Double-verify after repair: re-run the full audit against the repaired code.
-6. Deliver a **versioned fix ZIP**: `backend_{role}_v{N}_fix.zip` (e.g., `backend_superadmin_v2_fix.zip`)
+6. Deliver a **versioned fix ZIP**: `backend-{role}-v{N}-fix.zip` (e.g., `backend-superadmin-v2-fix.zip`)
 7. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
 ---
@@ -93,9 +93,9 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
 ## VERSIONING RULES
 
 ```text
-First creation:          backend_{role}_v1.zip
-First fix after v1:      backend_{role}_v2_fix.zip
-Second fix after v2:     backend_{role}_v3_fix.zip
+First creation:          backend-{role}-v1.zip
+First fix after v1:      backend-{role}-v2-fix.zip
+Second fix after v2:     backend-{role}-v3-fix.zip
 ... and so on
 ```
 
@@ -110,7 +110,7 @@ Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root
 The `INTEGRATION_GUIDE.md` MUST include:
 
 ```markdown
-# Integration Guide — backend_{role} v{N}
+# Integration Guide — backend-{role} v{N}
 
 ## 1. Framework-Specific Application Registration
 
@@ -267,8 +267,8 @@ The frontend is read-only evidence for backend requirement discovery.
 ---
 
 > **MODE DECISION RULE:**
-> - **Frontend ZIP given + NO backend ZIP given** → **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend_{role}_v1.zip`.
-> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all actionable backend issues within the supplied writable scope, documents any genuinely required frontend changes, and delivers `backend_{role}_v{N}_fix.zip`.
+> - **Frontend ZIP given + NO backend ZIP given** → **MODE A (CREATE)** — AI builds the backend from scratch and delivers `backend-{role}-v1.zip`.
+> - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all actionable backend issues within the supplied writable scope, documents any genuinely required frontend changes, and delivers `backend-{role}-v{N}-fix.zip`.
 >
 > **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
 
@@ -311,20 +311,20 @@ The supplied backend ZIP defines the maximum normal backend write scope for this
 If the ZIP contains:
 
 ```text
-backend_manager/
-    manager_members/
+backend-manager/
+    manager-members/
 ```
 
 then the writable feature scope is the owning feature module:
 
 ```text
-backend_manager/manager_members/**
+backend-manager/manager-members/**
 ```
 
 If the ZIP root itself is:
 
 ```text
-manager_members/
+manager-members/
 ```
 
 then that supplied feature directory is the writable feature scope.
@@ -339,7 +339,7 @@ A feature-only ZIP is still assumed to operate inside the project's Modular Mono
 
 **CRITICAL — MODULAR MONOLITH SCOPE BOUNDARY (MANDATORY):**
 
-When a single backend ROLE MODULE folder is supplied (e.g., `backend_superadmin/`, `backend_manager/`), the following files will NOT be present and MUST NOT be flagged as missing, broken, or incomplete:
+When a single backend ROLE MODULE folder is supplied (e.g., `backend-superadmin/`, `backend-manager/`), the following files will NOT be present and MUST NOT be flagged as missing, broken, or incomplete:
 
 * `app.module.ts` — lives in the global application root, not in the feature module
 * `main.ts` — global application bootstrap file
@@ -364,9 +364,9 @@ A ZIP containing the backend architecture and backend documentation.
 It may contain:
 
 * `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
-* `[role]_[module]_backend_feature.md`
-* `[role]_[module]_dependencies.md`
-* `[role]_[module]_forbidden.md`
+* `[role]-[module]-backend-feature.md`
+* `[role]-[module]-dependencies.md`
+* `[role]-[module]-forbidden.md`
 * related backend architecture documents.
 
 The backend documentation is the NORMATIVE ARCHITECTURE SOURCE.
@@ -424,7 +424,7 @@ If INPUT 4 is absent:
 - the AI MUST NOT claim that the missing external suite was inspected;
 - Stage 3 MAY generate the required API E2E and Selenium files;
 - generated tests are deliverables, not proof that a previously existing external suite was audited.
-A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend_e2e/backend_admin_e2e/admin_members`). 
+A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend-e2e/backend-admin-e2e/admin-members`). 
 
 Without this, E2E completeness cannot be verified, as tests are strictly isolated from the backend source code directory.
 
@@ -599,7 +599,7 @@ Example structure:
 ## Change 1
 
 ### Frontend File
-frontend_manager/manager_members/components/MemberTable.tsx
+frontend_manager/manager-members/components/MemberTable.tsx
 
 ### Exact Location
 MemberTableColumns → status column
@@ -911,8 +911,8 @@ Required control files:
 
 ```text
 progress.json
-work_units.json
-checkpoint_log.md
+work-units.json
+checkpoint-log.md
 ```
 
 These files are NOT backend business artifacts.
@@ -1212,9 +1212,9 @@ VERIFY
         ↓
 UPDATE progress.json
         ↓
-UPDATE work_units.json
+UPDATE work-units.json
         ↓
-APPEND checkpoint_log.md
+APPEND checkpoint-log.md
         ↓
 UPDATE interruption / recovery state
         ↓
@@ -1312,7 +1312,7 @@ the AI MUST:
 3. persist the current execution state;
 4. record interruption reason as `MANUAL_USER_STOP`;
 5. create the latest Recovery Snapshot in the durable state;
-6. append the event to `checkpoint_log.md`;
+6. append the event to `checkpoint-log.md`;
 7. display the Recovery Dashboard;
 8. stop execution.
 
@@ -1324,8 +1324,8 @@ If execution terminates before the normal user-facing checkpoint response can be
 
 ```text
 READ progress.json
-→ READ work_units.json
-→ READ checkpoint_log.md
+→ READ work-units.json
+→ READ checkpoint-log.md
 → INSPECT ACTUAL FILESYSTEM
 → COMPARE DURABLE STATE VS FILESYSTEM
 → IDENTIFY VERIFIED VS UNCERTAIN CHANGES
@@ -1364,8 +1364,8 @@ When response delivery is interrupted, the AI MUST:
 4. NOT assume that the last visible dashboard represents the latest real checkpoint;
 5. reconcile:
    - `progress.json`;
-   - `work_units.json`;
-   - `checkpoint_log.md`;
+   - `work-units.json`;
+   - `checkpoint-log.md`;
    - actual filesystem state;
 6. identify the latest successful durable checkpoint;
 7. determine whether any work occurred after that checkpoint;
@@ -1497,9 +1497,9 @@ The decision to replay MUST be based on:
 ```text
 progress.json
 +
-work_units.json
+work-units.json
 +
-checkpoint_log.md
+checkpoint-log.md
 +
 actual filesystem state
 +
@@ -1626,8 +1626,8 @@ On the next interaction:
 
 ```text
 READ progress.json
-→ READ work_units.json
-→ READ checkpoint_log.md
+→ READ work-units.json
+→ READ checkpoint-log.md
 → VERIFY filesystem
 → CONFIRM WU-18 state
 → GENERATE RECOVERY DASHBOARD
@@ -1679,8 +1679,8 @@ A response-delivery problem is NOT a valid rollback signal by itself.
 When execution state is uncertain, use this priority order:
 
 1. successfully persisted `progress.json`;
-2. successfully persisted `work_units.json`;
-3. successfully persisted `checkpoint_log.md`;
+2. successfully persisted `work-units.json`;
+3. successfully persisted `checkpoint-log.md`;
 4. actual filesystem state;
 5. verification evidence;
 6. user-visible checkpoint/dashboard;
@@ -1903,7 +1903,7 @@ Dependency coherence is more important than file count.
 
 ## 6.4A Work-Unit Record Contract
 
-Every work unit MUST be explicitly represented in `work_units.json`.
+Every work unit MUST be explicitly represented in `work-units.json`.
 
 Each work unit MUST contain at minimum:
 
@@ -2506,7 +2506,7 @@ The Initial Execution Plan MUST be persisted before execution continues.
 Every normal checkpoint, manual stop, or recovery event MUST be appended to:
 
 ```text
-checkpoint_log.md
+checkpoint-log.md
 ```
 
 Each entry MUST include:
@@ -2523,7 +2523,7 @@ blockers
 next action
 ```
 
-`checkpoint_log.md` is an append-only execution audit trail.
+`checkpoint-log.md` is an append-only execution audit trail.
 
 ## 6.7 Resume
 
@@ -2536,7 +2536,7 @@ continue
 the AI MUST:
 
 1. read `progress.json`;
-2. read `work_units.json`;
+2. read `work-units.json`;
 3. validate checkpoint;
 4. inspect filesystem;
 5. compare checkpoint against filesystem;
@@ -2552,7 +2552,7 @@ Do NOT restart from zero merely because the previous response was interrupted.
 After loading checkpoint state, the AI MUST validate:
 
 1. checkpoint sequence continuity;
-2. work-unit counts against `work_units.json`;
+2. work-unit counts against `work-units.json`;
 3. requirement counters against the frozen Stage 1 baseline;
 4. issue counters against persisted issue records;
 5. current work-unit state against the filesystem;
@@ -2605,7 +2605,7 @@ Checkpoint sequence numbers MUST be strictly monotonically increasing.
 
 A checkpoint sequence number MUST NEVER be reused.
 
-If the persisted sequence is missing, duplicated, decreases unexpectedly, or conflicts with `checkpoint_log.md`, the AI MUST report:
+If the persisted sequence is missing, duplicated, decreases unexpectedly, or conflicts with `checkpoint-log.md`, the AI MUST report:
 
 ```text
 CHECKPOINT SEQUENCE CONFLICT
@@ -2680,7 +2680,7 @@ LAST DURABLE STATE
 After recovery reconciliation:
 
 * update `progress.json`;
-* append the recovery event to `checkpoint_log.md`;
+* append the recovery event to `checkpoint-log.md`;
 * update the current work-unit state;
 * identify the first remaining unverified substep;
 * resume normal work-unit lifecycle.
@@ -2712,7 +2712,7 @@ STAGE 1:
 Create:
 
 ```text
-stage_1_frontend_requirements.md
+stage-1-frontend-requirements.md
 ```
 
 Freeze the complete frontend-derived backend requirement baseline.
@@ -2735,7 +2735,7 @@ After all creation units are complete:
 4. generate final documentation;
 5. generate API E2E/Selenium deliverables;
 6. generate `RE_AUDIT_CHECKLIST_RESULT.md`;
-7. only then create `backend_{role}_v1.zip`.
+7. only then create `backend-{role}-v1.zip`.
 
 ## 6.11 Mode B — AUDIT + REPAIR
 
@@ -2744,7 +2744,7 @@ STAGE 1:
 Create and freeze:
 
 ```text
-stage_1_frontend_requirements.md
+stage-1-frontend-requirements.md
 ```
 
 STAGE 2:
@@ -2754,7 +2754,7 @@ Audit the supplied backend scope through bounded work units.
 Maintain:
 
 ```text
-stage_2_backend_audit.md
+stage-2-backend-audit.md
 ```
 
 STAGE 3:
@@ -2780,7 +2780,7 @@ After repairs:
 3. verify frontend-derived requirements;
 4. verify API E2E/Selenium requirements;
 5. generate final documentation;
-6. only then package `backend_{role}_v{N}_fix.zip`.
+6. only then package `backend-{role}-v{N}-fix.zip`.
 
 ## 6.12 Final State
 
@@ -2914,7 +2914,7 @@ For every supplied feature, locate and compare, when present:
 * frontend API types;
 * frontend Zod response schemas;
 * frontend MSW handlers/stubs;
-* backend `## Frozen API Contract` in `_backend_feature.md` (MODE B only);
+* backend `## Frozen API Contract` in `-backend-feature.md` (MODE B only);
 * backend response DTOs (MODE B only);
 * Swagger/OpenAPI contract (MODE B only);
 * applicable backend tests (MODE B only).
@@ -4874,25 +4874,25 @@ Explicitly check:
 
 Verify:
 
-- backend role containers use `backend_` prefix (e.g., `backend_admin/`, `backend_manager/`);
-- E2E role roots use `backend_*_e2e` (e.g., `backend_e2e/backend_admin_e2e/`);
-- Selenium role roots use `backend_*_selenium` (e.g., `backend_selenium/backend_admin_selenium/`);
+- backend role containers use `backend-` prefix (e.g., `backend-admin/`, `backend-manager/`);
+- E2E role roots use `backend-*-e2e` (e.g., `backend-e2e/backend-admin-e2e/`);
+- Selenium role roots use `backend-*-selenium` (e.g., `backend-selenium/backend-admin-selenium/`);
 - ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere unless explicitly matching the Rule 2 global infrastructure exception;
 - filenames begin with the role + module as a prefix (e.g., `admin-billing-invoice.controller.ts`).
 
 Canonical prefixing architecture to verify against:
 
 ```text
-backend_admin/
-├── admin_core/                             ← (Top-level prefixed, NOT core/)
-│   ├── admin_guards/                       ← (Sub-folder prefixed, NOT guards/)
+backend-admin/
+├── admin-core/                             ← (Top-level prefixed, NOT core/)
+│   ├── admin-guards/                       ← (Sub-folder prefixed, NOT guards/)
 │   │   └── admin-core-jwt-auth.guard.ts    ← (Role: admin, Module: core)
 │   └── admin-core.module.ts
-└── admin_modules/                          ← (Top-level prefixed, NOT modules/)
-    └── admin_billing/                      ← (Feature folder prefixed)
-        ├── billing_controllers/            ← (Sub-folder prefixed with module name)
+└── admin-modules/                          ← (Top-level prefixed, NOT modules/)
+    └── admin-billing/                      ← (Feature folder prefixed)
+        ├── billing-controllers/            ← (Sub-folder prefixed with module name)
         │   └── admin-billing-invoice.controller.ts
-        ├── billing_dto/
+        ├── billing-dto/
         │   └── admin-billing-create-invoice.dto.ts
         └── admin-billing.module.ts
 ```
@@ -4901,7 +4901,7 @@ Any deviation from this canonical pattern (generic folder names without prefix) 
 
 #### Core Folder Scope Enforcement
 
-Verify `{role}_core/` contains ONLY:
+Verify `{role}-core/` contains ONLY:
 
 - guards
 - decorators
@@ -4910,7 +4910,7 @@ Verify `{role}_core/` contains ONLY:
 - middleware
 - the role's root module file
 
-Flag as Architecture Violation if `{role}_core/` contains ANY of:
+Flag as Architecture Violation if `{role}-core/` contains ANY of:
 
 - business logic services
 - feature-specific helpers
@@ -4955,9 +4955,9 @@ Verify ALL of:
 - every structural folder follows required prefixing;
 - no generic `core/`, `modules/`, `common/`, `shared/`, `utils/`, `config/`, etc. unless the architecture explicitly allows an infrastructure exception;
 - file and class names remain collision-resistant for AI context;
-- every backend role container contains EXACTLY the two mandatory top-level directories: `{role}_core/` and `{role}_modules/` — any feature module placed directly under `backend_{role}/` is a Rule 2 Architecture Violation;
-- all feature module sub-folders follow the mandatory naming table (`{module}_services/`, `{module}_controllers/`, `{module}_repositories/`, `{module}_dto/`, `{module}_mappers/`, `{module}_domain/`, `{module}_types/`, `{module}_constants/`, `{module}_exceptions/`, `{module}_locales/`, `{module}_jobs/`, `{module}_adapters/`) — unprefixed alternatives (`services/`, `dto/`, `mappers/`, etc.) are Architecture Violations;
-- `{role}_core/` contains ONLY framework infrastructure (guards, decorators, interceptors, pipes, middleware, root module) — business logic in `{role}_core/` is an Architecture Violation.
+- every backend role container contains EXACTLY the two mandatory top-level directories: `{role}-core/` and `{role}-modules/` — any feature module placed directly under `backend-{role}/` is a Rule 2 Architecture Violation;
+- all feature module sub-folders follow the mandatory naming table (`{module}-services/`, `{module}-controllers/`, `{module}-repositories/`, `{module}-dto/`, `{module}-mappers/`, `{module}-domain/`, `{module}-types/`, `{module}-constants/`, `{module}-exceptions/`, `{module}-locales/`, `{module}-jobs/`, `{module}-adapters/`) — unprefixed alternatives (`services/`, `dto/`, `mappers/`, etc.) are Architecture Violations;
+- `{role}-core/` contains ONLY framework infrastructure (guards, decorators, interceptors, pipes, middleware, root module) — business logic in `{role}-core/` is an Architecture Violation.
 
 IMPORTANT:
 
@@ -5028,7 +5028,7 @@ Verify:
 - concern-based splitting is encouraged to minimize AI context (e.g., `{role}-{module}-read.repository.ts`, `{role}-{module}-write.repository.ts`);
 - method-level over-fragmentation is forbidden (e.g., `member-find-by-id.repository.ts`);
 - forbidden naming patterns: `member.repository.ts` (missing role), `member-query.repository.ts` ("query" suffix is reserved for CQRS controllers);
-- all repositories live inside `{module}_repositories/` sub-folder.
+- all repositories live inside `{module}-repositories/` sub-folder.
 
 ---
 
@@ -5043,7 +5043,7 @@ Verify:
 - external dependencies use adapters;
 - all Orchestrators are named `{role}-{module}-orchestrator.service.ts` (e.g., `admin-members-orchestrator.service.ts`);
 - forbidden orchestrator names: `facade.service.ts`, `workflow.service.ts`, `transaction-handler.service.ts`, `*.facade.ts`;
-- Orchestrators live inside the module's `{module}_services/` sub-folder;
+- Orchestrators live inside the module's `{module}-services/` sub-folder;
 - exported Orchestrator class name follows PascalCase of the filename (e.g., `AdminMembersOrchestratorService`).
 
 ---
@@ -5725,7 +5725,7 @@ Commands MUST NOT become giant read aggregators.
 
 Every module MUST contain:
 
-`[role]_[module]_dependencies.md`
+`[role]-[module]-dependencies.md`
 
 It MUST list:
 
@@ -6190,7 +6190,7 @@ For new packages verify:
 
 Every module MUST contain:
 
-`[role]_[module]_forbidden.md`
+`[role]-[module]-forbidden.md`
 
 It MUST contain at least 5 concrete module-specific forbidden patterns.
 
@@ -6389,10 +6389,10 @@ Services and event handlers must not consume ORM entities where forbidden.
 No unified model shortcut.
 
 Verify physical locations:
-- Mappers MUST be in `{module}_mappers/`
-- Domain objects MUST be in `{module}_domain/`
-- ORM entities (`*.entity.ts`) MUST be in `{module}_repositories/`
-- ORM entities MUST NEVER be placed in `{module}_domain/`
+- Mappers MUST be in `{module}-mappers/`
+- Domain objects MUST be in `{module}-domain/`
+- ORM entities (`*.entity.ts`) MUST be in `{module}-repositories/`
+- ORM entities MUST NEVER be placed in `{module}-domain/`
 
 ---
 
@@ -6840,14 +6840,14 @@ Verify EXACTLY:
 
 - 1:1 backend folder mirroring;
 - role/module-prefixed filenames (exempt from prefix rules ONLY for the `test_` prefix exception);
-- `test_[role]_[module]_api.py`;
-- `test_[role]_[module]_ui.py`;
-- `test_[role]_[module]_ui_edge.py`;
+- `test_[role]-[module]-api.py`;
+- `test_[role]-[module]-ui.py`;
+- `test_[role]-[module]-ui-edge.py`;
 - negative-flow coverage;
 - edge-state coverage;
 - no shared helpers/utilities;
 - no cross-module imports;
-- `_test_forbidden.md`;
+- `_test-forbidden.md`;
 - self-contained fixtures;
 - dedicated test DB;
 - real HTTP/network;
@@ -7187,7 +7187,7 @@ The final report MUST identify which framework mapping was actually used.
 
 # 47H. BACKEND FEATURE-DOCUMENT TEMPLATE COMPLETENESS GATE
 
-Rule 19 is not satisfied merely because `[module_name]_backend_feature.md` exists.
+Rule 19 is not satisfied merely because `[module]-backend-feature.md` exists.
 
 When a feature document is supplied, verify the COMPLETE mandatory structure:
 
@@ -7384,7 +7384,7 @@ This is especially important for:
 - `/api/v1/...` examples;
 - Redis/S3/BullMQ examples;
 - sample event names;
-- example `_backend_feature.md` content.
+- example `-backend-feature.md` content.
 
 When the prompt example differs from the supplied project:
 
@@ -7632,9 +7632,9 @@ Any frontend-critical backend field sourced from mock/demo/placeholder data is a
 
 Inspect supplied backend documentation including, where present:
 
-* `_backend_feature.md`;
-* `_dependencies.md`;
-* `_forbidden.md`;
+* `-backend-feature.md`;
+* `-dependencies.md`;
+* `-forbidden.md`;
 * API contract;
 * frozen API contract;
 * data/state architecture;
@@ -8754,7 +8754,7 @@ Before producing the final verdict, verify:
 [ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
 [ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
 [ ] Rule 0C — Change scope failure conditions checked
-[ ] Rule 0D — All backend folders use backend_ prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)
+[ ] Rule 0D — All backend folders use backend- prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)
 [ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
@@ -8811,7 +8811,7 @@ Before producing the final verdict, verify:
 [ ] Every dynamically discovered backend architecture rule checked
 [ ] Rules added after prior Universal prompt versions included
 [ ] Latest extended architecture checks completed
-[ ] Rule 78 — _forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
+[ ] Rule 78 — -forbidden.md present, specific, rule-cited, and consequence-explained (not generic)
 [ ] Rule 79 — Language-appropriate RESPONSIBILITY + FLOW annotation in every service, controller, and repository file (TypeScript/JavaScript: `// RESPONSIBILITY:` + `// FLOW:`; Python/Django: `# RESPONSIBILITY:` + `# FLOW:`)
 [ ] Rule 80 — Framework-appropriate method documentation on ALL service methods, repository methods, adapter methods, and utility functions (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings)
 [ ] Rule 82A — Backend response DTOs satisfy COMPLETE frontend UI data requirements (no frontend reconstruction)
@@ -9061,9 +9061,9 @@ You MUST verify any additional strict architectural rules that are explicitly su
 
 ## 86B.1 Markdown Artifact Output Requirement
 DO NOT dump massive output tables directly into the chat. You MUST write your findings for each stage into separate Markdown Artifact files using your file-writing tools.
-- Stage 1 Output → `stage_1_frontend_requirements.md`
-- Stage 2 Output → `stage_2_backend_audit.md`
-- Stage 3 Output → `stage_3_final_verdict.md`
+- Stage 1 Output → `stage-1-frontend-requirements.md`
+- Stage 2 Output → `stage-2-backend-audit.md`
+- Stage 3 Output → `stage-3-final-verdict.md`
 ## 86B.2 E2E API AND SELENIUM TEST GENERATION MANDATE
 
 This is a mandatory deliverable that runs in parallel with Stage 2 and is finalized in Stage 3.
@@ -9095,30 +9095,30 @@ You have everything required to write complete, realistic Selenium tests without
 Files MUST follow the exact project naming pattern:
 
 ```
-backend_e2e/
-  backend_[role]_e2e/
+backend-e2e/
+  backend-[role]-e2e/
     [module]/
-      test_[role]_[module]_api.py
+      test_[role]-[module]-api.py
 
-backend_selenium/
-  backend_[role]_selenium/
+backend-selenium/
+  backend-[role]-selenium/
     [module]/
-      test_[role]_[module]_ui.py
-      test_[role]_[module]_ui_edge.py
-  _test_forbidden.md                  ← Selenium forbidden patterns doc
+      test_[role]-[module]-ui.py
+      test_[role]-[module]-ui-edge.py
+  _test-forbidden.md                  ← Selenium forbidden patterns doc
 ```
 
 Examples:
 
 ```
-backend_selenium/backend_admin_selenium/admin_members/test_admin_members_ui.py
-backend_selenium/backend_admin_selenium/admin_members/test_admin_members_ui_edge.py
-backend_selenium/backend_trainer_selenium/trainer_attendance/test_trainer_attendance_ui.py
+backend-selenium/backend-admin-selenium/admin-members/test_admin-members-ui.py
+backend-selenium/backend-admin-selenium/admin-members/test_admin-members-ui-edge.py
+backend-selenium/backend-trainer-selenium/trainer-attendance/test_trainer-attendance-ui.py
 ```
 
 ### What Each Selenium Test File MUST Cover
 
-#### `test_[role]_[module]_ui.py` — Happy Path Flows
+#### `test_[role]-[module]-ui.py` — Happy Path Flows
 
 For every major user-facing feature, cover the complete happy path:
 
@@ -9159,7 +9159,7 @@ Mandatory happy-path flows to cover (where applicable to the supplied module):
 * tabs: click tab → content changes;
 * modal/drawer: open → interact → close → original state preserved.
 
-#### `test_[role]_[module]_ui_edge.py` — Edge Cases and Negative Flows
+#### `test_[role]-[module]-ui-edge.py` — Edge Cases and Negative Flows
 
 For every major feature, cover:
 
@@ -9173,9 +9173,9 @@ For every major feature, cover:
 * duplicate submit: submit twice → only one record created (idempotency test);
 * session expiry: token expires → redirect to login (where applicable).
 
-#### `_test_forbidden.md` — E2E & Selenium Forbidden Patterns
+#### `_test-forbidden.md` — E2E & Selenium Forbidden Patterns
 
-Create this file in BOTH `backend_e2e/backend_[role]_e2e/` AND `backend_selenium/backend_[role]_selenium/` to enforce test isolation rules.
+Create this file in BOTH `backend-e2e/backend-[role]-e2e/` AND `backend-selenium/backend-[role]-selenium/` to enforce test isolation rules.
 
 Document at least 5 patterns that API E2E and Selenium tests in this module MUST NEVER do:
 
@@ -9213,7 +9213,7 @@ Each test file MUST:
 ```python
 # RESPONSIBILITY: [what this test file validates in one sentence]
 # FLOW: [Browser → Route → UI Interaction → Assert Visible Result]
-# MODULE: [role]_[module]
+# MODULE: [role]-[module]
 # RULE: Rule 112 — Complete E2E/Selenium isolation
 
 import pytest
@@ -9261,17 +9261,17 @@ class Test[Role][Module]UI:
 In Stage 3, create the actual Selenium test files alongside the final audit:
 
 ```
-stage_3_final_verdict.md
+stage-3-final-verdict.md
 
-backend_e2e/backend_[role]_e2e/[module]/test_[role]_[module]_api.py
+backend-e2e/backend-[role]-e2e/[module]/test_[role]-[module]-api.py
 
-backend_e2e/backend_[role]_e2e/_test_forbidden.md
+backend-e2e/backend-[role]-e2e/_test-forbidden.md
 
-backend_selenium/backend_[role]_selenium/[module]/test_[role]_[module]_ui.py
+backend-selenium/backend-[role]-selenium/[module]/test_[role]-[module]-ui.py
 
-backend_selenium/backend_[role]_selenium/[module]/test_[role]_[module]_ui_edge.py
+backend-selenium/backend-[role]-selenium/[module]/test_[role]-[module]-ui-edge.py
 
-backend_selenium/backend_[role]_selenium/_test_forbidden.md
+backend-selenium/backend-[role]-selenium/_test-forbidden.md
 ```
 
 These files are DELIVERABLES, not optional suggestions.
@@ -9431,13 +9431,13 @@ Only after all final verification passes:
 
 ```text
 Mode A:
-backend_{role}_v1.zip
+backend-{role}-v1.zip
 
 Mode B first repair:
-backend_{role}_v2_fix.zip
+backend-{role}-v2-fix.zip
 
 Mode B second repair:
-backend_{role}_v3_fix.zip
+backend-{role}-v3-fix.zip
 ```
 
 The ZIP MUST contain the required final artifacts already mandated by this prompt:
@@ -9446,7 +9446,7 @@ The ZIP MUST contain the required final artifacts already mandated by this promp
 INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
 
 Mode A:
-  backend_{role}/
+  backend-{role}/
     [all source files — controllers,
      services, repos, DTOs, entities,
      migrations, seeds, tests, docs]
@@ -9457,11 +9457,11 @@ Mode B:
   Do NOT fabricate omitted sibling modules merely to make the ZIP appear to be a complete role container.
   The final ZIP must contain exactly the repaired supplied backend scope plus the required verification/documentation deliverables.
 
-stage_1_frontend_requirements.md         ← requirements extracted from frontend ZIP
-stage_2_backend_audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
-stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
-backend_e2e/...                          ← all API E2E test files
-backend_selenium/...                     ← all Selenium test files (Section 86B.2)
+stage-1-frontend-requirements.md         ← requirements extracted from frontend ZIP
+stage-2-backend-audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
+stage-3-final-verdict.md                 ← final verdict after re-audit / after creation verification
+backend-e2e/...                          ← all API E2E test files
+backend-selenium/...                     ← all Selenium test files (Section 86B.2)
 RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
 FRONTEND_CHANGE_REQUIRED.md             ← ONLY when backend-only resolution was genuinely impossible
                                             and frontend modification is actually required.

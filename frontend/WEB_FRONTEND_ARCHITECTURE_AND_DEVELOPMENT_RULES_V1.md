@@ -136,7 +136,7 @@ This hierarchy applies to EVERY frontend project regardless of business domain.
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders. 
 - **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
 - **Primary Examples:** `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_superadmin/`.
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager_billing/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager-billing/`, there is zero ambiguity for the AI or the human developer.
 
 Examples of ROLE CONTAINERS:
 
@@ -208,20 +208,20 @@ APPLICATION
 └── ROLE CONTAINER
     └── FEATURE MODULE
         ├── page.tsx / layout.tsx / loading.tsx / error.tsx where required
-        ├── [module]_components/
-        ├── [module]_hooks/
-        ├── [module]_api/
-        ├── [module]_types/
-        ├── [module]_schemas/
-        ├── [module]_constants/
-        ├── [module]_store/
-        ├── [module]_tests/
-        ├── [module]_fixtures/
-        ├── [module]_handlers/
-        ├── [module]_locales/
-        ├── [module]_features.md
-        ├── [module]_forbidden.md
-        ├── [module]_theme_contract.md
+        ├── [moduleName]_components/
+        ├── [moduleName]_hooks/
+        ├── [moduleName]_api/
+        ├── [moduleName]_types/
+        ├── [moduleName]_schemas/
+        ├── [moduleName]_constants/
+        ├── [moduleName]_store/
+        ├── [moduleName]_tests/
+        ├── [moduleName]_fixtures/
+        ├── [moduleName]_handlers/
+        ├── [moduleName]_locales/
+        ├── [moduleName]_features.md
+        ├── [moduleName]_forbidden.md
+        ├── [moduleName]_theme_contract.md
         └── ... etc
 
 Example:
@@ -469,7 +469,7 @@ src/app/frontend_admin/admin_billing/admin_billing_utils/
 and
 
 ```text
-src/app/frontend_manager/manager_billing/manager_billing_utils/
+src/app/frontend_manager/manager-billing/manager_billing_utils/
 ```
 
 may contain similar code.
@@ -530,7 +530,7 @@ AI Repair Boundary
 The term "module" in all isolation, portability, dependency, and AI repair rules MUST refer to the FEATURE MODULE unless a rule explicitly states otherwise.
 
 2. **Total Role Isolation (No Shared Business Components)**:
-To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_trainer/`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `src/app/frontend_admin/admin_members/`, `ManagerMembersTable.tsx` inside `src/app/frontend_manager/manager_members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_trainer/`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `src/app/frontend_admin/admin_members/`, `ManagerMembersTable.tsx` inside `src/app/frontend_manager/manager-members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
 
 3. **Hyper-Descriptive Naming & Mandatory Role + Module Prefix (CRITICAL)**: 
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
@@ -538,7 +538,7 @@ Rename all components, files, and folders to be extremely descriptive based on e
   - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
   - ✅ **GOOD:** `useManagerMembers.ts`, `manager-members.api.ts`, `manager-members.store.ts`, `ManagerMembersTable.tsx`
   This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin-members.api.ts` and `manager-members.api.ts`.
-- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `_locales/{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
+- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `[moduleName]_locales/[moduleName]_{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
 - Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
 - **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
 - **No Abbreviations**: Never use `Btn`, `Nav`, `Utils`. Use `Button`, `Navigation`, `Utilities`.
@@ -549,7 +549,8 @@ Rename all components, files, and folders to be extremely descriptive based on e
 
 To eliminate AI naming hallucinations, strictly follow this pattern:
 
-- **Folders:** snake_case_with_ role and module (e.g., `admin_members_components/`, `admin_members_hooks/`, `admin_members_store/`)
+
+- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `manager_shared/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `ManagerShared/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
 - **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`, `AdminMembersContext.tsx`, `AdminMembersProvider.tsx`)
 - **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
 - **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
@@ -558,11 +559,11 @@ To eliminate AI naming hallucinations, strictly follow this pattern:
 ### Child Folder Naming Contract
 
 Every child folder MUST inherit Role + Module identity.
-- ✅ **GOOD:** `AdminMembersTable/`, `AdminMembersFilters/`, `AdminMembersProfile/`
-- ❌ **BAD:** `Table/`, `Filters/`, `Profile/`, `Modal/`
+- ✅ **GOOD:** `admin_members_table/`, `admin_members_filters/`, `admin_members_profile/`
+- ❌ **BAD:** `table/`, `filters/`, `profile/`, `modal/`
 *Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_header_constants.ts` inside the `/header` folder) or a module-level `[module_name]_shared_constants.ts` for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
 ### One Constants Entry Rule
@@ -875,7 +876,7 @@ Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into AP
 All files (Constants, Schemas, QueryKeys, API, UrlConfig, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
 
-For example, `ManagerAttendanceSchema.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchema.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
+For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
 #### API FACADE RULE
 Every feature module MAY expose one primary public API entry point (e.g., `AdminMembersApi.ts`), but this file MUST be placed inside the `[moduleName]_api/` folder, NEVER in the root folder.
@@ -1683,8 +1684,11 @@ Every **user-browsable data table** MUST implement applicable pagination, sortin
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
 
-32. **The "No Barrel File" Rule (Avoid `index.ts`)**:
+32. **The "No Barrel File" Rule (Avoid `index.ts`) & Facade Naming**:
 Strictly avoid using `index.ts` or `index.js` files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies.
+- **Facade / Re-export Naming:** If a module requires a facade or re-export file (e.g., to consolidate multiple schemas from a sub-folder into one file), the file name MUST explicitly end with `Export` to immediately signal its purpose to AI and developers.
+  - Example: `ManagerAttendanceSchemaExport.ts` (placed inside `manager_attendance_schemas/`).
+  - Example: `ManagerAttendanceApiExport.ts` (placed inside `manager_attendance_api/`).
 
 33. **Framework-Specific Media Optimization**:
 Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit documented exceptions for third-party controlled markup, emails, SVG assets, or technically incompatible external content where standard `<img>` tags are needed.
@@ -2065,7 +2069,7 @@ Example:
 
 src/app/
 └── frontend_manager/
-    └── manager_members/
+    └── manager-members/
         ├── manager_members_components/
         ├── manager_members_hooks/
         ├── manager_members_api/
@@ -2552,7 +2556,7 @@ EVERY frontend API client function that performs a mutation MUST require an `ide
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
+import { MEMBER_URLS } from '@/app/frontend_manager/manager-members/manager_members_url_config';
 
 export const updateMemberProfile = async (
   id: string,
@@ -2594,19 +2598,19 @@ The frontend uses `next-intl` (Next.js) with **co-located locale files inside ea
 - **Runtime cost:** Zero — all files are static JSON, bundled at build time
 
 ### Module-Level File Structure
-Each feature module owns its own `_locales/` folder:
+Each feature module owns its own `[moduleName]_locales/` folder:
 ```text
 src/app/
   frontend_admin/
     admin_members/
-      _locales/
+      [moduleName]_locales/
         en.json   ← AI writes this when creating the module
         hi.json   ← AI translates this in the same commit
       admin_members_components/
       admin_members_hooks/
   frontend_superadmin/
     superadmin_tenants/
-      _locales/
+      [moduleName]_locales/
         en.json
         hi.json
       superadmin_tenants_components/
@@ -2615,7 +2619,7 @@ scripts/
   merge-locales.ts   ← Merges all _locales into one bundle at build time
 ```
 
-### `_locales/en.json` (Source of Truth per Module)
+### `[moduleName]_locales/[moduleName]_en.json` (Source of Truth per Module)
 ```json
 {
   "MEMBERS": {
@@ -2628,12 +2632,12 @@ scripts/
 
 ### AI Agent Translation Rule
 When writing a new feature module, the AI MUST:
-1. Create `_locales/en.json` with all English UI strings used in the module.
+1. Create `[moduleName]_locales/[moduleName]_en.json` with all English UI strings used in the module.
 2. In the **same commit**, create locale files for all currently active languages defined in the "Currently Active Languages" section, using its own translation capability.
 3. Translations must be **contextually correct** for a Gym Management SaaS.
 
 ```json
-// _locales/hi.json — AI writes this, context-aware
+// [moduleName]_locales/[moduleName]_hi.json — AI writes this, context-aware
 {
   "MEMBERS": {
     "PAGE_TITLE": "सदस्य",
@@ -2662,7 +2666,7 @@ export const MembersPage = () => {
 ```
 
 ### `scripts/merge-locales.ts` (Build-Time Merge Script)
-Merges all module `_locales/` folders into a single bundle per language. Runs automatically at build time.
+Merges all module `[moduleName]_locales/` folders into a single bundle per language. Runs automatically at build time.
 
 ```typescript
 // scripts/merge-locales.ts
@@ -2674,7 +2678,7 @@ import { globSync } from 'glob';
 const OUTPUT_DIR = 'public/locales';
 const merged: Record<string, Record<string, unknown>> = {};
 
-for (const file of globSync('src/app/frontend_*/**/_locales/*.json')) {
+for (const file of globSync('src/app/frontend_*/**/[moduleName]_locales/*.json')) {
   const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
   const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
   merged[lang] = { ...merged[lang], ...content };
@@ -2712,14 +2716,14 @@ export const apiFetch = async (url: string, options?: RequestInit) => {
 ```
 
 ### Developer Workflow
-1. AI writes a new feature module and creates `_locales/en.json`.
-2. AI, in the **same response**, creates all currently active target-language `_locales/{lang}.json` files.
+1. AI writes a new feature module and creates `[moduleName]_locales/[moduleName]_en.json`.
+2. AI, in the **same response**, creates all currently active target-language `[moduleName]_locales/[moduleName]_{lang}.json` files.
 3. Run `npm run i18n:merge` (or let CI/build do it automatically).
-4. Commit all `_locales/` files alongside the feature module code.
+4. Commit all `[moduleName]_locales/` files alongside the feature module code.
 5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
 
 ### Currently Active Languages
-This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
+This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `[moduleName]_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2747,7 +2751,7 @@ When a planned language becomes officially active, every affected module MUST ad
 
 > **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
 
-> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all currently active target-language files (e.g., `_locales/hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `[moduleName]_locales/[moduleName]_en.json` AND all currently active target-language files (e.g., `[moduleName]_locales/[moduleName]_hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 

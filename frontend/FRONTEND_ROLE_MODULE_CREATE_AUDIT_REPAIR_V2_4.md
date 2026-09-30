@@ -21,7 +21,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 1. Deeply read and analyze the feature document and both instruction/design documents.
 2. Create the complete frontend module from SCRATCH for the specific role.
 3. Strictly follow EVERY design requirement in `WEB_FRONTEND_UI_UX_DESIGN.md` and EVERY architectural rule in `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
-4. Deliver a **versioned ZIP**: `frontend_{role}_v1.zip`
+4. Deliver a **versioned ZIP**: `frontend-{role}-v1.zip`
 5. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
 ---
@@ -39,7 +39,7 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 2. Identify every gap, missing file, UI issue, broken API contract, and missing architectural/design rule.
 3. Fix ALL found issues directly in code — no half-fixes, no skipping.
 4. Double-verify after repair by re-running the checklist.
-5. Deliver a **versioned fix ZIP**: `frontend_{role}_v{N}_fix.zip`
+5. Deliver a **versioned fix ZIP**: `frontend-{role}-v{N}-fix.zip`
 6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
 ---
@@ -47,9 +47,9 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 ## VERSIONING RULES
 
 ```text
-First creation:          frontend_{role}_v1.zip
-First fix after v1:      frontend_{role}_v2_fix.zip
-Second fix after v2:     frontend_{role}_v3_fix.zip
+First creation:          frontend-{role}-v1.zip
+First fix after v1:      frontend-{role}-v2-fix.zip
+Second fix after v2:     frontend-{role}-v3-fix.zip
 ... and so on
 ```
 
@@ -3509,7 +3509,7 @@ Verify ALL requirements from the source section, including:
 Verify:
 
 - EVERY top-level role container MUST be prefixed with `frontend_` (e.g., `src/app/frontend_manager/`);
-- The AI repair unit is strictly the FEATURE MODULE (e.g., `/frontend_manager/manager_members/`);
+- The AI repair unit is strictly the FEATURE MODULE (e.g., `/frontend_manager/manager-members/`);
 - No hallucination or mixing of backend NestJS code into frontend React modules.
 
 ---
@@ -5850,7 +5850,7 @@ The directory MUST contain at minimum:
 ```text
 progress.json
 work_units.json
-checkpoint_log.md
+checkpoint-log.md
 ```
 
 These are execution-control artifacts only.
@@ -6145,7 +6145,7 @@ UPDATE progress.json
         ↓
 UPDATE work_units.json
         ↓
-APPEND checkpoint_log.md
+APPEND checkpoint-log.md
         ↓
 UPDATE interruption / recovery state
         ↓
@@ -6220,7 +6220,7 @@ the AI MUST:
 2. safely finish only the current atomic operation if required to prevent corruption;
 3. persist current state;
 4. record `MANUAL_USER_STOP`;
-5. append the event to `checkpoint_log.md`;
+5. append the event to `checkpoint-log.md`;
 6. generate the Recovery Dashboard;
 7. stop.
 
@@ -6233,7 +6233,7 @@ If execution terminates before the normal dashboard can be delivered, the next e
 ```text
 READ progress.json
 → READ work_units.json
-→ READ checkpoint_log.md
+→ READ checkpoint-log.md
 → INSPECT ACTUAL FILESYSTEM
 → COMPARE DURABLE STATE VS ACTUAL STATE
 → IDENTIFY UNCERTAIN CHANGES
@@ -6293,7 +6293,7 @@ When response delivery is interrupted, the AI MUST:
 5. reconcile:
    - `progress.json`;
    - `work_units.json`;
-   - `checkpoint_log.md`;
+   - `checkpoint-log.md`;
    - actual filesystem state;
 6. identify the latest successful durable checkpoint;
 7. determine whether any work occurred after that checkpoint;
@@ -6427,7 +6427,7 @@ progress.json
 +
 work_units.json
 +
-checkpoint_log.md
+checkpoint-log.md
 +
 actual filesystem state
 +
@@ -6555,7 +6555,7 @@ On the next interaction:
 ```text
 READ progress.json
 → READ work_units.json
-→ READ checkpoint_log.md
+→ READ checkpoint-log.md
 → VERIFY filesystem
 → CONFIRM WU-18 state
 → GENERATE RECOVERY DASHBOARD
@@ -6608,7 +6608,7 @@ When execution state is uncertain, use this priority order:
 
 1. successfully persisted `progress.json`;
 2. successfully persisted `work_units.json`;
-3. successfully persisted `checkpoint_log.md`;
+3. successfully persisted `checkpoint-log.md`;
 4. actual filesystem state;
 5. verification evidence;
 6. user-visible checkpoint/dashboard;
@@ -7371,7 +7371,7 @@ The Initial Execution Plan MUST be persisted before execution continues.
 Every normal checkpoint, manual stop, and recovery event MUST be appended to:
 
 ```text
-checkpoint_log.md
+checkpoint-log.md
 ```
 
 Each entry MUST include:
@@ -7421,7 +7421,7 @@ After loading checkpoint state, the AI MUST validate:
 3. requirement counters against the frozen Stage 1 baseline;
 4. issue counters against persisted issue records;
 5. current work-unit state against the filesystem;
-6. interruption state against the latest `checkpoint_log.md` entry.
+6. interruption state against the latest `checkpoint-log.md` entry.
 
 If persisted state and filesystem state disagree, report:
 
@@ -7472,7 +7472,7 @@ Checkpoint sequence numbers MUST be strictly monotonically increasing.
 
 A checkpoint sequence number MUST NEVER be reused.
 
-If the persisted sequence is missing, duplicated, decreases unexpectedly, or conflicts with `checkpoint_log.md`, the AI MUST report:
+If the persisted sequence is missing, duplicated, decreases unexpectedly, or conflicts with `checkpoint-log.md`, the AI MUST report:
 
 ```text
 CHECKPOINT SEQUENCE CONFLICT
@@ -7537,7 +7537,7 @@ For every other classification:
 2. compare against expected state;
 3. perform the applicable verification;
 4. update `progress.json`;
-5. append the recovery event to `checkpoint_log.md`.
+5. append the recovery event to `checkpoint-log.md`.
 
 The AI MUST produce:
 
@@ -7599,7 +7599,7 @@ After all creation work units are complete:
 4. generate final documentation;
 5. generate the changelog;
 6. generate the final checklist;
-7. only then package `frontend_{role}_v1.zip`.
+7. only then package `frontend-{role}-v1.zip`.
 
 ## 44.11 Mode B — AUDIT + REPAIR
 
@@ -7767,10 +7767,10 @@ Only then package:
 
 ```text
 Mode A:
-frontend_{role}_v1.zip
+frontend-{role}-v1.zip
 
 Mode B:
-frontend_{role}_v{N}_fix.zip
+frontend-{role}-v{N}-fix.zip
 ```
 
 The ZIP MUST contain:
@@ -7778,7 +7778,7 @@ The ZIP MUST contain:
 ```text
 INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
 [module_name]_changelog_vN.md            ← detailed changelog
-frontend_{role}/
+frontend-{role}/
 └── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
 frontend_e2e/                            ← (when applicable) isolated E2E tests for the feature
 └── [role]_e2e/
