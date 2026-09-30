@@ -1109,16 +1109,16 @@ subscription tier, and drill into per-gym usage metrics. It is the entry point f
 tenant lifecycle operations (create → activate → suspend → delete).
 
 ## Feature Inventory
-| Gym List        | /frontend_superadmin/gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /frontend_superadmin/gyms?page&limit&search&status | ✅ Live |
-| Add Gym         | /frontend_superadmin/gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /frontend_superadmin/gyms                         | ✅ Live |
-| Gym Detail      | /frontend_superadmin/gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /frontend_superadmin/gyms/:id                      | ✅ Live |
-| Suspend/Restore | /frontend_superadmin/gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /frontend_superadmin/gyms/:id/status             | ✅ Live |
+| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /frontend_superadmin/superadmin_gyms?page&limit&search&status | ✅ Live |
+| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /frontend_superadmin/superadmin_gyms                         | ✅ Live |
+| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /frontend_superadmin/superadmin_gyms/:id                      | ✅ Live |
+| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /frontend_superadmin/superadmin_gyms/:id/status             | ✅ Live |
 
 ## Edge Cases / AI Warnings
 - Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
   irreversible until manually restored. Always use useConfirm() with a typed warning message.
 - The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
-  GET /frontend_superadmin/plans — do NOT hardcode plan options.
+  GET /frontend_superadmin/superadmin_plans — do NOT hardcode plan options.
 - Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
 - The status badge color mapping lives in SuperadminGymsConstants.ts — do not inline colors.
 ```
@@ -1560,8 +1560,8 @@ Use for:
 Rules:
 - Backend data MUST NOT be stored as the primary source of truth in Zustand or Context.
 - Every query key must be namespaced by module:
-  `['members', 'list', filters]`
-  `['members', 'detail', memberId]`
+  `['admin_members', 'list', filters]`
+  `['admin_members', 'detail', memberId]`
 - After mutations, invalidate or update the relevant query cache intentionally.
 - Do not refetch the whole application after a small mutation.
 
@@ -1746,7 +1746,7 @@ Any field displaying a unique, non-sensitive identifier or tracking code may hav
 Every list/table MUST have a dedicated empty state component (`[ModuleName]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
 
 49. **Strict Import Order Convention**:
-Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/gyms/...`), Types-only.
+Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/superadmin_gyms/...`), Types-only.
 
 50. **Prop Spreading is Forbidden (`...props` ban)**:
 Never write `<Component {...props} />`. All props must be explicitly named, except for primitive HTML wrappers.
@@ -2864,7 +2864,7 @@ If this is not possible, the module FAILS the portability and architecture revie
 ### Rule 22 — AI-Testable UI (Mandatory data-testid)
 * **The Problem:** When an AI agent writes or executes E2E tests (using Playwright, Cypress, or Puppeteer), it cannot "see" the UI like a human. If semantic IDs are missing, the AI will fail to interact with the page.
 * **The Rule:** Every single interactive element (Buttons, Inputs, Dropdowns, Links, Checkboxes) and critical state indicator (Status Badges, Error Messages) MUST have a strictly formatted `data-testid` attribute.
-* **Format:** `data-testid="[module]-[component]-[action/state]"`. Example: `data-testid="members-addform-submit"` or `data-testid="billing-invoice-status-paid"`.
+* **Format:** `data-testid="[moduleName]-[component]-[action/state]"`. Example: `data-testid="admin_members-addform-submit"` or `data-testid="admin_billing-invoice-status-paid"`.
 * **Why:** This makes the entire UI programmatically introspectable for autonomous AI testing and Web-Browsing Agents.
 
 ### Rule 23 — Component-Level AI Docstrings (JSDoc)

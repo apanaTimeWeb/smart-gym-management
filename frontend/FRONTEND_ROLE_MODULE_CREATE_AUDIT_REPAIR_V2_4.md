@@ -3504,7 +3504,7 @@ Verify ALL requirements from the source section, including:
 Verify:
 
 - EVERY top-level role container MUST be prefixed with `frontend_` (e.g., `src/app/frontend_manager/`);
-- The AI repair unit is strictly the FEATURE MODULE (e.g., `/frontend_manager/manager-members/`);
+- The AI repair unit is strictly the FEATURE MODULE (e.g., `/frontend_manager/manager_members/`);
 - No hallucination or mixing of backend NestJS code into frontend React modules.
 
 ---
@@ -5766,7 +5766,7 @@ Audit the module for strict AI-Introspection compatibility.
 Check Rule 22:
 * Does every interactive element (button, input, select, link) have a strictly formatted `data-testid`?
 * Does every critical status badge, error boundary fallback, and empty state have a `data-testid`?
-* Format expected: `data-testid="[module]-[component]-[action/state]"`
+* Format expected: `data-testid="[moduleName]-[component]-[action/state]"`
 
 Check Rule 23:
 * Does every Custom Hook have an exhaustive JSDoc describing its state dependencies and intent?
