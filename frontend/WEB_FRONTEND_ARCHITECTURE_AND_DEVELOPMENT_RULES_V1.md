@@ -14,9 +14,9 @@ The component size limit alone is insufficient. AI agents also lose context in l
 - React Component (`.tsx`): maximum 300 lines
 - Custom Hook (`use*.ts`): maximum 150 lines
 - Utility / formatter file: maximum 120 lines
-- Zustand Store (`*.store.ts`): maximum 180 lines
-- Zod Schema / type file (`*.types.ts`, `*.schema.ts`): maximum 200 lines
-- API service file (`*.api.ts`): maximum 200 lines
+- Zustand Store (`use*Store.ts`): maximum 180 lines
+- Zod Schema / type file (`*Schema.ts`, `*Types.ts`): maximum 200 lines
+- API service file (`*Api.ts`): maximum 200 lines
 
 ### Child Component Size Rule
 If a component contains more than **3 major visual sections**, it MUST be split.
@@ -536,8 +536,8 @@ To completely eliminate the risk of cross-role AI hallucinations, there is no un
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
 - **Role + Module Name Prefixing (CRITICAL):** EVERY single file name (not just the containing folder) MUST begin with the parent Role name (e.g., `Manager`, `Admin`) followed by the Module name as a prefix. This applies to EVERYTHING: components, hooks, api services, stores, schemas, constants, and utilities. 
   - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
-  - ✅ **GOOD:** `useManagerMembers.ts`, `manager_members_api.ts`, `manager_members_store.ts`, `ManagerMembersTable.tsx`
-  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin_members_api.ts` and `manager_members_api.ts`.
+  - ✅ **GOOD:** `useManagerMembers.ts`, `ManagerMembersApi.ts`, `useManagerMembersStore.ts`, `ManagerMembersTable.tsx`
+  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `AdminMembersApi.ts` and `ManagerMembersApi.ts`.
 - **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `[moduleName]_locales/[moduleName]_{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
 - Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
 - **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
@@ -745,8 +745,8 @@ Recommended structure:
 ```text
 [moduleName]_types/
   ManagerMembersApiGenerated.ts
-  [moduleName].schema.ts
-  [moduleName].types.ts
+  [Module]Schema.ts
+  [Module]Types.ts
 ```
 
 8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
@@ -2587,7 +2587,7 @@ The frontend uses `next-intl` (Next.js) with **co-located locale files inside ea
 
 ### Stack
 - **Library:** `next-intl` (Next.js) or `react-i18next` (plain React/Vite)
-- **Base language:** English (`en.json`) — written by AI agent when creating the module
+- **Base language:** English (`[moduleName]_en.json`) — written by AI agent when creating the module
 - **Other languages:** Written by the AI agent in the same commit
 - **Runtime cost:** Zero — all files are static JSON, bundled at build time
 
@@ -2598,15 +2598,15 @@ src/app/
   frontend_admin/
     admin_members/
       [moduleName]_locales/
-        en.json   ← AI writes this when creating the module
-        hi.json   ← AI translates this in the same commit
+        admin_members_en.json   ← AI writes this when creating the module
+        admin_members_hi.json   ← AI translates this in the same commit
       admin_members_components/
       admin_members_hooks/
   frontend_superadmin/
     superadmin_tenants/
       [moduleName]_locales/
-        en.json
-        hi.json
+        superadmin_tenants_en.json
+        superadmin_tenants_hi.json
       superadmin_tenants_components/
       superadmin_tenants_hooks/
 scripts/
