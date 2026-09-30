@@ -333,11 +333,11 @@ admin-core/
       │   │   └── admin-auth.exceptions.ts
       │   ├── auth-locales/
       │   │   ├── en/
-      │   │   │   ├── errors.json
-      │   │   │   └── messages.json
+      │   │   │   ├── admin-auth-errors.json
+      │   │   │   └── admin-auth-messages.json
       │   │   └── hi/
-      │   │       ├── errors.json
-      │   │       └── messages.json
+      │   │       ├── admin-auth-errors.json
+      │   │       └── admin-auth-messages.json
       │   ├── admin-auth.module.ts                        <-- NestJS module registration
       │   ├── admin-auth-backend-feature.md               <-- MANDATORY: module doc (Rule 19)
       │   ├── admin-auth-dependencies.md                  <-- MANDATORY: dependency graph (Rule 49)
@@ -2369,7 +2369,7 @@ The backend uses framework-native internationalization (e.g., `nestjs-i18n` for 
 
 ### Stack
 - **Library:** `nestjs-i18n` (NestJS) or Django native translation framework (Django)
-- **Base language:** English (`en/errors.json` and `en/messages.json`) — written by developer / AI agent
+- **Base language:** English (`en/{role}-{module}-errors.json` and `en/{role}-{module}-messages.json`) — written by developer / AI agent
 - **Other languages:** Written by the AI agent in the same commit that creates the module
 - **Runtime cost:** Zero — all files are static JSON, bundled with the app
 
@@ -2393,14 +2393,14 @@ src/
       admin-members/
         members-locales/
           en/
-            errors.json   ← AI writes this when creating the module
-            messages.json
+            admin-members-errors.json   ← AI writes this when creating the module
+            admin-members-messages.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
-            errors.json
-            messages.json
+            admin-members-errors.json
+            admin-members-messages.json
           fr/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
-            errors.json
-            messages.json
+            admin-members-errors.json
+            admin-members-messages.json
         members-controllers/
           admin-members-registration.controller.ts
         members-services/
@@ -2410,21 +2410,21 @@ src/
       superadmin-tenants/
         tenants-locales/
           en/
-            errors.json
+            superadmin-tenants-errors.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE
-            errors.json
+            superadmin-tenants-errors.json
 scripts/                  ← (Global tooling folder exception allowed under Rule 2)
   merge-locales.ts        ← Merges all module locales into one bundle at build time
 ```
 
 **AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST:
-1. Create `members-locales/en/errors.json` with the English strings.
-2. In the **same commit**, create `members-locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
+1. Create `members-locales/en/admin-members-errors.json` with the English strings.
+2. In the **same commit**, create `members-locales/hi/admin-members-errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
 3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
 
 ```json
-// members-locales/en/errors.json
+// members-locales/en/admin-members-errors.json
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Member not found.",
@@ -2432,7 +2432,7 @@ When an AI agent writes a new module or adds new error/message keys, it MUST:
   }
 }
 
-// members-locales/nl/errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
+// members-locales/nl/admin-members-errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Lid niet gevonden.",
@@ -2447,7 +2447,7 @@ Always throw with a module-scoped translation key — never a hardcoded English 
 // ❌ FORBIDDEN
 throw new NotFoundException('Member not found.');
 
-// ✅ CORRECT — key maps to _locales/{lang}/errors.json
+// ✅ CORRECT — key maps to {module}-locales/{lang}/{role}-{module}-errors.json
 throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 ```
 
@@ -2504,7 +2504,7 @@ This is the **authoritative list of languages** this project supports. There is 
 
 > **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. The native framework translation system handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../errors.json` for NestJS or `{module}-locales/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../{role}-{module}-errors.json` for NestJS or `{module}-locales/.../{role}-{module}-django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
@@ -2565,13 +2565,13 @@ return { amount, currency };
 ## Rule 110 — Tenant Data Export & Offboarding
 
 ### The Problem
-When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
+When a B2B tenant (e.g., Gym) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
 
 ### Implementation Strategy
 All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
 - **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
 
-1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder for NestJS or the corresponding Django ORM query facilities) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
+1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex enterprise gym with deep relationships (e.g., Member -> Membership Plan -> Trainer -> Training Session), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder for NestJS or the corresponding Django ORM query facilities) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Trainer Name`, `Plan Name`, `Class Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
 2. **Trigger:** `POST /api/v1/superadmin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
 3. **Background Job (Project Message Infrastructure):** A worker processes the job using:
    - NestJS → BullMQ backed by Redis
