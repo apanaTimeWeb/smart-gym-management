@@ -5025,9 +5025,9 @@ Verify:
 - repositories own queries/persistence;
 - complex queries are isolated;
 - ORM access is not hidden inside arbitrary utilities;
-- each module has exactly ONE primary repository named `{role}-{module}.repository.ts`;
-- additional repositories (if present) follow `{role}-{module}-{usecase}.repository.ts` (e.g., `admin-members-analytics.repository.ts`);
-- forbidden naming patterns: `member.repository.ts` (missing role), `member-read.repository.ts` (read/write split), `member-query.repository.ts` ("query" suffix is reserved for CQRS controllers);
+- concern-based splitting is encouraged to minimize AI context (e.g., `{role}-{module}-read.repository.ts`, `{role}-{module}-write.repository.ts`);
+- method-level over-fragmentation is forbidden (e.g., `member-find-by-id.repository.ts`);
+- forbidden naming patterns: `member.repository.ts` (missing role), `member-query.repository.ts` ("query" suffix is reserved for CQRS controllers);
 - all repositories live inside `{module}_repositories/` sub-folder.
 
 ---

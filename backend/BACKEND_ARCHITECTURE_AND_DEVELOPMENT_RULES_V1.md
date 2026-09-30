@@ -407,26 +407,32 @@ Extract complex queries into a dedicated Repository or Query file.
 
 ### Repository Naming Standard (MANDATORY)
 
-Every feature module MUST contain one primary repository:
+To maximize AI repair isolation and minimize blast radius, **concern-based repository splitting is encouraged.**
 
-`{role}-{module}.repository.ts`
+When a module has complex queries, splitting the repository by concern (read, write, search, analytics) creates smaller context windows for AI agents.
 
-Additional repositories are encouraged when they represent genuinely isolated data-access concerns with independent repair boundaries.
+✅ **Allowed Concern-Based Splitting:**
+- `{role}-{module}-read.repository.ts`
+- `{role}-{module}-write.repository.ts`
+- `{role}-{module}-search.repository.ts`
+- `{role}-{module}-analytics.repository.ts`
 
-Examples:
-- `admin-members-analytics.repository.ts`
-- `admin-members-report.repository.ts`
-- `admin-members-export.repository.ts`
+If a module is extremely simple, a single `{role}-{module}.repository.ts` is permitted.
+
+**Anti-Fragmentation Rule:**
+While concern-based splitting is encouraged, **method-level over-fragmentation is strictly forbidden.** You cannot create a repository for a single find method.
+
+❌ **Forbidden Over-Fragmentation:**
+- `member-find-by-id.repository.ts`
+- `member-find-by-email.repository.ts`
+- `member-find-active.repository.ts`
+- `member-update-name.repository.ts`
+
+❌ **Forbidden Naming Violations:**
+- `member-query.repository.ts` ("query" suffix reserved for CQRS controllers)
+- `member.repository.ts` (missing role prefix)
 
 All repositories MUST live inside the module's `{module}_repositories/` sub-folder.
-
-Artificial CRUD splitting is forbidden.
-
-❌ `member-read.repository.ts`
-❌ `member-write.repository.ts`
-❌ `member-delete.repository.ts`
-❌ `member-query.repository.ts` ("query" suffix reserved for CQRS controllers)
-❌ `member.repository.ts` (missing role prefix)
 
 ---
 
