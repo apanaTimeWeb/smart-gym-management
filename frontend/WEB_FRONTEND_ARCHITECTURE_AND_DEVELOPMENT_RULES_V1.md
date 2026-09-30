@@ -569,7 +569,7 @@ Find all hardcoded UI data (dropdown options, filter lists, default preset array
 ### One Constants Entry Rule
 Every feature module MUST contain one primary constant registry:
 `AdminMembersConstants.ts`
-Feature-local constants may exist inside subfolders, but the primary module-wide constants MUST live in the root entry file so the AI search location is fixed.
+Feature-local constants may exist inside subfolders, but the primary module-wide constants MUST live inside the `[moduleName]_constants/` folder as a single entry file.
 
 ### Enum Registry Rule
 Business statuses MUST originate from one constants source.
@@ -672,7 +672,7 @@ Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentN
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
 
 ### Main Component Ownership Rule
-Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component orchestrates the layout, assembles child components, and manages route-level providers.
+Every feature module MUST contain exactly one `[Module]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers.
 - **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
 *Why:* Prevents the AI from creating a monolithic "God Component".
 
@@ -712,8 +712,8 @@ A visible control without functional closure MUST be treated as a defect.
 Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
 - **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
 
-#### ROOT SCHEMA ENTRY RULE
-Every feature module MUST expose one root schema entry point (e.g., `AdminMembersSchema.ts`).
+#### SCHEMA ENTRY RULE
+Every feature module MUST expose one primary schema file located strictly inside the `[moduleName]_schemas/` folder (e.g., `AdminMembersSchema.ts`).
 
 Additional schemas may exist where responsibility separation requires them. Examples:
 - `AdminMembersCreateSchema.ts`
@@ -873,8 +873,10 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
 #### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
-All files (Constants, Schemas, QueryKeys, API, UrlConfig, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`). 
+All files (Constants, Schemas, QueryKeys, API, UrlConfig, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
+
+**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, and the `_features.md`, `_forbidden.md`, and `_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
