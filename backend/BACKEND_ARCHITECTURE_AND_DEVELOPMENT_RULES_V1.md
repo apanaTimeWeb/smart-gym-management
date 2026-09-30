@@ -2456,7 +2456,7 @@ throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 Use Django's native translation framework and the project's approved Django middleware/translation integration.
 
 **App-Level File Structure**
-Each app owns its own `locale/` folder containing `.po`/`.mo` message files.
+Each app owns its own `{module}-locales/` folder containing `.po`/`.mo` message files.
 
 **AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST generate translations using standard `gettext` syntax and ensure locale messages are updated for ALL active languages using `django-admin makemessages`.
@@ -2480,7 +2480,7 @@ The AI MUST implement only the branch corresponding to the verified
 active framework.
 
 ### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`{module}-locales/` JSON for NestJS, or `locale/` message files for Django).
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`{module}-locales/` JSON for NestJS, or `{module}-locales/` message files for Django).
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2504,7 +2504,7 @@ This is the **authoritative list of languages** this project supports. There is 
 
 > **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. The native framework translation system handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../errors.json` for NestJS or `locale/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../errors.json` for NestJS or `{module}-locales/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.

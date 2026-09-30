@@ -6780,7 +6780,7 @@ TTL alone is insufficient where explicit invalidation is required.
 Verify:
 
 - framework-native translation library (`nestjs-i18n` for NestJS, Django translation framework for Django);
-- module-co-located `{module}-locales` (or Django app-level `locale/`);
+- module-co-located `{module}-locales` (or Django app-level `{module}-locales/`);
 - `en` plus every language currently declared in the authoritative `ACTIVE_LANGUAGES` configuration;
 - new keys translated in the same change;
 - no central `src/i18n/` folder where forbidden;
