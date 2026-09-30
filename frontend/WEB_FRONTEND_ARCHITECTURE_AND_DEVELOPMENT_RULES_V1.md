@@ -647,11 +647,14 @@ Every feature module MUST contain a dedicated registry for TanStack query keys:
 `AdminMembersQueryKeys.ts`
 ```typescript
 export const ADMIN_MEMBERS_QUERY_KEYS = {
-  list: (filters: any) => ['admin-members', 'list', filters],
-  detail: (id: string) => ['admin-members', 'detail', id],
-}
+  all: ['admin-members'] as const,
+  lists: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'list'] as const,
+  list: (filters: Record<string, unknown>) => [...ADMIN_MEMBERS_QUERY_KEYS.lists(), filters] as const,
+  details: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'detail'] as const,
+  detail: (id: string) => [...ADMIN_MEMBERS_QUERY_KEYS.details(), id] as const,
+};
 ```
-*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`.
+*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`. This factory pattern also allows surgical invalidation (e.g., `queryClient.invalidateQueries({ queryKey: ADMIN_MEMBERS_QUERY_KEYS.lists() })` clears all list caches without dropping details).
 
 ### Mutation Hook Rule
 Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateAdminMember.ts`, `useUpdateAdminMember.ts`, `useDeleteAdminMember.ts`).
