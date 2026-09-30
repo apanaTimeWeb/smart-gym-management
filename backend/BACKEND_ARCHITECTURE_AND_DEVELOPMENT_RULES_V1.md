@@ -178,23 +178,64 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
   - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
+
+### Mandatory Role Container Structure (NON-OPTIONAL)
+
+Every backend role container MUST contain exactly two top-level business directories:
+
+- `{role}_core/`
+- `{role}_modules/`
+
+Direct feature placement under `backend_{role}/` is **forbidden**.
+
+❌ **FORBIDDEN — AI agents MUST flag this as Architecture Violation:**
+```text
+backend_admin/
+├── admin_core/
+├── admin_auth/        <-- VIOLATION: feature directly under backend_admin/
+├── admin_members/     <-- VIOLATION: feature directly under backend_admin/
+└── admin_billing/     <-- VIOLATION: feature directly under backend_admin/
+```
+
+✅ **REQUIRED — the ONLY compliant structure:**
+```text
+backend_admin/
+├── admin_core/
+│
+└── admin_modules/
+    ├── admin_auth/
+    ├── admin_members/
+    └── admin_billing/
+```
+
+The `{role}_modules/` folder is **NOT optional**. All business feature modules MUST be located inside `{role}_modules/`. AI agents MUST NOT place feature modules directly under `backend_{role}/`.
+
 * **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). These root-level generic folders may contain standard un-prefixed sub-folders (like `src/core/utils/`, `src/core/dtos/`, `src/core/config/`) provided they are strictly global and cross-cutting. Never put business logic in these generic folders.
   
-  **Canonical Example of Complete Prefixing Architecture:**
+  **Canonical Mandatory Backend Structure:**
+
+  > The following structure is mandatory. Any deviation is considered architecture non-compliant.
+
   ```text
   backend_admin/
-  ├── admin_core/                                <-- (Top-level prefixed)
+  ├── admin_core/                                <-- (Top-level prefixed — core guards/interceptors)
   │   ├── admin_guards/                          <-- (Sub-folder prefixed)
   │   │   └── admin-core-jwt-auth.guard.ts       <-- (Role: admin, Module: core, Resp: jwt-auth)
   │   └── admin-core.module.ts                   <-- (Main Core Module)
   │
-  └── admin_modules/                             <-- (Top-level prefixed)
-      └── admin_billing/                         <-- (Feature Folder prefixed)
-          ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
-          │   └── admin-billing-invoice.controller.ts
-          ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
-          │   └── admin-billing-create-invoice.dto.ts
-          └── admin-billing.module.ts            <-- (Main Feature Module)
+  └── admin_modules/                             <-- (Top-level prefixed — ALL features go here)
+      ├── admin_auth/                            <-- (Feature Folder prefixed)
+      │   └── admin-auth.module.ts
+      ├── admin_members/                         <-- (Feature Folder prefixed)
+      │   └── admin-members.module.ts
+      ├── admin_billing/                         <-- (Feature Folder prefixed)
+      │   ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
+      │   │   └── admin-billing-invoice.controller.ts
+      │   ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
+      │   │   └── admin-billing-create-invoice.dto.ts
+      │   └── admin-billing.module.ts            <-- (Main Feature Module)
+      └── admin_reports/                         <-- (Feature Folder prefixed)
+          └── admin-reports.module.ts
   ```
 
 ## 3. Strict Validation & DTO Isolation
@@ -775,7 +816,39 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
 * **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager_billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
-* **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
+* **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules.
+
+#### Top-Level Role Structure (MANDATORY — See also Rule 2)
+
+All backend role containers MUST follow this exact two-directory structure. This is not a recommendation — it is a hard architectural constraint:
+
+```text
+backend_{role}/
+├── {role}_core/
+└── {role}_modules/
+```
+
+Feature modules MUST always be children of `{role}_modules/`. Direct placement of any feature module under `backend_{role}/` is forbidden.
+
+❌ **FORBIDDEN:**
+```text
+backend_manager/
+├── manager_core/
+├── manager_members/    <-- VIOLATION
+├── manager_billing/    <-- VIOLATION
+└── manager_attendance/ <-- VIOLATION
+```
+
+✅ **REQUIRED:**
+```text
+backend_manager/
+├── manager_core/
+└── manager_modules/
+    ├── manager_members/
+    ├── manager_billing/
+    └── manager_attendance/
+```
+
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
 ---
@@ -1841,6 +1914,8 @@ When adding a new enum value, a database migration MUST be generated to update t
    - Does the global `ValidationExceptionFilter` transform `400` errors into the canonical `validationErrors` shape? (Rule 98)
    - Do service methods call named repository mutation methods — never directly mutating entity properties and calling `save()` inline? (Rule 99)
    - Are all DB constraints (FK, UQ, IDX, CHK) explicitly named following the `FK_[table]_[ref]_[col]` convention — never auto-generated? (Rule 100)
+   - Does the role container contain the mandatory `{role}_core/` and `{role}_modules/` directories? (Rule 2 — Mandatory Role Container Structure)
+   - Are all feature modules located inside `{role}_modules/` rather than directly under `backend_{role}/`? Direct feature placement under `backend_{role}/` is an Architecture Violation. (Rule 2 + Rule 38)
    - Do all AI-generated tests verify real observable behavior — no placeholder assertions, no tests that would pass if the feature were broken? (Rule 101)
    - Are there any barrel file imports or relative path imports?
    - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
