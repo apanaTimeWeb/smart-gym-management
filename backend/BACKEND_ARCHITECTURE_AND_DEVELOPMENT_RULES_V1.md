@@ -407,34 +407,26 @@ Extract complex queries into a dedicated Repository or Query file.
 
 ### Repository Naming Standard (MANDATORY)
 
-Every feature module MUST have exactly **one primary repository** following this naming pattern:
+Every feature module MUST contain one primary repository:
 
-```
-{role}-{module}.repository.ts
-```
+`{role}-{module}.repository.ts`
 
-**Examples:**
-- `admin-members.repository.ts`
-- `manager-billing.repository.ts`
-- `superadmin-tenants.repository.ts`
+Additional repositories are encouraged when they represent genuinely isolated data-access concerns with independent repair boundaries.
 
-Additional repositories are permitted ONLY for genuinely distinct data-access concerns (e.g., heavy analytics queries). When additional repositories are needed, they MUST follow:
-
-```
-{role}-{module}-{usecase}.repository.ts
-```
-
-**Examples of allowed secondary repositories:**
-- `admin-members-analytics.repository.ts` (analytics queries)
-- `manager-billing-reports.repository.ts` (report-specific queries)
+Examples:
+- `admin-members-analytics.repository.ts`
+- `admin-members-report.repository.ts`
+- `admin-members-export.repository.ts`
 
 All repositories MUST live inside the module's `{module}_repositories/` sub-folder.
 
-❌ **FORBIDDEN repository names:**
-- `member.repository.ts` (missing role prefix)
-- `member-read.repository.ts` (read/write split is not permitted)
-- `member-query.repository.ts` ("query" suffix reserved for CQRS controllers — Rule 48)
-- `member-write.repository.ts`
+Artificial CRUD splitting is forbidden.
+
+❌ `member-read.repository.ts`
+❌ `member-write.repository.ts`
+❌ `member-delete.repository.ts`
+❌ `member-query.repository.ts` ("query" suffix reserved for CQRS controllers)
+❌ `member.repository.ts` (missing role prefix)
 
 ---
 
