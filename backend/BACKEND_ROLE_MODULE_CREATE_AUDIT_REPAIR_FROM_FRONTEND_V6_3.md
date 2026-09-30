@@ -6055,7 +6055,7 @@ SOURCE OF TRUTH (CANONICAL OWNER):
 
 MIRROR (READ-ONLY COPY):
   Backend feature documentation
-  (e.g., admin-members-features.md inside backend-admin/admin-members/)
+  (e.g., admin-members-backend-feature.md inside backend-admin/admin-modules/admin-members/)
 ```
 
 **Rules:**
@@ -6797,7 +6797,7 @@ Do not invent supported languages. Read the actual authoritative configured list
 
 Verify:
 
-- centralized `FeatureFlagService`;
+- centralized `{role}-core-feature-flag.service.ts` (e.g. `AdminCoreFeatureFlagService`);
 - no business branching on raw env flags;
 - per-tenant evaluation;
 - dynamic rollout/canary behavior;

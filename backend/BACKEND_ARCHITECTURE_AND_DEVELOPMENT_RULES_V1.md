@@ -2508,7 +2508,7 @@ This is the **authoritative list of languages** this project supports. There is 
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
-* **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
+* **Implementation:** Always use a centralized `{role}-core-feature-flag.service.ts` (e.g. `AdminCoreFeatureFlagService`, backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
 
 
 ## Rule 109 — Multi-Currency Monetary Amounts
