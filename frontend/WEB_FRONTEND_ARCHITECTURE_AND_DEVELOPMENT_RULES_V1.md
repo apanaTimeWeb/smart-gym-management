@@ -876,7 +876,7 @@ DO NOT place facade files or entry-point files in the root of the feature module
 
 **THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
-For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
+For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). This keeps the root directory entirely clean.
 
 #### NO API FACADES (NO BARREL FILES)
 Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
@@ -1108,12 +1108,12 @@ Handles gyms operations, UI display, and logic isolation.
 The Gyms module is the master tenant registry for the Smart Gym Management SaaS platform. Superadmins
 use it to onboard new gym branches, view all active/suspended tenants, manage their
 subscription tier, and drill into per-gym usage metrics. It is the entry point for all
-tenant lifecycle operations (create → activate → suspend → delete).
+tenant lifecycle operations (create → activate → suspend).
 
 ## Feature Inventory
 | Feature Name    | Route Path                                    | Description                                                                          | API Endpoint                                         | Status  |
 |-----------------|-----------------------------------------------|--------------------------------------------------------------------------------------|------------------------------------------------------|---------|
-| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /api/v1/superadmin/gyms?page&limit&search&status | ✅ Live |
+| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /api/v1/superadmin/gyms?page&limit&search&status&planId | ✅ Live |
 | Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /api/v1/superadmin/gyms                         | ✅ Live |
 | Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |
 | Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /api/v1/superadmin/gyms/:id/status             | ✅ Live |
