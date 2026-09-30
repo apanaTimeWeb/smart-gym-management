@@ -6839,10 +6839,10 @@ Verify:
 Verify EXACTLY:
 
 - 1:1 backend folder mirroring;
-- role/module-prefixed filenames (exempt from prefix rules ONLY for the `test_` prefix exception);
-- `test_[role]-[module]-api.py`;
-- `test_[role]-[module]-ui.py`;
-- `test_[role]-[module]-ui-edge.py`;
+- role/module-prefixed filenames starting with `test-` (kebab-case, NOT `test_` underscore);
+- `test-[role]-[module]-e2e.py`;
+- `test-[role]-[module]-selenium.py`;
+- `test-[role]-[module]-selenium-edge.py`;
 - negative-flow coverage;
 - edge-state coverage;
 - no shared helpers/utilities;
@@ -9098,27 +9098,27 @@ Files MUST follow the exact project naming pattern:
 backend-e2e/
   backend-[role]-e2e/
     [module]/
-      test_[role]-[module]-api.py
+      test-[role]-[module]-e2e.py
 
 backend-selenium/
   backend-[role]-selenium/
     [module]/
-      test_[role]-[module]-ui.py
-      test_[role]-[module]-ui-edge.py
+      test-[role]-[module]-selenium.py
+      test-[role]-[module]-selenium-edge.py
   _test-forbidden.md                  ← Selenium forbidden patterns doc
 ```
 
 Examples:
 
 ```
-backend-selenium/backend-admin-selenium/admin-members/test_admin-members-ui.py
-backend-selenium/backend-admin-selenium/admin-members/test_admin-members-ui-edge.py
-backend-selenium/backend-trainer-selenium/trainer-attendance/test_trainer-attendance-ui.py
+backend-selenium/backend-admin-selenium/admin-members/test-admin-members-selenium.py
+backend-selenium/backend-admin-selenium/admin-members/test-admin-members-selenium-edge.py
+backend-selenium/backend-trainer-selenium/trainer-attendance/test-trainer-attendance-selenium.py
 ```
 
 ### What Each Selenium Test File MUST Cover
 
-#### `test_[role]-[module]-ui.py` — Happy Path Flows
+#### `test-[role]-[module]-selenium.py` — Happy Path Flows
 
 For every major user-facing feature, cover the complete happy path:
 
@@ -9263,13 +9263,13 @@ In Stage 3, create the actual Selenium test files alongside the final audit:
 ```
 stage-3-final-verdict.md
 
-backend-e2e/backend-[role]-e2e/[module]/test_[role]-[module]-api.py
+backend-e2e/backend-[role]-e2e/[module]/test-[role]-[module]-e2e.py
 
 backend-e2e/backend-[role]-e2e/_test-forbidden.md
 
-backend-selenium/backend-[role]-selenium/[module]/test_[role]-[module]-ui.py
+backend-selenium/backend-[role]-selenium/[module]/test-[role]-[module]-selenium.py
 
-backend-selenium/backend-[role]-selenium/[module]/test_[role]-[module]-ui-edge.py
+backend-selenium/backend-[role]-selenium/[module]/test-[role]-[module]-selenium-edge.py
 
 backend-selenium/backend-[role]-selenium/_test-forbidden.md
 ```
