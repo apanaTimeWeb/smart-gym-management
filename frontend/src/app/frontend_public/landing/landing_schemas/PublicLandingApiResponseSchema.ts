@@ -18,7 +18,7 @@ const PublicLandingPaginationMetaSchema = z.object({
 export const PublicLandingNullApiResponseSchema = z.object({
   success: z.boolean(),
   message: z.string(),
-  data: z.null(),
+  data: z.any(),
   meta: PublicLandingPaginationMetaSchema.optional(),
   error: z.string().optional(),
   errorCode: z.string().optional(),
