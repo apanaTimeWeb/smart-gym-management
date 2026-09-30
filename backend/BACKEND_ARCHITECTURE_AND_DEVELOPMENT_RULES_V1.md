@@ -163,7 +163,7 @@ Do not create monolithic Services, Controllers, or Views. A generic `UserService
 
 **The Solution: Use-Case Driven Files**
 Break down large files into micro-features. Every file must handle only one specific business flow.
-- ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
+- ❌ **BAD:** `admin-members.service.ts` (Handles registration, billing, attendance, emails — monolithic)
 - ✅ **GOOD:** 
   - `admin-members-registration.service.ts`
   - `admin-members-billing.service.ts`
@@ -456,13 +456,7 @@ For events that require durable delivery or cross-instance processing, the appli
 
 In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
 
-Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.
-
-For events that require durable delivery or cross-instance processing, the application event contract MUST be backed by Redis Streams.
-
-In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
-
-Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
+Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
 
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
@@ -519,8 +513,8 @@ Multiple NestJS module files inside a feature module are forbidden.
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `backend-finance/finance-modules/finance-billing/finance-billing-utils/`. If the HR module needs the exact same utility, **duplicate the code** into `backend-hr/hr-modules/hr-payroll/hr-payroll-utils/`. 
-* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/shared/` folder.
+Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-utils/`. If the Attendance module needs the exact same utility, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-utils/`. 
+* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `manager` domain, they MUST get their own independent copies of a shared utility. There is no `manager/shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
 > **CRITICAL WARNING TO AI AGENTS:** 
@@ -589,7 +583,7 @@ Never put tests in a global `tests/` or `pytest-tests/` directory separate from 
   - `requestId` (unique per-request UUID, injected at the middleware boundary)
   - `tenantId` (where permitted by data privacy policy — never log tenant-specific personal data alongside it)
   - `traceId` and `spanId` (injected via OpenTelemetry/AsyncLocalStorage)
-  - `context` (the exact class or service name emitting the log, e.g., `MemberRegistrationService`)
+  - `context` (the exact class or service name emitting the log, e.g., `AdminMembersRegistrationService`)
   - `responseTime` (milliseconds, for access logs)
 * **What MUST NEVER appear in any log line:**
   - Raw `req` or `res` objects — these contain auth headers, cookies, request bodies, and response bodies by default.
@@ -1044,7 +1038,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
         └── admin-attendance/
     ```
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend, but translated to kebab-case. Renaming a feature's core semantic meaning during backend development is strictly forbidden.
-* **Casing Translation Rule (CRITICAL):** The semantic name stays identical across frontend/backend; ONLY the casing style changes per language/framework convention. The frontend uses `snake_case` for folders (e.g., `frontend_admin/admin-billing`), whereas the backend MUST use `kebab-case` for folders (e.g., `backend-admin/admin-modules/admin-billing`). This enforces a hard visual boundary between stacks.
+* **Casing Translation Rule (CRITICAL):** The semantic name stays identical across frontend/backend; ONLY the casing style changes per language/framework convention. Both the frontend and backend use `kebab-case` for folders (e.g., frontend `admin-billing`, backend `backend-admin/admin-modules/admin-billing`). This enforces a hard visual boundary between stacks through the mandatory `backend-` namespace prefix (Rule 0D) rather than a casing difference.
 * **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager-billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named (modulo dashes/underscores).
 * **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `backend-superadmin` domain MUST have exactly 5 matching modules.
 
@@ -1649,15 +1643,15 @@ If a backend implementation cannot provide a field currently required by the fro
     ```
   - ✅ **GOOD (Guard Clauses + Repository-Owned Mutation):**
     ```typescript
-    async suspendMember(id: string): Promise<MemberDomain> {
+    async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
       const member = await this.memberRepo.findByIdOrThrow(id);
 
       if (member.status === MemberStatus.SUSPENDED) {
-        throw new MemberAlreadySuspendedException(id);
+        throw new ManagerMembersAlreadySuspendedException(id);
       }
 
       if (!member.hasActiveSubscription) {
-        throw new NoActiveSubscriptionException(id);
+        throw new ManagerMembersNoActiveSubscriptionException(id);
       }
 
       return this.memberRepo.suspendById(id, new Date());
@@ -1726,7 +1720,6 @@ This rule MUST remain consistent with Rule 99.
 
   import type { ManagerMembersCreateDto } from '@/backend-manager/manager-modules/manager-members/members-dto/manager-members-create.dto';
   ```
-  ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
 
 ---
@@ -1734,10 +1727,10 @@ This rule MUST remain consistent with Rule 99.
 ## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
-  1. **ORM Model / Entity** (`admin-member.entity.ts` for TypeORM, or the corresponding Django ORM model): Contains only database schema definition. Lives in the repository layer only.
-  2. **Domain Model** (`member.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
-  2b. **Response DTO** (`member-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
-  3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
+  1. **ORM Model / Entity** (`admin-members.entity.ts` for TypeORM, or the corresponding Django ORM model): Contains only database schema definition. Lives in the repository layer only.
+  2. **Domain Model** (`admin-members.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
+  2b. **Response DTO** (`admin-members-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
+  3. **Mapper** (`admin-members.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
 * **Why:** AI agents default to using ORM entities everywhere — passing `ManagerMembersEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
 
@@ -2528,13 +2521,13 @@ For Django, use the corresponding integer/big-integer field.
 Never use FLOAT/DOUBLE for monetary amounts.
 - Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
 
-``````typescript
+```typescript
 // ❌ FORBIDDEN — float and no currency
 { "amount": 99.99 }
 
 // ✅ CORRECT — integer smallest unit + ISO 4217 currency code
 { "amount": 9999, "currency": "INR" }
-``````
+```
 
 ### DTO Rule
 Every DTO that includes a monetary field MUST include the paired currency code:
@@ -2548,16 +2541,16 @@ export class AdminBillingPlanCreateDto {
   @IsISO4217CurrencyCode()
   currency: string; // e.g. 'INR', 'USD', 'EUR'
 }
-``````
+```
 
 ### Never Hardcode Currency Symbols
-``````typescript
+```typescript
 // ❌ FORBIDDEN
 return `₹${amount / 100}`;
 
 // ✅ CORRECT — pass raw integer + currency code to frontend; let frontend format
 return { amount, currency };
-``````
+```
 
 > **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` or `BIGINT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
 
@@ -2580,7 +2573,7 @@ All data exports MUST be processed asynchronously via background jobs and delive
 Redis Pub/Sub MUST NOT be used as the durable job queue.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
 5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/superadmin/download-export?token=xyz`) that streams the file.
-6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
+6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `EXPORT.DATA.COMPLETED`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
 
 ### Data Retention & Hard Deletion
 - When a tenant cancels, their account is **Soft Deleted** (suspended).
