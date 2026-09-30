@@ -194,6 +194,90 @@ The normal repair context is:
 
 ---
 
+## CANONICAL FILESYSTEM AND NEXT.JS ROUTING RULE — MANDATORY
+
+The frontend MUST have exactly ONE canonical representation of each feature.
+
+The canonical hierarchy is:
+
+APPLICATION
+└── ROLE CONTAINER
+    └── FEATURE MODULE
+        ├── page.tsx / layout.tsx / loading.tsx / error.tsx where required
+        ├── [module]_components/
+        ├── [module]_hooks/
+        ├── [module]_api/
+        ├── [module]_types/
+        ├── [module]_schemas/
+        ├── [module]_constants/
+        ├── [module]_store/
+        ├── [module]_tests/
+        ├── [module]_fixtures/
+        ├── [module]_handlers/
+        ├── [module]_locales/
+        ├── [module]_features.md
+        ├── [module]_forbidden.md
+        ├── [module]_theme_contract.md
+        └── ... etc
+
+Example:
+
+src/app/frontend_superadmin/
+└── superadmin_dashboard/
+
+There MUST NOT simultaneously exist:
+
+src/app/frontend_superadmin/dashboard/
+AND
+src/app/frontend_superadmin/superadmin_dashboard/
+
+for the same business feature.
+
+No parallel route tree, duplicate route tree, mirror directory, compatibility copy,
+or second implementation of the same feature is permitted.
+
+### NEXT.JS ROUTING
+
+Next.js route files MUST be physically owned by the corresponding feature module.
+
+A feature's `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, dynamic route
+segments, and route-specific layout MUST NOT be duplicated outside that feature module.
+
+If clean public URLs require Next.js route groups, use a route-group structure that
+preserves feature ownership without creating a second business implementation.
+
+Route groups are routing infrastructure only and MUST contain no duplicated business
+components, hooks, APIs, schemas, stores, fixtures, handlers, or feature logic.
+
+### SINGLE SOURCE OF TRUTH
+
+For every business feature:
+
+FEATURE MODULE = SINGLE SOURCE OF TRUTH
+
+Any route representation is only a routing entry point and MUST delegate to the
+canonical feature module. It MUST NOT duplicate feature implementation.
+
+AI MUST detect and remove duplicate representations before delivery.
+
+### DUPLICATE FEATURE STRUCTURE CHECK
+
+Before final packaging, mechanically verify:
+
+1. Every feature has exactly one canonical feature module.
+2. No unprefixed sibling directory represents the same feature.
+3. No route directory duplicates a prefixed feature directory.
+4. No duplicate page/component implementation exists for the same feature.
+5. No duplicate API/hooks/store/schema/constants/fixtures/handlers exist outside
+   the owning feature module.
+6. The final ZIP contains exactly one role container:
+   `frontend_[role]/`
+7. The final ZIP contains exactly one canonical module for each business feature.
+
+If any duplicate representation exists:
+STATUS = INCOMPLETE
+Do not package or deliver the ZIP.
+
 ### Feature Module Self-Containment Requirement
 
 Every feature module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that feature.
@@ -2752,15 +2836,6 @@ The WEB application MUST implement a hybrid notification architecture:
 
    Do not depend exclusively on WebSocket delivery for critical notifications.
 
-### Explicit Repair Map Rule
-Every feature module MUST contain a mandatory file: `[moduleName]_repair_map.md` (e.g., `admin_members_repair_map.md`).
-This file acts as an AI repair GPS by explicitly mapping bug types to exact files:
-- Search Bug -> `AdminMembersTable.tsx`
-- API Bug -> `AdminMembersApi.ts`
-- Validation Bug -> `AdminMembersSchema.ts`
-- State Bug -> `useAdminMembersStore.ts`
-- Routing Bug -> `admin_members_url_config.ts`
-
 ### No Duplicate Responsibility Rule
 Each responsibility MUST have exactly one owner to kill hallucination vectors:
 - Search State -> Store
@@ -2770,10 +2845,9 @@ Each responsibility MUST have exactly one owner to kill hallucination vectors:
 Forbidden: having the same responsibility duplicated in multiple places.
 
 ### Entry Point Discovery Rule
-An AI MUST be able to discover the module architecture within 60 seconds by reading exactly three files:
+An AI MUST be able to discover the module architecture within 60 seconds by reading exactly two files:
 1. `admin_members_features.md`
 2. `AdminMembersMain.tsx`
-3. `admin_members_repair_map.md`
 If this is not possible, the module FAILS the portability and architecture review.
 
 
