@@ -1721,10 +1721,10 @@ This rule MUST remain consistent with Rule 99.
 
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
-  import { MemberEntity } from '@/backend-manager/manager-modules/manager-members/manager-members-domain/manager-members.entity';
-  import { MemberNotFoundException } from '@/backend-manager/manager-modules/manager-members/manager-members-exceptions/manager-members.exceptions';
+  import { MemberEntity } from '@/backend-manager/manager-modules/manager-members/members-repositories/manager-members.entity';
+  import { MemberNotFoundException } from '@/backend-manager/manager-modules/manager-members/members-exceptions/manager-members.exceptions';
 
-  import type { CreateMemberDto } from '@/backend-manager/manager-modules/manager-members/manager-members-dto/manager-members-create.dto';
+  import type { CreateMemberDto } from '@/backend-manager/manager-modules/manager-members/members-dto/manager-members-create.dto';
   ```
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
@@ -1985,7 +1985,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'MembershipExpiryNotifier',
       module: 'members',
-      file: 'src/backend-manager/manager-modules/manager-members/manager-members-jobs/manager-members-expiry-notifier.job.ts',
+      file: 'src/backend-manager/manager-modules/manager-members/members-jobs/manager-members-expiry-notifier.job.ts',
       schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
       description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
       touchesEntities: ['members', 'notifications'],
@@ -1996,7 +1996,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'WalletAutoDeductionJob',
       module: 'billing',
-      file: 'src/backend-manager/manager-modules/manager-billing/manager-billing-jobs/manager-billing-wallet-auto-deduction.job.ts',
+      file: 'src/backend-manager/manager-modules/manager-billing/billing-jobs/manager-billing-wallet-auto-deduction.job.ts',
       schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
