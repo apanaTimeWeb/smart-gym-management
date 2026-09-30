@@ -1220,7 +1220,7 @@ without reading every component file. Example:]
 3. User fills 3-tab form: Personal Info → Membership Plan → Payment
 4. On submit, `createMember(dto)` is called from `ManagerMembersCrudApi.ts`
 5. On success: reconcile/invalidate the relevant TanStack Query cache using the authoritative backend response, modal closes, toast shows backend message
-6. On error: form preserves entered data, inline error shown from `res.message`
+6. On error: form preserves entered data, inline error shown from `res.validationErrors` or `res.error`
 
 ### Flow 2: Renew Membership
 1. User clicks any member row → `ManagerMembersProfileModal` opens
@@ -1232,7 +1232,7 @@ without reading every component file. Example:]
 [REQUIRED: Must name the ACTUAL store files, context files, and query keys — not "TBD".]
 
 - **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state."]
-- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab, searchQuery, statusFilter, currentPage]
+- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab. (Note: searchQuery and currentPage MUST go in URL state, not Zustand)]
 - **Local-storage keys:** ["None" is a valid answer if accurate]
 - **MSW handler location:** [actual module-owned handler file]
 - **MSW fixture location:** [actual module-owned fixture file]
