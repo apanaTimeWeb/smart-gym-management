@@ -217,7 +217,7 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend-superadmin/core/`, `backend-manager/modules/`, `backend-admin/config/`, `backend-trainer/utils/`
-  - ✅ **GOOD:** `backend-superadmin/superadmin-core/`, `backend-manager/manager-modules/`, `backend-admin/admin-config/`, `backend-trainer/trainer-utils/` ..etc
+  - ✅ **GOOD:** `backend-superadmin/superadmin-core/`, `backend-manager/manager-modules/` ..etc
 
 ### Mandatory Role Container Structure (NON-OPTIONAL)
 
@@ -513,7 +513,7 @@ Multiple NestJS module files inside a feature module are forbidden.
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-utils/`. If the Attendance module needs the exact same utility, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-utils/`. 
+Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-mappers/` (or `billing-constants/`, `billing-types/` respectively). If the Attendance module needs the exact same helper, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-mappers/`. 
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `manager` domain, they MUST get their own independent copies of a shared utility. There is no `manager/shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
@@ -1081,10 +1081,10 @@ backend-manager/
 
 ### 0G. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
 
-All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]-controllers/`, `[moduleName]-dto/`). 
+All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
 DO NOT place any of these implementation files in the root of the feature module folder. 
 
-For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[moduleName].module.ts` file itself (and perhaps `.md` documentation files). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
+For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (and perhaps `.md` documentation files). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
 
 ---
 
