@@ -804,9 +804,9 @@ Whenever data belongs to a specific resource, query keys MUST include the resour
 - `['gym']`
 
 ✅ **Required:**
-- `['member', memberId]`
-- `['profile', memberId]`
-- `['gym', gymId]`
+- `['admin_members', 'detail', memberId]`
+- `['manager_attendance', 'profile', memberId]`
+- `['superadmin_gyms', 'detail', gymId]`
 
 Two different resources MUST NOT share the same cache entry.
 
@@ -871,10 +871,10 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
 #### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
-All files (Constants, Schemas, QueryKeys, API, UrlConfig, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
+All files (Constants, Schemas, QueryKeys, API, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
 
-**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
+**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, and Next.js reserved routing files (`page.tsx`, `loading.tsx`, `error.tsx`). This keeps the root directory entirely clean.
 
@@ -1093,7 +1093,9 @@ Once the entire refactor is complete, generate or update a `[moduleName]_feature
 Handles gyms operations, UI display, and logic isolation.
 
 ## Feature Inventory
-| Core UI | /gyms | Main module view | TBD | Frontend Team |
+| Feature Name | Route Path | Description      | API Endpoint | Status        |
+|--------------|------------|------------------|--------------|---------------|
+| Core UI      | /gyms      | Main module view | TBD          | Frontend Team |
 
 ## Edge Cases / AI Warnings
 - Do not bypass API interceptors.
@@ -1109,6 +1111,8 @@ subscription tier, and drill into per-gym usage metrics. It is the entry point f
 tenant lifecycle operations (create → activate → suspend → delete).
 
 ## Feature Inventory
+| Feature Name    | Route Path                                    | Description                                                                          | API Endpoint                                         | Status  |
+|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------------|------------------------------------------------------|---------|
 | Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /api/v1/superadmin/gyms?page&limit&search&status | ✅ Live |
 | Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /api/v1/superadmin/gyms                         | ✅ Live |
 | Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |

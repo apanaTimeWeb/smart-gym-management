@@ -484,7 +484,7 @@ All Orchestrators MUST use the following naming pattern — no exceptions:
 **Examples:**
 - `admin-members-orchestrator.service.ts`
 - `manager-billing-orchestrator.service.ts`
-- `superadmin-tenants-orchestrator.service.ts`
+- `superadmin-gyms-orchestrator.service.ts`
 
 ❌ **FORBIDDEN orchestrator names — AI agents MUST NOT use these:**
 - `facade.service.ts`
@@ -640,6 +640,8 @@ These files MUST NOT be placed inside:
 Handles billing operations.
 
 ## Feature Inventory
+| Endpoint | Path | Description | DTO |
+|---|---|---|---|
 | POST /billing/charge | /billing/charge | Handles charging | AdminBillingChargeCreateDto |
 
 ## Edge Cases / AI Warnings
@@ -657,6 +659,8 @@ AdminBillingOrchestratorService to guarantee atomic DB + audit log writes.
 Never call AdminBillingWalletRepository directly from outside this module.
 
 ## Feature Inventory
+| Endpoint | Controller | Description | DTO |
+|---|---|---|---|
 | POST /billing/wallet/topup | AdminBillingWalletCommandController | Top up member wallet | AdminBillingWalletTopupDto |
 | POST /billing/plans/purchase | AdminBillingPlanCommandController | Purchase a plan | AdminBillingPlanPurchaseDto |
 
@@ -2290,7 +2294,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the framework's entity/model definition (e.g., `admin_campaigns`, `superadmin_saas_invoices`).
 * **NestJS implementation:** Use the `@Entity('prefix_table')` decorator. Always explicitly hardcode the name rather than using implicit global naming strategies.
 * **Django implementation:** Use `class Meta: db_table = 'prefix_table'`. Always explicitly hardcode the name rather than relying on app-label prefixing defaults.
-* **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin-tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin-gyms`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -2400,12 +2404,12 @@ src/
           admin-members-registration.service.ts
   backend-superadmin/
     superadmin-modules/
-      superadmin-tenants/
+      superadmin-gyms/
         tenants-locales/
           en/
-            superadmin-tenants-errors.json
+            superadmin-gyms-errors.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE
-            superadmin-tenants-errors.json
+            superadmin-gyms-errors.json
 scripts/                  ← (Global tooling folder exception allowed under Rule 2)
   merge-locales.ts        ← Merges all module locales into one bundle at build time
 ```
