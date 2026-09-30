@@ -519,7 +519,6 @@ Identify:
 * components
 * child components
 * hooks
-* contexts
 * Zustand stores
 * API files
 * URL config
@@ -550,23 +549,22 @@ Use actual imports and directory structure.
 
 Before giving findings, produce:
 
-## Module Structure
-
 ```text
-[module root]
-├── routes/pages
-├── components
-├── hooks
-├── store
-├── api
-├── types
-├── schemas
-├── constants
-├── utils
-├── mocks
-├── tests
-└── documentation
+[module root]/
+├── [moduleName]_components/
+├── [moduleName]_hooks/
+├── [moduleName]_store/
+├── [moduleName]_api/
+├── [moduleName]_types/
+├── [moduleName]_schemas/
+├── [moduleName]_constants/
+├── [moduleName]_utils/
+├── [moduleName]_mocks/
+├── [moduleName]_tests/
+└── documentation (.md files)
 ```
+
+**IMPORTANT:** The names above are structural placeholders. Replace EVERY folder name with the ACTUAL discovered prefixed folder name (e.g., `manager_members_components/`, NOT `components/`). Generic unprefixed folder names are an architecture violation.
 
 But replace the generic names above with the ACTUAL discovered structure.
 

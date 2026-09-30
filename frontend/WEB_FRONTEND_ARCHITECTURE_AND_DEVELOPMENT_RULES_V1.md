@@ -4,7 +4,7 @@ Please follow these strict architectural rules:
 
 1. **Micro-Modularization, Feature-Based Sub-folders & File Size Ceilings (Crucial)**: 
 Break down all large or mixed files. Every **React component file** MUST contain one primary React component. Non-component files MAY contain multiple closely related declarations when they represent one cohesive responsibility, such as an API service for one entity family, a schema family, or a constants set. **CRITICAL:** Do not dump all these micro-files into a single flat directory. Group them logically into cohesive sub-folders within the module. 
-**IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name exactly once (e.g., use `[moduleName]_components/`, `[moduleName]_context/`, `[moduleName]_utils/` instead of generic names like `components/`). Do NOT double-prefix folders (e.g., if the module is `superadmin_analytics`, the folder MUST be `superadmin_analytics_components/`, NOT `superadmin_analytics_analytics_components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/Header/`).
+**IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name exactly once (e.g., use `[moduleName]_components/`, `[moduleName]_store/`, `[moduleName]_api/` instead of generic names like `components/`). Do NOT double-prefix folders (e.g., if the module is `superadmin_analytics`, the folder MUST be `superadmin_analytics_components/`, NOT `superadmin_analytics_analytics_components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/[role]_[module]_table/`).
 **File Size Ceiling:** React Component: hard maximum 300 lines. If a component's JSX grows beyond that, extract sub-sections into their own child component files inside the same feature folder to force real component-level granularity.
 
 ### Extended File Size Ceilings
@@ -39,13 +39,13 @@ This includes:
 
 - Components
 - Hooks
-- Contexts
-- Module-scoped state
+- Module-scoped Zustand state
 - API clients
 - Types
 - Schemas
 - Constants
-- Feature-specific utilities
+- Utilities
+- Feature-specific formatters
 - Tests
 - Mock fixtures
 - MSW handlers
@@ -215,12 +215,14 @@ APPLICATION
         ├── [moduleName]_schemas/
         ├── [moduleName]_constants/
         ├── [moduleName]_store/
+        ├── [moduleName]_utils/
         ├── [moduleName]_tests/
         ├── [moduleName]_mocks/
         ├── [moduleName]_locales/
         ├── [moduleName]_features.md
         ├── [moduleName]_forbidden.md
         ├── [moduleName]_theme_contract.md
+        ├── [moduleName]_url_config.ts
         └── ... etc
 
 Example:
@@ -292,7 +294,6 @@ Where applicable, the feature module MUST contain:
 ├── [feature]_components/
 ├── [feature]_hooks/
 ├── [feature]_store/
-├── [feature]_context/
 ├── [feature]_api/
 ├── [feature]_types/
 ├── [feature]_schemas/
@@ -707,9 +708,9 @@ UI Interaction
 ```
 A visible control without functional closure MUST be treated as a defect.
 
-7. **Interface & Type Isolation (The Prop Blueprint)**: 
-Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
-- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
+7. **Interface & Type Isolation (The Prop Blueprint)**:
+Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types/` folder.
+- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants/` or `_types/` folder.
 
 #### SCHEMA ORGANIZATION (NO BARREL FILES)
 Place all schema files strictly inside the `[moduleName]_schemas/` folder. Do not create barrel files or single entry points to re-export them. Import the specific schema you need directly using absolute imports.
@@ -1149,9 +1150,9 @@ each folder, not just the folder name. Example:]
 
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableHeaders.ts` |
+| `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableColumns.ts` |
 | `manager_members_components/manager_members_profile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
-| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts`, `manager_members_url_config.ts` |
+| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts` |
 | `manager_members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
 | `manager_members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
 | `manager_members_constants/` | Hardcoded data, dropdown options, query keys, enums | `ManagerMembersConstants.ts`, `ManagerMembersQueryKeys.ts` |
