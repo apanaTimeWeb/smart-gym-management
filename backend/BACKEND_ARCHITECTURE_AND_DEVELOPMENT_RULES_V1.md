@@ -355,6 +355,24 @@ admin_core/
           └── admin_members_forbidden.md
   ```
 
+### Mandatory Feature Module Structure
+
+Every feature module MUST contain:
+- `{module}_controllers/`
+- `{module}_services/`
+- `{module}_repositories/`
+- `{module}_dto/`
+- `{module}_types/`
+- `{module}_constants/`
+- `{module}_exceptions/`
+- `{module}_domain/`
+- `{module}_mappers/`
+
+Optional:
+- `{module}_locales/`
+- `{module}_jobs/`
+- `{module}_adapters/`
+
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
 Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
@@ -481,6 +499,19 @@ The exported class MUST follow PascalCase matching the filename: `admin-billing-
 
 Orchestrators MUST live inside the module's `{module}_services/` sub-folder alongside other micro-services.
 
+### Feature Module File Rule
+
+Every feature module MUST contain exactly one module registration file.
+
+Pattern:
+`{role}-{module}.module.ts`
+
+Examples:
+- `admin-members.module.ts`
+- `manager-billing.module.ts`
+
+Multiple NestJS module files inside a feature module are forbidden.
+
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
@@ -588,6 +619,18 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 *(Crucial for AI Context & Onboarding)*
 * **The Rule:** Every single module must contain a `[role]_[module]_backend_feature.md` file at its root (e.g., `backend_admin/admin_auth/admin_auth_backend_feature.md`). 
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
+### Documentation Placement Rule
+
+The following files MUST exist directly inside the feature module root:
+- `{role}_{module}_backend_feature.md`
+- `{role}_{module}_dependencies.md`
+- `{role}_{module}_forbidden.md`
+
+These files MUST NOT be placed inside:
+- `docs/`
+- `documentation/`
+- `wiki/`
 
 ### Documentation Quality Standard
 
@@ -984,7 +1027,18 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 38. Domain-Driven Module Grouping (The "Route Group" Equivalent)
 * **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level role/domain folders before splitting them into specific features.
   - ❌ **BAD:** `src/billing/`, `src/superadmin_stats/`, `src/attendance/` (All dumped into a flat directory).
-  - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
+  - ✅ **GOOD:**
+    ```
+    src/backend_manager/
+    └── manager_modules/
+        └── manager_billing/
+    src/backend_superadmin/
+    └── superadmin_modules/
+        └── superadmin_stats/
+    src/backend_admin/
+    └── admin_modules/
+        └── admin_attendance/
+    ```
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
 * **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager_billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
