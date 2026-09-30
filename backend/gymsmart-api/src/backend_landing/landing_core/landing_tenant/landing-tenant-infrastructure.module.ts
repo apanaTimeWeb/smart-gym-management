@@ -10,6 +10,7 @@ import { LandingTenantContextService } from '@/backend_landing/landing_core/land
 import { LandingTenantDatabaseProvisionerService } from '@/backend_landing/landing_core/landing_tenant/landing-tenant-database-provisioner.service';
 import { LandingTestTenantIdempotencyService } from '@/backend_landing/landing_core/landing_tenant/landing-test-tenant-idempotency.service';
 
+import { LandingTestTenantController } from '@/backend_landing/landing_core/landing_tenant/landing-test-tenant.controller';
 
 /**
  * Intent: Defines the LandingTenantInfrastructureModule class boundary for this supplied Landing backend scope.
@@ -20,6 +21,7 @@ import { LandingTestTenantIdempotencyService } from '@/backend_landing/landing_c
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([LandingMasterTenantEntity])],
+  controllers: [LandingTestTenantController],
   providers: [
     LandingMasterTenantRepository,
     LandingTenantDataSourceManagerService,

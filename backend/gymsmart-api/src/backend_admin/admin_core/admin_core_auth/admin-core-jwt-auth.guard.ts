@@ -53,7 +53,8 @@ export class AdminCoreJwtAuthGuard implements CanActivate {
       // Landing public routes — protected by LandingTenantResolutionMiddleware instead
       path === '/landing/booking' ||
       path === '/landing/bookings' ||
-      path === '/landing/contact'
+      path === '/landing/contact' ||
+      path.startsWith('/test/tenants')
     );
   }
 }

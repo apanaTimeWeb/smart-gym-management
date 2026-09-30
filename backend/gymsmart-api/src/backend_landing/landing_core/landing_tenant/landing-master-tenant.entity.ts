@@ -32,8 +32,38 @@ export class LandingMasterTenantEntity extends LandingBaseEntity {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'PK_tenants', comment: 'Globally unique UUID identity for one tenant registry row.' })
   declare id: string;
 
+  @Column({ name: 'name', length: 160, comment: 'Internal tenant identifier name.' })
+  name!: string;
+
   @Column({ length: 120, comment: 'Globally unique human-readable tenant slug in the master registry.' })
   slug!: string;
+
+  @Column({ name: 'owner_name', length: 500, default: 'Seed Owner' })
+  ownerName!: string;
+
+  @Column({ name: 'admin_email', length: 500, default: 'admin@gymsmart.com' })
+  adminEmail!: string;
+
+  @Column({ name: 'phone', length: 500, default: '9999999999' })
+  phone!: string;
+
+  @Column({ name: 'plan', length: 500, default: 'Enterprise' })
+  plan!: string;
+
+  @Column({ name: 'database_version', length: 500, default: 'v1.0' })
+  databaseVersion!: string;
+
+  @Column({ name: 'city', length: 500, default: 'Demo City' })
+  city!: string;
+
+  @Column({ name: 'state', length: 500, default: 'Demo State' })
+  state!: string;
+
+  @Column({ name: 'country', length: 500, default: 'India' })
+  country!: string;
+
+  @Column({ name: 'gstin', length: 500, default: '' })
+  gstin!: string;
 
   @Column({ name: 'display_name', length: 200, comment: 'Human-readable tenant name shown in platform-level contexts.' })
   displayName!: string;

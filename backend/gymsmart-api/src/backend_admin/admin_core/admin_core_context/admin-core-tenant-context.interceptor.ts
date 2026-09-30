@@ -30,7 +30,7 @@ export class AdminCoreTenantContextInterceptor implements NestInterceptor {
     const rawPath = String(request.url ?? '');
     const path = rawPath;
     console.log('AdminCoreTenantContextInterceptor running for path:', path);
-    if (path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path.startsWith('/auth/') || path.startsWith('/superadmin/') || path.startsWith('/landing/')) {
+    if (path === '/health/live' || path === '/health/ready' || path.startsWith('/metrics') || path.startsWith('/auth/') || path.startsWith('/superadmin/') || path.startsWith('/landing/') || path.startsWith('/test/tenants')) {
       return next.handle();
     }
 

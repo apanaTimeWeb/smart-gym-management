@@ -80,12 +80,24 @@ async findActiveBySlug(slug: string): Promise<LandingMasterTenantEntity | null> 
    */
 async createTenant(input: {
     id: string;
+    name: string;
     slug: string;
     displayName: string;
     databaseName: string;
     status: LandingMasterTenantStatus;
   }): Promise<LandingMasterTenantEntity> {
-    const entity = this.repository.create(input);
+    const entity = this.repository.create({
+      ownerName: 'Seed Owner',
+      adminEmail: 'admin@gymsmart.com',
+      phone: '9999999999',
+      plan: 'Enterprise',
+      databaseVersion: 'v1.0',
+      city: 'Demo City',
+      state: 'Demo State',
+      country: 'India',
+      gstin: '',
+      ...input
+    });
     return this.repository.save(entity);
   }
 

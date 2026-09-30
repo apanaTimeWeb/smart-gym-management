@@ -61,6 +61,7 @@ constructor(
     const tenantId = randomUUID();
     const tenant = await this.tenantRepository.createTenant({
       id: tenantId,
+      name: `E2E Test ${tenantId}`,
       slug: `e2e-${tenantId}`,
       displayName: `E2E Test ${tenantId}`,
       databaseName: `tenant_test_${tenantId.replaceAll('-', '')}`,
@@ -119,6 +120,7 @@ private assertDisposableTenant(tenant: LandingMasterTenantEntity): void {
   private async createRegistryRow(tenantId: string): Promise<LandingMasterTenantEntity> {
     return this.tenantRepository.createTenant({
       id: tenantId,
+      name: this.config.getOrThrow<string>('landing.publicTenantName'),
       slug: this.config.getOrThrow<string>('landing.publicTenantSlug'),
       displayName: this.config.getOrThrow<string>('landing.publicTenantName'),
       databaseName: `tenant_${tenantId.replaceAll('-', '')}`,

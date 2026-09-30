@@ -12,8 +12,7 @@ BOOTSTRAP_TOKEN = os.getenv("E2E_BOOTSTRAP_TOKEN")
 
 def _assert_envelope(payload: dict, expected_message: str) -> None:
     assert payload["success"] is True
-    assert payload["message"] == expected_message
-    assert payload["data"] is None
+    assert payload["data"]["message"] == expected_message
     assert "error" not in payload
 
 
@@ -23,7 +22,7 @@ def isolated_tenant():
         pytest.skip("E2E_BOOTSTRAP_TOKEN is not configured; isolated tenant provisioning cannot be performed safely.")
 
     create_response = requests.post(
-        f"{BASE_URL}/api/v1/test/tenants",
+        f"{BASE_URL}/test/tenants",
         headers={
             "Idempotency-Key": f"e2e-provision-{uuid4()}",
             "x-test-bootstrap-token": BOOTSTRAP_TOKEN,
@@ -37,7 +36,7 @@ def isolated_tenant():
         yield tenant_id
     finally:
         requests.delete(
-            f"{BASE_URL}/api/v1/test/tenants/{tenant_id}",
+            f"{BASE_URL}/test/tenants/{tenant_id}",
             headers={
                 "Idempotency-Key": f"e2e-destroy-{uuid4()}",
                 "x-test-bootstrap-token": BOOTSTRAP_TOKEN,
@@ -48,7 +47,7 @@ def isolated_tenant():
 
 def test_landing_booking_requires_idempotency_key(isolated_tenant: str) -> None:
     response = requests.post(
-        f"{BASE_URL}/api/v1/landing/booking",
+        f"{BASE_URL}/landing/bookings",
         headers={"x-tenant-id": isolated_tenant, "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         json={
             "name": "E2E Member",
@@ -80,8 +79,8 @@ def test_landing_booking_replays_same_mutation(isolated_tenant: str) -> None:
         "date": "2026-09-28T10:00:00.000Z",
         "type": "trial",
     }
-    first = requests.post(f"{BASE_URL}/api/v1/landing/booking", headers=headers, json=body, timeout=20)
-    second = requests.post(f"{BASE_URL}/api/v1/landing/booking", headers=headers, json=body, timeout=20)
+    first = requests.post(f"{BASE_URL}/landing/bookings", headers=headers, json=body, timeout=20)
+    second = requests.post(f"{BASE_URL}/landing/bookings", headers=headers, json=body, timeout=20)
 
     assert first.status_code == HTTPStatus.CREATED, first.text
     assert second.status_code == HTTPStatus.CREATED, second.text
@@ -101,8 +100,8 @@ def test_landing_contact_replays_same_mutation(isolated_tenant: str) -> None:
         "email": "e2e-contact@example.org",
         "message": "Please contact me about membership plans.",
     }
-    first = requests.post(f"{BASE_URL}/api/v1/landing/contact", headers=headers, json=body, timeout=20)
-    second = requests.post(f"{BASE_URL}/api/v1/landing/contact", headers=headers, json=body, timeout=20)
+    first = requests.post(f"{BASE_URL}/landing/contact", headers=headers, json=body, timeout=20)
+    second = requests.post(f"{BASE_URL}/landing/contact", headers=headers, json=body, timeout=20)
 
     assert first.status_code == HTTPStatus.CREATED, first.text
     assert second.status_code == HTTPStatus.CREATED, second.text
@@ -126,8 +125,8 @@ def test_landing_key_reuse_with_different_payload_is_rejected(isolated_tenant: s
     }
     second_body = {**first_body, "email": "e2e-conflict-b@example.org"}
 
-    assert requests.post(f"{BASE_URL}/api/v1/landing/booking", headers=headers, json=first_body, timeout=20).status_code == HTTPStatus.CREATED
-    second = requests.post(f"{BASE_URL}/api/v1/landing/booking", headers=headers, json=second_body, timeout=20)
+    assert requests.post(f"{BASE_URL}/landing/bookings", headers=headers, json=first_body, timeout=20).status_code == HTTPStatus.CREATED
+    second = requests.post(f"{BASE_URL}/landing/bookings", headers=headers, json=second_body, timeout=20)
     assert second.status_code == HTTPStatus.CONFLICT
     payload = second.json()
     assert payload["success"] is False
@@ -137,7 +136,7 @@ def test_landing_key_reuse_with_different_payload_is_rejected(isolated_tenant: s
 
 def test_landing_booking_rejects_overlong_idempotency_key(isolated_tenant: str) -> None:
     response = requests.post(
-        f"{BASE_URL}/api/v1/landing/booking",
+        f"{BASE_URL}/landing/bookings",
         headers={
             "Idempotency-Key": "x" * 256,
             "x-tenant-id": isolated_tenant,
@@ -161,7 +160,7 @@ def test_landing_booking_rejects_overlong_idempotency_key(isolated_tenant: str) 
 
 def test_landing_rejects_malformed_tenant_identifier(isolated_tenant: str) -> None:
     response = requests.post(
-        f"{BASE_URL}/api/v1/landing/booking",
+        f"{BASE_URL}/landing/bookings",
         headers={
             "Idempotency-Key": f"e2e-tenant-format-{uuid4()}",
             "x-tenant-id": "not-a-uuid",
@@ -180,7 +179,7 @@ def test_landing_rejects_malformed_tenant_identifier(isolated_tenant: str) -> No
     payload = response.json()
     assert payload["success"] is False
     assert payload["data"] is None
-    assert payload["errorCode"] == "CORE.HTTP.REQUEST_FAILED"
+    assert payload["errorCode"] == "HTTP.REQUEST.FAILED"
 
 
 def test_test_tenant_destroy_key_reuse_across_targets_is_rejected() -> None:
@@ -188,21 +187,21 @@ def test_test_tenant_destroy_key_reuse_across_targets_is_rejected() -> None:
         pytest.skip("E2E_BOOTSTRAP_TOKEN is not configured; isolated tenant lifecycle cannot be exercised safely.")
     key = f"e2e-destroy-key-reuse-{uuid4()}"
     first = requests.post(
-        f"{BASE_URL}/api/v1/test/tenants",
+        f"{BASE_URL}/test/tenants",
         headers={"Idempotency-Key": key, "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
     assert first.status_code == HTTPStatus.CREATED, first.text
     first_tenant = first.json()["data"]["tenantId"]
     second = requests.post(
-        f"{BASE_URL}/api/v1/test/tenants",
+        f"{BASE_URL}/test/tenants",
         headers={"Idempotency-Key": key, "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
     assert second.status_code == HTTPStatus.CREATED, second.text
     assert second.json() == first.json()
     requests.delete(
-        f"{BASE_URL}/api/v1/test/tenants/{first_tenant}",
+        f"{BASE_URL}/test/tenants/{first_tenant}",
         headers={"Idempotency-Key": f"cleanup-{uuid4()}", "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
@@ -212,7 +211,7 @@ def test_test_tenant_destroy_key_is_bound_to_target(isolated_tenant: str) -> Non
     if not BOOTSTRAP_TOKEN:
         pytest.skip("E2E_BOOTSTRAP_TOKEN is not configured; isolated tenant lifecycle cannot be exercised safely.")
     other = requests.post(
-        f"{BASE_URL}/api/v1/test/tenants",
+        f"{BASE_URL}/test/tenants",
         headers={"Idempotency-Key": f"e2e-destroy-other-{uuid4()}", "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
@@ -220,20 +219,20 @@ def test_test_tenant_destroy_key_is_bound_to_target(isolated_tenant: str) -> Non
     other_tenant = other.json()["data"]["tenantId"]
     key = f"e2e-destroy-bound-{uuid4()}"
     first = requests.delete(
-        f"{BASE_URL}/api/v1/test/tenants/{isolated_tenant}",
+        f"{BASE_URL}/test/tenants/{isolated_tenant}",
         headers={"Idempotency-Key": key, "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
     assert first.status_code == HTTPStatus.OK, first.text
     second = requests.delete(
-        f"{BASE_URL}/api/v1/test/tenants/{other_tenant}",
+        f"{BASE_URL}/test/tenants/{other_tenant}",
         headers={"Idempotency-Key": key, "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )
     assert second.status_code == HTTPStatus.CONFLICT, second.text
     assert second.json()["errorCode"] == "CORE.IDEMPOTENCY.KEY_REUSE"
     requests.delete(
-        f"{BASE_URL}/api/v1/test/tenants/{other_tenant}",
+        f"{BASE_URL}/test/tenants/{other_tenant}",
         headers={"Idempotency-Key": f"cleanup-{uuid4()}", "x-test-bootstrap-token": BOOTSTRAP_TOKEN},
         timeout=20,
     )

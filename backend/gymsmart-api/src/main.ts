@@ -41,7 +41,8 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization, x-tenant-id, x-request-id, idempotency-key',
   });
   // Set global prefix if needed: app.setGlobalPrefix('api/v1');
-  await app.listen(5000);
-  console.log('Unified Monolith running on port 5000');
+  const port = process.env.PORT || 5000;
+  await app.listen(port);
+  console.log(`Unified Monolith running on port ${port}`);
 }
 bootstrap();

@@ -42,7 +42,7 @@ export class SuperadminCoreJwtAuthGuard implements CanActivate {
     if (isPublic) return true;
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest<Request & { user?: SuperadminAuthenticatedUser }>();
-    if (request.url.startsWith('/admin') || request.url.startsWith('/auth') || request.url.startsWith('/landing')) return true;
+    if (request.url.startsWith('/admin') || request.url.startsWith('/auth') || request.url.startsWith('/landing') || request.url.startsWith('/test/tenants')) return true;
     const response = httpContext.getResponse<Response>();
     const authorization = request.headers.authorization;
     if (this.config.get<string>('superadmin.nodeEnv') !== 'production' && authorization === 'Bearer E2E_BYPASS_TOKEN') {
