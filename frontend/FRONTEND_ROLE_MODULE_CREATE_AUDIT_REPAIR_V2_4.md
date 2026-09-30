@@ -558,7 +558,6 @@ Before giving findings, produce:
 ├── components
 ├── hooks
 ├── store
-├── context
 ├── api
 ├── types
 ├── schemas
@@ -754,7 +753,7 @@ Do not rename blindly if a framework convention requires a specific filename suc
 
 Check whether component files contain the required responsibility comments.
 
-Check whether hooks/contexts have the required data-flow documentation.
+Check whether hooks/stores have the required data-flow documentation.
 
 For every missing/weak comment:
 
@@ -963,13 +962,12 @@ Classify each state as:
 2. Shared client state
 3. Component-private state
 4. URL state
-5. Context state
+5. Store state
 
 Check:
 
 * TanStack Query
 * Zustand
-* React Context
 * useState
 * useReducer
 * URL parameters
@@ -977,7 +975,6 @@ Check:
 Find:
 
 * API data stored in Zustand
-* API data stored in Context
 * duplicate server state
 * unnecessarily global state
 * unnecessary prop drilling

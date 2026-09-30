@@ -20,7 +20,7 @@ The component size limit alone is insufficient. AI agents also lose context in l
 
 ### Child Component Size Rule
 If a component contains more than **3 major visual sections**, it MUST be split.
-- ✅ **GOOD:** `AdminMembersPage` split into `Header`, `Filters`, `KPIs`, `Table` (separate components).
+- ✅ **GOOD:** `AdminMembersMain` split into `AdminMembersHeader`, `AdminMembersFilters`, `AdminMembersKpis`, `AdminMembersTable` (separate components).
 - ❌ **BAD:** A 250-line monster file containing the entire page layout.
 
 If a file exceeds its limit:
@@ -216,8 +216,7 @@ APPLICATION
         ├── [moduleName]_constants/
         ├── [moduleName]_store/
         ├── [moduleName]_tests/
-        ├── [moduleName]_fixtures/
-        ├── [moduleName]_handlers/
+        ├── [moduleName]_mocks/
         ├── [moduleName]_locales/
         ├── [moduleName]_features.md
         ├── [moduleName]_forbidden.md
@@ -1150,14 +1149,14 @@ each folder, not just the folder name. Example:]
 
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `members_components/ManagerMembersTable/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableHeaders.ts` |
-| `members_components/ManagerMembersProfile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
-| `members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts`, `manager_members_url_config.ts` |
-| `members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
-| `members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
-| `members_context/` | React Context bridging store state to deeply nested components | `ManagerMembersContext.tsx`, `ManagerMembersProvider.tsx` |
-| `members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
-| `members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
+| `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableHeaders.ts` |
+| `manager_members_components/manager_members_profile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
+| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts`, `manager_members_url_config.ts` |
+| `manager_members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
+| `manager_members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
+| `manager_members_constants/` | Hardcoded data, dropdown options, query keys, enums | `ManagerMembersConstants.ts`, `ManagerMembersQueryKeys.ts` |
+| `manager_members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
+| `manager_members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
 
 ### Approved External Dependencies
 
@@ -1226,9 +1225,8 @@ without reading every component file. Example:]
 ## Data and State Architecture
 [REQUIRED: Must name the ACTUAL store files, context files, and query keys — not "TBD".]
 
-- **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state. React Context for cross-tree bridging."]
+- **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state."]
 - **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab, searchQuery, statusFilter, currentPage]
-- **Context providers:** [List actual provider files, e.g., `MembersProvider` in `ManagerMembersContext.tsx` — wraps `ManagerMembersMain`, provides store values to `ManagerMembersTable` and `ManagerMembersProfileModal`]
 - **Local-storage keys:** ["None" is a valid answer if accurate]
 - **MSW handler location:** [actual module-owned handler file]
 - **MSW fixture location:** [actual module-owned fixture file]
@@ -2537,8 +2535,8 @@ This rule is the authoritative web frontend rule for Idempotency-Key generation 
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
 - **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
-- ❌ **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
-- ✅ **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from '@/components/UserComponent'`.
+- ❌ **BAD:** File is `Button.tsx`, imported as `import Button from './button'`.
+- ✅ **GOOD:** File is `Button.tsx`, imported as `import Button from '@/components/ui/Button'`.
 
 ---
 *INTERNAL INSTRUCTION: Think step-by-step and create a detailed internal implementation plan. Do NOT stop for user review. Execute it perfectly without breaking existing data flows.*
