@@ -6388,6 +6388,12 @@ Services and event handlers must not consume ORM entities where forbidden.
 
 No unified model shortcut.
 
+Verify physical locations:
+- Mappers MUST be in `{module}_mappers/`
+- Domain objects MUST be in `{module}_domain/`
+- ORM entities (`*.entity.ts`) MUST be in `{module}_repositories/`
+- ORM entities MUST NEVER be placed in `{module}_domain/`
+
 ---
 
 ## RULE 90 — SECURITY CI/CD GATES
