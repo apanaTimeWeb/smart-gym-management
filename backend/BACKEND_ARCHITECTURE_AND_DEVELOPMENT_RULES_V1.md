@@ -2385,12 +2385,13 @@ The backend uses framework-native internationalization (e.g., `nestjs-i18n` for 
 ### NestJS implementation
 
 **Module-Level File Structure**
-Each module owns its own `_locales/` folder:
-```
+Each module owns its own `{module}-locales/` folder:
+```text
 src/
   backend-admin/
-    admin-members/
-        _locales/
+    admin-modules/
+      admin-members/
+        members-locales/
           en/
             errors.json   ← AI writes this when creating the module
             messages.json
@@ -2400,27 +2401,30 @@ src/
           fr/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
             errors.json
             messages.json
-        admin-members.controller.ts
-        admin-members.service.ts
-    superadmin-tenants/  ← NOTE: superadmin-scoped; should live under backend-superadmin/ not backend-admin/
-
-        _locales/
+        members-controllers/
+          admin-members-registration.controller.ts
+        members-services/
+          admin-members-registration.service.ts
+  backend-superadmin/
+    superadmin-modules/
+      superadmin-tenants/
+        tenants-locales/
           en/
             errors.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE
             errors.json
 scripts/                  ← (Global tooling folder exception allowed under Rule 2)
-  merge-locales.ts        ← Merges all module _locales into one bundle at build time
+  merge-locales.ts        ← Merges all module locales into one bundle at build time
 ```
 
 **AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST:
-1. Create `_locales/en/errors.json` with the English strings.
-2. In the **same commit**, create `_locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
+1. Create `members-locales/en/errors.json` with the English strings.
+2. In the **same commit**, create `members-locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
 3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
 
 ```json
-// _locales/en/errors.json
+// members-locales/en/errors.json
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Member not found.",
@@ -2428,7 +2432,7 @@ When an AI agent writes a new module or adds new error/message keys, it MUST:
   }
 }
 
-// _locales/nl/errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
+// members-locales/nl/errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Lid niet gevonden.",
@@ -2476,7 +2480,7 @@ The AI MUST implement only the branch corresponding to the verified
 active framework.
 
 ### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`_locales/` JSON for NestJS, or `locale/` message files for Django).
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`{module}-locales/` JSON for NestJS, or `locale/` message files for Django).
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2500,7 +2504,7 @@ This is the **authoritative list of languages** this project supports. There is 
 
 > **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. The native framework translation system handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `_locales/.../errors.json` for NestJS or `locale/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../errors.json` for NestJS or `locale/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
