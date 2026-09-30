@@ -3514,6 +3514,17 @@ Verify:
 
 ---
 
+## WEB-INSTRUCTION RULE 1D — CANONICAL FILESYSTEM AND NEXT.JS ROUTING RULE
+
+Verify:
+
+- Exactly one canonical representation of each feature exists.
+- No parallel route tree or duplicate directory exists for the same feature.
+- Next.js route files (`page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`) are physically owned by the feature module and not duplicated.
+- Any route group serves only as routing infrastructure and contains no duplicated business implementation.
+
+---
+
 ## WEB-INSTRUCTION RULE 2 — TOTAL ROLE ISOLATION
 
 Verify:
@@ -5603,6 +5614,7 @@ Before final delivery, the AI MUST literally verify:
 [ ] All source conflicts reported
 [ ] Web Rule 1 checked
 [ ] Web Rule 1B & 1C — frontend_ namespace prefix + role container hierarchy checked
+[ ] Web Rule 1D — Canonical Next.js routing and filesystem structure checked
 [ ] Web Rule 2 checked
 [ ] Web Rule 3 checked
 [ ] Web Rule 3B checked
