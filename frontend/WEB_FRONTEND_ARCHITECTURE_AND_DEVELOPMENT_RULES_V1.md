@@ -463,6 +463,10 @@ Every feature module MUST contain one primary constant registry:
 `AdminMembersConstants.ts`
 Feature-local constants may exist inside subfolders, but the primary module-wide constants MUST live in the root entry file so the AI search location is fixed.
 
+### Enum Registry Rule
+Business statuses MUST originate from one constants source.
+Status literals (e.g., `'ACTIVE'`, `'PENDING'`, `'SUSPENDED'`) are completely forbidden outside of constants and schemas. This prevents the AI from scattering magic strings everywhere.
+
 ### 3B.1 Static UI Configuration vs Server/API Data
 
 The following separation is mandatory:
@@ -537,9 +541,22 @@ Because the components will be heavily micro-modularized, avoid creating a massi
 - **Local `useState`:** Only for state that is strictly private to a single component and never needs to be shared.
 
 ### One Store Rule
-Every feature module MUST contain a maximum of **one primary Zustand store**.
-Example: `useAdminMembersStore.ts`
-Additional stores (like `useMembersTableStore.ts`, `useMembersModalStore.ts`) are completely forbidden unless the module documentation explicitly explains why. State fragmentation causes massive AI confusion and synchronization bugs.
+**Preferred:** Single primary Zustand store (e.g. `useAdminMembersStore.ts`).
+**Allowed:** Multiple stores (like `useMembersTableStore.ts`, `useMembersSelectionStore.ts`) ONLY when they represent genuinely independent repair boundaries for large modules. Explicit documentation is required.
+*Why:* Strict single-store rules can collide with Extreme Isolation in massive modules.
+
+### Derived Data Ownership Rule
+Derived calculations MUST have exactly one owner.
+- ✅ **Allowed:** `fullName`, `membershipStatus`, `expiryIndicator`, `kpiSummaries` centralized in one place.
+- ❌ **Forbidden:** Same derivation repeated across components, hooks, and tables.
+
+### Circular Dependency Rule
+Forbidden:
+- `A -> B -> A`
+- `Hooks -> Store -> Hooks`
+- `Components -> Components -> Parent`
+- `API -> Hook -> API`
+Every dependency chain MUST remain acyclic. AI accidentally creates loops, and this strictly bans them.
 
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
 Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
@@ -595,6 +612,12 @@ Recommended structure:
 
 8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
 Respect the Next.js App Router architecture. `page.tsx` and `layout.tsx` MUST remain Server Components unless a documented framework exception exists.
+
+### Route Ownership Rule
+One route = One `page.tsx`.
+`page.tsx` owns ONLY rendering, server prefetch, and layout assembly.
+- ❌ **Forbidden in page.tsx:** Business calculations, validation, API orchestration.
+
 For data-driven interactive modules using TanStack Query + MSW, prefer the module API client/query layer as the canonical data access path.
 Server-side prefetching/hydration MAY be used when explicitly implemented. When the backend is unavailable, server-side prefetch/hydration MUST either be disabled for that feature or use an explicitly documented server-compatible mock transport. Browser MSW remains the standard frontend/client test transport. The module API contract and query key MUST remain identical in either path.
 Do not create separate server-only and client-only data contracts for the same feature.
@@ -618,6 +641,21 @@ If initial server data is passed into a Client Component:
 - Document the query key.
 - Hydrate/cache it through the approved server-state library.
 - Avoid maintaining an unrelated duplicate local state copy.
+
+### Query Key Registry Rule
+Every feature module MUST contain a dedicated registry for TanStack query keys:
+`AdminMembersQueryKeys.ts`
+```typescript
+export const ADMIN_MEMBERS_QUERY_KEYS = {
+  list: (filters: any) => ['admin-members', 'list', filters],
+  detail: (id: string) => ['admin-members', 'detail', id],
+}
+```
+*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`.
+
+### Mutation Hook Rule
+Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateAdminMember.ts`, `useUpdateAdminMember.ts`, `useDeleteAdminMember.ts`).
+Components MUST NEVER call TanStack mutations directly or mix mutation logic inside JSX.
 
 9. **Leverage Next.js Native Features & Typed Error Boundaries**: 
 Ensure that the module properly utilizes Next.js native routing features for a great user experience.
@@ -919,6 +957,12 @@ Every module feature map MUST use this structure. Each section has mandatory con
 (2) Who uses it (which role/persona)? (3) What are the 3–5 most important things a user
 can DO in this module? (4) What is strictly OFF-LIMITS for this role in this module?
 Generic phrases like "handles X operations" are forbidden.]
+
+## Dependency Manifest
+[REQUIRED: Explicit list of the exact stack technologies used by this module. Example: TanStack Query, Zustand, React Hook Form, Zod. This allows an AI to instantly know what stack is used.]
+
+## Feature Lifecycle Contract
+[REQUIRED: Every module must define its CRUD capability: Create, Read, Update, Delete. If a lifecycle operation does not exist, it MUST be explicitly documented *why* it does not exist, to prevent AI from blindly assuming standard CRUD capability.]
 
 ## Directory Structure
 [REQUIRED: A table or bullet list of EVERY folder inside this module with a one-line
