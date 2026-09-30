@@ -379,7 +379,54 @@ The final report MUST identify:
 
 A module MUST NOT be described as fully compliant unless all applicable documented rules have been verified.
 
+### FINDING SEVERITY LEVELS
+
+Every finding MUST include a severity.
+
+**CRITICAL**
+- Broken user flow
+- Wrong resource identity
+- Data integrity issue
+- Security issue
+- Missing required route
+- Missing required API integration
+- Functional closure failure (visible control that does nothing)
+
+**MAJOR**
+- Architecture violation
+- State ownership violation
+- Query key violation
+- Accessibility violation
+
+**MODERATE**
+- Design-system violation
+- Missing loading/error state
+- Incomplete test coverage
+
+**MINOR**
+- Naming issue
+- Documentation issue
+- Comment issue
+- Low-risk refactor opportunity
+
+The final report MUST summarize findings by severity count.
+
+### PRODUCTION READINESS GATE
+
+A module MUST NOT be marked production-ready if even one unresolved CRITICAL finding remains.
+
+A module MUST NOT be described as fully compliant when:
+- Any CRITICAL finding exists
+- Any required workflow lacks functional closure
+- Any SOURCE_CONFLICT remains unresolved
+- Any required route is missing
+- Any required UI feature is missing
+- Any required API integration is missing
+
+A high PASS count does NOT override unresolved CRITICAL findings.
+
 ---
+
 
 # 4. PRIMARY OBJECTIVE (BOTH MODES)
 

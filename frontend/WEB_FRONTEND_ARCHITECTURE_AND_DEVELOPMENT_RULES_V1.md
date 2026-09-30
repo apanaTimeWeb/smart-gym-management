@@ -400,7 +400,26 @@ FEATURE PORTABILITY
 
 not minimum source-code duplication.
 
----
+### FEATURE-LOCAL SINGLE SOURCE OF TRUTH
+
+The phrase "single source of truth" applies **ONLY within the owning feature module**.
+
+Allowed:
+```text
+admin_members/
+└── AdminMembersConstants.ts
+
+admin_billing/
+└── AdminBillingConstants.ts
+```
+Both modules may contain similar or even identical business constants. Cross-feature consolidation is NOT required.
+
+AI agents MUST NOT create shared business registries, shared business constants, shared business schemas, shared business hooks, or shared business utilities merely because similar data exists elsewhere.
+
+- **Within a feature:** one authoritative source
+- **Across features:** duplication is allowed and preferred when it improves isolation
+
+
 
 ### Canonical Definition
 
@@ -573,13 +592,46 @@ The dependency flow within a module MUST be strictly unidirectional to prevent a
 - ✅ **Allowed:** `Page -> Main -> Hooks -> API` OR `Page -> Main -> Store`
 - ❌ **Forbidden:** `API -> Component`, `Store -> Component`, `Component -> API` (bypassing the hook), `Schema -> Component`
 
+### NO FAKE INTERACTION RULE
+A visible user interaction MUST produce its documented downstream behavior.
+
+❌ **Forbidden:**
+- Empty `onClick` handlers
+- `console.log`-only handlers
+- TODO handlers
+- Placeholder alerts
+- Fake success messages
+- Save buttons that do not persist data
+- Apply buttons that do not affect results
+- Filters that do not affect data
+- Pagination that does not change result pages
+- Retry buttons that do not retry
+- Export buttons that do not generate output
+
+A user interaction is considered complete only when:
+```
+UI Interaction
+→ Handler
+→ State Change
+→ API / Domain Action
+→ Success or Error Feedback
+→ UI Update
+```
+A visible control without functional closure MUST be treated as a defect.
+
 7. **Interface & Type Isolation (The Prop Blueprint)**: 
 Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
 - **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
 
-### One Schema Entry Rule
-Every feature module MUST contain exactly **one root schema file** (e.g., `AdminMembersSchema.ts`).
-Child schemas may exist only as implementation details within subfolders, but the root file MUST be the singular entry point to prevent AI from losing track of validations.
+#### ROOT SCHEMA ENTRY RULE
+Every feature module MUST expose one root schema entry point (e.g., `AdminMembersSchema.ts`).
+
+Additional schemas may exist where responsibility separation requires them. Examples:
+- `AdminMembersCreateSchema.ts`
+- `AdminMembersUpdateSchema.ts`
+- `AdminMembersSearchSchema.ts`
+
+The root schema entry remains the canonical schema discovery point for AI agents and developers. The purpose of this rule is **discoverability, not forcing every validation concern into one oversized file**.
 
 ### TypeScript Strictness and Runtime Contract Validation
 
@@ -656,6 +708,32 @@ export const ADMIN_MEMBERS_QUERY_KEYS = {
 ```
 *Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`. This factory pattern also allows surgical invalidation (e.g., `queryClient.invalidateQueries({ queryKey: ADMIN_MEMBERS_QUERY_KEYS.lists() })` clears all list caches without dropping details).
 
+#### RESOURCE IDENTITY PRESERVATION RULE
+Whenever data belongs to a specific resource, query keys MUST include the resource identity.
+
+❌ **Forbidden:**
+- `['member']`
+- `['profile']`
+- `['gym']`
+
+✅ **Required:**
+- `['member', memberId]`
+- `['profile', memberId]`
+- `['gym', gymId]`
+
+Two different resources MUST NOT share the same cache entry.
+
+Resource identity must remain consistent across:
+```
+Route
+→ Selected Resource
+→ Query Key
+→ Request Parameter
+→ API Response
+→ Rendered UI
+```
+A route representing Resource A MUST NOT display cached data from Resource B. Failure to preserve resource identity is a **CRITICAL architectural violation**.
+
 ### Mutation Hook Rule
 Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateAdminMember.ts`, `useUpdateAdminMember.ts`, `useDeleteAdminMember.ts`).
 Components MUST NEVER call TanStack mutations directly or mix mutation logic inside JSX.
@@ -705,9 +783,17 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
-### One API Entry Rule
-Every feature module MUST contain exactly **one API entry file** (e.g., `AdminMembersApi.ts`). 
-Additional API files (like `AdminMembersCrudApi.ts`, `AdminMembersSearchApi.ts`) are forbidden unless they represent a genuinely different external service. This ensures the AI always has a single discoverable entry point for all API interactions.
+#### API FACADE RULE
+Every feature module MUST expose one primary public API entry point (e.g., `AdminMembersApi.ts`).
+
+This file acts as the canonical entry point for AI discovery and module navigation.
+
+Internally, the module MAY organize implementation into multiple supporting files when required. Examples:
+- `AdminMembersCrudApi.ts`
+- `AdminMembersExportApi.ts`
+- `AdminMembersPaymentApi.ts`
+
+The primary API entry point remains the authoritative public boundary. AI agents MUST begin their API inspection from the public API entry point. The purpose of this rule is **discoverability, not forcing all API logic into one oversized file**.
 
 
 12. **No Hardcoded HTTP Status Codes**: 
