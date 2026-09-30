@@ -9,7 +9,7 @@ import { readAdminCoreEnvironment } from '@/backend_admin/admin_core/admin_core_
  * @returns Nest Config registration for the `app` namespace.
  * @remarks The values are configuration-only and are never used for business decisions.
  */
-export const AdminCoreAppConfig = registerAs('app', () => {
+export const AdminCoreAppConfig = registerAs('adminApp', () => {
   const env = readAdminCoreEnvironment();
   return { port: Number(env.PORT ?? 3000), nodeEnv: env.NODE_ENV ?? 'development' };
 });

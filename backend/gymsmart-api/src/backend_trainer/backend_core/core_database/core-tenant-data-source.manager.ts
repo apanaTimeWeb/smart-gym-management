@@ -31,7 +31,7 @@ export class CoreTenantDataSourceManager implements OnApplicationShutdown {
   private allocationChain: Promise<void> = Promise.resolve();
 
   constructor(
-    @InjectDataSource('master') private readonly master: DataSource,
+    @InjectDataSource() private readonly master: DataSource,
     private readonly config: CoreConfigService,
   ) {}
 

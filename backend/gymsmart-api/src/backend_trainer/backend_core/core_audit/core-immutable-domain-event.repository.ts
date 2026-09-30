@@ -39,6 +39,6 @@ export class CoreImmutableDomainEventRepository {
  */
 async insert(input: CoreImmutableDomainEventInput, transaction?: CoreTransactionContext): Promise<void> {
     const repository = transaction?.getRepository(CoreImmutableDomainEventEntity) ?? (await this.resolver.getDataSource()).getRepository(CoreImmutableDomainEventEntity);
-    await repository.insert(repository.create(input));
+    await repository.insert(repository.create(input) as any);
   }
 }

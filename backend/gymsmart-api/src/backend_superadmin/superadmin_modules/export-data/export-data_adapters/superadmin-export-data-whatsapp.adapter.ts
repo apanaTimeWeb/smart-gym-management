@@ -22,7 +22,7 @@ export class SuperadminExportDataWhatsappAdapter {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  isConfigured(): boolean { return Boolean(this.config.get<string>('app.exportWhatsappWebhookUrl')); }
+  isConfigured(): boolean { return Boolean(this.config.get<string>('superadmin.exportWhatsappWebhookUrl')); }
 
   /**
  * Primary Intent: Executes the send use case within its owning backend boundary.
@@ -31,7 +31,7 @@ export class SuperadminExportDataWhatsappAdapter {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async send(phone: string, downloadUrl: string, expiresAt: string): Promise<void> {
-    const endpoint = this.config.getOrThrow<string>('app.exportWhatsappWebhookUrl');
+    const endpoint = this.config.getOrThrow<string>('superadmin.exportWhatsappWebhookUrl');
     await this.circuitBreaker.execute('export-whatsapp', async () => this.post(endpoint, phone, downloadUrl, expiresAt));
   }
 

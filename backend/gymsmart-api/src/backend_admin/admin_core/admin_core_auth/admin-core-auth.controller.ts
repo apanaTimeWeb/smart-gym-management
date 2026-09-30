@@ -26,7 +26,7 @@ export class AdminCoreAuthController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Authentication succeeded.', type: AdminCoreAuthLoginResponseDto })
   async login(@Body() dto: AdminCoreAuthLoginDto, @Res({ passthrough: true }) response: Response): Promise<AdminCoreAuthLoginResponseDto> {
     const result = await this.authService.login(dto.email, dto.password);
-    response.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'strict', secure: this.config.get<string>('app.nodeEnv', 'development') === 'production' });
+    response.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'strict', secure: this.config.get<string>('adminApp.nodeEnv', 'development') === 'production' });
     return { accessToken: result.accessToken, user: result.user };
   }
 
@@ -39,7 +39,7 @@ export class AdminCoreAuthController {
     const token = request.cookies?.refreshToken as string | undefined;
     if (!token) throw new BadRequestException({ message: 'Refresh token is missing.', errorCode: 'CORE.CORE.INVALID_REQUEST' });
     const result = await this.authService.refresh(token);
-    response.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'strict', secure: this.config.get<string>('app.nodeEnv', 'development') === 'production' });
+    response.cookie('refreshToken', result.refreshToken, { httpOnly: true, sameSite: 'strict', secure: this.config.get<string>('adminApp.nodeEnv', 'development') === 'production' });
     return { accessToken: result.accessToken };
   }
 }

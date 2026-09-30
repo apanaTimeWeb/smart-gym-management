@@ -39,7 +39,7 @@ protected requireEntity<T>(entity: T | null, resource: string, id: string): T {
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
 protected activeRowScope<T extends Record<string, unknown>>(): Partial<T> {
-    return { deletedAt: IsNull() } as Partial<T>;
+    return { deletedAt: IsNull() } as unknown as Partial<T>;
   }
 
   /** Indicates whether a mapped ORM entity is active under the soft-delete contract. */

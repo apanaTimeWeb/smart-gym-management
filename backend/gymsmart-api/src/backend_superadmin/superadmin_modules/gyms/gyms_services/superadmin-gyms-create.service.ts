@@ -28,5 +28,5 @@ export class SuperadminGymsCreateService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async createGyms(input: SuperadminGymsCreateInput): Promise<SuperadminGymsResponseDto> { const currency = (input.currency ?? this.config.getOrThrow<string>('app.defaultCurrency')).toUpperCase(); const created = await this.repository.createGyms({ ...input, currency }); return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(created), currency); }
+  async createGyms(input: SuperadminGymsCreateInput): Promise<SuperadminGymsResponseDto> { const currency = (input.currency ?? this.config.getOrThrow<string>('superadmin.defaultCurrency')).toUpperCase(); const created = await this.repository.createGyms({ ...input, currency }); return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(created), currency); }
 }

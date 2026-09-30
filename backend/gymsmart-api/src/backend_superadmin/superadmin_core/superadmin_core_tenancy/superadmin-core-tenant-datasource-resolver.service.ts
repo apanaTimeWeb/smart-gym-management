@@ -143,9 +143,9 @@ export class SuperadminCoreTenantDatasourceResolverService implements OnModuleDe
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async createTenantDataSource(tenantId: string): Promise<DataSource> {
-    const baseUrl = new URL(this.config.getOrThrow<string>('app.databaseUrl'));
+    const baseUrl = new URL(this.config.getOrThrow<string>('superadmin.databaseUrl'));
     const safeTenantId = tenantId.replace(/[^a-zA-Z0-9_]/g, '_');
-    baseUrl.pathname = `/${this.config.getOrThrow<string>('app.tenantDatabasePrefix')}${safeTenantId}`;
+    baseUrl.pathname = `/${this.config.getOrThrow<string>('superadmin.tenantDatabasePrefix')}${safeTenantId}`;
     const dataSource = new DataSource({ type: 'postgres', url: baseUrl.toString(), synchronize: false, migrationsRun: false, entities: [join(__dirname, '../../superadmin_modules/**/*.entity.{js,ts}')], extra: this.poolOptions() });
     await dataSource.initialize();
     return dataSource;
@@ -163,7 +163,7 @@ export class SuperadminCoreTenantDatasourceResolverService implements OnModuleDe
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private poolOptions(): Record<string, number> { return { max: this.config.getOrThrow<number>('app.tenantPoolMaxPerDatabase'), connectionTimeoutMillis: this.config.getOrThrow<number>('app.databaseAcquireTimeoutMs'), idleTimeoutMillis: this.config.getOrThrow<number>('app.databaseIdleTimeoutMs'), statement_timeout: this.config.getOrThrow<number>('app.databaseStatementTimeoutMs') }; }
+  private poolOptions(): Record<string, number> { return { max: this.config.getOrThrow<number>('superadmin.tenantPoolMaxPerDatabase'), connectionTimeoutMillis: this.config.getOrThrow<number>('superadmin.databaseAcquireTimeoutMs'), idleTimeoutMillis: this.config.getOrThrow<number>('superadmin.databaseIdleTimeoutMs'), statement_timeout: this.config.getOrThrow<number>('superadmin.databaseStatementTimeoutMs') }; }
 
   /**
  * Primary Intent: Executes the `evictIfNecessary` responsibility owned by this superadmin-core-tenant-datasource-resolver.service construct.
@@ -178,8 +178,8 @@ export class SuperadminCoreTenantDatasourceResolverService implements OnModuleDe
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   private async evictIfNecessary(): Promise<void> {
-    const totalPerTenant = this.config.getOrThrow<number>('app.tenantPoolMaxPerDatabase');
-    const budget = this.config.getOrThrow<number>('app.tenantPoolBudget');
+    const totalPerTenant = this.config.getOrThrow<number>('superadmin.tenantPoolMaxPerDatabase');
+    const budget = this.config.getOrThrow<number>('superadmin.tenantPoolBudget');
     const maxDataSources = Math.max(1, Math.floor(budget / totalPerTenant));
     while (this.dataSources.size >= maxDataSources) {
       const evicted = await this.evictOldestIdle();

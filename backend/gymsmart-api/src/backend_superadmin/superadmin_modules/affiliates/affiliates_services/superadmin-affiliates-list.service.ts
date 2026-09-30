@@ -37,7 +37,7 @@ export class SuperadminAffiliatesListService {
     const currencies = new Map(result.items.map((item) => [item.id, item.currency]));
     const balances = await this.ledger.findPayableBalances(result.items.map((item) => item.id), currencies);
     return {
-      data: result.items.map((e) => SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(e, balances.get(e.id) ?? 0), this.config.getOrThrow<string>('app.defaultCurrency'))),
+      data: result.items.map((e) => SuperadminAffiliatesMapper.toResponse(SuperadminAffiliatesMapper.toDomain(e, balances.get(e.id) ?? 0), this.config.getOrThrow<string>('superadmin.defaultCurrency'))),
       meta: buildPaginationMeta(query.page, query.limit, result.total),
     };
   }

@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Builds Trainer progress list, entry detail, and summary response contracts.
 // FLOW: Progress query controller → query service → trainer ownership guard → repository/mapper.
 import { Injectable } from '@nestjs/common';
-import type { ProgressTrackingMemberSummary, ProgressTrackingSummary } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/progress-tracking_repositories/trainer-progress-tracking-repository';
+import type { ProgressTrackingMemberSummary, ProgressTrackingSummary, ProgressEntriesQuery } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/progress-tracking_types/trainer-progress-tracking-repository-query.types';
 import { CoreRequestContext } from '@/backend_trainer/backend_core/core_context/core-request-context';
 import { buildCorePaginationMeta } from '@/backend_trainer/backend_core/core_utils/core-pagination.utils';
-import { TrainerProgressTrackingRepository, type ProgressEntriesQuery } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/progress-tracking_repositories/trainer-progress-tracking-repository';
+import { TrainerProgressTrackingRepository } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/progress-tracking_repositories/trainer-progress-tracking-repository';
 /**
  * Intent: Defines the TrainerProgressTrackingQueryService boundary for the modules architecture.
  * Edge Cases: Preserve tenant scope, validation, authorization, nullability, transactions, and canonical errors when changing this construct.

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Verifies bearer access JWTs and stores typed actor context without owning business authorization.
+// RESPONSIBILITY: Verifies bearer access JWTs and stores typed actor context without owning business authorization.
 // FLOW: HTTP Authorization -> JWT verify -> CoreJwtAuthGuard -> CoreRequestContextService -> controller.
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -28,6 +28,8 @@ export class CoreJwtAuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest<CoreAuthenticatedRequest>();
+    if (request.url.startsWith('/landing')) return true;
+    
     const token = this.extractBearerToken(request.headers.authorization);
     if (!token) throw new UnauthorizedException(CoreErrorConstants.MESSAGE.AUTHENTICATION_REQUIRED);
 

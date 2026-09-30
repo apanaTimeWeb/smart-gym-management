@@ -80,5 +80,5 @@ export class SuperadminGymsExportDownloadTokenService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private sign(encoded: string): string { return createHmac('sha256', this.config.getOrThrow<string>('app.jwtAccessSecret')).update(encoded).digest('base64url'); }
+  private sign(encoded: string): string { return createHmac('sha256', this.config.getOrThrow<string>('superadmin.jwtAccessSecret')).update(encoded).digest('base64url'); }
 }

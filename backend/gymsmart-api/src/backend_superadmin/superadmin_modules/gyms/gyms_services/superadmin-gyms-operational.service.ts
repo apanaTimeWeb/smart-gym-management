@@ -60,7 +60,7 @@ export class SuperadminGymsOperationalService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  async impersonate(id:string):Promise<{token:string}>{ const tenant=await this.repository.findByIdOrThrow(id); const actor=getRequestContext()?.userId ?? null; if(!actor) throw new BadRequestException({error:'BAD_REQUEST',errorCode:'GYMS.EMAIL.ACTOR_REQUIRED',message:{key:'gyms.ERRORS.BAD_REQUEST'}}); const secret=this.config.getOrThrow<string>('app.jwtAccessSecret'); const token=await this.jwtService.signAsync({sub:actor,impersonatedTenantId:tenant.id,purpose:'GYM_IMPERSONATION'},{secret,expiresIn:'10m'}); await this.repository.recordAdministrativeAction(id,'IMPERSONATION_ISSUED'); return {token}; }
+  async impersonate(id:string):Promise<{token:string}>{ const tenant=await this.repository.findByIdOrThrow(id); const actor=getRequestContext()?.userId ?? null; if(!actor) throw new BadRequestException({error:'BAD_REQUEST',errorCode:'GYMS.EMAIL.ACTOR_REQUIRED',message:{key:'gyms.ERRORS.BAD_REQUEST'}}); const secret=this.config.getOrThrow<string>('superadmin.jwtAccessSecret'); const token=await this.jwtService.signAsync({sub:actor,impersonatedTenantId:tenant.id,purpose:'GYM_IMPERSONATION'},{secret,expiresIn:'10m'}); await this.repository.recordAdministrativeAction(id,'IMPERSONATION_ISSUED'); return {token}; }
   /**
  * Primary Intent: Executes the `exportGyms` responsibility owned by this feature-local superadmin-gyms-operational.service construct.
    * Edge Cases: Missing records, invalid inputs, and downstream failures must fail fast and preserve the owning feature's error contract.

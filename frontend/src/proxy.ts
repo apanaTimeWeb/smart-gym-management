@@ -53,6 +53,7 @@ export function proxy(req: NextRequest) {
   const isPublicRoute =
     pathname.startsWith("/auth") ||
     pathname.startsWith("/landing") ||
+    pathname.startsWith("/frontend_public") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/__nextjs") ||

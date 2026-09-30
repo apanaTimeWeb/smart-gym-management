@@ -10,7 +10,8 @@ test('rejects a socket without a token', async () => {
   const jwt = { verifyAsync: jest.fn() };
   const config = { getCorsOrigins: jest.fn().mockReturnValue(['https://app.example.com']) };
   const memberships = { findActiveMembership: jest.fn() };
-  const gateway = new TrainerNotificationsRealtimeGateway(jwt as unknown as JwtService, config as unknown as CoreConfigService, memberships as unknown as CoreTenantMembershipAuthorizationRepository);
+  const redis = { publisher: {}, subscriber: {} };
+  const gateway = new TrainerNotificationsRealtimeGateway(jwt as unknown as JwtService, config as unknown as CoreConfigService, memberships as unknown as CoreTenantMembershipAuthorizationRepository, redis as any);
   const socket = { handshake: { headers: { origin: 'https://app.example.com' }, auth: {} }, disconnect: jest.fn() } as unknown as Socket;
   await gateway.handleConnection(socket);
   expect(socket.disconnect).toHaveBeenCalledWith(true);

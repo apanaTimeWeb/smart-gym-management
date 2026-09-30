@@ -12,7 +12,7 @@ import { CoreMasterTransactionContext } from '@/backend_trainer/backend_core/cor
  */
 @Injectable()
 export class CoreMasterUnitOfWorkService {
-  constructor(@InjectDataSource('master') private readonly dataSource: DataSource) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
   /** Executes one all-or-nothing identity mutation on the master database. */
   /**
  * Intent: Executes the execute operation inside the backend core service boundary.

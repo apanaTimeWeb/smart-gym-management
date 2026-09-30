@@ -12,4 +12,4 @@ import type { TrainerScheduleWeeklyAvailabilityEntity } from '@/backend_trainer/
  * @remarks Preserve pure mapping/adapter behavior and avoid introducing business persistence shortcuts.
  * AI Note: Keep the utility isolated and update its direct callers when its contract changes.
  */
-export function ScheduleAvailabilityMapper(entity:TrainerScheduleWeeklyAvailabilityEntity): ScheduleAvailabilityDomain{return {id:entity.id,trainerId:entity.trainerId,day:TrainerScheduleEnumMapper.toApiDay(entity.day),isAvailable:entity.isAvailable,startTime:entity.startTime,endTime:entity.endTime,createdAt:entity.createdAt.toISOString(),updatedAt:entity.updatedAt.toISOString()};}
+export function ScheduleAvailabilityMapper(entity:TrainerScheduleWeeklyAvailabilityEntity): ScheduleAvailabilityDomain{return {id:entity.id,trainerId:entity.trainerId,day:TrainerScheduleEnumMapper.toApiDay(entity.day),isAvailable:entity.isAvailable,startTime:entity.startTime,endTime:entity.endTime};}

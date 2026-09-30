@@ -13,7 +13,7 @@ describe('TrainerProfileTrainerProfileReadService', () => {
     const repo = { findByUserId: jest.fn().mockResolvedValue({ id: '1', userId: 'u1', name: 'Trainer', email: 't@example.com', phone: '9000000000', role: 'TRAINER', specialization: [], joinedAt: new Date('2024-01-01'), avatarInitial: 'T', certifications: null, specialties: null, bio: null, experienceYears: null, profilePhotoUrl: null, languagesSpoken: null, createdAt: new Date(), updatedAt: new Date(), deletedAt: IsNull() }) };
     const service = new TrainerProfileTrainerProfileReadService(repo as never);
     const result = await CoreRequestContext.run({ requestId: 'test-request', userId: 'u1' }, () => service.find());
-    expect(result.name).toBe('Trainer');
+    expect(result!.name).toBe('Trainer');
     expect(repo.findByUserId).toHaveBeenCalled();
   });
 

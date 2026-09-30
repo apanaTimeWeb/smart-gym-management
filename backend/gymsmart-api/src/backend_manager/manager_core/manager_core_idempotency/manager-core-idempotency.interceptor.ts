@@ -20,6 +20,7 @@ export class ManagerCoreIdempotencyInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Request>();
     const path = request.route?.path ?? request.path;
+    if (path.startsWith('/landing/')) return next.handle();
     if (!this.isCritical(request.method, path)) return next.handle();
     const explicitlyRequired = this.reflector.getAllAndOverride<boolean>(MANAGER_CORE_REQUIRE_IDEMPOTENCY_KEY, [context.getHandler(), context.getClass()]);
     const mutationMethod = this.isMutationMethod(request.method);

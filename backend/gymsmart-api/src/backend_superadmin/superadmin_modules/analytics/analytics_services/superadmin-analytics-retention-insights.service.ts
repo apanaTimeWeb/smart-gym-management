@@ -28,6 +28,6 @@ export class SuperadminAnalyticsRetentionInsightsService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async findAnalyticsRetentionInsights(input: Record<string, unknown> = {}): Promise<SuperadminAnalyticsRetentionInsightsResponseDto> {
-    return await this.repository.getLiveRetention(this.config.get<string>('app.defaultCurrency') ?? 'INR', input) as unknown as SuperadminAnalyticsRetentionInsightsResponseDto;
+    return await this.repository.getLiveRetention(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', input) as unknown as SuperadminAnalyticsRetentionInsightsResponseDto;
   }
 }

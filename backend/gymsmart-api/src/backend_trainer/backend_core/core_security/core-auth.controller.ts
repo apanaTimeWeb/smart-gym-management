@@ -2,7 +2,7 @@
 // FLOW: HTTP auth request → CoreAuthService → canonical response interceptor.
 
 import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { CoreAuthService } from '@/backend_trainer/backend_core/core_security/core-auth.service';
 import { CoreConfigService } from '@/backend_trainer/backend_core/core_config/core-config.service';

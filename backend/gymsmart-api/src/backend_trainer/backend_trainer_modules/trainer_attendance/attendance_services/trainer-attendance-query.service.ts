@@ -3,7 +3,8 @@
 import { Injectable } from '@nestjs/common';
 import { CoreRequestContext } from '@/backend_trainer/backend_core/core_context/core-request-context';
 import { buildCorePaginationMeta } from '@/backend_trainer/backend_core/core_utils/core-pagination.utils';
-import { TrainerAttendanceRepository, type AttendanceListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_attendance/attendance_repositories/trainer-attendance-repository';
+import { TrainerAttendanceRepository } from '@/backend_trainer/backend_trainer_modules/trainer_attendance/attendance_repositories/trainer-attendance-repository';
+import type { AttendanceListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_attendance/attendance_types/trainer-attendance-list-query.type';
 /**
  * Intent: Defines the TrainerAttendanceQueryService boundary for the modules architecture.
  * Edge Cases: Preserve tenant scope, validation, authorization, nullability, transactions, and canonical errors when changing this construct.

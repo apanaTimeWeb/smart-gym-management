@@ -89,8 +89,8 @@ private getTrainerId(): string { return CoreRequestContext.getUserIdOrThrow(); }
  * @remarks Preserve tenant isolation, frozen API semantics, transaction behavior, and mapper/repository boundaries.
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
-private buildKpiResult(totals: { totalEarnings: string | number; taxDeduction: string | number }, payouts: Array<{ amountMinor: string | number }>, compensation: { commissionRate: string | number; bankAccount: string | null; commissionTier: string }, sessionsCompleted: number, currency: string): TrainerEarningsKpiResult {
-    return { totalEarnings: Number(totals.totalEarnings), pendingPayouts: payouts.reduce((sum, row) => sum + Number(row.amountMinor), 0), sessionsCompleted, commissionRate: Number(compensation.commissionRate), taxDeduction: Number(totals.taxDeduction), ...(compensation.bankAccount !== null ? { bankAccount: compensation.bankAccount } : {}), commissionTier: compensation.commissionTier, currency };
+private buildKpiResult(totals: { totalEarnings: string | number; taxDeduction: string | number }, payouts: Array<{ amountMinor?: string | number; amount?: string | number }>, compensation: { commissionRate: string | number; bankAccount: string | null; commissionTier: string }, sessionsCompleted: number, currency: string): TrainerEarningsKpiResult {
+    return { totalEarnings: Number(totals.totalEarnings), pendingPayouts: payouts.reduce((sum, row) => sum + Number(row.amountMinor ?? row.amount ?? 0), 0), sessionsCompleted, commissionRate: Number(compensation.commissionRate), taxDeduction: Number(totals.taxDeduction), ...(compensation.bankAccount !== null ? { bankAccount: compensation.bankAccount } : {}), commissionTier: compensation.commissionTier, currency };
   }
   /**
    * Intent: Returns pending payout rows for the authenticated Trainer.

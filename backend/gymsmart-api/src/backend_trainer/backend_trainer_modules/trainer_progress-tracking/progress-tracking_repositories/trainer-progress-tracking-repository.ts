@@ -15,7 +15,6 @@ import { CoreBaseRepository } from '@/backend_trainer/backend_core/core_database
 import { CoreTenantDatasourceResolver } from '@/backend_trainer/backend_core/core_database/core-tenant-datasource.resolver';
 import { CoreNotFoundException } from '@/backend_trainer/backend_core/core_errors/core-not-found.exception';
 import { TrainerProgressTrackingProgressEntryEntity } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/trainer-progress-tracking-progress-entry.entity';
-import type { ProgressTrackingProgressEntryDomain } from '@/backend_trainer/backend_trainer_modules/trainer_progress-tracking/trainer-progress-tracking-progress-entry.domain';
 
 
 

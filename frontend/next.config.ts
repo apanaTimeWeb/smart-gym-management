@@ -13,6 +13,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/landing',
+        destination: '/frontend_public/landing',
+      },
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/:path*',
+      }
+    ];
+  },
+
   images: {
     remotePatterns: [
       {

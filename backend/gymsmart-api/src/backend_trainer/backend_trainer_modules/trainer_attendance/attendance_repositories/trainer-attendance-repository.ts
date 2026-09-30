@@ -50,7 +50,7 @@ export class TrainerAttendanceRepository extends CoreBaseRepository {
       const byId = new Map(staff.map((person) => [person.id, person]));
       for (const row of rows) row.staff = byId.get(row.staffId ?? '') ?? null;
     }
-    return { rows, total };
+    return { rows: rows.map(AttendanceRecordMapper), total };
   }
   /** Finds an active attendance row by ID. */
   async findById(id:string):Promise<AttendanceRecordDomain|null>{return (await this.resolver.getRepository(TrainerAttendanceRecordEntity)).findOneBy({id,deletedAt: IsNull()}).then((row) => row ? AttendanceRecordMapper(row) : null);}

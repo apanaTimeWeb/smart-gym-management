@@ -37,7 +37,7 @@ export class TrainerMembersRepository extends CoreBaseRepository {
     const qb = repo.createQueryBuilder('m').where('m.deleted_at IS NULL AND m.assigned_trainer_id = :trainerId', { trainerId });
     if (query.search) qb.andWhere('(m.name ILIKE :search OR m.email ILIKE :search OR m.phone ILIKE :search)', { search: `%${query.search}%` });
     if (query.status === 'EXPIRING_SOON') qb.andWhere("m.expiry_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days'"); else if (query.status === 'NEW') qb.andWhere("m.join_date >= CURRENT_DATE - INTERVAL '30 days'"); else if (query.status) qb.andWhere('m.status = :status', { status: query.status });
-    if (query.progressStatus) qb.andWhere('m.progress_status = :progressStatus', { progressStatus });
+    if (query.progressStatus) qb.andWhere('m.progress_status = :progressStatus', { progressStatus: query.progressStatus });
     qb.orderBy(allowed[query.sortBy as keyof typeof allowed] ?? allowed.name, query.sortDirection === 'asc' ? 'ASC' : 'DESC').skip((query.page - 1) * query.limit).take(query.limit);
     const [rows, total] = await qb.getManyAndCount();
     return { rows: rows.map((row) => MembersMemberMapper(row)), total };
@@ -66,7 +66,7 @@ export class TrainerMembersRepository extends CoreBaseRepository {
     const assignments = await this.resolveAssignmentPersistence(trainerId, assignedDietId, assignedWorkoutId, context);
     const persistence: Partial<TrainerMembersMemberEntity> = { ...fields, ...assignments, ...(joinDate !== undefined ? { joinDate: new Date(joinDate) } : {}), ...(expiryDate !== undefined ? { expiryDate: new Date(expiryDate) } : {}) };
     const repo = context?.getRepository(TrainerMembersMemberEntity) ?? await this.resolver.getRepository(TrainerMembersMemberEntity);
-    const result = await repo.update({ id, assignedTrainerId: trainerId, deletedAt: IsNull() }, persistence);
+    const result = await repo.update({ id, assignedTrainerId: trainerId, deletedAt: IsNull() }, persistence as any);
     if (!result.affected) throw new CoreNotFoundException('MEMBERS.MEMBER', id);
     const entity = await repo.findOneBy({ id, assignedTrainerId: trainerId, deletedAt: IsNull() });
     if (!entity) throw new CoreNotFoundException('MEMBERS.MEMBER', id);

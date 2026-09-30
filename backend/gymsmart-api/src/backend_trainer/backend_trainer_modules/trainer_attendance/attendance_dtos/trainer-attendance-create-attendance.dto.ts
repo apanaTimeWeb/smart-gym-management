@@ -25,7 +25,7 @@ export class TrainerAttendanceCreateAttendanceDto {
 @IsOptional() @IsString() checkIn?: string;
   @ApiPropertyOptional({ type: String })
 @IsOptional() @IsString() checkOut?: string;
-  @ApiPropertyOptional({ type: AttendanceCheckInMethod })
+  @ApiPropertyOptional({ enum: AttendanceCheckInMethod, enumName: 'AttendanceCheckInMethod' })
 @IsOptional() @IsEnum(AttendanceCheckInMethod) checkInMethod?:AttendanceCheckInMethod;
   @ApiPropertyOptional({ type: String })
 @IsOptional() @IsString() notes?: string;

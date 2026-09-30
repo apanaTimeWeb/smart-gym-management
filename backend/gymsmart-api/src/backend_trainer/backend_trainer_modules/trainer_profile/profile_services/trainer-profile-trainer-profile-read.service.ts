@@ -1,6 +1,5 @@
 // RESPONSIBILITY: Reads the authenticated trainer profile through its feature-local repository.
 // FLOW: Profile controller → read service → profile repository.
-import { CoreNotFoundException } from '@/backend_trainer/backend_core/core_errors/core-not-found.exception';
 import { Injectable } from '@nestjs/common'; import { CoreRequestContext } from '@/backend_trainer/backend_core/core_context/core-request-context'; import { CoreNotFoundException } from '@/backend_trainer/backend_core/core_errors/core-not-found.exception'; import { TrainerProfileTrainerProfileRepository } from '@/backend_trainer/backend_trainer_modules/trainer_profile/profile_repositories/trainer-profile-trainer-profile.repository';
  /**
  * Intent: Defines the TrainerProfileTrainerProfileReadService boundary for the modules architecture.

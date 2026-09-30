@@ -28,6 +28,6 @@ export class SuperadminDashboardRevenueChartService {
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
   async getRevenueChart(query: SuperadminDashboardWidgetQuery = {}): Promise<SuperadminDashboardRevenueChartProjection[]> {
-    return this.repository.getDashboardRevenueChart(this.config.get<string>('app.defaultCurrency') ?? 'INR', query);
+    return this.repository.getDashboardRevenueChart(this.config.get<string>('superadmin.defaultCurrency') ?? 'INR', query);
   }
 }

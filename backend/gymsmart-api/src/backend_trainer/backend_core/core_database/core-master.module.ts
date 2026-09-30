@@ -21,21 +21,7 @@ import { CoreAuthAuditRepository } from '@/backend_trainer/backend_core/core_dat
  */
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      name: 'master',
-      inject: [CoreConfigService],
-      useFactory: (config: CoreConfigService) => ({
-        name: 'master',
-        type: 'postgres' as const,
-        ...config.getMasterDatabase(),
-        entities: [CoreUserEntity, CoreTenantEntity, CoreTenantMembershipEntity, CoreAuthAuditLogEntity],
-        synchronize: false,
-        migrations: [CoreMasterSchemaMigration],
-        migrationsRun: true,
-        migrationsTableName: 'core_migrations',
-      }),
-    }),
-    TypeOrmModule.forFeature([CoreUserEntity, CoreTenantEntity, CoreTenantMembershipEntity, CoreAuthAuditLogEntity], 'master'),
+    TypeOrmModule.forFeature([CoreUserEntity, CoreTenantEntity, CoreTenantMembershipEntity, CoreAuthAuditLogEntity]),
   ],
   providers: [CoreAuthUserRepository, CoreAuthAuditRepository],
   exports: [TypeOrmModule, CoreAuthUserRepository, CoreAuthAuditRepository],

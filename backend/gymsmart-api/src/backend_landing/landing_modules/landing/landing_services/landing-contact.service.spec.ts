@@ -17,14 +17,12 @@ describe('LandingContactService', () => {
     const auditRepository = { recordCreate: jest.fn().mockResolvedValue(undefined) };
     const service = new LandingContactService(contactRepository as never, auditRepository as never);
 
-    const result = await service.createContact(
-      { name: contact.name, email: contact.email, message: contact.message },
-      { manager: {} as never },
-    );
+    const result = await service.createContact({
+      name: contact.name, email: contact.email, message: contact.message,
+    });
 
     expect(result).toEqual(contact);
     expect(auditRepository.recordCreate).toHaveBeenCalledWith(
-      expect.anything(),
       'LANDING_CONTACT_CREATED',
       'LandingContact',
       'contact-1',

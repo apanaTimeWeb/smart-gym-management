@@ -29,7 +29,10 @@ export default new DataSource({
   password: env.MASTER_DB_PASSWORD ?? '',
   database: env.MASTER_DB_NAME ?? 'buildronix_master',
   entities: [AdminCoreMasterTenantEntity, AdminCoreMasterAdminEntity, AdminCoreMasterTenantMembershipEntity, AdminCoreMasterPlanEntity, AdminCoreMasterSubscriptionEntity, AdminCoreMasterInvoiceEntity, AdminCoreMasterPaymentMethodEntity, AdminCoreMasterUpgradeRequestEntity, AdminCoreMasterAuditLogEntity, AdminCoreMasterFeatureFlagEntity],
-  migrations: [join(__dirname, 'admin_core_migrations/admin_core_master/*{.js,.ts}')],
+  migrations: [
+    join(__dirname, 'admin_core_migrations/admin_core_master/*{.js,.ts}'),
+    join(__dirname, '../../../backend_landing/landing_core/landing_database/landing_migrations/landing_migrations_master/*{.js,.ts}')
+  ],
   synchronize: false,
   extra: { max: 20, connectionTimeoutMillis: 30000, idleTimeoutMillis: 10000 },
 });

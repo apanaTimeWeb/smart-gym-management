@@ -20,7 +20,10 @@ export default new DataSource({
   password: env.TENANT_DB_PASSWORD ?? '',
   database: env.TENANT_DB_FALLBACK ?? env.SEED_TENANT_DATABASE ?? 'buildronix_tenant_default',
   entities: AdminCoreTenantEntityRegistry,
-  migrations: [join(__dirname, 'admin_core_migrations/admin_core_tenant/*{.js,.ts}')],
+  migrations: [
+    join(__dirname, 'admin_core_migrations/admin_core_tenant/*{.js,.ts}'),
+    join(__dirname, '../../../backend_landing/landing_core/landing_database/landing_migrations/landing_migrations_tenant/*{.js,.ts}')
+  ],
   synchronize: true,
   extra: { max: 20, connectionTimeoutMillis: 30000, idleTimeoutMillis: 10000, statement_timeout: 3000 },
 });

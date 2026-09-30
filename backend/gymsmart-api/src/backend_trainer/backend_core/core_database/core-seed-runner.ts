@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { AppModule } from '@/backend_trainer/app.module';
+import { AppModule } from '@/app.module';
 import { CoreConfigService } from '@/backend_trainer/backend_core/core_config/core-config.service';
 import { CoreTenantProvisioningService } from '@/backend_trainer/backend_core/core_database/core-tenant-provisioning.service';
 const TENANT_ID = '00000000-0000-0000-0000-000000000001', TRAINER_ID = '00000000-0000-0000-0000-000000000010';
@@ -15,7 +15,7 @@ const MEMBER1 = '00000000-0000-0000-0000-000000001001', MEMBER2 = '00000000-0000
 async function runSeed(): Promise<void> {
   const app = await NestFactory.createApplicationContext(AppModule);
   try {
-    const master = app.get<DataSource>(getDataSourceToken('master'));
+    const master = app.get<DataSource>(getDataSourceToken());
     const provisioner = app.get(CoreTenantProvisioningService);
     const config = app.get(CoreConfigService);
     const passwordHash = await bcrypt.hash('Trainer@123', 12);

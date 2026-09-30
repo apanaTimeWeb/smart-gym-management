@@ -11,7 +11,7 @@ import { ScheduleDay } from '@/backend_trainer/backend_trainer_modules/trainer_s
  * Side Effects: Preserve the owning construct’s existing persistence, cache, event, and audit behavior without introducing cross-module state changes.
  * AI Note: Keep this construct isolated from unrelated modules and preserve frozen contracts; never bypass repository/domain boundaries.
  */
-export class TrainerScheduleUpdateAvailabilityDto { @ApiProperty({ type: ScheduleDay })
+export class TrainerScheduleUpdateAvailabilityDto { @ApiProperty({ enum: ScheduleDay, enumName: 'ScheduleDay' })
 @Transform(({value}) => TrainerScheduleEnumMapper.toDay(value)) @IsEnum(ScheduleDay) day!:ScheduleDay; @ApiProperty({ type: Boolean })
 @IsBoolean() isAvailable!:boolean; @ApiProperty({ type: String })
 @IsString() startTime!:string; @ApiProperty({ type: String })

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "nest build && tsc-alias -p tsconfig.json",
     "start": "node dist/main.js",
-    "start:dev": "nest start --watch",
+    "start:dev": "nest start --watch --exec \"node -r tsconfig-paths/register\"",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
@@ -37,6 +37,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.80.0",
     "@opentelemetry/sdk-node": "^0.222.0",
     "@prometheus-io/client": "^0.16.1",
+    "@socket.io/redis-adapter": "^8.3.0",
     "argon2": "^0.44.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",

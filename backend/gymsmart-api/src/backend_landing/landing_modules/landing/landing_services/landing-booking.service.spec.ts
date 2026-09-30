@@ -1,8 +1,7 @@
 // RESPONSIBILITY: Proves the booking service invokes the named repository mutation and audit trail.
 // FLOW: Unit test → LandingBookingService.createBooking → mocked repositories.
 import { LandingBookingService } from '@/backend_landing/landing_modules/landing/landing_services/landing-booking.service';
-
-import { LandingBookingType } from '@/backend_landing/landing_modules/landing/enums/landing-booking-type.enum';
+import { LandingBookingType } from '@/backend_landing/landing_modules/landing/landing_enums/landing-booking-type.enum';
 
 
 describe('LandingBookingService', () => {
@@ -28,12 +27,11 @@ describe('LandingBookingService', () => {
       phone: booking.phone,
       date: booking.date,
       type: booking.type,
-    }, { manager: {} as never });
+    });
 
     expect(result).toEqual(booking);
     expect(bookingRepository.createBooking).toHaveBeenCalledTimes(1);
     expect(auditRepository.recordCreate).toHaveBeenCalledWith(
-      expect.anything(),
       'LANDING_BOOKING_CREATED',
       'LandingBooking',
       'booking-1',

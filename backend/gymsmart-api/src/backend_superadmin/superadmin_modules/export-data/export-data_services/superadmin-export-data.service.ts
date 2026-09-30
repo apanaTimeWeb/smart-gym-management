@@ -115,7 +115,7 @@ export class SuperadminExportDataService {
    * Side-Effects: Only documented persistence, cache, event, job, or external effects are permitted.
    * AI-Note: Preserve explicit return types, guard clauses, module isolation, and frozen API semantics.
    */
-  private downloadToken(jobId: string, expiresAt: Date): string { return createHmac('sha256', this.config.getOrThrow<string>('app.exportDownloadSecret')).update(`${jobId}:${expiresAt.toISOString()}`).digest('hex'); }
+  private downloadToken(jobId: string, expiresAt: Date): string { return createHmac('sha256', this.config.getOrThrow<string>('superadmin.exportDownloadSecret')).update(`${jobId}:${expiresAt.toISOString()}`).digest('hex'); }
 
   /**
  * Primary Intent: Executes the `safeEqual` responsibility owned by this superadmin-export-data.service construct.

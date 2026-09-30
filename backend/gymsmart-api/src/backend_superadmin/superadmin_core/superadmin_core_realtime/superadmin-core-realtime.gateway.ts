@@ -133,7 +133,7 @@ export class SuperadminCoreRealtimeGateway implements OnGatewayConnection, OnGat
   async handleConnection(client: Socket): Promise<void> {
     try {
       const token = this.readToken(client);
-      const claims = this.jwt.verify<AccessClaims>(token, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret') });
+      const claims = this.jwt.verify<AccessClaims>(token, { secret: this.config.getOrThrow<string>('superadmin.jwtAccessSecret') });
       if (!claims.sub) throw new SuperadminCoreRealtimeAuthenticationException('missing-subject');
       if (claims.tenantId) await this.tenantAuthorization.authorize(claims.sub, claims.tenantId);
       client.data.userId = claims.sub;

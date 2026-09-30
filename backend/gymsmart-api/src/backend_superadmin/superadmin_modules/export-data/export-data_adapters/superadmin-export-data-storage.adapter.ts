@@ -15,7 +15,7 @@ import { join } from 'node:path';
 export class SuperadminExportDataStorageAdapter {
   private readonly root: string;
 
-  constructor(config: ConfigService) { this.root = config.getOrThrow<string>('app.exportStoragePath'); }
+  constructor(config: ConfigService) { this.root = config.getOrThrow<string>('superadmin.exportStoragePath'); }
 
   /**
  * Primary Intent: Executes the store use case within its owning backend boundary.

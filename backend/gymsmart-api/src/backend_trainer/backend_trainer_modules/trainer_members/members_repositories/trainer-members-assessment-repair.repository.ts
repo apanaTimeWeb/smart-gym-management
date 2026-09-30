@@ -38,8 +38,8 @@ async findBatch(offset: number, limit: number): Promise<TrainerMembersMemberEnti
  * @remarks Preserve tenant isolation, frozen API semantics, transaction behavior, and mapper/repository boundaries.
  * AI Note: Do not move ORM access into services, introduce sibling business imports, or silently change response fields.
  */
-async updateAssessment(id: string, assessment: string): Promise<void> {
+async updateAssessment(id: string, assessment: Record<string, unknown>): Promise<void> {
     const repo = await this.resolver.getRepository(TrainerMembersMemberEntity);
-    await repo.update({ id, deletedAt: IsNull() }, { assessment });
+    await repo.update({ id, deletedAt: IsNull() }, { assessment } as any);
   }
 }

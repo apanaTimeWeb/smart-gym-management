@@ -146,10 +146,10 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
     const dataSource = await this.resolver.resolve(job.payload.requestedByUserId, job.tenantId);
     try {
       const connection = this.connectionDetails((dataSource.options as any).url?.toString() ?? '');
-      const root = this.config.getOrThrow<string>('app.backupStoragePath');
+      const root = this.config.getOrThrow<string>('superadmin.backupStoragePath');
       const path = join(root, job.tenantId, `${backup.id}.dump`);
       await fs.mkdir(dirname(path), { recursive: true, mode: 0o700 });
-      await this.runProcess(this.config.getOrThrow<string>('app.pgDumpBin'), [
+      await this.runProcess(this.config.getOrThrow<string>('superadmin.pgDumpBin'), [
         '--format=custom', '--no-owner', '--no-acl', '--host', connection.host,
         '--port', connection.port, '--username', connection.user,
         '--dbname', connection.database, '--file', path,
@@ -183,7 +183,7 @@ export class SuperadminSystemOpsBackupsWorkerService implements OnModuleInit, On
     const dataSource = await this.resolver.resolve(job.payload.requestedByUserId, job.tenantId);
     try {
       const connection = this.connectionDetails((dataSource.options as any).url?.toString() ?? '');
-      await this.runProcess(this.config.getOrThrow<string>('app.pgRestoreBin'), [
+      await this.runProcess(this.config.getOrThrow<string>('superadmin.pgRestoreBin'), [
         '--clean', '--if-exists', '--no-owner', '--no-acl', '--host', connection.host,
         '--port', connection.port, '--username', connection.user,
         '--dbname', connection.database, backup.artifactPath!,

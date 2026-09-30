@@ -4,7 +4,8 @@ import { Injectable } from '@nestjs/common';
 import type { TrainerSessionsMemberOption } from '@/backend_trainer/backend_trainer_modules/trainer_sessions/sessions_types/trainer-sessions.types';
 import { CoreRequestContext } from '@/backend_trainer/backend_core/core_context/core-request-context';
 import { buildCorePaginationMeta, type CorePaginationMeta } from '@/backend_trainer/backend_core/core_utils/core-pagination.utils';
-import { TrainerSessionsRepository, type SessionsListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_sessions/sessions_repositories/trainer-sessions-repository';
+import { TrainerSessionsRepository } from '@/backend_trainer/backend_trainer_modules/trainer_sessions/sessions_repositories/trainer-sessions-repository';
+import type { SessionsListQuery } from '@/backend_trainer/backend_trainer_modules/trainer_sessions/sessions_types/trainer-sessions-list-query.type';
 /**
  * Intent: Defines the TrainerSessionsQueryService boundary for the modules architecture.
  * Edge Cases: Preserve tenant scope, validation, authorization, nullability, transactions, and canonical errors when changing this construct.

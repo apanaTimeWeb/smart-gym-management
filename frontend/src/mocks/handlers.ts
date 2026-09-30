@@ -22,7 +22,7 @@ import { superadminWhiteLabelingHandlers } from '@/app/superadmin/white-labeling
 
 import { adminHandlers } from '@/app/admin/admin_layout/admin_mocks/handlers/AdminMockHandlers';
 import { AuthMockHandlers } from '@/app/auth/auth_mocks/AuthMockHandlers';
-import { landingHandlers } from '@/app/landing/landing_mocks/LandingMockHandlers';
+import { landingHandlers } from '@/app/frontend_public/landing/landing_mocks/PublicLandingMockHandlers';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
 
 import { trainerAttendanceHandlers } from '@/app/trainer/attendance/attendance_mocks/handlers/TrainerAttendanceMockHandlers';

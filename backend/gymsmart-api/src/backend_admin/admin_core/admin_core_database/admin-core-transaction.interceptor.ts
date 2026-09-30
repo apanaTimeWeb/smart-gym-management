@@ -21,6 +21,7 @@ export class AdminCoreTransactionInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest<Record<string, unknown>>();
     const method = String(request.method ?? 'GET').toUpperCase();
     const path = String(request.url ?? '');
+    console.log(`[AdminCoreTransactionInterceptor] path='${path}' isPublic=${this.isPublic(path)}`);
     if (!['POST', 'PATCH', 'PUT', 'DELETE'].includes(method) || this.isPublic(path)) return next.handle();
     if (this.isMasterMutation(path)) return from(this.masterUnitOfWork.run(() => firstValueFrom(next.handle())));
     return from(this.unitOfWork.run(() => firstValueFrom(next.handle())));
@@ -35,6 +36,6 @@ export class AdminCoreTransactionInterceptor implements NestInterceptor {
   /** @description Identifies public/runtime endpoints that do not belong in tenant transactions. @param path Request URL path. @returns True for non-tenant public paths. */
   private isPublic(path: string): boolean {
     const normalized = path.replace(/^\/api\/v1/, '');
-    return normalized === '/health/live' || normalized === '/health/ready' || normalized.startsWith('/metrics') || normalized === '/auth/login' || normalized === '/auth/refresh' || normalized.startsWith('/superadmin/');
+    return normalized === '/health/live' || normalized === '/health/ready' || normalized.startsWith('/metrics') || normalized === '/auth/login' || normalized === '/auth/refresh' || normalized.startsWith('/superadmin/') || normalized.startsWith('/landing/') || normalized.startsWith('/test/tenants');
   }
 }

@@ -41,7 +41,7 @@ export class TrainerSessionsCommandService {
  */
 async createSession(dto: TrainerSessionsCreateSessionDto): Promise<Awaited<ReturnType<TrainerSessionsRepository['updateSessionById']>>> {
     const trainerId = this.getTrainerId();
-    await this.assertMember(trainerId, dto.memberId);
+    await this.assertMember(trainerId, dto.memberId ?? undefined);
     const row = await this.uow.execute(async (context) => this.createAndAudit(trainerId, dto, context));
     return row;
   }
@@ -61,7 +61,7 @@ async createSession(dto: TrainerSessionsCreateSessionDto): Promise<Awaited<Retur
  */
 async updateSession(id: string, dto: TrainerSessionsUpdateSessionDto): Promise<Awaited<ReturnType<TrainerSessionsRepository['createSession']>>> {
     const trainerId = this.getTrainerId();
-    await this.assertMember(trainerId, dto.memberId);
+    await this.assertMember(trainerId, dto.memberId ?? undefined);
     const before = await this.repo.findByIdOrThrow(trainerId, id);
     const row = await this.uow.execute(async (context) => {
       const updated = await this.repo.updateSessionById(
@@ -70,8 +70,8 @@ async updateSession(id: string, dto: TrainerSessionsUpdateSessionDto): Promise<A
         { time: dto.time, sessionDate: dto.date, duration: dto.duration, type: dto.type, ...(dto.memberId !== undefined ? { memberId: dto.memberId, enrolledMembers: dto.memberId === null ? [] : await this.resolveEnrolledMembers(trainerId, dto.memberId) } : {}), location: dto.location, room: dto.room, recurrenceRule: dto.recurrenceType, recurrenceEndDate: dto.recurrenceEndDate ?? null },
         context,
       );
-      const oldValue={time:before.time,sessionDate:before.sessionDate,duration:before.duration,type:before.type,status:before.status,memberId:before.memberId,location:before.location,room:before.room,recurrenceRule:before.recurrenceRule,recurrenceEndDate:before.recurrenceEndDate};
-      const newValue={time:updated.time,sessionDate:updated.sessionDate,duration:updated.duration,type:updated.type,status:updated.status,memberId:updated.memberId,location:updated.location,room:updated.room,recurrenceRule:updated.recurrenceRule,recurrenceEndDate:updated.recurrenceEndDate};
+      const oldValue={time:before.time,sessionDate:before.sessionDate,duration:before.duration,type:before.type,status:before.status,memberId:before.member,location:before.location,room:before.room,recurrenceRule:before.recurrenceRule,recurrenceEndDate:before.recurrenceEndDate};
+      const newValue={time:updated.time,sessionDate:updated.sessionDate,duration:updated.duration,type:updated.type,status:updated.status,memberId:updated.member,location:updated.location,room:updated.room,recurrenceRule:updated.recurrenceRule,recurrenceEndDate:updated.recurrenceEndDate};
       await this.audit.record('SESSION_UPDATED', 'SESSION', id, oldValue, newValue, context);
       return updated;
     });

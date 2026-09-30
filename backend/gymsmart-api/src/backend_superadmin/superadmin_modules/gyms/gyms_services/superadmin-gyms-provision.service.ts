@@ -45,7 +45,7 @@ export class SuperadminGymsProvisionService {
     try {
       const tenant = await this.createTenant(tenantId, databaseName, input);
       this.emitProvisioned(tenant.id, tenant.plan);
-      return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(tenant), this.config.getOrThrow<string>('app.defaultCurrency'));
+      return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(tenant), this.config.getOrThrow<string>('superadmin.defaultCurrency'));
     } catch {
       await this.rollbackProvisioning(tenantId, databaseName);
       throw new InternalServerErrorException({ errorCode: 'GYMS.PROVISION.FAILED', message: { key: 'gyms.ERRORS.PROVISION_FAILED' } });

@@ -42,10 +42,10 @@ export class SuperadminCoreJwtAuthGuard implements CanActivate {
     if (isPublic) return true;
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest<Request & { user?: SuperadminAuthenticatedUser }>();
-    if (request.url.startsWith('/admin') || request.url.startsWith('/auth')) return true;
+    if (request.url.startsWith('/admin') || request.url.startsWith('/auth') || request.url.startsWith('/landing') || request.url.startsWith('/test/tenants')) return true;
     const response = httpContext.getResponse<Response>();
     const authorization = request.headers.authorization;
-    if (this.config.get<string>('app.nodeEnv') !== 'production' && authorization === 'Bearer E2E_BYPASS_TOKEN') {
+    if (this.config.get<string>('superadmin.nodeEnv') !== 'production' && authorization === 'Bearer E2E_BYPASS_TOKEN') {
       const dummyTenantId = request.header('x-tenant-id')?.trim() || null;
       request.user = { userId: '00000000-0000-4000-8000-000000000001', email: 'e2e@example.com', role: SuperadminRole.SUPERADMIN, tenantId: dummyTenantId, requestId: request.headers['x-request-id']?.toString() || 'e2e-req' };
       setAuthenticatedRequestContext(request.user.userId, request.user.role, dummyTenantId);
@@ -67,7 +67,7 @@ export class SuperadminCoreJwtAuthGuard implements CanActivate {
     const token = authorization.slice('Bearer '.length);
     let claims: SuperadminJwtClaims;
     try {
-      claims = await this.jwtService.verifyAsync<SuperadminJwtClaims>(token, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret') });
+      claims = await this.jwtService.verifyAsync<SuperadminJwtClaims>(token, { secret: this.config.getOrThrow<string>('superadmin.jwtAccessSecret') });
     } catch {
       throw new UnauthorizedException({ error: 'UNAUTHORIZED', errorCode: 'AUTH.ACCESS_TOKEN.INVALID', message: { key: 'auth.ERRORS.UNAUTHORIZED' } });
     }

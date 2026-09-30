@@ -42,7 +42,7 @@ export class SuperadminGymsUpdateService {
       } else if (current.adminEmail !== updated.adminEmail) {
         await this.registry.syncAdminAccount(updated.id, updated.adminEmail);
       }
-      return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(updated), this.config.getOrThrow<string>('app.defaultCurrency'));
+      return SuperadminGymsMapper.toResponse(SuperadminGymsMapper.toDomain(updated), this.config.getOrThrow<string>('superadmin.defaultCurrency'));
     });
   }
 }

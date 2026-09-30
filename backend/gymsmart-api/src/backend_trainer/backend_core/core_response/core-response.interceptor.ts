@@ -31,7 +31,8 @@ export class CoreResponseInterceptor implements NestInterceptor {
         return { success: true, message: 'CORE.RESPONSE.SUCCESS', data, meta: pagination };
       }
       if (this.hasResponseShape(result)) {
-        return { success: true, message: result.message ?? 'CORE.RESPONSE.SUCCESS', data: result.data ?? null, ...(result.meta ? { meta: result.meta as PaginationMeta } : {}) };
+        const res = result as { data?: unknown; message?: string; meta?: unknown };
+        return { success: true, message: res.message ?? 'CORE.RESPONSE.SUCCESS', data: res.data ?? null, ...(res.meta ? { meta: res.meta as PaginationMeta } : {}) };
       }
       return { success: true, message: 'CORE.RESPONSE.SUCCESS', data: result };
     }));
