@@ -1,0 +1,43 @@
+// RESPONSIBILITY: Provides the application theme state and theme-mode presentation contract without owning module business data.
+'use client';
+
+import type { SuperadminTheme, SuperadminThemeContextValue, SuperadminLayoutThemeProviderProps } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_types/SuperadminLayoutInfrastructureTypes';
+
+import { createContext, useContext, useEffect, useState } from 'react';
+
+const SuperadminThemeContext = createContext<SuperadminThemeContextValue>({ theme: 'dark' });
+
+function readTheme(): SuperadminTheme {
+  if (typeof document === 'undefined') return 'dark';
+  const raw = document.documentElement.dataset.theme ?? (document.documentElement.classList.contains('light') ? 'light' : 'dark');
+  return raw === 'light' ? 'light' : 'dark';
+}
+
+/**
+ * @description Reads the active application theme through one role-level provider contract for chart consumers.
+ * @dependencies Observes the host document theme without creating a second theme system.
+ * @edge-case Falls back to dark mode until the host document is available and reacts to theme attribute/class changes.
+ */
+export function SuperadminLayoutThemeProvider({ children }: SuperadminLayoutThemeProviderProps) {
+  const [theme, setTheme] = useState<SuperadminTheme>(() => readTheme());
+
+  // EFFECT INTENT: Apply the resolved theme class to the document root and keep the DOM theme synchronized with persisted role/theme state.
+useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => setTheme(readTheme()));
+    observer.observe(root, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return <SuperadminThemeContext.Provider value={{ theme }}>{children}</SuperadminThemeContext.Provider>;
+}
+
+/**
+ * @description Returns the current role theme for semantic chart configuration.
+ * @dependencies Reads SuperadminLayoutThemeProvider context and preserves a safe dark-mode default.
+ * @edge-case Works even when consumed before a provider is mounted, using the context fallback.
+ */
+export function useSuperadminTheme(): SuperadminThemeContextValue {
+  return useContext(SuperadminThemeContext);
+}
+

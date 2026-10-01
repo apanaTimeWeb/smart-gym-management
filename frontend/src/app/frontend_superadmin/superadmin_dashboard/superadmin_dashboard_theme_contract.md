@@ -1,0 +1,56 @@
+# superadmin_dashboard — Theme Contract
+
+## Exact Consumed Semantic Tokens
+- bg-card
+- bg-danger-bg
+- bg-floating
+- bg-page
+- bg-primary
+- bg-primary-hover
+- bg-primary-subtle
+- bg-purple-bg
+- bg-skeleton-base
+- bg-skeleton-highlight
+- bg-success-bg
+- bg-surface-hover
+- bg-warning-bg
+- border-border
+- ring-primary
+- shadow-card
+- text-danger
+- text-on-primary
+- text-primary
+- text-purple-text
+- text-success
+- text-warning
+
+## Radius
+- rounded-full
+- rounded-lg
+- rounded-xl
+
+## Shadows
+- shadow-card
+
+## Motion
+- motion-safe:animate-pulse
+- motion-safe:duration-base
+- motion-safe:hover
+- motion-safe:transition-all
+- motion-safe:transition-colors
+
+## Chart Tokens
+- No chart CSS-variable token references detected in source; chart components must inherit approved semantic chart configuration.
+
+## Global Design Ownership
+The global design system owns the semantic color/surface/typography/radius/shadow/motion token definitions. This module consumes those semantics and does not define global business tokens.
+
+## Required Host Token Chain
+`UI/UX design source → canonical CSS variable → Tailwind mapping → this module theme contract → JSX/CSS usage`. The supplied frontend bundle does not include the host global CSS/Tailwind mapping, so the final audit must not claim the host token-definition chain is runtime-verified.
+
+## Forbidden Patterns
+- Raw hex/RGB colors in production JSX/CSS.
+- Semantic opacity modifiers.
+- Arbitrary Tailwind CSS-variable token definitions.
+- Business status registries in global UI primitives.
+- Motion/animation without `motion-safe:` protection.

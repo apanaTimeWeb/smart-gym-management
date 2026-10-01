@@ -1,0 +1,1 @@
+export type DateRangeOption = typeof import('@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingDateRangeConstants').SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS[number]['value'];

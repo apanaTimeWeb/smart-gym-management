@@ -1,0 +1,1 @@
+export const SUPERADMIN_AFFILIATE_STATUS_FILTERS = ['ALL', 'ACTIVE', 'INACTIVE'] as const;
