@@ -1431,10 +1431,10 @@ Co-location rule (Unit & Component Tests ONLY):
 - ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
 
 **Complete Isolation for E2E Testing (The AI Zip Principle):**
-1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `playwright_E2E/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `playwright_E2E/` MUST strictly mirror the frontend route structure (e.g., `playwright_E2E/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `playwright_E2E/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `playwright_E2E/` MUST mirror the frontend route structure, but the role container must be suffixed with `_e2e` (e.g., `playwright_E2E/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
 2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `admin_members` test and `admin_billing` test need a login helper, duplicate it directly into BOTH the `admin_members` and `admin_billing` test folders.
-   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `playwright_E2E/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
-3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/manager_billing/`.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `playwright_E2E/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinates.
+3. **No Cross-Module Imports:** A test script in `playwright_E2E/frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `playwright_E2E/frontend_manager_e2e/manager_billing/`.
 
 Minimum expectations:
 - Utilities: 90% branch coverage
@@ -1448,10 +1448,6 @@ Minimum expectations:
    - Dropdowns open and select the correct values.
    - Modals appear and close correctly.
    - Component empty, error, and success states render properly.
-
-
-   - Core components: interaction tests for loading, success, empty, error, and disabled states
-- Critical journeys: Playwright E2E coverage
 
 Mandatory E2E flows:
 - Login/logout/session expiry
