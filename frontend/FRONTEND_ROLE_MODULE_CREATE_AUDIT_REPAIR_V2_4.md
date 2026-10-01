@@ -3424,7 +3424,7 @@ Do not treat these examples as evidence that the current supplied documents cont
 ### Example 1 — Frontend E2E contradiction
 
 The web development instruction contains an E2E architecture that places frontend E2E
-tests in a separate `frontend_e2e/` tree, while another section states that there is
+tests in a separate `playwright_E2E/` tree, while another section states that there is
 "No Frontend E2E Suite" because true E2E is handled externally, and a later CI rule
 requires Playwright E2E for critical flows.
 
@@ -3764,7 +3764,7 @@ Explicitly inspect:
 - React Testing Library;
 - MSW;
 - Playwright references;
-- separated `frontend_e2e/` rules;
+- separated `playwright_E2E/` rules;
 - no shared E2E helpers where prohibited;
 - no cross-module test imports;
 - meaningful behavior assertions;
@@ -7775,7 +7775,7 @@ INTEGRATION_GUIDE.md                     ← mandatory integration instructions 
 [module_name]_changelog_vN.md            ← detailed changelog
 frontend-{role}/
 └── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
-frontend_e2e/                            ← (when applicable) isolated E2E tests for the feature
+playwright_E2E/                            ← (when applicable) isolated E2E tests for the feature
 └── [role]_e2e/
     └── [target_feature]/
 stage_1_frontend_requirements.md         ← requirements extracted

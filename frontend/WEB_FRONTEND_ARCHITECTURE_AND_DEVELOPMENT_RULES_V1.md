@@ -1431,9 +1431,9 @@ Co-location rule (Unit & Component Tests ONLY):
 - ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
 
 **Complete Isolation for E2E Testing (The AI Zip Principle):**
-1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `playwright_E2E/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `playwright_E2E/` MUST strictly mirror the frontend route structure (e.g., `playwright_E2E/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
 2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `admin_members` test and `admin_billing` test need a login helper, duplicate it directly into BOTH the `admin_members` and `admin_billing` test folders.
-   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `playwright_E2E/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
 3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/manager_billing/`.
 
 Minimum expectations:
@@ -1443,7 +1443,7 @@ Minimum expectations:
 
 **Component Testing vs Frontend E2E Philosophy (No Playwright for Components):**
 1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
-2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `frontend_e2e/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
+2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `playwright_E2E/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
    - Buttons trigger the correct actions and loading states.
    - Dropdowns open and select the correct values.
    - Modals appear and close correctly.
