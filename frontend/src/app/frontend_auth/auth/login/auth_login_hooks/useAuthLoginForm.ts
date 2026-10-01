@@ -52,7 +52,7 @@ export function useAuthLoginForm(): UseAuthLoginFormReturn {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
-  const { isPending, variables, mutateCredentials, mutateDemoRole } = useAuthLoginMutation();
+  const { isPending, variables, mutateCredentials } = useAuthLoginMutation();
   const credentialIntentRef = useRef<{ fingerprint: string; idempotencyKey: string } | null>(null);
   const demoIntentRef = useRef<{ role: AuthLoginDemoRole; idempotencyKey: string } | null>(null);
   useAuthLoginUnsavedChangesGuard(form.formState.isDirty);
@@ -105,16 +105,33 @@ export function useAuthLoginForm(): UseAuthLoginFormReturn {
 
   const handleDemoLogin = useCallback(async (role: AuthLoginDemoRole): Promise<void> => {
     form.clearErrors('root');
-    if (!demoIntentRef.current || demoIntentRef.current.role !== role) {
-      demoIntentRef.current = { role, idempotencyKey: crypto.randomUUID() };
+    
+    // Auto-fill the credentials based on the demo role
+    let email = '';
+    const password = 'demo123';
+    
+    switch (role) {
+      case 'SUPERADMIN':
+        email = 'demo_admin@gym.com';
+        break;
+      case 'ADMIN':
+        email = 'admin@gymsmart.com';
+        break;
+      case 'MANAGER':
+        email = 'manager@gymsmart.com';
+        break;
+      case 'TRAINER':
+        email = 'trainer@gymsmart.com';
+        break;
     }
-    try {
-      const result = await mutateDemoRole(role, demoIntentRef.current.idempotencyKey);
-      handleMutationSuccess(result.role);
-    } catch (error) {
-      handleMutationError(error);
+
+    if (email) {
+      form.setValue('email', email, { shouldValidate: true });
+      form.setValue('password', password, { shouldValidate: true });
+      // Automatically trigger form submission
+      void form.handleSubmit(handleLoginSubmit)();
     }
-  }, [form, handleMutationError, handleMutationSuccess, mutateDemoRole]);
+  }, [form, handleLoginSubmit]);
 
   // USEEFFECT AUDIT: Captures only the documented Ctrl/Cmd+S submit shortcut, prevents the browser save dialog, and removes the listener on unmount.
   useEffect(() => {

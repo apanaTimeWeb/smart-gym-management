@@ -80,62 +80,10 @@ function idempotencyConflictResponse() {
 }
 
 export const AuthMockBrowserHandlers = [
-  http.post(AuthUrlConfig.PROXY_API.SESSION, async ({ request }) => {
-    const rawPayload: unknown = await request.json().catch(() => null);
-    const parsed = AuthLoginCredentialsSchema.safeParse(rawPayload);
-    if (!parsed.success) {
-      return HttpResponse.json(
-        { success: false, message: AuthErrorConstants.MESSAGE.INVALID_INPUT, data: null, error: AuthErrorConstants.NAME.VALIDATION, errorCode: AuthErrorConstants.CODE.INVALID_INPUT, statusCode: StatusCodes.BAD_REQUEST },
-        { status: StatusCodes.BAD_REQUEST },
-      );
-    }
-
-    const idempotencyKey = getRequestIdempotencyKey(request);
-    if (!idempotencyKey) return idempotencyRequiredResponse();
-
-    const fingerprint = await AuthIdempotencyFingerprintUtilities.forLogin(parsed.data);
-    const replay = mockBrowserIdempotency.get(idempotencyKey);
-    if (replay) {
-      if (replay.fingerprint !== fingerprint) return idempotencyConflictResponse();
-      return HttpResponse.json({ success: true, message: AuthResponseMessages.LOGIN_SUCCESS, data: replay.user });
-    }
-
-    const user = resolveProxyUser(parsed.data.email);
-    if (!user) {
-      return HttpResponse.json(
-        { success: false, message: AuthErrorConstants.MESSAGE.INVALID_CREDENTIALS, data: null, error: AuthErrorConstants.NAME.AUTHENTICATION_FAILED, errorCode: AuthErrorConstants.CODE.BACKEND_REJECTED, statusCode: StatusCodes.UNAUTHORIZED },
-        { status: StatusCodes.UNAUTHORIZED },
-      );
-    }
-
-    mockBrowserIdempotency.set(idempotencyKey, { fingerprint, user });
-    return HttpResponse.json({ success: true, message: AuthResponseMessages.LOGIN_SUCCESS, data: user });
-  }),
-
-  http.post(AuthUrlConfig.PROXY_API.DEMO_LOGIN, async ({ request }) => {
-    const rawPayload: unknown = await request.json().catch(() => null);
-    const parsed = AuthDemoLoginRequestSchema.safeParse(rawPayload);
-    if (!parsed.success) {
-      return HttpResponse.json(
-        { success: false, message: AuthErrorConstants.MESSAGE.INVALID_INPUT, data: null, error: AuthErrorConstants.NAME.VALIDATION, errorCode: AuthErrorConstants.CODE.INVALID_INPUT, statusCode: StatusCodes.BAD_REQUEST },
-        { status: StatusCodes.BAD_REQUEST },
-      );
-    }
-
-    const idempotencyKey = getRequestIdempotencyKey(request);
-    if (!idempotencyKey) return idempotencyRequiredResponse();
-
-    const user = AuthMockPublicFixtures.USERS[parsed.data.role];
-    const fingerprint = AuthIdempotencyFingerprintUtilities.forDemoRole(parsed.data.role);
-    const replay = mockBrowserIdempotency.get(idempotencyKey);
-    if (replay) {
-      if (replay.fingerprint !== fingerprint) return idempotencyConflictResponse();
-      return HttpResponse.json({ success: true, message: AuthResponseMessages.LOGIN_SUCCESS, data: replay.user });
-    }
-
-    mockBrowserIdempotency.set(idempotencyKey, { fingerprint, user });
-    return HttpResponse.json({ success: true, message: AuthResponseMessages.LOGIN_SUCCESS, data: user });
-  }),
+  // Deliberately empty: Browser mocks MUST NOT intercept PROXY_API routes.
+  // Next.js API Routes (like /frontend_auth/auth/session/route.ts) MUST handle these
+  // in order to correctly set the secure HttpOnly session cookies.
+  // The server-side route.ts has its own mock bypass when NEXT_PUBLIC_DEMO_MODE=true.
 ];
 
 export const AuthMockBrowserHandlersTestApi = {
