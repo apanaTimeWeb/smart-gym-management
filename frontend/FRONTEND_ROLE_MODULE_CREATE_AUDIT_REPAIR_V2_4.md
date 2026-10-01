@@ -7776,7 +7776,7 @@ INTEGRATION_GUIDE.md                     ← mandatory integration instructions 
 frontend-{role}/
 └── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
 playwright_E2E/                            ← (when applicable) isolated E2E tests for the feature
-└── [role]_e2e/
+└── frontend_[role]_e2e/
     └── [target_feature]/
 stage_1_frontend_requirements.md         ← requirements extracted
 stage_2_frontend_audit.md                ← audit findings (Mode B only; for Mode A: creation log)

@@ -1442,12 +1442,12 @@ Minimum expectations:
 - Core components: interaction tests for all user events (clicks, typing, dropdowns), loading, success, empty, error, and disabled states.
 
 **Component Testing vs Frontend E2E Philosophy (No Playwright for Components):**
-1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
-2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `playwright_E2E/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
+1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
    - Buttons trigger the correct actions and loading states.
    - Dropdowns open and select the correct values.
    - Modals appear and close correctly.
    - Component empty, error, and success states render properly.
+2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `playwright_E2E/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline.
 
 Mandatory E2E flows:
 - Login/logout/session expiry
