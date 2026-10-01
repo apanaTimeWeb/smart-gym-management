@@ -1,11 +1,17 @@
 import { StatusCodes } from 'http-status-codes';
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AuthBackendTransport } from '@/app/frontend_auth/auth/auth_api/AuthBackendTransport';
-import { AuthUrlConfig } from '@/app/frontend_auth/auth/auth_url_config';
+
 import { AuthSessionConstants } from '@/app/frontend_auth/auth/auth_constants/AuthSessionConstants';
 
+import { AuthUrlConfig } from '@/app/frontend_auth/auth/auth_url_config';
+
+
+
 vi.mock('@/config/env', () => ({
-  env: { NEXT_PUBLIC_API_URL: 'https://api.example.com' },
+  env: { NEXT_PUBLIC_API_URL: 'https://api.test' },
 }));
 
 describe('AuthBackendTransport', () => {
@@ -25,7 +31,7 @@ describe('AuthBackendTransport', () => {
 
     const result = await AuthBackendTransport.post(AuthUrlConfig.BACKEND_API.LOGIN, { email: 'a@example.com' }, { [AuthSessionConstants.HEADERS.IDEMPOTENCY_KEY]: 'intent-1' });
 
-    expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/auth/login', {
+    expect(fetchMock).toHaveBeenCalledWith('https://api.test/auth/login', {
       method: 'POST',
       headers: {
         [AuthSessionConstants.HEADERS.CONTENT_TYPE]: AuthSessionConstants.HEADERS.CONTENT_TYPE_JSON,

@@ -1,9 +1,10 @@
-/**
- * RESPONSIBILITY: Provides the Auth module's server-only backend transport without owning endpoint-specific business logic.
- * DATA FLOW: Auth route -> AuthBackendTransport -> backend endpoint -> unknown JSON -> route-level Zod validation.
- */
+// RESPONSIBILITY: Owns server-side Auth-to-backend HTTP transport used only by Auth route handlers.
+// DATA FLOW: Auth route -> AuthBackendTransport -> upstream Auth API -> validated Auth response.
+
 import { env } from '@/config/env';
+
 import { AuthApiError } from '@/app/frontend_auth/auth/auth_api/AuthApiError';
+
 import { AuthSessionConstants } from '@/app/frontend_auth/auth/auth_constants/AuthSessionConstants';
 
 export const AuthBackendTransport = {

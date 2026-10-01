@@ -1,37 +1,22 @@
-# Auth Module — Security Impact Analysis
+# Auth Security Impact Analysis — v9
 
 ## Scope
-This analysis covers the frontend Auth module changes affecting login, demo login, server-side session cookies, refresh, logout, token/session status, ghost-session restoration, and the retired set-cookie bridge.
+Frontend-only review of `frontend_auth/auth/`. Backend authorization/implementation remains outside scope.
 
-## Security-Sensitive Flows
-| Flow | Sensitive Boundary | Required Safeguard | Module Evidence | Verification |
-|---|---|---|---|---|
-| Credential Login | Browser credentials → server Auth route | Zod validation, idempotency, backend contract validation, HTTP-only session cookies, sanitized browser response | `session/route.ts`, `AuthApi.ts`, `AuthContracts.ts`, `AuthCookieUtils.ts` | PASS by source/test inspection |
-| Demo Login | Browser role → server fixture | Server-only demo gate; browser receives no demo password/token | `demo-login/route.ts`, `AuthMockFixtures.ts`, `AuthMockPublicFixtures.ts` | PASS by source/test inspection |
-| Session Status | Cookie → server identity resolver | Do not trust unsigned user identity cookie | `token/route.ts`, `AuthSessionServerUtils.ts` | PASS by security tests |
-| Refresh | HTTP-only refresh cookie → token rotation | Contract validation, idempotency, tokens remain cookie-only | `refresh/route.ts` | PASS by source/test inspection; host runtime NOT VERIFIED |
-| Logout | Cookie → upstream logout + local cleanup | Local cleanup remains authoritative; no token JSON response | `logout/route.ts` | PASS by source/test inspection |
-| Ghost Restore | Stashed original session cookies | Restore only existing secure stash; no invented privileged session | `exit-ghost-login/route.ts` | PASS by security tests |
-| Retired Cookie Bridge | Client-supplied token payload | Reject client token-to-cookie write | `set-cookie/route.ts` | PASS by security tests |
+## Re-verified Security Contracts
+- Auth tokens are server-owned/HTTP-only and are not returned in browser JSON.
+- Session identity resolves from the access-token authority rather than the convenience identity cookie.
+- Demo authentication has separate public presentation gating and private server issuance gating.
+- Credential-bearing mock data is isolated from browser-safe public fixtures.
+- Refresh/logout/ghost restore validate and mutate server-owned cookie state.
+- Retired `set-cookie` rejects client token/cookie injection.
+- Auth mutation API methods require idempotency keys and retry reuse follows the same intent fingerprint.
+- User-facing error paths expose safe messages; raw backend objects and technical stacks are not rendered.
 
-## Threats Considered
-- Credential replay or changed-intent reuse under one idempotency key.
-- Token exposure in browser-facing JSON.
-- Forged `gymsmart_user` identity cookie being treated as authoritative.
-- Public demo flag being trusted by the server.
-- Browser bundle accidentally importing credential-bearing fixtures.
-- Technical backend errors being exposed to users.
-- Session state becoming stale after token rotation.
+## v9 Security-Adjacent Repairs
+- Removed the duplicate browser MSW handler so browser behavior has one canonical module-owned mock implementation.
+- Preserved root URL ownership and query-key namespace boundaries.
+- Preserved security regression suites and added no new secret-bearing browser fixture.
 
-## Required Human Review
-Because Auth is a security-critical frontend path, human CODEOWNERS review is required for the corresponding host repository paths. A CODEOWNERS file and repository branch-protection configuration were not supplied in this module artifact.
-
-STATUS: NOT VERIFIED — HOST CODEOWNERS / BRANCH-PROTECTION EVIDENCE NOT PROVIDED.
-
-## Required CI Security Gates
-The host repository must run the documented SCA/dependency-vulnerability scan and secrets scan, including `gitleaks`, and block merge on critical/high dependency vulnerabilities or detected secrets. These gates cannot be executed or verified from the supplied module-only artifact.
-
-STATUS: NOT VERIFIED — HOST CI / SECURITY TOOLING NOT PROVIDED.
-
-## Security Acceptance
-Module-level source and test safeguards are implemented. Full security acceptance requires host-level CODEOWNERS review, CI security scans, environment validation integration, and production runtime verification.
+## Host Security Gates
+`NOT VERIFIED`: CODEOWNERS enforcement, human approval, gitleaks, npm/SCA scan, host security headers, global auth middleware, browser runtime security verification. These cannot be fabricated without the host repository.

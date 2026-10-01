@@ -1,24 +1,21 @@
 # Forbidden Patterns for `auth/login`
 
-1. Do not access Auth backend endpoints directly from `AuthLoginForm.tsx`.
-2. Do not return, store, or render access/refresh tokens in the browser.
-3. Do not use `gymsmart_user` as authentication authority.
-4. Do not duplicate dashboard redirect decisions; use `AuthRoleRedirectUtils`.
-5. Do not import role business modules.
-6. Do not use raw colors, arbitrary theme Tailwind values, or semantic background opacity modifiers.
-7. Do not hardcode user-facing Login copy in JSX; use `useTranslations('AUTH_LOGIN')`.
-8. Do not render development demo controls unless `AuthClientRuntimeConfig.isLoginDemoEnabled()` is true.
-9. Do not let the public demo flag enable server-side demo sessions; the server must independently require `AUTH_DEMO_MODE` and non-production runtime.
-10. Do not create a new browser-visible demo-token generation path.
-11. Do not bypass the Zod Login schema.
-12. Do not create mutation state in Zustand or Context.
-13. Do not leave buttons, links, or icon controls without a deterministic action and verification reference.
-14. Do not remove `data-testid` attributes from interactive or critical-state elements.
-15. Do not remove `motion-safe:` guards from animated/transitioning Login elements.
-16. Do not move component logic back into JSX once it belongs in `useAuthLoginForm.ts`.
-17. Do not use render-only tests as a substitute for interaction tests.
-18. Do not rename framework-reserved route files.
-19. Do not modify unrelated application roles to repair Login.
-20. Never hardcode a second Login hero icon/configuration array inside a component when the value is static presentation configuration; keep it in `AuthLoginSharedConstants.ts`.
-21. Never report demo-login functionality as fully verified unless the demo button, loading state, server gate, session result, and redirect are all behaviorally verified.
-22. Never assume `/logo.png` or `/gym-hero.jpg` exist in the host application; verify the host asset contract.
+- No direct Auth backend calls from Login JSX.
+- No access/refresh token exposure in browser JSON, fixtures, constants, URLs, or UI.
+- No `document.cookie`, `localStorage`, or `sessionStorage` in Login components.
+- No duplicate Login URL configuration.
+- No business components/global abstractions imported from sibling features or role buckets.
+- No raw colors, arbitrary Tailwind values, inline style objects, or semantic background opacity modifiers.
+- No hardcoded Login UI copy in production JSX; use module-local `next-intl` translations.
+- No direct TanStack mutation invocation from presentation components; use `useAuthLoginMutation`.
+- No API response consumption before Zod validation.
+- No fake Save/Submit/Retry/demo interactions.
+- No fresh idempotency key for a retry of the same intent.
+- No credentials in `AuthMockPublicFixtures`; browser fixtures must remain credential-free.
+- No business test data in constants/stores/components.
+- No removal of required `data-testid` attributes.
+- No unguarded animations/transitions.
+- No server-only environment access from Login Client Components.
+- No technical/raw error details surfaced to users.
+- No `key={index}` for dynamic Login collections.
+- No `console.log`, `@ts-ignore`, `@ts-nocheck`, or `any`.

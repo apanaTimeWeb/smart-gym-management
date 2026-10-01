@@ -1,27 +1,37 @@
-
-// RESPONSIBILITY: Handles development-only demo login using server-owned fixture identities and secure HTTP-only session cookies.
-// DATA FLOW: Browser role selection -> validated role request -> private demo gate -> module fixture -> secure session cookie -> sanitized AuthUser.
+// RESPONSIBILITY: Owns the development-only role demo-login gateway and server-side demo-session issuance.
 import { StatusCodes } from 'http-status-codes';
+
 import { AuthErrorConstants } from '@/app/frontend_auth/auth/auth_constants/AuthErrorConstants';
+
 import { AuthResponseMessages } from '@/app/frontend_auth/auth/auth_constants/AuthResponseMessages';
+
 import { AuthServerRuntimeConfig } from '@/app/frontend_auth/auth/auth_constants/AuthServerRuntimeConfig';
-import { AuthMockFixturesApi } from '@/app/frontend_auth/auth/auth_mocks/fixtures/AuthMockFixtures';
-import { AuthDemoLoginRequestSchema } from '@/app/frontend_auth/auth/auth_types/AuthContracts';
-import { AuthApiResponseUtils } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtils';
-import { AuthCookieUtils } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtils';
-import { AuthIdempotencyFingerprintUtils } from '@/app/frontend_auth/auth/auth_utils/AuthIdempotencyFingerprintUtils';
-import { AuthRequestHeaderUtils } from '@/app/frontend_auth/auth/auth_utils/AuthRequestHeaderUtils';
+
+import { AuthMockFixturesApi } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_fixtures/AuthMockFixturesApi';
+
+import { AuthDemoLoginRequestSchema } from '@/app/frontend_auth/auth/auth_schemas/AuthSchema';
+
+import { AuthApiResponseUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtilities';
+
+import { AuthCookieUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtilities';
+
+import { AuthIdempotencyFingerprintUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthIdempotencyFingerprintUtilities';
+
+import { AuthRequestHeaderUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthRequestHeaderUtilities';
+
 import type { NextRequest } from 'next/server';
+
+
 
 /**
  * Handles the development-only role demo session flow through the same secure cookie boundary used by Login.
  * @description Validates the role payload, enforces the server-side demo gate, applies idempotency, and returns only the sanitized user identity.
- * @dependencies AuthServerRuntimeConfig, AuthMockFixturesApi, AuthDemoLoginRequestSchema, AuthCookieUtils, AuthApiResponseUtils.
+ * @dependencies AuthServerRuntimeConfig, AuthMockFixturesApi, AuthDemoLoginRequestSchema, AuthCookieUtilities, AuthApiResponseUtilities.
  * @edge-case Reusing an idempotency key with a different role is rejected instead of creating a second session.
  */
 export async function POST(request: NextRequest) {
   if (!AuthServerRuntimeConfig.isLoginDemoEnabled()) {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.DEMO_DISABLED,
       StatusCodes.NOT_FOUND,
       AuthErrorConstants.NAME.NOT_FOUND,
@@ -33,7 +43,7 @@ export async function POST(request: NextRequest) {
   try {
     rawPayload = await request.json();
   } catch {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.INVALID_REQUEST,
       StatusCodes.BAD_REQUEST,
       AuthErrorConstants.NAME.VALIDATION,
@@ -43,7 +53,7 @@ export async function POST(request: NextRequest) {
 
   const parsed = AuthDemoLoginRequestSchema.safeParse(rawPayload);
   if (!parsed.success) {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.INVALID_INPUT,
       StatusCodes.BAD_REQUEST,
       AuthErrorConstants.NAME.VALIDATION,
@@ -52,13 +62,13 @@ export async function POST(request: NextRequest) {
   }
 
   const demoEntry = AuthMockFixturesApi.findByRole(parsed.data.role);
-  const idempotencyKey = AuthRequestHeaderUtils.getIdempotencyKey(request);
+  const idempotencyKey = AuthRequestHeaderUtilities.getIdempotencyKey(request);
   const session = idempotencyKey
-    ? AuthMockFixturesApi.issueSessionForIntent(demoEntry.user, idempotencyKey, AuthIdempotencyFingerprintUtils.forDemoRole(parsed.data.role))
+    ? AuthMockFixturesApi.issueSessionForIntent(demoEntry.user, idempotencyKey, AuthIdempotencyFingerprintUtilities.forDemoRole(parsed.data.role))
     : AuthMockFixturesApi.issueSession(demoEntry.user);
 
   if (!session) {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.IDEMPOTENCY_CONFLICT,
       StatusCodes.CONFLICT,
       AuthErrorConstants.NAME.CONFLICT,
@@ -66,7 +76,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const response = AuthApiResponseUtils.success(AuthResponseMessages.LOGIN_SUCCESS, session.user);
-  AuthCookieUtils.setSession(response, session.accessToken, session.refreshToken, session.user);
+  const response = AuthApiResponseUtilities.success(AuthResponseMessages.LOGIN_SUCCESS, session.user);
+  AuthCookieUtilities.setSession(response, session.accessToken, session.refreshToken, session.user);
   return response;
 }

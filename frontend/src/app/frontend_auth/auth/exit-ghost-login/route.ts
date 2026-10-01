@@ -1,15 +1,19 @@
-
-/**
- * RESPONSIBILITY: Restores a previously stashed session from secure ghost-login cookies; never invents a privileged session.
- * DATA FLOW: Secure original-session cookies -> restore current session cookies -> clear stash -> canonical response.
- */
+// RESPONSIBILITY: Owns the secure ghost-login restore action and consumes the stashed original session material.
 import { StatusCodes } from 'http-status-codes';
+
 import { AuthErrorConstants } from '@/app/frontend_auth/auth/auth_constants/AuthErrorConstants';
+
 import { AuthResponseMessages } from '@/app/frontend_auth/auth/auth_constants/AuthResponseMessages';
+
 import { AuthSessionConstants } from '@/app/frontend_auth/auth/auth_constants/AuthSessionConstants';
-import { AuthApiResponseUtils } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtils';
-import { AuthCookieUtils } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtils';
+
+import { AuthApiResponseUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtilities';
+
+import { AuthCookieUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtilities';
+
 import type { NextRequest } from 'next/server';
+
+
 
 export async function POST(request: NextRequest) {
   const accessToken = request.cookies.get(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_ACCESS_TOKEN)?.value;
@@ -17,7 +21,7 @@ export async function POST(request: NextRequest) {
   const userJson = request.cookies.get(AuthSessionConstants.COOKIES.GHOST_ORIGINAL_USER)?.value;
 
   if (!accessToken || !refreshToken) {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.GHOST_NO_SESSION,
       StatusCodes.UNAUTHORIZED,
       AuthErrorConstants.NAME.UNAUTHORIZED,
@@ -25,7 +29,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const response = AuthApiResponseUtils.success(AuthResponseMessages.GHOST_RESTORED, null);
-  AuthCookieUtils.restoreOriginalGhostSession(response, accessToken, refreshToken, userJson);
+  const response = AuthApiResponseUtilities.success(AuthResponseMessages.GHOST_RESTORED, null);
+  AuthCookieUtilities.restoreOriginalGhostSession(response, accessToken, refreshToken, userJson);
   return response;
 }

@@ -9,4 +9,3 @@ export const AuthRoleConstants = {
   TRAINER: 'TRAINER',
 } as const;
 
-export type AuthRole = (typeof AuthRoleConstants)[keyof typeof AuthRoleConstants];

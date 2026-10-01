@@ -3,6 +3,7 @@
  * DATA FLOW: Auth clients/routes -> AuthSessionConstants -> cookie/header request behavior.
  */
 export const AuthSessionConstants = {
+  PASSWORD_MIN_LENGTH: 6,
   COOKIES: {
     ACCESS_TOKEN: 'gymsmart_token',
     REFRESH_TOKEN: 'gymsmart_refresh_token',

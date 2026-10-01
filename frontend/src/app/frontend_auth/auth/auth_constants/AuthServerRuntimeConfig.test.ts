@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import { AuthServerRuntimeConfig } from '@/app/frontend_auth/auth/auth_constants/AuthServerRuntimeConfig';
+
+
 
 const authTestEnv = vi.hoisted(() => ({
   NODE_ENV: 'test' as 'development' | 'test' | 'production',

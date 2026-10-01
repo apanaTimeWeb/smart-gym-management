@@ -1,8 +1,6 @@
-/**
- * RESPONSIBILITY: Defines typed Login route/client error contracts for safe recovery UI.
- * DATA FLOW: Next.js/React error -> typed Login boundary state/props -> safe translated fallback.
- */
 import type { ReactNode } from 'react';
+
+// RESPONSIBILITY: Owns type-only contracts for Login error-boundary props and safe route error state.
 
 export interface AuthLoginRouteErrorProps {
   error: Error & { digest?: string };

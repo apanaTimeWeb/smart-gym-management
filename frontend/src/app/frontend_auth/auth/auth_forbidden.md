@@ -31,3 +31,5 @@
 28. Never duplicate browser-safe demo identities inside `AuthMockHandlers.ts`; `AuthMockPublicFixtures.ts` is the single public identity source of truth.
 29. Never duplicate canonical Auth response message literals across route handlers when a module constant already owns them.
 30. Never treat the existence of the isolated module ZIP as evidence that host-wide typecheck, lint, build, CI, security scans, global theme mapping, or provider integration passed.
+
+31. Never include test-only environment origins in production-facing Auth configuration registries.

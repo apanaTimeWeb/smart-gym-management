@@ -21,7 +21,7 @@ import { superadminAffiliatesHandlers } from '@/app/superadmin/affiliates/affili
 import { superadminWhiteLabelingHandlers } from '@/app/superadmin/white-labeling/white-labeling_mocks/handlers/SuperadminWhiteLabelingMockHandlers';
 
 import { adminHandlers } from '@/app/admin/admin_layout/admin_mocks/handlers/AdminMockHandlers';
-import { AuthMockHandlers } from '@/app/frontend_auth/auth/auth_mocks/handlers/AuthMockHandlers';
+import { AuthMockHandlers } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_handlers/AuthMockHandlers';
 import { landingHandlers } from '@/app/frontend_public/landing/landing_mocks/PublicLandingMockHandlers';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
 

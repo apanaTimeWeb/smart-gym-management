@@ -1,13 +1,14 @@
-/**
- * RESPONSIBILITY: Retired security boundary. Direct client-provided token-to-cookie writes are intentionally disabled.
- * DATA FLOW: Any legacy caller receives a deterministic gone response and must migrate to POST /auth/session.
- */
+// RESPONSIBILITY: Owns the retired set-cookie compatibility route and rejects direct client token-to-cookie writes.
 import { StatusCodes } from 'http-status-codes';
+
 import { AuthErrorConstants } from '@/app/frontend_auth/auth/auth_constants/AuthErrorConstants';
-import { AuthApiResponseUtils } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtils';
+
+import { AuthApiResponseUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtilities';
+
+
 
 export async function POST() {
-  return AuthApiResponseUtils.failure(
+  return AuthApiResponseUtilities.failure(
     AuthErrorConstants.MESSAGE.SET_COOKIE_RETIRED,
     StatusCodes.GONE,
     AuthErrorConstants.NAME.ENDPOINT_RETIRED,

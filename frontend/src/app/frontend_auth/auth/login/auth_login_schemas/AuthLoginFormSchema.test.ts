@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { AuthLoginFormSchema, AuthLoginFormTranslationKeys } from '@/app/frontend_auth/auth/login/auth_login_schemas/AuthLoginFormSchema';
+
+import { AuthLoginFormTranslationKeys } from '@/app/frontend_auth/auth/login/auth_login_constants/AuthLoginConstants';
+
+import { AuthLoginFormSchema } from '@/app/frontend_auth/auth/login/auth_login_schemas/AuthLoginFormSchema';
+
+
 
 describe('AuthLoginFormSchema', () => {
   it('uses translated validation messages and blocks invalid credentials', () => {

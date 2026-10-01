@@ -1,30 +1,49 @@
-
-/**
- * RESPONSIBILITY: Secure server-side login gateway. Validates credentials, calls the backend, validates the backend contract, and writes HTTP-only cookies.
- * DATA FLOW: Browser credentials -> Auth session route -> backend/mock contract -> secure cookies -> canonical user-only response.
- */
+// RESPONSIBILITY: Owns the secure credential-login gateway, backend/mock authentication contract, and HTTP-only session cookie issuance.
 import { StatusCodes } from 'http-status-codes';
+
+import { logger } from '@/lib/logger';
+
 import { AuthBackendTransport } from '@/app/frontend_auth/auth/auth_api/AuthBackendTransport';
+
 import { AuthErrorConstants } from '@/app/frontend_auth/auth/auth_constants/AuthErrorConstants';
+
 import { AuthResponseMessages } from '@/app/frontend_auth/auth/auth_constants/AuthResponseMessages';
+
 import { AuthServerRuntimeConfig } from '@/app/frontend_auth/auth/auth_constants/AuthServerRuntimeConfig';
+
 import { AuthSessionConstants } from '@/app/frontend_auth/auth/auth_constants/AuthSessionConstants';
-import { AuthMockFixturesApi } from '@/app/frontend_auth/auth/auth_mocks/fixtures/AuthMockFixtures';
-import { AuthBackendLoginResponseSchema, AuthLoginCredentialsSchema } from '@/app/frontend_auth/auth/auth_types/AuthContracts';
+
+import { AuthMockFixturesApi } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_fixtures/AuthMockFixturesApi';
+
+import { AuthBackendLoginResponseSchema, AuthLoginCredentialsSchema } from '@/app/frontend_auth/auth/auth_schemas/AuthSchema';
+
 import { AuthUrlConfig } from '@/app/frontend_auth/auth/auth_url_config';
-import { AuthApiResponseUtils } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtils';
-import { AuthCookieUtils } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtils';
-import { AuthIdempotencyFingerprintUtils } from '@/app/frontend_auth/auth/auth_utils/AuthIdempotencyFingerprintUtils';
-import { AuthRequestHeaderUtils } from '@/app/frontend_auth/auth/auth_utils/AuthRequestHeaderUtils';
-import { AuthValidationUtils } from '@/app/frontend_auth/auth/auth_utils/AuthValidationUtils';
+
+import { AuthApiResponseUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthApiResponseUtilities';
+
+import { AuthCookieUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthCookieUtilities';
+
+import { AuthIdempotencyFingerprintUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthIdempotencyFingerprintUtilities';
+
+import { AuthRequestHeaderUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthRequestHeaderUtilities';
+
+import { AuthValidationUtilities } from '@/app/frontend_auth/auth/auth_utils/AuthValidationUtilities';
+
 import type { NextRequest } from 'next/server';
+
+
 
 export async function POST(request: NextRequest) {
   let rawPayload: unknown;
   try {
     rawPayload = await request.json();
   } catch {
-    return AuthApiResponseUtils.failure(
+    logger.error('Auth backend session request failed', {
+      route: AuthUrlConfig.PROXY_API.SESSION,
+      module: 'auth/session',
+      timestamp: new Date().toISOString(),
+    });
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.INVALID_REQUEST,
       StatusCodes.BAD_REQUEST,
       AuthErrorConstants.NAME.VALIDATION,
@@ -34,12 +53,12 @@ export async function POST(request: NextRequest) {
 
   const parsedPayload = AuthLoginCredentialsSchema.safeParse(rawPayload);
   if (!parsedPayload.success) {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.INVALID_INPUT,
       StatusCodes.BAD_REQUEST,
       AuthErrorConstants.NAME.VALIDATION,
       AuthErrorConstants.CODE.INVALID_INPUT,
-      AuthValidationUtils.toValidationErrors(parsedPayload.error.issues),
+      AuthValidationUtilities.toValidationErrors(parsedPayload.error.issues),
     );
   }
 
@@ -48,13 +67,13 @@ export async function POST(request: NextRequest) {
   if (AuthServerRuntimeConfig.isLoginDemoEnabled()) {
     const demoUser = AuthMockFixturesApi.findByCredentials(email, password);
     if (demoUser) {
-      const idempotencyKey = AuthRequestHeaderUtils.getIdempotencyKey(request);
-      const sessionFingerprint = await AuthIdempotencyFingerprintUtils.forLogin({ email, password });
+      const idempotencyKey = AuthRequestHeaderUtilities.getIdempotencyKey(request);
+      const sessionFingerprint = await AuthIdempotencyFingerprintUtilities.forLogin({ email, password });
       const session = idempotencyKey
         ? AuthMockFixturesApi.issueSessionForIntent(demoUser, idempotencyKey, sessionFingerprint)
         : AuthMockFixturesApi.issueSession(demoUser);
       if (!session) {
-        return AuthApiResponseUtils.failure(
+        return AuthApiResponseUtilities.failure(
           AuthErrorConstants.MESSAGE.IDEMPOTENCY_CONFLICT,
           StatusCodes.CONFLICT,
           AuthErrorConstants.NAME.CONFLICT,
@@ -62,14 +81,14 @@ export async function POST(request: NextRequest) {
         );
       }
       const { accessToken, refreshToken } = session;
-      const response = AuthApiResponseUtils.success(AuthResponseMessages.LOGIN_SUCCESS, demoUser);
-      AuthCookieUtils.setSession(response, accessToken, refreshToken, demoUser);
+      const response = AuthApiResponseUtilities.success(AuthResponseMessages.LOGIN_SUCCESS, demoUser);
+      AuthCookieUtilities.setSession(response, accessToken, refreshToken, demoUser);
       return response;
     }
   }
 
   try {
-    const idempotencyKey = AuthRequestHeaderUtils.getIdempotencyKey(request);
+    const idempotencyKey = AuthRequestHeaderUtilities.getIdempotencyKey(request);
     const backendHeaders = idempotencyKey ? { [AuthSessionConstants.HEADERS.IDEMPOTENCY_KEY]: idempotencyKey } : undefined;
     const { response: backendResponse, payload } = await AuthBackendTransport.post(
       AuthUrlConfig.BACKEND_API.LOGIN,
@@ -80,7 +99,7 @@ export async function POST(request: NextRequest) {
     const parsedBackend = AuthBackendLoginResponseSchema.safeParse(payload);
 
     if (!parsedBackend.success) {
-      return AuthApiResponseUtils.failure(
+      return AuthApiResponseUtilities.failure(
         AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
         StatusCodes.BAD_GATEWAY,
         AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,
@@ -89,7 +108,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (parsedBackend.data.success !== backendResponse.ok) {
-      return AuthApiResponseUtils.failure(
+      return AuthApiResponseUtilities.failure(
         AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
         StatusCodes.BAD_GATEWAY,
         AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,
@@ -98,7 +117,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!backendResponse.ok && parsedBackend.data.statusCode !== backendResponse.status) {
-      return AuthApiResponseUtils.failure(
+      return AuthApiResponseUtilities.failure(
         AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
         StatusCodes.BAD_GATEWAY,
         AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,
@@ -107,10 +126,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (!backendResponse.ok) {
-      const responseStatus = backendResponse.status >= StatusCodes.BAD_REQUEST && backendResponse.status < 500
+      const responseStatus = backendResponse.status >= StatusCodes.BAD_REQUEST && backendResponse.status < StatusCodes.INTERNAL_SERVER_ERROR
         ? backendResponse.status
         : StatusCodes.BAD_GATEWAY;
-      return AuthApiResponseUtils.failure(
+      return AuthApiResponseUtilities.failure(
         parsedBackend.data.message,
         responseStatus,
         parsedBackend.data.error ?? AuthErrorConstants.NAME.AUTHENTICATION_FAILED,
@@ -120,7 +139,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!parsedBackend.data.data) {
-      return AuthApiResponseUtils.failure(
+      return AuthApiResponseUtilities.failure(
         AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
         StatusCodes.BAD_GATEWAY,
         AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,
@@ -128,8 +147,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response = AuthApiResponseUtils.success(parsedBackend.data.message, parsedBackend.data.data.user);
-    AuthCookieUtils.setSession(
+    const response = AuthApiResponseUtilities.success(parsedBackend.data.message, parsedBackend.data.data.user);
+    AuthCookieUtilities.setSession(
       response,
       parsedBackend.data.data.accessToken,
       parsedBackend.data.data.refreshToken,
@@ -137,7 +156,7 @@ export async function POST(request: NextRequest) {
     );
     return response;
   } catch {
-    return AuthApiResponseUtils.failure(
+    return AuthApiResponseUtilities.failure(
       AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
       StatusCodes.BAD_GATEWAY,
       AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,

@@ -1,51 +1,36 @@
-# Auth Module — Theme Portability Contract
+# Auth Module Theme Contract — v9-fix
 
-`auth/` consumes the global Smart Gym 360 design system through semantic Tailwind tokens. The module defines no global business color tokens.
+## Consumed Semantic Theme Tokens
+The Auth module consumes only semantic design-system tokens in production JSX:
 
-## Required semantic color tokens
-- `--primary` → `bg-primary`
-- `--primary-hover` → `bg-primary-hover`
-- `--primary-subtle` → `bg-primary-subtle`
-- `--text-primary` → `text-primary`
-- `--text-secondary` → `text-secondary`
-- `--text-disabled` → `text-disabled`
-- `--text-on-primary` → `text-on-primary`
-- `--danger-text` → `text-danger`
-- `--danger-bg` → `bg-danger-bg`
-- `--success` → `bg-success` (status indicator only)
-- `--success-text` → `text-success`
-- `--success-bg` → `bg-success-bg`
-- `--warning-text` → `text-warning`
-- `--warning-bg` → `bg-warning-bg`
+- `bg-page`
+- `bg-card`
+- `bg-input`
+- `bg-sidebar`
+- `bg-success`, `bg-success-bg`, `text-success`
+- `bg-warning-bg`, `text-warning`
+- `bg-danger-bg`, `text-danger`
+- `text-primary`, `text-secondary`, `text-disabled`, `text-on-primary`
+- `border-border`, `border-focus`, `ring-primary`
+- `bg-skeleton-base`, `bg-skeleton-highlight`
+- `shadow-card`
 
-## Required surfaces
-- `--bg-page` → `bg-page`
-- `--bg-sidebar` → `bg-sidebar`
-- `--bg-card` → `bg-card`
-- `--bg-input` → `bg-input`
-- `--skeleton-base` → `bg-skeleton-base`
-- `--skeleton-highlight` → `bg-skeleton-highlight`
+It also relies on documented Tailwind geometry and typography tokens/classes and the host `font-sans` mapping to the required Inter font.
 
-## Required borders/focus/elevation
-- `--border` → `border-border`
-- `--border-focus` → `border-focus`
-- `--focus-ring` → `ring-primary`
-- `--shadow-card` → `shadow-card`
+## Visual Ownership
+- Global design owns the CSS variable values and Tailwind mappings.
+- Auth/Login owns feature composition and semantic token selection.
+- Auth/Login does not define raw color values or inline styles.
+- Business/status semantics are not moved into the global design system.
 
-## Required motion tokens
-- `duration-base`
-- `motion-safe:transition-*`
-- `motion-safe:active:scale-*`
-- `motion-safe:animate-spin`
-- `motion-safe:animate-pulse`
-- `motion-safe:*transform`
+## Host Verification Boundary
+The supplied frontend-auth artifact does not contain the host `globals.css`, `tailwind.config.ts`, ThemeProvider, or `ThemeToggle` implementation. Therefore these host-level items are **NOT VERIFIED** from this artifact and are documented as integration requirements rather than fabricated as module-local code.
 
-## Typography
-Auth uses the global default `Inter` typography system and semantic text tokens. No feature-local font token is defined.
+## Responsive Contract
+- Base classes are mobile-first.
+- `md:` is used for tablet adjustments where required.
+- `xl:` is the Login desktop split threshold because the supplied design defines Desktop as `>=1280px`.
+- Narrow mobile widths must avoid unintended horizontal overflow.
 
-## Portability constraints
-- No raw hex/RGBA values in Auth JSX.
-- No arbitrary `bg-[...]`, `text-[...]`, `border-[...]`, or `ring-[...]` theme values.
-- No semantic background opacity modifiers such as `bg-success/10`.
-- Solid `bg-primary` is paired with `text-on-primary`.
-- Validation feedback uses `bg-danger-bg` with `text-danger`; the form alert does not depend on an undefined `border-danger` token.
+## Visual Exceptions / Applicability
+The Auth/Login feature does not contain tables, KPI cards, charts, drag-and-drop surfaces, payment-mode UI, export UI, or status registries. Those design families are therefore documented as not applicable rather than invented.

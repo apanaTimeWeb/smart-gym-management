@@ -1,53 +1,61 @@
-/**
- * RESPONSIBILITY: Encapsulates browser-facing Auth API calls; browser JavaScript receives only sanitized AuthUser data.
- * DATA FLOW: Login view/hook -> AuthApi -> same-origin Auth route -> sanitized AuthUser.
- * @edge-case Malformed responses become typed AuthApiError instances without exposing token material or internal transport details.
- */
+// RESPONSIBILITY: Owns the browser-facing Auth API contract, response validation, and mutation transport for login flows.
+// DATA FLOW: Login form hook -> AuthApi -> same-origin route -> AuthUser -> TanStack Query cache.
+
+import { apiFetch } from '@/lib/api';
+
 import { AuthApiError } from '@/app/frontend_auth/auth/auth_api/AuthApiError';
+
 import { AuthErrorConstants } from '@/app/frontend_auth/auth/auth_constants/AuthErrorConstants';
+
 import { AuthSessionConstants } from '@/app/frontend_auth/auth/auth_constants/AuthSessionConstants';
-import { AuthSessionResponseSchema } from '@/app/frontend_auth/auth/auth_types/AuthContracts';
+
+import { AuthSessionResponseSchema } from '@/app/frontend_auth/auth/auth_schemas/AuthSchema';
+
 import { AuthUrlConfig } from '@/app/frontend_auth/auth/auth_url_config';
+
 import type { AuthLoginCredentials, AuthRole, AuthUser } from '@/app/frontend_auth/auth/auth_types/AuthContracts';
 
-async function parseAuthSessionResponse(response: Response): Promise<AuthUser> {
-  let rawPayload: unknown;
-  try {
-    rawPayload = await response.json();
-  } catch {
-    throw new AuthApiError('', AuthErrorConstants.CODE.RESPONSE_UNREADABLE);
-  }
-
+/**
+ * Validates the browser-facing Auth response envelope and returns only the sanitized user payload.
+ * @description Rejects malformed or HTTP/body status mismatches before the Login layer consumes the response.
+ * @dependencies AuthSessionResponseSchema and AuthApiError.
+ * @edge-case Error responses must contain a matching HTTP statusCode; success responses must omit it.
+ */
+function parseAuthSessionResponse(rawPayload: unknown): AuthUser {
   const parsed = AuthSessionResponseSchema.safeParse(rawPayload);
   if (!parsed.success) {
     throw new AuthApiError('', AuthErrorConstants.CODE.RESPONSE_INVALID);
   }
 
-  if (parsed.data.success !== response.ok) {
-    throw new AuthApiError('', AuthErrorConstants.CODE.RESPONSE_INVALID);
-  }
-
   if (!parsed.data.success || !parsed.data.data) {
-    if (parsed.data.statusCode !== response.status) {
-      throw new AuthApiError('', AuthErrorConstants.CODE.RESPONSE_INVALID);
-    }
     throw new AuthApiError(parsed.data.message, parsed.data.errorCode, parsed.data.validationErrors);
   }
 
   return parsed.data.data;
 }
 
+/**
+ * Sends a module-owned Auth session mutation through the global API transport.
+ * @description Centralizes POST header and JSON serialization behavior so Login APIs do not duplicate transport details.
+ * @dependencies apiFetch and AuthSessionConstants.
+ * @edge-case The caller must supply the stable idempotency key for the current user intent.
+ */
 async function postAuthSession(endpoint: string, body: unknown, idempotencyKey: string): Promise<AuthUser> {
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      [AuthSessionConstants.HEADERS.CONTENT_TYPE]: AuthSessionConstants.HEADERS.CONTENT_TYPE_JSON,
-      [AuthSessionConstants.HEADERS.IDEMPOTENCY_KEY]: idempotencyKey,
-    },
-    body: JSON.stringify(body),
-  });
+  let rawPayload: unknown;
+  try {
+    rawPayload = await apiFetch(endpoint, {
+      method: 'POST',
+      headers: {
+        [AuthSessionConstants.HEADERS.CONTENT_TYPE]: AuthSessionConstants.HEADERS.CONTENT_TYPE_JSON,
+        [AuthSessionConstants.HEADERS.IDEMPOTENCY_KEY]: idempotencyKey,
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error: any) {
+    throw new AuthApiError(error.message, AuthErrorConstants.CODE.RESPONSE_INVALID);
+  }
 
-  return parseAuthSessionResponse(response);
+  return parseAuthSessionResponse(rawPayload);
 }
 
 export const AuthApi = {

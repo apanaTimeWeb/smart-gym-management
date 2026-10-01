@@ -1,53 +1,65 @@
-# INTEGRATION_GUIDE.md — Auth v5_fix
+# INTEGRATION GUIDE — Smart Gym 360 Auth v9-fix
 
-## Target
-Integrate `frontend_auth/auth/**` into the host Next.js application.
+## Included Scope
+This package contains the repaired `frontend_auth/auth/` module, the isolated Login Playwright E2E test tree, and the required V2.4 verification artifacts. No sibling business feature implementation is included.
 
-## Route placement
-Preserve the feature route structure under the host App Router so these routes resolve exactly:
-- `/auth/login`
-- `/auth/session`
-- `/auth/demo-login`
-- `/auth/refresh`
-- `/auth/logout`
-- `/auth/token`
-- `/auth/exit-ghost-login`
-- `/auth/set-cookie`
+## Required Host Placement
+Copy the module to:
 
-Do not rename Next.js reserved route files such as `page.tsx`, `loading.tsx`, or `error.tsx`.
+```text
+src/app/frontend_auth/auth/
+```
 
-## Required host dependencies / infrastructure
-The module expects the host to provide the approved infrastructure imports already documented in `auth_features.md`:
+Keep the canonical Login route under the module-owned `login/` route segment and do not create a second Login route tree.
+
+## Required Host Infrastructure
+The supplied archive did not contain the host application infrastructure needed to verify these contracts. The host project must provide the already-approved contracts consumed by this module, including:
+
 - `@/lib/api`
 - `@/lib/logger`
 - `@/config/env`
-- `@/components/ThemeToggle`
-- React / Next.js / TanStack Query / React Hook Form / Zod / next-intl / lucide-react / MSW / http-status-codes / Playwright as configured by the host.
+- global theme/Tailwind semantic token mapping
+- `next-intl` provider/loading configuration
+- authentication/session middleware where the host owns redirects
+- global top-loader integration where the host owns route transitions
+- approved WebSocket/session infrastructure if future Auth features consume it
 
-## Host configuration requirements
-- Central `ApiResponse<T>` and `ValidationErrorItem` / `PaginationMeta` contracts must match the Auth module contract.
-- Tailwind must map the semantic tokens consumed by the module (`bg-page`, `bg-card`, `bg-input`, `bg-primary`, `text-on-primary`, `bg-danger-bg`, `text-danger`, `bg-warning-bg`, skeleton and motion tokens, etc.).
-- Global ThemeProvider must supply the documented dark/light token system.
-- `next-intl` must load the co-located Auth Login `en` and `hi` locale objects through the host's merge/loader mechanism.
-- Global route progress/top-loader must be wired according to the host architecture.
-- The Auth Login assets referenced by `AuthLoginSharedConstants.ASSETS` must exist at `/logo.png` and `/gym-hero.jpg`. These assets were not included in the supplied module artifact.
+No new NPM dependency is added by this v9 package. Dependency versions MUST be checked against the host `package.json` before merge.
 
-## Environment
-No new Auth runtime environment key is required beyond the host's validated API-base/runtime configuration already consumed through `@/config/env`. The development demo flow is gated by the existing non-production `AUTH_DEMO_MODE` server check and public client demo visibility flag.
+## Route Contract
+Module-owned route entries are: `/auth/login`, `/auth/session`, `/auth/demo-login`, `/auth/refresh`, `/auth/logout`, `/auth/token`, `/auth/exit-ghost-login`, and retired `/auth/set-cookie`. The exact paths are centralized in `frontend_auth/auth/auth_url_config.ts`.
+
+## i18n
+Active Login locales are English and Hindi. Keep `auth_login_locales/` co-located inside the Login sub-feature. Do not move the strings to a global business translation folder.
+
+## Theme
+The module expects the semantic tokens listed by `auth_theme_contract.md` and `login/auth_login_theme_contract.md`. Host Tailwind/CSS must map those semantic classes to the canonical global CSS variables. Do not make this module compliant by adding raw hex values or arbitrary Tailwind values.
 
 ## E2E
-Keep `frontend_e2e/auth_e2e/auth/AuthLogin.spec.ts` in the separate top-level E2E tree. Configure Playwright to run the host app before the suite. Credential-based host E2E requires `AUTH_E2E_EMAIL` and `AUTH_E2E_PASSWORD`.
+Canonical E2E files:
 
-## Verification
-1. Run host `tsc --noEmit`.
-2. Run configured lint + Tailwind checks.
-3. Run module/Vitest tests through the host test runner.
-4. Start the host application and run `AuthLogin.spec.ts`.
-5. Verify Login at 375px, 768px, 1280px+, and approximately 320px.
-6. Verify both `en` and `hi` Login locale loading.
-7. Verify global ThemeProvider, semantic token mapping, top-loader, logger and API transport integration.
-8. Run required CI SCA and gitleaks scans.
-9. Verify CODEOWNERS/security-review requirements for Auth changes.
+```text
+playwright_E2E/frontend_auth_e2e/auth/login/AuthLogin.spec.ts
+playwright_E2E/frontend_auth_e2e/auth/login/AuthLoginE2eRouteConstants.ts
+```
 
-## Important scope note
-This module artifact has been source-audited, but the supplied task did not include the host repository/runtime. The above host checks are integration verification requirements and remain `NOT VERIFIED` in this delivery.
+Run them in the host Playwright environment. Runtime browser execution is NOT VERIFIED in this package because the host runner/configuration was not supplied.
+
+## Verification Before Merge
+Run:
+
+1. `tsc --noEmit`
+2. ESLint + Tailwind linting + Prettier check
+3. Vitest + React Testing Library + MSW tests
+4. Playwright Login E2E
+5. Direct `/auth/login` deep link + refresh + back/forward checks
+6. Credential login success/failure/retry/idempotency verification
+7. Demo gate verification in development/test and rejection outside the gate
+8. Session/refresh/logout/ghost restore token-confidentiality tests
+9. Responsive checks at 320px, 375px, 768px, and 1280px
+10. Production Next.js build
+11. `npm audit --audit-level=high` or approved SCA
+12. `gitleaks detect` and pre-commit staged secret scan
+13. CODEOWNERS/security review for Auth changes
+
+The host-only items above are deliberately documented as NOT VERIFIED rather than guessed.
