@@ -380,7 +380,7 @@ Optional:
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
-Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
+Extract all validation logic (NestJS: Class-Validator DTOs, Django: Forms/Serializers, Config: Zod) into their own isolated files.
 - **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-members-create.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
@@ -546,7 +546,7 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ## Django Framework Reference Appendix
 
-For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
+For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.views.py`).
 
 *(Note: In non-NestJS frameworks like Django, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
 
@@ -1715,7 +1715,7 @@ This rule MUST remain consistent with Rule 99.
   ```typescript
   import { Injectable } from '@nestjs/common';
 
-  import { InjectableRepository } from 'typeorm';
+  import { Repository } from 'typeorm';
 
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
@@ -2399,7 +2399,7 @@ src/
             admin-members-errors.json
             admin-members-messages.json
         members-controllers/
-          admin-members-registration.controller.ts
+          admin-members-command.controller.ts
         members-services/
           admin-members-registration.service.ts
   backend-superadmin/

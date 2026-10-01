@@ -4716,7 +4716,7 @@ Critical notifications/chats must not depend exclusively on a live WebSocket con
 
 ### E2E / Selenium Isolation
 
-Verify role/module namespace, module-level self-containment, no cross-module test imports, real test DB, real HTTP behavior, behavioral assertions, and required backup locators for Selenium/UI tests.
+Verify role/module namespace, module-level self-containment, no cross-module test imports, real test DB, real HTTP behavior, and behavioral assertions for Selenium/UI tests.
 
 ### Runtime Optionality
 
@@ -9199,10 +9199,9 @@ Each test MUST:
 * use real browser automation (Selenium WebDriver);
 * start from a fresh authenticated session;
 * navigate to the actual route;
-* use real element locators (by data-testid, aria-label, role, or visible text — in that priority order);
+* use real element locators (strictly by data-testid attribute only);
 * assert on visible UI content, not internal state;
 * verify the result after each action;
-* include a backup locator using CSS selector or XPath as a fallback;
 * verify the post-action URL where navigation is expected.
 
 Mandatory happy-path flows to cover (where applicable to the supplied module):
@@ -9220,7 +9219,7 @@ Mandatory happy-path flows to cover (where applicable to the supplied module):
 * tabs: click tab → content changes;
 * modal/drawer: open → interact → close → original state preserved.
 
-#### `test_[role]-[module]-ui-edge.py` — Edge Cases and Negative Flows
+#### `test-[role]-[module]-selenium-edge.py` — Edge Cases and Negative Flows
 
 For every major feature, cover:
 
