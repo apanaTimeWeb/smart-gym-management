@@ -9156,23 +9156,25 @@ Files MUST follow the exact project naming pattern:
 ```
 backend-e2e/
   backend-[role]-e2e/
-    [module]/
-      test-[role]-[module]-e2e.py
+    [role]-modules/
+      [role]-[module]/
+        test-[role]-[module]-e2e.py
 
 backend-selenium/
   backend-[role]-selenium/
-    [module]/
-      test-[role]-[module]-selenium.py
-      test-[role]-[module]-selenium-edge.py
+    [role]-modules/
+      [role]-[module]/
+        test-[role]-[module]-selenium.py
+        test-[role]-[module]-selenium-edge.py
   _test-forbidden.md                  ← Selenium forbidden patterns doc
 ```
 
 Examples:
 
 ```
-backend-selenium/backend-admin-selenium/admin-members/test-admin-members-selenium.py
-backend-selenium/backend-admin-selenium/admin-members/test-admin-members-selenium-edge.py
-backend-selenium/backend-trainer-selenium/trainer-attendance/test-trainer-attendance-selenium.py
+backend-selenium/backend-admin-selenium/admin-modules/admin-members/test-admin-members-selenium.py
+backend-selenium/backend-admin-selenium/admin-modules/admin-members/test-admin-members-selenium-edge.py
+backend-selenium/backend-trainer-selenium/trainer-modules/trainer-attendance/test-trainer-attendance-selenium.py
 ```
 
 ### What Each Selenium Test File MUST Cover
