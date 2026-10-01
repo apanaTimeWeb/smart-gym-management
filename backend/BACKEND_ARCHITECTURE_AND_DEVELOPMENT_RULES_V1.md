@@ -1084,7 +1084,7 @@ backend-manager/
 All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
 DO NOT place any of these implementation files in the root of the feature module folder. 
 
-For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (and perhaps `.md` documentation files). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
+For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (alongside the mandatory `.md` documentation files like `-backend-feature.md`). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
 
 ---
 
@@ -2641,7 +2641,7 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
    - **Root Level:** `src/backend-superadmin/` ➔ `backend-e2e/backend-superadmin-e2e/` (API) or `backend-selenium/backend-superadmin-selenium/` (UI)
-   - **Feature Level:** `src/backend-superadmin/superadmin-modules/superadmin-dashboard/` ➔ `backend-e2e/backend-superadmin-e2e/superadmin-dashboard/` (API) or `backend-selenium/backend-superadmin-selenium/superadmin-dashboard/` (UI)
+   - **Feature Level:** `src/backend-superadmin/superadmin-modules/superadmin-dashboard/` ➔ `backend-e2e/backend-superadmin-e2e/superadmin-modules/superadmin-dashboard/` (API) or `backend-selenium/backend-superadmin-selenium/superadmin-modules/superadmin-dashboard/` (UI)
    - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
    - ✅ **GOOD:** `backend-e2e/backend-admin-e2e/` and `backend-selenium/backend-superadmin-selenium/`
@@ -2650,14 +2650,14 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
    - **E2E (API) Format:** `test-[role]-[module]-e2e.py` (e.g., `test-superadmin-dashboard-e2e.py`)
    - **Selenium (UI) Format:** `test-[role]-[module]-selenium.py` (e.g., `test-superadmin-dashboard-selenium.py`)
    - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
-   - ✅ **GOOD:** `test-admin-members-e2e.py` (lives inside `backend-e2e/backend-admin-e2e/admin-members/`)
+   - ✅ **GOOD:** `test-admin-members-e2e.py` (lives inside `backend-e2e/backend-admin-e2e/admin-modules/admin-members/`)
 
-3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend-manager-e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
-   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend-e2e/backend-manager-e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
+3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend-manager-e2e/helpers/`). If the `manager-dashboard` test and `manager-billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `manager-dashboard` and `manager-billing` test folders.
+   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend-e2e/backend-manager-e2e/manager-modules/manager-dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
    - ❌ **BAD:** `backend-e2e/backend-manager-e2e/helpers/auth-helper.py`
-   - ✅ **GOOD:** `backend-e2e/backend-manager-e2e/dashboard/manager-auth-helper.py` AND `backend-e2e/backend-manager-e2e/billing/manager-auth-helper.py`
+   - ✅ **GOOD:** `backend-e2e/backend-manager-e2e/manager-modules/manager-dashboard/manager-auth-helper.py` AND `backend-e2e/backend-manager-e2e/manager-modules/manager-billing/manager-auth-helper.py`
 
-4. **No Cross-Module Imports:** A test script in `backend-manager-e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend-manager-e2e/billing/`, nor from `backend-admin-e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
+4. **No Cross-Module Imports:** A test script in `backend-manager-e2e/manager-modules/manager-dashboard/` MUST NOT import a fixture, constant, or helper from `backend-manager-e2e/manager-modules/manager-billing/`, nor from `backend-admin-e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
 5. **Test-Specific Forbidden Patterns (`_test-forbidden.md`):** Every top-level testing role container — both in `backend-e2e/backend-[role]-e2e/` and `backend-selenium/backend-[role]-selenium/` — MUST contain a `_test-forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables. (*Note: `_test-forbidden.md` and global test config files are explicitly exempt from the Rule 2 role-prefixing requirement.*)
 
@@ -2667,9 +2667,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 8. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
 
-9. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
-   - ❌ **BAD:** Hardcoding a single brittle locator: `driver.find_element(By.ID, "submit-btn")`
-   - ✅ **GOOD:** Writing robust selector logic that attempts a primary locator (e.g., `data-testid`), and if that fails, gracefully falls back to a secondary locator (e.g., specific CSS class, XPath, or ARIA label). The AI must ensure that if the primary locator fails, the backup locator works to complete the action.
+9. **Selenium Strict Locators (The data-testid Contract):** Every Selenium or UI interaction MUST strictly rely on `data-testid` attributes as the primary and only locator for interactive elements. The frontend is architecturally required (Rule 22) to provide a strictly formatted `data-testid` for all interactive elements and states. The UI changes frequently, and tests shouldn't crash because a single CSS class name changed. Do not write fallback locators that use brittle XPaths or CSS classes, as this encourages AI agents to ignore missing `data-testid` contracts.
+   - ❌ **BAD:** Hardcoding a brittle locator: `driver.find_element(By.CSS_SELECTOR, ".submit-btn-active")`
+   - ✅ **GOOD:** Strictly using the immutable contract: `driver.find_element(By.CSS_SELECTOR, "[data-testid='admin_members-addform-submit']")`
 
 **Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized. Tests must be real and resilient, not just "green" checkboxes.
 

@@ -9322,13 +9322,13 @@ In Stage 3, create the actual Selenium test files alongside the final audit:
 ```
 stage-3-final-verdict.md
 
-backend-e2e/backend-[role]-e2e/[module]/test-[role]-[module]-e2e.py
+backend-e2e/backend-[role]-e2e/[role]-modules/[role]-[module]/test-[role]-[module]-e2e.py
 
 backend-e2e/backend-[role]-e2e/_test-forbidden.md
 
-backend-selenium/backend-[role]-selenium/[module]/test-[role]-[module]-selenium.py
+backend-selenium/backend-[role]-selenium/[role]-modules/[role]-[module]/test-[role]-[module]-selenium.py
 
-backend-selenium/backend-[role]-selenium/[module]/test-[role]-[module]-selenium-edge.py
+backend-selenium/backend-[role]-selenium/[role]-modules/[role]-[module]/test-[role]-[module]-selenium-edge.py
 
 backend-selenium/backend-[role]-selenium/_test-forbidden.md
 ```
