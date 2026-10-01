@@ -2687,11 +2687,11 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 ## Rule 115 - Exhaustive, AI-Contextual Documentation for EVERYTHING (The "No-Guessing" Rule)
-* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The documentation syntax is framework-specific:
+* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage-*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The documentation syntax is framework-specific:
   - **TypeScript / JavaScript classes, methods, DTOs, services, controllers** → JSDoc block comments
   - **Python / Django classes, methods, DTO-equivalent constructs, services, controllers** → Python docstrings
   - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })` for NestJS, Django model field `help_text='...'` for Django); otherwise documented in migration/DDL
-  - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
+  - **Config variables** → Zod / class-validator configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included in every documented construct:**
   1. **Intent:** Deep explanation of the business context.
@@ -2708,8 +2708,8 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
 * **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
-* **The Rule:** The backend must expose a dedicated `/api/v1/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
-* **Implementation:** These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
+* **The Rule:** The backend must support "RAG-Ready" API projections for AI agents and Chatbots. However, you MUST NOT create a generic root-level `_rag` namespace, as this violates Rule 0D (Strict API Namespacing). RAG endpoints must remain strictly within their role and module boundary.
+* **Implementation:** You must expose these endpoints either via a dedicated sub-route within the module (e.g., `/api/v1/manager/members/rag`) or via a strict query parameter on the primary endpoint (e.g., `/api/v1/manager/members?format=rag`). These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
 * **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
 
 ## Rule 118 - Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
