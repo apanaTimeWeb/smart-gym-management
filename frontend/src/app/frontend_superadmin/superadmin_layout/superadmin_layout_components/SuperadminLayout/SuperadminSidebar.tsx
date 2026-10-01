@@ -16,7 +16,10 @@ import {
   Wrench, 
   Ticket,
   Search,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Building2,
+  CreditCard,
+  FileText
 } from 'lucide-react';
 import { getUser } from '@/lib/api';
 
@@ -31,9 +34,12 @@ const SUPERADMIN_NAV_GROUPS = [
   {
     group: "Management",
     items: [
+      { label: "Gyms & Tenants", href: "/frontend_superadmin/superadmin_gyms", icon: Building2 },
+      { label: "SaaS Plans", href: "/frontend_superadmin/superadmin_plans", icon: CreditCard },
       { label: "Affiliates", href: "/frontend_superadmin/superadmin_affiliates", icon: Users },
       { label: "Features", href: "/frontend_superadmin/superadmin_features", icon: Shield },
-      { label: "Integrations", href: "/frontend_superadmin/superadmin_integrations", icon: LinkIcon }
+      { label: "Integrations", href: "/frontend_superadmin/superadmin_integrations", icon: LinkIcon },
+      { label: "Reports", href: "/frontend_superadmin/superadmin_reports", icon: FileText }
     ]
   },
   {
