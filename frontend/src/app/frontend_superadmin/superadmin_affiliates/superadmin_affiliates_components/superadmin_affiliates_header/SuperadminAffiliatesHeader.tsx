@@ -1,7 +1,7 @@
+'use client';
 import { SUPERADMIN_AFFILIATE_ALL_FILTER, SUPERADMIN_AFFILIATE_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 import type { AffiliateStatusFilter } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_types/SuperadminAffiliatesTypes';
 // RESPONSIBILITY: Renders the page title, search, status filter, date-range filter, and Add CTA for the Affiliates page.
-'use client';
 import { useTranslations } from 'next-intl';
 
 import { Users, Plus, Search } from 'lucide-react';

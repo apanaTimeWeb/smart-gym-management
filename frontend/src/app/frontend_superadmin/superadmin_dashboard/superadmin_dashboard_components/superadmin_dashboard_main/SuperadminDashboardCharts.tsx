@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching.
 'use client';
+// RESPONSIBILITY: Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import dynamic from 'next/dynamic';

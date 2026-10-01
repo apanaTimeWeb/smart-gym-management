@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin features V1 Platform release log, Rollback readiness view.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin features V1 Platform release log, Rollback readiness view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

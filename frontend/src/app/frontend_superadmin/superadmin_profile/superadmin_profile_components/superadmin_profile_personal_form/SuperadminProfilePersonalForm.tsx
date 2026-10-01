@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
 'use client';
+// RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Orchestrates the async Superadmin tenant-data export request and completion feedback.
 'use client';
-
+// RESPONSIBILITY: Orchestrates the async Superadmin tenant-data export request and completion feedback.
 import { SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_constants/SuperadminProfileConstants';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -25,7 +24,7 @@ import { superadminProfileDataExportApi } from '@/app/frontend_superadmin/supera
 export function useSuperadminProfileDataExportMutation() {
   const t = useTranslations('superadmin_profile');
   const idempotencyKeyRef = useRef<string | null>(null);
-  const [completionState, setCompletionState] = useState<(typeof SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES)[keyof typeof SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES]>(SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES.IDLE);
+  const [completionState, setCompletionState] = useState<(typeof SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES)[number]>('idle');
   const activeExportRef = useRef(false);
 
   const mutation = useMutation({
@@ -34,7 +33,7 @@ export function useSuperadminProfileDataExportMutation() {
       if (response.success) {
         idempotencyKeyRef.current = null;
         activeExportRef.current = true;
-        setCompletionState(SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES.STARTED);
+        setCompletionState('started');
         toast.success(response.message, { id: 'superadmin-profile-data-export-success' });
       } else {
         toast.error(response.message, { id: 'superadmin-profile-data-export-error' });
@@ -48,12 +47,12 @@ export function useSuperadminProfileDataExportMutation() {
   useSuperadminSocketEvent('export.completed', () => {
     if (!activeExportRef.current) return;
     activeExportRef.current = false;
-    setCompletionState(SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES.COMPLETED);
+    setCompletionState('completed');
     toast.success(t('ui.export_completed_success'), { id: 'superadmin-profile-data-export-completed' });
   });
 
   const requestExport = async (): Promise<void> => {
-    setCompletionState(SUPERADMIN_PROFILE_DATA_EXPORT_COMPLETION_STATES.IDLE);
+    setCompletionState('idle');
     activeExportRef.current = false;
     idempotencyKeyRef.current ??= crypto.randomUUID();
     await mutation.mutateAsync(idempotencyKeyRef.current);

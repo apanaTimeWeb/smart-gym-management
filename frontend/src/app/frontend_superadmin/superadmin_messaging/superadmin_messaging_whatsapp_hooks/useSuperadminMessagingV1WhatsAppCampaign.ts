@@ -1,12 +1,12 @@
+'use client';
 // DATA FLOW: Inputs enter useSuperadminMessagingV1WhatsAppCampaign, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns WhatsApp campaign creation mutation for the Superadmin tenant-contact center.
-'use client';
 import { useRef } from 'react';
 
 import { SUPERADMIN_MESSAGING_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_query_keys/SuperadminMessagingQueryKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createWhatsAppCampaign } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi';
+import { createWhatsAppCampaign } from "@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi";
 import { SuperadminWhatsAppCreateCampaignPayloadSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingV1WhatsAppSchema';
 
 /**

@@ -1,6 +1,6 @@
+'use client';
 import { SUPERADMIN_AFFILIATE_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 // RESPONSIBILITY: Renders the status badge pill for a single affiliate. Purely presentational — maps AffiliateStatus to design system colors.
-'use client';
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminAffiliateStatusBadgeProps } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_types/SuperadminAffiliatesAffiliateStatusBadgeTypes';

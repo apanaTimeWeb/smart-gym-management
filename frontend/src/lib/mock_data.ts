@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Centralized mock data for offline/demo mode.
 // DATA FLOW: apiFetch → getMockResponse() → hardcoded data when backend is unreachable.
-import { mockFlags, mockNotes } from '@/app/superadmin/features/features_mocks/handlers/SuperadminFeaturesMockHandlers';
+import { mockFlags, mockNotes } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_mocks/superadmin_features_mocks_handlers/SuperadminFeaturesMockHandlers';
 // Every module's API path is matched here and returns a realistic ApiResponse<T>.
 
 // ─── helpers ─────────────────────────────────────────────────────────────────

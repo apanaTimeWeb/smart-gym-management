@@ -51,6 +51,7 @@ export function proxy(req: NextRequest) {
 
   // Public routes: auth pages, landing, Next.js internals
   const isPublicRoute =
+    pathname.startsWith("/frontend_auth/auth") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/landing") ||
     pathname.startsWith("/frontend_public") ||
@@ -67,7 +68,7 @@ export function proxy(req: NextRequest) {
 
   if (isPublicRoute) {
     // Redirect authenticated users away from /auth/login to their dashboard
-    if (pathname.startsWith("/auth/login") && user) {
+    if ((pathname.startsWith("/auth/login") || pathname.startsWith("/frontend_auth/auth/login")) && user) {
       return NextResponse.redirect(new URL(getDashboardForRole(user.role), req.url));
     }
     return NextResponse.next();
@@ -84,7 +85,7 @@ export function proxy(req: NextRequest) {
   const isAdminRoute = ROUTES.ADMIN_PREFIXES.some(p => pathname.startsWith(p));
   const isManagerRoute = ROUTES.MANAGER_PREFIXES.some(p => pathname.startsWith(p));
   const isTrainerRoute = ROUTES.TRAINER_PREFIXES.some(p => pathname.startsWith(p));
-  const isSuperadminRoute = pathname.startsWith("/superadmin");
+  const isSuperadminRoute = pathname.startsWith("/superadmin") || pathname.startsWith("/frontend_superadmin");
 
   if (isAdminRoute && user.role !== "admin") {
     return NextResponse.redirect(new URL(getDashboardForRole(user.role), req.url));

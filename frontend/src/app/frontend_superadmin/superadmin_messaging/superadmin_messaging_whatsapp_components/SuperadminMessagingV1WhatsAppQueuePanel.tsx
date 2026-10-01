@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppQueuePanel responsibility defined by this module feature.
 'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppQueuePanel responsibility defined by this module feature.
 import { SUPERADMIN_WHATSAPP_QUEUE_ACTION_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 import { useTranslations } from 'next-intl';
 
@@ -87,7 +87,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
                   </td>
                   <td className="px-3 py-3 text-secondary" data-mobile-label={t('ui.mobile_gym')}>{item.recipient.tenantName}</td>
                   <td className="px-3 py-3" data-mobile-label={t('ui.mobile_status')}>
-                    <span data-testid={`superadmin_messaging-whatsapp-queue-status-${item.id}`} className={`rounded-full px-2 py-1 text-xs font-semibold uppercase ${getSuperadminMessagingStatusBadgeClasses(item.status)}`}>{item.status}</span>
+                    <span data-testid={`superadmin_messaging-whatsapp-queue-status-${item.recipient.id}`} className={`rounded-full px-2 py-1 text-xs font-semibold uppercase ${getSuperadminMessagingStatusBadgeClasses(item.status)}`}>{item.status}</span>
                   </td>
                 </tr>))}
             </tbody>

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 

@@ -1,6 +1,7 @@
-// RESPONSIBILITY: Renders one feature flag's change history from the feature-owned API/query boundary.
 'use client';
+// RESPONSIBILITY: Renders one feature flag's change history from the feature-owned API/query boundary.
 import { useTranslations } from 'next-intl';
+import Tooltip from "@/components/ui/Tooltip";
 
 import { Clock, Loader2, X } from 'lucide-react';
 

@@ -1,6 +1,6 @@
+'use client';
 import { SUPERADMIN_AFFILIATE_ALL_FILTER } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 // DATA FLOW: Superadmin UI → useSuperadminAffiliatesPage → Superadmin module API/state → consuming component
-'use client';
 // RESPONSIBILITY: useSuperadminAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
 // DATA FLOW: superadminApi → useSuperadminAffiliatesPage → SuperadminAffiliatesMain
 import { useState, useMemo, useCallback } from 'react';

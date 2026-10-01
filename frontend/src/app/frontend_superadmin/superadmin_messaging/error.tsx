@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the superadmin_messaging route-segment error fallback and provides the documented recovery path.
 'use client';
+// RESPONSIBILITY: Renders the superadmin_messaging route-segment error fallback and provides the documented recovery path.
 import type { SuperadminNextErrorProps } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_types/SuperadminLayoutInfrastructureTypes';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';

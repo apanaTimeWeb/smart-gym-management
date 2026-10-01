@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: date-range controls → local selection state → pure date range utility → onRangeChange callback.
 /**
  * Owns interaction state for DateRangePicker.
  * Inputs: parent `onRangeChange` callback. Output: selected option and custom dates plus normalized range handlers.
  * Side effects: invokes the callback when a complete range is selected; no server state is owned here.
  */
-'use client';
 import { useState } from 'react';
 
 import { getDateRange, serializeSuperadminCustomDateRange } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_utils/SuperadminMessagingDateRangeUtils';

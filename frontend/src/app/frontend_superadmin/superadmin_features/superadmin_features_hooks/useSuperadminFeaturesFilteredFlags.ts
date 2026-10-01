@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Owns the presentation-derived feature-flag filter so the root view remains layout-only.
 'use client';
-
+// RESPONSIBILITY: Owns the presentation-derived feature-flag filter so the root view remains layout-only.
 import { useMemo } from 'react';
 
 import type { FeatureFlag } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_types/SuperadminFeaturesTypes';

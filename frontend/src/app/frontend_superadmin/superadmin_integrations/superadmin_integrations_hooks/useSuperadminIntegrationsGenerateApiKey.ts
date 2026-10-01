@@ -1,3 +1,4 @@
+'use client';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +8,6 @@ import type { SuperadminGenerateApiKeyMutationInput } from '@/app/frontend_super
 
 // DATA FLOW: Generate API Key form → mutation input → module API client/MSW → TanStack Query invalidation + one-time secret result.
 // RESPONSIBILITY: Owns API-key generation mutation state, idempotency, and integrations-query reconciliation. No JSX.
-'use client';
 
 
 

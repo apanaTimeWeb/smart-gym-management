@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: MSW/Backend → fetchDashboardBusinessOverview() → TanStack Query → Business Overview UI
 // RESPONSIBILITY: Owns query orchestration for Business Overview. No JSX.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_DASHBOARD_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_query_keys/SuperadminDashboardQueryKeys';
-import { fetchDashboardBusinessOverview } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_api/SuperadminDashboardApi';
+import { superadminDashboardApi } from "@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_api/SuperadminDashboardApi";
 
 /**
  * Purpose: Owns query orchestration for Business Overview. No JSX.
@@ -18,5 +18,5 @@ import { fetchDashboardBusinessOverview } from '@/app/frontend_superadmin/supera
  * @edge-case Preserves documented loading, error, retry, repeated-action, and empty-state behavior where applicable.
  */
 export function useSuperadminDashboardV1() {
-    return useQuery({ queryKey: SUPERADMIN_DASHBOARD_QUERY_KEYS.businessOverview, queryFn: fetchDashboardBusinessOverview });
+    return useQuery({ queryKey: SUPERADMIN_DASHBOARD_QUERY_KEYS.businessOverview, queryFn: () => superadminDashboardApi.fetchDashboard() });
 }

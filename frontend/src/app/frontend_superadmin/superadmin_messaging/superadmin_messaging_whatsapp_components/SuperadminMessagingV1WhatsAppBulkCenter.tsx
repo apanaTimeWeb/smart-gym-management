@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppBulkCenter responsibility defined by this module feature.
 'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppBulkCenter responsibility defined by this module feature.
 import { SUPERADMIN_WHATSAPP_QUEUE_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';

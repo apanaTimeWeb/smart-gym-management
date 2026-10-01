@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the dedicated empty state for the Superadmin developer access list.
 'use client';
+// RESPONSIBILITY: Renders the dedicated empty state for the Superadmin developer access list.
 import { useTranslations } from 'next-intl';
 
 import EmptyState from '@/components/ui/EmptyState';

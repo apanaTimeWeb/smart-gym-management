@@ -1,5 +1,5 @@
 import type { SuperadminMessagingComposeValues } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingComposeTypes';
-import type { SuperadminMessagingTenant } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingTypes';
+import type { MessagingTenant } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingTypes';
 
 /**
  * @description Returns the messaging compose submission callback consumed by the compose modal.
@@ -12,7 +12,7 @@ import type { SuperadminMessagingTenant } from '@/app/frontend_superadmin/supera
  * @dependencies Uses only approved feature-owned APIs/hooks/state plus explicitly approved application infrastructure.
  * @edge-case Preserves loading, error, retry, cancellation, and repeated-action behavior without leaking business state into sibling modules.
  */
-export function useSuperadminMessagingCompose(tenants: SuperadminMessagingTenant[]) {
+export function useSuperadminMessagingCompose(tenants: MessagingTenant[]) {
   return (values: SuperadminMessagingComposeValues) => {
     const tenant = tenants.find((candidate) => candidate.id === values.tenantId);
     return tenant ? { ...values, tenantName: tenant.name } : null;

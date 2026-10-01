@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 

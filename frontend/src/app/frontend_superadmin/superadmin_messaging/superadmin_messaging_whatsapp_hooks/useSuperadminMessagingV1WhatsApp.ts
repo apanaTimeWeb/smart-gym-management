@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: WhatsApp API/MSW → query state → template/audience/queue workflow → Superadmin messaging UI
 // RESPONSIBILITY: Orchestrate Superadmin tenant-level WhatsApp bulk messaging mutations and query state.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_MESSAGING_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_query_keys/SuperadminMessagingQueryKeys';
-import { fetchWhatsAppBulkCenter } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi';
+import { fetchWhatsAppBulkCenter } from "@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi";
 
 /**
  * Purpose: Orchestrate Superadmin tenant-level WhatsApp bulk messaging mutations and query state.
@@ -20,6 +20,6 @@ import { fetchWhatsAppBulkCenter } from '@/app/frontend_superadmin/superadmin_me
 export function useSuperadminMessagingV1WhatsApp() {
     return useQuery({
         queryKey: SUPERADMIN_MESSAGING_QUERY_KEYS.whatsappBulkCenter,
-        queryFn: fetchWhatsAppBulkCenter,
+        queryFn: () => fetchWhatsAppBulkCenter(),
     });
 }

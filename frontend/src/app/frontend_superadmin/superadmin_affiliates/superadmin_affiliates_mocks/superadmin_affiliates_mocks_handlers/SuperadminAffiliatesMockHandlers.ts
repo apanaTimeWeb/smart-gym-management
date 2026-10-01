@@ -1,6 +1,5 @@
 import { SUPERADMIN_AFFILIATE_ALL_FILTER, SUPERADMIN_AFFILIATE_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 // RESPONSIBILITY: Owns MSW handlers for Superadmin affiliate list and mutation contracts.
-import { SUPERADMIN_AFFILIATE_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 

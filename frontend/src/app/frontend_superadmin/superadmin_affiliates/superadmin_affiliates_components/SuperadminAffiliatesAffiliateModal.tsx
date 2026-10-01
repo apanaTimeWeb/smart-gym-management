@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls.
 'use client';
+// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls.
 import { useTranslations } from 'next-intl';
 import React from 'react';
 

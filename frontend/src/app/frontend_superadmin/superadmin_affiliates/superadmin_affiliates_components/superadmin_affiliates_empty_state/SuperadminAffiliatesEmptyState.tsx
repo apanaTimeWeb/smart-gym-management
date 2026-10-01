@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the empty state UI for the Affiliates table when no affiliates exist. Shows icon, message, and CTA to add first affiliate.
 'use client';
+// RESPONSIBILITY: Renders the empty state UI for the Affiliates table when no affiliates exist. Shows icon, message, and CTA to add first affiliate.
 import { useTranslations } from 'next-intl';
 
 import { Users } from 'lucide-react';

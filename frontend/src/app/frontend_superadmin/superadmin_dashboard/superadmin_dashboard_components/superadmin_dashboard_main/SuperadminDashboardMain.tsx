@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Orchestrates the Superadmin Dashboard layout and child data-view sections. No API calls; server state comes from the owning hook.
 'use client';
+// RESPONSIBILITY: Orchestrates the Superadmin Dashboard layout and child data-view sections. No API calls; server state comes from the owning hook.
 import { useTranslations } from 'next-intl';
 
 import { SuperadminDashboardCharts } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_components/superadmin_dashboard_main/SuperadminDashboardCharts';

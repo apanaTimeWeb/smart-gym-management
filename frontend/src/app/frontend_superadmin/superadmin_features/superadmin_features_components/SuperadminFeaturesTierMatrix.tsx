@@ -1,11 +1,34 @@
-// RESPONSIBILITY: Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
 'use client';
+// RESPONSIBILITY: Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
 import { useTranslations } from 'next-intl';
 
 import { Layers, Check, Minus } from 'lucide-react';
 
-import { FEATURES_LIST, SUPERADMIN_FEATURE_TIER_MATRIX, TIERS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_constants/SuperadminFeaturesTierMatrixConstants';
+import { SUPERADMIN_FEATURE_TIER_IDS } from "@/app/frontend_superadmin/superadmin_features/superadmin_features_constants/SuperadminFeaturesTierMatrixConstants";
 
+const TIERS = [
+  { id: 'basic', name: 'Basic' },
+  { id: 'pro', name: 'Pro' },
+  { id: 'enterprise', name: 'Enterprise' }
+] as const;
+
+const FEATURES_LIST = [
+  { id: 'hr', name: 'HR Management' },
+  { id: 'payroll', name: 'Payroll' },
+  { id: 'custom_domain', name: 'Custom Domain' },
+  { id: 'whitelabel', name: 'White-label App' },
+  { id: 'analytics', name: 'Advanced Analytics' },
+  { id: 'franchise', name: 'Franchise Management' }
+] as const;
+
+const SUPERADMIN_FEATURE_TIER_MATRIX: Record<string, Record<string, boolean>> = {
+  hr: { basic: true, pro: true, enterprise: true },
+  payroll: { basic: false, pro: true, enterprise: true },
+  custom_domain: { basic: false, pro: true, enterprise: true },
+  whitelabel: { basic: false, pro: false, enterprise: true },
+  analytics: { basic: false, pro: true, enterprise: true },
+  franchise: { basic: false, pro: false, enterprise: true }
+};
 /**
  * @description Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
  * @dependencies Consumes feature-local state/data through its declared props and hooks; it does not own unrelated business state.
@@ -36,7 +59,7 @@ export default function SuperadminFeaturesTierMatrix() {
               <tr key={feature.id} className="motion-safe:transition-colors hover:bg-surface-hover" data-testid={`superadmin_features-features-tier-matrix-item-feature-id-2-${String(feature.id)}`}>
                 <th scope="row" className="border-r border-border p-4 text-left text-sm font-medium text-primary">{feature.name}</th>
                 {TIERS.map((tier) => {
-                  const enabled = SUPERADMIN_FEATURE_TIER_MATRIX[feature.id][tier.id];
+                  const enabled = SUPERADMIN_FEATURE_TIER_MATRIX[feature.id]?.[tier.id] ?? false;
                   return (
                     <td key={tier.id} className="border-r border-border p-4 text-center last:border-r-0" data-mobile-label={t('ui.mobile_feature')}>
                       <span data-testid={`superadmin_features-tier-${feature.id}-${tier.id}`} className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border ${enabled ? 'border-border bg-success-bg text-success' : 'border-border bg-surface-highlight text-disabled'}`} aria-label={t('ui.a11y_feature_tier', { feature: feature.name, status: enabled ? t('ui.available') : t('ui.not_available'), tier: tier.name })}>

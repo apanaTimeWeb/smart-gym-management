@@ -1,7 +1,7 @@
+'use client';
 import type { SuperadminFeaturesReleaseNotesPanelProps } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_types/SuperadminFeaturesReleaseNotesPanelTypes';
 
 // RESPONSIBILITY: Renders the feature-owned release-note history and publication form using parent-owned form state and mutation handlers.
-'use client';
 
 import { useTranslations } from 'next-intl';
 import { Loader2, Send } from 'lucide-react';

@@ -1,6 +1,6 @@
+'use client';
 // DATA FLOW: Inputs enter useSuperadminFeaturesFeatureHistory, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns server-state loading for feature-flag change history and exposes query state to the history view.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_FEATURES_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_query_keys/SuperadminFeaturesQueryKeys';
@@ -19,7 +19,7 @@ import { featuresApi } from '@/app/frontend_superadmin/superadmin_features/super
  */
 export function useSuperadminFeaturesFeatureHistory(flagId: string | null) {
   return useQuery({
-    queryKey: SUPERADMIN_FEATURES_QUERY_KEYS.history(flagId),
+    queryKey: SUPERADMIN_FEATURES_QUERY_KEYS.history(flagId ?? ''),
     queryFn: () => featuresApi.fetchFeatureFlagHistory(flagId as string),
     enabled: Boolean(flagId),
   });

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin messaging V1 Template library view.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin messaging V1 Template library view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';
@@ -41,19 +41,19 @@ export default function SuperadminMessagingV1TemplateLibraryPanel({ data }: Supe
         </tr>
       </thead>
       <tbody>
-        {data.templates.map((t) => <tr key={t.name} className="border-b border-border" data-testid={`superadmin_messaging-messaging-v1-template-library-panel-item-t-name-2-${String(t.name)}`}>
+        {data.templates.map((templateItem) => <tr key={templateItem.name} className="border-b border-border" data-testid={`superadmin_messaging-messaging-v1-template-library-panel-item-t-name-2-${String(templateItem.name)}`}>
           <td className="px-3 py-3 font-medium text-primary" data-mobile-label={t('ui.mobile_template')}>
-            {t.name}
+            {templateItem.name}
           </td>
           <td className="px-3 py-3 text-secondary" data-mobile-label={t('ui.mobile_channels')}>
-            {t.channel}
+            {templateItem.channel}
           </td>
           <td className="px-3 py-3 text-secondary" data-mobile-label={t('ui.mobile_uses')}>
-            {formatNumber(t.uses)}
+            {formatNumber(templateItem.uses)}
           </td>
           <td className="px-3 py-3" data-mobile-label={t('ui.mobile_status')}>
-            <span data-testid={`superadmin_messaging-template-status-${t.id}`} className={getSuperadminMessagingStatusBadgeClasses(t.status)}>
-              {t.status}
+            <span data-testid={`superadmin_messaging-template-status-${templateItem.name}`} className={getSuperadminMessagingStatusBadgeClasses(templateItem.status)}>
+              {templateItem.status}
             </span>
           </td>
         </tr>)}

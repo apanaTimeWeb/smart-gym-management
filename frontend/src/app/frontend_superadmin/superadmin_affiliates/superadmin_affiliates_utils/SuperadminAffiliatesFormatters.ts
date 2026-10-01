@@ -42,6 +42,7 @@ export function superadminAffiliatesMaskEmail(value: string | null | undefined):
   if (!value) return '—';
   const [local, domain] = value.split('@');
   if (!domain) return '—';
+  if (!local) return "—";
   const visible = local.slice(0, Math.min(2, local.length));
   return `${visible}***@${domain}`;
 }

@@ -1,8 +1,7 @@
+'use client';
 import type { SuperadminAnalyticsMainErrorStateProps } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsMainErrorStateTypes';
 
 // RESPONSIBILITY: Renders the analytics route error state with a recoverable retry action.
-'use client';
-
 import { useTranslations } from 'next-intl';
 
 

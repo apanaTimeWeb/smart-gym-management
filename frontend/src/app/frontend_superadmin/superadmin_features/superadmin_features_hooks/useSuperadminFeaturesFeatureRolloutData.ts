@@ -1,6 +1,6 @@
+'use client';
 // DATA FLOW: Inputs enter useSuperadminFeaturesFeatureRolloutData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns tenant-list server state for the Feature Flag canary rollout modal.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_FEATURES_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_query_keys/SuperadminFeaturesQueryKeys';

@@ -1,7 +1,6 @@
+'use client';
 // DATA FLOW: Profile route → page hook → profile query + dedicated mutation hooks → view components.
 // RESPONSIBILITY: Orchestrates profile server state, tab state, mutation intents, and cache reconciliation.
-'use client';
-
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 

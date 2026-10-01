@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: MSW/Backend → fetchMessagingTemplateInsights() → TanStack Query → Message Templates & Campaign Results UI
 // RESPONSIBILITY: Owns query orchestration for Message Templates & Campaign Results. No JSX.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_MESSAGING_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_query_keys/SuperadminMessagingQueryKeys';
-import { fetchMessagingTemplateInsights } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi';
+import { superadminMessagingApi } from "@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi";
 
 /**
  * Purpose: Owns query orchestration for Message Templates & Campaign Results. No JSX.
@@ -18,5 +18,5 @@ import { fetchMessagingTemplateInsights } from '@/app/frontend_superadmin/supera
  * @edge-case Preserves documented loading, error, retry, repeated-action, and empty-state behavior where applicable.
  */
 export function useSuperadminMessagingV1() {
-    return useQuery({ queryKey: SUPERADMIN_MESSAGING_QUERY_KEYS.templateInsights, queryFn: fetchMessagingTemplateInsights });
+    return useQuery({ queryKey: SUPERADMIN_MESSAGING_QUERY_KEYS.templateInsights, queryFn: () => superadminMessagingApi.fetchMessages() });
 }

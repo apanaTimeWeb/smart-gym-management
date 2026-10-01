@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the analytics route skeleton while the primary query is pending.
 'use client';
-
+// RESPONSIBILITY: Renders the analytics route skeleton while the primary query is pending.
 /**
  * @description Provides layout-matching skeletons for the analytics header, KPI cards, and charts.
  * @dependencies Uses only semantic skeleton theme tokens.

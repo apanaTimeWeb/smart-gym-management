@@ -1,6 +1,6 @@
+'use client';
 // DATA FLOW: Superadmin UI → useSuperadminAffiliatesMutation → TanStack Query mutation → caller callback.
 // RESPONSIBILITY: Provides the Affiliate feature's shared mutation lifecycle without owning server data.
-'use client';
 import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 

@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: MSW/Backend → fetchAnalyticsRetentionInsights() → TanStack Query → Customer Retention & Growth Insights UI
 // RESPONSIBILITY: Owns query orchestration for Customer Retention & Growth Insights. No JSX.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_ANALYTICS_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_query_keys/SuperadminAnalyticsQueryKeys';
-import { fetchAnalyticsRetentionInsights } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_api/SuperadminAnalyticsApi';
+import { analyticsApi } from "@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_api/SuperadminAnalyticsApi";
 
 /**
  * Purpose: Owns query orchestration for Customer Retention & Growth Insights. No JSX.
@@ -18,5 +18,5 @@ import { fetchAnalyticsRetentionInsights } from '@/app/frontend_superadmin/super
  * @edge-case Preserves documented loading, error, retry, repeated-action, and empty-state behavior where applicable.
  */
 export function useSuperadminAnalyticsV1() {
-    return useQuery({ queryKey: SUPERADMIN_ANALYTICS_QUERY_KEYS.retentionInsights, queryFn: fetchAnalyticsRetentionInsights });
+    return useQuery({ queryKey: SUPERADMIN_ANALYTICS_QUERY_KEYS.retentionInsights, queryFn: () => analyticsApi.fetchRevenueMetrics() });
 }

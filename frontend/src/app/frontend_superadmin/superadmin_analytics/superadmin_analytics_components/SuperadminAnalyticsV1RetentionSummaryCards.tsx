@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 

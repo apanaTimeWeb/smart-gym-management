@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the authenticated Superadmin data-export settings surface without owning transport or mutation state.
 'use client';
-
+// RESPONSIBILITY: Renders the authenticated Superadmin data-export settings surface without owning transport or mutation state.
 import { useTranslations } from 'next-intl';
 import { DownloadCloud, Loader2, MailCheck } from 'lucide-react';
 

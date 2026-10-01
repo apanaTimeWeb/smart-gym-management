@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
 'use client';
+// RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 

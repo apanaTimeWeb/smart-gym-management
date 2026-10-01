@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin dashboard V1 DashboardBusinessOverviewHeader.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin dashboard V1 DashboardBusinessOverviewHeader.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminDashboardV1SectionProps } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_types/SuperadminDashboardV1Types';

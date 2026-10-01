@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Orchestrates the Superadmin integrations page and its focused child sections.
 'use client';
+// RESPONSIBILITY: Orchestrates the Superadmin integrations page and its focused child sections.
 import { useTranslations } from 'next-intl';
 
 import SuperadminIntegrationsConnectionHealthPanel from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_components/SuperadminIntegrationsConnectionHealthPanel';

@@ -1,6 +1,5 @@
+'use client';
 // RESPONSIBILITY: Orchestrates the Product Management feature tabs and composes child views; it owns no direct API calls or business calculations.
-
-"use client";
 
 import SuperadminFeaturesFeatureHistoryModal from '@/app/frontend_superadmin/superadmin_features/superadmin_features_components/SuperadminFeaturesFeatureHistoryModal';
 import SuperadminFeaturesFeatureRolloutModal from '@/app/frontend_superadmin/superadmin_features/superadmin_features_components/SuperadminFeaturesFeatureRolloutModal';

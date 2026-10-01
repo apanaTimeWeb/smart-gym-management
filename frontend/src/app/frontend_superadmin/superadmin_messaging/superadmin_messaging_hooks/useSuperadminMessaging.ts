@@ -1,7 +1,7 @@
+'use client';
 import { SUPERADMIN_MESSAGING_ALL_FILTER } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 // DATA FLOW: URL state → debounced filters → Superadmin Messaging API → TanStack Query → Messaging UI; mutations update the module-owned server state.
 // RESPONSIBILITY: Owns server-state fetching and mutations for the Superadmin tenant messaging workspace. No JSX.
-'use client';
 
 import { SUPERADMIN_MESSAGING_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_query_keys/SuperadminMessagingQueryKeys';
 import { useMemo } from 'react';
@@ -33,7 +33,7 @@ export function useSuperadminMessaging() {
   const { getParam, setParams } = useUrlState();
   const tab = getParam('tab', 'messages') as MessagingTab;
   const search = getParam('search', '');
-  const channel = getParam('channel', SUPERADMIN_MESSAGING_ALL_FILTER) as MessageChannel | SUPERADMIN_MESSAGING_ALL_FILTER;
+  const channel = getParam('channel', SUPERADMIN_MESSAGING_ALL_FILTER) as MessageChannel | typeof SUPERADMIN_MESSAGING_ALL_FILTER;
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
   const currentPage = Math.max(Number(getParam('page', '1')) || 1, 1);
@@ -70,7 +70,7 @@ export function useSuperadminMessaging() {
 
   const setTab = (value: MessagingTab) => setParams({ tab: value });
   const setSearch = (value: string) => setParams({ search: value, page: '1' });
-  const setChannel = (value: MessageChannel | SUPERADMIN_MESSAGING_ALL_FILTER) => setParams({ channel: value === SUPERADMIN_MESSAGING_ALL_FILTER ? null : value, page: '1' });
+  const setChannel = (value: MessageChannel | typeof SUPERADMIN_MESSAGING_ALL_FILTER) => setParams({ channel: value === SUPERADMIN_MESSAGING_ALL_FILTER ? null : value, page: '1' });
   const setRange = (start: string, end: string) => setParams({ startDate: start || null, endDate: end || null, page: '1' });
   const setPage = (page: number) => setParams({ page: String(Math.max(page, 1)) });
 

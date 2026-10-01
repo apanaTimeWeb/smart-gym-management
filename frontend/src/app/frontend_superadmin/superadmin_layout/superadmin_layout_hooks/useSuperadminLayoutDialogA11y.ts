@@ -62,10 +62,10 @@ useEffect(() => {
       const active = document.activeElement;
       if (event.shiftKey && active === first) {
         event.preventDefault();
-        last.focus();
+        last?.focus();
       } else if (!event.shiftKey && active === last) {
         event.preventDefault();
-        first.focus();
+        first?.focus();
       }
     };
 

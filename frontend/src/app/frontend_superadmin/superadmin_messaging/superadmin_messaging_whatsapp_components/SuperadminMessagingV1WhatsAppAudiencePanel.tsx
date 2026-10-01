@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppAudiencePanel responsibility defined by this module feature.
 'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppAudiencePanel responsibility defined by this module feature.
 import { useTranslations } from 'next-intl';
 
 import { Building2, UsersRound } from 'lucide-react';

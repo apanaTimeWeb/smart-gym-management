@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the SuperadminMessagingDateRangePicker control; date calculation and state are isolated in the adjacent hook/utility.
 'use client';
+// RESPONSIBILITY: Renders the SuperadminMessagingDateRangePicker control; date calculation and state are isolated in the adjacent hook/utility.
 import { useTranslations } from 'next-intl';
 
 import { Calendar } from 'lucide-react';

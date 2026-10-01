@@ -1,6 +1,7 @@
-// RESPONSIBILITY: Renders the Superadmin dashboard V1 Why monthly income changed, Top & at-risk gyms, Critical platform alerts view.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin dashboard V1 Why monthly income changed, Top & at-risk gyms, Critical platform alerts view.
 import { useTranslations } from 'next-intl';
+import Tooltip from "@/components/ui/Tooltip";
 import { useLocale } from 'next-intl';
 
 import { ArrowDown, ArrowUp, CircleAlert } from 'lucide-react';

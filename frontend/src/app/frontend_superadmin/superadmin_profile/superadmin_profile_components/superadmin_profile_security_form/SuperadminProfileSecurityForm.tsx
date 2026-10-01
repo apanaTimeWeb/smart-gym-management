@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Security settings form — change password and toggle 2FA.
 'use client';
+// RESPONSIBILITY: Security settings form — change password and toggle 2FA.
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';

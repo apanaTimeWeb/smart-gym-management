@@ -1,10 +1,10 @@
+'use client';
 // DATA FLOW: MSW/Backend → fetchFeatureRolloutInsights() → TanStack Query → Feature Rollouts & Release History UI
 // RESPONSIBILITY: Owns query orchestration for Feature Rollouts & Release History. No JSX.
-'use client';
 import { useQuery } from '@tanstack/react-query';
 
 import { SUPERADMIN_FEATURES_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_query_keys/SuperadminFeaturesQueryKeys';
-import { fetchFeatureRolloutInsights } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_api/SuperadminFeaturesApi';
+import { featuresApi } from "@/app/frontend_superadmin/superadmin_features/superadmin_features_api/SuperadminFeaturesApi";
 
 /**
  * Purpose: Owns query orchestration for Feature Rollouts & Release History. No JSX.
@@ -18,5 +18,5 @@ import { fetchFeatureRolloutInsights } from '@/app/frontend_superadmin/superadmi
  * @edge-case Preserves documented loading, error, retry, repeated-action, and empty-state behavior where applicable.
  */
 export function useSuperadminFeaturesV1() {
-    return useQuery({ queryKey: SUPERADMIN_FEATURES_QUERY_KEYS.rolloutInsights, queryFn: fetchFeatureRolloutInsights });
+    return useQuery({ queryKey: SUPERADMIN_FEATURES_QUERY_KEYS.rolloutInsights, queryFn: () => featuresApi.fetchFeatures() });
 }

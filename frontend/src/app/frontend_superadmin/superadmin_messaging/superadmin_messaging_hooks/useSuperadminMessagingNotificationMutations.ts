@@ -1,7 +1,6 @@
+'use client';
 // DATA FLOW: Notification UI intent → stable idempotency key → Messaging API → TanStack Query reconciliation → visible notification state.
 // RESPONSIBILITY: Owns notification read mutations and authoritative cache reconciliation for the Superadmin Messaging feature.
-'use client';
-
 import { useRef } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,6 +11,7 @@ import { superadminMessagingApi } from '@/app/frontend_superadmin/superadmin_mes
 import type { SuperadminNotification } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingTypes';
 import type { ApiResponse } from '@/lib/api';
 
+type NotificationsQueryData = ApiResponse<SuperadminNotification[]>;
 
 /** Reconciles one authoritative notification response into the existing Query cache without creating a second server-data store. */
 function reconcileReadNotification(

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useSuperadminAffiliatesPage. No business logic here.
 'use client';
+// RESPONSIBILITY: Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useSuperadminAffiliatesPage. No business logic here.
 import { useTranslations } from 'next-intl';
 
 import { SuperadminAffiliatesAffiliateModal } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_components/SuperadminAffiliatesAffiliateModal';
@@ -19,7 +19,7 @@ import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superad
  */
 export default function SuperadminAffiliatesMain() {
   const t = useTranslations('superadmin_affiliates');
-    const { affiliates, searchQuery, setSearchQuery, statusFilter, setStatusFilter, activeTab, setActiveTab, isModalOpen, setIsModalOpen, handleCloseModal, form, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, openEditModal, totalAffiliates, totalCommission, payoutHistory, payoutHistoryLoading, payoutHistoryError, retryPayoutHistory, fetchState, isMutating, isError, startDate, setStartDate, endDate, setEndDate, currentPage, totalPages, setPage, } = useSuperadminAffiliatesPage();
+    const { affiliates, searchQuery, setSearchQuery, statusFilter, setStatusFilter, activeTab, setActiveTab, isModalOpen, setIsModalOpen, handleCloseModal, form, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, openEditModal, totalAffiliates, totalCommission, payoutHistory, payoutHistoryLoading, payoutHistoryError, retryPayoutHistory, fetchState, isMutating, isError, startDate, setStartDate, endDate, setEndDate, currentPage, totalPages, setPage, editingAffiliate, } = useSuperadminAffiliatesPage();
     if (fetchState === 'pending')
         return (<div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48"/>

@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin module error fallback and exposes the documented recovery action without leaking internal error details.
 'use client';
-
+// RESPONSIBILITY: Renders the Superadmin module error fallback and exposes the documented recovery action without leaking internal error details.
 import { Component } from 'react';
 import { useTranslations } from 'next-intl';
 

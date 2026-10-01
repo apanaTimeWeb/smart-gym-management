@@ -1,7 +1,7 @@
+'use client';
 import type { SuperadminFeaturesHeaderProps } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_types/SuperadminFeaturesHeaderTypes';
 
 // RESPONSIBILITY: Renders the Product Management heading and feature-owned tab navigation without owning business state or mutations.
-'use client';
 
 import { useTranslations } from 'next-intl';
 

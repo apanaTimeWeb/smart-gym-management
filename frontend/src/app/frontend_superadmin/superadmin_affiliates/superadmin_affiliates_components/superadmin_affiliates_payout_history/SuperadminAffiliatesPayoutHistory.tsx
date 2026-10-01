@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
 'use client';
+// RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
 import { SUPERADMIN_AFFILIATE_PAYOUT_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_constants/SuperadminAffiliatesConstants';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';

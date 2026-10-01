@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin dashboard V1 DashboardRetentionSummary summary cards.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin dashboard V1 DashboardRetentionSummary summary cards.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 

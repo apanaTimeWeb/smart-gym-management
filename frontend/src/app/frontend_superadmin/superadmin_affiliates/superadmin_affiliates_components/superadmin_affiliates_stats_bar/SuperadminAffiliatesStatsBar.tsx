@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the KPI stat cards (Total Affiliates, Total Commission Paid) for the Affiliates page. Purely presentational — receives data via props.
 'use client';
+// RESPONSIBILITY: Renders the KPI stat cards (Total Affiliates, Total Commission Paid) for the Affiliates page. Purely presentational — receives data via props.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 

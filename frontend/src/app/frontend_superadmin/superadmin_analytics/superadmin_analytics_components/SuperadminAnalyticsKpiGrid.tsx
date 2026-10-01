@@ -1,8 +1,7 @@
+'use client';
 import type { SuperadminAnalyticsKpiGridProps } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsKpiGridTypes';
 
 // RESPONSIBILITY: Renders the read-only analytics KPI cards from the feature view-model.
-'use client';
-
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

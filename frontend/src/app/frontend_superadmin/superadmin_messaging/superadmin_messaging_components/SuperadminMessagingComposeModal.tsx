@@ -1,6 +1,6 @@
+'use client';
 import { SUPERADMIN_MESSAGING_CHANNEL_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 // RESPONSIBILITY: Owns Superadmin Messaging form presentation and client-side Zod validation.
-'use client';
 import { useTranslations } from 'next-intl';
 import { useForm, Controller } from 'react-hook-form';
 

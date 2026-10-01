@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-const RevenueHistoryPointSchema = z.object({
+export const RevenueHistoryPointSchema = z.object({
     month: z.string(),
     amount: z.number(),
 }).passthrough();
 
-const UserGrowthPointSchema = z.object({
+export const UserGrowthPointSchema = z.object({
     month: z.string(),
     count: z.number(),
 }).passthrough();

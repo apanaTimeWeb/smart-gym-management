@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin notification bell UI. Notification business data access is isolated in useSuperadminMessagingNotifications.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin notification bell UI. Notification business data access is isolated in useSuperadminMessagingNotifications.
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';

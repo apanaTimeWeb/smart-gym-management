@@ -1,7 +1,7 @@
+'use client';
 import type { SuperadminAnalyticsSecondaryMetricsProps } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsSecondaryMetricsTypes';
 
 // RESPONSIBILITY: Renders the LTV and CAC secondary analytics cards from the feature view-model.
-'use client';
 
 import { Activity, IndianRupee } from 'lucide-react';
 import { useTranslations } from 'next-intl';

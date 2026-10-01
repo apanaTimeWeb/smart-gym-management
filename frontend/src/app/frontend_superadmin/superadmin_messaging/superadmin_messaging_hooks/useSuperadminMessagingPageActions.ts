@@ -1,7 +1,6 @@
+'use client';
 // DATA FLOW: Messaging UI intent → tenant relation lookup → Messaging mutation boundary → API/Query reconciliation → visible state.
 // RESPONSIBILITY: Owns send-message and notification-read workflows for the root Messaging view.
-'use client';
-
 import toast from 'react-hot-toast';
 
 import { useSuperadminMessaging } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_hooks/useSuperadminMessaging';

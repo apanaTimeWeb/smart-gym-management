@@ -1,6 +1,6 @@
+'use client';
 import { SUPERADMIN_MESSAGING_NOTIFICATION_TYPE_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 // RESPONSIBILITY: Renders notification state and delegates read mutations to the Superadmin Messaging hook.
-'use client';
 import { useTranslations } from 'next-intl';
 
 import { AlertTriangle, Info, X } from 'lucide-react';

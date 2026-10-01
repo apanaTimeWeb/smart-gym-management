@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Provides API access for the Superadmin WhatsApp bulk center; MSW owns demo responses.
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
-import { SuperadminWhatsAppBulkCenterDataSchema, SuperadminWhatsAppCreateCampaignPayloadSchema, SuperadminWhatsAppCreateCampaignResponseSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingV1WhatsAppSchema';
+import { SuperadminWhatsAppBulkCenterDataSchema, SuperadminWhatsAppCreateCampaignPayloadSchema, SuperadminWhatsAppCampaignSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingV1WhatsAppSchema';
 import { SuperadminMessagingUrlConfig } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
 
 import type { SuperadminWhatsAppBulkCenterData, SuperadminWhatsAppCampaign, SuperadminWhatsAppCreateCampaignPayload } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
@@ -21,6 +21,6 @@ export async function createWhatsAppCampaign(payload: SuperadminWhatsAppCreateCa
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
         body: JSON.stringify(parsedPayload),
-        dataSchema: SuperadminWhatsAppCreateCampaignResponseSchema.shape.data,
+        dataSchema: SuperadminWhatsAppCampaignSchema,
     });
 }

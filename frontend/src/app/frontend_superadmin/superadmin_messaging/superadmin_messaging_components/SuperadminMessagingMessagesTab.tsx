@@ -1,7 +1,8 @@
+'use client';
 import { SUPERADMIN_MESSAGING_CHANNEL_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
+import Tooltip from "@/components/ui/Tooltip";
 import { SUPERADMIN_MESSAGING_ALL_FILTER } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 // RESPONSIBILITY: Renders the searchable, filterable, URL-backed Superadmin tenant message table.
-'use client';
 import { useTranslations } from 'next-intl';
 
 import { Bell, Mail, MessageSquare, Search } from 'lucide-react';

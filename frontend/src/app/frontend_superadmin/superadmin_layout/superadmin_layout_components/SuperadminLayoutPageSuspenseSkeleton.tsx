@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the shared Superadmin route suspense skeleton used while module content is loading.
 'use client';
-
+// RESPONSIBILITY: Renders the shared Superadmin route suspense skeleton used while module content is loading.
 /**
  * @description Provides the shared Superadmin route-level Suspense loading skeleton.
  * @dependencies Uses semantic design tokens only; it owns no business state.

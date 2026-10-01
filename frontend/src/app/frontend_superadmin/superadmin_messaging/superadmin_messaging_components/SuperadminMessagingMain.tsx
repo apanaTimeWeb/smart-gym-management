@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the tenant messaging workspace from feature-owned view-model state and callbacks; contains no API, mutation, toast, or business calculations.
 'use client';
-
+// RESPONSIBILITY: Renders the tenant messaging workspace from feature-owned view-model state and callbacks; contains no API, mutation, toast, or business calculations.
 import { useTranslations } from 'next-intl';
 import { Bell, CheckCheck, Mail, Plus } from 'lucide-react';
 

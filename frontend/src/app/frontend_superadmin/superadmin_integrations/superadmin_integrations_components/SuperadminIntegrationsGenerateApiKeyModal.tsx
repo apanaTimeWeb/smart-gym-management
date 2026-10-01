@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the validated Superadmin API-key generation form and one-time generated-secret result.
 'use client';
+// RESPONSIBILITY: Renders the validated Superadmin API-key generation form and one-time generated-secret result.
 import { useTranslations } from 'next-intl';
 import { useRef } from 'react';
 import { Check, KeyRound, Loader2, X } from 'lucide-react';
@@ -104,12 +104,12 @@ export default function SuperadminIntegrationsGenerateApiKeyModal({ isOpen, tena
                 <legend className="mb-2 text-sm font-medium text-secondary">{t('ui.api_scopes_fa86913')}</legend>
                 <div className="flex flex-wrap gap-4">
                   <label className="flex min-h-11 items-center gap-2 text-sm text-primary">
-                    <input type="checkbox" value="Read" {...register('scopes')} className="rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out"  data-testid="superadmin_integrations-integrations-generate-api-key-modal-export-1"/>
+                    <input type="checkbox" value="READ" {...register('scopes')} className="rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out"  data-testid="superadmin_integrations-integrations-generate-api-key-modal-export-1"/>
                     
                     {t('ui.read_data_export_e5c2db3')}
                   </label>
                   <label className="flex min-h-11 items-center gap-2 text-sm text-primary">
-                    <input type="checkbox" value="Write" {...register('scopes')} className="rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out"  data-testid="superadmin_integrations-integrations-generate-api-key-modal-control-4-1"/>
+                    <input type="checkbox" value="WRITE" {...register('scopes')} className="rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out"  data-testid="superadmin_integrations-integrations-generate-api-key-modal-control-4-1"/>
                     
                     {t('ui.write_mutations_6da4a03')}
                   </label>

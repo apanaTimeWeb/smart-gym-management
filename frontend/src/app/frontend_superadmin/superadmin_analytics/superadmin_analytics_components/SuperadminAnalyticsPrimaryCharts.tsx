@@ -1,7 +1,7 @@
+'use client';
 import type { SuperadminAnalyticsPrimaryChartsProps } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsPrimaryChartsTypes';
 
 // RESPONSIBILITY: Renders the two primary analytics charts from the feature chart view-model.
-'use client';
 
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';

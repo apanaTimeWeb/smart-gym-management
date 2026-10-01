@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 'use client';
+// RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 import { useTranslations } from 'next-intl';
 import { useState, useRef, useEffect } from 'react';
 

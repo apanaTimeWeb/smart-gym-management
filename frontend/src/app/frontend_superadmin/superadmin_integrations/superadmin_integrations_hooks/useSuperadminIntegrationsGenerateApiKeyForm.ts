@@ -5,7 +5,7 @@ import type { SubmitHandler } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SuperadminGenerateApiKeyFormSchema } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsGenerateApiKeyTypes';
+import { SuperadminGenerateApiKeyFormSchema } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_schemas/SuperadminIntegrationsGenerateApiKeySchema';
 import type { SuperadminGenerateApiKeyFormValues } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsGenerateApiKeyTypes';
 import { useSuperadminIntegrationsGenerateApiKey } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_hooks/useSuperadminIntegrationsGenerateApiKey';
 
@@ -22,7 +22,7 @@ export function useSuperadminIntegrationsGenerateApiKeyForm() {
   const [generatedSecret, setGeneratedSecret] = useState<string | null>(null);
   const form = useForm<SuperadminGenerateApiKeyFormValues>({
     resolver: zodResolver(SuperadminGenerateApiKeyFormSchema),
-    defaultValues: { label: '', tenantId: '', scopes: ['Read'] },
+    defaultValues: { label: '', tenantId: '', scopes: ['READ'] },
   });
 
   const resetForm = (values?: SuperadminGenerateApiKeyFormValues) => {

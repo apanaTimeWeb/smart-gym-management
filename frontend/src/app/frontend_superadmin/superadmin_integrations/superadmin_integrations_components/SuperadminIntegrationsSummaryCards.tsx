@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin integrations summary cards section.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations summary cards section.
 import { SUPERADMIN_INTEGRATION_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_constants/SuperadminIntegrationsConstants';
 import { useTranslations } from 'next-intl';
 

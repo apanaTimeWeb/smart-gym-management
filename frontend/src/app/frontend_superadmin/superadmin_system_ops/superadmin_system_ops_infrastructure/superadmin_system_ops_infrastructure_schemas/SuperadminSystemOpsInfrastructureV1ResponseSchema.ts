@@ -1,0 +1,4 @@
+import { SuperadminLayoutApiResponseSchema } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_schemas/SuperadminLayoutApiResponseSchema';
+import { SuperadminInfrastructureV1DataSchema } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_schemas/SuperadminSystemOpsInfrastructureV1Schema';
+
+export const SuperadminSystemOpsInfrastructureV1ResponseSchema = SuperadminLayoutApiResponseSchema(SuperadminInfrastructureV1DataSchema);

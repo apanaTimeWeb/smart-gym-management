@@ -1,7 +1,7 @@
+'use client';
 import type { SuperadminFeaturesFlagsPanelProps } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_types/SuperadminFeaturesFlagsPanelTypes';
 
 // RESPONSIBILITY: Renders feature-flag search, status rows, rollout actions, history actions, and toggle controls from parent-owned state.
-'use client';
 
 import { useTranslations } from 'next-intl';
 import { Clock, Search, ToggleLeft, Users } from 'lucide-react';

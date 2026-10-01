@@ -1,11 +1,11 @@
-import type { ComponentType } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 import {
   SUPERADMIN_ANALYTICS_KPI_ICON_BACKGROUND_CLASSES,
   SUPERADMIN_ANALYTICS_KPI_ICON_TEXT_CLASSES,
 } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_constants/SuperadminAnalyticsKpiConstants';
 
-export type SuperadminAnalyticsKpiIcon = ComponentType;
+export type SuperadminAnalyticsKpiIcon = LucideIcon;
 export type SuperadminAnalyticsKpiIconBackgroundClass = (typeof SUPERADMIN_ANALYTICS_KPI_ICON_BACKGROUND_CLASSES)[number];
 export type SuperadminAnalyticsKpiIconTextClass = (typeof SUPERADMIN_ANALYTICS_KPI_ICON_TEXT_CLASSES)[number];
 

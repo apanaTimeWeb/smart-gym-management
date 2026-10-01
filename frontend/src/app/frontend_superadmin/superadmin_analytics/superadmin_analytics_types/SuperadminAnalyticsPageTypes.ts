@@ -14,4 +14,5 @@ export interface SuperadminAnalyticsPageReturn {
   timeRange: SuperadminAnalyticsTimeRange;
   customStart: string;
   customEnd: string;
+  refetch: () => void;
 }

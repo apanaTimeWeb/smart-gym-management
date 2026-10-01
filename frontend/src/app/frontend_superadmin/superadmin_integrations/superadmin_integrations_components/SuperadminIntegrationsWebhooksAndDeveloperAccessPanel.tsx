@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin integrations webhooks and developer access panel section.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations webhooks and developer access panel section.
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 

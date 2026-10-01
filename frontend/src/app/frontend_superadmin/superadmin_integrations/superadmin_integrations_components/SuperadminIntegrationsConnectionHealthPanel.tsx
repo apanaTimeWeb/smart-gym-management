@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin integrations connection health panel section.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations connection health panel section.
 import { useTranslations } from 'next-intl';
 
 import { PlugZap } from 'lucide-react';
@@ -37,7 +37,7 @@ export default function SuperadminIntegrationsConnectionHealthPanel({ data }: Su
               </p>
             </div>
           </div>
-          <span data-testid={`superadmin_integrations-connection-status-${item.id}`} className={`rounded-full px-2 py-1 text-xs font-semibold ${getSuperadminIntegrationsStatusBadgeClasses(item.status)}`}>
+          <span data-testid={`superadmin_integrations-connection-status-${item.name}`} className={`rounded-full px-2 py-1 text-xs font-semibold ${getSuperadminIntegrationsStatusBadgeClasses(item.status)}`}>
             {item.status}
           </span>
         </div>

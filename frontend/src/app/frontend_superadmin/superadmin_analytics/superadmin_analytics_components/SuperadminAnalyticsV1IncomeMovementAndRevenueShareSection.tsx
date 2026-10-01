@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the Superadmin analytics V1 Income movement, Revenue share concentration view.
 'use client';
+// RESPONSIBILITY: Renders the Superadmin analytics V1 Income movement, Revenue share concentration view.
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 
