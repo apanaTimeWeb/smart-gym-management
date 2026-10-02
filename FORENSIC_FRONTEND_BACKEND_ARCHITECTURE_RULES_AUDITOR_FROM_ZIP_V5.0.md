@@ -1088,7 +1088,7 @@ TYPECHECK
 LINT
 BUILD
 API_RUNTIME
-BROWSER_RUNTIME
+CLIENT_RUNTIME
 SCREENSHOT
 DOCUMENTATION
 SCOPE_BLOCKED
@@ -1718,24 +1718,32 @@ If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE`. Do NOT att
 
 ---
 
-# 39. FRONTEND FRAMEWORK BOUNDARY AUDIT
+# 39. FRONTEND FRAMEWORK BOUNDARY AUDIT (WEB)
 
-For frameworks with server/client execution boundaries, inspect where applicable:
+If the target is Web (e.g., Next.js), inspect where applicable:
 
 - server/client component boundary
-- browser-only API usage
+- browser-only API usage vs server availability
 - client-only hooks
 - event listener ownership
 - hydration risks
-- inappropriate client state
-- route/layout ownership
-- loading/error boundary usage where required
 - server-side vs client-side data responsibility
-- direct URL behavior
-- incorrect execution boundary for browser APIs
-- inappropriate `use client`
-- missing `use client` where required
-- business logic incorrectly placed in generic framework-level files
+- inappropriate `use client` or missing `use client`
+
+---
+
+# 39A. FRONTEND FRAMEWORK BOUNDARY AUDIT (MOBILE / REACT NATIVE)
+
+If the target is Mobile (React Native), inspect where applicable:
+
+- UI Thread vs JS Thread execution blocking
+- Safe Area insets handling
+- Platform-specific code branching (`Platform.OS` or `.ios.ts` / `.android.ts`)
+- Device Permissions (Camera, Location, Storage) requests and fallbacks
+- React Native New Architecture compatibility (Fabric / TurboModules)
+- Absence of Web DOM APIs (`window`, `document`, `div`, `span`)
+
+Do NOT apply Web/DOM rules to React Native code.
 
 Use framework-specific supplied rules only.
 
@@ -1957,7 +1965,7 @@ For visual/UI claims distinguish:
 ```text
 STATIC_UI_EVIDENCE
 SCREENSHOT_EVIDENCE
-BROWSER_RUNTIME_EVIDENCE
+CLIENT_RUNTIME_EVIDENCE
 ```
 
 ### STATIC_UI_EVIDENCE
@@ -1974,7 +1982,7 @@ A screenshot can prove only the captured UI state, viewport, and visible conditi
 
 It cannot prove all responsive breakpoints or all interactive states.
 
-### BROWSER_RUNTIME_EVIDENCE
+### CLIENT_RUNTIME_EVIDENCE
 
 A browser runtime result can prove only the executed flow, state, viewport, and conditions actually tested.
 
@@ -2363,7 +2371,7 @@ TYPECHECK
 LINT
 BUILD
 API_RUNTIME
-BROWSER_RUNTIME
+CLIENT_RUNTIME
 SCREENSHOT
 DOCUMENTATION
 SCOPE_BLOCKED
@@ -2775,7 +2783,7 @@ HIGH | MEDIUM | LOW
 ```
 
 **Evidence type**:
-[STATIC | TEST | TYPECHECK | LINT | BUILD | API_RUNTIME | BROWSER_RUNTIME | SCREENSHOT | DOCUMENTATION | SCOPE_BLOCKED]
+[STATIC | TEST | TYPECHECK | LINT | BUILD | API_RUNTIME | CLIENT_RUNTIME | SCREENSHOT | DOCUMENTATION | SCOPE_BLOCKED]
 
 **Evidence provenance**:
 [source snapshot / command / environment / timestamp when available]
@@ -3938,7 +3946,7 @@ To prevent AI from generating machine-unparseable output, the following precise 
 | Matrix column headers | **English only** |
 | Issue titles (`### ISSUE-NNN ...`) | **English only** |
 | Status values (`PASS`, `FAIL`, `NOT_VERIFIED`, etc.) | **English only** |
-| Evidence type tags (`STATIC`, `BROWSER_RUNTIME`, etc.) | **English only** |
+| Evidence type tags (`STATIC`, `CLIENT_RUNTIME`, etc.) | **English only** |
 | Code blocks, file paths, symbols | **As-is — no translation** |
 | JSON / YAML / structured data | **As-is** |
 | Rule IDs and document references | **English only** |
