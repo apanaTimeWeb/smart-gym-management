@@ -2,6 +2,20 @@ import { getRequestConfig } from 'next-intl/server';
 import fs from 'fs';
 import path from 'path';
 
+function setNestedValue(obj: any, path: string, value: any) {
+  const keys = path.split('.');
+  let current = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i] as string;
+    if (!current[key]) {
+      current[key] = {};
+    }
+    current = current[key];
+  }
+  const lastKey = keys[keys.length - 1] as string;
+  current[lastKey] = value;
+}
+
 function getAllLocales(dir: string, fileList: string[] = []) {
   const files = fs.readdirSync(dir);
   for (const file of files) {
@@ -36,8 +50,13 @@ export default getRequestConfig(async () => {
     console.error('Failed to load messages from src/app:', error);
   }
 
+  let unflattenedMessages = {};
+  Object.entries(messages).forEach(([key, value]) => {
+    setNestedValue(unflattenedMessages, key, value);
+  });
+
   return {
     locale,
-    messages
+    messages: unflattenedMessages
   };
 });
