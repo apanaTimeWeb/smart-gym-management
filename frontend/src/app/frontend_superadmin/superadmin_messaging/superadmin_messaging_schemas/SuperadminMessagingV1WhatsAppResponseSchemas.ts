@@ -1,5 +1,0 @@
-import { SuperadminLayoutApiResponseSchema } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_schemas/SuperadminLayoutApiResponseSchema';
-import { SuperadminWhatsAppBulkCenterDataSchema, SuperadminWhatsAppCampaignSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingV1WhatsAppSchema';
-
-export const SuperadminWhatsAppBulkCenterResponseSchema = SuperadminLayoutApiResponseSchema(SuperadminWhatsAppBulkCenterDataSchema);
-export const SuperadminWhatsAppCreateCampaignResponseSchema = SuperadminLayoutApiResponseSchema(SuperadminWhatsAppCampaignSchema);

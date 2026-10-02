@@ -1,8 +1,0 @@
-import type { infer as ZodInfer } from 'zod';
-import { MigrationStatusSchema, MigrationLogSchema, SuperadminMigrationsTenantSchema, SchemaMigrationSchema, MigrationsPageDataSchema } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_schemas/SuperadminSystemOpsMigrationsSchema';
-// RESPONSIBILITY: Defines types and interfaces for the Superadmin Migrations (Schema Rollouts) module.
-export type MigrationStatus = ZodInfer<typeof MigrationStatusSchema>;
-export type MigrationLog = ZodInfer<typeof MigrationLogSchema>;
-export type SuperadminMigrationsTenant = ZodInfer<typeof SuperadminMigrationsTenantSchema>;
-export type SchemaMigration = ZodInfer<typeof SchemaMigrationSchema>;
-export type MigrationsPageData = ZodInfer<typeof MigrationsPageDataSchema>;

@@ -1,4 +1,0 @@
-import { SuperadminLayoutApiResponseSchema } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_schemas/SuperadminLayoutApiResponseSchema';
-import { SuperadminBackupsV1DataSchema } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_schemas/SuperadminSystemOpsBackupsV1Schema';
-
-export const SuperadminSystemOpsBackupsV1ResponseSchema = SuperadminLayoutApiResponseSchema(SuperadminBackupsV1DataSchema);

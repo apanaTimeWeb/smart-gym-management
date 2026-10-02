@@ -1,6 +1,0 @@
-// RESPONSIBILITY: Defines all TypeScript prop interfaces for ADMIN layout shell components (Header, Sidebar). Single source of truth for layout prop contracts.
-
-export interface SuperadminSidebarProps {
-  isCollapsed: boolean;
-  setIsCollapsed: (v: boolean) => void;
-}

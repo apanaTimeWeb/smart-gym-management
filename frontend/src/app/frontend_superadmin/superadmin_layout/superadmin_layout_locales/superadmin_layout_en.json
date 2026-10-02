@@ -1,9 +1,0 @@
-{
-  "superadmin_layout": {
-    "ui": {
-      "error_boundary_title": "This part of the Superadmin page could not be loaded.",
-      "retry": "Try again",
-      "error_description": "Something went wrong while loading this page. Retry the request to continue."
-    }
-  }
-}
