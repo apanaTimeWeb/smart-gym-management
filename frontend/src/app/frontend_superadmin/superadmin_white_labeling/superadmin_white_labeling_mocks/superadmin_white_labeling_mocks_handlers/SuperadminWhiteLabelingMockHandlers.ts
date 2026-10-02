@@ -26,7 +26,7 @@ export function resetSuperadminWhiteLabelingMockState(): void {
 }
 
 export const superadminWhiteLabelingHandlers = [
-  http.get(MODULE_URLS.BACKEND_API.DOMAINS, ({ request }) => {
+  http.get('*' + MODULE_URLS.BACKEND_API.DOMAINS, ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') ?? '').trim().toLowerCase();
     const status = url.searchParams.get('status');
@@ -37,7 +37,7 @@ export const superadminWhiteLabelingHandlers = [
     });
     return HttpResponse.json<ApiResponse<WhiteLabelDomain[]>>({ success: true, message: 'Domains retrieved successfully.', data: filtered });
   }),
-  http.patch(MODULE_URLS.BACKEND_API.UPDATE_STATUS(':id'), async ({ params, request }) => {
+  http.patch('*' + MODULE_URLS.BACKEND_API.UPDATE_STATUS(':id'), async ({ params, request }) => {
     const parsed = UpdateDomainStatusSchema.safeParse(await request.json());
     if (!parsed.success) return HttpResponse.json<ApiResponse<WhiteLabelDomain>>({ success: false, message: 'Invalid domain status.', data: null }, { status: StatusCodes.BAD_REQUEST });
     const id = String(params.id);

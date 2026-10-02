@@ -20,5 +20,5 @@ export function resetSuperadminTeamMockState(): void {
 }
 export const superadminTeamHandlers = [
     http.get('*' + MODULE_URLS.BACKEND_API.BASE, () => HttpResponse.json({ success:true, message:'Superadmin team data loaded.', data:mockTeam })),
-    http.patch(MODULE_URLS.BACKEND_API.ALERT_PREFERENCES, async ({ request }) => { const body = await request.json() as { preferences?: Array<{ name:string; enabled:boolean }> }; const updates = body.preferences ?? []; mockTeam = { ...mockTeam, alerts: mockTeam.alerts.map(alert => { const update=updates.find(item=>item.name===alert.name); return update ? { ...alert, enabled:update.enabled } : alert; }) }; return HttpResponse.json({ success:true, message:'Alert preferences updated.', data:null }); }),
+    http.patch('*' + MODULE_URLS.BACKEND_API.ALERT_PREFERENCES, async ({ request }) => { const body = await request.json() as { preferences?: Array<{ name:string; enabled:boolean }> }; const updates = body.preferences ?? []; mockTeam = { ...mockTeam, alerts: mockTeam.alerts.map(alert => { const update=updates.find(item=>item.name===alert.name); return update ? { ...alert, enabled:update.enabled } : alert; }) }; return HttpResponse.json({ success:true, message:'Alert preferences updated.', data:null }); }),
 ];

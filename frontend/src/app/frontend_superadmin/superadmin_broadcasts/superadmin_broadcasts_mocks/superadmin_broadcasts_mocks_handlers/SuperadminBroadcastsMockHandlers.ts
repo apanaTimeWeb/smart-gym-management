@@ -30,7 +30,7 @@ export function resetSuperadminBroadcastsMockState(): void {
   idempotentBroadcastResponses.clear();
 }
 export const superadminBroadcastsHandlers = [
-    http.get(MODULE_URLS.BACKEND_API.TENANTS, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_BROADCAST_TENANTS })),
+    http.get('*' + MODULE_URLS.BACKEND_API.TENANTS, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_BROADCAST_TENANTS })),
     http.get(BASE_URL, async ({ request }) => {
         await delay(350);
         const url = new URL(request.url);

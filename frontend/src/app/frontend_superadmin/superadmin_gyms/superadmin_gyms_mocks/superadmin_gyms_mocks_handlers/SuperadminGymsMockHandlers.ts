@@ -18,11 +18,11 @@ import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmi
 let mockGymsList: any[] = [...MOCK_GYMS];
 export function resetSuperadminGymsMockState(): void { mockGymsList = [...MOCK_GYMS]; }
 export const superadminGymsHandlers = [
-    http.get(MODULE_URLS.BACKEND_API.SUBSCRIPTION_PLANS, async () => {
+    http.get('*' + MODULE_URLS.BACKEND_API.SUBSCRIPTION_PLANS, async () => {
         await delay(300);
         return HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUBSCRIPTION_PLANS });
     }),
-    http.get(MODULE_URLS.BACKEND_API.BASE, async ({ request }) => {
+    http.get('*' + MODULE_URLS.BACKEND_API.BASE, async ({ request }) => {
         try {
             await delay(400);
         const url = new URL(request.url);
@@ -59,7 +59,7 @@ export const superadminGymsHandlers = [
             throw error;
         }
     }),
-    http.post(`${MODULE_URLS.BACKEND_API.BASE}/provision`, async ({ request }) => {
+    http.post('*' + `${MODULE_URLS.BACKEND_API.BASE}/provision`, async ({ request }) => {
         await delay(700);
         const parsed = gymProvisionSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json({ success: false, message: 'Gym provisioning payload is invalid.', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -70,7 +70,7 @@ export const superadminGymsHandlers = [
         mockGymsList = [newGym, ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Gym provisioned successfully.', data: newGym });
     }),
-    http.post(MODULE_URLS.BACKEND_API.BASE, async ({ request }) => {
+    http.post('*' + MODULE_URLS.BACKEND_API.BASE, async ({ request }) => {
         await delay(500);
         const parsed = gymCreateSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json({ success: false, message: 'Gym creation payload is invalid.', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -78,7 +78,7 @@ export const superadminGymsHandlers = [
         mockGymsList = [newGym as typeof mockGymsList[0], ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Created', data: newGym });
     }),
-    http.patch(`${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params, request }) => {
         await delay(500);
         const body = await request.json() as Record<string, unknown>;
         const exists = mockGymsList.some(g => g.id === params.id);
@@ -86,14 +86,14 @@ export const superadminGymsHandlers = [
         mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, ...body } : g);
         return HttpResponse.json({ success: true, message: 'Updated', data: mockGymsList.find(g => g.id === params.id) });
     }),
-    http.delete(`${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params }) => {
+    http.delete('*' + `${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params }) => {
         await delay(400);
         const exists = mockGymsList.some(g => g.id === params.id);
         if (!exists) return HttpResponse.json({ success: false, message: 'Gym not found.', data: null }, { status: StatusCodes.NOT_FOUND });
         mockGymsList = mockGymsList.filter(g => g.id !== params.id);
         return HttpResponse.json({ success: true, message: 'Deleted' });
     }),
-    http.patch(`${MODULE_URLS.BACKEND_API.BASE}/:id/status`, async ({ params, request }) => {
+    http.patch('*' + `${MODULE_URLS.BACKEND_API.BASE}/:id/status`, async ({ params, request }) => {
         await delay(300);
         const { status } = await request.json() as Record<string, unknown>;
         const validStatus = status as typeof SUPERADMIN_GYM_STATUS_CODES[keyof typeof SUPERADMIN_GYM_STATUS_CODES];
@@ -102,17 +102,17 @@ export const superadminGymsHandlers = [
         mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, status: validStatus } : g);
         return HttpResponse.json({ success: true, message: 'Status updated', data: mockGymsList.find(g => g.id === params.id) });
     }),
-    http.get(`${MODULE_URLS.BACKEND_API.BASE}/stats`, async () => {
+    http.get('*' + `${MODULE_URLS.BACKEND_API.BASE}/stats`, async () => {
         await delay(200);
         return HttpResponse.json({ success: true, message: 'Success', data: MOCK_GYM_STATS });
     }),
-    http.get(`${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params }) => {
+    http.get('*' + `${MODULE_URLS.BACKEND_API.BASE}/:id`, async ({ params }) => {
         await delay(300);
         const gym = mockGymsList.find(g => g.id === params.id);
         if (!gym) return HttpResponse.json({ success: false, message: 'Gym not found.', data: null }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json({ success: true, message: 'Success', data: gym });
     }),
-    http.post(`${MODULE_URLS.BACKEND_API.IMPERSONATE}/:id/impersonate`, async () => {
+    http.post('*' + `${MODULE_URLS.BACKEND_API.IMPERSONATE}/:id/impersonate`, async () => {
         await delay(400);
         return HttpResponse.json({ success: true, message: 'Impersonating', data: { token: 'mock-jwt-token' } });
     }),

@@ -20,7 +20,7 @@ import type { ApiResponse } from '@/lib/api';
 
 const migrationLogs: MigrationLog[] = [...MOCK_MIGRATIONS];
 export const superadminMigrationsHandlers = [
-    http.get(MODULE_URLS.BACKEND_API.BASE, async () => {
+    http.get('*' + MODULE_URLS.BACKEND_API.BASE, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<MigrationLog[]>>({
             success: true,
@@ -28,7 +28,7 @@ export const superadminMigrationsHandlers = [
             data: migrationLogs,
         });
     }),
-    http.post(MODULE_URLS.BACKEND_API.TRIGGER, async ({ request }) => {
+    http.post('*' + MODULE_URLS.BACKEND_API.TRIGGER, async ({ request }) => {
         await delay(600);
         const body = (await request.json()) as {
             targetVersion?: unknown;
