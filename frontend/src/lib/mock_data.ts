@@ -132,11 +132,11 @@ const PAYMENTS = Array.from({ length: 12 }, (_, i) => ({
 
 // ─── superadmin gyms ──────────────────────────────────────────────────────────
 const GYMS = [
-  { id: 'g1', name: 'FitLife Andheri', ownerName: 'Rajesh Patel', adminEmail: 'admin@fitlife.com', phone: '9876543210', city: 'Mumbai', status: 'ACTIVE', memberCount: 420, plan: 'Enterprise', monthlyRevenue: 185000, databaseVersion: 'v2.4.1', createdAt: '2023-03-01' },
-  { id: 'g2', name: 'PowerZone Bandra', ownerName: 'Sunita Reddy', adminEmail: 'admin@powerzone.com', phone: '9876543211', city: 'Mumbai', status: 'ACTIVE', memberCount: 340, plan: 'Pro', monthlyRevenue: 142000, databaseVersion: 'v2.4.1', createdAt: '2023-05-15' },
-  { id: 'g3', name: 'IronHouse Powai', ownerName: 'Vikram Singh', adminEmail: 'admin@ironhouse.com', phone: '9876543212', city: 'Mumbai', status: 'ACTIVE', memberCount: 220, plan: 'Standard', monthlyRevenue: 98000, databaseVersion: 'v2.4.1', createdAt: '2023-07-20' },
-  { id: 'g4', name: 'FlexFit Thane', ownerName: 'Meena Joshi', adminEmail: 'admin@flexfit.com', phone: '9876543213', city: 'Thane', status: 'TRIAL', memberCount: 180, plan: 'Trial', monthlyRevenue: 60000, databaseVersion: 'v2.4.1', createdAt: '2024-01-10' },
-  { id: 'g5', name: 'ZenGym Pune', ownerName: 'Arun Kumar', adminEmail: 'admin@zengym.com', phone: '9876543214', city: 'Pune', status: 'SUSPENDED', memberCount: 0, plan: 'Standard', monthlyRevenue: 0, databaseVersion: 'v2.4.1', createdAt: '2022-12-01' },
+  { id: 'g1', name: 'FitLife Andheri', ownerName: 'Rajesh Patel', adminEmail: 'admin@fitlife.com', phone: '9876543210', city: 'Mumbai', status: 'ACTIVE', memberCount: 420, plan: 'Enterprise', monthlyRevenue: 185000, databaseVersion: 'v2.4.1', databaseName: 'gym_db', currency: 'INR', createdAt: '2023-03-01' },
+  { id: 'g2', name: 'PowerZone Bandra', ownerName: 'Sunita Reddy', adminEmail: 'admin@powerzone.com', phone: '9876543211', city: 'Mumbai', status: 'ACTIVE', memberCount: 340, plan: 'Pro', monthlyRevenue: 142000, databaseVersion: 'v2.4.1', databaseName: 'gym_db', currency: 'INR', createdAt: '2023-05-15' },
+  { id: 'g3', name: 'IronHouse Powai', ownerName: 'Vikram Singh', adminEmail: 'admin@ironhouse.com', phone: '9876543212', city: 'Mumbai', status: 'ACTIVE', memberCount: 220, plan: 'Standard', monthlyRevenue: 98000, databaseVersion: 'v2.4.1', databaseName: 'gym_db', currency: 'INR', createdAt: '2023-07-20' },
+  { id: 'g4', name: 'FlexFit Thane', ownerName: 'Meena Joshi', adminEmail: 'admin@flexfit.com', phone: '9876543213', city: 'Thane', status: 'TRIAL', memberCount: 180, plan: 'Trial', monthlyRevenue: 60000, databaseVersion: 'v2.4.1', databaseName: 'gym_db', currency: 'INR', createdAt: '2024-01-10' },
+  { id: 'g5', name: 'ZenGym Pune', ownerName: 'Arun Kumar', adminEmail: 'admin@zengym.com', phone: '9876543214', city: 'Pune', status: 'SUSPENDED', memberCount: 0, plan: 'Standard', monthlyRevenue: 0, databaseVersion: 'v2.4.1', databaseName: 'gym_db', currency: 'INR', createdAt: '2022-12-01' },
 ];
 
 // ─── franchises ───────────────────────────────────────────────────────────────
@@ -673,6 +673,16 @@ export function getMockResponse(path: string): unknown {
   }
   // Admin Module Specific
   if (p.includes('/admin/dashboard'))    return ok(DASHBOARD_STATS, 'Admin dashboard stats fetched');
+
+  // Superadmin Compliance & White Labeling
+  if (p.includes('/superadmin_compliance')) {
+    const { SUPERADMIN_COMPLIANCE_MOCK_FIXTURE } = require('@/app/frontend_superadmin/superadmin_compliance/superadmin_compliance_mocks/superadmin_compliance_mocks_fixtures/SuperadminComplianceMockFixtures');
+    return ok(SUPERADMIN_COMPLIANCE_MOCK_FIXTURE, 'Compliance data fetched');
+  }
+  if (p.includes('/superadmin/white-labeling/domains')) {
+    const { mockWhiteLabelDomains } = require('@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_mocks/superadmin_white_labeling_mocks_fixtures/SuperadminWhiteLabelingMockFixtures');
+    return ok(mockWhiteLabelDomains, 'White labeling domains fetched');
+  }
 
   // Admin Sales
   if (p.includes('/admin/sales/overview')) return ok({ monthlyRevenue: ADMIN_SALES_INITIAL_DATA.overviewData }, 'Sales overview fetched');

@@ -23,7 +23,7 @@ const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
 let mockCoupons: Coupon[] = [...MOCK_SUPERADMIN_COUPONS];
 export function resetSuperadminCouponsMockState(): void { mockCoupons = MOCK_SUPERADMIN_COUPONS.map((coupon) => ({ ...coupon, redemptions: coupon.redemptions ? [...coupon.redemptions] : [] })); }
 export const superadminCouponsHandlers = [
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page')) || 1;
@@ -47,7 +47,7 @@ export const superadminCouponsHandlers = [
             meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
         });
     }),
-    http.post(BASE_URL, async ({ request }) => {
+    http.post('*' + BASE_URL, async ({ request }) => {
         await delay(500);
         const raw = await request.json();
         const parsed = CouponSchema.safeParse(raw);
@@ -73,7 +73,7 @@ export const superadminCouponsHandlers = [
             data: newCoupon,
         });
     }),
-    http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(500);
         const id = params.id as string;
         const raw = await request.json();
@@ -97,7 +97,7 @@ export const superadminCouponsHandlers = [
             data: updated,
         });
     }),
-    http.post(`${BASE_URL}/:id/restore`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/:id/restore`, async ({ params }) => {
         await delay(350);
         const id = String(params.id);
         let restored: Coupon | null = null;
@@ -105,7 +105,7 @@ export const superadminCouponsHandlers = [
         if (!restored) return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: true, message: 'Coupon restored', data: restored });
     }),
-    http.patch(`${BASE_URL}/:id/status`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id/status`, async ({ params, request }) => {
         await delay(300);
         const id = String(params.id);
         const raw = await request.json();
@@ -117,14 +117,14 @@ export const superadminCouponsHandlers = [
         if (!updated) return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: true, message: 'Coupon status updated', data: updated });
     }),
-    http.get(`${BASE_URL}/:id/redemptions`, async ({ params }) => {
+    http.get('*' + `${BASE_URL}/:id/redemptions`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);
         const coupon = mockCoupons.find((item) => item.id === id);
         if (!coupon) return HttpResponse.json<ApiResponse<RedemptionRecord[]> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json<ApiResponse<RedemptionRecord[]> | ApiResponse<null>>({ success: true, message: 'Coupon redemptions loaded', data: coupon.redemptions ?? [] });
     }),
-    http.delete(`${BASE_URL}/:id`, async ({ params }) => {
+    http.delete('*' + `${BASE_URL}/:id`, async ({ params }) => {
         await delay(400);
         const id = params.id as string;
         let updated: Coupon | null = null;

@@ -42,18 +42,18 @@ function jsonSuccess<T>(message: string, data: T) {
 }
 
 export const superadminJobsHandlers = [
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(250);
         const result = getPagedResponse(mockJobs, request);
         return HttpResponse.json({ success: true, message: 'Jobs loaded.', data: result.data, meta: result.meta });
     }),
-    http.post(`${BASE_URL}/retry-all`, async () => {
+    http.post('*' + `${BASE_URL}/retry-all`, async () => {
         await delay(300);
         const failedBefore = mockJobs.filter((job) => job.status === SUPERADMIN_JOBS_STATUS_CODES.FAILED).length;
         mockJobs = mockJobs.map((job) => job.status === SUPERADMIN_JOBS_STATUS_CODES.FAILED ? { ...job, status: SUPERADMIN_JOBS_STATUS_CODES.ACTIVE } : job);
         return jsonSuccess(`Queued ${failedBefore} failed jobs for retry.`, { queuedCount: failedBefore });
     }),
-    http.post(`${BASE_URL}/:id/retry`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/:id/retry`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);
         const index = mockJobs.findIndex((job) => job.id === id);
@@ -62,7 +62,7 @@ export const superadminJobsHandlers = [
         mockJobs[index] = { ...job, status: SUPERADMIN_JOBS_STATUS_CODES.ACTIVE, attempts: job.attempts + 1 };
         return jsonSuccess('Job queued for retry.', mockJobs[index]);
     }),
-    http.post(`${BASE_URL}/:id/cancel`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/:id/cancel`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);
         const index = mockJobs.findIndex((job) => job.id === id);
@@ -71,7 +71,7 @@ export const superadminJobsHandlers = [
         mockJobs[index] = { ...job, status: SUPERADMIN_JOBS_STATUS_CODES.CANCELLED };
         return jsonSuccess('Job cancelled.', mockJobs[index]);
     }),
-    http.delete(`${BASE_URL}/:id`, async ({ params }) => {
+    http.delete('*' + `${BASE_URL}/:id`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);
         const exists = mockJobs.some((job) => job.id === id);
@@ -79,13 +79,13 @@ export const superadminJobsHandlers = [
         mockJobs = mockJobs.filter((job) => job.id !== id);
         return jsonSuccess('Job deleted.', null);
     }),
-    http.post(`${BASE_URL}/clear-completed`, async () => {
+    http.post('*' + `${BASE_URL}/clear-completed`, async () => {
         await delay(250);
         const completedCount = mockJobs.filter((job) => job.status === SUPERADMIN_JOBS_STATUS_CODES.COMPLETED).length;
         mockJobs = mockJobs.filter((job) => job.status !== SUPERADMIN_JOBS_STATUS_CODES.COMPLETED);
         return jsonSuccess(`Cleared ${completedCount} completed jobs.`, { affectedCount: completedCount });
     }),
-    http.post(`${BASE_URL}/bulk-retry`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/bulk-retry`, async ({ request }) => {
         await delay(300);
         const body = await request.json() as { ids?: unknown };
         const ids = Array.isArray(body.ids) ? body.ids.filter((id): id is string => typeof id === 'string') : [];
@@ -99,7 +99,7 @@ export const superadminJobsHandlers = [
         });
         return jsonSuccess(`Queued ${affectedCount} selected jobs for retry.`, { affectedCount });
     }),
-    http.post(`${BASE_URL}/bulk-delete`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/bulk-delete`, async ({ request }) => {
         await delay(300);
         const body = await request.json() as { ids?: unknown };
         const ids = Array.isArray(body.ids) ? body.ids.filter((id): id is string => typeof id === 'string') : [];

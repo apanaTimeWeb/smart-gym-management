@@ -85,7 +85,7 @@ export default function SuperadminGymsAddGymForm() {
 
               <div className="space-y-2">
                 <label htmlFor="superadmin-add-gym-plan" className="text-sm font-bold text-secondary">{t('ui.saas_plan_be057644')}</label>
-                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${SuperadminGymsFormatCurrency(Number(p.priceMonthly), p.currency, locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? t('ui.loading_plans') : t('ui.select_plan')} data-testid="superadmin_gyms-add-gym-form-plan-dropdown"/>)} data-testid="superadmin_gyms-add-gym-form-plan-field"/></div>
+                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${SuperadminGymsFormatCurrency(Number(p.priceMonthly), p.currency || 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? t('ui.loading_plans') : t('ui.select_plan')} data-testid="superadmin_gyms-add-gym-form-plan-dropdown"/>)} data-testid="superadmin_gyms-add-gym-form-plan-field"/></div>
                 {errors.plan && <p className="text-danger text-xs">{errors.plan.message}</p>}
               </div>
             </div>

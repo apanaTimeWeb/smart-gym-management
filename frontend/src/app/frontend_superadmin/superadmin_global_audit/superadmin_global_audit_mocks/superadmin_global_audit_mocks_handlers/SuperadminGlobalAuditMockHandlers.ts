@@ -16,7 +16,7 @@ import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/superadmin/audit-logs';
 export const superadminGlobalAuditHandlers = [
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(120);
         const url = new URL(request.url);
         const page = Math.max(Number(url.searchParams.get('page')) || 1, 1);

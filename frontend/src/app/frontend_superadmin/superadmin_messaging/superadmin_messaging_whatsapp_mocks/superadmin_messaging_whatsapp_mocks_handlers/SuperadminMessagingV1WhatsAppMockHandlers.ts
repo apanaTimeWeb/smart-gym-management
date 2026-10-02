@@ -26,7 +26,7 @@ export function resetSuperadminMessagingV1WhatsAppMockState(): void {
   mockCampaigns = [...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.campaigns];
 }
 export const superadminMessagingV1WhatsAppHandlers = [
-    http.get(`${BASE_URL}/bulk-center`, async () => {
+    http.get('*' + `${BASE_URL}/bulk-center`, async () => {
         await delay(300);
         const data: SuperadminWhatsAppBulkCenterData = {
             ...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE,
@@ -38,7 +38,7 @@ export const superadminMessagingV1WhatsAppHandlers = [
             data,
         });
     }),
-    http.post(`${BASE_URL}/campaigns`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/campaigns`, async ({ request }) => {
         await delay(250);
         const payload = SuperadminWhatsAppCreateCampaignPayloadSchema.safeParse(await request.json());
         if (!payload.success) {

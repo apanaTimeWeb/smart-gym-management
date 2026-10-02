@@ -84,7 +84,7 @@ export default function SuperadminGymsGymEditModal() {
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">{t('ui.subscription_plan_90fe0789')}<span className="text-danger">{t('ui.text_3389dae3')}</span></label>
-            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${SuperadminGymsFormatCurrency(Number(p.priceMonthly), p.currency, locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? t('ui.loading_plans') : t('ui.select_plan')} data-testid="superadmin_gyms-gym-edit-modal-plan-dropdown"/>)} data-testid="superadmin_gyms-gym-edit-modal-plan-field"/>
+            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${SuperadminGymsFormatCurrency(Number(p.priceMonthly), p.currency || 'INR', locale)}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? t('ui.loading_plans') : t('ui.select_plan')} data-testid="superadmin_gyms-gym-edit-modal-plan-dropdown"/>)} data-testid="superadmin_gyms-gym-edit-modal-plan-field"/>
             {errors.plan && <p className="text-xs text-danger mt-1">{errors.plan.message}</p>}
           </div>
 

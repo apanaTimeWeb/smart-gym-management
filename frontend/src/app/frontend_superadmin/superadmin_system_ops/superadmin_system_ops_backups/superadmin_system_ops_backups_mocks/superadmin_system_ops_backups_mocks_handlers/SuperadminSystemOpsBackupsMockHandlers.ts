@@ -28,14 +28,14 @@ export function resetSuperadminBackupsMockState(): void {
 }
 
 export const superadminBackupsHandlers = [
-    http.get(`${BASE_URL}/schedule`, async () => HttpResponse.json<ApiResponse<SuperadminBackupsSchedule>>({ success: true, message: 'Backup schedule loaded', data: mockBackupSchedule })),
-    http.patch(`${BASE_URL}/schedule`, async ({ request }) => {
+    http.get('*' + `${BASE_URL}/schedule`, async () => HttpResponse.json<ApiResponse<SuperadminBackupsSchedule>>({ success: true, message: 'Backup schedule loaded', data: mockBackupSchedule })),
+    http.patch('*' + `${BASE_URL}/schedule`, async ({ request }) => {
         const parsed = SuperadminBackupsScheduleInputSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json<ApiResponse<SuperadminBackupsSchedule>>({ success: false, message: 'Invalid backup schedule', data: null as unknown as SuperadminBackupsSchedule }, { status: StatusCodes.BAD_REQUEST });
         mockBackupSchedule = { ...parsed.data, updatedAt: new Date().toISOString() };
         return HttpResponse.json<ApiResponse<SuperadminBackupsSchedule>>({ success: true, message: 'Backup schedule updated', data: mockBackupSchedule });
     }),
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(250);
         const u = new URL(request.url);
         const page = Number(u.searchParams.get('page') || '1');
@@ -54,8 +54,8 @@ export const superadminBackupsHandlers = [
         const data = filtered.slice((page - 1) * limit, page * limit);
         return HttpResponse.json<ApiResponse<BackupRecord[]>>({ success: true, message: 'Success', data, meta: { total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) } });
     }),
-    http.post(`${BASE_URL}/trigger`, async () => { await delay(300); const created: BackupRecord = { ...MOCK_SUPERADMIN_BACKUPS[0]!, id: `bk${Date.now()}`, status: SUPERADMIN_BACKUPS_STATUS_CODES.IN_PROGRESS, timestamp: new Date().toISOString() }; mockBackups = [created, ...mockBackups]; return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Backup snapshot queued', data: null }); }),
-    http.post(`${BASE_URL}/:id/restore`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/trigger`, async () => { await delay(300); const created: BackupRecord = { ...MOCK_SUPERADMIN_BACKUPS[0]!, id: `bk${Date.now()}`, status: SUPERADMIN_BACKUPS_STATUS_CODES.IN_PROGRESS, timestamp: new Date().toISOString() }; mockBackups = [created, ...mockBackups]; return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Backup snapshot queued', data: null }); }),
+    http.post('*' + `${BASE_URL}/:id/restore`, async ({ params }) => {
         await delay(350);
         const id = String(params.id);
         const existing = mockBackups.find((backup) => backup.id === id);
@@ -65,7 +65,7 @@ export const superadminBackupsHandlers = [
         mockBackups = mockBackups.map((backup) => backup.id === id ? { ...backup, status: SUPERADMIN_BACKUPS_STATUS_CODES.IN_PROGRESS, timestamp: new Date().toISOString() } : backup);
         return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Backup restore started', data: null });
     }),
-    http.get(`${BASE_URL}/:id/download`, async ({ params }) => HttpResponse.json<ApiResponse<{
+    http.get('*' + `${BASE_URL}/:id/download`, async ({ params }) => HttpResponse.json<ApiResponse<{
         downloadUrl: string;
     }>>({ success: true, message: 'Backup download ready', data: { downloadUrl: `/mock-backups/${String(params.id)}.sql` } })),
 ];

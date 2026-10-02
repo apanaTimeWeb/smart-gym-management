@@ -26,7 +26,7 @@ export function resetSuperadminTicketsMockState(): void {
 }
 
 export const superadminTicketsHandlers = [
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page')) || 1;
@@ -55,7 +55,7 @@ export const superadminTicketsHandlers = [
             meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
         });
     }),
-    http.get(`${BASE_URL}/:id`, async ({ params }) => {
+    http.get('*' + `${BASE_URL}/:id`, async ({ params }) => {
         await delay(300);
         const id = params.id as string;
         const ticket = mockTickets.find(t => t.id === id);
@@ -68,7 +68,7 @@ export const superadminTicketsHandlers = [
             data: ticket,
         });
     }),
-    http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(500);
         const id = params.id as string;
         const body = (await request.json()) as Partial<SupportTicket>;
@@ -89,7 +89,7 @@ export const superadminTicketsHandlers = [
             data: updated,
         });
     }),
-    http.post(`${BASE_URL}/:id/close`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/:id/close`, async ({ params }) => {
         await delay(400);
         const id = params.id as string;
         let updated: SupportTicket | null = null;
@@ -109,7 +109,7 @@ export const superadminTicketsHandlers = [
             data: updated,
         });
     }),
-    http.post(`${BASE_URL}/:id/reply`, async ({ params, request }) => {
+    http.post('*' + `${BASE_URL}/:id/reply`, async ({ params, request }) => {
         await delay(400);
         const id = params.id as string;
         const parsed = replySchema.safeParse(await request.json());
@@ -135,7 +135,7 @@ export const superadminTicketsHandlers = [
         if (!updated) return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json<ApiResponse<SupportTicket>>({ success: true, message: 'Reply sent', data: updated });
     }),
-    http.post(`${BASE_URL}/:id/assign`, async ({ params, request }) => {
+    http.post('*' + `${BASE_URL}/:id/assign`, async ({ params, request }) => {
         await delay(400);
         const id = params.id as string;
         const parsed = TicketAssigneeInputSchema.safeParse(await request.json());

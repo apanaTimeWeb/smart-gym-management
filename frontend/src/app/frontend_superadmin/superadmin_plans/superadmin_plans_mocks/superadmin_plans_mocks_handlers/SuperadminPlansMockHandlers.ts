@@ -22,7 +22,7 @@ export function resetSuperadminPlansMockState(): void {
     mockPlansList = [...INITIAL_PLANS];
 }
 export const superadminPlansHandlers = [
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(250);
         const url = new URL(request.url);
         const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
@@ -38,21 +38,21 @@ export const superadminPlansHandlers = [
         const data = filtered.slice((page - 1) * limit, page * limit);
         return HttpResponse.json({ success: true, message: 'Success', data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } });
     }),
-    http.get(`${BASE_URL}/:id`, async ({ params }) => {
+    http.get('*' + `${BASE_URL}/:id`, async ({ params }) => {
         await delay(200);
         const plan = mockPlansList.find((item) => item.id === params.id);
         return plan
             ? HttpResponse.json({ success: true, message: 'Success', data: plan })
             : HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }),
-    http.post(BASE_URL, async ({ request }) => {
+    http.post('*' + BASE_URL, async ({ request }) => {
         await delay(350);
         const body = await request.json() as Omit<SubscriptionPlan, 'id' | 'activeTenants' | 'isArchived'>;
         const newPlan: SubscriptionPlan = { ...body, id: `plan-${Date.now()}`, activeTenants: 0, isArchived: false };
         mockPlansList = [...mockPlansList, newPlan];
         return HttpResponse.json({ success: true, message: 'Created', data: newPlan });
     }),
-    http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(350);
         const body = await request.json() as Partial<SubscriptionPlan>;
         const current = mockPlansList.find((item) => item.id === params.id);
@@ -62,12 +62,12 @@ export const superadminPlansHandlers = [
         mockPlansList = mockPlansList.map((item) => item.id === params.id ? updated : item);
         return HttpResponse.json({ success: true, message: 'Updated', data: updated });
     }),
-    http.delete(`${BASE_URL}/:id`, async ({ params }) => {
+    http.delete('*' + `${BASE_URL}/:id`, async ({ params }) => {
         await delay(300);
         mockPlansList = mockPlansList.filter((item) => item.id !== params.id);
         return HttpResponse.json({ success: true, message: 'Deleted', data: null });
     }),
-    http.patch(`${BASE_URL}/:id/archive`, async ({ params }) => {
+    http.patch('*' + `${BASE_URL}/:id/archive`, async ({ params }) => {
         await delay(300);
         const updated = mockPlansList.find((item) => item.id === params.id);
         if (!updated)

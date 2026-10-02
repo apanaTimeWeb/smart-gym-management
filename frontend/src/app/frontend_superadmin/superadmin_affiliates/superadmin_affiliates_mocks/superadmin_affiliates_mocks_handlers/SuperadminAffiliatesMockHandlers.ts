@@ -29,7 +29,7 @@ export function resetSuperadminAffiliatesMockState(): void {
 }
 
 export const superadminAffiliatesHandlers = [
-  http.get(BASE_URL, async ({ request }) => {
+  http.get('*' + BASE_URL, async ({ request }) => {
     await delay(400);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page')) || 1;
@@ -53,7 +53,7 @@ export const superadminAffiliatesHandlers = [
     const paginated = filtered.slice((page - 1) * limit, page * limit);
     return HttpResponse.json<ApiResponse<Affiliate[]>>({ success: true, message: 'Success', data: paginated, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } });
   }),
-  http.post(BASE_URL, async ({ request }) => {
+  http.post('*' + BASE_URL, async ({ request }) => {
     await delay(500);
     const raw = await request.json();
     const parsed = AffiliateSchema.safeParse(raw);
@@ -77,7 +77,7 @@ export const superadminAffiliatesHandlers = [
     mockAffiliates = [newAffiliate, ...mockAffiliates];
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Affiliate created successfully', data: newAffiliate });
   }),
-  http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+  http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
     await delay(500);
     const raw = await request.json();
     if (typeof raw !== 'object' || raw === null) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Invalid affiliate payload', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -102,7 +102,7 @@ export const superadminAffiliatesHandlers = [
     if (!updatedAffiliate) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Affiliate updated', data: updatedAffiliate });
   }),
-  http.patch(`${BASE_URL}/:id/status`, async ({ params, request }) => {
+  http.patch('*' + `${BASE_URL}/:id/status`, async ({ params, request }) => {
     await delay(300);
     const raw = await request.json();
     if (typeof raw !== 'object' || raw === null || !('status' in raw)) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Invalid status payload', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -114,7 +114,7 @@ export const superadminAffiliatesHandlers = [
     if (!updatedAffiliate) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Status updated', data: updatedAffiliate });
   }),
-  http.delete(`${BASE_URL}/:id`, async ({ params }) => {
+  http.delete('*' + `${BASE_URL}/:id`, async ({ params }) => {
     await delay(400);
     const id = String(params.id);
     const exists = mockAffiliates.some((affiliate) => affiliate.id === id);
@@ -122,7 +122,7 @@ export const superadminAffiliatesHandlers = [
     mockAffiliates = mockAffiliates.filter((affiliate) => affiliate.id !== id);
     return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Deleted successfully', data: null });
   }),
-  http.post(`${BASE_URL}/:id/pay`, async ({ params }) => {
+  http.post('*' + `${BASE_URL}/:id/pay`, async ({ params }) => {
     await delay(600);
     const id = String(params.id);
     let updatedAffiliate: Affiliate | null = null;
@@ -130,7 +130,7 @@ export const superadminAffiliatesHandlers = [
     if (!updatedAffiliate) return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<Affiliate> | ApiResponse<null>>({ success: true, message: 'Commission paid successfully', data: updatedAffiliate });
   }),
-  http.get(`${BASE_URL}/payout-history`, async () => {
+  http.get('*' + `${BASE_URL}/payout-history`, async () => {
     await delay(300);
     return HttpResponse.json<ApiResponse<AffiliatePayoutRecord[]>>({ success: true, message: 'Affiliate payout history loaded', data: MOCK_SUPERADMIN_AFFILIATE_PAYOUT_HISTORY });
   }),

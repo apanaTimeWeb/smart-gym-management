@@ -25,7 +25,7 @@ export default function SuperadminGymsGymDetailOverviewSection({ gym, locale }: 
   const t = useTranslations('superadmin_gyms');
   const cards = [
     { label: 'Members', value: formatNumber(gym.memberCount), icon: User, tone: 'bg-primary-subtle text-primary' },
-    { label: 'Monthly Revenue', value: SuperadminGymsFormatCurrency(gym.monthlyRevenue, gym.currency, locale), icon: CreditCard, tone: 'bg-success-bg text-success' },
+    { label: 'Monthly Revenue', value: SuperadminGymsFormatCurrency(gym.monthlyRevenue, gym.currency || 'INR', locale), icon: CreditCard, tone: 'bg-success-bg text-success' },
     { label: 'Plan', value: displayValue(gym.plan).toUpperCase(), icon: Activity, tone: 'bg-purple-bg text-purple-text' },
     { label: 'DB Version', value: displayValue(gym.databaseVersion), icon: Clock, tone: 'bg-warning-bg text-warning' },
   ];

@@ -31,7 +31,7 @@ export function resetSuperadminBroadcastsMockState(): void {
 }
 export const superadminBroadcastsHandlers = [
     http.get('*' + MODULE_URLS.BACKEND_API.TENANTS, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_BROADCAST_TENANTS })),
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(350);
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page') || '1');
@@ -49,7 +49,7 @@ export const superadminBroadcastsHandlers = [
         const data = filtered.slice((page - 1) * limit, page * limit);
         return HttpResponse.json<ApiResponse<Broadcast[]>>({ success: true, message: 'Success', data, meta: { total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) } });
     }),
-    http.post(BASE_URL, async ({ request }) => {
+    http.post('*' + BASE_URL, async ({ request }) => {
         await delay(300);
         const key = request.headers.get('Idempotency-Key');
         if (key && idempotentBroadcastResponses.has(`create:${key}`)) return HttpResponse.json(idempotentBroadcastResponses.get(`create:${key}`));
@@ -60,7 +60,7 @@ export const superadminBroadcastsHandlers = [
         if (key) idempotentBroadcastResponses.set(`create:${key}`, response);
         return HttpResponse.json(response);
     }),
-    http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(300);
         const key = request.headers.get('Idempotency-Key');
         const responseKey = `update:${String(params.id)}:${key ?? 'none'}`;
@@ -73,7 +73,7 @@ export const superadminBroadcastsHandlers = [
         if (key) idempotentBroadcastResponses.set(responseKey, response);
         return HttpResponse.json(response);
     }),
-    http.delete(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.delete('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(250);
         const key = request.headers.get('Idempotency-Key');
         const responseKey = `delete:${String(params.id)}:${key ?? 'none'}`;
@@ -85,7 +85,7 @@ export const superadminBroadcastsHandlers = [
         if (key) idempotentBroadcastResponses.set(responseKey, response);
         return HttpResponse.json(response);
     }),
-    http.post(`${BASE_URL}/:id/deliveries/:recipientId`, async ({ params, request }) => {
+    http.post('*' + `${BASE_URL}/:id/deliveries/:recipientId`, async ({ params, request }) => {
         await delay(250);
         const key = request.headers.get('Idempotency-Key');
         const responseKey = `delivery:${String(params.id)}:${String(params.recipientId)}:${key ?? 'none'}`;
@@ -119,5 +119,5 @@ export const superadminBroadcastsHandlers = [
         if (key) idempotentBroadcastResponses.set(responseKey, response);
         return HttpResponse.json(response);
     }),
-    http.get(`${BASE_URL}/recipient-count`, async () => HttpResponse.json({ success: true, message: 'Success', data: { count: 42 } })),
+    http.get('*' + `${BASE_URL}/recipient-count`, async () => HttpResponse.json({ success: true, message: 'Success', data: { count: 42 } })),
 ];

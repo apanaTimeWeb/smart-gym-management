@@ -28,13 +28,13 @@ export function resetSuperadminFeaturesMockState(): void {
 }
 export const superadminFeaturesHandlers = [
     http.get(`*${MODULE_URLS.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_TENANTS })),
-    http.get(`${BASE_URL}/flags/:id/history`, async ({ params }) => {
+    http.get('*' + `${BASE_URL}/flags/:id/history`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);
         const history: SuperadminFeatureHistoryEntry[] = SUPERADMIN_FEATURE_HISTORY[id] ?? [];
         return HttpResponse.json<ApiResponse<SuperadminFeatureHistoryEntry[]>>({ success: true, message: 'Feature history loaded', data: history });
     }),
-    http.get(BASE_URL, async () => {
+    http.get('*' + BASE_URL, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<{
             flags: FeatureFlag[];
@@ -45,7 +45,7 @@ export const superadminFeaturesHandlers = [
             data: { flags: mockFlags, notes: mockNotes },
         });
     }),
-    http.post(`${BASE_URL}/flags`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/flags`, async ({ request }) => {
         await delay(500);
         const body = await request.json() as Partial<FeatureFlag>;
         const newFlag: FeatureFlag = {
@@ -63,7 +63,7 @@ export const superadminFeaturesHandlers = [
             data: newFlag,
         });
     }),
-    http.patch(`${BASE_URL}/flags/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/flags/:id`, async ({ params, request }) => {
         await delay(500);
         const id = params.id as string;
         const body = await request.json() as Partial<FeatureFlag>;
@@ -84,7 +84,7 @@ export const superadminFeaturesHandlers = [
             data: updated,
         });
     }),
-    http.post(`${BASE_URL}/flags/:id/toggle`, async ({ params }) => {
+    http.post('*' + `${BASE_URL}/flags/:id/toggle`, async ({ params }) => {
         await delay(400);
         const id = params.id as string;
         let updated: FeatureFlag | null = null;
@@ -104,7 +104,7 @@ export const superadminFeaturesHandlers = [
             data: updated,
         });
     }),
-    http.delete(`${BASE_URL}/flags/:id`, async ({ params }) => {
+    http.delete('*' + `${BASE_URL}/flags/:id`, async ({ params }) => {
         await delay(400);
         const id = params.id as string;
         mockFlags = mockFlags.filter(f => f.id !== id);
@@ -114,7 +114,7 @@ export const superadminFeaturesHandlers = [
             data: null,
         });
     }),
-    http.post(`${BASE_URL}/notes`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/notes`, async ({ request }) => {
         await delay(500);
         const body = await request.json() as Partial<ReleaseNote>;
         const newNote: ReleaseNote = {
@@ -133,7 +133,7 @@ export const superadminFeaturesHandlers = [
             data: newNote,
         });
     }),
-    http.patch(`${BASE_URL}/notes/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/notes/:id`, async ({ params, request }) => {
         await delay(500);
         const id = params.id as string;
         const body = await request.json() as Partial<ReleaseNote>;
@@ -154,7 +154,7 @@ export const superadminFeaturesHandlers = [
             data: updated,
         });
     }),
-    http.delete(`${BASE_URL}/notes/:id`, async ({ params }) => {
+    http.delete('*' + `${BASE_URL}/notes/:id`, async ({ params }) => {
         await delay(400);
         const id = params.id as string;
         mockNotes = mockNotes.filter(n => n.id !== id);

@@ -26,7 +26,7 @@ export function resetSuperadminInvoicesMockState(): void {
 }
 export const superadminInvoicesHandlers = [
     http.get(`*${MODULE_URLS.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
-    http.get(BASE_URL, async ({ request }) => {
+    http.get('*' + BASE_URL, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page')) || 1;
@@ -50,7 +50,7 @@ export const superadminInvoicesHandlers = [
             meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
         });
     }),
-    http.post(`${BASE_URL}/manual-payment`, async ({ request }) => {
+    http.post('*' + `${BASE_URL}/manual-payment`, async ({ request }) => {
         await delay(500);
         const parsed = CreateManualPaymentDtoSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json<ApiResponse<SaaSInvoice>>({ success: false, message: 'Invalid manual payment request', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -78,7 +78,7 @@ export const superadminInvoicesHandlers = [
             data: newInvoice,
         });
     }),
-    http.get(`${BASE_URL}/:id/download`, async () => {
+    http.get('*' + `${BASE_URL}/:id/download`, async () => {
         await delay(300);
         return HttpResponse.json<ApiResponse<{
             downloadUrl: string;
@@ -88,7 +88,7 @@ export const superadminInvoicesHandlers = [
             data: { downloadUrl: '/mock-invoice.pdf' },
         });
     }),
-    http.get(`${BASE_URL}/export`, async () => {
+    http.get('*' + `${BASE_URL}/export`, async () => {
         await delay(600);
         return HttpResponse.json<ApiResponse<{
             downloadUrl: string;
@@ -98,7 +98,7 @@ export const superadminInvoicesHandlers = [
             data: { downloadUrl: '/mock-invoices.csv' },
         });
     }),
-    http.post(`${BASE_URL}/:id/resend`, async () => {
+    http.post('*' + `${BASE_URL}/:id/resend`, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<null>>({
             success: true,

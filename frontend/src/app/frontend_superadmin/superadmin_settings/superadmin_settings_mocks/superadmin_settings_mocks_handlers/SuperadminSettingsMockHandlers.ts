@@ -18,11 +18,11 @@ export function resetSuperadminSettingsMockState(): void {
   mockSettings = [...MOCK_PLATFORM_SETTINGS];
 }
 export const superadminSettingsHandlers = [
-    http.get(BASE_URL, async () => {
+    http.get('*' + BASE_URL, async () => {
         await delay(300);
         return HttpResponse.json({ success: true, message: 'Success', data: mockSettings });
     }),
-    http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
+    http.patch('*' + `${BASE_URL}/:id`, async ({ params, request }) => {
         await delay(400);
         const body = await request.json() as Record<string, unknown>;
         mockSettings = mockSettings.map(s => s.id === params.id ? { ...s, value: String(body.value ?? '') } : s);

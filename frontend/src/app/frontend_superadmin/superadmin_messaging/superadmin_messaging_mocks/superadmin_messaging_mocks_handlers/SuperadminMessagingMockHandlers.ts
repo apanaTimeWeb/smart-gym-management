@@ -39,7 +39,7 @@ function parseDateBoundary(value: string | null, endOfDay = false): number | nul
 }
 
 export const superadminMessagingHandlers = [
-  http.get(`${BASE_URL}/messages`, async ({ request }) => {
+  http.get('*' + `${BASE_URL}/messages`, async ({ request }) => {
     await delay(150);
     const url = new URL(request.url);
     const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
@@ -69,7 +69,7 @@ export const superadminMessagingHandlers = [
     });
   }),
 
-  http.get(`${BASE_URL}/notifications`, async () => {
+  http.get('*' + `${BASE_URL}/notifications`, async () => {
     await delay(150);
     return HttpResponse.json<ApiResponse<SuperadminNotification[]>>({
       success: true,
@@ -78,7 +78,7 @@ export const superadminMessagingHandlers = [
     });
   }),
 
-  http.patch(`${BASE_URL}/notifications/:id/read`, async ({ params }) => {
+  http.patch('*' + `${BASE_URL}/notifications/:id/read`, async ({ params }) => {
     await delay(100);
     const id = String(params.id ?? '');
     const index = mockNotifications.findIndex((notification) => notification.id === id);
@@ -94,7 +94,7 @@ export const superadminMessagingHandlers = [
     });
   }),
 
-  http.patch(`${BASE_URL}/notifications/read-all`, async () => {
+  http.patch('*' + `${BASE_URL}/notifications/read-all`, async () => {
     await delay(100);
     mockNotifications = mockNotifications.map((notification) => ({ ...notification, read: true }));
     return HttpResponse.json<ApiResponse<SuperadminNotification[]>>({
@@ -104,7 +104,7 @@ export const superadminMessagingHandlers = [
     });
   }),
 
-  http.get(`${BASE_URL}/tenants`, async () => {
+  http.get('*' + `${BASE_URL}/tenants`, async () => {
     await delay(150);
     return HttpResponse.json<ApiResponse<typeof MOCK_SUPERADMIN_MESSAGING_TENANTS>>({
       success: true,
@@ -113,7 +113,7 @@ export const superadminMessagingHandlers = [
     });
   }),
 
-  http.post(`${BASE_URL}/messages`, async ({ request }) => {
+  http.post('*' + `${BASE_URL}/messages`, async ({ request }) => {
     await delay(150);
     const payload = await request.json() as Partial<TenantMessage>;
     if (!payload.tenantId || !payload.tenantName || !payload.channel || !payload.subject?.trim() || !payload.body?.trim()) {

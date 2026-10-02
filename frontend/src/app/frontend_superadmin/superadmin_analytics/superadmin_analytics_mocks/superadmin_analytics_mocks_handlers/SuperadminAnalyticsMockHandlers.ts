@@ -18,7 +18,7 @@ import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
 export const superadminAnalyticsHandlers = [
-    http.get(BASE_URL, async () => {
+    http.get('*' + BASE_URL, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<AnalyticsApiData>>({
             success: true,

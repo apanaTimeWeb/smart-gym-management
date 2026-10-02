@@ -17,7 +17,7 @@ import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
 export const superadminReportsHandlers = [
-    http.get(`${BASE_URL}/revenue`, async ({ request }) => {
+    http.get('*' + `${BASE_URL}/revenue`, async ({ request }) => {
         await delay(300);
         const url = new URL(request.url);
         const search = (url.searchParams.get('search') || '').toLowerCase();
@@ -34,7 +34,7 @@ export const superadminReportsHandlers = [
         });
         return HttpResponse.json<ApiResponse<RevenueRow[]>>({ success: true, message: 'Success', data: filtered });
     }),
-    http.get(`${BASE_URL}/cancellations`, async ({ request }) => {
+    http.get('*' + `${BASE_URL}/cancellations`, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);
         const search = url.searchParams.get('search')?.toLowerCase() || '';
@@ -66,7 +66,7 @@ export const superadminReportsHandlers = [
             data: filtered,
         });
     }),
-    http.get(`${BASE_URL}/health`, async ({ request }) => {
+    http.get('*' + `${BASE_URL}/health`, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);
         const search = url.searchParams.get('search')?.toLowerCase() || '';
