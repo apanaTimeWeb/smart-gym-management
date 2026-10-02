@@ -133,9 +133,9 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
          data-testid="superadmin_layout_shell-superadminsidebar-interaction-layer-1"/>
       )}
 
-      <aside className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow w-64 md:w-16 ${
-        isCollapsed ? 'xl:w-16' : 'xl:w-60'
-      } ${isMobileOpen ? 'left-0' : '-left-64 md:left-0'}`} aria-label={t('ui.superadmin_sidebar_label')}>
+      <aside className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow w-64 ${
+        isCollapsed ? 'md:w-16' : 'md:w-64'
+      } ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`} aria-label={t('ui.superadmin_sidebar_label')}>
 
         {isMobileOpen && (
           <div className="flex items-center justify-end border-b border-border px-4 py-2 md:hidden">
@@ -160,7 +160,7 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
 
         {/* Search Box */}
         {(!isCollapsed || isMobileOpen) && (
-          <div className={`px-4 py-3 ${isMobileOpen ? 'block' : 'hidden xl:block'} border-b border-border shrink-0`}>
+          <div className={`px-4 py-3 ${isMobileOpen ? 'block' : 'hidden md:block'} border-b border-border shrink-0`}>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search size={18} className="text-secondary" />
@@ -205,7 +205,7 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
             filteredNavGroups.map((group) => (
               <div key={group.labelKey}>
                 {(!isCollapsed || isMobileOpen) && (
-                  <p className={`${isMobileOpen ? 'block' : 'hidden xl:block'} text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider`}>
+                  <p className={`${isMobileOpen ? 'block' : 'hidden md:block'} text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider`}>
                     {t(group.labelKey)}
                   </p>
                 )}
@@ -214,7 +214,7 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
                     const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                     const Icon = item.icon;
                     const showLabel = !isCollapsed || isMobileOpen;
-                    const labelVisibilityClass = isMobileOpen ? 'inline' : (!isCollapsed ? 'hidden xl:inline' : 'hidden');
+                    const labelVisibilityClass = isMobileOpen ? 'inline' : (!isCollapsed ? 'hidden md:inline' : 'hidden');
 
                     return (
                       <Link
@@ -242,12 +242,12 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
         </nav>
 
         {/* User */}
-        <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${isMobileOpen ? 'gap-3' : (!isCollapsed ? 'justify-center xl:justify-start xl:gap-3' : 'justify-center')}`}>
+        <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${isMobileOpen ? 'gap-3' : (!isCollapsed ? 'justify-center md:justify-start md:gap-3' : 'justify-center')}`}>
           <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-on-primary text-sm font-bold border border-border bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
           </div>
           {(!isCollapsed || isMobileOpen) && (
-            <div className={`${isMobileOpen ? 'block' : 'hidden xl:block'} whitespace-nowrap overflow-hidden flex-1`}>
+            <div className={`${isMobileOpen ? 'block' : 'hidden md:block'} whitespace-nowrap overflow-hidden flex-1`}>
               <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || t('ui.superadmin_user')) : t('ui.superadmin_user')}</div>
               <div className="text-secondary text-xs truncate">{mounted ? (user?.role || t('ui.superadmin_role')) : t('ui.superadmin_role')}</div>
             </div>

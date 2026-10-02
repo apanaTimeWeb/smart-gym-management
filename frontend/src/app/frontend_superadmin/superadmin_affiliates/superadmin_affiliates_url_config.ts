@@ -5,7 +5,7 @@
  */
 export const MODULE_URLS = {
   PAGES: {
-          MAIN: '/superadmin/affiliates',
+          MAIN: '/frontend_superadmin/superadmin_affiliates',
       },
       BACKEND_API: {
           BASE: '/superadmin/affiliates',

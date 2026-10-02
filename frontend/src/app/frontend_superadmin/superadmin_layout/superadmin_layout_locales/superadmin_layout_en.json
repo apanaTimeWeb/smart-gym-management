@@ -22,31 +22,31 @@
       "close_sidebar": "Close sidebar",
       "superadmin_user": "Superadmin User",
       "superadmin_role": "Superadmin"
-    }
-  },
-  "navigation": {
-    "subscriptions_and_tiers": "Subscriptions & Tiers",
-    "tenant_invoices": "Tenant Invoices",
-    "platform_coupons": "Platform Coupons",
-    "saaS_billing_sections": "SaaS billing sections",
-    "groups": {
-      "overview": "Overview",
-      "management": "Management",
-      "system": "System"
     },
-    "items": {
-      "dashboard": "Dashboard",
-      "analytics": "Analytics",
-      "gyms": "Gyms & Tenants",
-      "plans": "SaaS Plans",
-      "affiliates": "Affiliates",
-      "features": "Features",
-      "integrations": "Integrations",
-      "reports": "Reports",
-      "system_ops": "System Ops",
-      "tickets": "Tickets",
-      "messaging": "Messaging",
-      "profile": "Profile"
+    "navigation": {
+      "subscriptions_and_tiers": "Subscriptions & Tiers",
+      "tenant_invoices": "Tenant Invoices",
+      "platform_coupons": "Platform Coupons",
+      "saaS_billing_sections": "SaaS billing sections",
+      "groups": {
+        "overview": "Overview",
+        "management": "Management",
+        "system": "System"
+      },
+      "items": {
+        "dashboard": "Dashboard",
+        "analytics": "Analytics",
+        "gyms": "Gyms & Tenants",
+        "plans": "SaaS Plans",
+        "affiliates": "Affiliates",
+        "features": "Features",
+        "integrations": "Integrations",
+        "reports": "Reports",
+        "system_ops": "System Ops",
+        "tickets": "Tickets",
+        "messaging": "Messaging",
+        "profile": "Profile"
+      }
     }
   }
 }

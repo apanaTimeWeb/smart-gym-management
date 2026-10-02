@@ -7,6 +7,6 @@ export const MODULE_URLS = {
   EXTERNAL: {
           WHATSAPP_SHARE: (message: string) => `https://wa.me/?text=${encodeURIComponent(message)}`,
       },
-      PAGES: { MAIN: "/superadmin/saas-billing/coupons" },
+      PAGES: { MAIN: "/frontend_superadmin/superadmin_coupons" },
       BACKEND_API: { BASE: "/superadmin/saas-billing/coupons" }
 } as const;

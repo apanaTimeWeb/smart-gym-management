@@ -4,7 +4,7 @@
  * Endpoint path strings are preserved from the supplied contract.
  */
 export const MODULE_URLS = {
-  PAGES: { MAIN: "/superadmin/broadcasts" },
+  PAGES: { MAIN: "/frontend_superadmin/superadmin_broadcasts" },
       BACKEND_API: { BASE: "/superadmin/broadcasts", TENANTS: "/superadmin/gyms", DELIVER_TO_RECIPIENT: (broadcastId: string, recipientId: string) => `/superadmin/broadcasts/${encodeURIComponent(broadcastId)}/deliveries/${encodeURIComponent(recipientId)}` },
   AUDIENCE_INSIGHTS: { BACKEND_API: { BASE: '/superadmin/broadcasts/audience-insights' } },
 } as const;

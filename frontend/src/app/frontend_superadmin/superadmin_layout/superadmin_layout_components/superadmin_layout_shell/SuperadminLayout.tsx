@@ -30,7 +30,7 @@ export default function SuperadminLayout({ children }: SuperadminLayoutProps) {
       <div className="min-h-screen bg-page text-primary">
       <SuperadminLayoutHeader />
       <SuperadminLayoutSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <main className={`min-h-screen pt-16 motion-safe:transition-all motion-safe:duration-slow ${isCollapsed ? 'lg:ml-16' : 'lg:ml-60'}`}>
+      <main className={`min-h-screen pt-16 motion-safe:transition-all motion-safe:duration-slow ml-0 ${isCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
         
         {children}
       </main>

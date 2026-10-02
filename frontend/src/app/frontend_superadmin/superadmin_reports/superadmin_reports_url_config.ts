@@ -4,7 +4,7 @@
  * Endpoint path strings are preserved from the supplied contract.
  */
 export const MODULE_URLS = {
-  PAGES: { MAIN: "/superadmin/reports" },
+  PAGES: { MAIN: "/frontend_superadmin/superadmin_reports" },
       BACKEND_API: { BASE: "/superadmin/reports" },
   COMPARISON: { BACKEND_API: { BASE: '/superadmin/reports/comparison' } },
   EXPORT: { BACKEND_API: { EXPORT: '/export-data' } },

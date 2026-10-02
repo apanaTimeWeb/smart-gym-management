@@ -4,7 +4,7 @@
  * Endpoint path strings are preserved from the supplied contract.
  */
 export const MODULE_URLS = {
-  PAGES: { MAIN: "/superadmin/tickets", GYMS: "/superadmin/gyms" },
+  PAGES: { MAIN: "/frontend_superadmin/superadmin_tickets", GYMS: "/frontend_superadmin/superadmin_gyms" },
       BACKEND_API: {
           BASE: "/superadmin/tickets",
           REPLY: (id: string) => `/superadmin/tickets/${encodeURIComponent(id)}/reply`,

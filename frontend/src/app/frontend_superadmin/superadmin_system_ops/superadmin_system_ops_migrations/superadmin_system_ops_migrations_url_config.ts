@@ -5,7 +5,7 @@
  */
 export const MODULE_URLS = {
   PAGES: {
-          MAIN: '/superadmin/system-ops/migrations',
+          MAIN: '/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations',
       },
       BACKEND_API: {
           BASE: '/superadmin/system-ops/migrations',

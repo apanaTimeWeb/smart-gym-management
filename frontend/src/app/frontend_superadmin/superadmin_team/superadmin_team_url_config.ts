@@ -4,5 +4,5 @@
  * Endpoint path strings are preserved from the supplied contract.
  */
 export const MODULE_URLS = {
-  PAGES: { MAIN: '/superadmin/team' }, BACKEND_API: { BASE: '/superadmin/team', ALERT_PREFERENCES: '/superadmin/team/alerts' }
+  PAGES: { MAIN: '/frontend_superadmin/superadmin_team' }, BACKEND_API: { BASE: '/frontend_superadmin/superadmin_team', ALERT_PREFERENCES: '/superadmin/team/alerts' }
 } as const;

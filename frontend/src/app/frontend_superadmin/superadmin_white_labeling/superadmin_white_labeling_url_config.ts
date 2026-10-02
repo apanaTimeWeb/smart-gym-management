@@ -5,7 +5,7 @@
  */
 export const MODULE_URLS = {
   PAGES: {
-      MAIN: '/superadmin/white-labeling',
+      MAIN: '/frontend_superadmin/superadmin_white_labeling',
     },
     BACKEND_API: {
       DOMAINS: '/superadmin/white-labeling/domains',

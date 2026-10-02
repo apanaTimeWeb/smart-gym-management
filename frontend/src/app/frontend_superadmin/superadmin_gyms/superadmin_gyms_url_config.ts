@@ -8,7 +8,7 @@ export const MODULE_URLS = {
           WHATSAPP_CLICK_TO_CHAT: (phone: string, message: string) => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
       },
       PAGES: {
-          MAIN: "/superadmin/gyms",
+          MAIN: "/frontend_superadmin/superadmin_gyms",
           BILLING_PLANS: '/superadmin/saas-billing/plans',
           ADD: "/superadmin/gyms/add",
       },
