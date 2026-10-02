@@ -130,6 +130,13 @@ The only persistent project-level file the auditor may create is:
 DEEP-VERIFICATION-REPORT.md
 ```
 
+## ABSOLUTE CROSS-STACK WRITE PROHIBITION (NON-NEGOTIABLE)
+
+Agar tum Frontend audit kar rahe ho, toh Backend ka ek single word bhi modify ya suggest mat karna (chahe backend galat ho).
+Agar tum Backend audit kar rahe ho, toh Frontend ka ek single file ya type modify/suggest mat karna.
+
+Integrations hamesha "Target Stack" me fix hone chahiye. Agar backend API wrong shape de raha hai (during frontend audit), toh frontend usko handle karega, ya fir issue report hoga as `CROSS-STACK-CONTRACT-FAILURE`. Opposite stack ko alter karne ka attempt turant FAIL maana jayega.
+
 Runtime verification may use a **disposable isolated execution workspace external to the supplied implementation**, when such an environment is available and safe.
 
 That isolated workspace must not become part of the audited source tree and must not modify the supplied source snapshot.
@@ -674,6 +681,22 @@ IMPACT:
 Never silently skip a file.
 
 If source completeness is uncertain, record the limitation in the coverage ledger.
+
+---
+
+# 13A. MANDATORY BOUNDED EXECUTION + PERSISTENT CHECKPOINT WORKFLOW
+
+Agar supplied codebase ya module bohot bada hai (Token limit breach hone ka risk hai), toh audit ko ek single run me force mat karo. 
+
+Tumhe apni progress in states me track karni hai:
+- NOT_STARTED
+- PARTIAL (Hit context/generation limit)
+- DELIVERED (Completely audited)
+
+Agar tumhe lagta hai output limit hit hone wali hai, toh cleanly stop karo aur end me likho:
+`[STATUS: PARTIAL - WAITING FOR USER TO SAY "CONTINUE"]`
+
+Do NOT hallucinate file contents just to finish the report in one go.
 
 ---
 
@@ -1975,6 +1998,19 @@ Do not invent backend requirements absent from supplied rules.
 
 ---
 
+# 47A. FRONTEND-FIRST REVERSE ENGINEERING (MANDATORY FOR BACKEND AUDIT)
+
+Agar AUDIT TARGET `BACKEND` hai, aur supplied scope me Frontend files (UI, Actions, API clients) maujood hain, toh direct Backend code read karna start mat karo.
+
+STAGE 1: Pehle Frontend ko reverse-engineer karo.
+- Extract exact UI requirements, form validations, aur API network payloads.
+- Identify dropdowns, lookup values, and search/filter/pagination contracts.
+- Is extracted Frontend-baseline ko apna "Source of Truth" banao.
+
+STAGE 2: Ab is frontend baseline (contract) ke against backend ko audit karo. Check karo ki backend exactly un requirements ko meet kar raha hai ya nahi.
+
+---
+
 # 48. BACKEND STACK CONFLICT AUDIT
 
 If the supplied architecture defines a fixed stack, inspect:
@@ -2103,6 +2139,15 @@ Test existence does NOT equal test integrity.
 A test may be valid for one narrow behavior while inadequate for the broader workflow.
 
 Do not mark it invalid merely because it is not an end-to-end test if its intended scope is narrower.
+
+## 51A. E2E AND ISOLATION FORBIDDEN PATTERNS
+
+Tests ko rigorously in criteria pe evaluate karo:
+- Kya test E2E / Selenium isolation rules break kar raha hai? (Check supplied architecture rules).
+- Kya ek test doosre test ka shared state use kar raha hai? 
+- Agar koi E2E test database ya authentication state properly seed/teardown nahi karta independently, toh it is a STRICT FAIL. 
+
+Test existence is not enough. Isolation and teardown correctness must be verified.
 
 ---
 
@@ -2832,6 +2877,16 @@ existing valid test contracts
 Each invariant should have evidence.
 
 Do not invent invariants.
+
+---
+
+# 67A. REPORT FORMAT AND SCORING OVERRIDE RULE
+
+Dhyan rahe, agar supplied scope me specialized Role Module documents hain (e.g., `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR` ya `BACKEND_ROLE_MODULE...`), toh unme define kiya gaya reporting structure aur scoring format (jaise "BEFORE REPAIR SCORE: X/10" aur "CATEGORY SCORECARD") sabse zyada authoritative hai.
+
+Aise cases me:
+- Is document (temp.md) ka generalized A-to-F rating system aur projected rating formula IGNORE kar do.
+- Strictly us specialized document ke "EXACT REPORT STRUCTURE" ko follow karo.
 
 ---
 
