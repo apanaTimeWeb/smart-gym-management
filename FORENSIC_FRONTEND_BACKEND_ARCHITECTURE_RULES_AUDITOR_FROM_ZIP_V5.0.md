@@ -4080,4 +4080,23 @@ The auditor must preserve valid implementation rather than unnecessarily directi
 
 The auditor must never silently turn incomplete evidence into a complete verdict.
 
+---
+
+# 85. MANDATORY COGNITIVE SCRATCHPAD (CHAIN OF THOUGHT ENFORCEMENT)
+
+To guarantee zero hallucination, the AI MUST output a cognitive scratchpad block BEFORE generating the final 15-section report. 
+
+You must wrap your pre-computation reasoning in XML tags: `<forensic_scratchpad> ... </forensic_scratchpad>`.
+
+Inside the scratchpad, you MUST:
+1. List every single rule from the supplied Architecture/Design documents.
+2. For each rule, explicitly write out the absolute file path where you searched for evidence.
+3. Explicitly quote the exact code string you found (or write "NOT FOUND").
+4. Explicitly reason whether this constitutes a PASS, FAIL, or NOT_VERIFIED.
+5. Identify any "Devil's Advocate" counter-arguments (e.g., "Wait, I marked this FAIL, but is it possible the logic is inside a custom hook? Let me check `useAdminMembers.ts` first").
+
+Only AFTER closing the `</forensic_scratchpad>` tag are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
+
+This Chain of Thought mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
+
 # END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V5.1
