@@ -243,8 +243,12 @@ features/
     └── members/      ← TrainerMembers — isolated
 ```
 
+## Rule 1A — Architectural Dependency & Interaction Rules
 
-
+- **NO FAKE INTERACTION RULE:** A visible user interaction MUST produce its documented downstream behavior. Empty `onPress` handlers, `console.log`-only handlers, TODO handlers, fake success messages, and filters that do not affect data are explicitly **forbidden**. A user interaction is complete only when it triggers a handler → state change → API/domain action → success/error feedback → UI update.
+- **Circular Dependency Rule:** The following architectural loops are forbidden: `A -> B -> A`, `Hooks -> Store -> Hooks`, `Components -> Components -> Parent`, and `API -> Hook -> API`. Every dependency chain MUST remain acyclic.
+- **Dependency Direction Rule:** Dependency flow within a module MUST be unidirectional: `Screen -> Hooks -> API` OR `Screen -> Store`. Forbidden flows: `API -> Component`, `Store -> Component`, `Schema -> Component` (bypassing the hook).
+- **Separation of Logic and UI:** Do not mix complex React logic (`useEffect`, data transformations) with JSX markup. Extract all heavy logic into a custom hook. The `Screen.tsx` or `Component.tsx` acts purely as a View layer consuming the hook.
 
 ## Rule 2 — Navigation
 
@@ -298,6 +302,11 @@ State Ownership
 container "just in case." Components read server state directly through the
 data-fetching layer, which handles request de-duplication and caching itself.
 
+## Rule 4A — Derived Data Ownership Rule
+Derived calculations (e.g., `fullName`, `membershipStatus`, `expiryIndicator`) MUST have exactly one owner.
+- ✅ **Allowed:** Centralized in one place (a specific hook, model, or formatter).
+- ❌ **Forbidden:** The same derivation logic repeated across multiple components, hooks, and list items.
+
 ## Rule 5 — Forms & Validation
 
 - All non-trivial forms use a form-management library + a schema-validation
@@ -307,6 +316,14 @@ data-fetching layer, which handles request de-duplication and caching itself.
 - Client-side validation messages are for immediate UX feedback only. The
   backend's validation response (see Rule 7) is the final source of truth for
   what's actually accepted — never assume client validation alone is sufficient.
+
+## Rule 5A — Interface, Schema, & TypeScript Strictness
+
+- **Type Isolation (No Inline String Type Unions):** Never hardcode string type unions (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or component definitions. Always extract these into a named type in the module's `types/` folder.
+- **No Barrel Files:** Place schemas and constants strictly in their respective folders (`schemas/`, `config/`). Do NOT create barrel files (`index.ts`) to re-export them. Import the specific file directly using absolute imports.
+- **TypeScript Strictness:**
+  - `any` is strictly forbidden. Use `unknown` and narrow safely.
+  - `@ts-ignore` and `@ts-nocheck` are forbidden.
 
 ## Rule 6 — Secure Storage & Credential Handling
 
