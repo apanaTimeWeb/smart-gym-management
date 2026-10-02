@@ -95,11 +95,13 @@ Missing contract information MUST be reported as `BLOCKED BY SUPPLIED SCOPE` rat
 Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the main React/Next.js/Vite application.
 
 The `INTEGRATION_GUIDE.md` MUST include:
-- Required route registration / route-file placement for the host application, according to its framework's routing model.
-- Any new environment variables needed.
-- New NPM dependencies added.
-- Verification steps to ensure the module loads correctly.
-
+- **Global Route Registration:** Exact code snippets showing how to import and register the module's routes into the host app's main router/layout (e.g., Next.js `layout.tsx`, React Router `<Route>`, or React Native/Expo Router navigation stacks).
+- **Import Path Resolution (STRICT ALIASING):** You MUST use exact TypeScript path aliases (e.g., `import { X } from '@/app/frontend_superadmin/superadmin_gyms/...'` or `@/components/...`). Do NOT use fragile relative imports like `../../` for cross-module integration.
+- **Global State / Provider Wrapping:** If the module requires a specific Context Provider, TanStack Query client configuration, or Redux slice injection, provide the exact wrapper code for `_app.tsx` or `providers.tsx`.
+- **Environment Variables:** Any new `.env` variables needed for the module's API clients to function.
+- **NPM Dependencies:** Exact `npm install` commands for any new packages the module requires (e.g., `sonner`, `lucide-react`).
+- **Global Styling / Tailwind:** Instructions on importing the module's specific CSS variables or adding its paths to the host's `tailwind.config.ts` (or NativeWind) `content` array.
+- **Verification Steps:** How to manually verify the module is successfully hooked into the global frontend.
 ---
 
 You are a Senior Frontend Architect, Code Auditor, Accessibility Reviewer, Design-System Auditor, Testing Reviewer, and AI-Friendly Architecture Specialist.

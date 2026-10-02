@@ -118,16 +118,18 @@ The `INTEGRATION_GUIDE.md` MUST include:
 ```markdown
 # Integration Guide — backend-{role} v{N}
 
-## 1. Framework-Specific Application Registration
+## 1. Global Application Registration & Import Resolution
 
 ### NestJS
-- Add the module class to the root `app.module.ts` imports array.
-- Provide exact module class name and import path.
+- **Module Registration:** Add the module class to the root `app.module.ts` imports array.
+- **Import Paths (STRICT ALIASING):** Provide the EXACT TypeScript path alias required to import the module into the host app (e.g., `import { SuperadminMembersModule } from '@/backend-superadmin/superadmin-modules/superadmin-members/superadmin-members.module'`). Do NOT use fragile relative imports like `../../` for global integration.
+- **Entity Registration:** If new TypeORM Entities were created, explicitly state that they must be added to the global `entities: []` array in the `TypeOrmModule.forRoot()` configuration.
+- **Queue/Worker Registration:** If BullMQ is used, provide exact instructions on how to register the new queue/worker in the global Redis/Queue module.
 
-### Django
+### Django / Other
 - Add the app to `INSTALLED_APPS` in `settings.py` if required.
 - Register required root URL configuration in the project `urls.py`.
-- Register any framework-specific application wiring required by the supplied project.
+- Provide exact import statements to prevent "ModuleNotFoundError".
 - Do not invent root configuration files that are outside the supplied scope.
 
 ## 2. Environment Variables (.env)
