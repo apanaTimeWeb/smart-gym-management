@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 export default function GymsPage() {
     // In the future, server-side fetching can happen here before passing data to SuperadminGymsMain
     return (<SuperadminLayoutErrorBoundary>
-      <SuperadminGymsMain />
+      <Suspense fallback={<div className="p-6 text-center text-secondary">Loading...</div>}>
+        <SuperadminGymsMain />
+      </Suspense>
     </SuperadminLayoutErrorBoundary>);
 }
