@@ -421,3 +421,16 @@ scannable table that AI agents read before writing any styled component.
 CI MUST fail when:
 - the React Native theme implementation references an unknown token;
 - a required Light/Dark token pair is incomplete.
+
+---
+
+## 20. Premium Native Micro-Interactions (The WOW Factor)
+
+To ensure the application feels like a world-class, premium native app, **every developer and AI agent MUST adhere to these interaction details:**
+
+1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states should scale down slightly (`press-scale = 0.96`). Bottom sheets must slide in smoothly.
+2. **Haptic Feedback:** Pair visual feedback with tactile feedback.
+   - **Light Impact:** Minor UI changes (switches, dropdown toggles, pulling to refresh).
+   - **Success Notification:** Completing a wizard, saving a form, processing payment.
+   - **Error Notification:** Destructive actions, or when validation fails.
+3. **Custom Scroll/Pull-to-Refresh:** Use native refresh controls tinted with the `primary` token.

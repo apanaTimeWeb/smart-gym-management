@@ -173,11 +173,12 @@ Hooks (camelCase with required `use` prefix + feature name):
   useMembersFilters.ts
   useMembersSearch.ts
 
-API / Types / Schema / Store (dot-notation, feature-prefixed, lowercase):
+API / Types / Schema / Store / Config (dot-notation, feature-prefixed, lowercase):
   members.api.ts
   members.types.ts
   members.schema.ts
   members.store.ts
+  members.url_config.ts
 
 Integration tests:
   members.integration.test.ts
@@ -504,6 +505,24 @@ Before declaring a mobile feature complete, the AI MUST verify:
 A feature MUST NOT be marked complete merely because the app builds or the screen
 visually renders with placeholder values.
 
+## Rule 7B — URL Config Contract
+
+Every feature module MUST have exactly one `[moduleName].url_config.ts` (e.g., `members.url_config.ts`) which MUST export:
+1. All API endpoint URL strings as named constants (UPPER_SNAKE_CASE).
+2. A typed MODULE_URLS object grouping all endpoints.
+3. NO hardcoded base URLs — only paths relative to the API base.
+4. NO business logic — only URL string definitions.
+
+Example export shape:
+```typescript
+export const MEMBERS_URLS = {
+  LIST:   '/api/v1/manager/members',
+  DETAIL: (id: string) => `/api/v1/manager/members/${id}`,
+  CREATE: '/api/v1/manager/members',
+} as const;
+```
+This guarantees a single source of truth for endpoints and prevents scattered hardcoded URL strings inside the `*.api.ts` file.
+
 ## Rule 8 — Lists & Rendering Performance
 
 - Any list rendering more than ~20 items MUST use a virtualization-aware list
@@ -528,7 +547,7 @@ visually renders with placeholder values.
 - Icon sizes and stroke/weight values must reference tokens from
   `MOBILE_UI_UX_DESIGN.md` — never arbitrary numeric values per usage.
 
-## Rule 11 — Animations & Gestures
+## Rule 11 — Animations, Gestures, & Haptics (The WOW Factor)
 
 - Use React Native's high-performance animation system (a UI-thread-driven
   animation library like `react-native-reanimated` rather than the legacy JS-thread animation API).
@@ -538,6 +557,10 @@ visually renders with placeholder values.
   non-essential animations when the user has that setting enabled.
 - Centralize reusable animation presets (durations, easing curves, spring
   configs) in one shared module — never redefine the same values per screen.
+- **Haptic Feedback (Premium Feel):** To achieve a world-class SaaS feel, critical interactions MUST be accompanied by appropriate haptic feedback (e.g., using `react-native-haptic-feedback` or Expo Haptics).
+  - Use light impact for minor state changes (e.g., toggling a switch).
+  - Use success notifications for successful mutations (e.g., saving a form).
+  - Use error notifications for destructive actions or validation failures.
 
 ## Rule 12 — Charts & Data Visualization
 
@@ -842,6 +865,7 @@ it. "Contains components" is not acceptable.]
 | `types/` | All interfaces, enums, type unions | `members.types.ts` |
 | `schemas/` | Zod schemas / validator classes for forms | `members.schema.ts` |
 | `state/` | Feature-scoped store for shared UI state | `members.store.ts` — holds: selectedMemberId, isAddSheetOpen, filterStatus |
+| `config/` | Feature-specific configs like URL constants | `members.url_config.ts` |
 
 ## User Flows & Interactions
 [REQUIRED: 2-4 most important multi-step flows. Numbered steps. This lets an AI
