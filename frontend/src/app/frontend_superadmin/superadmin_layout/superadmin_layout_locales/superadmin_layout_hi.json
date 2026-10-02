@@ -30,22 +30,33 @@
       "saaS_billing_sections": "SaaS बिलिंग सेक्शन",
       "groups": {
         "overview": "अवलोकन",
-        "management": "प्रबंधन",
-        "system": "सिस्टम"
+        "gyms": "जिम और किरायेदार",
+        "billing": "बिलिंग और राजस्व",
+        "communication": "संचार और सहायता",
+        "insights": "अंतर्दृष्टि और रिपोर्ट",
+        "platform": "प्लेटफ़ॉर्म प्रबंधन",
+        "account": "खाता"
       },
       "items": {
         "dashboard": "डैशबोर्ड",
-        "analytics": "एनालिटिक्स",
-        "gyms": "जिम और टेनेंट",
-        "plans": "SaaS प्लान",
-        "affiliates": "एफिलिएट्स",
-        "features": "फीचर्स",
-        "integrations": "इंटीग्रेशंस",
-        "reports": "रिपोर्ट्स",
+        "gyms": "जिम और किरायेदार",
+        "analytics": "राजस्व विश्लेषण",
+        "plans": "SaaS बिलिंग",
+        "usage_meters": "उपयोग मीटर",
+        "compliance": "कर और अनुपालन",
+        "tickets": "सहायता टिकट",
+        "messaging": "जिम मैसेजिंग",
+        "broadcasts": "प्रसारण संदेश",
+        "reports": "रिपोर्ट और निर्यात",
+        "white_labeling": "व्हाइट-लेबलिंग",
+        "features": "फ़ीचर झंडे",
+        "affiliates": "सहबद्ध भागीदार",
+        "team": "प्लेटफ़ॉर्म टीम",
+        "integrations": "एकीकरण और वेबहुक",
         "system_ops": "सिस्टम ऑप्स",
-        "tickets": "टिकट्स",
-        "messaging": "मैसेजिंग",
-        "profile": "प्रोफ़ाइल"
+        "global_audit": "ग्लोबल ऑडिट लॉग",
+        "settings": "ग्लोबल सेटिंग्स",
+        "profile": "मेरी प्रोफ़ाइल"
       }
     }
   }

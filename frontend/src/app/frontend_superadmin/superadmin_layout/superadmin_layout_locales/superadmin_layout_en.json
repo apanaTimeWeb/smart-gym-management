@@ -30,22 +30,33 @@
       "saaS_billing_sections": "SaaS billing sections",
       "groups": {
         "overview": "Overview",
-        "management": "Management",
-        "system": "System"
+        "gyms": "Gyms & Tenants",
+        "billing": "Billing & Revenue",
+        "communication": "Communication & Support",
+        "insights": "Insights & Reports",
+        "platform": "Platform Management",
+        "account": "Account"
       },
       "items": {
         "dashboard": "Dashboard",
-        "analytics": "Analytics",
         "gyms": "Gyms & Tenants",
-        "plans": "SaaS Plans",
-        "affiliates": "Affiliates",
-        "features": "Features",
-        "integrations": "Integrations",
-        "reports": "Reports",
+        "analytics": "Revenue Analytics",
+        "plans": "SaaS Billing",
+        "usage_meters": "Usage Meters",
+        "compliance": "Tax & Compliance",
+        "tickets": "Support Tickets",
+        "messaging": "Gym Messaging",
+        "broadcasts": "Broadcast Messages",
+        "reports": "Reports & Exports",
+        "white_labeling": "White-Labeling",
+        "features": "Feature Flags",
+        "affiliates": "Affiliate Partners",
+        "team": "Platform Team",
+        "integrations": "Integrations & Webhooks",
         "system_ops": "System Ops",
-        "tickets": "Tickets",
-        "messaging": "Messaging",
-        "profile": "Profile"
+        "global_audit": "Global Audit Logs",
+        "settings": "Global Settings",
+        "profile": "My Profile"
       }
     }
   }
