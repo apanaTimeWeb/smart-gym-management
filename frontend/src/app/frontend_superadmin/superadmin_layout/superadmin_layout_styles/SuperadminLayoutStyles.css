@@ -1,0 +1,70 @@
+:root {
+  --superadmin-page-title-size: var(--font-size-page-title, 22px);
+  --superadmin-section-title-size: var(--font-size-section-title, 16px);
+  --superadmin-kpi-size: var(--font-size-kpi, 28px);
+  --superadmin-body-size: var(--font-size-body, 14px);
+  --superadmin-caption-size: var(--font-size-caption, 12px);
+}
+
+.superadmin-page-title {
+  font-size: var(--superadmin-page-title-size);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.superadmin-section-title {
+  font-size: var(--superadmin-section-title-size);
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.superadmin-kpi-number {
+  font-size: var(--superadmin-kpi-size);
+  line-height: 1.2;
+  font-weight: 700;
+}
+.superadmin-mobile-card-table {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .superadmin-mobile-card-table {
+    display: block;
+    min-width: 0;
+  }
+
+  .superadmin-mobile-card-table thead {
+    display: none;
+  }
+
+  .superadmin-mobile-card-table tbody {
+    display: block;
+  }
+
+  .superadmin-mobile-card-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+
+  .superadmin-mobile-card-table tbody td {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    border: 0 !important;
+    padding: 12px !important;
+  }
+
+  .superadmin-mobile-card-table tbody td::before {
+    content: attr(data-mobile-label);
+    color: var(--text-secondary);
+    font-size: var(--font-size-caption);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}

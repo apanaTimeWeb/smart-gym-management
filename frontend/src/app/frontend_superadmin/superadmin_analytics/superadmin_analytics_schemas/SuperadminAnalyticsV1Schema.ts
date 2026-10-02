@@ -1,0 +1,11 @@
+/**
+ * RESPONSIBILITY: Module-owned TypeScript module SuperadminAnalyticsV1Schema owned by the superadmin_analytics feature boundary.
+ * INTENT: Keep this file’s presentation, logic, and state responsibility isolated from unrelated business modules.
+ * STATE DEPENDENCIES: No React/client state primitive detected.
+ * MODULE DEPENDENCIES: zod
+ * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
+ * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
+ */
+import { z } from 'zod';
+
+export const SuperadminAnalyticsV1DataSchema = z.object({ metrics: z.object({ existingIncomeRetained: z.number(), grossIncomeRetained: z.number(), gymRetention: z.number(), revenueLost: z.number(), customerChurn: z.number(), currency: z.string().optional() }), cohort: z.array(z.object({ month: z.string(), m1: z.number(), m2: z.number(), m3: z.number(), m6: z.number(), m12: z.number() })), movement: z.array(z.object({ label: z.string(), value: z.number() })), adoption: z.array(z.object({ feature: z.string(), available: z.number(), active: z.number(), used: z.number() })), sources: z.array(z.object({ source: z.string(), gyms: z.number(), monthlyIncome: z.number(), churn: z.number() })), concentration: z.array(z.object({ group: z.string(), share: z.number() })) });

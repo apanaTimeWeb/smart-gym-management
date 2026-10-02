@@ -1,0 +1,29 @@
+'use client';
+/**
+ * RESPONSIBILITY: React component SuperadminInvoicesEmptyState owned by the superadmin_invoices feature boundary.
+ * INTENT: Keep this file’s presentation, logic, and state responsibility isolated from unrelated business modules.
+ * STATE DEPENDENCIES: No React/client state primitive detected.
+ * MODULE DEPENDENCIES: lucide-react, @/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_types/SuperadminInvoicesEmptyStateTypes
+ * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
+ * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
+ */
+// RESPONSIBILITY: Renders the empty state UI for the Invoices table when no invoices exist. Shows icon, message, and CTA to log first payment.
+import { Receipt } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+
+import type { SuperadminInvoicesEmptyStateProps } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_types/SuperadminInvoicesEmptyStateTypes';
+
+
+
+export default function SuperadminInvoicesEmptyState({ onLogPaymentClick }: SuperadminInvoicesEmptyStateProps) {
+  const t = useTranslations('superadmin_invoices');
+    return (<div className="flex flex-col items-center justify-center py-16 text-center" data-testid="superadmin_invoices-superadmin-invoices-empty-state-invoices-empty-state-empty">
+      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
+        <Receipt size={18} className="text-secondary opacity-50"/>
+      </div>
+      <h3 className="text-base font-semibold text-primary">{t('ui.no_invoices_yet_741a477d')}</h3>
+      <p className="text-sm text-secondary mt-1 max-w-xs">{t('ui.no_payment_records_found_log_a_manual_paymen_866f00a4')}</p>
+      <button onClick={onLogPaymentClick} className="mt-4 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary text-sm font-medium rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" data-testid="superadmin_invoices-superadmin-invoices-empty-state-state-log-manual-payment">
+        {t('ui.log_manual_payment_e15e5207')}</button>
+    </div>);
+}

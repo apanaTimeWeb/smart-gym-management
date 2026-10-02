@@ -1,0 +1,43 @@
+{
+  "superadmin_usage_meters": {
+    "module": {
+      "name": "superadmin_usage_meters",
+      "namespace": "superadmin_usage_meters"
+    },
+    "ui": {
+      "failed_to_load_view_f0191174": "लोड करने में विफल देखें",
+      "an_unexpected_error_occurred_while_rendering_1a97607b": "An unexpected error occurred while rendering this module. कृपया फिर से प्रयास करें या contact support if यह issue persists.",
+      "try_again_d876a9fe": "फिर से प्रयास करें",
+      "usage_meters_83ceafa1": "उपयोग मीटर",
+      "monitor_gym_resource_consumption_and_billing_c0c9399b": "Monitor जिम resource consumption और बिलिंग limits.",
+      "to_01b6e203": "को",
+      "total_sms_sent_1742d971": "कुल SMS Sent",
+      "limit_9917a4b3": "Limit:",
+      "total_storage_gb_d4a44fab": "कुल Storage (GB)",
+      "gb_79cba118": "GB",
+      "db_33ae9939": "DB:",
+      "binary_beef6ec0": "Binary:",
+      "members_ef53538a": "सदस्य",
+      "active_4d3d769b": "सक्रिय",
+      "text_6666cd76": "/",
+      "total_96b01412": "कुल",
+      "staff_8f7f9363": "Staff",
+      "billing_cycle_ends_949b51af": "बिलिंग Cycle Ends:",
+      "page_not_found_title": "पेज नहीं मिला",
+      "page_not_found_message": "मांगा गया पेज उपलब्ध नहीं है या इस Superadmin क्षेत्र में मौजूद नहीं है।",
+      "back_to_module": "मॉड्यूल पर वापस जाएँ"
+    },
+    "actions": {
+      "retry": "पुनः प्रयास करें",
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "close": "बंद करें",
+      "submit": "जमा करें",
+      "delete": "हटाएँ",
+      "edit": "संपादित करें",
+      "create": "बनाएँ",
+      "export": "निर्यात करें",
+      "search": "खोजें"
+    }
+  }
+}

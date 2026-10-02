@@ -1,0 +1,45 @@
+{
+  "superadmin_settings": {
+    "module": {
+      "name": "superadmin_settings",
+      "namespace": "superadmin_settings"
+    },
+    "ui": {
+      "failed_to_load_view_f0191174": "लोड करने में विफल देखें",
+      "an_unexpected_error_occurred_while_rendering_1a97607b": "An unexpected error occurred while rendering this module. कृपया फिर से प्रयास करें या contact support if यह issue persists.",
+      "try_again_d876a9fe": "फिर से प्रयास करें",
+      "loading_platform_settings_056ed69b": "लोड हो रहा है प्लेटफ़ॉर्म सेटिंग्स",
+      "platform_settings_could_not_be_loaded_00f9abd2": "प्लेटफ़ॉर्म सेटिंग्स could not be loaded.",
+      "retry_6327b4e5": "पुनः प्रयास करें",
+      "platform_settings_bc7aef6e": "प्लेटफ़ॉर्म सेटिंग्स",
+      "configure_global_saas_limits_master_credenti_246230e0": "वैश्विक SaaS limits, master credentials, और सिस्टम defaults कॉन्फ़िगर करें.",
+      "changelog_c49182dc": "चेंजलॉग",
+      "v2_4_1_current_6b444d2d": "v2.4.1 (वर्तमान)",
+      "released_on_sept_09_2026_bb49ecfc": "Released on Sept 09, 2026",
+      "added_support_for_trialgyms_count_in_dashboa_66b93a0a": "Added support के लिए trialGyms count in dashboard.",
+      "fixed_overdue_invoices_kpi_aggregation_bug_ba59f236": "Fixed overdue invoices KPI aggregation bug.",
+      "added_quot_revenue_by_plan_tier_quot_donut_c_a5d1f407": "Added &quot;Revenue by प्लान Tier&quot; donut chart.",
+      "v2_4_0_fd7b4c8a": "v2.4.0",
+      "released_on_aug_21_2026_113677d0": "Released on Aug 21, 2026",
+      "introduced_superadmin_module_a7ce793b": "Introduced Superadmin module.",
+      "added_global_audit_logs_7b2a40b5": "Added वैश्विक audit logs.",
+      "basic_gym_management_and_uptime_tracker_d3d15603": "Basic जिम management और uptime tracker.",
+      "save_setting_aria": "{key} सहेजें",
+      "page_not_found_title": "पेज नहीं मिला",
+      "page_not_found_message": "मांगा गया पेज उपलब्ध नहीं है या इस Superadmin क्षेत्र में मौजूद नहीं है।",
+      "back_to_module": "मॉड्यूल पर वापस जाएँ"
+    },
+    "actions": {
+      "retry": "पुनः प्रयास करें",
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "close": "बंद करें",
+      "submit": "जमा करें",
+      "delete": "हटाएँ",
+      "edit": "संपादित करें",
+      "create": "बनाएँ",
+      "export": "निर्यात करें",
+      "search": "खोजें"
+    }
+  }
+}
