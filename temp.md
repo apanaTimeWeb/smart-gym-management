@@ -943,6 +943,25 @@ Before marking any rule PASS, verify:
 10. No missing upstream dependency invalidates the claimed behavior.
 ```
 
+### PASS Gate — Anti-Hallucination Extension (Items 11–14)
+
+Before marking any rule PASS, ALSO confirm:
+
+```text
+11. I have actually read the specific file/lines this evidence comes from
+    using a real tool call — NOT assumed from memory or similar patterns.
+12. I have not assumed this file exists based on patterns in other files
+    or on what "should" be present in a well-structured project.
+13. I have not assumed this behavior based on what "should" be there
+    given the architecture rules.
+14. I can quote the exact code/content that satisfies the requirement
+    with an exact file path and concrete line reference.
+```
+
+If ANY of items 11–14 cannot be confirmed: mark `NOT_VERIFIED`, not `PASS`.
+
+This rule exists because the most dangerous audit error is a fabricated PASS — it prevents repair from ever being triggered for a real defect.
+
 If material uncertainty remains:
 
 ```text
@@ -1241,6 +1260,24 @@ A line-count violation and a responsibility violation are separate findings if i
 Do not split solely because a file is large when the supplied rules do not impose a relevant ceiling.
 
 Do not ignore an explicit file-size rule because the implementation still "works".
+
+---
+
+# 27A. STRICT NAMING & FILE STRUCTURE AUDIT
+
+The auditor MUST strictly verify the Canonical Naming Rules based on the supplied scope.
+
+**Global Rules:**
+1. Every file (except framework reserved) MUST be prefixed with `{Role}{Module}`.
+2. Every child folder MUST be `{module_name}_{artifact}` (Frontend) or `{module-name}-{artifact}` (Backend). No double prefixes for folders.
+
+**If FRONTEND is in scope:**
+3. Locale files MUST be named `[moduleName]_{lang}.json` and live in `[moduleName]_locales/`.
+4. URL Config files MUST export a `MODULE_URLS` object with UPPER_SNAKE_CASE keys.
+5. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 9 mandatory sections (Purpose, Routes, State Map, API Contract, etc.).
+
+**If BACKEND is in scope:**
+6. Backend migrations MUST follow the strict `{timestamp}-{RoleModule}-{Description}.ts` format with complete `down()` rollbacks.
 
 ---
 
@@ -1662,9 +1699,22 @@ A frontend can still have a contract issue when:
 
 - request shape contradicts supplied API contract;
 - response assumptions contradict supplied types/contracts;
-- required error states are omitted;
 - the API client is never used;
 - mock contract contradicts the supplied contract.
+
+---
+
+# 38A. DUAL-STACK CONTRACT CROSS-VERIFICATION (GAP-13 Equivalent)
+
+When BOTH frontend and backend implementations are supplied in the audit scope, the auditor MUST perform exact cross-stack verification for every endpoint:
+
+1. Frontend `_url_config.ts` URL perfectly matches Backend `@Controller` path + `@Get/Post/etc` path.
+2. Frontend API client HTTP method matches Backend HTTP method.
+3. Frontend Request Payload (Zod/Type) perfectly matches Backend Request DTO (class-validator).
+4. Frontend Response Expectation (Type) perfectly matches Backend Response DTO.
+5. Frontend Error Handling matches Backend Error throwing shape.
+
+If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE`. Do NOT attempt to fix either side.
 
 ---
 
@@ -1822,6 +1872,16 @@ Use supplied design system as the source of truth.
 Do not mark visual compliance merely because the UI looks aesthetically acceptable.
 
 Aesthetic preference is not a documented rule.
+
+---
+
+# 42A. DESIGN TOKEN & CSS VARIABLES COMPLIANCE AUDIT
+
+**If FRONTEND is in scope**, verify that the implementation strictly uses the canonical design tokens:
+1. `globals.css` must define all Chart Tokens (`--chart-primary`, etc.), Shadow Tokens, and Motion Tokens.
+2. No hardcoded colors or box-shadows in UI components.
+3. Tailwind usage must map to CSS variables (e.g., `text-pay-cash`, `bg-pay-upi-bg`, `text-purple`).
+4. Motion must use the defined duration tokens (e.g., `duration-base: 150ms`, `duration-slow: 300ms`).
 
 ---
 
@@ -2043,6 +2103,25 @@ The prohibition must come from supplied rules.
 
 ---
 
+# 48A. APPROVED PACKAGE REGISTRY AUDIT
+
+Verify the project strictly adheres to the approved NPM packages based on the supplied scope:
+
+**If FRONTEND is in scope:**
+- Must use `@tanstack/react-query` v5 (v4 is a failure).
+- Must use `react-hook-form` v7 + zod.
+- No `axios` unless explicitly approved (use native fetch).
+- No `formik`, `redux`, `mobx`.
+
+**If BACKEND is in scope:**
+- Must use `typeorm` (No `prisma`, `mongoose`, `sequelize`).
+- Must use `bullmq` (No `bull`).
+- Must use `ioredis` (No `redis` v4).
+
+Any violation is a Major Architecture Failure.
+
+---
+
 # 49. BACKEND DATA / TRANSACTION / CONCURRENCY AUDIT
 
 Where applicable inspect:
@@ -2102,6 +2181,22 @@ Security findings require concrete evidence.
 Do not speculate.
 
 Do not label an implementation insecure merely because a preferred security mechanism is absent unless the supplied rules require it or a concrete documented security requirement is violated.
+
+---
+
+# 50A. MULTI-TENANCY STRICT ENFORCEMENT AUDIT
+
+The Smart Gym application is multi-tenant. The auditor MUST verify tenant isolation based on the supplied scope.
+
+**If BACKEND is in scope, verify:**
+1. `gymId` and `branchId` are extracted strictly from the JWT/Auth context, NEVER from user request body or query params for secure operations.
+2. Every Database Repository `find`, `update`, `delete`, and `count` operation explicitly includes a `gymId` / `branchId` filter in the `WHERE` clause.
+3. Omitting the tenant filter is a P0 Critical Security Failure.
+4. Response DTOs never leak cross-tenant identifiers.
+
+**If FRONTEND is in scope, verify:**
+1. The frontend NEVER explicitly sends `gymId` or `branchId` in request bodies (it must rely on its Auth token).
+2. UI components do not inadvertently leak or mix data from different tenants.
 
 ---
 
@@ -2884,9 +2979,12 @@ Do not invent invariants.
 
 Dhyan rahe, agar supplied scope me specialized Role Module documents hain (e.g., `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR` ya `BACKEND_ROLE_MODULE...`), toh unme define kiya gaya reporting structure aur scoring format (jaise "BEFORE REPAIR SCORE: X/10" aur "CATEGORY SCORECARD") sabse zyada authoritative hai.
 
+> **CORRECTION NOTE (GAP-19 Fix):** Is document  me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
+
 Aise cases me:
-- Is document (temp.md) ka generalized A-to-F rating system aur projected rating formula IGNORE kar do.
+- Is document  ka generalized 1.0–10.0 numeric rating system aur projected rating formula override ho jaata hai — specialized document ka rating format use karo.
 - Strictly us specialized document ke "EXACT REPORT STRUCTURE" ko follow karo.
+
 
 ---
 
@@ -3796,33 +3894,27 @@ The audit is complete only when:
 
 ---
 
-# 82. LANGUAGE RULE
+# 82. LANGUAGE RULE (Clarified Scope - GAP 25 Fix)
 
-Narrative:
+Narrative (WHY / Analytical explanations):
 
 ```text
 Roman Hinglish
 ```
 
-Technical content:
+Technical content (Section headings, Matrix column headers, Issue titles, Status values like PASS/FAIL):
 
 ```text
 English
 ```
 
-Code:
+Code & Evidence Quotes:
 
 ```text
 as-is
 ```
 
-File paths:
-
-```text
-as-is
-```
-
-Routes:
+File paths & Routes:
 
 ```text
 as-is
@@ -3835,6 +3927,27 @@ English
 ```
 
 NEVER use Devanagari.
+
+### Language Scope Clarification (GAP-25 Fix)
+
+To prevent AI from generating machine-unparseable output, the following precise scope applies:
+
+| Content Type | Language |
+|---|---|
+| Section headings | **English only** |
+| Matrix column headers | **English only** |
+| Issue titles (`### ISSUE-NNN ...`) | **English only** |
+| Status values (`PASS`, `FAIL`, `NOT_VERIFIED`, etc.) | **English only** |
+| Evidence type tags (`STATIC`, `BROWSER_RUNTIME`, etc.) | **English only** |
+| Code blocks, file paths, symbols | **As-is — no translation** |
+| JSON / YAML / structured data | **As-is** |
+| Rule IDs and document references | **English only** |
+| Analytical narrative (WHY something fails) | **Roman Hinglish permitted here ONLY** |
+| Repair handoff instructions | **English only** |
+| Rating values and caps | **English only** |
+| Evidence quotes from source code | **As-is** |
+
+**Intent:** Narrative prose connecting evidence to conclusion may use Roman Hinglish for naturalness. All structured, machine-parseable output MUST remain in English so that a downstream AI or tool can parse the report reliably.
 
 Example:
 

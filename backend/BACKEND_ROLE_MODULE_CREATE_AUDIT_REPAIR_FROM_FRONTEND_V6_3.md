@@ -2981,6 +2981,38 @@ Do NOT audit backend implementation yet.
 
 Do NOT turn this into a frontend quality review.
 
+### STAGE 1 SCOPE BOUNDARY CLARIFICATION (GAP-4 Fix)
+
+The following MUST be completed and FROZEN before ANY backend file is opened, read, or analyzed:
+
+1. Frontend topology map (Section 8 / Stage 1A) — COMPLETE
+2. API surface discovery (Section 9 / Stage 1B) — COMPLETE
+3. Form/mutation requirement extraction (Section 10 / Stage 1C) — COMPLETE
+4. Realtime/event requirement discovery — COMPLETE
+5. Full requirement baseline — FROZEN (persisted in `progress.json` with `baseline_frozen: true`)
+
+### STAGE 1 FREEZE GATE (GAP-4 Fix)
+
+```text
+⛔ STAGE 1 FREEZE GATE
+
+Before any backend file may be opened, verify ALL of the following:
+
+[ ] 1. Full frontend topology has been recursively inspected (Stage 1A complete)
+[ ] 2. All frontend API clients, hooks, and mutations have been catalogued (Stage 1B complete)
+[ ] 3. All forms and their field-level backend requirements have been extracted (Stage 1C complete)
+[ ] 4. All realtime (WebSocket/SSE/Polling) requirements have been captured
+[ ] 5. requirements_total is set and locked in progress.json
+[ ] 6. baseline_frozen: true is persisted in progress.json
+[ ] 7. No backend file has been opened or read yet in this session
+[ ] 8. The frontend ZIP and backend ZIP are strictly in separate context passes
+    (not mixed in the same bounded unit — per Section 4.1A chunking rules)
+
+If ANY box is unchecked: DO NOT open any backend file. Complete Stage 1 first.
+```
+
+> **CRITICAL (Section 4.1A):** Frontend reading and backend repair MUST NOT occur in the same bounded work unit. Mixing them causes context pollution and hallucination. The freeze gate enforces this boundary.
+
 ---
 
 # 8. STAGE 1A — FRONTEND TOPOLOGY
@@ -3075,6 +3107,14 @@ REQ-002
 REQ-003
 ...
 ```
+
+### Handling Incomplete Frontend Evidence (GAP-18 Fix)
+If the frontend evidence is incomplete or stubbed, apply these rules:
+- MSW handlers returning `{}` or `[]` -> `STUB_RESPONSE` (not contract proof)
+- TODO API calls or console.log only -> `DEAD_ENDPOINT` (document, don't generate)
+- Zod schemas with `z.unknown()` -> `UNRESOLVED_TYPE` (flag for human input)
+
+Mark as `BLOCKED_BY_FRONTEND_INCOMPLETENESS` and proceed with available evidence only.
 
 ---
 
@@ -9051,6 +9091,28 @@ Only discovered real invariants.
 ## 16. Final Acceptance Conditions
 
 Exact binary DONE criteria.
+
+## 17. BACKEND DELIVERY FREEZE GATE (GAP-18 Fix)
+
+Before delivering any backend module ZIP, the AI MUST run this gate. If ANY item fails, the ZIP MUST NOT be delivered — it must be repaired first.
+
+```text
+BACKEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
+
+[ ] 1. No CRITICAL findings remain open (broken API contracts, security flaws, missing required endpoints)
+[ ] 2. No MAJOR architecture violations remain (wrong folder naming per Rule 0H, double-prefixing)
+[ ] 3. Tenant isolation (gymId/branchId) is enforced at the repository layer for ALL queries
+[ ] 4. All migrations follow the exact canonical naming convention and include complete down() steps
+[ ] 5. No missing global/app-level files are falsely reported as missing from the feature module scope
+[ ] 6. No forbidden packages (Prisma, Express, MongoDB) have been introduced
+[ ] 7. No frontend file has been modified under any circumstance (FRONTEND_CHANGE_REQUIRED.md used if needed)
+[ ] 8. All seed files are idempotent and wrapped in transactions
+[ ] 9. Redis mechanisms correctly match the decision table (e.g. Streams for critical events, Cache for rate limiting)
+[ ] 10. `progress.json` accurately reflects the final frozen state
+[ ] 11. CHANGELOG inside ZIP is specific and accurate
+
+If ANY box is unchecked: STATUS = BLOCKED_DELIVERY — do not deliver the ZIP.
+```
 
 
 ## FINAL STACK CONTAMINATION CHECK

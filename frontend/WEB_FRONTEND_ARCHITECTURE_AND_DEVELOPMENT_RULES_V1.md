@@ -558,6 +558,42 @@ To eliminate AI naming hallucinations, strictly follow this pattern:
 - **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
 - **Special Config/Doc Files:** snake_case with role and module (e.g., `admin_members_url_config.ts`, `admin_members_features.md`, `admin_members_forbidden.md`, `admin_members_theme_contract.md`)
 
+### Locale File Naming Convention (GAP-1 Fix)
+Locale files MUST follow: `[moduleName]_{lang}.json`
+(e.g., `admin_members_en.json`, `admin_members_hi.json`)
+The `[moduleName]_locales/` folder MUST contain ONLY locale files.
+Locale files are grouped by module, NOT by language.
+Do NOT create `src/locales/en/` global folders.
+
+### URL Config Contract (GAP-2 Fix)
+Every feature module MUST have exactly one `[moduleName]_url_config.ts` which MUST export:
+1. All API endpoint URL strings as named constants (UPPER_SNAKE_CASE).
+2. A typed MODULE_URLS object grouping all endpoints.
+3. NO hardcoded base URLs — only paths relative to API base.
+4. NO business logic — only URL string definitions.
+
+Example export shape:
+```typescript
+export const ADMIN_MEMBERS_URLS = {
+  LIST:   '/api/v1/admin/members',
+  DETAIL: (id: string) => `/api/v1/admin/members/${id}`,
+  CREATE: '/api/v1/admin/members',
+} as const;
+```
+
+### `[moduleName]_features.md` Content Specification (MANDATORY — GAP-4 Fix)
+This file MUST contain ALL of:
+1. Module Purpose — exact business purpose
+2. Routes — all URL paths with their page components
+3. User Flows — numbered steps for every major user action
+4. Component Tree — rendered hierarchy
+5. API Contract Summary — all endpoints with method + URL
+6. State Map — TanStack Query vs Zustand vs local
+7. Permissions — which role can see/do what
+8. External Dependencies — non-local infrastructure imports only
+9. Known Forbidden Patterns — cross-reference to _forbidden.md
+Generic boilerplate defeats the AI-portable goal.
+
 ### Child Folder Naming Contract
 
 Every child folder MUST inherit Role + Module identity.
@@ -870,6 +906,49 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 
+### CANONICAL `[moduleName]_url_config.ts` TEMPLATE (GAP-18 Fix)
+
+Every `[moduleName]_url_config.ts` MUST follow this exact shape. AI agents MUST generate this file for every module — no improvisation allowed.
+
+```typescript
+// [moduleName]_url_config.ts
+// Owned by: [role]/[module] feature module
+// DO NOT import this file from outside this module boundary.
+
+// ─── Internal Navigation Routes ────────────────────────────────────────────
+// These are the Next.js page routes owned by this module.
+export const [MODULE_NAME]_ROUTES = {
+  /** Root list / index page */
+  root: '/[role]/[module]' as const,
+  /** Dynamic detail page — usage: `[MODULE_NAME]_ROUTES.detail(memberId)` */
+  detail: (id: string) => `/[role]/[module]/${id}` as const,
+  /** Create/add page (if applicable) */
+  create: '/[role]/[module]/add' as const,
+} as const;
+
+// ─── External API Endpoints ─────────────────────────────────────────────────
+// These are the backend API endpoint paths consumed by this module.
+export const [MODULE_NAME]_API = {
+  /** GET  /api/v1/[role]/[module]  — paginated list */
+  list: '/api/v1/[role]/[module]' as const,
+  /** POST /api/v1/[role]/[module]  — create */
+  create: '/api/v1/[role]/[module]' as const,
+  /** GET  /api/v1/[role]/[module]/:id  — single record */
+  detail: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+  /** PATCH /api/v1/[role]/[module]/:id  — update */
+  update: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+  /** DELETE /api/v1/[role]/[module]/:id  — delete */
+  delete: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+} as const;
+```
+
+**Rules:**
+- Replace `[MODULE_NAME]`, `[role]`, `[module]` with the actual values.
+- Add/remove endpoint entries to match the actual backend contract.
+- All string literals MUST use `as const` for type safety.
+- Dynamic segments use a function form (e.g., `detail: (id: string) => ...`).
+- AI MUST NOT hardcode these strings directly in API client files.
+
 #### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
 All files (Constants, Schemas, QueryKeys, API, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
 DO NOT place facade files or entry-point files in the root of the feature module folder. 
@@ -877,6 +956,8 @@ DO NOT place facade files or entry-point files in the root of the feature module
 **THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
 For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). This keeps the root directory entirely clean.
+
+
 
 #### NO API FACADES (NO BARREL FILES)
 Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
@@ -1507,9 +1588,45 @@ are meaningless.
 
 15B. **Form Management, Validation, and Submission Architecture**:
 All non-trivial forms MUST use:
-- React Hook Form
+- React Hook Form **v7** (the project-locked version)
 - Zod
 - `@hookform/resolvers`
+
+### React Hook Form Canonical Import Pattern (GAP-17 Fix)
+
+AI agents MUST use this exact import pattern. Do NOT use v6 patterns:
+
+```typescript
+// ✅ CORRECT — React Hook Form v7 pattern
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Schema definition
+const [ModuleName]Schema = z.object({
+  fieldName: z.string().min(1, 'Required'),
+  // ... more fields
+});
+
+type [ModuleName]FormValues = z.infer<typeof [ModuleName]Schema>;
+
+// Hook usage
+const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<[ModuleName]FormValues>({
+  resolver: zodResolver([ModuleName]Schema),
+  defaultValues: { fieldName: '' },
+});
+
+// ❌ FORBIDDEN — v6 pattern (do NOT use these)
+// import { useForm } from 'react-hook-form';
+// yupResolver, joiResolver, or any non-Zod resolver
+// errors.fieldName?.message?.toString() (v6 casting pattern) — use errors.fieldName?.message directly
+```
+
+**Version-Specific Rules:**
+- Use `register()` for simple uncontrolled inputs.
+- Use `Controller` component (or `useController` hook) for custom/third-party UI components (e.g., selects, date pickers).
+- Use `formState.isSubmitting` (not a custom `loading` state) to disable the submit button during pending requests.
+- Trigger `form.setError('root', { message: ... })` for server-level errors returned from the API.
 
 Form structure:
 ```text
@@ -1545,10 +1662,49 @@ File upload rules:
 - Show upload progress where supported.
 - Never trust client validation alone; backend validation remains mandatory.
 
+
+
 15C. **State Management Decision Matrix**:
 State must be placed according to its ownership and lifecycle.
 
-1. **Server State — TanStack Query / React Query**
+1. **Server State — TanStack Query v5** (the project-locked version — GAP-13 Fix)
+
+> **IMPORTANT:** This project uses TanStack Query **v5**. AI agents MUST NOT use v4 APIs.
+
+Key v5 API changes that AI commonly gets wrong:
+
+| v4 (FORBIDDEN) | v5 (REQUIRED) |
+|---|---|
+| `mutation.isLoading` | `mutation.isPending` |
+| `useQuery({ onSuccess, onError })` | Callbacks removed — use `useEffect` or mutate callbacks |
+| `status === 'loading'` | `status === 'pending'` |
+| `keepPreviousData: true` | `placeholderData: keepPreviousData` |
+| `cacheTime` | `gcTime` |
+| Error type `unknown` needs manual cast | Use `isError` narrowing |
+
+Canonical v5 query usage:
+```typescript
+// ✅ CORRECT — TanStack Query v5
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+const { data, isPending, isError } = useQuery({
+  queryKey: ADMIN_MEMBERS_QUERY_KEYS.list(filters),
+  queryFn: () => fetchMembers(filters),
+});
+
+const queryClient = useQueryClient();
+const { mutate, isPending: isMutating } = useMutation({
+  mutationFn: createMember,
+  onSuccess: (data) => {
+    queryClient.invalidateQueries({ queryKey: ADMIN_MEMBERS_QUERY_KEYS.all });
+    toast.success(data.message);
+  },
+  onError: (error) => {
+    toast.error(error.message);
+  },
+});
+```
+
 Use for:
 - API responses
 - Loading/error states from APIs
@@ -1564,6 +1720,7 @@ Rules:
   `['admin_members', 'detail', memberId]`
 - After mutations, invalidate or update the relevant query cache intentionally.
 - Do not refetch the whole application after a small mutation.
+
 
 2. **Zustand — Module-Level Shared Client State**
 Use for:
@@ -2871,3 +3028,316 @@ If this is not possible, the module FAILS the portability and architecture revie
 * **The Problem:** The `[moduleName]_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
 * **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`
+
+---
+
+## APPROVED FRONTEND NPM PACKAGE REGISTRY (GAP-21 Fix)
+
+The following are the ONLY approved npm packages for feature modules. AI agents MUST NOT introduce packages outside this list without explicit documented approval.
+
+| Concern | Approved Package | Version Lock | FORBIDDEN Alternatives |
+|---|---|---|---|
+| Framework | `next` | 15.x | CRA, Remix, Vite standalone |
+| UI State | `zustand` | 5.x | Redux, MobX, Jotai, Recoil |
+| Server State | `@tanstack/react-query` | 5.x | SWR, Apollo Client |
+| Forms | `react-hook-form` | 7.x | Formik, Final Form |
+| Form Validation | `zod` | 3.x | Yup, Joi |
+| Form Resolver | `@hookform/resolvers` | 3.x | — |
+| Icons | `lucide-react` | latest | heroicons, react-icons mixed use |
+| Toast | `sonner` | latest | react-hot-toast, react-toastify |
+| HTTP Client | Global `apiFetch` (wrapping `fetch`) | — | axios, ky (in feature modules) |
+| Charts | `recharts` | 2.x | victory, nivo, chart.js |
+| Date Utilities | `date-fns` | 3.x | moment, dayjs |
+| Routing Progress | `nextjs-toploader` | latest | — |
+| i18n | `next-intl` | latest | i18next, react-i18next |
+| Theme | `next-themes` | latest | — |
+
+**Rules:**
+- Introducing a package NOT in this list requires: (a) adding it to this registry, (b) documenting the justification in the feature's `_features.md`, and (c) explicit human developer approval.
+- Never use two packages from the "FORBIDDEN Alternatives" column for the same concern.
+- Do NOT install and use two different HTTP clients; all feature API calls go through the global `apiFetch` at `@/lib/api`.
+
+---
+
+## CANONICAL `globals.css` STRUCTURE TEMPLATE (GAP-24 Fix)
+
+Every project MUST have a `globals.css` (or equivalent canonical theme stylesheet) following this exact structure. AI agents MUST generate this file if it does not exist — it is the single source of truth for all CSS variables.
+
+```css
+/* globals.css — Smart Gym 360 Design System
+ * SINGLE SOURCE OF TRUTH for all semantic theme tokens.
+ * DO NOT hardcode any of these values in component files.
+ * Structure: :root (light) → .dark (dark) → @theme inline (Tailwind mapping)
+ * ─────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+/* ── 1. LIGHT MODE (default) ──────────────────────────────── */
+:root {
+  /* Core Surface */
+  --primary: #EAB308;
+  --primary-hover: #CA8A04;
+  --primary-subtle: #FEF9C3;
+  --bg-page: #F4F4F5;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #FAFAFA;
+  --bg-header: #FFFFFF;
+  --bg-header-translucent: rgba(255, 255, 255, 0.8);
+  --bg-input: #FFFFFF;
+  --bg-floating: #FFFFFF;
+  --bg-overlay: #FAFAFA;
+  --bg-popover: #F4F4F5;
+  --surface-hover: rgba(234, 179, 8, 0.08);
+  --surface-highlight: rgba(234, 179, 8, 0.05);
+  --surface-zebra: #FAFAFA;
+  --overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --focus-ring: #A16207;
+  --border: #E4E4E7;
+  --border-focus: #A16207;
+  /* Text */
+  --text-primary: #000000;
+  --text-secondary: #52525B;
+  --text-disabled: #A1A1AA;
+  --text-on-primary: #111111;
+  --text-on-danger: #FFFFFF;
+  --text-on-warning: #111111;
+  --text-on-success: #FFFFFF;
+  --text-on-info: #FFFFFF;
+  /* Skeleton */
+  --skeleton-base: #E4E4E7;
+  --skeleton-highlight: #F4F4F5;
+  /* Status */
+  --success: #047857;
+  --warning: #F59E0B;
+  --danger: #B91C1C;
+  --info: #1D4ED8;
+  --success-text: #065F46;
+  --success-bg: #D1FAE5;
+  --warning-text: #92400E;
+  --warning-bg: #FEF3C7;
+  --danger-text: #991B1B;
+  --danger-bg: #FEE2E2;
+  --info-text: #1E40AF;
+  --info-bg: #DBEAFE;
+  --purple-text: #7E22CE;
+  --purple-bg: #EDE9FE;
+  /* Pay */
+  --pay-cash-text: #0F766E;
+  --pay-cash-bg: #CCFBF1;
+  --pay-upi-text: #0E7490;
+  --pay-upi-bg: #CFFAFE;
+  --pay-card-text: #334155;
+  --pay-card-bg: #F1F5F9;
+  --pay-bank-text: #0369A1;
+  --pay-bank-bg: #E0F2FE;
+  /* Chart */
+  --chart-primary: #EAB308;
+  --chart-success: #16A34A;
+  --chart-danger: #DC2626;
+  --chart-warning: #F59E0B;
+  --chart-info: #2563EB;
+  --chart-secondary: #7C3AED;
+  --chart-grid: rgba(0, 0, 0, 0.06);
+  --chart-tooltip-bg: #FFFFFF;
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-popover: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-dialog: 0 20px 60px rgba(0,0,0,0.16), 0 8px 16px rgba(0,0,0,0.08);
+  --shadow-toast: 0 8px 24px rgba(0,0,0,0.12);
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+  /* Layout */
+  --layout-header-height: 64px;
+  --layout-sidebar-width: 240px;
+  --layout-sidebar-width-collapsed: 60px;
+  --layout-content-padding: 24px;
+  --control-height: 40px;
+  --touch-target-min: 44px;
+  --table-row-height: 48px;
+  --table-row-height-compact: 32px;
+  --modal-width: 480px;
+  --drawer-width: 480px;
+}
+
+/* ── 2. DARK MODE ──────────────────────────────────────────── */
+.dark {
+  --primary: #FACC15;
+  --primary-hover: #EAB308;
+  --primary-subtle: rgba(250, 204, 21, 0.15);
+  --bg-page: #050505;
+  --bg-card: #111111;
+  --bg-sidebar: #050505;
+  --bg-header: #111111;
+  --bg-header-translucent: rgba(17, 17, 17, 0.8);
+  --bg-input: #1A1A1A;
+  --bg-floating: #1A1A1A;
+  --bg-overlay: #242424;
+  --bg-popover: #2E2E2E;
+  --surface-hover: rgba(250, 204, 21, 0.08);
+  --surface-highlight: rgba(250, 204, 21, 0.05);
+  --surface-zebra: #141414;
+  --focus-ring: #FACC15;
+  --border: #27272A;
+  --border-focus: #FACC15;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-disabled: #52525B;
+  --text-on-primary: #111111;
+  --skeleton-base: #111111;
+  --skeleton-highlight: #1A1A1A;
+  --success: #15803D;
+  --success-text: #4ADE80;
+  --success-bg: #064E3B;
+  --warning-text: #FBBF24;
+  --warning-bg: #451A03;
+  --danger: #B91C1C;
+  --danger-text: #F87171;
+  --danger-bg: #450A0A;
+  --info-text: #60A5FA;
+  --info-bg: #172554;
+  --purple-text: #D8B4FE;
+  --purple-bg: #3B0764;
+  --pay-cash-text: #5EEAD4;
+  --pay-cash-bg: #134E4A;
+  --pay-upi-text: #67E8F9;
+  --pay-upi-bg: #164E63;
+  --pay-card-text: #CBD5E1;
+  --pay-card-bg: #1E293B;
+  --pay-bank-text: #7DD3FC;
+  --pay-bank-bg: #0C4A6E;
+  --chart-primary: #FACC15;
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-tooltip-bg: #111111;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-popover: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-dialog: 0 20px 60px rgba(0,0,0,0.6);
+  --shadow-toast: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* ── 3. TAILWIND TOKEN MAPPING (@theme inline) ─────────────── */
+/* Maps all CSS variables to Tailwind utility class names      */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-subtle: var(--primary-subtle);
+  --color-page: var(--bg-page);
+  --color-card: var(--bg-card);
+  --color-sidebar: var(--bg-sidebar);
+  --color-header: var(--bg-header);
+  --color-header-translucent: var(--bg-header-translucent);
+  --color-input: var(--bg-input);
+  --color-floating: var(--bg-floating);
+  --color-overlay: var(--bg-overlay);
+  --color-popover: var(--bg-popover);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-zebra: var(--surface-zebra);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-disabled: var(--text-disabled);
+  --color-on-primary: var(--text-on-primary);
+  --color-on-danger: var(--text-on-danger);
+  --color-on-warning: var(--text-on-warning);
+  --color-on-success: var(--text-on-success);
+  --color-on-info: var(--text-on-info);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-text: var(--warning-text);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-text: var(--danger-text);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-text: var(--info-text);
+  --color-purple-text: var(--purple-text);
+  --color-purple-bg: var(--purple-bg);
+  --color-pay-cash-text: var(--pay-cash-text);
+  --color-pay-cash-bg: var(--pay-cash-bg);
+  --color-pay-upi-text: var(--pay-upi-text);
+  --color-pay-upi-bg: var(--pay-upi-bg);
+  --color-pay-card-text: var(--pay-card-text);
+  --color-pay-card-bg: var(--pay-card-bg);
+  --color-pay-bank-text: var(--pay-bank-text);
+  --color-pay-bank-bg: var(--pay-bank-bg);
+  --color-skeleton-base: var(--skeleton-base);
+  --color-skeleton-highlight: var(--skeleton-highlight);
+  --color-border: var(--border);
+  --color-border-focus: var(--border-focus);
+  --color-focus-ring: var(--focus-ring);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-success: var(--chart-success);
+  --color-chart-danger: var(--chart-danger);
+  --color-chart-warning: var(--chart-warning);
+  --color-chart-info: var(--chart-info);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-dialog: var(--shadow-dialog);
+  --shadow-toast: var(--shadow-toast);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --animate-duration-fast: 150ms;
+  --animate-duration-base: 200ms;
+  --animate-duration-slow: 300ms;
+  --animate-duration-xslow: 500ms;
+}
+
+/* ── 4. REDUCED MOTION GLOBAL OVERRIDE ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 5. PREMIUM SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-disabled); }
+```
+
+> **AI AGENT NOTE (GAP-24):** When creating a new frontend project or a new role module, check for `globals.css` first. If it is missing or incomplete, regenerate it using this template before writing any component code. The Tailwind classes like `bg-card`, `text-primary`, etc. will NOT work without this mapping.
+
+---
+
+## FRONTEND DELIVERY FREEZE GATE (GAP-20 Fix)
+
+Before delivering any frontend module ZIP, the AI MUST run this gate. If ANY item fails, the ZIP MUST NOT be delivered — it must be repaired first.
+
+```text
+FRONTEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
+
+[ ] 1. No CRITICAL findings remain open (broken user flow, wrong resource identity, data integrity issue)
+[ ] 2. No MAJOR architecture violations remain (wrong state ownership, forbidden cross-module imports, naming violations)
+[ ] 3. globals.css / tailwind.config.ts token mapping verified — all semantic tokens produce working Tailwind classes
+[ ] 4. No hardcoded colors, hex values, or arbitrary CSS var brackets in ANY JSX file
+[ ] 5. No forbidden opacity modifiers (bg-success/10, bg-danger/5) in ANY JSX file
+[ ] 6. All `[moduleName]_url_config.ts` files present and contain real endpoint values (not placeholders)
+[ ] 7. All `[moduleName]_features.md` files are non-generic (no "TBD", "Core UI", "Do not bypass API interceptors" filler)
+[ ] 8. TanStack Query v5 APIs used (no mutation.isLoading, no onSuccess/onError in useQuery)
+[ ] 9. React Hook Form v7 APIs used (zodResolver, no Yup/Joi resolvers)
+[ ] 10. No barrel files (no index.ts re-exports) in any module
+[ ] 11. Changed-file list produced — only files within the target module are changed (or approved infrastructure exceptions documented)
+[ ] 12. Multi-tenancy is enforced if applicable — gymId/branchId come from auth context, not client input
+[ ] 13. All loading/empty/error states implemented (no blank screens, no generic spinners for full-page loads)
+[ ] 14. CHANGELOG inside ZIP is specific and accurate (maps each fix to the original audit finding)
+
+If ANY box is unchecked: STATUS = BLOCKED_DELIVERY — do not deliver the ZIP.
+```
+
+

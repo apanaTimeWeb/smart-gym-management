@@ -106,6 +106,30 @@ When fixing a bug in `backend-superadmin/superadmin-modules/superadmin-billing`,
 
 Never double-prefix feature names or folders. If a backend module is named `admin-billing`, its child **sub-folders** MUST be named using the **module name only** as prefix (e.g., `billing-controllers/`, `billing-services/`), NEVER using the full role+module (e.g., NEVER `admin-billing-controllers/`). The role prefix applies to **file names** inside those folders (e.g., `admin-billing-invoice-search.service.ts`), NOT to the folder name itself. This is the single canonical rule — there is no alternative.
 
+### 0H. CANONICAL NAMING SINGLE SOURCE OF TRUTH (GAP-14 Fix)
+
+To eliminate all ambiguity between Rule 0F and Rule 2 (file naming), the following is the definitive unified rule:
+
+| Level | Pattern | Correct Example | FORBIDDEN Example |
+|---|---|---|---|
+| Root feature module folder | `{role}-{module}/` | `admin-members/` | `members/` or `admin-admin-members/` |
+| Sub-folders inside a feature module | `{module}-{artifact}/` ONLY | `members-services/` | `admin-members-services/` |
+| Files inside those sub-folders | `{role}-{module}-{description}.{type}.ts` | `admin-members-registration.service.ts` | `members-registration.service.ts` |
+
+**The key rule in one sentence:** Folders use the MODULE name as prefix; files use the ROLE+MODULE name as prefix. Never mix them up.
+
+```text
+admin-members/                                    ← root: {role}-{module}
+├── members-services/                             ← sub-folder: {module}-{artifact}
+│   └── admin-members-registration.service.ts     ← file: {role}-{module}-{description}
+├── members-controllers/                          ← sub-folder: {module}-{artifact}
+│   └── admin-members-command.controller.ts       ← file: {role}-{module}-{description}
+└── members-dto/                                  ← sub-folder: {module}-{artifact}
+    └── admin-members-create.dto.ts               ← file: {role}-{module}-{description}
+```
+
+AI agents MUST consult this table before creating any folder or file name. Any deviation = architecture violation.
+
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
 For a feature-specific task, the default writable scope is:
@@ -158,7 +182,128 @@ mark `FRAMEWORK_NOT_VERIFIED` rather than guessing.
 
 ---
 
-## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
+## 0G. MULTI-TENANCY CONTRACT — MANDATORY (GAP-23 Fix)
+
+This application is **multi-tenant**. Every feature module across every role MUST enforce tenant isolation at every layer.
+
+### Tenant Identity Contract
+
+| Field | Source | Description |
+|---|---|---|
+| `gymId` | JWT payload ONLY | Primary tenant identifier (the gym/organization) |
+| `branchId` | JWT payload ONLY | Sub-tenant identifier (the gym branch) |
+
+**CRITICAL RULES:**
+1. `gymId` and `branchId` MUST be extracted from the authenticated JWT payload — NEVER from the request body, URL query string, or client-supplied headers.
+2. Services MUST NOT accept `gymId`/`branchId` as input parameters from controllers — they receive them from the auth context/JWT payload resolved by the auth guard.
+3. Route parameters containing a resource ID (e.g., `/members/:memberId`) MUST be verified against the JWT tenant before returning data.
+
+### Repository Tenant Filter Rule (P0 Security Requirement)
+
+Every repository query that retrieves or modifies business data MUST include a tenant filter:
+
+```typescript
+// NestJS/TypeORM example
+await this.memberRepo.findOne({
+  where: {
+    id: memberId,
+    gymId: jwtPayload.gymId,      // MANDATORY — never omit
+    branchId: jwtPayload.branchId, // MANDATORY where applicable
+  }
+});
+```
+
+```python
+# Django ORM example
+Member.objects.filter(
+    id=member_id,
+    gym_id=request.user.gym_id,       # MANDATORY
+    branch_id=request.user.branch_id,  # MANDATORY where applicable
+)
+```
+
+**Omitting the tenant filter = P0 Security Failure.** Any query that can return or modify data across tenant boundaries is a critical vulnerability.
+
+### Response DTO Tenant Safety
+
+- Response DTOs MUST NOT expose `gymId`/`branchId` to the client unless explicitly required by the frontend contract.
+- Response DTOs MUST NOT include internal IDs or relationship references that could leak cross-tenant information.
+
+### AI Audit Checklist for Tenant Isolation
+
+Before marking any data endpoint PASS, verify ALL of the following:
+
+```text
+[ ] JWT payload extraction verified at auth guard level (not from body/query)
+[ ] gymId/branchId NEVER accepted from request body params
+[ ] Every findOne/findMany/update/delete query includes tenant filter
+[ ] Response DTOs do not leak cross-tenant identifiers
+[ ] Route param IDs (e.g., :memberId) are validated against JWT tenant
+[ ] Tests verify that Tenant A cannot access Tenant B data
+[ ] Bulk operations (where clauses) include tenant scope
+```
+
+---
+
+## 0G-A. APPROVED BACKEND NPM PACKAGE REGISTRY (GAP-22 Fix)
+
+The following are the ONLY approved npm packages for backend feature modules. AI agents MUST NOT introduce packages outside this list without explicit documented approval.
+
+| Concern | Approved Package | FORBIDDEN Alternatives |
+|---|---|---|
+| Framework | `@nestjs/core`, `@nestjs/common` | Express raw, Fastify standalone |
+| ORM | `typeorm` | Prisma, Sequelize, Drizzle |
+| Database Driver | `pg` (via TypeORM config) | `mysql2`, `better-sqlite3` |
+| Validation | `class-validator`, `class-transformer` | Joi, Zod (backend), Yup |
+| Redis Client | `ioredis` | `redis` npm v4 (conflicting API surface) |
+| Queue | `bullmq` | `bull` (deprecated), `agenda`, `bee-queue` |
+| Logging | `nestjs-pino`, `pino` | Winston, `console.log` direct |
+| Config | `@nestjs/config` + Zod env schema | `dotenv` direct usage |
+| JWT | `@nestjs/jwt` | `jsonwebtoken` direct usage |
+| API Docs | `@nestjs/swagger` | none |
+| Unit Testing | `jest`, `@nestjs/testing` | mocha, vitest, jasmine |
+| E2E Testing | Python `pytest` + `httpx` | Jest E2E, Supertest |
+
+**Django equivalent packages:** `djangorestframework`, `celery`, `django-redis`, `python-jose` or `djangorestframework-simplejwt`, `pytest-django`, `httpx` for E2E.
+
+---
+
+## 0G-B. SEED FILE SPECIFICATION (GAP-15 Fix)
+
+Seed files MUST follow these rules without exception:
+
+1. **Location:** `{feature-module}/{module}-seeds/`
+2. **Naming:** `{role}-{module}-{description}.seed.ts`
+   - Example: `admin-members-default-plans.seed.ts`
+3. **Idempotency:** MANDATORY — repeated execution MUST NOT create duplicate data. Use `upsert` or explicit existence checks.
+4. **Export shape:**
+   ```typescript
+   export async function seedAdminMembersDefaultPlans(dataSource: DataSource): Promise<void>
+   ```
+5. **Scope:** ONLY seed reference/initial data required for the application to function. NEVER seed production-exclusive or demo-only data.
+6. **Transaction:** Seed operations MUST run inside a transaction for atomicity.
+
+---
+
+## 0G-C. REDIS RESPONSIBILITY DECISION TABLE (GAP-16 Fix)
+
+Before choosing a Redis mechanism, consult this table:
+
+| Scenario | Correct Redis Mechanism | FORBIDDEN Alternatives |
+|---|---|---|
+| Cache API response for 5–60 min | Redis Cache (ioredis + TTL) | Pub/Sub, Streams |
+| Background email / SMS after event | BullMQ job | Pub/Sub (not durable — subscriber must be online) |
+| Critical domain event that must not be lost | Redis Streams | Pub/Sub (ephemeral — lost if no active subscriber) |
+| Real-time dashboard metric broadcast | Redis Pub/Sub | Streams (overkill for ephemeral fan-out) |
+| Prevent double-processing a payment | Redis Distributed Lock | Streams, BullMQ |
+| Rate limiting per user / IP | Redis Cache + sliding window TTL | BullMQ |
+| Session storage / token blacklist | Redis Cache + TTL | Pub/Sub |
+
+> **CRITICAL:** Redis Pub/Sub is ephemeral. A message published when there are no active subscribers is permanently lost. NEVER use Pub/Sub for critical business events that must survive a service restart or a subscriber being temporarily offline. Use Redis Streams for durable event delivery.
+
+---
+
+
 Do not create monolithic Services, Controllers, or Views. A generic `UserService` or `MemberController` will quickly grow to 1000+ lines. When you feed a 1000-line file to an AI, token costs explode, and the AI loses focus, increasing the chance of collateral damage.
 
 **The Solution: Use-Case Driven Files**
@@ -851,8 +996,54 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
   No Prisma Migrate, Flyway, Liquibase, Hibernate schema-update, or alternate migration system is approved for this project.
 
+### Migration File Naming Convention (GAP-3 Fix)
+
+All migration files MUST use this exact naming pattern:
+
+**NestJS / TypeORM:**
+```text
+{timestamp}-{RoleModule}-{Description}.ts
+```
+Example:
+```text
+1720000000000-AdminMembers-AddGymIdIndex.ts
+1720000000001-AdminBilling-AddInvoiceStatusColumn.ts
+```
+- Timestamp MUST be `Date.now()` (milliseconds) at the time of generation.
+- `{RoleModule}` MUST use PascalCase and follow the `{Role}{Module}` convention.
+- `{Description}` MUST be a plain-English description of what the migration does.
+- Every migration file MUST export exactly: `public up()` and `public down()`.
+- `down()` MUST reverse EVERY operation in `up()` exactly — it is not optional.
+
+**Django:**
+```text
+{NNNN}_{role}_{module}_{description}.py
+```
+Example:
+```text
+0001_admin_members_add_gym_id_index.py
+0002_admin_billing_add_invoice_status_column.py
+```
+- Django auto-generates the `{NNNN}` prefix — do not invent it.
+- Human-authored migration names must match the snake_case pattern above.
+
+### Migration Audit Checklist
+Before marking any migration PASS:
+```text
+[ ] File name follows the canonical naming pattern above
+[ ] up() performs ONLY the documented schema change — no business logic
+[ ] down() correctly reverts EVERY operation in up()
+[ ] No column dropped and re-added in the same migration (two-phase rule)
+[ ] No NOT NULL column added to a non-empty table without a DEFAULT value
+[ ] Migration does not touch tables outside its owning feature module
+[ ] NestJS: migration included in migrations array of TypeORM config
+[ ] Django: makemigrations was run and the auto-generated file is committed
+```
+
 * **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
 * **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
+
+
 
 ## 25. Graceful Shutdown & Health Probes (Kubernetes/Docker Ready)
 * **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).

@@ -355,7 +355,19 @@ Create a Documentation Rule Coverage Matrix:
 | Document | Section / Rule | Requirement | Applicable? | Evidence | Status |
 | -------- | -------------- | ----------- | ----------- | -------- | ------ |
 
-Allowed statuses are defined by the canonical Source Coverage Engine in Section 43A.
+Allowed statuses for every audited rule:
+
+```text
+PASS                         — Implementation satisfies the requirement with concrete evidence
+FAIL                         — Implementation violates the requirement with concrete evidence
+PARTIAL                      — Requirement is partially satisfied; specific gaps documented
+NOT_VERIFIED                 — Evidence insufficient to determine compliance; do NOT convert to PASS
+NOT_APPLICABLE               — Does not apply to this module (MUST explain why)
+BLOCKED_BY_SUPPLIED_SCOPE    — Required evidence is outside the supplied scope
+SOURCE_CONFLICT              — Two authoritative sources conflict on this requirement
+```
+
+> **NOTE (GAP-12 Fix):** A previous version of this document referenced "the canonical Source Coverage Engine in Section 43A" — that section does NOT exist in this document. The status definitions above are the canonical complete list and replace that broken reference.
 
 Rules marked NOT APPLICABLE MUST include a reason.
 
@@ -1027,6 +1039,8 @@ Schema
 Types
 Constants
 URL config
+
+
 
 ---
 
