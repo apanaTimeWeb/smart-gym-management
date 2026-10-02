@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin Features route → feature query + dedicated mutation hooks → UI.
+'use client';
+// DATA FLOW: Superadmin Features route → feature query + dedicated mutation hooks → UI.
 // RESPONSIBILITY: Owns feature flag/release-note server-state query and composes isolated mutation contracts.
 import { useQuery } from '@tanstack/react-query';
 

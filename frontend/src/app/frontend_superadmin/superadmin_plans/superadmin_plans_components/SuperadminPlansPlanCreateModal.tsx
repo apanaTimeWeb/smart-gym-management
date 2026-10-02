@@ -83,7 +83,7 @@ export default function SuperadminPlansPlanCreateModal() {
           <div className="grid grid-cols-2 gap-4">
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (<div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? t('ui.monthly_price') : t('ui.annual_price')} <span className="text-danger">{t('ui.text_3389dae3')}</span></label>
-                <input type="number" min="0" step="1" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
+                <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
             e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-primary focus:border-focus outline-none motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" data-testid="superadmin_plans-superadmin-plans-plan-create-modal-plan-create-modal-number"/>
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>))}

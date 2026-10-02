@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the semantic icon for one Superadmin notification severity.
+'use client';
+// RESPONSIBILITY: Renders the semantic icon for one Superadmin notification severity.
 import { AlertTriangle, Info } from 'lucide-react';
 
 import { SUPERADMIN_MESSAGING_NOTIFICATION_TYPE_CODES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';

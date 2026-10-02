@@ -1,7 +1,7 @@
 'use client';
-import { Tooltip } from '@/components/ui/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 // RESPONSIBILITY: Renders and composes SuperadminDashboardV1IncomeGymsAndAlertsSection for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { ArrowDown, ArrowUp, CircleAlert } from 'lucide-react';
+import { ArrowDown, ArrowUp, CircleAlert } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import ApexBarChart from '@/components/ui/ApexBarChart';
@@ -107,3 +107,4 @@ export default function SuperadminDashboardV1IncomeGymsAndAlertsSection({ data }
   </Panel>
     </div>;
 }
+

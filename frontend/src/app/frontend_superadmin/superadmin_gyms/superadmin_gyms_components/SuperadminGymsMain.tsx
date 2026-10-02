@@ -1,5 +1,4 @@
 'use client';
-import { useUrlState } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_hooks/useUrlState';
 import SuperadminGymsToolbar from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/superadmin_gyms_toolbar/SuperadminGymsToolbar';
 import SuperadminGymsTable from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/superadmin_gyms_table/SuperadminGymsTable';
 import SuperadminGymsCalendar from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/superadmin_gyms_calendar/SuperadminGymsCalendar';
@@ -21,7 +20,7 @@ import { SUPERADMIN_GYMS_STATUS_FILTER_OPTIONS } from '@/app/frontend_superadmin
 import Link from 'next/link';
 
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
-import { SuperadminErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
+import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
 
 
 
@@ -66,9 +65,9 @@ export default function SuperadminGymsMain() {
 
       <div className="bg-page border border-border rounded-xl overflow-hidden shadow-card">
         <SuperadminGymsToolbar />
-        <SuperadminErrorBoundary variant="inline">
+        <SuperadminLayoutErrorBoundary variant="inline">
           {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}
-        </SuperadminErrorBoundary>
+        </SuperadminLayoutErrorBoundary>
       </div>
     </div>);
 }

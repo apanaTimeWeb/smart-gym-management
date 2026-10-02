@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the empty state for the jobs table.
+'use client';
+// RESPONSIBILITY: Renders the empty state for the jobs table.
 import { Activity } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

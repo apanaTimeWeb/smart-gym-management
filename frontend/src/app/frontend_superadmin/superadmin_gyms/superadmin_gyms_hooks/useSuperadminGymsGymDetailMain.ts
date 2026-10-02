@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Route gymId → detail query/action hooks → route-level UI state → Gym Detail Main view.
+'use client';
+// DATA FLOW: Route gymId → detail query/action hooks → route-level UI state → Gym Detail Main view.
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useSuperadminGymsGymDetail } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_hooks/useSuperadminGymsGymDetail';

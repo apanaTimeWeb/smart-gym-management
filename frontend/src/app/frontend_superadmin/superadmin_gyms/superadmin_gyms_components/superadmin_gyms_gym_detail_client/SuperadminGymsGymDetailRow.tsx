@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders one labeled value row inside a Superadmin gym detail section.
-'use client';import { displayValue } from '@/lib/formatters';
+import { displayValue } from '@/lib/formatters';
 
 import type { SuperadminGymsGymDetailRowProps } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsGymDetailRowTypes.ts';
 
@@ -17,3 +17,4 @@ import type { SuperadminGymsGymDetailRowProps } from '@/app/frontend_superadmin/
 export default function SuperadminGymsGymDetailRow({ label, value, emphasis = false, emphasisWarning = false }: SuperadminGymsGymDetailRowProps) {
   return <div className="flex items-start justify-between gap-4"><span className="shrink-0 text-secondary">{label}</span><span className={`min-w-0 truncate text-right font-medium ${emphasisWarning ? 'text-warning' : emphasis ? 'text-danger' : 'text-primary'}`}>{displayValue(value)}</span></div>;
 }
+

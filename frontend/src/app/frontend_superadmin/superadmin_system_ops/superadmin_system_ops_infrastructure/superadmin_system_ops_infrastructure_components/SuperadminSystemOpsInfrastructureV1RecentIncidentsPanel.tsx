@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin infrastructure V1 Recent incidents view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin infrastructure V1 Recent incidents view.
 import { ShieldAlert } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

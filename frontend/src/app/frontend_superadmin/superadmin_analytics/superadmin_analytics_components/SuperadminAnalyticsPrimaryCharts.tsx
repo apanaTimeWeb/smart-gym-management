@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the two primary analytics charts from the feature chart view-model.
+'use client';
+// RESPONSIBILITY: Renders the two primary analytics charts from the feature chart view-model.
 import dynamic from 'next/dynamic';
 
 import { useTranslations } from 'next-intl';

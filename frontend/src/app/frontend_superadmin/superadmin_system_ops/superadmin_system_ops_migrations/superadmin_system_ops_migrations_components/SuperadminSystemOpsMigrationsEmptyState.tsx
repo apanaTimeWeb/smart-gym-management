@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the empty state for the Superadmin migration history table.
+'use client';
+// RESPONSIBILITY: Renders the empty state for the Superadmin migration history table.
 import { Database } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

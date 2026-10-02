@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchReportsComparison() → TanStack Query → owning V1 feature UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchReportsComparison() → TanStack Query → owning V1 feature UI
 // RESPONSIBILITY: Owns server-state query orchestration for the owning V1 feature. No JSX and no business UI state.
 import { useQuery } from '@tanstack/react-query';
 

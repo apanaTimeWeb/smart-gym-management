@@ -8,7 +8,7 @@ import { SUPERADMIN_INVOICE_STATUS_CODES } from '@/app/frontend_superadmin/super
 import { toast } from 'sonner';
 
 // RESPONSIBILITY: Renders and composes SuperadminInvoicesTableRow for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import React from 'react';
+import React from 'react';
 
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
 import { formatCurrency as SuperadminInvoicesFormatCurrency } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_utils/SuperadminInvoicesFormatCurrency';
@@ -106,3 +106,4 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
       </td>
     </tr>);
 }
+

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Queue recipient → validated delivery mutation → Broadcasts API/MSW → mutable delivery state → refreshed broadcast result.
+'use client';
+// DATA FLOW: Queue recipient → validated delivery mutation → Broadcasts API/MSW → mutable delivery state → refreshed broadcast result.
 /**
  * Owns the Superadmin broadcast recipient-delivery mutation.
  * Input: a broadcast ID and tenant-recipient ID. Output: the validated delivery response.

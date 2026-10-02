@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminFeaturesMainViewModel → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminFeaturesMainViewModel → consuming feature component.
 import { useRef, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -1,5 +1,4 @@
 'use client';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { SuperadminWhiteLabelingApi } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_api/SuperadminWhiteLabelingApi';

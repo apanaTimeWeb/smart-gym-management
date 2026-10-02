@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: backups API → useSuperadminSystemOpsBackupsData → TanStack Query cache → Superadmin backups UI
+'use client';
+// DATA FLOW: backups API → useSuperadminSystemOpsBackupsData → TanStack Query cache → Superadmin backups UI
 // RESPONSIBILITY: Retrieves authoritative backup data and server pagination metadata.
 import { useQuery } from '@tanstack/react-query';
 

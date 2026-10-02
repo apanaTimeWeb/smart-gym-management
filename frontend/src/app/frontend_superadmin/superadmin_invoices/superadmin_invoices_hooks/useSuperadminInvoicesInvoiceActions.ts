@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminInvoicesInvoiceActions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminInvoicesInvoiceActions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns invoice export/download/email actions for Superadmin invoice surfaces.
 import { useRef } from 'react';
 

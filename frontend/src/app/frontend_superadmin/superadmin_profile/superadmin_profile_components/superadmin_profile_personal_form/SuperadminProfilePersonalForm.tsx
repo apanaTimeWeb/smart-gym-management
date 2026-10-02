@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
+'use client';
+// RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
 import { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';

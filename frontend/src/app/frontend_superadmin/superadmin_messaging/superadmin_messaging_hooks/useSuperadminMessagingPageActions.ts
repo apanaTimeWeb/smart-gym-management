@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Messaging UI intent → tenant relation lookup → Messaging mutation boundary → API/Query reconciliation → visible state.
+'use client';
+// DATA FLOW: Messaging UI intent → tenant relation lookup → Messaging mutation boundary → API/Query reconciliation → visible state.
 // RESPONSIBILITY: Owns send-message and notification-read workflows for the root Messaging view.
 import { toast } from 'sonner';
 

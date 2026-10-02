@@ -5,10 +5,10 @@ import { formatDate } from '@/lib/formatters';
 import { useLocale, useTranslations } from 'next-intl';
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { SUPERADMIN_COUPON_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_constants/SuperadminCouponsConstants';
-import { Trash2, RefreshCw, MessageCircle, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Trash2, RefreshCw, MessageCircle, Edit2, ToggleLeft, ToggleRight, History } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminCouponsTableRow for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
+import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
 import { formatCurrency as SuperadminCouponsFormatCurrency } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsFormatCurrency';
 
 import type { SuperadminCouponsTableRowProps } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_types/SuperadminCouponsTableRowTypes';
@@ -108,3 +108,4 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
       </td>
     </tr>);
 }
+

@@ -7,7 +7,7 @@
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-'use client';// RESPONSIBILITY: Composes the infrastructure page sections from the feature-owned view-model; contains no API, mutation, toast, confirmation, or business calculation logic.
+// RESPONSIBILITY: Composes the infrastructure page sections from the feature-owned view-model; contains no API, mutation, toast, confirmation, or business calculation logic.
 import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
 import SuperadminSystemOpsInfrastructureHeader from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_components/superadmin_system_ops_infrastructure_header/SuperadminSystemOpsInfrastructureHeader';
 import SuperadminSystemOpsInfrastructureRedisControls from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_components/superadmin_system_ops_infrastructure_redis_controls/SuperadminSystemOpsInfrastructureRedisControls';

@@ -7,7 +7,7 @@
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-'use client';// RESPONSIBILITY: Composes the Tickets page from feature-owned query, mutation, store, and modal state; contains no API or business orchestration.
+// RESPONSIBILITY: Composes the Tickets page from feature-owned query, mutation, store, and modal state; contains no API or business orchestration.
 import { Loader2 } from 'lucide-react';
 
 import Pagination from '@/components/ui/Pagination';

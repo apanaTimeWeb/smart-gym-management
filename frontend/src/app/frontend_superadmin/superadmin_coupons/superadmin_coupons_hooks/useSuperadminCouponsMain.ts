@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Coupon page → local drawer event state + useSuperadminCoupons → composed child views.
+'use client';
+// DATA FLOW: Coupon page → local drawer event state + useSuperadminCoupons → composed child views.
 // RESPONSIBILITY: Owns route-level coupon drawer coordination and delegates CRUD/filter state to the feature hook.
 import { useEffect, useState } from 'react';
 

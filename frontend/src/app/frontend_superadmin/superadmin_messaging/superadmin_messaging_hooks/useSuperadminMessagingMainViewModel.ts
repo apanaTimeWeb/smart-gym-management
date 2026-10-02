@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminMessagingMainViewModel → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminMessagingMainViewModel → consuming feature component.
 import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';

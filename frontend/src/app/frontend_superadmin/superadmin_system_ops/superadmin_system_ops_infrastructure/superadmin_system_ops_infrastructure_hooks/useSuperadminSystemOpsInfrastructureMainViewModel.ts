@@ -1,4 +1,4 @@
-'use client';import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -9,7 +9,7 @@ import { useUrlState } from '@/hooks/useUrlState';
 import { SUPERADMIN_INFRASTRUCTURE_STATUS_OPTIONS, SUPERADMIN_INFRASTRUCTURE_FILTER_ALL } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_constants/SuperadminSystemOpsInfrastructureConstants';
 import { useSuperadminSystemOpsInfrastructureActions } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_hooks/useSuperadminSystemOpsInfrastructureActions';
 import { useSuperadminSystemOpsInfrastructureData } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_hooks/useSuperadminSystemOpsInfrastructureData';
-import { useSuperadminSystemOpsInfrastructureViewModel } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_hooks/useSuperadminSystemOpsInfrastructureMainViewModel';
+import { useSuperadminSystemOpsInfrastructureViewModel } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_hooks/useSuperadminSystemOpsInfrastructureViewModel';
 
 
 
@@ -88,3 +88,4 @@ export function useSuperadminSystemOpsInfrastructureMainViewModel() {
     closeFlushModal: () => setIsFlushModalOpen(false),
   };
 }
+

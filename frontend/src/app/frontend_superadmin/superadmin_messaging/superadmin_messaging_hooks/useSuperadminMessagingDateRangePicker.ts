@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: date-range controls → local selection state → pure date range utility → onRangeChange callback.
+'use client';
+// DATA FLOW: date-range controls → local selection state → pure date range utility → onRangeChange callback.
 /**
  * Owns interaction state for DateRangePicker.
  * Inputs: parent `onRangeChange` callback. Output: selected option and custom dates plus normalized range handlers.

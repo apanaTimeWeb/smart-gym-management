@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders the Reports date preset selector and emits the selected preset plus calculated range to its parent.
-'use client';import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 import { SUPERADMIN_REPORTS_DATE_PRESET_OPTIONS } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_constants/SuperadminReportsConstants';
 import { getSuperadminReportsPresetRange } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_utils/SuperadminReportsDateRangeUtils';
@@ -43,3 +43,4 @@ export function SuperadminReportsDatePresetDropdown({ value, onChange }: Superad
 }
 
 export type { DatePreset } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsDatePresetDropdownTypes';
+

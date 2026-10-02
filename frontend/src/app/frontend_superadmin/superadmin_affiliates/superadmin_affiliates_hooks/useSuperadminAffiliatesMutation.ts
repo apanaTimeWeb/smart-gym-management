@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminAffiliatesMutation → TanStack Query mutation → caller callback.
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminAffiliatesMutation → TanStack Query mutation → caller callback.
 // RESPONSIBILITY: Provides the Affiliate feature's shared mutation lifecycle without owning server data.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';

@@ -1,4 +1,4 @@
-'use client';import { useState } from 'react';
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -38,3 +38,4 @@ export function useSuperadminSystemOpsMigrationsMainViewModel() {
 
   return { t, versionInput, setVersionInput, validationMessage, handleRollout, ...page };
 }
+

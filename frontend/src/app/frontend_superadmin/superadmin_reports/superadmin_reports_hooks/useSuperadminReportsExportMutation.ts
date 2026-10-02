@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Reports export control → mutation → feature export API → success/error toast.
+'use client';
+// DATA FLOW: Reports export control → mutation → feature export API → success/error toast.
 // RESPONSIBILITY: Owns export-request lifecycle and idempotency for the Reports feature.
 import { useRef } from 'react';
 

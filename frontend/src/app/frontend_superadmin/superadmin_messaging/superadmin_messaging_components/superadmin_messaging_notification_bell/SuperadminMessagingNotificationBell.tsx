@@ -1,8 +1,8 @@
 'use client';
 import { CheckCheck, Bell } from 'lucide-react';
 import SuperadminMessagingNotificationIcon from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_components/superadmin_messaging_notification_bell/SuperadminMessagingNotificationIcon';
-import { Tooltip } from '@/components/ui/Tooltip';
-'use client';// RESPONSIBILITY: Renders the Superadmin notification bell UI. Notification business data access is isolated in useSuperadminMessagingNotifications.
+import Tooltip from '@/components/ui/Tooltip';
+// RESPONSIBILITY: Renders the Superadmin notification bell UI. Notification business data access is isolated in useSuperadminMessagingNotifications.
 import { useTranslations } from 'next-intl';
 import { useSuperadminMessagingNotifications } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_hooks/useSuperadminMessagingNotifications';
 import { useEffect, useRef, useState } from 'react';

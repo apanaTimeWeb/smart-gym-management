@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns feature-flag enable/disable mutation and feature-list cache reconciliation.
+'use client';
+// RESPONSIBILITY: Owns feature-flag enable/disable mutation and feature-list cache reconciliation.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { featuresApi } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_api/SuperadminFeaturesApi';

@@ -1,4 +1,4 @@
-'use client';import { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -86,3 +86,4 @@ export function useSuperadminAnalyticsChartViewModel(monthlyData: MonthlyAnalyti
     };
   }, [locale, monthlyData, t, theme]);
 }
+

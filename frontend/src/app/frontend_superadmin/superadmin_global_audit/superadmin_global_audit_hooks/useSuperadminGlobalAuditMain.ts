@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: URL state → useSuperadminGlobalAuditData → Main view; export uses feature-owned mutation.
+'use client';
+// DATA FLOW: URL state → useSuperadminGlobalAuditData → Main view; export uses feature-owned mutation.
 // RESPONSIBILITY: Owns Global Audit route-level state, filter option derivation, pagination, and export lifecycle.
 import { useUrlState } from '@/hooks/useUrlState';
 

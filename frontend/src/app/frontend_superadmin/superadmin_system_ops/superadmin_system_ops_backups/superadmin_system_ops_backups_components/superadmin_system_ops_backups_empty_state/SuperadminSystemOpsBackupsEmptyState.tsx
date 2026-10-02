@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the empty state UI for the Backups table when no backups exist.
+'use client';
+// RESPONSIBILITY: Renders the empty state UI for the Backups table when no backups exist.
 import { DatabaseBackup } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

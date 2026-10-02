@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchMessagingTemplateInsights() → TanStack Query → Message Templates & Campaign Results UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchMessagingTemplateInsights() → TanStack Query → Message Templates & Campaign Results UI
 // RESPONSIBILITY: Owns query orchestration for Message Templates & Campaign Results. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

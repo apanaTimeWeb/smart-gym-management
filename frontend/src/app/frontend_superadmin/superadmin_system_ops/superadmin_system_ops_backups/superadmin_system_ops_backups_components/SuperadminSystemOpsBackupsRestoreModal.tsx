@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Confirmation view for restoring a backup snapshot; mutation lifecycle is owned by the feature action hook.
+'use client';
+// RESPONSIBILITY: Confirmation view for restoring a backup snapshot; mutation lifecycle is owned by the feature action hook.
 import { Loader2, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';

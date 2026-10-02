@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Job Payload Inspect Modal — shows timing, error trace, and JSON payload.
+'use client';
+// RESPONSIBILITY: Renders the Job Payload Inspect Modal — shows timing, error trace, and JSON payload.
 import { Eye, AlertTriangle, X as XIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

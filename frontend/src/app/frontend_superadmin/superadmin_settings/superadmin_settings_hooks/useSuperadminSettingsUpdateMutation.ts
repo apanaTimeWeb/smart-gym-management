@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminSettingsUpdateMutation → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminSettingsUpdateMutation → consuming feature component.
 import { useRef } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';

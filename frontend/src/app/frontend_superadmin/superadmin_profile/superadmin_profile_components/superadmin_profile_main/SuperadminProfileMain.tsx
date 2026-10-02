@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Root client orchestrator for the Superadmin Profile page.
+'use client';
+// RESPONSIBILITY: Root client orchestrator for the Superadmin Profile page.
 import { useTranslations } from 'next-intl';
 
 import SuperadminProfileAvatarCard from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_components/superadmin_profile_avatar_card/SuperadminProfileAvatarCard';

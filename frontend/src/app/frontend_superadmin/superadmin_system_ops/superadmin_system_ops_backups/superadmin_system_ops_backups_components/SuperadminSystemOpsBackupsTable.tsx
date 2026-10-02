@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Download, RotateCcw } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminSystemOpsBackupsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { SUPERADMIN_BACKUPS_STATUS_CODES, SUPERADMIN_BACKUPS_STATUS_COLORS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_constants/SuperadminSystemOpsBackupsConstants';
+import { SUPERADMIN_BACKUPS_STATUS_CODES, SUPERADMIN_BACKUPS_STATUS_COLORS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_constants/SuperadminSystemOpsBackupsConstants';
 
 import type { SuperadminBackupsTableProps } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_types/SuperadminSystemOpsBackupsTableTypes';
 import type { BackupRecord } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_types/SuperadminSystemOpsBackupsTypes';
@@ -63,3 +63,4 @@ export default function SuperadminSystemOpsBackupsTable({ paginatedBackups, filt
       </table>
     </div>);
 }
+

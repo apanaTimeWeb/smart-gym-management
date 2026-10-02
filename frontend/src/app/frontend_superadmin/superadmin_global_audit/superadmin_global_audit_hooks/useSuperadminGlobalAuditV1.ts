@@ -1,11 +1,10 @@
-'use client';// DATA FLOW: MSW/Backend → fetchGlobalAuditInvestigation() → TanStack Query → owning V1 feature UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchGlobalAuditInvestigation() → TanStack Query → owning V1 feature UI
 // RESPONSIBILITY: Owns server-state query orchestration for the owning V1 feature. No JSX and no business UI state.
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchGlobalAuditInvestigation } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_api/SuperadminGlobalAuditInvestigationApi';
-import { SUPERADMIN_GLOBAL_AUDIT_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_constants/SuperadminGlobalAuditQueryKeys';
-
-
+import { SUPERADMIN_AUDIT_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_constants/SuperadminGlobalAuditQueryKeys';
 
 /**
  * @description Provides the Global Audit list query with URL-derived filters and feature-owned cache identity.
@@ -14,7 +13,7 @@ import { SUPERADMIN_GLOBAL_AUDIT_QUERY_KEYS } from '@/app/frontend_superadmin/su
  */
 export function useSuperadminGlobalAuditV1() {
   return useQuery({
-    queryKey: SUPERADMIN_GLOBAL_AUDIT_QUERY_KEYS.investigation,
+    queryKey: SUPERADMIN_AUDIT_QUERY_KEYS.all,
     queryFn: () => fetchGlobalAuditInvestigation(),
   });
 }

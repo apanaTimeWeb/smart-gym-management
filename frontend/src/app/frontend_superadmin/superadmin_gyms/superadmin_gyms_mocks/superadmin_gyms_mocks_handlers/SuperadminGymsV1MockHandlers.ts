@@ -14,7 +14,7 @@ import { SUPERADMIN_GYM_STATUS_CODES } from '@/app/frontend_superadmin/superadmi
 // RESPONSIBILITY: Owns MSW handlers and mutable server-like state for the tenant business-controls feature.
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
-import type { SuperadminGymsV1BulkMutationRequestSchema } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsV1Types';
+import { SuperadminGymsV1BulkMutationRequestSchema } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_schemas/SuperadminGymsV1ContractSchemas';
 import type { SuperadminGymsV1Data } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsV1Types';
 
 

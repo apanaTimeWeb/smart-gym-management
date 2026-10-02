@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the branded SuperadminLayoutStyles not-found state and provides recovery navigation to the owning feature.
+'use client';
+// RESPONSIBILITY: Renders the branded SuperadminLayoutStyles not-found state and provides recovery navigation to the owning feature.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';

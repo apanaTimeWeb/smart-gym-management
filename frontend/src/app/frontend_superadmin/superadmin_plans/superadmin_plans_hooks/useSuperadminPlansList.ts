@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Plans API → TanStack Query → Plans list view; mutations invalidate the authoritative list.
+'use client';
+// DATA FLOW: Plans API → TanStack Query → Plans list view; mutations invalidate the authoritative list.
 // RESPONSIBILITY: Owns Superadmin Plans list server queries, mutation orchestration, cache invalidation and destructive confirmation.
 import { useRef } from 'react';
 

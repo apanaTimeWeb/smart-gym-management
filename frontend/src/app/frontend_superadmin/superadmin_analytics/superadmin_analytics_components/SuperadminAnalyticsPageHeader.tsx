@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the analytics page heading and feature-owned date-range control.
+'use client';
+// RESPONSIBILITY: Renders the analytics page heading and feature-owned date-range control.
 import { useTranslations } from 'next-intl';
 
 import { SuperadminAnalyticsDateFilterDropdown } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_components/SuperadminAnalyticsDateFilterDropdown';

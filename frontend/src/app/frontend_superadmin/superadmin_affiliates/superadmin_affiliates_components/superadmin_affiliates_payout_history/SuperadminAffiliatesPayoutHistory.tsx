@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
+'use client';
+// RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
 import { Loader2 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 

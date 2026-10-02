@@ -8,7 +8,7 @@ import { formatDateTime } from '@/app/frontend_superadmin/superadmin_tickets/sup
 import { SUPERADMIN_TICKETS_STATUS_CODES, PriorityColors, StatusColors } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_constants/SuperadminTicketsConstants';
 
 // RESPONSIBILITY: Renders and composes SuperadminTicketsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
+import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
 import { getSuperadminTicketsSlaRemainingMs } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_utils/SuperadminTicketsSlaUtils';
 
 import type { SuperadminTicketsTableProps } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_types/SuperadminTicketsTableTypes';
@@ -102,3 +102,4 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
       </table>
     </div>);
 }
+

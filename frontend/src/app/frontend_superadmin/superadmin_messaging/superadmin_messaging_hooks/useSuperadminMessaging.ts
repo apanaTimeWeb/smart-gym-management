@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { superadminMessagingApi } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi';
 
 // DATA FLOW: Owning feature API/query/store state → useSuperadminMessaging → consuming feature component.
-'use client';import { SUPERADMIN_MESSAGING_ALL_FILTER, ITEMS_PER_PAGE } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
+import { SUPERADMIN_MESSAGING_ALL_FILTER, ITEMS_PER_PAGE } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 import { SUPERADMIN_MESSAGING_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingQueryKeys';
 import { useSuperadminMessagingNotificationMutations } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_hooks/useSuperadminMessagingNotificationMutations';
 import { useSuperadminMessagingSendMutation } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_hooks/useSuperadminMessagingSendMutation';
@@ -117,3 +117,4 @@ export function useSuperadminMessaging() {
     },
   };
 }
+

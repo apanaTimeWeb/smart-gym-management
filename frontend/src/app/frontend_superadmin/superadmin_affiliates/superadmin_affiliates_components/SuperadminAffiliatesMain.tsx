@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useSuperadminAffiliatesPage. No business logic here.
+'use client';
+// RESPONSIBILITY: Root orchestrator for the Affiliates page. Composes isolated sub-components and passes state from useSuperadminAffiliatesPage. No business logic here.
 import { useTranslations } from 'next-intl';
 
 import SuperadminAffiliatesEmptyState from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_components/superadmin_affiliates_empty_state/SuperadminAffiliatesEmptyState';

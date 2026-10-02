@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppComposerPanel responsibility defined by this module feature.
+'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppComposerPanel responsibility defined by this module feature.
 import { ClipboardPlus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

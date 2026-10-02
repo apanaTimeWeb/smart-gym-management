@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Messaging notification API → TanStack Query → notification popover state → feature-owned read mutations → authoritative query cache.
+'use client';
+// DATA FLOW: Messaging notification API → TanStack Query → notification popover state → feature-owned read mutations → authoritative query cache.
 // RESPONSIBILITY: Owns notification server state, read actions, and WebSocket recovery orchestration for the Superadmin Messaging feature.
 import { useCallback, useEffect } from 'react';
 

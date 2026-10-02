@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: error.tsx handles module-level rendering errors.
+'use client';
+// RESPONSIBILITY: error.tsx handles module-level rendering errors.
 import { useEffect } from 'react';
 
 import { AlertTriangle, RefreshCcw } from 'lucide-react';

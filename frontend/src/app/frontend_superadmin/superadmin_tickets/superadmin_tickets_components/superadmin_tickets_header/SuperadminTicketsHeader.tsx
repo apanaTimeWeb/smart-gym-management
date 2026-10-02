@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the header and filter/search controls for Support Tickets
+'use client';
+// RESPONSIBILITY: Renders the header and filter/search controls for Support Tickets
 import { Search, Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

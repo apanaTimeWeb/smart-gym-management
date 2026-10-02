@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the page title, search, status filter, date-range filter, and Add CTA for the Affiliates page.
+'use client';
+// RESPONSIBILITY: Renders the page title, search, status filter, date-range filter, and Add CTA for the Affiliates page.
 import { Users, Plus, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

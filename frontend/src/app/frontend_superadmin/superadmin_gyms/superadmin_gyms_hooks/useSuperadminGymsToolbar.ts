@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: toolbar controls → URL/query state → Superadmin gyms table query → rendered result
+'use client';
+// DATA FLOW: toolbar controls → URL/query state → Superadmin gyms table query → rendered result
 /**
  * RESPONSIBILITY: Manages the logic for the Superadmin gyms search/filter/export toolbar.
  * DATA FLOW: UI input → debounced URL state → TanStack Query parameters → Superadmin Gym API.

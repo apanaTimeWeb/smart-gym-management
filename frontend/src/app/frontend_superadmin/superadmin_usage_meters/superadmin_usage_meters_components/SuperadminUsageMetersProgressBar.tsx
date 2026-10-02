@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders one bounded Usage Meter progress segment using feature-local CSS classes instead of inline width styles.
-'use client';import styles from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_components/SuperadminUsageMetersProgressBar.module.css';
+import styles from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_components/SuperadminUsageMetersProgressBar.module.css';
 
 import type { SuperadminUsageMetersProgressBarProps } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_types/SuperadminUsageMetersProgressBarTypes.ts';
 
@@ -19,3 +19,4 @@ export default function SuperadminUsageMetersProgressBar({ value, limit, classNa
   const widthClass = styles[`width${Math.round(percentage)}`] ?? styles.width0;
   return <div className={`h-full ${className} ${widthClass}`} title={title} aria-hidden="true" />;
 }
+

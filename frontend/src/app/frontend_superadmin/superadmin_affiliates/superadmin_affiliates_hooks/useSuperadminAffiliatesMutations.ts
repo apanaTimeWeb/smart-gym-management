@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminAffiliatesMutations → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminAffiliatesMutations → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Execute Superadmin affiliate mutations, confirmations, cache updates, and user feedback.
 // DATA FLOW: feature API/schema → hook/context → useSuperadminAffiliatesMutations consumers.
 import { useCallback, useRef } from 'react';

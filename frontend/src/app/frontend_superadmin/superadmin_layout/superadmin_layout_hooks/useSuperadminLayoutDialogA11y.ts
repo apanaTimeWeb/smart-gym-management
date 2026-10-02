@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useRef, RefObject } from 'react';
+import { useEffect, useRef } from 'react';
+import type { RefObject } from 'react';
 
 /**
  * Keeps an open Superadmin dialog keyboard-safe and restores focus when it closes.

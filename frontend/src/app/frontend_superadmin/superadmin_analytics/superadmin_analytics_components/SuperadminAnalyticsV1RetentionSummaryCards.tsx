@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminAnalyticsV1RetentionSummaryCards for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';
 
@@ -28,3 +28,4 @@ export default function SuperadminAnalyticsV1RetentionSummaryCards({ data }: Sup
   <MetricCard label={t('ui.customer_churn_c5ef269')} value={formatPercent1dp(data.metrics.customerChurn)} helper={t('ui.kpi_helper_superadmin_gyms_leaving_v3')} tone="warning" data-testid="superadmin-analytics-superadmin-analytics-v1-retention-summary-cards-metric-card-5"/>
     </div>;
 }
+

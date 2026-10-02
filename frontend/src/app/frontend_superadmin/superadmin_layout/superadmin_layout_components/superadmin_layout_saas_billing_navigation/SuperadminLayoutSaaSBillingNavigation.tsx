@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders the Superadmin SaaS Billing sub-navigation and performs client-side route transitions only.
-'use client';import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useTranslations } from 'next-intl';
 
@@ -41,3 +41,4 @@ export default function SuperadminSaaSBillingNavigation() {
     </nav>
   );
 }
+

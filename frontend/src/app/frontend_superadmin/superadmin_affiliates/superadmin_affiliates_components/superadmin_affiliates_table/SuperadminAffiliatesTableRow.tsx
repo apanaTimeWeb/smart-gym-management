@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
+'use client';
+// RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { toast } from 'sonner';

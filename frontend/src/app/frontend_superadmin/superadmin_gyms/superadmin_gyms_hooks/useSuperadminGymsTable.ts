@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useSuperadminGymsGymMutations } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_hooks/useSuperadminGymsGymMutations';
 
 // DATA FLOW: Owning feature API/query/store state → useSuperadminGymsTable → consuming feature component.
-'use client';import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 import type { SuperadminGymsSortOrder } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTableTypes';
 import type { Tenant } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTypes';
@@ -96,3 +96,4 @@ export function useSuperadminGymsTable() {
         refetch,
     };
 }
+

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Backups schedule modal → query registry → schedule API → validated query response.
+'use client';
+// DATA FLOW: Backups schedule modal → query registry → schedule API → validated query response.
 // RESPONSIBILITY: Owns read-only Backups schedule server state.
 import { useQuery } from '@tanstack/react-query';
 

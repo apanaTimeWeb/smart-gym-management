@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the superadmin_system_ops_backups route-segment error fallback and provides documented recovery actions.
+'use client';
+// RESPONSIBILITY: Renders the superadmin_system_ops_backups route-segment error fallback and provides documented recovery actions.
 import { useTranslations } from 'next-intl';
 import { RefreshCcw, AlertTriangle } from 'lucide-react';
 

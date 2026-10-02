@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminAffiliatesStatsBar for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { Users, IndianRupee } from 'lucide-react';
+import { Users, IndianRupee } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import { SuperadminAffiliatesFormatCurrency } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_utils/SuperadminAffiliatesFormatCurrency';
@@ -41,3 +41,4 @@ export default function SuperadminAffiliatesStatsBar({ totalAffiliates, totalCom
       </div>
     </div>);
 }
+

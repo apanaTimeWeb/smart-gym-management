@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the SuperadminTicketsEmptyState component.
+'use client';
+// RESPONSIBILITY: Renders the SuperadminTicketsEmptyState component.
 import { MessageSquare } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

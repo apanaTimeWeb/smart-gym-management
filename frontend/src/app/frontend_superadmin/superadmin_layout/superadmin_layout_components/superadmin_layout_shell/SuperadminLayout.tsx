@@ -8,7 +8,8 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Root Superadmin shell. Owns only sidebar collapse, persistent header, global Superadmin feedback, and shell-level alerts.
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 import SuperadminLayoutHeader from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/superadmin_layout_shell/SuperadminLayoutHeader';
 import SuperadminLayoutResponsiveTableProvider from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/superadmin_layout_shell/SuperadminLayoutResponsiveTableProvider';

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
+'use client';
+// RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 import { useState, useRef, useEffect } from 'react';
 
 import { Search, ChevronDown } from 'lucide-react';
@@ -56,10 +57,10 @@ export function SuperadminMessagingTenantDropdown({ value, onChange, tenants }: 
           </div>
           <div role="listbox" aria-label={t('ui.tenant_recipients_8634318')} className="max-h-48 overflow-y-auto" data-testid="superadmin_messaging-superadmin-messaging-tenant-dropdown-tenant-dropdown-action-1">
             {filtered.length === 0 && (<div className="px-3 py-2 text-sm text-secondary">{t('ui.no_tenants_found_b97e94e')}</div>)}
-            {filtered.map((t, index) => (<button  key={t.id} type="button" role="option" aria-selected={t.id === value} onClick={() => handleSelect(t.id)} className={`min-h-11 block w-full px-3 py-2 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${t.id === value
+            {filtered.map((tenant, index) => (<button  key={tenant.id} type="button" role="option" aria-selected={tenant.id === value} onClick={() => handleSelect(tenant.id)} className={`min-h-11 block w-full px-3 py-2 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${tenant.id === value
                     ? 'bg-primary-subtle text-primary'
                     : 'text-primary hover:bg-surface-hover'} motion-safe:active:scale-95`} data-testid={`superadmin_messaging-messaging-messaging-tenant-dropdown-action2-${index}`}>
-                {t.name} {t('ui.text_26aeabd0')}{t.plan}
+                {tenant.name} {t('ui.text_26aeabd0')}{tenant.plan}
               </button>))}
           </div>
         </div>)}

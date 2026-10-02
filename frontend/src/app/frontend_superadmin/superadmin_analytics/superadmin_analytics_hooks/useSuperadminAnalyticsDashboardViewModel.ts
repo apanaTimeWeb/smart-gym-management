@@ -1,4 +1,4 @@
-'use client';import { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useLocale } from 'next-intl';
 
@@ -70,3 +70,4 @@ export function useSuperadminAnalyticsDashboardViewModel(
     return { kpiCards, charts, secondaryMetrics };
   }, [charts, kpiCards, locale, metrics]);
 }
+

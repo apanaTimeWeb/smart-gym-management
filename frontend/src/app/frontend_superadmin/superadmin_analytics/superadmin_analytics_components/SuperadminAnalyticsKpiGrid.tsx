@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the read-only analytics KPI cards from the feature view-model.
+'use client';
+// RESPONSIBILITY: Renders the read-only analytics KPI cards from the feature view-model.
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

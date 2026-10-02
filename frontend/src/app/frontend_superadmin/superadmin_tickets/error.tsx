@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the superadmin_tickets route-segment error fallback and provides the documented recovery path.
+'use client';
+// RESPONSIBILITY: Renders the superadmin_tickets route-segment error fallback and provides the documented recovery path.
 import { useEffect } from 'react';
 
 import { AlertTriangle, RefreshCcw } from 'lucide-react';

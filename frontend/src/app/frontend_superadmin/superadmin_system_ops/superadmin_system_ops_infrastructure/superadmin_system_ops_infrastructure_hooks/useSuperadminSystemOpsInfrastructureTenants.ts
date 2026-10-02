@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Infrastructure tenant API → TanStack Query → Flush Tenant modal.
+'use client';
+// DATA FLOW: Infrastructure tenant API → TanStack Query → Flush Tenant modal.
 // RESPONSIBILITY: Owns the tenant list used only by the cache-flush selector; avoids unrelated node/Redis queries.
 import { useQuery } from '@tanstack/react-query';
 

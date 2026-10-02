@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchInfrastructure() → TanStack Query → Platform API Health UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchInfrastructure() → TanStack Query → Platform API Health UI
 // RESPONSIBILITY: Owns query orchestration for Platform API Health. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

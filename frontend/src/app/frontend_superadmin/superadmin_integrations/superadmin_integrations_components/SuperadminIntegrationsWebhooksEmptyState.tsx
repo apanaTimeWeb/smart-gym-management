@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the dedicated empty state for the Superadmin webhook deliveries list.
+'use client';
+// RESPONSIBILITY: Renders the dedicated empty state for the Superadmin webhook deliveries list.
 import { useTranslations } from 'next-intl';
 
 import EmptyState from '@/components/ui/EmptyState';

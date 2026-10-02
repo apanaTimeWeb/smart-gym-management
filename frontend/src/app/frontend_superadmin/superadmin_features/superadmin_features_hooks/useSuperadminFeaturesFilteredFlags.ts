@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminFeaturesFilteredFlags → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminFeaturesFilteredFlags → consuming feature component.
 // RESPONSIBILITY: Owns the presentation-derived feature-flag filter so the root view remains layout-only.
 import { useMemo } from 'react';
 

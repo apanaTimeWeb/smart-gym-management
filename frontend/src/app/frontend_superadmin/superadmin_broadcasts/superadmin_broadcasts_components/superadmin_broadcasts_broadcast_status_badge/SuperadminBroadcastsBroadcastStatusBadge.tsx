@@ -1,5 +1,4 @@
 'use client';
-import { SuperadminBroadcastsBroadcastStatusBadgeProps } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsTypes';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsBroadcastStatusBadge owned by the superadmin_broadcasts feature boundary.
  * INTENT: Keep this file’s presentation, logic, and state responsibility isolated from unrelated business modules.
@@ -16,7 +15,7 @@ import { SUPERADMIN_BROADCAST_STATUS_FILTER_CODES } from '@/app/frontend_superad
 import type { SuperadminBroadcastStatusBadgeProps } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsTypes';
 
 
-export default function SuperadminBroadcastsBroadcastStatusBadge({ status }: SuperadminBroadcastsBroadcastStatusBadgeProps) {
+export default function SuperadminBroadcastsBroadcastStatusBadge({ status }: SuperadminBroadcastStatusBadgeProps) {
   const t = useTranslations('superadmin_broadcasts');
     switch (status) {
         case SUPERADMIN_BROADCAST_STATUS_FILTER_CODES.SENT:

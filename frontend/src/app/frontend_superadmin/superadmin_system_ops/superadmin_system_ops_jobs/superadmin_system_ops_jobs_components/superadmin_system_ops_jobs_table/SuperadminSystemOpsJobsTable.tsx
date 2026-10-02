@@ -1,11 +1,11 @@
 'use client';
 import { formatDuration, formatDateTime } from '@/lib/formatters';
-import { Tooltip } from '@/components/ui/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 import { useTranslations } from 'next-intl';
 import { Trash2, RefreshCw, XCircle } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminSystemOpsJobsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import SuperadminSystemOpsJobsEmptyState from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_components/superadmin_system_ops_jobs_empty_state/SuperadminSystemOpsJobsEmptyState';
+import SuperadminSystemOpsJobsEmptyState from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_components/superadmin_system_ops_jobs_empty_state/SuperadminSystemOpsJobsEmptyState';
 import { SUPERADMIN_JOBS_STATUS_CODES, SUPERADMIN_JOBS_STATUS_STYLES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_constants/SuperadminSystemOpsJobsConstants';
 
 import type { SuperadminJobsTableProps } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_types/SuperadminSystemOpsJobsTableTypes';
@@ -87,3 +87,4 @@ export default function SuperadminSystemOpsJobsTable({ jobs, allJobsFiltered, se
       </table>
     </div>);
 }
+

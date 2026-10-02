@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminPlansPlanMutations, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminPlansPlanMutations, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns subscription plan create/update mutations and Query reconciliation.
 import { useRef } from 'react';
 

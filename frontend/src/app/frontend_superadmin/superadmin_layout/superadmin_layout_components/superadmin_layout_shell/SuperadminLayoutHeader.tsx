@@ -38,7 +38,7 @@ export default function SuperadminLayoutHeader() {
           type="button"
           className="min-h-11 min-w-11 inline-flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base bg-input hover:bg-surface-hover rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base"
           onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
-          id="superadmin-sidebar-toggle" id="superadmin-sidebar-toggle" aria-label={t('ui.toggle_sidebar_d4bbf74f')}
+          id="superadmin-sidebar-toggle" aria-label={t('ui.toggle_sidebar_d4bbf74f')}
          data-testid="SuperadminLayoutStyles-superadmin-header-superadmin-header-toggle-sidebar">
           <Menu size={18} strokeWidth={2} aria-hidden="true" />
         </button>

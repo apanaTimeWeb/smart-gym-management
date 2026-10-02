@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import ApexBarChart from '@/components/ui/ApexBarChart';
 import Panel from '@/components/ui/Panel';
@@ -34,3 +34,4 @@ export default function SuperadminAnalyticsV1IncomeMovementAndRevenueShareSectio
   </Panel>
     </div>;
 }
+

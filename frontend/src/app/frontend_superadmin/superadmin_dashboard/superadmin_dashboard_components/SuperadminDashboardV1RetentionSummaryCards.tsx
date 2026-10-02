@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminDashboardV1RetentionSummaryCards for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';
 
@@ -28,3 +28,4 @@ export default function SuperadminDashboardV1RetentionSummaryCards({ data }: Sup
   <MetricCard label={t('ui.closing_monthly_income_535dc71')} value={SuperadminDashboardFormatCurrency(data.endingIncome, data.currency || 'INR', locale)} helper={t('ui.kpi_helper_current_recurring_income_v3')} data-testid="superadmin-dashboard-superadmin-dashboard-v1-retention-summary-cards-metric-card-5"/>
     </div>;
 }
+

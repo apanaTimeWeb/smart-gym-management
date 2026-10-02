@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: API → useSuperadminIntegrationsPage.ts → SuperadminIntegrationsMain.tsx
+'use client';
+// DATA FLOW: API → useSuperadminIntegrationsPage.ts → SuperadminIntegrationsMain.tsx
 // RESPONSIBILITY: Owns TanStack Query state for this Superadmin page.
 import { useQuery } from '@tanstack/react-query';
 

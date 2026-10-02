@@ -1,7 +1,7 @@
 'use client';
 import { formatCurrency as SuperadminPlansFormatCurrency } from '@/app/frontend_superadmin/superadmin_plans/superadmin_plans_utils/SuperadminPlansFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminPlansList for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';// DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
+// DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 

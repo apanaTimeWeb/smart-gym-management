@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the SuperadminFeaturesFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary.
+'use client';
+// RESPONSIBILITY: Renders the SuperadminFeaturesFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary.
 import { useEffect, useRef, useState } from 'react';
 
 import { Loader2, Search, X } from 'lucide-react';

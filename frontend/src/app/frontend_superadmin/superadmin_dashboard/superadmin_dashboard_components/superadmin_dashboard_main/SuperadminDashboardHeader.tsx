@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Dashboard header with the local date filter. No API calls.
+'use client';
+// RESPONSIBILITY: Renders the Dashboard header with the local date filter. No API calls.
 import { useTranslations } from 'next-intl';
 
 import { SuperadminDashboardDateFilterDropdown } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_components/superadmin_dashboard_date_filter_dropdown/SuperadminDashboardDateFilterDropdown';

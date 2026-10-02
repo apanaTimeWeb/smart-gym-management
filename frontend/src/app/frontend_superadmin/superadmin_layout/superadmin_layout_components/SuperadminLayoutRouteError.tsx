@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Shared App Router error surface for role-owned child routes; never exposes raw exceptions.
+'use client';
+// RESPONSIBILITY: Shared App Router error surface for role-owned child routes; never exposes raw exceptions.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminNextErrorProps } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_types/SuperadminLayoutInfrastructureTypes';

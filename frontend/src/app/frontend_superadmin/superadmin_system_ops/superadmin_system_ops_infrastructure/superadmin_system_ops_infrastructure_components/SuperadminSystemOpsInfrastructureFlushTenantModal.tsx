@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the infrastructure tenant-selection dialog and owns its confirmed cache-flush mutation lifecycle.
+'use client';
+// RESPONSIBILITY: Renders the infrastructure tenant-selection dialog and owns its confirmed cache-flush mutation lifecycle.
 import { useMemo, useRef, useState } from 'react';
 
 import { Loader2, Search, X } from 'lucide-react';

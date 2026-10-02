@@ -89,12 +89,11 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
       const focusable = Array.from(aside.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       ));
-      if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       const active = document.activeElement;
-      if (event.shiftKey && active === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
+      if (event.shiftKey && active === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && active === last) { event.preventDefault(); first?.focus(); }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -137,14 +136,6 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
       <aside className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow w-64 md:w-16 ${
         isCollapsed ? 'xl:w-16' : 'xl:w-60'
       } ${isMobileOpen ? 'left-0' : '-left-64 md:left-0'}`} aria-label={t('ui.superadmin_sidebar_label')}>
-
-        {isMobileOpen && (
-          <div className="flex items-center justify-end border-b border-border px-4 py-2 md:hidden">
-            <button ref={drawerCloseRef} type="button" onClick={() => setIsMobileOpen(false)} aria-label={t('ui.close_sidebar')} className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="SuperadminLayoutStyles-superadmin-sidebar-superadmin-sidebar-close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-        )}
 
         {isMobileOpen && (
           <div className="flex items-center justify-end border-b border-border px-4 py-2 md:hidden">
@@ -223,7 +214,6 @@ export default function SuperadminLayoutSidebar({ isCollapsed, setIsCollapsed }:
                     const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                     const Icon = item.icon;
                     const showLabel = !isCollapsed || isMobileOpen;
-                    const labelVisibilityClass = isMobileOpen ? 'inline' : (!isCollapsed ? 'hidden xl:inline' : 'hidden');
                     const labelVisibilityClass = isMobileOpen ? 'inline' : (!isCollapsed ? 'hidden xl:inline' : 'hidden');
 
                     return (

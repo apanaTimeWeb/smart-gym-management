@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin integrations summary cards section.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations summary cards section.
 import { useTranslations } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';

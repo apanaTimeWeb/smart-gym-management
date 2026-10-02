@@ -1,4 +1,4 @@
-'use client';import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { useTranslations } from 'next-intl';
 
@@ -26,3 +26,4 @@ export function useSuperadminAnalyticsDateRangeSuffix(): string {
   if (!option || range === 'this_month') return '';
   return ` (${t(option.labelKey)})`;
 }
+

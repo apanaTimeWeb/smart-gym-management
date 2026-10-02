@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin tickets V1 Support categories view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin tickets V1 Support categories view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

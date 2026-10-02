@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchGymDetailBusinessOverview(gymId) → TanStack Query → Gym 360 Overview UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchGymDetailBusinessOverview(gymId) → TanStack Query → Gym 360 Overview UI
 // RESPONSIBILITY: Owns query orchestration for the route-specific Gym 360 Overview. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

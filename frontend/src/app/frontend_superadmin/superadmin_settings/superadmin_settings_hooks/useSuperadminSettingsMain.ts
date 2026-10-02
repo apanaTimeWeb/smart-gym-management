@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Settings route → useSuperadminSettingsPage → draft/grouping state → Settings Main view.
+'use client';
+// DATA FLOW: Settings route → useSuperadminSettingsPage → draft/grouping state → Settings Main view.
 // RESPONSIBILITY: Owns editable drafts, grouped settings, and save completion behavior for the settings view.
 import { useMemo, useState } from 'react';
 

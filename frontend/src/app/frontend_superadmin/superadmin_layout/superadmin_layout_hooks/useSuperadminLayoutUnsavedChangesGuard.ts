@@ -16,7 +16,7 @@ export function useSuperadminLayoutUnsavedChangesGuard(
   isDirty: boolean,
   message = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.',
 ): void {
-  const confirm = useConfirm();
+  const { confirm } = useConfirm();
   const acceptedHrefRef = useRef<string | null>(null);
 
 // EFFECT: Synchronizes the component state/effect side effect with its declared dependencies and cleans up the subscription or listener when the owner unmounts or dependencies change.

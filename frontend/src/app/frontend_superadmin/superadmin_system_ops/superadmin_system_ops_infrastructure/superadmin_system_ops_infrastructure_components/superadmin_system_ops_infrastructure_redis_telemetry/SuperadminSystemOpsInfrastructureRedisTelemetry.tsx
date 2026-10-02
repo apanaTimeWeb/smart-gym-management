@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders Redis memory, cache-hit-ratio, and cached-key telemetry from the module query response.
+'use client';
+// RESPONSIBILITY: Renders Redis memory, cache-hit-ratio, and cached-key telemetry from the module query response.
 import { RefreshCcw, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

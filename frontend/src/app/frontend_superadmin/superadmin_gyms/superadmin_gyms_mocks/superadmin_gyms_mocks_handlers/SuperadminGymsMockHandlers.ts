@@ -15,7 +15,7 @@ import { MOCK_GYM_STATS, MOCK_GYMS, MOCK_SUBSCRIPTION_PLANS } from '@/app/fronte
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
-let mockGymsList = [...MOCK_GYMS];
+let mockGymsList: any[] = [...MOCK_GYMS];
 export function resetSuperadminGymsMockState(): void { mockGymsList = [...MOCK_GYMS]; }
 export const superadminGymsHandlers = [
     http.get(MODULE_URLS.BACKEND_API.SUBSCRIPTION_PLANS, async () => {
@@ -66,7 +66,7 @@ export const superadminGymsHandlers = [
         const body = parsed.data;
         const gymName = body.gymName;
         const planName = String(body.planId ?? body.plan ?? 'Starter');
-        const newGym = { id: `t${Date.now()}`, name: gymName, ownerName: String(body.ownerName ?? 'Tenant Owner'), adminEmail: String(body.adminEmail ?? 'admin@example.com'), phone: String(body.phone ?? ''), status: SUPERADMIN_GYM_STATUS_CODES.ACTIVE as const, plan: planName, createdAt: new Date().toISOString(), memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', city: '', state: '', country: 'India', staffCount: 1, lastActiveAt: new Date().toISOString() };
+        const newGym = { id: `t${Date.now()}`, name: gymName, ownerName: String(body.ownerName ?? 'Tenant Owner'), adminEmail: String(body.adminEmail ?? 'admin@example.com'), phone: String(body.phone ?? ''), status: SUPERADMIN_GYM_STATUS_CODES.ACTIVE, plan: planName, createdAt: new Date().toISOString(), memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', city: '', state: '', country: 'India', staffCount: 1, lastActiveAt: new Date().toISOString() };
         mockGymsList = [newGym, ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Gym provisioned successfully.', data: newGym });
     }),
@@ -74,7 +74,7 @@ export const superadminGymsHandlers = [
         await delay(500);
         const parsed = gymCreateSchema.safeParse(await request.json());
         if (!parsed.success) return HttpResponse.json({ success: false, message: 'Gym creation payload is invalid.', data: null }, { status: StatusCodes.BAD_REQUEST });
-        const newGym = { ...parsed.data, id: `t${Date.now()}`, createdAt: new Date().toISOString(), status: SUPERADMIN_GYM_STATUS_CODES.ACTIVE as const, memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', lastActiveAt: new Date().toISOString() };
+        const newGym = { ...parsed.data, id: `t${Date.now()}`, createdAt: new Date().toISOString(), status: SUPERADMIN_GYM_STATUS_CODES.ACTIVE, memberCount: 0, monthlyRevenue: 0, currency: 'INR', databaseName: 'gym_db', databaseVersion: 'v2.4.1', lastActiveAt: new Date().toISOString() };
         mockGymsList = [newGym as typeof mockGymsList[0], ...mockGymsList];
         return HttpResponse.json({ success: true, message: 'Created', data: newGym });
     }),

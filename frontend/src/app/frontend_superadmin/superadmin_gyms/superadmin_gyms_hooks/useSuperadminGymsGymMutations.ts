@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminGymsGymMutations → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminGymsGymMutations → Superadmin module API/state → consuming component
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { useTranslations } from 'next-intl';
 import { useRef } from 'react';

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders notification state and delegates read mutations to the Superadmin Messaging hook.
+'use client';
+// RESPONSIBILITY: Renders notification state and delegates read mutations to the Superadmin Messaging hook.
 import { AlertTriangle, Info, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

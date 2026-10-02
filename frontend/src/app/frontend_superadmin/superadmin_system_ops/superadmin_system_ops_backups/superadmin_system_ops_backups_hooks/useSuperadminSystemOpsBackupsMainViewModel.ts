@@ -1,4 +1,4 @@
-'use client';import { useState } from 'react';
+import { useState } from 'react';
 
 import { SUPERADMIN_BACKUPS_FILTER_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_constants/SuperadminSystemOpsBackupsConstants';
 
@@ -56,3 +56,4 @@ export function useSuperadminSystemOpsBackupsMainViewModel() {
     closeRestoreModal: () => { setRestoreModalOpen(false); setSelectedBackup(null); },
   };
 }
+

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Invoices page → local tab state + useSuperadminInvoicesPage → child sections.
+'use client';
+// DATA FLOW: Invoices page → local tab state + useSuperadminInvoicesPage → child sections.
 import { SUPERADMIN_INVOICES_TAB_CODES } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_constants/SuperadminInvoicesConstants';
 
 // RESPONSIBILITY: Owns page-local tab state and completion behavior for the manual-payment modal.

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Composes the role-level providers required by the Superadmin application shell without owning feature business state.
+'use client';
+// RESPONSIBILITY: Composes the role-level providers required by the Superadmin application shell without owning feature business state.
 import { SuperadminLayoutSocketProvider } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutSocketProvider';
 import { SuperadminLayoutThemeProvider } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutThemeProvider';
 import '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_styles/SuperadminLayoutStyles.css';

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppQueuePanel responsibility defined by this module feature.
+'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppQueuePanel responsibility defined by this module feature.
 import { Check, ExternalLink, MessageCircle, SkipForward } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

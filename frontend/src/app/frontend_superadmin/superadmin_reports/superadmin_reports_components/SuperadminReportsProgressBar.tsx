@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders a theme-safe report progress bar without inline CSS. Width is supplied as bounded numeric data.
-'use client';import styles from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_components/SuperadminReportsProgressBar.module.css';
+import styles from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_components/SuperadminReportsProgressBar.module.css';
 
 import type { SuperadminReportsProgressBarProps } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsProgressBarTypes.ts';
 
@@ -18,3 +18,4 @@ export default function SuperadminReportsProgressBar({ value, className }: Super
   const widthClass = styles[`width${bounded}`] ?? styles.width0;
   return <div className={`h-full rounded-full ${className} ${widthClass}`} aria-hidden="true" />;
 }
+

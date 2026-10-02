@@ -1,6 +1,6 @@
 'use client';
-import { Tooltip } from '@/components/ui/Tooltip';
-'use client';// RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
+import Tooltip from '@/components/ui/Tooltip';
+// RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_PLAN_BADGE_FALLBACK_CLASS, DASHBOARD_PLAN_BADGE_CLASSES } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_constants/SuperadminDashboardConstants';

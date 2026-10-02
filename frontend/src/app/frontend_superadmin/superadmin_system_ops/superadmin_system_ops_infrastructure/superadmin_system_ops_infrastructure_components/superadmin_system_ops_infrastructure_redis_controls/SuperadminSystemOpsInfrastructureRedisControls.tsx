@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders global and tenant-specific Redis flush actions and delegates mutation intent to the module orchestrator.
+'use client';
+// RESPONSIBILITY: Renders global and tenant-specific Redis flush actions and delegates mutation intent to the module orchestrator.
 import { Loader2, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

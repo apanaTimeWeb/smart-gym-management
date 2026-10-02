@@ -1,4 +1,4 @@
-'use client';import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { SuperadminInvoicesManualPaymentFormSchema } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_schemas/SuperadminInvoicesManualPaymentFormSchema';
@@ -17,7 +17,7 @@ import type { SuperadminInvoicesManualPaymentFormValues } from '@/app/frontend_s
  */
 export function useSuperadminInvoicesManualPaymentForm(onSave: (amount: number) => Promise<boolean>) {
   const form = useForm<SuperadminInvoicesManualPaymentFormValues>({
-    resolver: zodResolver(SuperadminInvoicesManualPaymentFormSchema),
+    resolver: zodResolver(SuperadminInvoicesManualPaymentFormSchema) as any,
     defaultValues: { amount: undefined },
   });
 
@@ -33,3 +33,4 @@ export function useSuperadminInvoicesManualPaymentForm(onSave: (amount: number) 
     isSubmitting: form.formState.isSubmitting,
   };
 }
+

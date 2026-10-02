@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminCouponsMutation → TanStack Query mutation → caller callback.
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminCouponsMutation → TanStack Query mutation → caller callback.
 // RESPONSIBILITY: Provides the Coupons feature's shared mutation lifecycle without owning server data.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';

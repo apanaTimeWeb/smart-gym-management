@@ -1,13 +1,13 @@
 'use client';
 import { formatCurrency as SuperadminGymsFormatCurrency } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsFormatCurrency';
-import SearchableDropdown from '@/components/ui/SearchableDropdown';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSuperadminGymsAddGymForm } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_hooks/useSuperadminGymsAddGymForm';
 import { Controller } from 'react-hook-form';
 import { Save, ArrowLeft, Database, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminGymsAddGymForm for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import Link from 'next/link';
+import Link from 'next/link';
 
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 import { useSuperadminLayoutUnsavedChangesGuard } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_hooks/useSuperadminLayoutUnsavedChangesGuard';
@@ -112,3 +112,4 @@ export default function SuperadminGymsAddGymForm() {
       </div>
     </div>);
 }
+

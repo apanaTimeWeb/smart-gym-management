@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns the Superadmin two-factor-authentication toggle mutation.
+'use client';
+// RESPONSIBILITY: Owns the Superadmin two-factor-authentication toggle mutation.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';

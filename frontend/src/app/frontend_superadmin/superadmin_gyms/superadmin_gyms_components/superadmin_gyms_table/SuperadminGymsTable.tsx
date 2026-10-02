@@ -1,7 +1,7 @@
 'use client';
 import { formatCurrency as SuperadminGymsFormatCurrency } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminGymsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { CheckCircle2, Ban, LogIn, PlayCircle, MessageCircle, Trash2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Ban, LogIn, PlayCircle, MessageCircle, Trash2, Loader2 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import CopyButton from '@/components/ui/CopyButton';
@@ -188,3 +188,4 @@ export default function SuperadminGymsTable() {
       <SuperadminGymsGymDeleteModal />
     </div>);
 }
+

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin tickets V1 TicketsSupportSummary summary cards.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin tickets V1 TicketsSupportSummary summary cards.
 import { useTranslations } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';

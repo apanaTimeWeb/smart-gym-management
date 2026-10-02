@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Orchestrates the analytics page sections and route-level loading/error states; owns no business calculations or API calls.
+'use client';
+// RESPONSIBILITY: Orchestrates the analytics page sections and route-level loading/error states; owns no business calculations or API calls.
 import { useTranslations } from 'next-intl';
 
 import { SuperadminAnalyticsKpiGrid } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_components/SuperadminAnalyticsKpiGrid';

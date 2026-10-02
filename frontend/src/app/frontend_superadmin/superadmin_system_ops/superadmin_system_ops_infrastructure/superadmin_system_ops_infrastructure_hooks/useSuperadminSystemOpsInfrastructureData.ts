@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminSystemOpsInfrastructureData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminSystemOpsInfrastructureData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Infrastructure query state for nodes, Redis telemetry, and tenant selection data.
 import { useMemo } from 'react';
 

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Feature UI intent → confirmation → feature mutation hook → authoritative response → toast/cache-visible result.
+'use client';
+// DATA FLOW: Feature UI intent → confirmation → feature mutation hook → authoritative response → toast/cache-visible result.
 // RESPONSIBILITY: Owns release-note publication, feature-flag toggles, and tenant rollout actions for the Superadmin Features module.
 import { useRef } from 'react';
 

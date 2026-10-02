@@ -1,7 +1,7 @@
 'use client';
 import { useTranslations } from 'next-intl';
 // RESPONSIBILITY: Renders and composes SuperadminBroadcastsBroadcastModal for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { X, Loader2, Users } from 'lucide-react';
 import { Controller } from 'react-hook-form';
@@ -140,3 +140,4 @@ export const SuperadminBroadcastsBroadcastModal: React.FC<SuperadminBroadcastsBr
       </div>
     </div>);
 };
+

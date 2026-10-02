@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminUsageMetersMain. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminUsageMetersMain. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
 /**
  * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
  * DATA FLOW: usageMetersApi -> SuperadminUsageMetersMain -> UI

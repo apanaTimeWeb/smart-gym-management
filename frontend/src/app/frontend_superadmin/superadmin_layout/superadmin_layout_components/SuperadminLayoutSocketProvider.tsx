@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Provides the shared Superadmin WebSocket lifecycle context using socket.io-client and websocket-only transport.
+'use client';
+// RESPONSIBILITY: Provides the shared Superadmin WebSocket lifecycle context using socket.io-client and websocket-only transport.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { io } from 'socket.io-client';

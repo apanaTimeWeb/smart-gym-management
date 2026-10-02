@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: SuperadminBroadcastsBroadcastModal → useSuperadminBroadcastsBroadcastModalData → Broadcasts API → TanStack Query cache.
+'use client';
+// DATA FLOW: SuperadminBroadcastsBroadcastModal → useSuperadminBroadcastsBroadcastModalData → Broadcasts API → TanStack Query cache.
 import { useQuery } from '@tanstack/react-query';
 
 import { broadcastsApi } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_api/SuperadminBroadcastsApi';

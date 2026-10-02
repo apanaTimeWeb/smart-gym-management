@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminCouponsCouponRedemptions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminCouponsCouponRedemptions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Loads the redemption history for one coupon through the Coupons API/query boundary.
 import { useQuery } from '@tanstack/react-query';
 

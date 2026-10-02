@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminSystemOpsJobsSelection, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminSystemOpsJobsSelection, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 import { useState } from 'react';
 
 import type { BackgroundJob } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_types/SuperadminSystemOpsJobsTypes';

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the frontend_superadmin role-level not-found recovery surface; it owns no business state.
+'use client';
+// RESPONSIBILITY: Renders the frontend_superadmin role-level not-found recovery surface; it owns no business state.
 import Link from 'next/link';
 
 import { useTranslations } from 'next-intl';

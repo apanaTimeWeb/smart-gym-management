@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminGymsAddGymForm → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminGymsAddGymForm → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Manages form state, validation, and API submission for onboarding a new gym.
 // DATA FLOW: SuperadminGymsAddGymForm -> useSuperadminGymsAddGymForm -> gymsApi.createGym
 import { useState } from 'react';

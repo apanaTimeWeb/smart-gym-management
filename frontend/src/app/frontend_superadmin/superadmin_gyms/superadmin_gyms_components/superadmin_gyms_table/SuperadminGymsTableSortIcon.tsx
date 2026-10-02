@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Renders the semantic sort indicator for a gym table column.
-'use client';import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 
 import type { SuperadminGymsTableSortIconProps } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTableSortIconTypes';
 
@@ -16,3 +16,4 @@ import type { SuperadminGymsTableSortIconProps } from '@/app/frontend_superadmin
 export default function SuperadminGymsTableSortIcon({ active }: SuperadminGymsTableSortIconProps) {
   return <ArrowUpDown size={18} className={`ml-1 inline ${active ? 'text-primary' : 'text-disabled'}`} aria-hidden="true"/>;
 }
+

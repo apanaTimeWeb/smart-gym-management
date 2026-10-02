@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the page title, filter toolbar, and bulk action buttons for the Jobs page.
+'use client';
+// RESPONSIBILITY: Renders the page title, filter toolbar, and bulk action buttons for the Jobs page.
 import { RefreshCw, Filter, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

@@ -1,4 +1,4 @@
-'use client';import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { SUPERADMIN_INFRASTRUCTURE_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_constants/SuperadminSystemOpsInfrastructureQueryKeys';
 
@@ -39,3 +39,4 @@ export function useSuperadminSystemOpsInfrastructureFlushTenantMutation(onFlush:
     },
   });
 }
+

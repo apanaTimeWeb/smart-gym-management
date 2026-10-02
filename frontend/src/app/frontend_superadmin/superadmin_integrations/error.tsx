@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the superadmin_integrations route-segment error fallback and provides the documented recovery path.
+'use client';
+// RESPONSIBILITY: Renders the superadmin_integrations route-segment error fallback and provides the documented recovery path.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminLayoutRouteErrorProps } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsRouteErrorTypes';

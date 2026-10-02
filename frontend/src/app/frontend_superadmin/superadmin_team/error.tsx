@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Route-level Superadmin recovery boundary.
+'use client';
+// RESPONSIBILITY: Route-level Superadmin recovery boundary.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminRouteErrorProps } from '@/app/frontend_superadmin/superadmin_team/superadmin_team_types/SuperadminTeamRouteErrorTypes';

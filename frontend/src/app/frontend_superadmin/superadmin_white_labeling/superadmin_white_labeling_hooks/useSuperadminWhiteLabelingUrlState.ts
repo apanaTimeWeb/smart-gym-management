@@ -1,5 +1,4 @@
 'use client';
-
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import type { SuperadminWhiteLabelingStatusFilter } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_constants/SuperadminWhiteLabelingConstants';

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the superadmin_dashboard route-segment not-found state and provides the documented recovery navigation.
+'use client';
+// RESPONSIBILITY: Renders the superadmin_dashboard route-segment not-found state and provides the documented recovery navigation.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';

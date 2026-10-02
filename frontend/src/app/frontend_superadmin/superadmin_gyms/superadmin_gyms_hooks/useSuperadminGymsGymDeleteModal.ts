@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminGymsGymDeleteModal → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminGymsGymDeleteModal → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymsGymDeleteModal.
 // DATA FLOW: SuperadminGymsGymDeleteModal -> useSuperadminGymsGymDeleteModal -> API
 import { useEffect, useRef, useState } from 'react';

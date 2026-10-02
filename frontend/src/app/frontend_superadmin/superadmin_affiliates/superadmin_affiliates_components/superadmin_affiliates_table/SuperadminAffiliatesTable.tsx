@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to SuperadminAffiliatesTableRow. No API calls.
+'use client';
+// RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to SuperadminAffiliatesTableRow. No API calls.
 import { useTranslations } from 'next-intl';
 
 import Pagination from '@/components/ui/Pagination';

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminBroadcastsMutations → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminBroadcastsMutations → Superadmin module API/state → consuming component
 // DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsMutations consumers.
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsMutations.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';

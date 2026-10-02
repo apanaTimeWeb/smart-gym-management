@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns the schema migration deployment mutation and cache reconciliation.
+'use client';
+// RESPONSIBILITY: Owns the schema migration deployment mutation and cache reconciliation.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';

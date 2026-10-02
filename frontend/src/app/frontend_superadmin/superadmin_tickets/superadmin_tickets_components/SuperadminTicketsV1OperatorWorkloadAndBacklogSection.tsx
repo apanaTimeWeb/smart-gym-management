@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin tickets V1 Operator workload, Backlog age view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin tickets V1 Operator workload, Backlog age view.
 import { useTranslations } from 'next-intl';
 
 import ApexBarChart from '@/components/ui/ApexBarChart';

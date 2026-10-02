@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the route-segment error boundary for the White-labeling feature and exposes a safe retry action.
+'use client';
+// RESPONSIBILITY: Renders the route-segment error boundary for the White-labeling feature and exposes a safe retry action.
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

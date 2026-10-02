@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminSystemOpsInfrastructureUptime, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminSystemOpsInfrastructureUptime, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns TanStack Query access to historical Superadmin platform uptime points.
 import { useQuery } from '@tanstack/react-query';
 

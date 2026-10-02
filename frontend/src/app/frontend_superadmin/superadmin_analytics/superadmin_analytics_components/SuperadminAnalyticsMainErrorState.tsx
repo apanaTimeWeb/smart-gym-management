@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the analytics route error state with a recoverable retry action.
+'use client';
+// RESPONSIBILITY: Renders the analytics route error state with a recoverable retry action.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminAnalyticsMainErrorStateProps } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsMainErrorStateTypes';

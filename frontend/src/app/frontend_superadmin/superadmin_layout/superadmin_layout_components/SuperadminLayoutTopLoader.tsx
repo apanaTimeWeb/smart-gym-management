@@ -8,6 +8,6 @@ import NextTopLoader from 'nextjs-toploader';
  * @dependencies Requires the host application's `nextjs-toploader` dependency and global `--primary` theme token.
  * @edge-case Uses the library's default navigation integration and suppresses its standalone spinner so it does not compete with page skeletons.
  */
-export function SuperadminLayoutTopLoader(): JSX.Element {
+export function SuperadminLayoutTopLoader() {
   return <NextTopLoader color="var(--primary)" showSpinner={false} height={2} crawl={true} />;
 }

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin backups V1 BackupsHealthSummary summary cards.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin backups V1 BackupsHealthSummary summary cards.
 import { useTranslations } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';

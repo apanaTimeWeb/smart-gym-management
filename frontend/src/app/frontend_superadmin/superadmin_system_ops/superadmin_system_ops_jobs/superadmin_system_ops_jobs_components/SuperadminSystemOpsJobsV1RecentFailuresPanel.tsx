@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin jobs V1 Recent job failures view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin jobs V1 Recent job failures view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

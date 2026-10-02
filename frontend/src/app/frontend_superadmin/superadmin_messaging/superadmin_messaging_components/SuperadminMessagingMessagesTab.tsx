@@ -1,13 +1,13 @@
 'use client';
-import { SuperadminMessagingDateRangePicker } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_components/SuperadminMessagingDateRangePicker';
+import SuperadminMessagingDateRangePicker from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_components/SuperadminMessagingDateRangePicker';
 import Pagination from '@/components/ui/Pagination';
 import { formatDateTime } from '@/lib/formatters';
-import { Tooltip } from '@/components/ui/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 import { useTranslations } from 'next-intl';
 import { Search, Bell, Mail, MessageSquare } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminMessagingMessagesTab for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { SUPERADMIN_MESSAGING_CHANNEL_CODES, SUPERADMIN_MESSAGING_ALL_FILTER, CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
+import { SUPERADMIN_MESSAGING_CHANNEL_CODES, SUPERADMIN_MESSAGING_ALL_FILTER, CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_constants/SuperadminMessagingConstants';
 
 import type { SuperadminMessagingMessagesTabProps } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingMessagesTabTypes';
 
@@ -83,3 +83,4 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
     </div>
   );
 }
+

@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders infrastructure page heading, status filter, and manual refresh control without owning query state.
+'use client';
+// RESPONSIBILITY: Renders infrastructure page heading, status filter, and manual refresh control without owning query state.
 import { RefreshCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

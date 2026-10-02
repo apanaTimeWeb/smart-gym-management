@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns the Superadmin password-change mutation and backend feedback.
+'use client';
+// RESPONSIBILITY: Owns the Superadmin password-change mutation and backend feedback.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';

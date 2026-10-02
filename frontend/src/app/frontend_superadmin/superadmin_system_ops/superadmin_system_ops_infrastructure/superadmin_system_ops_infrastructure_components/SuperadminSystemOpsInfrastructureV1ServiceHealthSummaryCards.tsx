@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin infrastructure V1 InfrastructureServiceHealthSummary summary cards.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin infrastructure V1 InfrastructureServiceHealthSummary summary cards.
 import { useTranslations } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';

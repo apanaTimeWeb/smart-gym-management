@@ -1,7 +1,7 @@
 'use client';
 import { formatCurrency as SuperadminReportsFormatCurrency } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_utils/SuperadminReportsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminReportsSummaryCards for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
+import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import type { SuperadminReportsSummaryCardsProps } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsTabTypes';
@@ -45,3 +45,4 @@ export function SuperadminReportsSummaryCards({ totalMRR, totalCancelledRevenue,
       </div>
     </div>);
 }
+

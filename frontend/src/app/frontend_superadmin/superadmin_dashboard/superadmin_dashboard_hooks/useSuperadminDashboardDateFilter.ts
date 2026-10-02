@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminDashboardDateFilter → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminDashboardDateFilter → Superadmin module API/state → consuming component
 // DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateFilter consumers.
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';

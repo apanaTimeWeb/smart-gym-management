@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Notification UI intent → stable idempotency key → Messaging API → TanStack Query reconciliation → visible notification state.
+'use client';
+// DATA FLOW: Notification UI intent → stable idempotency key → Messaging API → TanStack Query reconciliation → visible notification state.
 // RESPONSIBILITY: Owns notification read mutations and authoritative cache reconciliation for the Superadmin Messaging feature.
 import { useRef } from 'react';
 

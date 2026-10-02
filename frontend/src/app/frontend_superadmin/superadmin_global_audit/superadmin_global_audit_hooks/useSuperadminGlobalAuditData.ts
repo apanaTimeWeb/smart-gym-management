@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminGlobalAuditData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminGlobalAuditData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 import { SUPERADMIN_AUDIT_FILTER_ALL } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_constants/SuperadminGlobalAuditConstants';
 
 // RESPONSIBILITY: Owns Global Audit Logs query state for the Superadmin audit route.

@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminDashboardDateRangeSuffix → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminDashboardDateRangeSuffix → Superadmin module API/state → consuming component
 // DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateRangeSuffix consumers.
 // RESPONSIBILITY: Derives a human-readable date range suffix string from URL search params for KPI card labels.
 import { useSearchParams } from 'next/navigation';

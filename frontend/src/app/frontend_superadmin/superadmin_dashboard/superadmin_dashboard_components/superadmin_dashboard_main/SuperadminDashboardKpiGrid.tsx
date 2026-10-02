@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
+'use client';
+// RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_hooks/useSuperadminDashboardDateRangeSuffix';

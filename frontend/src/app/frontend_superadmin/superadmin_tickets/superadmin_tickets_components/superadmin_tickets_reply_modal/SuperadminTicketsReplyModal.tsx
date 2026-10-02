@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin ticket reply form. Submission state and API behavior are owned by useSuperadminTicketsTicketReply.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin ticket reply form. Submission state and API behavior are owned by useSuperadminTicketsTicketReply.
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Send, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';

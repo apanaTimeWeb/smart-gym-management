@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls.
+'use client';
+// RESPONSIBILITY: Renders the Create/Edit Affiliate modal form. Receives form state via props from useSuperadminAffiliatesPage. No API calls.
 import React from 'react';
 
 import { X } from 'lucide-react';

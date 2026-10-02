@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin integrations page header section.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations page header section.
 import { useTranslations } from 'next-intl';
 
 import type { SuperadminIntegrationsSectionProps } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsTypes';

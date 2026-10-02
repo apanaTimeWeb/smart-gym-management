@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Reply form → validated reply mutation → ticket API/MSW → updated ticket message list → query reconciliation.
+'use client';
+// DATA FLOW: Reply form → validated reply mutation → ticket API/MSW → updated ticket message list → query reconciliation.
 /**
  * Owns the Superadmin ticket reply mutation and keeps list/detail server state coherent.
  * It accepts validated reply text, exposes the authoritative API response message, and

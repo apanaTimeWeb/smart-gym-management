@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the validated historical infrastructure uptime series. No API calls are performed in the component.
+'use client';
+// RESPONSIBILITY: Renders the validated historical infrastructure uptime series. No API calls are performed in the component.
 import dynamic from 'next/dynamic';
 
 import { useLocale, useTranslations } from 'next-intl';

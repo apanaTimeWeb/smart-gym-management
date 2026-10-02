@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminReportsCancellationsTab for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
 
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -81,3 +81,4 @@ export function SuperadminReportsCancellationsTab({ cancellationsData, filteredC
       </div>
     </div>);
 }
+

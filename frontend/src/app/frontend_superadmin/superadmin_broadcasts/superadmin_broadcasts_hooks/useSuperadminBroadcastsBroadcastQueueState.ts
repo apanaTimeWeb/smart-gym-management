@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminBroadcastsBroadcastQueueState, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminBroadcastsBroadcastQueueState, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 import { useState } from 'react';
 
 import type { SuperadminBroadcastQueueRecipientDraft, SuperadminBroadcastQueueState } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsBroadcastQueueStateTypes';

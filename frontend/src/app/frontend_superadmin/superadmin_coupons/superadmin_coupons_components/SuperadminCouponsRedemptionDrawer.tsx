@@ -1,7 +1,7 @@
 'use client';
 import { formatCurrency as SuperadminCouponsFormatCurrency } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminCouponsRedemptionDrawer for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { History, Loader2, X } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -74,3 +74,4 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
     </>
   );
 }
+

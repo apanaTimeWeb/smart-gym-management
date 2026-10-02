@@ -1,8 +1,8 @@
 'use client';
 import * as WhatsAppFormatter from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsWhatsappReceiptFormatter';
-'use client';// DATA FLOW: Superadmin UI → useSuperadminGymsGymWhatsappModal → Superadmin module API/state → consuming component
+// DATA FLOW: Superadmin UI → useSuperadminGymsGymWhatsappModal → Superadmin module API/state → consuming component
 import { useSuperadminGymsStore } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_store/useSuperadminGymsStore';
-import { useLocale, useTranslations, useRef } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { gymWhatsappSchema } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_schemas/SuperadminGymsSchema';
@@ -61,23 +61,23 @@ export function useSuperadminGymsGymWhatsappModal() {
             ownerName: string;
             gymName: string;
         }; idempotencyKey: string }) => gymsApi.emailGymOwner(selectedGym!.id, data as unknown as Parameters<typeof gymsApi.emailGymOwner>[1], idempotencyKey), // Still calling API for record keeping if necessary, or just skip
-        onSuccess: (res, data) => {
-            if (data.phone) {
-                const cleanPhone = String(data.phone).replace(/\D/g, '');
+        onSuccess: (res, variables) => {
+            if (variables.data.phone) {
+                const cleanPhone = String(variables.data.phone).replace(/\D/g, '');
                 const dateStr = formatSuperadminGymWhatsappReceiptDate(new Date(), locale);
                 const waText = WhatsAppFormatter.formatReceipt({
                     title: 'Smart Gym 360',
-                    subtitle: String(data.subject),
+                    subtitle: String(variables.data.subject),
                     date: dateStr,
                     customerInfo: {
-                        Owner: String(data.ownerName || 'Gym Owner'),
-                        Gym: String(data.gymName || 'Gym')
+                        Owner: String(variables.data.ownerName || 'Gym Owner'),
+                        Gym: String(variables.data.gymName || 'Gym')
                     },
                     sections: [
                         {
                             title: 'Message',
                             items: {
-                                'Content': String(data.message)
+                                'Content': String(variables.data.message)
                             }
                         }
                     ],

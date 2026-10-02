@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminCoupons → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminCoupons → Superadmin module API/state → consuming component
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
 // DATA FLOW: superadminApi → useCouponsPage → CouponsClient
 import { useState, useMemo, useCallback } from 'react';

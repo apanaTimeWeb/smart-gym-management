@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin backups V1 Backup health by gym view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin backups V1 Backup health by gym view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

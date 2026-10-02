@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminInvoicesPage → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminInvoicesPage → consuming feature component.
 import { useMemo, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';

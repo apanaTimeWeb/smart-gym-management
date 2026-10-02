@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminTickets → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminTickets → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Provide ticket list/query state for the Superadmin Tickets surface.
 // DATA FLOW: feature API/schema → hook/context → useSuperadminTickets consumers.
 import { useMemo } from 'react';

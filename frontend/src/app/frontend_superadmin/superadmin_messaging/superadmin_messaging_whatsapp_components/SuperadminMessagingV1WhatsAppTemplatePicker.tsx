@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppTemplatePicker responsibility defined by this module feature.
+'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppTemplatePicker responsibility defined by this module feature.
 import { MessageSquareText } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

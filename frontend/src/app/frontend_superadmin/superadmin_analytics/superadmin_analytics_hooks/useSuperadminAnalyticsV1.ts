@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchAnalyticsRetentionInsights() → TanStack Query → Customer Retention & Growth Insights UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchAnalyticsRetentionInsights() → TanStack Query → Customer Retention & Growth Insights UI
 // RESPONSIBILITY: Owns query orchestration for Customer Retention & Growth Insights. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

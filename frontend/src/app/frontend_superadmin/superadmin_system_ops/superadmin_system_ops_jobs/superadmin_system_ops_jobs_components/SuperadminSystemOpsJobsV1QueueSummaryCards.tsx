@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin jobs V1 JobsQueueSummary summary cards.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin jobs V1 JobsQueueSummary summary cards.
 import { useTranslations } from 'next-intl';
 
 import MetricCard from '@/components/ui/MetricCard';

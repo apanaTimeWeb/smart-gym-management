@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Orchestrates the Superadmin Gym Detail ghost-login workflow; API side effects stay in this hook.
+'use client';
+// RESPONSIBILITY: Orchestrates the Superadmin Gym Detail ghost-login workflow; API side effects stay in this hook.
 // DATA FLOW: Gym Detail action → Gyms API → UI-only ghost-login state → Admin dashboard redirect.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';

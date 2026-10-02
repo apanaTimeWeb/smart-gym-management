@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders CPU, RAM, and storage resource KPI cards from already-derived infrastructure metrics.
+'use client';
+// RESPONSIBILITY: Renders CPU, RAM, and storage resource KPI cards from already-derived infrastructure metrics.
 import { Cpu, HardDrive, Server } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

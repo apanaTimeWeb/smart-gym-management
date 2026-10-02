@@ -1,7 +1,7 @@
 'use client';
 import { formatCurrency as SuperadminInvoicesFormatCurrency } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_utils/SuperadminInvoicesFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminInvoicesAgingReport for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-'use client';import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -46,3 +46,4 @@ export default function SuperadminInvoicesAgingReport({ invoices }: {
       </div>
     </div>);
 }
+

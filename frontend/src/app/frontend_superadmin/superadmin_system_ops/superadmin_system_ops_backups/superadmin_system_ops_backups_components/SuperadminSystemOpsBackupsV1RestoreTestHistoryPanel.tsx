@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin backups V1 Restore test history view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin backups V1 Restore test history view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

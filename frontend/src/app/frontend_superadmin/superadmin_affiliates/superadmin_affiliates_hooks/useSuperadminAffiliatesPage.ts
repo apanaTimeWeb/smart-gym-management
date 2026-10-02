@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminAffiliatesPage → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminAffiliatesPage → Superadmin module API/state → consuming component
 // RESPONSIBILITY: useSuperadminAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
 // DATA FLOW: superadminApi → useSuperadminAffiliatesPage → SuperadminAffiliatesMain
 import { useState, useMemo, useCallback } from 'react';

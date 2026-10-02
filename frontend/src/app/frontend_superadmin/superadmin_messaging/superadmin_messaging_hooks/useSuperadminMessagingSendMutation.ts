@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns outbound tenant-message mutation, idempotency, and message-list cache reconciliation.
+'use client';
+// RESPONSIBILITY: Owns outbound tenant-message mutation, idempotency, and message-list cache reconciliation.
 import { useRef } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';

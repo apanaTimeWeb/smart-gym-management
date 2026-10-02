@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the not-found component and its associated UI logic.
+'use client';
+// RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';

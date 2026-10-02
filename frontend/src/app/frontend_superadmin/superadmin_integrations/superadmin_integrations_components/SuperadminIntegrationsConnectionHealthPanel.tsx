@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin integrations connection health panel section.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin integrations connection health panel section.
 import { PlugZap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

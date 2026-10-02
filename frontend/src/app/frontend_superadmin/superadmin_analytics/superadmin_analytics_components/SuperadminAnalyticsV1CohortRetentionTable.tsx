@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin analytics V1 Cohort retention view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin analytics V1 Cohort retention view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';

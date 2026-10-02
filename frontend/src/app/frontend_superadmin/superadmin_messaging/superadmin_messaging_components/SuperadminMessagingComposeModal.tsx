@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Owns Superadmin Messaging form presentation and client-side Zod validation.
+'use client';
+// RESPONSIBILITY: Owns Superadmin Messaging form presentation and client-side Zod validation.
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Send, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';

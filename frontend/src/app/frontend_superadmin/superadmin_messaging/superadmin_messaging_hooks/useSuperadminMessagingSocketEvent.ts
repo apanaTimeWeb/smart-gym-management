@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: SuperadminLayoutSocketProvider → useSuperadminMessagingSocketEvent → messaging event callback → TanStack Query invalidation → refreshed UI.
+'use client';
+// DATA FLOW: SuperadminLayoutSocketProvider → useSuperadminMessagingSocketEvent → messaging event callback → TanStack Query invalidation → refreshed UI.
 // RESPONSIBILITY: Subscribes the Superadmin Messaging feature to notification WebSocket events through role infrastructure and triggers authoritative recovery fetches.
 import { useEffect } from 'react';
 

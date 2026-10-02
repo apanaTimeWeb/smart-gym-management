@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the validated Superadmin API-key generation form and one-time generated-secret result.
+'use client';
+// RESPONSIBILITY: Renders the validated Superadmin API-key generation form and one-time generated-secret result.
 import { useRef } from 'react';
 
 import { Check, KeyRound, Loader2, X } from 'lucide-react';

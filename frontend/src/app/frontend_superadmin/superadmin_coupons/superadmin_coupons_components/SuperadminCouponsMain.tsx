@@ -8,7 +8,7 @@
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Root orchestrator for the Coupons page. Composes isolated sub-components and consumes the main feature hook.
-'use client';import SuperadminCouponsEmptyState from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_empty_state/SuperadminCouponsEmptyState';
+import SuperadminCouponsEmptyState from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_empty_state/SuperadminCouponsEmptyState';
 import SuperadminCouponsHeader from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_header/SuperadminCouponsHeader';
 import SuperadminCouponsStatsBar from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_stats_bar/SuperadminCouponsStatsBar';
 import SuperadminCouponsTable from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_table/SuperadminCouponsTable';
@@ -40,3 +40,4 @@ export default function SuperadminCouponsMain() {
     <SuperadminCouponsRedemptionDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} coupon={drawerCoupon} data-testid="superadmin_coupons-superadmin-coupons-redemption-drawer-interactive-6"/>
   </div>);
 }
+

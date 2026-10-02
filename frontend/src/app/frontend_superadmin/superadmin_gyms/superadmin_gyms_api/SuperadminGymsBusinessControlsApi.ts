@@ -3,8 +3,8 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
 
 import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
-import type {
-  SuperadminGymsV1BulkMutationRequestSchema, SuperadminGymsV1BulkMutationRequest, SuperadminGymsV1Data } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsV1Types';
+import { SuperadminGymsV1BulkMutationRequestSchema } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_schemas/SuperadminGymsV1ContractSchemas';
+import type { SuperadminGymsV1BulkMutationRequest, SuperadminGymsV1Data } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsV1Types';
 import type { ApiResponse } from '@/lib/api';
 
 

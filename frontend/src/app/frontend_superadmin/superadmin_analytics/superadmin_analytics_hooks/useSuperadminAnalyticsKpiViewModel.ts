@@ -1,4 +1,4 @@
-'use client';import { ArrowDownRight, DollarSign, IndianRupee, TrendingUp, Users } from 'lucide-react';
+import { ArrowDownRight, DollarSign, IndianRupee, TrendingUp, Users } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 
 import { SUPERADMIN_ANALYTICS_KPI_DELTA_PERIOD_KEYS } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_constants/SuperadminAnalyticsKpiConstants';
@@ -85,3 +85,4 @@ export function useSuperadminAnalyticsKpiViewModel(metrics: RevenueMetrics | nul
     },
   ];
 }
+

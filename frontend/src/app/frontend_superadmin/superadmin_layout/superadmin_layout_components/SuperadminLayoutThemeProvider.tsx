@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Provides the application theme state and theme-mode presentation contract without owning module business data.
+'use client';
+// RESPONSIBILITY: Provides the application theme state and theme-mode presentation contract without owning module business data.
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import type { SuperadminTheme, SuperadminThemeContextValue, SuperadminLayoutThemeProviderProps } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_types/SuperadminLayoutInfrastructureTypes';

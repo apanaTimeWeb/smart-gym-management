@@ -3,6 +3,11 @@
  * AI BOUNDARY: Schema-only runtime validation; no UI, API calls, or state management.
  */
 import { z } from 'zod';
+export const SuperadminReportsV1PeriodSchema = z.object({ key: z.string(), label: z.string() });
+export const SuperadminReportsV1SegmentSchema = z.object({ key: z.string(), label: z.string() });
+export const SuperadminReportsV1MetricSchema = z.object({ name: z.string(), current: z.number(), previous: z.number(), change: z.number() });
+export const SuperadminReportsV1ComparisonSetSchema = z.object({ periodKey: z.string(), segmentKey: z.string(), currency: z.string().optional(), metrics: z.array(SuperadminReportsV1MetricSchema) });
+
 export const SuperadminReportsV1DataSchema = z.object({
   periods: z.array(SuperadminReportsV1PeriodSchema),
   segments: z.array(SuperadminReportsV1SegmentSchema),
@@ -12,7 +17,3 @@ export const SuperadminReportsV1DataSchema = z.object({
   comparisonSets: z.array(SuperadminReportsV1ComparisonSetSchema),
 });
 export const SuperadminReportsV1ResponseSchema = z.object({ data: SuperadminReportsV1DataSchema, message: z.string(), success: z.boolean() });
-const SuperadminReportsV1PeriodSchema = z.object({ key: z.string(), label: z.string() });
-const SuperadminReportsV1SegmentSchema = z.object({ key: z.string(), label: z.string() });
-const SuperadminReportsV1MetricSchema = z.object({ name: z.string(), current: z.number(), previous: z.number(), change: z.number() });
-const SuperadminReportsV1ComparisonSetSchema = z.object({ periodKey: z.string(), segmentKey: z.string(), currency: z.string().optional(), metrics: z.array(SuperadminReportsV1MetricSchema) });

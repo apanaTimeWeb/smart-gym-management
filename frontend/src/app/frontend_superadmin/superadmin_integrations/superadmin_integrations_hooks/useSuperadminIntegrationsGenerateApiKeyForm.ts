@@ -1,4 +1,4 @@
-'use client';import { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -55,3 +55,4 @@ export function useSuperadminIntegrationsGenerateApiKeyForm() {
     handleSubmit,
   };
 }
+

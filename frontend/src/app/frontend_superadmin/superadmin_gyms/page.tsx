@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 
 import SuperadminGymsMain from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/SuperadminGymsMain';
-import { SuperadminErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
+import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
 
 import type { Metadata } from 'next';
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
  */
 export default function GymsPage() {
     // In the future, server-side fetching can happen here before passing data to SuperadminGymsMain
-    return (<SuperadminErrorBoundary>
+    return (<SuperadminLayoutErrorBoundary>
       <SuperadminGymsMain />
-    </SuperadminErrorBoundary>);
+    </SuperadminLayoutErrorBoundary>);
 }

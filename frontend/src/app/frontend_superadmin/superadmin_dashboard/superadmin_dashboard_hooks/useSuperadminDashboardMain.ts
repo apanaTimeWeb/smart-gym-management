@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminDashboardMain → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminDashboardMain → Superadmin module API/state → consuming component
 // DATA FLOW: URL search params → useSuperadminDashboardMain.ts → TanStack Query → SuperadminDashboardMain → Dashboard child components
 // RESPONSIBILITY: Custom hook managing the data fetching for the Dashboard view using TanStack Query.
 import { useSearchParams } from 'next/navigation';

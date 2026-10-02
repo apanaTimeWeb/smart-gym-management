@@ -48,7 +48,7 @@ export default function SuperadminBroadcastsBroadcastQueueModal({ isOpen, onClos
       processingIndexRef.current = null;
       return;
     }
-    const initialStates = Object.fromEntries(recipients.map((recipient) => [recipient.id, SUPERADMIN_BROADCAST_QUEUE_STATE_CODES.PENDING as const]));
+    const initialStates = Object.fromEntries(recipients.map((recipient) => [recipient.id, SUPERADMIN_BROADCAST_QUEUE_STATE_CODES.PENDING]));
     setStates(initialStates);
     setCurrentIndex(recipients.length > 0 ? 0 : -1);
     setLastError(null);

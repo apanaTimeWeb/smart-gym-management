@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchDashboardBusinessOverview() → TanStack Query → Business Overview UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchDashboardBusinessOverview() → TanStack Query → Business Overview UI
 // RESPONSIBILITY: Owns query orchestration for Business Overview. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

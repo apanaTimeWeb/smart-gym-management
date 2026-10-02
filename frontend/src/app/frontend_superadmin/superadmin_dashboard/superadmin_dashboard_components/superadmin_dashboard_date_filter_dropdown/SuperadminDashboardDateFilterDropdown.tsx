@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Pure View component for the Dashboard date filter dropdown, consuming its local hook.
+'use client';
+// RESPONSIBILITY: Pure View component for the Dashboard date filter dropdown, consuming its local hook.
 import { useTranslations } from 'next-intl';
 
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';

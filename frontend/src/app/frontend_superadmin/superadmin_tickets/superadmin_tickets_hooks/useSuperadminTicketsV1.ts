@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchTickets() → TanStack Query → Support Performance & Service Levels UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchTickets() → TanStack Query → Support Performance & Service Levels UI
 // RESPONSIBILITY: Owns query orchestration for Support Performance & Service Levels. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

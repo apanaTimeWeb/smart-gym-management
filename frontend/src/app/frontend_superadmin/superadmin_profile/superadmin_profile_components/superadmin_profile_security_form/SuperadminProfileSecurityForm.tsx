@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Security settings form — change password and toggle 2FA.
+'use client';
+// RESPONSIBILITY: Security settings form — change password and toggle 2FA.
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';

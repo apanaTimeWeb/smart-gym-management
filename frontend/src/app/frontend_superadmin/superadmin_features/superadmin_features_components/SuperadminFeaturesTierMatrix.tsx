@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
+'use client';
+// RESPONSIBILITY: Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
 import { Layers, Check, Minus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

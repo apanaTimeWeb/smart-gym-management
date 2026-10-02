@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminTicketsTicketMutations, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminTicketsTicketMutations, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Superadmin ticket close and assignment mutations; UI components consume only typed mutation actions.
 import { useRef } from 'react';
 

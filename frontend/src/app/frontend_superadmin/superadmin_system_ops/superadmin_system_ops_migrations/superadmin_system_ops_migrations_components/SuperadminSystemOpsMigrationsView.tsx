@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin schema rollout screen. Delegates query, mutation, confirmation, and cache logic to the page hook.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin schema rollout screen. Delegates query, mutation, confirmation, and cache logic to the page hook.
 import { AlertTriangle, Database, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

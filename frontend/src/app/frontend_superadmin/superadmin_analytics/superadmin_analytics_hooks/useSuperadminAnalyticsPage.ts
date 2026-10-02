@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminAnalyticsPage → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminAnalyticsPage → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Logic hook for the Analytics page. Fetches revenue metrics and monthly chart data.
 // Exposes isPending, isError. No JSX — pure logic.
 //

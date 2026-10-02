@@ -1,4 +1,4 @@
-'use client';import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { SUPERADMIN_FEATURES_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_constants/SuperadminFeaturesQueryKeys';
 
@@ -35,3 +35,4 @@ export function useSuperadminFeaturesFeatureRolloutMutation(onSaveRollout: Super
     },
   });
 }
+

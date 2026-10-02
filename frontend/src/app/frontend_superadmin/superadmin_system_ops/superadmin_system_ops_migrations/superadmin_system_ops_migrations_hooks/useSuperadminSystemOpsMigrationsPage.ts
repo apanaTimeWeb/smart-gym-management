@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: migration route → query state + dedicated deployment mutation → user-visible migration table.
+'use client';
+// DATA FLOW: migration route → query state + dedicated deployment mutation → user-visible migration table.
 // RESPONSIBILITY: Owns migration page state/query/confirmation orchestration; mutation execution is delegated.
 import { useRef } from 'react';
 

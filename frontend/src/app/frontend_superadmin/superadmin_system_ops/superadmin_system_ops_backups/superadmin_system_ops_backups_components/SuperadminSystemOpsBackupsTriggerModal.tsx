@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Confirmation view for the global backup trigger; asynchronous mutation is owned by the feature action hook.
+'use client';
+// RESPONSIBILITY: Confirmation view for the global backup trigger; asynchronous mutation is owned by the feature action hook.
 import { DatabaseBackup, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';

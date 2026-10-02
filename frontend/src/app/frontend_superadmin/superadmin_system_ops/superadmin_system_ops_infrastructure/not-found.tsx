@@ -1,6 +1,6 @@
 'use client';
 import { SearchX } from 'lucide-react';
-'use client';// RESPONSIBILITY: Renders the superadmin_system_ops_infrastructure route-segment not-found state and provides documented recovery navigation.
+// RESPONSIBILITY: Renders the superadmin_system_ops_infrastructure route-segment not-found state and provides documented recovery navigation.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';

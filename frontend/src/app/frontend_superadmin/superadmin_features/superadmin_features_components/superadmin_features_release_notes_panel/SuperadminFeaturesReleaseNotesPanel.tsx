@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the feature-owned release-note history and publication form using parent-owned form state and mutation handlers.
+'use client';
+// RESPONSIBILITY: Renders the feature-owned release-note history and publication form using parent-owned form state and mutation handlers.
 import { Loader2, Send } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

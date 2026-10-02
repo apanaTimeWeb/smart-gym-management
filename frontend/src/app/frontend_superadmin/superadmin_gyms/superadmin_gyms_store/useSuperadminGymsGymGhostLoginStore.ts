@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin Gyms UI events → feature-scoped UI store → shell/session consumers.
+'use client';
+// DATA FLOW: Superadmin Gyms UI events → feature-scoped UI store → shell/session consumers.
 // RESPONSIBILITY: Owns only persisted ghost-login presentation state. API mutations live in feature hooks.
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';

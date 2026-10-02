@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchBackups() → TanStack Query → Backup Safety & Restore Readiness UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchBackups() → TanStack Query → Backup Safety & Restore Readiness UI
 // RESPONSIBILITY: Owns query orchestration for Backup Safety & Restore Readiness. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

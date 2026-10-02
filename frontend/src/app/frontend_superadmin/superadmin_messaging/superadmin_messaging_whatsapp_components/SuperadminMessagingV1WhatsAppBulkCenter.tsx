@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppBulkCenter responsibility defined by this module feature.
+'use client';
+// RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppBulkCenter responsibility defined by this module feature.
 import { useEffect, useMemo, useState } from 'react';
 
 import { Building2, Rocket, ShieldCheck } from 'lucide-react';

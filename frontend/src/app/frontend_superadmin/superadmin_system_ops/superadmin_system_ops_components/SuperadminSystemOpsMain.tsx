@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders System Ops summary cards from TanStack Query server data and links to the owning detail features. No API calls.
+'use client';
+// RESPONSIBILITY: Renders System Ops summary cards from TanStack Query server data and links to the owning detail features. No API calls.
 import Link from 'next/link';
 
 import { useLocale, useTranslations } from 'next-intl';

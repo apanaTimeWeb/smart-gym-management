@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchJobs() → TanStack Query → Background Job Queue Health UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchJobs() → TanStack Query → Background Job Queue Health UI
 // RESPONSIBILITY: Owns query orchestration for Background Job Queue Health. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

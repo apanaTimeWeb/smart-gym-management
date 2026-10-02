@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: URL filter → infrastructure queries → derived metrics → Infrastructure mutation hooks → visible Superadmin UI.
+'use client';
+// DATA FLOW: URL filter → infrastructure queries → derived metrics → Infrastructure mutation hooks → visible Superadmin UI.
 import { SUPERADMIN_INFRASTRUCTURE_FILTER_ALL } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_constants/SuperadminSystemOpsInfrastructureConstants';
 
 // RESPONSIBILITY: Owns Infrastructure page state, derived metric calculations, and confirmed cache-flush action orchestration.

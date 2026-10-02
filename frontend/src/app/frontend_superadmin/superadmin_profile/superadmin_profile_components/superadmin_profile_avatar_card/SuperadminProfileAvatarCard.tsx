@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Displays the superadmin's avatar, name, role badge, and last login info.
+'use client';
+// RESPONSIBILITY: Displays the superadmin's avatar, name, role badge, and last login info.
 import { ShieldCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 

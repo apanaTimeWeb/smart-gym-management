@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Orchestrates the async Superadmin tenant-data export request and completion feedback.
+'use client';
+// RESPONSIBILITY: Orchestrates the async Superadmin tenant-data export request and completion feedback.
 import { useRef, useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';

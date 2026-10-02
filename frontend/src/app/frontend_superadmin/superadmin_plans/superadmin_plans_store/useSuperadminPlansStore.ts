@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Superadmin UI → useSuperadminPlansStore → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: Superadmin UI → useSuperadminPlansStore → Superadmin module API/state → consuming component
 // RESPONSIBILITY: Zustand store for the Plans module. Manages only modal UI state.
 // DATA FLOW: Component -> useSuperadminPlansStore.ts -> UI Components
 import { create } from 'zustand';

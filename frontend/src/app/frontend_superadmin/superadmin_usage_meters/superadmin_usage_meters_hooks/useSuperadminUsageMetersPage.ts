@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Inputs enter useSuperadminUsageMetersPage, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+'use client';
+// DATA FLOW: Inputs enter useSuperadminUsageMetersPage, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Usage Meters query state for search and page parameters.
 import { useQuery } from '@tanstack/react-query';
 

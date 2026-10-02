@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: Owning feature API/query/store state → useSuperadminSettingsPage → consuming feature component.
+'use client';
+// DATA FLOW: Owning feature API/query/store state → useSuperadminSettingsPage → consuming feature component.
 import { useQuery } from '@tanstack/react-query';
 
 import { settingsApi } from '@/app/frontend_superadmin/superadmin_settings/superadmin_settings_api/SuperadminSettingsApi';

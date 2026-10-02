@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the branded superadmin_global_audit not-found state and provides recovery navigation to the owning feature.
+'use client';
+// RESPONSIBILITY: Renders the branded superadmin_global_audit not-found state and provides recovery navigation to the owning feature.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';

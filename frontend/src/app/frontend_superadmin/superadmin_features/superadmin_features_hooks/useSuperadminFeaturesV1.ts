@@ -1,4 +1,5 @@
-'use client';// DATA FLOW: MSW/Backend → fetchFeatureRolloutInsights() → TanStack Query → Feature Rollouts & Release History UI
+'use client';
+// DATA FLOW: MSW/Backend → fetchFeatureRolloutInsights() → TanStack Query → Feature Rollouts & Release History UI
 // RESPONSIBILITY: Owns query orchestration for Feature Rollouts & Release History. No JSX.
 import { useQuery } from '@tanstack/react-query';
 

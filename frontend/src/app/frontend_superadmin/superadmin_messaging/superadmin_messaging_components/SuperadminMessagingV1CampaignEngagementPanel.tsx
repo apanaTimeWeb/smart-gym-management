@@ -1,4 +1,5 @@
-'use client';// RESPONSIBILITY: Renders the Superadmin messaging V1 Campaign engagement view.
+'use client';
+// RESPONSIBILITY: Renders the Superadmin messaging V1 Campaign engagement view.
 import { useTranslations } from 'next-intl';
 
 import Panel from '@/components/ui/Panel';
