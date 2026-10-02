@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Framework route artifact for integrations.
 import SuperadminIntegrationsMain from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_components/SuperadminIntegrationsMain';
 import SuperadminLayoutRoleProviders from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutRoleProviders';
@@ -9,5 +11,7 @@ import SuperadminLayoutRoleProviders from '@/app/frontend_superadmin/superadmin_
  * @edge-case Preserves documented loading, empty, error, retry, keyboard, responsive, and repeated-action behavior where applicable.
  */
 export default function SuperadminIntegrationsPage() {
-    return <SuperadminLayoutRoleProviders><SuperadminIntegrationsMain /></SuperadminLayoutRoleProviders>;
+    return <SuperadminLayoutRoleProviders><Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
+        <SuperadminIntegrationsMain />
+      </Suspense></SuperadminLayoutRoleProviders>;
 }

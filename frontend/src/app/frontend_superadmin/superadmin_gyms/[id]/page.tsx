@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Server entry for the Superadmin gym detail route; passes the route gym ID to client views.
 import { notFound } from 'next/navigation';
 
@@ -11,6 +13,8 @@ export default async function GymDetailPage({ params }: SuperadminGymDetailPageP
     if (!id)
         return notFound();
     return (<>
-      <SuperadminGymsGymDetailView gymId={id}/>
+      <Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
+        <SuperadminGymsGymDetailView gymId={id}/>
+      </Suspense>
     </>);
 }

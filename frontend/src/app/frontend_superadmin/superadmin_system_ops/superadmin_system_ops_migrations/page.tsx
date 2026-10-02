@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Server route boundary for the Superadmin System Ops child feature.
 import SuperadminLayoutRoleProviders from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutRoleProviders';
 import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
@@ -14,7 +16,9 @@ export default function Page() {
   return (
     <SuperadminLayoutRoleProviders>
       <SuperadminLayoutErrorBoundary>
+        <Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
         <SuperadminSystemOpsMigrationsView />
+      </Suspense>
       </SuperadminLayoutErrorBoundary>
     </SuperadminLayoutRoleProviders>
   );

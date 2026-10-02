@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Server Component entry point for the Dashboard page. Delegates rendering to SuperadminDashboardMain.
 import SuperadminDashboardMain from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_components/superadmin_dashboard_main/SuperadminDashboardMain';
 import SuperadminLayoutRoleProviders from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutRoleProviders';
@@ -12,6 +14,8 @@ import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superad
  */
 export default function SaaSDashboardPage() {
     return (<SuperadminLayoutRoleProviders><SuperadminLayoutErrorBoundary>
-      <SuperadminDashboardMain />
+      <Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
+        <SuperadminDashboardMain />
+      </Suspense>
     </SuperadminLayoutErrorBoundary></SuperadminLayoutRoleProviders>);
 }

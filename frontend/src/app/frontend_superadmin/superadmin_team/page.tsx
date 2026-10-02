@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Framework route artifact for team.
 import SuperadminTeamMain from '@/app/frontend_superadmin/superadmin_team/superadmin_team_components/SuperadminTeamMain';
 /**
@@ -7,5 +9,7 @@ import SuperadminTeamMain from '@/app/frontend_superadmin/superadmin_team/supera
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  */
 export default function SuperadminTeamPage() {
-    return <SuperadminTeamMain />;
+    return <Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
+        <SuperadminTeamMain />
+      </Suspense>;
 }

@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Server route entry for Superadmin White-labeling; the interactive feature is isolated in its client component.
 import SuperadminWhiteLabelingMain from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_components/SuperadminWhiteLabelingMain';
 
@@ -17,5 +19,7 @@ export const metadata: Metadata = {
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  */
 export default function SuperadminWhiteLabelingPage() {
-  return <SuperadminWhiteLabelingMain />;
+  return <Suspense fallback={<SuperadminLayoutPageSuspenseSkeleton />}>
+        <SuperadminWhiteLabelingMain />
+      </Suspense>;
 }
