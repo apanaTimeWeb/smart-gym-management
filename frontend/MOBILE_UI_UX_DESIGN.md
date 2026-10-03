@@ -386,19 +386,25 @@ Spinner size: `icon-sm`.
 
 ## 19. Theme Contract Cross-Reference
 
-This file (`MOBILE_UI_UX_DESIGN.md`) is the VALUES source — it defines what every
-token is worth in light and dark mode.
+This file (`MOBILE_UI_UX_DESIGN.md`) serves two roles simultaneously:
+1. **VALUES source** — it defines what every token is worth in light and dark mode (the tables above).
+2. **AI-readable catalogue** — it lists every token name, value, and usage context in one scannable table that AI agents read before writing any styled component.
 
-`MOBILE_UI_UX_DESIGN.md` (required by mobile Rule 52) is the CATALOGUE — it lists
-every token name, its value from this file, and its exact usage context in one
-scannable table that AI agents read before writing any styled component.
+**Hierarchy:**
+```
+MOBILE_UI_UX_DESIGN.md   ← this file (values + catalogue)
+       ↓
+React Native theme module  ← implements the token values from this file
+       ↓
+Feature UI                 ← consumes semantic tokens ONLY; never hardcodes values
+```
 
-**Relationship:**
-- When a new token is needed: add it to THIS file first (with light + dark values
-  and a usage description), then implement it in the framework's theme module (Rule 3).
-- AI agents writing components MUST reference THIS document (`MOBILE_UI_UX_DESIGN.md`) to pick
-  token names — never guess a token name or hardcode a value from memory.
-- This file acts as the SINGLE source of truth for the codebase's theme implementation.
+**Workflow rule (when a new token is needed):**
+1. Add the token to THIS file first — with light + dark values and a usage description.
+2. Implement it in the React Native theme module (Rule 3).
+3. List it in the owning feature's `[featureName]_theme_contract.md` (Rule 52A).
+4. AI agents writing components MUST reference THIS document to pick token names — never guess a token name or hardcode a value from memory.
+
 
 **Token categories that MUST be explicitly declared in the React Native theme module:**
 - Color tokens (Section 1)

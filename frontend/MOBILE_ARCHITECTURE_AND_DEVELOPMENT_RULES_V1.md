@@ -145,12 +145,15 @@ features/
         │   └── members.types.ts          ← all interfaces, enums, type unions
         ├── api/
         │   └── members.api.ts            ← ALL network calls for this feature ONLY
+        ├── config/                       ← URL constants ONLY (no business logic)
+        │   └── members.url_config.ts     ← endpoint paths for this feature
         ├── state/                        ← only if UI state shared across 2+ components
         │   └── members.store.ts          
         ├── tests/                        ← integration-level tests (unit = co-located)
         │   └── members.integration.test.ts
         ├── members_features.md           ← MANDATORY — see Rule 24
-        └── members_forbidden.md          ← MANDATORY — see Rule 29
+        ├── members_forbidden.md          ← MANDATORY — see Rule 29
+        └── members_theme_contract.md     ← MANDATORY — see Rule 52A
 ```
 
 ### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
@@ -178,14 +181,12 @@ API / Types / Schema / Store / Config (dot-notation, feature-prefixed, lowercase
   members.types.ts
   members.schema.ts
   members.store.ts
-  members.url_config.ts
+  members.url_config.ts   ← lives inside config/ sub-folder
 
-Integration tests:
-  members.integration.test.ts
-
-Mandatory documentation files:
+Mandatory documentation files (feature root level):
   members_features.md
   members_forbidden.md
+  members_theme_contract.md
 ```
 
 **Framework/architectural prefix exceptions (explicitly permitted):**
@@ -524,14 +525,23 @@ visually renders with placeholder values.
 
 ## Rule 7B — URL Config Contract
 
-Every feature module MUST have exactly one `[moduleName].url_config.ts` (e.g., `members.url_config.ts`) which MUST export:
-1. All API endpoint URL strings as named constants (UPPER_SNAKE_CASE).
-2. A typed MODULE_URLS object grouping all endpoints.
+Every feature module MUST have exactly one `[moduleName].url_config.ts` (e.g., `members.url_config.ts`).
+
+**Placement:** This file lives inside the feature's `config/` sub-folder (e.g., `features/frontend_manager/members/config/members.url_config.ts`), NOT in the feature root.
+
+**Separation of Concerns (no conflict with Rule 20):**
+- **Base URL** (e.g., `https://api.example.com`) lives in Rule 20 infrastructure — defined per environment via native build configuration and set centrally in the network client. Feature modules MUST NOT define or read the base URL.
+- **Endpoint paths** (e.g., `/api/v1/manager/members`) are feature-owned and MUST live in this file.
+
+This file MUST export:
+1. All API endpoint path strings as named constants.
+2. A typed `MODULE_URLS` object grouping all endpoints.
 3. NO hardcoded base URLs — only paths relative to the API base.
-4. NO business logic — only URL string definitions.
+4. NO business logic — only URL path string definitions.
 
 Example export shape:
 ```typescript
+// features/frontend_manager/members/config/members.url_config.ts
 export const MEMBERS_URLS = {
   LIST:   '/api/v1/manager/members',
   DETAIL: (id: string) => `/api/v1/manager/members/${id}`,
@@ -539,6 +549,72 @@ export const MEMBERS_URLS = {
 } as const;
 ```
 This guarantees a single source of truth for endpoints and prevents scattered hardcoded URL strings inside the `*.api.ts` file.
+
+## Rule 7C — Query Key Registry (Canonical Factory Pattern)
+
+Every feature module MUST contain a dedicated query key registry file inside its `api/` or `config/` folder (e.g., `members.query_keys.ts`). This prevents the AI from inventing inconsistent, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`.
+
+```typescript
+// features/frontend_manager/members/api/members.query_keys.ts
+export const MEMBERS_QUERY_KEYS = {
+  all:     ['manager_members'] as const,
+  lists:   () => [...MEMBERS_QUERY_KEYS.all, 'list'] as const,
+  list:    (filters: Record<string, unknown>) =>
+             [...MEMBERS_QUERY_KEYS.lists(), filters] as const,
+  details: () => [...MEMBERS_QUERY_KEYS.all, 'detail'] as const,
+  detail:  (id: string) =>
+             [...MEMBERS_QUERY_KEYS.details(), id] as const,
+};
+```
+
+### Resource Identity Preservation Rule
+
+Whenever data belongs to a specific resource, query keys MUST include the resource identity.
+
+```
+❌ Forbidden:
+  ['member']
+  ['members']
+  ['profile']
+
+✅ Required:
+  ['manager_members', 'detail', memberId]
+  ['admin_attendance', 'list', { page: 1 }]
+  ['manager_members', 'detail', gymId]
+```
+
+Two different resources MUST NOT share the same cache entry. Resource identity must remain consistent across:
+```
+Route → Selected Resource → Query Key → Request Parameter → API Response → Rendered UI
+```
+A route representing Resource A MUST NOT display cached data from Resource B. This is a **CRITICAL architectural violation**.
+
+### Dedicated Mutation Hook Rule
+
+Mutations MUST be orchestrated through dedicated, named mutation hooks (e.g., `useCreateMember.ts`, `useDeleteMember.ts`).
+Screens and components MUST NEVER call `useMutation` directly or mix mutation logic inside JSX or Screen components.
+
+```typescript
+// ❌ BAD — mutation logic inlined in screen
+function MembersAddScreen() {
+  const { mutate } = useMutation({ mutationFn: createMember });
+  // ...
+}
+
+// ✅ GOOD — dedicated mutation hook consumed by screen
+// hooks/useCreateMember.ts
+export function useCreateMember() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createMember,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBERS_QUERY_KEYS.lists() });
+    },
+  });
+}
+```
+
+Cross-reference: Rule 60 (cache invalidation), Rule 7C (query key registry).
 
 ## Rule 8 — Lists & Rendering Performance
 
@@ -744,6 +820,10 @@ the feature can be broken and PASS at the same time.
   directly — always go through the central config-access module or feature flag hook
   which validates presence/shape at app startup or runtime.
 
+> **Separation of Infra vs Feature URL Concerns:** Rule 20 governs the BASE URL (scheme + host + port) only.
+> Feature endpoint PATHS live in each feature's `config/members.url_config.ts` (Rule 7B).
+> These two concerns MUST NEVER be merged into a single file or a single rule.
+
 ## Rule 21 — Over-The-Air (OTA) Updates & Hotfix Strategy
 
 - OTA/JS-only patch delivery is OPTIONAL and must be a deliberate, documented
@@ -765,9 +845,15 @@ the feature can be broken and PASS at the same time.
 - CI runs, on every push: (a) a software-composition-analysis (SCA)
   dependency vulnerability scan, (b) a secret-scanning check. Both must pass
   before merge.
-- Code ownership (`CODEOWNERS`) requires mandatory human review on: the central
-  network client, the central storage module, the central permissions module,
-  the central config module, any auth flow, and any native build/signing config.
+- Code ownership (`CODEOWNERS`) requires mandatory human review on:
+  - the central network client
+  - the central storage module
+  - the central permissions module
+  - the central config module
+  - **any auth flow and token-refresh logic**
+  - **any payment or financial mutation**
+  - any native build/signing config
+  These paths MUST NEVER merge without a required human approval gate.
 - No new dependency is added without:
   1. Checking the `/docs/decisions/approved-dependencies.md` list first.
   2. Confirming current-generation architecture compatibility (Rule 0 / Rule 14).
@@ -863,6 +949,16 @@ requirements listed inline.
 (2) Which role(s) use it and what can they DO? (3) What is strictly OFF-LIMITS for each
 role? Generic phrases like "handles X operations" are forbidden.]
 
+## Dependency Manifest
+[REQUIRED: List every library and core infrastructure module this feature uses. Example:
+TanStack Query, Zustand, React Hook Form, Zod, react-native-reanimated.
+This lets an AI instantly know what stack is used without reading every file.]
+
+## Feature Lifecycle Contract
+[REQUIRED: Explicitly state which CRUD operations exist. If any is absent, state why.
+Example: Create ✓ | Read ✓ | Update ✓ | Delete ✓ | Export ✓ | Bulk ✗ (not in scope)
+Prevents AI from blindly assuming standard CRUD capability.]
+
 ## Screens & Entry Points
 [REQUIRED: Every screen with its exact route/stack name and which roles can access it.
 "All roles" is not acceptable — name each role explicitly.]
@@ -900,12 +996,11 @@ understand the full journey without reading every file.]
 [REQUIRED: Name the ACTUAL store files, cache keys, and providers — not "TBD".]
 
 - **State pattern:** [e.g., "TanStack Query for server state + Zustand members.store.ts for UI state"]
-- **Cache / query keys:** [e.g., `['members', 'list', filters]`, `['members', 'detail', memberId]`]
+- **Cache / query keys:** [e.g., `MEMBERS_QUERY_KEYS.list(filters)`, `MEMBERS_QUERY_KEYS.detail(memberId)` — from `members.query_keys.ts` (Rule 7C)]
 - **Feature-scoped store:** [e.g., `members.store.ts` — holds: selectedMemberId, isAddSheetOpen, filterStatus, searchQuery]
 - **Local state decisions:** [e.g., "Detail screen tab selection is local useState — not shared"]
 - **Persisted state (offline requirement):** Yes / No — if Yes, document cache strategy and invalidation triggers
 - **Storage keys used:** ["None" or namespaced constants e.g. `MEMBERS_FILTER_PREFS_V1`] — if yes, document strategy
-- Storage keys used (namespaced constants):
 
 ## API Contract
 [REQUIRED: Every function in the feature's api file listed with exact HTTP method,
@@ -2026,6 +2121,40 @@ The React Native application's theme module MUST exactly implement the complete 
 
 Any raw values or tokens missing from the code's theme configuration that are present in `MOBILE_UI_UX_DESIGN.md` will cause CI/Design validation failure.
 
+## Rule 52A — Per-Feature Theme Contract Documentation
+
+Every feature folder MUST contain a `members_theme_contract.md` (or equivalent for that feature name) file at the feature root.
+This file lists ONLY the design tokens that THIS specific feature consumes — no values, just the token names.
+
+Purpose: When copying a feature module into a new project, this file tells the target project's theme implementor exactly which tokens must exist.
+
+```markdown
+# members — Theme Contract
+
+## Color Tokens Used
+- `primary`, `on-primary` — FAB and action buttons
+- `destructive`, `on-destructive` — delete confirmation button
+- `card`, `border` — member card surface and dividers
+- `foreground`, `muted` — name text and secondary info
+- `status-success-bg`, `status-success-text` — active badge
+- `status-danger-bg`, `status-danger-text` — expired badge
+- `skeleton-base`, `skeleton-highlight` — list loading skeleton
+
+## Spacing Tokens Used
+- `space-3`, `space-4`, `space-5` — card internal padding
+
+## Typography Tokens Used
+- `body`, `body-sm`, `caption`, `heading-sm`
+
+## Motion Tokens Used
+- `duration-base` — card press animation
+
+## Z-Index Tokens Used
+- `z-bottom-sheet` — delete confirmation sheet
+```
+
+AI agents writing styled components for a feature MUST check this file to verify all tokens they intend to use are already listed. New tokens must be added to `MOBILE_UI_UX_DESIGN.md` first (Rule 52), then listed here.
+
 ## Rule 53 — Idempotency for ALL API Mutations
 
 Every mutating API call (POST, PUT, PATCH, DELETE) MUST generate an `Idempotency-Key` at the moment of user intent.
@@ -2122,7 +2251,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - Co-located tests exist for new hooks and components? (Rule 17)
    - Crash reporting wired for new critical paths? (Rule 23)
    - Is any new dependency on the approved list? (Rule 22)
-   - `_features.md` updated with non-generic content? (Rule 24)
+   - `_features.md` updated with non-generic content, including Dependency Manifest and Feature Lifecycle Contract? (Rule 24)
    - All interactive elements have accessible labels + 44/48dp targets? (Rule 25)
    - Any cross-feature imports? (Rule 28)
    - `_forbidden.md` current and specific? (Rule 29)
@@ -2146,6 +2275,10 @@ The mobile architecture MUST enforce the following security and robustness const
    - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
    - New tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation? (Rule 52)
+   - `members_theme_contract.md` updated with any newly used tokens? (Rule 52A)
+   - `members.url_config.ts` exists in `config/` sub-folder — no hardcoded URLs in `*.api.ts`? (Rule 7B)
+   - Query keys use the canonical factory from `members.query_keys.ts`? (Rule 7C)
+   - Mutations use dedicated mutation hooks — no inline `useMutation` in screens/components? (Rule 7C)
    - Every POST/PATCH/PUT/DELETE mutation uses a required stable Idempotency-Key; the same key is reused on retry and a new key is generated only for a new user intent? (Rule 53)
    - Token refresh is single-flight? (Rule 54)
    - x-tenant-id derived from secure context only? (Rule 55)
@@ -2154,16 +2287,32 @@ The mobile architecture MUST enforce the following security and robustness const
    - WebSocket instantiated only through centralized `WebSocketContext` / `SocketProvider`? (Rule 58)
    - App foreground resume triggers the exact notification-recovery endpoint from the feature API contract? (Rule 58A)
    - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
-   - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys? (Rule 60)
+   - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys via canonical registry? (Rule 60)
    - All client-authored/static user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)
+   - Locale files named `[featureName]_{lang}.json` and co-located in feature `_locales/`? (Rule 61)
    - `Accept-Language` header attached automatically by central network client? (Rule 61)
    - Feature flags accessed via `useFeatureFlag()` — no raw build/env reads in components? (Rule 62)
    - Currency formatting is feature-local `formatCurrency.ts`; approved currency metadata used; unknown codes throw? (Rule 63)
    - Tenant data export triggers async backend call + `202 Accepted` toast — no in-app download? (Rule 64)
-   - Every interactive control and critical state indicator has a deterministic `testID`? (Rule 65)
+   - Every interactive control and critical state indicator has a deterministic `testID` in `[module]-[component]-[action/state]` format? (Rule 65)
    - Every custom hook, complex component, and state store has an exhaustive JSDoc / docstring? (Rule 66)
 4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan, hard-write-boundary diff check.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
+
+### Sub-Module `_features.md` Files
+
+For large features with 5+ sub-screens or sub-flows, each major sub-screen folder MAY have its own `_features.md`. These files follow the same quality standard but can be shorter. They MUST still contain:
+- A real Purpose (not "handles X operations")
+- A real Screen + Route table
+- A real API Contract with actual endpoints
+- A real Edge Cases section with feature-specific warnings (minimum 3 items)
+- A Component Responsibility Map
+
+Sub-module files with only generic boilerplate content are considered **undocumented** and MUST be rewritten.
+
+### Documentation Freshness Rule
+
+Every time a component is added, an API endpoint changes, a new screen is added, or a user flow changes, the `_features.md` for that feature MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
 
 ## Rule 57 — Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
@@ -2190,8 +2339,18 @@ The mobile frontend uses a co-located locale file architecture. The active launc
 
 ### Module-Co-located Locales
 Each feature module owns its own translation keys.
+
+### Locale File Naming Convention
+Locale files MUST follow: `[featureName]_{lang}.json`
+- ✅ **GOOD:** `members_en.json`, `members_hi.json`
+- ❌ **BAD:** `en.json`, `translation.json`, `index.json`
+
+The `_locales/` folder inside each feature MUST contain ONLY locale files for that feature.
+Locale files are grouped by feature, NOT by language.
+Do NOT create `src/locales/en/` or any global language folder.
+
 ```json
-// features/frontend_manager/members/_locales/en.json
+// features/frontend_manager/members/_locales/members_en.json
 {
   "members": {
     "PAGE_TITLE": "Members",
