@@ -147,6 +147,8 @@ features/
         │   └── members.api.ts            ← ALL network calls for this feature ONLY
         ├── config/                       ← URL constants ONLY (no business logic)
         │   └── members.url_config.ts     ← endpoint paths for this feature
+        ├── mocks/                        ← MUST CONTAIN ALL FEATURE MOCKS (NO GLOBAL MOCKS)
+        │   └── members.mock.ts           ← MSW handlers or fixture data for this feature
         ├── state/                        ← only if UI state shared across 2+ components
         │   └── members.store.ts          
         ├── tests/                        ← integration-level tests (unit = co-located)
@@ -294,8 +296,8 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native). Never duplicated into a separate "client" state container. |
-| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for React Native). One container per feature — never one giant global store. |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by TanStack Query v5 for React Native. Never duplicated into a separate "client" state container. **AI BAN:** `isLoading` is banned (use `isPending`), and v4 callbacks (`onSuccess` inside `useQuery`) are banned. |
+| UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `React Component` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
@@ -311,7 +313,9 @@ Derived calculations (e.g., `fullName`, `membershipStatus`, `expiryIndicator`) M
 ## Rule 5 — Forms & Validation
 
 - All non-trivial forms use a form-management library + a schema-validation
-  library, kept separate from each other (e.g. React Hook Form + Zod).
+  library, kept separate from each other.
+- **Enforced Stack:** React Hook Form (v7) + Zod. 
+- **AI BAN:** The v6 `import { useForm, FormProvider }` without proper v7 register patterns is STRICTLY BANNED. Do not hallucinate legacy v6 patterns.
 - Validation schema/rules live in the feature's `schemas/` (or `validators/`)
   folder — never written inline inside the widget/component.
 - Client-side validation messages are for immediate UX feedback only. The

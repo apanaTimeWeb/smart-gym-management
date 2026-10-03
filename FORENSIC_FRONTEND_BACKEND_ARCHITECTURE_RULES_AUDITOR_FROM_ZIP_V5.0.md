@@ -862,6 +862,16 @@ The tracker MUST contain:
 ## Key Invariants Identified
 [List any important DO-NOT-BREAK findings discovered in completed batches]
 
+## Accumulated Batch Findings (The Master Log)
+*AI Instruction: After every batch, APPEND the full issue details (Issue ID, Severity, File, Problem, Fix) for that batch below. Do not overwrite previous batches. This ensures the user has a single downloadable report if the audit is interrupted.*
+
+### Batch 1 Findings:
+[List detailed issues and fixes here]
+
+### Batch 2 Findings:
+[List detailed issues and fixes here]
+(...and so on)
+
 ## Last Updated After
 Batch [N] — [Module names]
 ```
