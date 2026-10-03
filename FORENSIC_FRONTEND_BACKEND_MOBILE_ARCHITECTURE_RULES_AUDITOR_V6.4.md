@@ -149,7 +149,6 @@ That isolated workspace must not become part of the audited source tree and must
 
 If an isolated execution workspace is unavailable, do not perform mutation-capable verification.
 
-If the environment cannot create a downloadable report file, return the complete report in chat.
 
 ---
 
@@ -831,7 +830,7 @@ AUDIT_PROGRESS_TRACKER.md
 ```
 
 **CRITICAL FILE GENERATION INSTRUCTION:**
-If your AI environment supports creating downloadable files (e.g., Claude Artifacts, ChatGPT Code Interpreter, or direct file writing), you MUST output `AUDIT_PROGRESS_TRACKER.md` as an actual, downloadable file or Artifact. Do NOT just print it as plain text in a markdown block if you have the capability to generate a real file.
+You MUST use your native file-generation tool, Artifacts system, or Code Interpreter to provide `AUDIT_PROGRESS_TRACKER.md` and the Batch Findings as ACTUAL DOWNLOADABLE FILES. Do NOT print them as raw chat text. Automatically generate the files so the user can download them immediately without needing to ask.
 
 This file MUST be created after Batch 1 completes and updated after every subsequent batch.
 
@@ -4757,15 +4756,10 @@ P2: N
 P3: N
 ```
 
-Make the `.md` file directly downloadable using the available platform capability.
+**CRITICAL FILE GENERATION INSTRUCTION:**
+You MUST use your native file-generation tool, Artifacts system, or Code Interpreter to provide the final `DEEP-VERIFICATION-REPORT.md` as an ACTUAL DOWNLOADABLE FILE. Do NOT print the 15-section report as raw chat text. Automatically generate the file so the user can download it immediately without needing to ask.
 
-Do NOT paste the full report into chat when the file has been successfully created.
-
----
-
-## MODE B — MARKDOWN FILE CANNOT BE CREATED
-
-Return the complete report in chat.
+Do NOT paste the full report into chat.
 
 Never truncate.
 
