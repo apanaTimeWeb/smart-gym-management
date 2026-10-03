@@ -905,12 +905,15 @@ Your response MUST end with EXACTLY this checkpoint block — no deviation, no p
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
-**Critical Rules for Checkpoints:**
-1. Never proceed to the next batch without posting this exact checkpoint and receiving a "continue" reply.
-2. Never merge multiple batches into one response to "save time" — this defeats the zero-sampling guarantee.
-3. If you feel the current batch is nearly done but token pressure is building, STOP at the current module boundary (do not half-audit a module) and checkpoint early. A partial module audit is worse than stopping before it.
-4. When the user replies "continue", you MUST re-read the AUDIT_PROGRESS_TRACKER.md before beginning the next batch to restore full context.
-5. After the FINAL batch completes, output the checkpoint block with "ALL BATCHES COMPLETE" and then generate the full 15-section DEEP-VERIFICATION-REPORT.md.
+**Critical Rules for Checkpoints & Token Edge Cases:**
+1. **Checkpoint Enforcement:** Never proceed to the next batch without posting this exact checkpoint and receiving a "continue" reply.
+2. **Anti-Skipping:** Never merge multiple batches into one response to "save time" — this defeats the zero-sampling guarantee.
+3. **Pre-emptive Halting:** If you feel the current batch is nearly done but token pressure is building, STOP at the current module boundary (do not half-audit a module) and checkpoint early.
+4. **Mid-Response Truncation (Output Limit Edge Case):** If you are writing the report or scratchpad and get cut off abruptly due to output token limits, the user will reply "continue". You MUST resume exactly where you left off (from the exact character or line) inside a new code block. Do NOT restart the entire batch or file.
+5. **Hard Context Reset (Memory Full Edge Case):** If you detect severe context degradation (forgetting rules) or token context limits approaching (e.g., after Batch 10), instruct the user to: *"STOP. Start a NEW chat session and upload only the AUDIT_PROGRESS_TRACKER.md and the architecture rules to continue from Batch N+1."*
+6. **Token-Saving Quote Rule:** When logging issues, DO NOT quote entire functions or 50-line code blocks. Quote ONLY the exact 3-5 broken lines using `...` for omitted code to conserve output tokens.
+7. **Tracker Rehydration:** When the user replies "continue" (in the same or a new chat), you MUST re-read `AUDIT_PROGRESS_TRACKER.md` before beginning the next batch to restore full context.
+8. **Finalization:** After the FINAL batch completes, output the checkpoint block with "ALL BATCHES COMPLETE" and then generate the full 15-section DEEP-VERIFICATION-REPORT.md.
 
 ---
 
