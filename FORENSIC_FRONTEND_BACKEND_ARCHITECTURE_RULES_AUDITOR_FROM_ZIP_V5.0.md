@@ -1450,6 +1450,23 @@ DOMAIN BUSINESS LOGIC
 UNKNOWN
 ```
 
+---
+
+# 24A. REGISTRATION CHAIN AUDIT (ORPHAN DETECTION)
+
+A feature that exists but cannot be reached or initialized is fundamentally broken. You MUST verify the complete registration chain for every feature:
+
+**For Backend:**
+`Controller` / `Provider` → registered in `FeatureModule` → imported in `AppModule` or `Router`.
+`Queue Consumer` / `Event Handler` → registered in corresponding Registry.
+
+**For Frontend:**
+`Page` / `Component` → registered in `Route Registry` (e.g., `routes.ts` or file-based routing) → accessible via `Navigation` / `Sidebar` / `Menu` → protected by `Permission Guard` → visible to the User.
+
+If a file exists but the registration chain is broken, report an `ORPHAN_FEATURE` issue.
+
+---
+
 Do not declare something global merely because multiple modules consume it.
 
 Multiple consumers do not automatically make business logic global.
@@ -2116,21 +2133,21 @@ A frontend can still have a contract issue when:
 
 # 38A. DUAL-STACK CONTRACT CROSS-VERIFICATION
 
-> **⚠️ SCOPE CLARIFICATION — Does NOT override Section 8:**
-> Section 8 mandates that the audit TARGETS exactly ONE stack (FRONTEND or BACKEND).
-> This section (38A) is a CONTRACT BOUNDARY CHECK only — it does NOT mean you perform a full audit of both stacks simultaneously.
-> You audit the TARGET stack deeply. When you encounter a cross-stack contract surface (an API call, a DTO boundary, a route URL), you MAY inspect the OPPOSITE stack's contract definition ONLY to verify the boundary is consistent.
-> You do NOT flag issues in the opposite stack — you flag them as `CROSS-STACK-CONTRACT-FAILURE` in the TARGET stack's audit.
+> **⚠️ SCOPE CLARIFICATION:**
+> If the Audit Target is `INTEGRATION`, this section is the PRIMARY focus of the entire audit.
+> If the Audit Target is `FRONTEND` or `BACKEND`, this section is a CONTRACT BOUNDARY CHECK ONLY. You audit the TARGET stack deeply, and only inspect the OPPOSITE stack to verify the boundary is consistent, flagging any mismatch as `CROSS-STACK-CONTRACT-FAILURE`.
 
-When BOTH frontend and backend implementations are supplied in the audit scope, the auditor MUST perform exact cross-stack contract verification for every endpoint that is part of the target stack's audit:
+When BOTH frontend and backend implementations are supplied in the audit scope, the auditor MUST perform exact cross-stack contract verification for every endpoint:
 
-1. Frontend `_url_config.ts` URL perfectly matches Backend `@Controller` path + `@Get/Post/etc` path.
-2. Frontend API client HTTP method matches Backend HTTP method.
-3. Frontend Request Payload (Zod/Type) perfectly matches Backend Request DTO (class-validator).
-4. Frontend Response Expectation (Type) perfectly matches Backend Response DTO.
-5. Frontend Error Handling matches Backend Error throwing shape.
+1. **URL & Method Contract:** Frontend `_url_config.ts` URL perfectly matches Backend `@Controller` path + `@Get/Post/etc` path, including query params and ID segments.
+2. **Payload Contract:** Frontend Request Payload (Zod/Type) perfectly matches Backend Request DTO (class-validator).
+3. **Response Contract:** Frontend Response Expectation (Type) perfectly matches Backend Response DTO.
+4. **Error Contract:** Frontend Error Handling logic perfectly matches the Backend Error throwing shape (e.g. `error.response.message` vs `{ errors: [] }`).
+5. **Auth Contract (Cross-Verification):** Frontend Route/Button permissions (e.g., `SUPERADMIN_MEMBERS_EDIT`) perfectly match the Backend Endpoint Guard (e.g., `@Roles('MEMBER_EDIT')`).
+6. **Environment Contract:** Frontend API base URL and prefixes (e.g., `NEXT_PUBLIC_API_URL=/api/v1`) perfectly match the Backend exposed route prefix (e.g., `API_PREFIX=/api/v1`).
+7. **Generated Contract Drift (API Spec Source of Truth):** If generated clients/SDKs are used, they must be 3-way verified: `OpenAPI/Swagger Spec` ↔ `Backend DTO` ↔ `Frontend SDK/Consumer`. Any drift between the source of truth and the generated output must be flagged.
 
-If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE` in the TARGET stack's issue log. Do NOT attempt to fix either side.
+If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE`. Do NOT attempt to fix either side.
 
 If only ONE stack is supplied, skip this section entirely and mark it `BLOCKED_BY_SUPPLIED_SCOPE`.
 
@@ -4076,7 +4093,14 @@ No normative source requirement may disappear.
 |---|---|---|---|---|---|---|---|---|---|---|---|
 ```
 
-Only use columns relevant to the target stack.
+### Integration target:
+
+```text
+| Feature | Frontend Route | Frontend API Call | Request DTO | Backend Endpoint | Backend DTO | Response Type | Env Match | Auth Match | Status |
+|---|---|---|---|---|---|---|---|---|---|
+```
+
+Only use columns relevant to the explicitly declared target stack (Frontend, Backend, or Integration).
 
 ---
 
