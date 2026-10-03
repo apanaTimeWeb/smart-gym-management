@@ -1404,6 +1404,9 @@ Conversation memory is NOT evidence. Only supplied files, supplied reports, disc
 ## 9. CURRENT REALITY RULE
 Implementation reality and Architecture expectation MUST always be reported separately. `Expected-by-Architecture` ≠ `Currently Implemented`.
 
+## 10. PHYSICAL EXECUTION LIMIT RULE
+If the supplied repository size exceeds the platform's technical inspection capacity (e.g., 3000-5000+ authored files), the auditor must report `PHYSICAL_COVERAGE_LIMIT_REACHED` instead of falsely claiming `COMPLETE COVERAGE`. Do not hallucinate zero-sampling on ultra-large repos if the token limit prevents it.
+
 ---
 
 # 24. FEATURE / MODULE BOUNDARY AUDIT
@@ -4771,7 +4774,7 @@ The auditor must never silently turn incomplete evidence into a complete verdict
 
 After completing the zero-sampling inspection of all files in the current batch, but BEFORE writing the batch's ISSUE-[NNN] findings, you MUST output a scratchpad block:
 
-You must wrap your reasoning in XML tags: `<forensic_scratchpad_batch_[N]> ... </forensic_scratchpad_batch_[N]>` (where N = current batch number).
+You must output a standard markdown header: `### VERIFICATION LEDGER (BATCH [N])` (where N = current batch number). Do NOT use XML tags.
 
 Inside each batch scratchpad, you MUST:
 1. List the files you ACTUALLY inspected in this batch (exact paths from actual tool calls).
@@ -4787,7 +4790,7 @@ Inside each batch scratchpad, you MUST:
 
 After ALL batches complete, before generating `## SECTION 1 — RATINGS BLOCK`, output a final reconciliation scratchpad:
 
-Wrap in: `<forensic_scratchpad_final> ... </forensic_scratchpad_final>`
+Output the markdown header: `### FINAL VERIFICATION LEDGER`
 
 Inside the final scratchpad, you MUST:
 1. Confirm that all batch trackers have been read and accumulated.
@@ -4796,7 +4799,7 @@ Inside the final scratchpad, you MUST:
 4. Confirm the running issue count from the tracker matches the issues in the final report.
 5. Final Devil's Advocate check: "Is there any PASS I gave that I am not 100% confident about? Should it be NOT_VERIFIED instead?"
 
-Only AFTER closing `</forensic_scratchpad_final>` are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
+Only AFTER completing the Final Verification Ledger are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
 
 This Chain of Thought mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
 
