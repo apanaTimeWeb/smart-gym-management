@@ -199,7 +199,7 @@ The normal repair context is:
 
 ---
 
-## CANONICAL FILESYSTEM AND NEXT.JS ROUTING RULE — MANDATORY
+## 1D. CANONICAL FILESYSTEM AND NEXT.JS ROUTING RULE — MANDATORY
 
 The frontend MUST have exactly ONE canonical representation of each feature.
 
@@ -2626,7 +2626,7 @@ Never render completely blank table cells or profile field values when an API re
 - **Why:** A blank cell is visually indistinguishable from a broken render or a missing API field. An en-dash is an explicit, intentional signal to the user that the data does not exist. This is especially critical in financial tables, member profiles, and audit logs where a blank value could be misread as a data integrity issue.
 - ❌ **BAD:** `<td>{member.trainerName}</td>` — renders nothing if `null`
 - ✅ **GOOD:** `<td>{displayValue(member.trainerName)}</td>` — renders `—` explicitly
-- **Centralize the fallback:** Define a shared utility `displayValue` in `src/lib/formatters.ts`. `displayValue()` accepts all primitive display values required by the UI, including string, number, boolean, null, and undefined, while preserving meaningful zero/false values.
+- **Centralize the fallback:** Define a shared utility `displayValue` in `src/lib/formatters.ts`. `displayValue()` accepts all primitive display values required by the UI, including string, number, boolean, null, and undefined, while preserving meaningful zero/false values. *(Note: `displayValue()` contains zero business logic and qualifies as approved global infrastructure under Rule 63. It is the only formatter permitted in `src/lib/`. All other formatters must remain feature-local per Rule 80).*
 
 79. **Unsaved Changes Guard (Data Loss Prevention)**:
 Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to prevent accidental data loss. Rule 79 supersedes Rule 46 for scope; Rule 46 defines only the browser `beforeunload` mechanism.
@@ -2722,7 +2722,7 @@ export const updateMemberProfile = async (
 });
 ```
 
-## Rule 15 — WebSockets & Real-Time Communication
+## Extended Rule 15 — WebSocket Centralization
 * **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components. 
 * **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
 
@@ -3046,7 +3046,7 @@ The following are the ONLY approved npm packages for feature modules. AI agents 
 | Icons | `lucide-react` | latest | heroicons, react-icons mixed use |
 | Toast | `sonner` | latest | react-hot-toast, react-toastify |
 | HTTP Client | Global `apiFetch` (wrapping `fetch`) | — | axios, ky (in feature modules) |
-| Charts | `recharts` | 2.x | victory, nivo, chart.js |
+| Charts | `react-apexcharts` | 1.x | victory, nivo, chart.js, recharts |
 | Date Utilities | `date-fns` | 3.x | moment, dayjs |
 | Routing Progress | `nextjs-toploader` | latest | — |
 | i18n | `next-intl` | latest | i18next, react-i18next |

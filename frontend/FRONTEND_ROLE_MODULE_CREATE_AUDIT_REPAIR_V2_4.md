@@ -368,8 +368,6 @@ BLOCKED_BY_SUPPLIED_SCOPE    — Required evidence is outside the supplied scope
 SOURCE_CONFLICT              — Two authoritative sources conflict on this requirement
 ```
 
-> **NOTE (GAP-12 Fix):** A previous version of this document referenced "the canonical Source Coverage Engine in Section 43A" — that section does NOT exist in this document. The status definitions above are the canonical complete list and replace that broken reference.
-
 Rules marked NOT APPLICABLE MUST include a reason.
 
 The auditor MUST NOT skip a documented rule merely because:
@@ -3369,6 +3367,7 @@ The auditor MUST:
    NOT_APPLICABLE
    OUTSIDE_TARGET_SCOPE
    BLOCKED_BY_SUPPLIED_SCOPE
+   SOURCE_CONFLICT
    ```
 7. Every `NOT_APPLICABLE` result MUST include a reason.
 8. Every `NOT_VERIFIED`, `OUTSIDE_TARGET_SCOPE`, or `BLOCKED_BY_SUPPLIED_SCOPE` result MUST identify
@@ -6007,6 +6006,7 @@ Minimum structure:
   "final_reaudit_complete": false,
   "final_packaging_ready": false
 }
+```
 
 ### Response Delivery State Contract
 
