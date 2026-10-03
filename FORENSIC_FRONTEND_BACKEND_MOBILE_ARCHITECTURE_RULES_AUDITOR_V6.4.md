@@ -815,8 +815,8 @@ TOTAL BATCHES:     [N]
 BATCH SIZING RATIONALE:
 [Brief explanation of why you grouped modules this way]
 
-Please reply "Begin Batch 1" to start the zero-sampling deep audit.
-Or reply "Adjust" if you want to change the batch grouping.
+Please reply **"Begin Batch 1 and generate downloadable files"** to start the zero-sampling deep audit.
+Or reply **"Adjust"** if you want to change the batch grouping.
 ```
 
 DO NOT start any code inspection until the user replies to this map.
@@ -918,7 +918,8 @@ Your response MUST end with EXACTLY this checkpoint block — no deviation, no p
 ║ AUDIT_PROGRESS_TRACKER.md has been updated.                  ║
 ║                                                              ║
 ║ ACTION REQUIRED:                                             ║
-║ Reply "continue" to proceed to Batch [N+1].                  ║
+║ Reply "continue and generate downloadable files" to proceed  ║
+║ to Batch [N+1].                                              ║
 ║ OR, if this chat is getting slow/long, start a NEW session   ║
 ║ and upload: (1) The Auditor Prompt (2) The Architecture      ║
 ║ Rules (3) The Source ZIP (4) The Tracker.md file.            ║
