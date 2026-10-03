@@ -389,19 +389,20 @@ and explain exactly why.
 
 ---
 
-# 8. TARGET STACK — EXACTLY ONE
+# 8. TARGET STACK
 
 The audit must target exactly one of:
 
 ```text
 FRONTEND
 BACKEND
+INTEGRATION
 UNKNOWN
 ```
 
-Do not perform a full frontend + backend audit simultaneously.
+Do not perform a full frontend + backend audit simultaneously UNLESS the target is explicitly `INTEGRATION`.
 
-If both stacks are present:
+If both stacks are present and the target is `FRONTEND` or `BACKEND`:
 
 - identify the requested target;
 - audit only that target;
@@ -423,10 +424,11 @@ AUDIT TARGET
 
 Resolve the audit target in this order:
 
-1. If the current task explicitly specifies `FRONTEND`, use `FRONTEND`.
-2. If the current task explicitly specifies `BACKEND`, use `BACKEND`.
-3. Otherwise, if exactly one supported stack is detected in supplied implementation, use that stack.
-4. If both stacks are detected and no explicit target exists, set:
+1. If the current task explicitly specifies `INTEGRATION` (or if both stacks are supplied with the explicit goal of verifying cross-stack contracts), use `INTEGRATION`.
+2. If the current task explicitly specifies `FRONTEND`, use `FRONTEND`.
+3. If the current task explicitly specifies `BACKEND`, use `BACKEND`.
+4. Otherwise, if exactly one supported stack is detected in supplied implementation, use that stack.
+5. If both stacks are detected and no explicit target exists, set:
 
 ```text
 AUDIT TARGET: UNKNOWN
@@ -455,8 +457,8 @@ Only evidence-independent scope analysis may proceed until target resolution is 
 Top of report:
 
 ```text
-STACK DETECTED: [FRONTEND | BACKEND | UNKNOWN]
-AUDIT TARGET:   [FRONTEND | BACKEND | UNKNOWN]
+STACK DETECTED: [FRONTEND | BACKEND | BOTH | UNKNOWN]
+AUDIT TARGET:   [FRONTEND | BACKEND | INTEGRATION | UNKNOWN]
 ```
 
 ---
