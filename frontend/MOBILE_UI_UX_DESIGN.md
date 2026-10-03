@@ -57,7 +57,7 @@ Every semantic foreground/background pair used for normal UI text MUST meet WCAG
 The theme module MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
-Ensure `primary` (#4F46E5 dark) and `destructive` (#DC2626 dark) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
+Ensure `primary` (#4F46E5) and `destructive` (#DC2626) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
 
 ## 1. Color Tokens
 
@@ -123,9 +123,12 @@ Size values are expressed in platform-independent typography units; React Native
 `radius-sm (4)`, `radius-md (8)`, `radius-lg (12)`, `radius-xl (16)`, `radius-full`
 — cards default to `radius-lg`, buttons/inputs to `radius-md`.
 
-## 5. Icon Sizes
+## 5A. Layout Tokens
 
 `button-min-width = 120`
+
+## 5B. Icon Sizes
+
 `icon-sm (16)`, `icon-md (20)`, `icon-lg (24)` — default stroke/weight `1.75`.
 
 Never use 17, 18, 21, 22, 23 etc. 

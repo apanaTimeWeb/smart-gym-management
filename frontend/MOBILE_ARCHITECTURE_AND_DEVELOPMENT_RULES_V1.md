@@ -155,7 +155,7 @@ features/
         │   └── members.integration.test.ts
         ├── members_features.md           ← MANDATORY — see Rule 24
         ├── members_forbidden.md          ← MANDATORY — see Rule 29
-        └── members_theme_contract.md     ← MANDATORY — see Rule 52A
+        └── [featureName]_theme_contract.md     ← MANDATORY — see Rule 52A
 ```
 
 ### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
@@ -296,7 +296,7 @@ State Ownership
 
 | State Type | Category | Rule |
 |---|---|---|
-| Anything from an API (lists, details, counts, status) | **Server state** | Managed by TanStack Query v5 for React Native. Never duplicated into a separate "client" state container. **AI BAN:** `isLoading` is banned (use `isPending`), and v4 callbacks (`onSuccess` inside `useQuery`) are banned. |
+| Anything from an API (lists, details, counts, status) | **Server state** | Managed by TanStack Query v5 for React Native. Never duplicated into a separate "client" state container. **AI BAN:** `isLoading` is banned (use `isPending`), and callbacks (`onSuccess` inside `useQuery` AND `useMutation`) are banned. For mutations, rely on `.mutateAsync().then()` at the call site or use global `mutationCache`. |
 | UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `React Component` local fields). |
 | Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
@@ -608,12 +608,9 @@ function MembersAddScreen() {
 // ✅ GOOD — dedicated mutation hook consumed by screen
 // hooks/useCreateMember.ts
 export function useCreateMember() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createMember,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: MEMBERS_QUERY_KEYS.lists() });
-    },
+    // onSuccess is banned; invalidation MUST happen via .mutateAsync().then() at the call site or via global mutationCache
   });
 }
 ```
@@ -661,7 +658,7 @@ Cross-reference: Rule 60 (cache invalidation), Rule 7C (query key registry).
 
 ## Rule 12 — Charts & Data Visualization
 
-- Use a native-rendering React Native charting package (e.g., Skia-based) — never a
+- Use a native-rendering React Native charting package (`react-native-gifted-charts` is the canonical library for this project) — never a
   DOM/SVG/Canvas-web-only charting library, none of which render on mobile.
 - Chart color palettes must pull from the design system's chart tokens — never
   hardcoded hex values per chart instance.
@@ -1140,8 +1137,8 @@ which file to open for any task without reading all files.]
 - [ ] Rule 58: WebSockets managed via centralized `WebSocketContext` / `SocketProvider` — no direct `new WebSocket()` in components
 - [ ] Rule 58A: App foreground resume calls the exact notification-recovery endpoint defined by the feature API contract; canonical project pattern: `GET /api/v1/{role}/notifications`
 - [ ] Rule 59: Role-masked fields typed as optional in TypeScript interfaces and Zod schemas; UI handles `undefined` gracefully
-- [ ] Rule 60: Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys
-- [ ] Rule 61: All client-authored/static user-visible strings use `t('NAMESPACE.KEY')`; backend-supplied `response.message` values are displayed as-is and NOT passed through `t()`; `Accept-Language` header attached by central network client
+- [ ] Rule 60: Every `useMutation` invalidates affected TanStack Query keys via `.mutateAsync().then()` or global `mutationCache`
+- [ ] Rule 61: All client-authored/static user-visible strings use `t('namespace.KEY')`; backend-supplied `response.message` values are displayed as-is and NOT passed through `t()`; `Accept-Language` header attached by central network client
 - [ ] Rule 62: Feature flags accessed via `useFeatureFlag()` — no raw build/env reads inside components
 - [ ] Rule 63: Currency formatting is feature-local (`formatCurrency.ts`); approved currency metadata used; unsupported codes throw
 - [ ] Rule 64: Tenant data export triggers async backend call + `202 Accepted` success feedback — no in-app download
@@ -2125,7 +2122,7 @@ The React Native application's theme module MUST exactly implement the complete 
 
 Any raw values or tokens missing from the code's theme configuration that are present in `MOBILE_UI_UX_DESIGN.md` will cause CI/Design validation failure.
 
-## Rule 52A — Per-Feature Theme Contract Documentation
+## Rule 52A — [featureName]_theme_contract.md Documentation
 
 Every feature folder MUST contain a `members_theme_contract.md` (or equivalent for that feature name) file at the feature root.
 This file lists ONLY the design tokens that THIS specific feature consumes — no values, just the token names.
@@ -2279,7 +2276,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
    - New tokens added to `MOBILE_UI_UX_DESIGN.md` before implementation? (Rule 52)
-   - `members_theme_contract.md` updated with any newly used tokens? (Rule 52A)
+   - `[featureName]_theme_contract.md` updated with any newly used tokens? (Rule 52A)
    - `members.url_config.ts` exists in `config/` sub-folder — no hardcoded URLs in `*.api.ts`? (Rule 7B)
    - Query keys use the canonical factory from `members.query_keys.ts`? (Rule 7C)
    - Mutations use dedicated mutation hooks — no inline `useMutation` in screens/components? (Rule 7C)
@@ -2291,8 +2288,8 @@ The mobile architecture MUST enforce the following security and robustness const
    - WebSocket instantiated only through centralized `WebSocketContext` / `SocketProvider`? (Rule 58)
    - App foreground resume triggers the exact notification-recovery endpoint from the feature API contract? (Rule 58A)
    - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
-   - Every `useMutation` `onSuccess` invalidates all affected TanStack Query keys via canonical registry? (Rule 60)
-   - All client-authored/static user-visible strings use `t('NAMESPACE.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)
+   - Every `useMutation` invalidates affected TanStack Query keys via `.mutateAsync().then()` or global `mutationCache`? (Rule 60)
+   - All client-authored/static user-visible strings use `t('namespace.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)
    - Locale files named `[featureName]_{lang}.json` and co-located in feature `_locales/`? (Rule 61)
    - `Accept-Language` header attached automatically by central network client? (Rule 61)
    - Feature flags accessed via `useFeatureFlag()` — no raw build/env reads in components? (Rule 62)
@@ -2329,13 +2326,26 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components.
 * **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
 
+## Rule 58A — Notification & WebSocket Recovery
+
+### The Problem
+If the user's app is closed or loses internet connection when a server notification event is emitted, the event is lost.
+
+### The Rule
+1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
+2. **Offline Recovery:** Whenever the application mounts or comes to the foreground, it MUST call the exact notification-recovery endpoint defined by the supplied feature API contract. The AI MUST NOT invent, shorten, or substitute the endpoint path.
+
+   Canonical project pattern: `GET /api/v1/{role}/notifications`
+
+   Do not rely 100% on WebSocket delivery for critical notifications.
+
 ## Rule 59 — Role-Based Field Masking & Optional Types
 * **The Rule:** The backend strictly masks sensitive data fields (like revenue) based on the user's role before transmitting the response.
 * **Implementation:** Frontend TypeScript interfaces and Zod schemas MUST mark these potentially masked fields as optional (`?`). UI components consuming this data must implement graceful fallback behavior (e.g., hiding a specific chart or displaying a generic placeholder) if a field is `undefined`. The frontend must never crash due to a missing role-restricted field.
 
 ## Rule 60 — Strict Cache Invalidation Strategy
 * **The Rule:** TanStack Query (React Query) server state must always remain perfectly synchronized with the backend data.
-* **Implementation:** Every mutation hook (`useMutation`) MUST implement an `onSuccess` callback that calls `queryClient.invalidateQueries({ queryKey: [...] })` for any relevant queries affected by the mutation. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
+* **Implementation:** Every mutation hook (`useMutation`) MUST invalidate affected queries. Since TanStack v5 deprecated callbacks on the mutate function and this architecture bans them inside `useMutation`, you MUST trigger `queryClient.invalidateQueries({ queryKey: [...] })` either explicitly at the call site using `.mutateAsync(...).then(() => ...)` or centrally via a global `mutationCache`. Failing to invalidate queries will cause the UI to display stale, obsolete data after an update.
 
 ## Rule 61 — Internationalization (i18n) & Localization
 
@@ -2397,7 +2407,7 @@ if (isNewBillingEnabled) { ... }
 ## Rule 63 — Multi-Currency Monetary Amounts
 
 Rule 63 supersedes the currency portion of Rule 37. Currency formatting is feature-local.
-Currency formatting MUST be feature-local (`[feature]/utils/formatCurrency.ts`).
+Currency formatting MUST be feature-local (`[feature]/utils/formatCurrency.ts`). Rule 63 internally handles nulls by returning `—`; `displayValue()` (Rule 38) is NOT called for currency values.
 
 Only currencies present in the project's approved currency metadata are supported. Unsupported currency codes MUST fail validation. Never silently default an unknown currency to divisor 100.
 
@@ -2453,18 +2463,7 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
 > **AI AGENT NOTE:** Never attempt to download, parse, or open the `.zip` file directly within the mobile app's file system or using a Webview. The mobile app's ONLY responsibility is to hit the export endpoint and display a confirmation message indicating that an email is on the way.
 
 
-## Rule 58A — Notification & WebSocket Recovery
 
-### The Problem
-If the user's app is closed or loses internet connection when a server notification event is emitted, the event is lost.
-
-### The Rule
-1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the UI (bell icon, toast) immediately if the app is open.
-2. **Offline Recovery:** Whenever the application mounts or comes to the foreground, it MUST call the exact notification-recovery endpoint defined by the supplied feature API contract. The AI MUST NOT invent, shorten, or substitute the endpoint path.
-
-   Canonical project pattern: `GET /api/v1/{role}/notifications`
-
-   Do not rely 100% on WebSocket delivery for critical notifications.
 
 
 ## AI Introspection & Agentic Compatibility Rules
