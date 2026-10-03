@@ -914,7 +914,12 @@ Your response MUST end with EXACTLY this checkpoint block — no deviation, no p
 ║   Batch [N+2]: [Module names] (~[N] files)                   ║
 ╠══════════════════════════════════════════════════════════════╣
 ║ AUDIT_PROGRESS_TRACKER.md has been updated.                  ║
+║                                                              ║
+║ ACTION REQUIRED:                                             ║
 ║ Reply "continue" to proceed to Batch [N+1].                  ║
+║ OR, if this chat is getting slow/long, start a NEW session   ║
+║ and upload: (1) The Auditor Prompt (2) The Architecture      ║
+║ Rules (3) The Source ZIP (4) The Tracker.md file.            ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
