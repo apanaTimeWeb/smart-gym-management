@@ -760,18 +760,19 @@ This Phase 1 scan PRODUCES the Chunk Map. Do not produce the Chunk Map from memo
 You — the AI — are responsible for deciding how many modules fit in a single turn. Do NOT use a fixed number like "always 1 module" or "always 5 modules". Instead, apply this decision logic:
 
 ```text
-IF a module has > 100 authored files
-  → It MUST be subdivided into SUB-BATCHES (e.g., Module A-1, Module A-2). Never attempt >100 files in one turn.
+IF a module has > 50 authored files
+  → It MUST be subdivided into SUB-BATCHES (e.g., Module A-1, Module A-2). Never attempt >50 files in one turn.
 
-IF a module has 30-100 authored files
+IF a module has 30-50 authored files
   → It is a SOLO BATCH (one module per turn, strictly).
 
 IF a module has 15–30 authored files
   → Group 2 modules per batch at most.
 
 IF a module has < 15 authored files
-  → Group up to 4 modules per batch.
+  → Group up to 3 modules per batch.
 
+MAXIMUM ABSOLUTE CEILING: NO BATCH MAY EVER EXCEED 50 FILES COMBINED.
 GOLDEN RULE: You may only group multiple modules in one batch IF you can guarantee 100% line-by-line, zero-sampling inspection. Depth always wins over breadth.
 ```
 
