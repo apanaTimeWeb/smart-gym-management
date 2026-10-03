@@ -243,6 +243,13 @@ Before marking any data endpoint PASS, verify ALL of the following:
 [ ] Bulk operations (where clauses) include tenant scope
 ```
 
+### 0G-D. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
+
+All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
+DO NOT place any of these implementation files in the root of the feature module folder. 
+
+For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (alongside the mandatory `.md` documentation files like `-backend-feature.md`). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
+
 ---
 
 ## 0G-A. APPROVED BACKEND NPM PACKAGE REGISTRY (GAP-22 Fix)
@@ -666,7 +673,7 @@ Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type i
 > Do NOT attempt to "DRY up" business logic, utilities, or services by moving them to global folders like `src/shared/` or `src/common/`. 
 > Anything containing domain-specific business behavior MUST be duplicated per feature, NEVER globalized. 
 > Only pure infrastructure plumbing (like database connection pools) belongs in global core folders.
-* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
+* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), the Feature Flag Service (Rule 108), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
@@ -937,6 +944,9 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
 - [ ] Rule 29: Soft-delete by default. (Exception: Immutable event logs (Rule 118) and financial ledgers (Rule 119) are strictly append-only and exempt from standard soft-delete rules. Furthermore, the 90-day tenant hard-delete (Rule 110) must explicitly archive/retain legally required financial/audit ledgers rather than blindly deleting them.)
+- [ ] Rule 115: AI-contextual docstrings added to entities/services/controllers
+- [ ] Rule 116: MCP-Ready API Design conventions followed
+- [ ] Rule 117: RAG-Ready API Projection (`?format=rag`) implemented
 - [ ] Rule 103: Idempotency-Key enforced on all state-mutating endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
@@ -1270,12 +1280,7 @@ backend-manager/
 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../frontend_superadmin/superadmin_coupons/` and `backend/.../backend-superadmin/superadmin-modules/superadmin-coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
-### 0G-D. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
 
-All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
-DO NOT place any of these implementation files in the root of the feature module folder. 
-
-For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (alongside the mandatory `.md` documentation files like `-backend-feature.md`). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
 
 ---
 
@@ -1291,6 +1296,7 @@ For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feat
   - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
 * **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it can reduce dataset size per tenant and improve isolation/performance characteristics, avoiding massive multi-tenant table bottlenecks.
+* **Tenant DB vs Query Filters (Belt & Suspenders):** Even though Database-per-Tenant provides physical isolation, ALL ORM queries MUST still strictly include `gymId` and `branchId` filters as mandated by Rule 0G. This double-security approach ensures logic remains perfectly isolated and future-proofs the codebase if tenants are ever merged into a shared DB.
 
 ---
 
@@ -2910,6 +2916,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 * **Why:** All AI Analytics engines, forecasting models, and **historical/state-transition analytics (e.g., member lifecycle, revenue trends, forecasting) MUST query this immutable event log**. Current operational widgets (e.g., live attendance, active sessions) MAY query the transactional read model directly (see Rule 114). Dashboards that mix both widget types must source each widget from its appropriate layer (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
 
 ## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
+
+**Cached Balance Projection Pattern:**
+While the ledger is the absolute source of truth and balances must never be mutated directly via API calls (`UPDATE members SET balance = X`), entities MAY contain a `balance` column (e.g., `balance: bigint`) for **fast read-model caching**. This cached balance column is updated strictly by the backend either synchronously in the same database transaction as the ledger insert, or asynchronously via event handlers. An API consumer must never be allowed to pass a `balance` value in a request payload to update this column.
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 

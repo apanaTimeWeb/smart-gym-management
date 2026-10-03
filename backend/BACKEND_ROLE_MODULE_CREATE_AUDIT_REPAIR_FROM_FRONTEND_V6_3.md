@@ -931,7 +931,8 @@ Execution state MUST remain outside the supplied backend source scope.
 Use:
 
 ```text
-/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/ (Linux/Mac)
+%LOCALAPPDATA%/.ai_execution_state/[SAFE_TASK_ID]/ (Windows)
 ```
 
 Required control files:
@@ -4735,9 +4736,11 @@ Verify scalable adapter requirements, authorization, tenant scoping, event shape
 
 Verify sensitive or role-specific fields are enforced at the backend serialization boundary, not hidden only in the frontend.
 
-### Cache Invalidation
-
 Verify mutation → successful DB commit → cache invalidation ordering, deterministic cache keys, and tenant safety.
+
+### MCP & RAG Readiness (Rule 116 & 117)
+
+Verify that REST endpoints are properly annotated with OpenAPI docstrings (Rule 116) and that query projections natively support `?format=rag` (Rule 117) to return flattened, token-optimized text for Agentic AI consumption where specified by the Architecture document.
 
 ### i18n / Localization
 
@@ -9550,7 +9553,8 @@ The final ZIP MUST be validated after creation.
 Do NOT include:
 
 ```text
-/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/ (Linux)
+%LOCALAPPDATA%/.ai_execution_state/[SAFE_TASK_ID]/ (Windows)
 ```
 
 inside the final backend ZIP unless explicitly required.
