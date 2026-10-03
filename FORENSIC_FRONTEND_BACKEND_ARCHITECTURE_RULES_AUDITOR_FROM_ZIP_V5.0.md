@@ -780,7 +780,7 @@ If the total repository size (e.g., 5000+ files) mathematically prevents zero-sa
 
 ## STEP 3: PUBLISH THE AUDIT CHUNK MAP
 
-Your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE. No code inspection may begin until the map is published and the user approves it.
+If the repository requires multi-batch execution, your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE. No code inspection may begin until the map is published and the user approves it. (Note: If it is a small single-turn audit, you may output the final report immediately as per Mode C).
 
 The Audit Chunk Map MUST use exactly this format:
 
@@ -2951,18 +2951,27 @@ For every frontend feature module, verify that ALL THREE mandatory documentation
 
 ### `_features.md` MANDATORY SECTION AUDIT
 
-Every `_features.md` file MUST contain ALL 9 of these sections. Missing even one = PARTIAL.
+Every `_features.md` file MUST contain ALL 18 of these sections. Missing even one = PARTIAL.
 
 ```text
-[ ] 1. Purpose            — what this module does and why it exists
-[ ] 2. Routes             — all routes owned by this module
-[ ] 3. State Map          — what state this module manages and who owns it
-[ ] 4. API Contract       — exact API endpoints, request/response shapes
-[ ] 5. Permission Matrix  — which roles can access which actions
-[ ] 6. Edge Cases         — known edge cases and how the module handles them
-[ ] 7. Error Behavior     — what happens when API calls fail
-[ ] 8. Forbidden Patterns — what MUST NOT be done in this module's code
-[ ] 9. Test Checklist     — what tests exist and what behaviors they verify
+[ ] 1. Purpose
+[ ] 2. Dependency Manifest
+[ ] 3. Feature Lifecycle Contract
+[ ] 4. Screens & Entry Points
+[ ] 5. Folder Structure
+[ ] 6. User Flows & Interactions
+[ ] 7. Data & State Architecture
+[ ] 8. API Contract
+[ ] 9. Approved External Dependencies
+[ ] 10. Permissions Used
+[ ] 11. Platform-Specific Notes
+[ ] 12. Offline Behavior
+[ ] 13. Loading/Empty/Error States
+[ ] 14. Background Tasks
+[ ] 15. Edge Cases and AI Warnings
+[ ] 16. Component Responsibility Map
+[ ] 17. Rule Compliance Checklist
+[ ] 18. Known Issues / Tech Debt
 ```
 
 ### `_theme_contract.md` AUDIT
@@ -3663,7 +3672,7 @@ Do not invent invariants.
 
 Dhyan rahe, agar supplied scope me specialized Role Module documents hain (e.g., `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR` ya `BACKEND_ROLE_MODULE...`), toh unme define kiya gaya reporting structure aur scoring format (jaise "BEFORE REPAIR SCORE: X/10" aur "CATEGORY SCORECARD") sabse zyada authoritative hai.
 
-> **CORRECTION NOTE:** Is document me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
+
 
 Aise cases me:
 - Is document ka generalized 1.0–10.0 numeric rating system aur projected rating formula override ho jaata hai — specialized document ka rating format use karo.
@@ -4494,6 +4503,7 @@ The audit is complete only when ALL of the following are true:
 [ ] Final 15-section report was generated ONLY after all batches were complete and checkpointed
 [ ] Issue counts in final report match cumulative running totals from the tracker
 [ ] Any retroactive PASS revisions from later batches are documented in the Coverage Ledger
+[ ] Section 85 Verification Ledger was completed per-batch and pre-final-report
 ```
 
 ### AUDIT QUALITY GATE
