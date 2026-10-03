@@ -7606,10 +7606,11 @@ After all creation work units are complete:
 1. re-read Stage 1 requirements;
 2. perform complete final re-audit;
 3. repair any remaining issue;
-4. generate final documentation;
-5. generate the changelog;
-6. generate the final checklist;
-7. only then package `frontend-{role}-v1.zip`.
+4. generate the comprehensive Playwright E2E test suite (`playwright_E2E/...`);
+5. generate final documentation;
+6. generate the changelog;
+7. generate the final checklist;
+8. only then package `frontend-{role}-v1.zip`.
 
 ## 44.11 Mode B — AUDIT + REPAIR
 
@@ -7644,6 +7645,7 @@ INTEGRATION_GUIDE.md
 stage_3_final_verdict.md
 RE_AUDIT_CHECKLIST_RESULT.md
 [module_name]_changelog_vN.md
+playwright_E2E/frontend_[role]_e2e/[target_feature]/[target_feature].spec.ts
 ```
 
 Only after final verification may the versioned fix ZIP be generated.
@@ -7790,7 +7792,7 @@ INTEGRATION_GUIDE.md                     ← mandatory integration instructions 
 [module_name]_changelog_vN.md            ← detailed changelog
 frontend-{role}/
 └── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
-playwright_E2E/                            ← (when applicable) isolated E2E tests for the feature
+playwright_E2E/                            ← (MANDATORY) isolated E2E tests for the feature
 └── frontend_[role]_e2e/
     └── [target_feature]/
 stage_1_frontend_requirements.md         ← requirements extracted
@@ -7799,7 +7801,7 @@ stage_3_final_verdict.md                 ← final verdict after re-audit / afte
 RE_AUDIT_CHECKLIST_RESULT.md             ← final checklist result on the final code
 ```
 
-**The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
+**The `INTEGRATION_GUIDE.md` and `playwright_E2E` suite are NOT optional. An output without them is an incomplete delivery.**
 
 ## 45.6 Packaging Recovery
 
