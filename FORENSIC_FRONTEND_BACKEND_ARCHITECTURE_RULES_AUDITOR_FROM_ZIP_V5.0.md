@@ -1407,6 +1407,18 @@ Implementation reality and Architecture expectation MUST always be reported sepa
 ## 10. PHYSICAL EXECUTION LIMIT RULE
 If the supplied repository size exceeds the platform's technical inspection capacity (e.g., 3000-5000+ authored files), the auditor must report `PHYSICAL_COVERAGE_LIMIT_REACHED` instead of falsely claiming `COMPLETE COVERAGE`. Do not hallucinate zero-sampling on ultra-large repos if the token limit prevents it.
 
+## 11. RETROACTIVE STATUS REVISION RULE
+Any prior status (PASS, FAIL, PARTIAL, NOT_VERIFIED, etc.) may be revised by later evidence. The tracker MUST record: OLD_STATUS, NEW_STATUS, REASON, and EVIDENCE.
+
+## 12. IMPLEMENTATION ↔ RUNTIME CONFLICT RULE
+If static evidence and runtime evidence conflict (e.g. code looks compliant, but runtime fails, or vice versa): the rule status MUST be set to `EVIDENCE_CONFLICT` until reconciled.
+
+## 13. GENERATED ROOT CAUSE RULE
+Defects found in generated files (e.g. Prisma clients, OpenAPI SDKs, Auto-generated DTOs) MUST be traced back to the authored source responsible for generation. Generated files MUST NOT become primary repair targets unless the generation source is unavailable.
+
+## 14. LATE DISCOVERED AUTHORITY RULE
+If a new authoritative architecture or design document is discovered/supplied AFTER batch execution begins, all impacted prior findings MUST automatically become `NOT_VERIFIED` until re-evaluated against the new authority.
+
 ---
 
 # 24. FEATURE / MODULE BOUNDARY AUDIT
@@ -4254,6 +4266,11 @@ RUNTIME STATUS:
 
 All arithmetic must reconcile.
 
+### RULE ACCOUNTING INTEGRITY RULE
+The mathematical total of `RULES DISCOVERED` MUST equal the exact sum of:
+`PASS` + `FAIL` + `PARTIAL` + `NOT_VERIFIED` + `BLOCKED` + `NOT_APPLICABLE` + `SOURCE_CONFLICT` + `EVIDENCE_CONFLICT`
+If this reconciliation fails, the ledger is mathematically invalid and the report is compromised.
+
 ---
 
 ## SECTION 15 — FINAL VERDICT
@@ -4763,20 +4780,22 @@ The auditor must never silently turn incomplete evidence into a complete verdict
 
 # 85. MANDATORY COGNITIVE SCRATCHPAD (CHAIN OF THOUGHT ENFORCEMENT)
 
-> **⚠️ CRITICAL ANTI-HALLUCINATION RULE FOR SCRATCHPAD:**
-> The scratchpad MUST only reference rules and evidence from files that have been ACTUALLY INSPECTED in this audit session.
+# 85. MANDATORY VERIFICATION LEDGER (EVIDENCE RECONCILIATION LOG)
+
+> **⚠️ CRITICAL ANTI-HALLUCINATION RULE FOR VERIFICATION:**
+> The Verification Ledger MUST only reference rules and evidence from files that have been ACTUALLY INSPECTED in this audit session.
 > Do NOT list rules from memory or from general knowledge of architecture documents you have not read.
 > Do NOT write file paths you have not actually opened and read.
 > Do NOT quote code you have not actually seen.
-> The scratchpad is a VERIFICATION tool, not a planning tool. It comes AFTER inspection, not before.
+> The Ledger is a VERIFICATION tool, not a planning tool. It comes AFTER inspection, not before.
 
-## PER-BATCH SCRATCHPAD (Required at end of EVERY batch)
+## PER-BATCH LEDGER (Required at end of EVERY batch)
 
-After completing the zero-sampling inspection of all files in the current batch, but BEFORE writing the batch's ISSUE-[NNN] findings, you MUST output a scratchpad block:
+After completing the zero-sampling inspection of all files in the current batch, but BEFORE writing the batch's ISSUE-[NNN] findings, you MUST output an Evidence Reconciliation Log:
 
 You must output a standard markdown header: `### VERIFICATION LEDGER (BATCH [N])` (where N = current batch number). Do NOT use XML tags.
 
-Inside each batch scratchpad, you MUST:
+Inside each batch ledger, you MUST:
 1. List the files you ACTUALLY inspected in this batch (exact paths from actual tool calls).
 2. For each applicable rule from the supplied architecture docs, write:
    - The rule ID and source
@@ -4784,23 +4803,23 @@ Inside each batch scratchpad, you MUST:
    - Your PASS / FAIL / PARTIAL / NOT_VERIFIED conclusion
    - Your Devil's Advocate check: "Wait, could I be wrong about this because...?"
 3. List any Late-Discovered rules found during this batch.
-4. List any retroactive revisions to prior PASS verdicts.
+4. List any retroactive revisions to prior verdicts.
 
-## PRE-FINAL-REPORT SCRATCHPAD (Required before Section 1 of the final 15-section report)
+## PRE-FINAL-REPORT LEDGER (Required before Section 1 of the final 15-section report)
 
-After ALL batches complete, before generating `## SECTION 1 — RATINGS BLOCK`, output a final reconciliation scratchpad:
+After ALL batches complete, before generating `## SECTION 1 — RATINGS BLOCK`, output a final reconciliation log:
 
 Output the markdown header: `### FINAL VERIFICATION LEDGER`
 
-Inside the final scratchpad, you MUST:
+Inside the final ledger, you MUST:
 1. Confirm that all batch trackers have been read and accumulated.
 2. List the total rules found, total PASS/FAIL/PARTIAL counts.
 3. Identify any rules that appear in MULTIPLE batches (and confirm the status is consistent).
 4. Confirm the running issue count from the tracker matches the issues in the final report.
-5. Final Devil's Advocate check: "Is there any PASS I gave that I am not 100% confident about? Should it be NOT_VERIFIED instead?"
+5. Final Devil's Advocate check: "Is there any verdict I gave that I am not 100% confident about? Should it be NOT_VERIFIED instead?"
 
 Only AFTER completing the Final Verification Ledger are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
 
-This Chain of Thought mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
+This verification mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
 
 # END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V6.3
