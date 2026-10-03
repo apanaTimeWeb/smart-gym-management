@@ -777,7 +777,10 @@ GOLDEN RULE: You may only group multiple modules in one batch IF you can guarant
 ```
 
 **PHYSICAL COVERAGE LIMIT FALLBACK:**
-If the total repository size (e.g., 5000+ files) mathematically prevents zero-sampling within practical platform limits, you MUST stop and generate a `COVERAGE PARTITION PLAN`. Do NOT pretend the audit is completed. Explicitly state `PHYSICAL_COVERAGE_LIMIT_REACHED`.
+If the repository size or current batch density prevents zero-sampling within practical platform/token limits, you MUST stop immediately. Do NOT fabricate coverage. 
+1. Explicitly state `PHYSICAL_COVERAGE_LIMIT_REACHED`.
+2. Generate an updated `AUDIT_PROGRESS_TRACKER.md`.
+3. Include a detailed **Resume Checklist** inside the tracker, listing exactly which files were read, which files were read but lost from context, and which files remain unread for the current interrupted batch.
 
 ## STEP 3: PUBLISH THE AUDIT CHUNK MAP
 
