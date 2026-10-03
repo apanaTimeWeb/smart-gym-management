@@ -1270,7 +1270,7 @@ backend-manager/
 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../frontend_superadmin/superadmin_coupons/` and `backend/.../backend-superadmin/superadmin-modules/superadmin-coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
-### 0G. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
+### 0G-D. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
 
 All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
 DO NOT place any of these implementation files in the root of the feature module folder. 
@@ -1387,7 +1387,7 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 * **The Rule:** After 5 failed login attempts, the account is temporarily locked via Redis. Lockout state must be logged in the audit trail.
 
 ## 55. Deterministic Seed Data Strategy
-* **The Rule:** Every module must have a co-located `[role]-[module].seeder.ts` that is deterministic and idempotent. A master seed script orchestrates them in dependency order for local testing.
+* **The Rule:** Every module must define seed files that are deterministic and idempotent. Placement and naming (`.seed.ts`) MUST strictly follow the canonical specification defined in Section 0G-B (Seed File Specification). A master seed script orchestrates them in dependency order for local testing.
 
 ## 56. Strict Null Safety in Repository Returns
 * **The Rule:** Repositories must correctly type `findById()` as returning `Entity | null`. AI must use a dedicated `findByIdOrThrow()` method to ensure null exceptions are handled defensively.
@@ -1480,7 +1480,7 @@ Backend implementation (services, repositories, DB queries)
   - Rename fields unilaterally (e.g., `ownerName` → `owner_display_name`) after the contract is frozen.
   - Add or remove required fields without updating the frontend types, Zod schemas, MSW handlers, and tests in the same change.
 
-* **Why:** The previous "backend writes DTOs first" rule conflicted with the frontend-first workflow used in this project. The backend AI writing a DTO without inspecting the frontend's UI Data Requirements produces exactly the minimal-response failure mode that Rules 75A and 82A are designed to prevent.
+* **Why:** The previous "backend writes DTOs first" rule conflicted with the frontend-first workflow used in this project. The backend AI writing a DTO without inspecting the frontend's UI Data Requirements produces exactly the minimal-response failure mode that Rule 82A is designed to prevent.
 
 ## 68. Health Check Depth Levels
 * **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).

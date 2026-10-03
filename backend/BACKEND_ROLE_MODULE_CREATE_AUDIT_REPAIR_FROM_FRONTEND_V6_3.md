@@ -1084,6 +1084,7 @@ Minimum structure:
   "final_reaudit_complete": false,
   "final_packaging_ready": false
 }
+```
 
 ### Response Delivery State Contract
 
@@ -3047,6 +3048,8 @@ Build a route-to-capability map.
 # 9. STAGE 1B — COMPLETE BACKEND-RELEVANT UI REQUIREMENT INVENTORY
 
 Inventory every frontend element that creates or consumes backend behavior.
+
+Requirement IDs are immutable once assigned — never renumber existing IDs.
 
 This includes:
 
@@ -7534,7 +7537,10 @@ PARTIAL
 NOT_APPLICABLE
 NOT_VERIFIED
 BLOCKED_BY_SUPPLIED_SCOPE
+SUPERSEDED
 ```
+
+*(Note: If a rule is marked SUPERSEDED by another rule, it must be recorded with the SUPERSEDED status in the ledger, not FAIL).*
 
 Do not convert unavailable global infrastructure evidence into automatic module failure.
 
