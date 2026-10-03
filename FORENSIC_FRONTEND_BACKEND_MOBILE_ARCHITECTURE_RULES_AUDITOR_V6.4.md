@@ -785,8 +785,10 @@ If the repository size or current batch density prevents zero-sampling within pr
 
 If the repository requires multi-batch execution, your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE. No code inspection may begin until the map is published and the user approves it. (Note: If it is a small single-turn audit, you may output the final report immediately as per Mode C).
 
-**CRITICAL FILE GENERATION INSTRUCTION:**
-You MUST use your native file-generation tool, Artifacts system, or Code Interpreter to provide the Chunk Map as an ACTUAL DOWNLOADABLE FILE named `AUDIT_CHUNK_MAP.md`. Do NOT print it as raw chat text. Automatically generate the file so the user can download it immediately.
+**CRITICAL DOWNLOADABLE FILE RULE (NON-NEGOTIABLE):**
+1. You MUST write the Chunk Map to an actual file named `AUDIT_CHUNK_MAP.md`.
+2. IMMEDIATELY after writing the file, you MUST emit the platform's file render/download component for that exact file path so the user receives a one-click download link. 
+3. Writing the file without rendering the UI download component is considered a CRITICAL FAILURE. Do NOT print the map as raw chat text.
 
 The Audit Chunk Map MUST use exactly this format:
 
@@ -827,17 +829,19 @@ DO NOT start any code inspection until the user replies to this map.
 
 To prevent context loss across multiple turns, you MUST maintain a persistent state tracker. This tracker must be updated at the END of every completed batch before publishing the checkpoint message.
 
-The tracker file is named:
-```text
-AUDIT_PROGRESS_TRACKER.md
-```
+The AI MUST generate exactly TWO files at the end of every completed batch before publishing the checkpoint message:
 
-**CRITICAL FILE GENERATION INSTRUCTION:**
-You MUST use your native file-generation tool, Artifacts system, or Code Interpreter to provide `AUDIT_PROGRESS_TRACKER.md` and the Batch Findings as ACTUAL DOWNLOADABLE FILES. Do NOT print them as raw chat text. Automatically generate the files so the user can download them immediately without needing to ask.
+1. `AUDIT_PROGRESS_TRACKER.md` (Maintains state across batches)
+2. `BATCH_[N]_FINDINGS.md` (e.g., `BATCH_1_FINDINGS.md` containing the detailed issues and ledger for just that batch)
 
-This file MUST be created after Batch 1 completes and updated after every subsequent batch.
+**CRITICAL DOWNLOADABLE FILE RULE (NON-NEGOTIABLE):**
+1. You MUST write BOTH files to the disk.
+2. IMMEDIATELY after writing, you MUST emit the platform's file render/download component for BOTH file paths so the user receives two one-click download links. 
+3. Writing the files without rendering the UI download component is considered a CRITICAL FAILURE. Do NOT print the tracker or the findings as raw chat text.
 
-The tracker MUST contain:
+These files MUST be created/updated after Batch 1 completes and after every subsequent batch.
+
+The `AUDIT_PROGRESS_TRACKER.md` MUST contain:
 
 ```markdown
 # AUDIT PROGRESS TRACKER
@@ -877,18 +881,23 @@ The tracker MUST contain:
 ## Key Invariants Identified
 [List any important DO-NOT-BREAK findings discovered in completed batches]
 
-## Accumulated Batch Findings (The Master Log)
-*AI Instruction: After every batch, APPEND the full issue details (Issue ID, Severity, File, Problem, Fix) for that batch below. Do not overwrite previous batches. This ensures the user has a single downloadable report if the audit is interrupted.*
-
-### Batch 1 Findings:
-[List detailed issues and fixes here]
-
-### Batch 2 Findings:
-[List detailed issues and fixes here]
-(...and so on)
-
 ## Last Updated After
 Batch [N] — [Module names]
+```
+
+The `BATCH_[N]_FINDINGS.md` MUST contain:
+
+```markdown
+# BATCH [N] FINDINGS: [Module Names]
+
+### VERIFICATION LEDGER
+[List of files actually inspected in this batch]
+
+### RULE CHECKS (Sample)
+[Markdown table showing pass/fail for rules applied to this batch]
+
+### DETAILED ISSUES
+[List detailed issues and fixes here (Issue ID, Severity, File, Problem, Fix)]
 ```
 
 When resuming from a "continue" reply, you MUST read the tracker first and carry forward all accumulated findings, issue counts, and rule statuses before beginning the next batch.
@@ -4760,8 +4769,10 @@ P2: N
 P3: N
 ```
 
-**CRITICAL FILE GENERATION INSTRUCTION:**
-You MUST use your native file-generation tool, Artifacts system, or Code Interpreter to provide the final `DEEP-VERIFICATION-REPORT.md` as an ACTUAL DOWNLOADABLE FILE. Do NOT print the 15-section report as raw chat text. Automatically generate the file so the user can download it immediately without needing to ask.
+**CRITICAL DOWNLOADABLE FILE RULE (NON-NEGOTIABLE):**
+1. You MUST write the final report to an actual file named `DEEP-VERIFICATION-REPORT.md`.
+2. IMMEDIATELY after writing the file, you MUST emit the platform's file render/download component for that exact file path so the user receives a one-click download link. 
+3. Writing the file without rendering the UI download component is considered a CRITICAL FAILURE. Do NOT print the 15-section report as raw chat text.
 
 Do NOT paste the full report into chat.
 
