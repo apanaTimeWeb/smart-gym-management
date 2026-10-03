@@ -9603,7 +9603,7 @@ FRONTEND_CHANGE_REQUIRED.md             ← ONLY when backend-only resolution wa
                                             INTEGRATION_GUIDE.md must reference this file when it exists.
 ```
 
-**The `INTEGRATION_GUIDE.md` is not optional. An output without it is an incomplete delivery.**
+**The `INTEGRATION_GUIDE.md`, Postman collection, API E2E, and Selenium suites are NOT optional. An output without them is an incomplete delivery.**
 
 ### Final Artifact Response Delivery Rule
 
