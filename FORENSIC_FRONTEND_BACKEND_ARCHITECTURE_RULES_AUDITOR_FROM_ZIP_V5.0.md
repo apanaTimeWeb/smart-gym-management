@@ -1,4 +1,4 @@
-# FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP — V5.1
+# FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP — V6.2
 
 ## FORENSIC SOFTWARE / ARCHITECTURE / UI-UX / CONTRACT COMPLIANCE AUDIT
 
@@ -454,31 +454,47 @@ If frontend, detect actual supplied framework.
 Possible examples:
 
 ```text
-React
-Next.js
-Vite
+React (SPA)
+Next.js (Web)
+Vite (Web)
+React Native (Mobile — bare-metal, New Architecture / Fabric + TurboModules)
+Expo (Mobile)
 Other supplied frontend framework
 ```
+
+> **MOBILE vs WEB CRITICAL DISTINCTION:**
+> If React Native is detected, the applicable rule document is `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` and `MOBILE_UI_UX_DESIGN.md`.
+> Do NOT apply Web frontend rules to React Native code.
+> Do NOT apply React Native rules to Web (Next.js/Vite) code.
+> Web DOM APIs (`window`, `document`, `div`, `span`) are forbidden in React Native. Their presence is a defect.
+> React Native-specific APIs (`FlatList`, `SafeAreaView`, `Platform`, `StyleSheet`) must not be expected in Web code.
 
 If backend, detect actual supplied framework.
 
 Possible examples:
 
 ```text
-NestJS
-Django
+NestJS / TypeScript
+Django / Python
 Other supplied supported backend framework
 ```
+
+> **NESTJS vs DJANGO CRITICAL DISTINCTION:**
+> If NestJS is detected: apply NestJS patterns (Controllers, DTOs, Services, Repositories, BullMQ, TypeORM, Jest).
+> If Django is detected: apply Django patterns (Views/ViewSets, Serializers, QuerySets, Celery, Django ORM, pytest-django).
+> NEVER mix NestJS and Django patterns in the same audit finding.
 
 Use supplied architecture documents as authority.
 
 Framework applicability:
 
 ```text
-NestJS rules → only NestJS
-Django rules → only Django
-Frontend rules → only frontend
-Backend rules → only backend
+NestJS rules    → only NestJS/TypeScript backend
+Django rules    → only Django/Python backend
+Web rules       → only Next.js/Vite/React web frontend
+Mobile rules    → only React Native mobile frontend
+Backend rules   → only backend (do not apply to frontend)
+Frontend rules  → only frontend (do not apply to backend)
 Framework-agnostic rules → applicable where relevant
 ```
 
@@ -493,6 +509,8 @@ Do not guess.
 Do not apply NestJS rules to Django.
 
 Do not apply Django rules to NestJS.
+
+Do not apply Web frontend rules to React Native.
 
 Do not apply framework-specific expectations based solely on general ecosystem conventions.
 
@@ -520,12 +538,19 @@ Do not expect:
 Do not expect:
 
 - React components
+- React Native screens / widgets
 - Zustand stores
+- TanStack Query hooks
 - Zod frontend schemas
 - MSW
-- Tailwind classes
+- Tailwind classes / CSS Modules
 - browser UI components
 - frontend pages
+- React Navigation
+- native device platform files (`.ios.ts`, `.android.ts`)
+- mobile permissions modules
+- mobile animation libraries (`react-native-reanimated`)
+- mobile secure storage (`react-native-keychain`)
 
 Cross-stack absence is NOT automatically a defect.
 
@@ -684,19 +709,176 @@ If source completeness is uncertain, record the limitation in the coverage ledge
 
 ---
 
-# 13A. MANDATORY BOUNDED EXECUTION + PERSISTENT CHECKPOINT WORKFLOW
+# 13A. MANDATORY PHASE 1 — DISCOVERY & DYNAMIC BATCHING MAP
 
-Agar supplied codebase ya module bohot bada hai (Token limit breach hone ka risk hai), toh audit ko ek single run me force mat karo. 
+> ⛔ ANTI-SUMMARIZATION PRIME DIRECTIVE (NON-NEGOTIABLE)
+> AIs naturally try to finish the entire task in a single response by summarizing.
+> YOU MUST NOT DO THIS.
+> Producing a shallow summary of 50 modules to fit one response is a CRITICAL AUDIT FAILURE.
+> Doing 20% of the modules with 100% zero-sampling depth is CORRECT.
+> Doing 100% of the modules at 20% depth is WRONG and INVALID.
+> There is no partial credit for breadth-over-depth. Depth is the non-negotiable requirement.
 
-Tumhe apni progress in states me track karni hai:
-- NOT_STARTED
-- PARTIAL (Hit context/generation limit)
-- DELIVERED (Completely audited)
+## STEP 1: MANDATORY DISCOVERY RUN (Before Any Code Inspection)
 
-Agar tumhe lagta hai output limit hit hone wali hai, toh cleanly stop karo aur end me likho:
-`[STATUS: PARTIAL - WAITING FOR USER TO SAY "CONTINUE"]`
+Before you inspect any business logic, route, component, or file, your VERY FIRST task is a structural discovery scan. This scan produces the "Audit Chunk Map" that governs the entire audit.
 
-Do NOT hallucinate file contents just to finish the report in one go.
+During discovery:
+1. Scan the root directory and identify all ROLE CONTAINERS (e.g., `frontend_admin/`, `backend-manager/`).
+2. For each role container, enumerate all FEATURE MODULES inside it.
+3. For each feature module, count the number of authored files (exclude `node_modules`, `dist`, `.git`, vendor artifacts).
+4. Estimate total file density per module.
+5. Identify any modules that are obviously large (>30 files) — these are "Heavy Modules" and MUST be solo batches.
+6. Group smaller modules into "Safe Batches" using the Dynamic Batch Sizing Rule below.
+
+## STEP 2: DYNAMIC BATCH SIZING RULE
+
+You — the AI — are responsible for deciding how many modules fit in a single turn. Do NOT use a fixed number like "always 1 module" or "always 5 modules". Instead, apply this decision logic:
+
+```text
+IF a module has > 30 authored files
+  → It is a SOLO BATCH (one module per turn, possibly even split across turns if needed)
+
+IF a module has 15–30 authored files
+  → Group 2 modules per batch at most
+
+IF a module has < 15 authored files
+  → Group up to 4 modules per batch
+
+GOLDEN RULE: You may only group multiple modules in one batch IF you can guarantee
+100% line-by-line, zero-sampling inspection for EVERY file in ALL grouped modules.
+If you cannot guarantee this, reduce the batch size. Depth always wins over breadth.
+```
+
+## STEP 3: PUBLISH THE AUDIT CHUNK MAP
+
+Your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE. No code inspection may begin until the map is published and the user approves it.
+
+The Audit Chunk Map MUST use exactly this format:
+
+```text
+╔══════════════════════════════════════════════════════════╗
+║           FORENSIC AUDIT — CHUNK MAP V6.1                ║
+╚══════════════════════════════════════════════════════════╝
+
+STACK DETECTED:    [FRONTEND | BACKEND | BOTH | UNKNOWN]
+FRAMEWORK:         [Next.js | NestJS | Django | etc.]
+TOTAL MODULES:     [N]
+TOTAL FILES:       [N] (approximate, excluding vendor/generated)
+TOTAL BATCHES:     [N]
+
+┌─────────────────────────────────────────────────────┐
+│ BATCH 1 — [Module A, Module B]                      │
+│ Files: ~[N]  │  Estimated depth: [LIGHT/MEDIUM/HEAVY]│
+├─────────────────────────────────────────────────────┤
+│ BATCH 2 — [Module C]                                │
+│ Files: ~[N]  │  Estimated depth: HEAVY (SOLO BATCH)  │
+├─────────────────────────────────────────────────────┤
+│ BATCH 3 — [Module D, Module E, Module F]            │
+│ Files: ~[N]  │  Estimated depth: LIGHT               │
+└─────────────────────────────────────────────────────┘
+
+BATCH SIZING RATIONALE:
+[Brief explanation of why you grouped modules this way]
+
+Please reply "Begin Batch 1" to start the zero-sampling deep audit.
+Or reply "Adjust" if you want to change the batch grouping.
+```
+
+DO NOT start any code inspection until the user replies to this map.
+
+---
+
+# 13B. PERSISTENT AUDIT STATE TRACKER
+
+To prevent context loss across multiple turns, you MUST maintain a persistent state tracker. This tracker must be updated at the END of every completed batch before publishing the checkpoint message.
+
+The tracker file is named:
+```text
+AUDIT_PROGRESS_TRACKER.md
+```
+
+This file MUST be created after Batch 1 completes and updated after every subsequent batch.
+
+The tracker MUST contain:
+
+```markdown
+# AUDIT PROGRESS TRACKER
+
+## Session Info
+- Audit Target: [FRONTEND | BACKEND]
+- Framework: [framework]
+- Total Batches: [N]
+- Total Modules: [N]
+
+## Completed Batches
+| Batch | Modules | Files Inspected | Rules Checked | Status |
+|-------|---------|-----------------|---------------|--------|
+| Batch 1 | [Module A, B] | [N] | [N] | ✅ COMPLETE |
+
+## Remaining Batches
+| Batch | Modules | Estimated Files |
+|-------|---------|------------------|
+| Batch 2 | [Module C] | ~[N] |
+| Batch 3 | [Module D, E, F] | ~[N] |
+
+## Running Issue Count (Cross-Batch)
+- P0 (Critical): [N]
+- P1 (Major): [N]
+- P2 (Moderate): [N]
+- P3 (Minor): [N]
+- TOTAL: [N]
+
+## Rules Verified So Far
+- Total Applicable Rules Checked: [N]
+- PASS: [N]
+- FAIL: [N]
+- PARTIAL: [N]
+- NOT_VERIFIED: [N]
+- BLOCKED: [N]
+
+## Key Invariants Identified
+[List any important DO-NOT-BREAK findings discovered in completed batches]
+
+## Last Updated After
+Batch [N] — [Module names]
+```
+
+When resuming from a "continue" reply, you MUST read the tracker first and carry forward all accumulated findings, issue counts, and rule statuses before beginning the next batch.
+
+---
+
+# 13C. MANDATORY BATCH CHECKPOINT TEMPLATE
+
+When you finish deeply auditing all modules in the current batch, you MUST cleanly pause execution. Do NOT proceed to the next batch until the user replies.
+
+Your response MUST end with EXACTLY this checkpoint block — no deviation, no paraphrasing:
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║                  🛑 BATCH CHECKPOINT 🛑                      ║
+╠══════════════════════════════════════════════════════════════╣
+║ BATCH JUST COMPLETED:  Batch [N] — [Module names]            ║
+║ FILES INSPECTED:       [N] files (zero-sampling confirmed)   ║
+║ RULES CHECKED:         [N] applicable rules                  ║
+║ ISSUES FOUND (this batch): P0:[N] P1:[N] P2:[N] P3:[N]      ║
+║ CUMULATIVE ISSUES:     P0:[N] P1:[N] P2:[N] P3:[N]          ║
+╠══════════════════════════════════════════════════════════════╣
+║ REMAINING BATCHES:                                           ║
+║   Batch [N+1]: [Module names] (~[N] files)                   ║
+║   Batch [N+2]: [Module names] (~[N] files)                   ║
+╠══════════════════════════════════════════════════════════════╣
+║ AUDIT_PROGRESS_TRACKER.md has been updated.                  ║
+║ Reply "continue" to proceed to Batch [N+1].                  ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**Critical Rules for Checkpoints:**
+1. Never proceed to the next batch without posting this exact checkpoint and receiving a "continue" reply.
+2. Never merge multiple batches into one response to "save time" — this defeats the zero-sampling guarantee.
+3. If you feel the current batch is nearly done but token pressure is building, STOP at the current module boundary (do not half-audit a module) and checkpoint early. A partial module audit is worse than stopping before it.
+4. When the user replies "continue", you MUST re-read the AUDIT_PROGRESS_TRACKER.md before beginning the next batch to restore full context.
+5. After the FINAL batch completes, output the checkpoint block with "ALL BATCHES COMPLETE" and then generate the full 15-section DEEP-VERIFICATION-REPORT.md.
 
 ---
 
@@ -1225,9 +1407,26 @@ Do not classify valid framework infrastructure as business leakage.
 
 # 27. FILE SIZE / MICRO-MODULARIZATION
 
-Read actual file-size limits from supplied rules.
+Read actual file-size limits from the **SUPPLIED architecture rules document for the detected stack**.
 
 Do not hardcode project-specific limits into this audit prompt.
+
+> **⚠️ CRITICAL: Web vs Mobile File Size Ceilings Are DIFFERENT**
+> Mobile (React Native) has dramatically stricter ceilings than Web (Next.js/Vite).
+> A Mobile screen entry file ceiling is **80 lines** (vs 300 for Web).
+> A Mobile component ceiling is **200 lines** (vs 300 for Web).
+> You MUST read the correct stack's document before auditing file size.
+> Marking a 250-line Mobile screen as PASS (against a Web 300-line ceiling) is a CRITICAL audit error.
+>
+> Reference ceilings (from project architecture docs, NOT normative here — verify from supplied doc):
+> | File Type | Web | Mobile |
+> |-----------|-----|--------|
+> | Screen/Page entry | 300 lines | **80 lines** |
+> | Component/Widget | 300 lines | **200 lines** |
+> | Hook/Controller | 150 lines | 150 lines |
+> | API service file | 200 lines | 150 lines |
+> | Schema/Validator | 200 lines | 150 lines |
+> | Store/Provider | — | 180 lines |
 
 Check where applicable:
 
@@ -1269,15 +1468,40 @@ The auditor MUST strictly verify the Canonical Naming Rules based on the supplie
 
 **Global Rules:**
 1. Every file (except framework reserved) MUST be prefixed with `{Role}{Module}`.
-2. Every child folder MUST be `{module_name}_{artifact}` (Frontend) or `{module-name}-{artifact}` (Backend). No double prefixes for folders.
+2. Child folder naming differs by stack — see stack-specific rules below.
 
-**If FRONTEND is in scope:**
-3. Locale files MUST be named `[moduleName]_{lang}.json` and live in `[moduleName]_locales/`.
-4. URL Config files MUST export a `MODULE_URLS` object with UPPER_SNAKE_CASE keys.
-5. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 9 mandatory sections (Purpose, Routes, State Map, API Contract, etc.).
+**If WEB FRONTEND is in scope:**
+3. Child folders MUST use `{module_name}_{artifact}` pattern (e.g., `admin_members_components/`).
+4. Files MUST use `PascalCase` or `camelCase` with `{Role}{Module}` prefix (e.g., `AdminMembersTable.tsx`).
+5. Locale files MUST be named `[moduleName]_{lang}.json` and live in `[moduleName]_locales/`.
+6. URL Config files MUST export a `MODULE_URLS` object with UPPER_SNAKE_CASE keys.
+7. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 9 mandatory sections (Purpose, Routes, State Map, API Contract, Permission Matrix, Edge Cases, Error Behavior, Forbidden Patterns, Test Checklist).
 
-**If BACKEND is in scope:**
-6. Backend migrations MUST follow the strict `{timestamp}-{RoleModule}-{Description}.ts` format with complete `down()` rollbacks.
+**If MOBILE FRONTEND (React Native) is in scope:**
+8. Child folders use flat naming inside feature folder (e.g., `components/`, `hooks/`, `screens/`, `api/`, `config/`, `state/`, `types/`, `schemas/`, `tests/`).
+9. Component files MUST use PascalCase with feature-prefix (e.g., `MembersMemberCard.tsx`).
+10. Hook files MUST use camelCase with `use` prefix + feature name (e.g., `useMembers.ts`).
+11. API/types/schema/store/config files MUST use dot-notation (e.g., `members.api.ts`, `members.types.ts`).
+12. URL config lives in `config/` sub-folder (e.g., `members.url_config.ts`).
+13. Query key registry MUST exist per feature (e.g., `members.query_keys.ts`).
+
+**If BACKEND (NestJS) is in scope:**
+
+> ⚠️ CRITICAL — DO NOT CONFUSE FOLDER vs FILE PREFIX RULES:
+>
+> | Level | Prefix Rule | Correct Example | FORBIDDEN Example |
+> |-------|-------------|-----------------|-------------------|
+> | Root feature module folder | `{role}-{module}/` | `admin-members/` | `members/` or `admin-admin-members/` |
+> | Sub-folders inside feature module | `{module}-{artifact}/` ONLY | `members-services/` | `admin-members-services/` |
+> | Files inside those sub-folders | `{role}-{module}-{description}.{type}.ts` | `admin-members-registration.service.ts` | `members-registration.service.ts` |
+>
+> **The rule in one sentence:** Folders use MODULE name only as prefix; Files use ROLE+MODULE name as prefix.
+
+14. Migration files MUST follow `{timestamp}-{RoleModule}-{Description}.ts` format with complete `down()` rollbacks.
+
+**If BACKEND (Django) is in scope:**
+15. Apps follow Django app naming conventions as defined in the supplied architecture rules.
+16. View files, serializer files, URL files, and model files follow the pattern defined in the supplied architecture document.
 
 ---
 
@@ -1321,32 +1545,56 @@ An API client existing without an actual consumer is not automatically PASS.
 
 # 29. CONTRACT CHAIN — BACKEND
 
-If backend:
+If backend, trace the complete chain from requirement to database and back.
 
+Use the framework-appropriate chain based on detected framework:
+
+### NestJS Contract Chain:
 ```text
 Requirement
-→ Route
-→ Controller
-→ DTO
-→ Validation
+→ Route (@Controller + @Get/Post/Patch/Delete)
+→ Controller Method
+→ Request DTO (class-validator)
+→ Validation Pipe
 → Service / Use Case
+→ Orchestrator (for multi-step)
 → Repository
-→ Database
+→ TypeORM Entity / Database
 → Mapper
 → Response DTO
-→ Response Envelope
-→ Error Contract
-→ Authorization
-→ Audit / Event
-→ Test
+→ Response Envelope (ApiResponse<T>)
+→ Error Contract (HttpException shape)
+→ Authorization Guard
+→ Audit Event / Domain Event
+→ Jest Unit Test
+→ pytest API E2E Test
 → Documentation
 ```
 
-Use framework-specific equivalents where required.
+### Django Contract Chain:
+```text
+Requirement
+→ URL Pattern (urls.py)
+→ View / ViewSet
+→ Serializer (DRF input validation)
+→ Service / Business Logic layer
+→ Django ORM QuerySet
+→ Django Model
+→ Response Serializer
+→ Response Envelope
+→ Error Contract (DRF exception shape)
+→ Permission Class / Authentication
+→ Signal / Celery task dispatch
+→ pytest-django Unit Test
+→ pytest API E2E Test
+→ Documentation
+```
 
 Any mandatory missing link must be classified.
 
-Do not assume that a controller method implies a correct service/repository/data flow.
+Do not assume that a controller/view method implies a correct service/repository/data flow.
+
+Use only framework-applicable chain — never mix NestJS and Django chain items in the same audit finding.
 
 ---
 
@@ -1390,6 +1638,35 @@ Where applicable inspect:
 - queue/job defined but never scheduled
 - retry path that replays unsafe mutation
 - successful completion without durable state reconciliation
+
+### REDIS RESPONSIBILITY SEGREGATION AUDIT (CRITICAL)
+
+Each Redis responsibility MUST remain strictly segregated. Verify:
+
+```text
+[ ] Redis cache is used ONLY for caching — NOT as a job queue or event transport
+[ ] BullMQ (NestJS) / Celery (Django) is used ONLY for background jobs — NOT for real-time fan-out
+[ ] Redis Streams is used ONLY for DURABLE domain events — NOT replaced by Redis Pub/Sub
+[ ] Redis Pub/Sub is used ONLY for real-time horizontal fan-out — NOT as a durable event store
+[ ] Redis distributed locks are used ONLY for distributed locking
+
+CRITICAL VIOLATION: Redis Pub/Sub used as a durable replacement for Redis Streams = P0 FAIL
+CRITICAL VIOLATION: BullMQ used for real-time fan-out instead of Redis Pub/Sub = P1 FAIL
+CRITICAL VIOLATION: Redis cache used as job queue = P1 FAIL
+```
+
+### EVENT REGISTRY PATTERN AUDIT (NestJS)
+
+If NestJS backend, verify the event naming contract:
+
+```text
+[ ] A central `event-registry.constants.ts` file defines ALL event names
+[ ] Feature modules consume event names FROM this registry — not from hardcoded strings
+[ ] No feature imports a sibling feature's module to access an event name (direct business import = FORBIDDEN)
+[ ] Event-based dependencies are declared runtime dependencies via the registry (ALLOWED)
+    vs direct business-code imports from sibling features (FORBIDDEN)
+[ ] Event consumers are properly registered against the registry event names
+```
 
 Only report an issue when the evidence supports it and the rule is applicable.
 
@@ -1734,14 +2011,59 @@ If the target is Web (e.g., Next.js), inspect where applicable:
 
 # 39A. FRONTEND FRAMEWORK BOUNDARY AUDIT (MOBILE / REACT NATIVE)
 
-If the target is Mobile (React Native), inspect where applicable:
+If the target is Mobile (React Native), inspect ALL of the following where applicable:
 
+### Architecture Boundary Checks
 - UI Thread vs JS Thread execution blocking
-- Safe Area insets handling
 - Platform-specific code branching (`Platform.OS` or `.ios.ts` / `.android.ts`)
-- Device Permissions (Camera, Location, Storage) requests and fallbacks
 - React Native New Architecture compatibility (Fabric / TurboModules)
-- Absence of Web DOM APIs (`window`, `document`, `div`, `span`)
+- Absence of Web DOM APIs (`window`, `document`, `div`, `span`, `css`)
+- ONE central HTTP client module for the whole app — feature modules MUST NOT create their own HTTP client instances
+- ONE central permissions module — feature modules MUST NOT call permission APIs directly
+- ONE centralized push notification module — not duplicated per screen
+- ONE central storage-access module — no direct `AsyncStorage` or Keychain calls in feature files
+
+### Safe Area & Screen Boundary
+- Screen roots MUST use `SafeAreaView` from `react-native-safe-area-context` (NOT from `react-native`)
+- Bottom tab bars and FABs MUST account for bottom safe-area insets
+- Full-screen modals and bottom sheets MUST account for top safe-area insets
+- Hardcoded inset values are forbidden — `useSafeAreaInsets()` must be used
+
+### Secure Storage Classification
+- Auth tokens (JWT, refresh token), biometric keys = MUST use iOS Keychain / Android Keystore via `react-native-keychain` or equivalent
+- NEVER store tokens in `AsyncStorage` — this is a CRITICAL security failure
+- App preferences, non-sensitive cached data = `react-native-mmkv` or equivalent fast KV store
+
+### Animation & Gesture
+- Animations MUST use `react-native-reanimated` (UI-thread driven) — NOT the legacy `Animated` API from `react-native`
+- Gestures MUST use `react-native-gesture-handler` — NOT raw touch events
+- Reduced-motion compliance MANDATORY: check `AccessibilityInfo.isReduceMotionEnabled()` or `useReduceMotion()` from `react-native-reanimated` before playing non-essential animations
+- Pure decorative animations (card press, skeleton shimmer, screen transition) MUST be skipped/reduced when reduced-motion is enabled
+- Functional animations (loading spinners) MAY remain when reduced-motion is enabled
+
+### List Performance
+- Any list rendering more than ~20 items MUST use `FlatList` or `@shopify/flash-list` — NEVER a naively-mapped `ScrollView` wrapping JSX
+- List item components MUST be render-stable (`React.memo` or `useMemo`)
+
+### Haptic Feedback (Premium UX — Check if Implemented)
+- Critical state changes (switch toggle) → light impact haptic
+- Successful mutations (save form, process payment) → success notification haptic
+- Destructive actions, validation failures → error notification haptic
+- Absence of haptics is NOT automatically a FAIL unless the supplied rules mandate it; classify as OPTIONAL_RECOMMENDATION if undocumented
+
+### Query & State Management (Mobile-specific)
+- Every feature MUST have a dedicated query key registry file (`*.query_keys.ts`)
+- Query keys MUST include the resource identity (e.g., `['manager_members', 'detail', memberId]`)
+- Generic keys like `['members']` or `['profile']` are forbidden
+- Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateMember.ts`)
+- Screens MUST NOT call `useMutation()` directly
+- Server state (API data) MUST use TanStack Query — NOT duplicated into a Zustand store
+- Shared client UI state MUST use feature-scoped Zustand stores — NOT one global store
+
+### Device Permissions
+- Camera, Location, Storage, Notifications, Biometrics — ALL must go through ONE central permissions module
+- No feature screen calls native permission APIs directly
+- New native dependencies MUST support React Native New Architecture (Fabric/TurboModules)
 
 Do NOT apply Web/DOM rules to React Native code.
 
@@ -1885,11 +2207,20 @@ Aesthetic preference is not a documented rule.
 
 # 42A. DESIGN TOKEN & CSS VARIABLES COMPLIANCE AUDIT
 
-**If FRONTEND is in scope**, verify that the implementation strictly uses the canonical design tokens:
-1. `globals.css` must define all Chart Tokens (`--chart-primary`, etc.), Shadow Tokens, and Motion Tokens.
-2. No hardcoded colors or box-shadows in UI components.
-3. Tailwind usage must map to CSS variables (e.g., `text-pay-cash`, `bg-pay-upi-bg`, `text-purple`).
-4. Motion must use the defined duration tokens (e.g., `duration-base: 150ms`, `duration-slow: 300ms`).
+**If FRONTEND (Web — Next.js/Vite/React) is in scope**, verify that the implementation strictly uses the canonical design tokens as defined in the supplied `WEB_FRONTEND_UI_UX_DESIGN.md` or equivalent:
+
+1. `globals.css` (or equivalent CSS entry file) MUST define all required token categories: Color Tokens, Chart Tokens, Shadow Tokens, Motion Tokens, Status Tokens, Payment Tokens.
+2. No hardcoded raw hex colors or arbitrary pixel values in UI component files — every visual value must resolve through a named CSS variable.
+3. Motion/animation durations MUST use the defined duration tokens (e.g., `duration-base`, `duration-slow`) — never inline millisecond values.
+4. Status and payment badge colors MUST use semantic token names — never inline hex values.
+5. If the project uses a utility CSS framework (e.g., Tailwind), verify that utility classes map to CSS variables, not raw values. If the project uses Vanilla CSS, verify that CSS variable names match the design token catalogue exactly.
+
+**If MOBILE FRONTEND (React Native) is in scope**, verify token compliance per `MOBILE_UI_UX_DESIGN.md`:
+
+1. The React Native theme module MUST implement ALL token categories: Color, Status, Payment, Spacing, Typography, Radius, Icon Size, Touch Target, Motion, Opacity, Skeleton, Elevation, Z-Index.
+2. No raw hex/RGB colors or arbitrary dp values in any feature component.
+3. Motion durations MUST use named token constants from the theme module.
+4. CI MUST fail when the theme module references an unknown token or a required Light/Dark pair is incomplete.
 
 ---
 
@@ -2025,30 +2356,24 @@ Check whether those attributes are:
 
 # 47. BACKEND ARCHITECTURE AUDIT
 
-If backend, dynamically audit applicable:
+If backend, dynamically audit applicable items based on detected framework:
 
+### Common to Both NestJS and Django:
 ```text
-framework
 module boundary
-namespace
-folder naming
+namespace / folder naming
 file naming
 micro-modularization
 feature isolation
-repository pattern
-DTO isolation
 validation
-exceptions
-types
+types / contracts
 constants
-transactions
-orchestrators
 database access
 authentication
 authorization
 tenant isolation
 caching
-jobs
+jobs / async tasks
 events
 Redis responsibilities
 idempotency
@@ -2058,6 +2383,47 @@ response envelope
 observability
 testing
 documentation
+```
+
+### If NestJS:
+```text
+Controllers / DTOs / Services / Repositories
+Orchestrator pattern (multi-step workflows)
+TypeORM entities and .forFeature() usage
+BullMQ queue/worker registration
+Jest unit tests
+pytest API E2E tests (backend-e2e/)
+```
+
+### If Django:
+```text
+Views / ViewSets / Serializers
+Django ORM QuerySets
+Celery tasks and workers
+DRF (Django REST Framework) patterns
+pytest-django unit tests
+pytest API E2E tests
+```
+
+### MODULAR MONOLITH ISOLATION CHECK (CRITICAL — applies to both):
+```text
+[ ] Feature modules MUST NOT contain framework root-level bootstrap code
+[ ] NestJS: Feature modules MUST NOT use .forRoot() or .forRootAsync()
+[ ] NestJS: Feature modules MUST use .forFeature() for TypeORM and BullMQ registration
+[ ] NestJS: Feature modules MUST NOT create independent Redis connection pools
+[ ] Django: Feature apps MUST NOT initialize new database connections in apps.py or feature views
+[ ] Django: Feature apps MUST rely on settings.py for all DB and infrastructure config
+[ ] No feature module attempts to bootstrap its own independent infrastructure
+    (this crashes the global monolith on startup due to duplicated context boundaries)
+```
+
+### ORCHESTRATOR PATTERN CHECK (NestJS — multi-step operations):
+```text
+[ ] Orchestrators own database transactions — Services MUST NOT own transactions
+[ ] Multi-step business workflows go through Orchestrators, not direct Service-to-Service calls
+[ ] UnitOfWork / transaction context is passed from Orchestrator to Services
+[ ] Orchestrators do NOT call other Orchestrators (unless explicitly permitted by supplied rules)
+[ ] Services receive transaction context — they do NOT create their own transaction boundaries
 ```
 
 Use only supplied rules as normative authority.
@@ -2113,20 +2479,33 @@ The prohibition must come from supplied rules.
 
 # 48A. APPROVED PACKAGE REGISTRY AUDIT
 
-Verify the project strictly adheres to the approved NPM packages based on the supplied scope:
+> ⚠️ **CRITICAL RULE — READ BEFORE AUDITING PACKAGES:**
+> This prompt does NOT maintain a hardcoded list of approved packages.
+> Every project has its own technology decisions.
+> The ONLY source of truth for approved/forbidden packages is the **SUPPLIED architecture rules document** for the detected stack.
+> Do NOT use general ecosystem preference as a rule.
+> Do NOT mark a package as forbidden unless the supplied architecture document explicitly forbids it.
 
-**If FRONTEND is in scope:**
-- Must use `@tanstack/react-query` v5 (v4 is a failure).
-- Must use `react-hook-form` v7 + zod.
-- No `axios` unless explicitly approved (use native fetch).
-- No `formik`, `redux`, `mobx`.
+Verify the project strictly adheres to the approved package list **AS DEFINED IN THE SUPPLIED ARCHITECTURE RULES DOCUMENT** for the detected stack.
 
-**If BACKEND is in scope:**
-- Must use `typeorm` (No `prisma`, `mongoose`, `sequelize`).
-- Must use `bullmq` (No `bull`).
-- Must use `ioredis` (No `redis` v4).
+**Audit Process:**
+1. Read the "PROJECT STACK BASELINE" or equivalent section from the supplied architecture rules document.
+2. Extract the exact list of approved packages and forbidden alternatives from that document.
+3. Compare `package.json` (NestJS/Web/Mobile) or `requirements.txt`/`pyproject.toml` (Django) against the extracted list.
+4. Flag any use of explicitly forbidden alternatives as a Major Architecture Failure.
+5. Do NOT flag a package as forbidden merely because you have not seen it before — the prohibition must come from the supplied rules.
 
-Any violation is a Major Architecture Failure.
+**Evidence format for every package finding:**
+```text
+PACKAGE FOUND: [package-name@version]
+STATUS: APPROVED | FORBIDDEN | NOT_IN_SUPPLIED_RULES
+SOURCE: [exact location in supplied architecture document where rule is stated]
+```
+
+If the supplied architecture document does not define an approved package list:
+```text
+NOT_VERIFIED — PACKAGE_REGISTRY_NOT_IN_SUPPLIED_SCOPE
+```
 
 ---
 
@@ -2197,13 +2576,23 @@ Do not label an implementation insecure merely because a preferred security mech
 The Smart Gym application is multi-tenant. The auditor MUST verify tenant isolation based on the supplied scope.
 
 **If BACKEND is in scope, verify:**
-1. `gymId` and `branchId` are extracted strictly from the JWT/Auth context, NEVER from user request body or query params for secure operations.
-2. Every Database Repository `find`, `update`, `delete`, and `count` operation explicitly includes a `gymId` / `branchId` filter in the `WHERE` clause.
-3. Omitting the tenant filter is a P0 Critical Security Failure.
-4. Response DTOs never leak cross-tenant identifiers.
+1. `gymId` and `branchId` are extracted strictly from the **JWT/Auth context** — NEVER from:
+   - the request **body**
+   - URL **query strings**
+   - **client-supplied headers**
+   Any of the above three sources is a P0 Critical Security Failure.
+2. **Controllers MUST NOT pass `gymId`/`branchId` as parameters to Services** — Services receive them from the auth context/JWT payload resolved by the auth guard only.
+3. Every Database Repository `find`, `update`, `delete`, and `count` operation explicitly includes a `gymId` / `branchId` filter in the `WHERE` clause.
+4. Omitting the tenant filter is a **P0 Critical Security Failure**.
+5. Route parameters containing a resource ID (e.g., `/members/:memberId`) MUST be verified against the JWT tenant before returning data — never trust the client-supplied resource ID without cross-checking the tenant.
+6. Response DTOs never leak cross-tenant identifiers.
 
 **If FRONTEND is in scope, verify:**
-1. The frontend NEVER explicitly sends `gymId` or `branchId` in request bodies (it must rely on its Auth token).
+1. The frontend NEVER explicitly sends `gymId` or `branchId` in:
+   - **request bodies**
+   - **URL query strings** (e.g., `?gymId=123`)
+   - **custom request headers**
+   The frontend must rely entirely on its Auth token; the backend derives tenant identity from the JWT.
 2. UI components do not inadvertently leak or mix data from different tenants.
 
 ---
@@ -2247,10 +2636,40 @@ Do not mark it invalid merely because it is not an end-to-end test if its intend
 
 Tests ko rigorously in criteria pe evaluate karo:
 - Kya test E2E / Selenium isolation rules break kar raha hai? (Check supplied architecture rules).
-- Kya ek test doosre test ka shared state use kar raha hai? 
-- Agar koi E2E test database ya authentication state properly seed/teardown nahi karta independently, toh it is a STRICT FAIL. 
+- Kya ek test doosre test ka shared state use kar raha hai?
+- Agar koi E2E test database ya authentication state properly seed/teardown nahi karta independently, toh it is a STRICT FAIL.
 
 Test existence is not enough. Isolation and teardown correctness must be verified.
+
+## 51B. BACKEND E2E TEST STRUCTURE AUDIT
+
+If BACKEND is in scope, verify the E2E test directory structure matches the supplied architecture rules:
+
+```text
+Verify:
+[ ] Top-level E2E directory exists and follows: `backend-e2e/backend-{role}-e2e/` pattern
+[ ] Selenium test directory follows: `backend-selenium/backend-{role}-selenium/` pattern
+[ ] E2E test folders carry the backend namespace prefix — not generic folder names
+[ ] API E2E tests use Python pytest (NestJS projects) or pytest-django (Django projects)
+[ ] Each E2E test independently seeds and tears down its required database/auth state
+[ ] No E2E test depends on state created by a sibling E2E test (shared state = STRICT FAIL)
+```
+
+## 51C. MOBILE E2E TEST STRUCTURE AUDIT
+
+If MOBILE FRONTEND (React Native) is in scope, verify the E2E test structure:
+
+```text
+Verify:
+[ ] Mobile E2E tests live in a separate top-level `mobile_e2e/` directory
+[ ] Internal structure mirrors the mobile route structure:
+    e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`
+[ ] E2E tests use Maestro as the test tool (YAML-based)
+[ ] WET (Write Everything Twice) principle: NO shared `utils/` or `shared/` folders in mobile_e2e/
+[ ] Each module's E2E tests are 100% self-contained — login helpers, fixtures duplicated per module
+[ ] No cross-module imports: `mobile_admin_e2e/members/` MUST NOT import from `mobile_admin_e2e/dashboard/`
+[ ] A developer must be able to ZIP only one module's E2E folder and run it independently
+```
 
 ---
 
@@ -2308,6 +2727,55 @@ error behavior
 ```
 
 Do not PASS documentation merely because a file exists.
+
+### MANDATORY FEATURE DOCUMENTATION FILES (Frontend — Web & Mobile)
+
+For every frontend feature module, verify that ALL THREE mandatory documentation files exist and are non-empty/non-boilerplate:
+
+```text
+[ ] [featureName]_features.md     — MANDATORY (see required sections below)
+[ ] [featureName]_forbidden.md    — MANDATORY (must list concrete forbidden patterns for this module)
+[ ] [featureName]_theme_contract.md — MANDATORY (must list all design tokens used by this module)
+```
+
+**Missing any of these 3 files = FAIL.**
+
+**A file that exists but contains only generic boilerplate or placeholder text = PARTIAL.**
+
+### `_features.md` MANDATORY SECTION AUDIT
+
+Every `_features.md` file MUST contain ALL 9 of these sections. Missing even one = PARTIAL.
+
+```text
+[ ] 1. Purpose            — what this module does and why it exists
+[ ] 2. Routes             — all routes owned by this module
+[ ] 3. State Map          — what state this module manages and who owns it
+[ ] 4. API Contract       — exact API endpoints, request/response shapes
+[ ] 5. Permission Matrix  — which roles can access which actions
+[ ] 6. Edge Cases         — known edge cases and how the module handles them
+[ ] 7. Error Behavior     — what happens when API calls fail
+[ ] 8. Forbidden Patterns — what MUST NOT be done in this module's code
+[ ] 9. Test Checklist     — what tests exist and what behaviors they verify
+```
+
+### `_theme_contract.md` AUDIT
+
+```text
+[ ] Lists every design token used by this module's components
+[ ] Token names match what is actually used in component code (cross-reference a sample file)
+[ ] No raw hex values or arbitrary values listed — only token names
+[ ] Both light and dark mode tokens documented where applicable
+```
+
+### `_forbidden.md` AUDIT
+
+```text
+[ ] Lists concrete, module-specific forbidden patterns (not just generic advice)
+[ ] Forbidden patterns are specific enough for an AI to avoid them
+[ ] Not a copy-paste of generic documentation
+```
+
+### General Documentation Quality
 
 Also inspect where applicable:
 
@@ -3783,8 +4251,21 @@ Do not publish the unsupported conclusion.
 
 # 80. FINAL COVERAGE GATE
 
-The audit is complete only when:
+The audit is complete only when ALL of the following are true:
 
+### BATCH EXECUTION GATE (New in V6.1 — MUST be verified first)
+```text
+[ ] Phase 1 Discovery was completed and Audit Chunk Map was published before any code inspection began
+[ ] User approved the Chunk Map before Batch 1 started
+[ ] ALL batches in the Chunk Map have been completed (none skipped, none merged shallowly)
+[ ] Every batch ended with the mandatory Section 13C Checkpoint Template
+[ ] AUDIT_PROGRESS_TRACKER.md was created after Batch 1 and updated after every subsequent batch
+[ ] No module was half-audited — every module received full zero-sampling treatment
+[ ] Final 15-section report was generated ONLY after all batches were complete and checkpointed
+[ ] Issue counts in final report match cumulative running totals from the tracker
+```
+
+### AUDIT QUALITY GATE
 ```text
 [ ] Correct stack identified
 [ ] Framework identified
@@ -3899,6 +4380,15 @@ The audit is complete only when:
 39. Do not treat a compiled type as runtime validation.
 40. Do not perform any repair during the audit.
 41. Do not truncate the report.
+42. Do not summarize multiple modules shallowly to finish in fewer turns — this is an audit depth failure.
+43. Do not skip the Phase 1 Discovery and Chunk Map step, even if the codebase appears small.
+44. Do not begin code inspection before publishing the Audit Chunk Map and receiving user approval.
+45. Do not proceed to the next batch without posting the mandatory Section 13C Checkpoint Template and receiving a "continue" reply.
+46. Do not half-audit a module — if token pressure builds mid-module, stop at the module boundary and checkpoint early.
+47. Do not merge multiple batches into one response to save turns — each batch must be fully deep-audited before the next begins.
+48. Do not start a new batch without first re-reading the AUDIT_PROGRESS_TRACKER.md to restore accumulated context.
+49. Do not generate the final 15-section report until ALL batches have been completed and checkpointed.
+50. Do not carry forward findings from a previous batch without explicitly referencing the tracker — silently assuming context is an anti-hallucination violation.
 
 ---
 
@@ -4035,6 +4525,17 @@ If message limits require splitting:
 
 Every section must remain complete.
 
+## MODE C — MULTI-BATCH AUDIT IN PROGRESS (V6.1)
+
+When the audit is being executed in multiple batches (per Sections 13A/13B/13C), the following delivery rules apply:
+
+1. Do NOT generate the final 15-section DEEP-VERIFICATION-REPORT.md until ALL batches from the Chunk Map are complete.
+2. After each non-final batch, output ONLY: the batch's findings in structured issue format + the Section 13C Checkpoint block + the updated AUDIT_PROGRESS_TRACKER.md.
+3. Batch-level findings must be formatted using the standard ISSUE-[NNN] format from Section 63 so they can be directly incorporated into the final report without re-work.
+4. When the FINAL batch is complete, output: the final batch findings + the checkpoint marked as "ALL BATCHES COMPLETE" + the complete 15-section DEEP-VERIFICATION-REPORT.md that reconciles ALL batches.
+5. The final report's Coverage Ledger (Section 14) and Issue Log (Section 9) MUST include findings from all batches, not just the last one.
+6. If the user starts a new conversation to continue the audit, they must supply the AUDIT_PROGRESS_TRACKER.md from the previous session. Without it, the AI MUST declare `CONTEXT_LOST — TRACKER_NOT_SUPPLIED` and re-run from the last confirmed complete batch.
+
 ---
 
 # 84. FINAL PRINCIPLE
@@ -4107,4 +4608,4 @@ Only AFTER closing the `</forensic_scratchpad>` tag are you allowed to begin gen
 
 This Chain of Thought mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
 
-# END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V5.1
+# END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V6.2
