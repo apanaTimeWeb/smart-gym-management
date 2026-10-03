@@ -830,6 +830,9 @@ The tracker file is named:
 AUDIT_PROGRESS_TRACKER.md
 ```
 
+**CRITICAL FILE GENERATION INSTRUCTION:**
+If your AI environment supports creating downloadable files (e.g., Claude Artifacts, ChatGPT Code Interpreter, or direct file writing), you MUST output `AUDIT_PROGRESS_TRACKER.md` as an actual, downloadable file or Artifact. Do NOT just print it as plain text in a markdown block if you have the capability to generate a real file.
+
 This file MUST be created after Batch 1 completes and updated after every subsequent batch.
 
 The tracker MUST contain:
