@@ -760,19 +760,23 @@ This Phase 1 scan PRODUCES the Chunk Map. Do not produce the Chunk Map from memo
 You — the AI — are responsible for deciding how many modules fit in a single turn. Do NOT use a fixed number like "always 1 module" or "always 5 modules". Instead, apply this decision logic:
 
 ```text
-IF a module has > 30 authored files
-  → It is a SOLO BATCH (one module per turn, possibly even split across turns if needed)
+IF a module has > 100 authored files
+  → It MUST be subdivided into SUB-BATCHES (e.g., Module A-1, Module A-2). Never attempt >100 files in one turn.
+
+IF a module has 30-100 authored files
+  → It is a SOLO BATCH (one module per turn, strictly).
 
 IF a module has 15–30 authored files
-  → Group 2 modules per batch at most
+  → Group 2 modules per batch at most.
 
 IF a module has < 15 authored files
-  → Group up to 4 modules per batch
+  → Group up to 4 modules per batch.
 
-GOLDEN RULE: You may only group multiple modules in one batch IF you can guarantee
-100% line-by-line, zero-sampling inspection for EVERY file in ALL grouped modules.
-If you cannot guarantee this, reduce the batch size. Depth always wins over breadth.
+GOLDEN RULE: You may only group multiple modules in one batch IF you can guarantee 100% line-by-line, zero-sampling inspection. Depth always wins over breadth.
 ```
+
+**PHYSICAL COVERAGE LIMIT FALLBACK:**
+If the total repository size (e.g., 5000+ files) mathematically prevents zero-sampling within practical platform limits, you MUST stop and generate a `COVERAGE PARTITION PLAN`. Do NOT pretend the audit is completed. Explicitly state `PHYSICAL_COVERAGE_LIMIT_REACHED`.
 
 ## STEP 3: PUBLISH THE AUDIT CHUNK MAP
 
@@ -1420,6 +1424,30 @@ Defects found in generated files (e.g. Prisma clients, OpenAPI SDKs, Auto-genera
 
 ## 14. LATE DISCOVERED AUTHORITY RULE
 If a new authoritative architecture or design document is discovered/supplied AFTER batch execution begins, all impacted prior findings MUST automatically become `NOT_VERIFIED` until re-evaluated against the new authority.
+
+---
+
+# 23B. MASSIVE REPOSITORY SURVIVAL GATES (TOKEN EXHAUSTION PROTECTION)
+
+When auditing repositories with 1000+ files, the auditor MUST adhere to the following strict scale-survival rules to prevent token crashes and hallucination:
+
+## 1. RULE SCALING GATE (Rule Explosion Protection)
+If extracted atomic rules exceed 300, DO NOT write them all out in every batch ledger. Instead, create a `MASTER RULE REGISTRY` (e.g., grouped as `[ARCH-01] to [ARCH-50]`) in the first response. During batch processing, reference the Rule Group ID and only write out the exact rules that were violated or specifically checked.
+
+## 2. DEFECT COLLAPSE RULE (Duplicate Finding Explosion)
+If multiple files violate the exact same rule with the identical root cause and identical impact (e.g., 40 files missing JSDoc, or 15 controllers missing a security decorator), DO NOT generate repetitive identical issues. You MUST aggregate them into a SINGLE issue. Include `Representative Evidence` (1-2 code snippets) and list the `Affected Count` and file paths.
+
+## 3. RULE EXTRACTION CAP
+Extract normative requirements from the Architecture documents EXACTLY ONCE during Phase 1. Freeze the Rule Registry. DO NOT repeatedly re-extract rules from the same document in every subsequent batch.
+
+## 4. RUNTIME CAPABILITY DETECTION GATE
+Explicitly acknowledge your execution environment. If you cannot run Node, execute a browser, or connect to a DB, you MUST NOT generate findings that depend on those capabilities. State `CAPABILITY UNAVAILABLE` and set status to `STATIC-ONLY` or `NOT_VERIFIED`.
+
+## 5. SEVERITY GOVERNANCE (Issue Volume Cap)
+For repetitive P2 or P3 issues, enforce an issue volume cap. Do not flood the report with thousands of minor formatting issues. Use the Defect Collapse Rule aggressively for P2/P3.
+
+## 6. GLOBAL STATUS RECALCULATION
+If the Retroactive Status Revision Rule (Rule 11) is triggered, you MUST recalculate the mathematical totals in ALL final report sections. Cross-batch drift (e.g., Rule ledger showing PASS=200 but Coverage matrix showing PASS=205) is a fatal audit failure.
 
 ---
 
@@ -3573,6 +3601,10 @@ Dependencies
 Required repair objective
 Verification gate
 ```
+
+> **⚠️ WEAK-EVIDENCE REPAIR PROHIBITION:**
+> If the audit status is `NOT_VERIFIED`, `LOW` confidence, or `EVIDENCE_CONFLICT`, you are PROHIBITED from inventing repair instructions. Write `INSUFFICIENT EVIDENCE FOR REPAIR`.
+> If a target symbol or target file cannot be perfectly resolved, write `UNRESOLVED_ARTIFACT` instead of fabricating code or filenames.
 
 Do not invent dependencies.
 
