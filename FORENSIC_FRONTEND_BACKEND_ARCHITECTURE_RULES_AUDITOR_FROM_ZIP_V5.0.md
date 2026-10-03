@@ -1,4 +1,4 @@
-# FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP — V6.2
+# FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP — V6.3
 
 ## FORENSIC SOFTWARE / ARCHITECTURE / UI-UX / CONTRACT COMPLIANCE AUDIT
 
@@ -122,13 +122,19 @@ During the audit:
 - commit or persist execution-generated source changes
 - silently replace supplied files with modified variants
 
-## ONLY ALLOWED REPORT ARTIFACT
+## ONLY ALLOWED REPORT ARTIFACTS
 
-The only persistent project-level file the auditor may create is:
+The only persistent project-level files the auditor may create are:
 
 ```text
-DEEP-VERIFICATION-REPORT.md
+DEEP-VERIFICATION-REPORT.md       ← Final 15-section audit report
+AUDIT_PROGRESS_TRACKER.md         ← Multi-batch state tracker (Section 13B)
 ```
+
+No other files may be created, modified, or deleted in the project.
+
+AUDIT_PROGRESS_TRACKER.md is ONLY created during multi-batch audits (Sections 13A–13C).
+If the audit completes in a single turn, AUDIT_PROGRESS_TRACKER.md is NOT needed.
 
 ## ABSOLUTE CROSS-STACK WRITE PROHIBITION (NON-NEGOTIABLE)
 
@@ -216,11 +222,19 @@ Default authority order:
 2. Supplied architecture/development rules
 3. Supplied UI/UX/design rules
 4. Supplied feature/API/domain requirements
-5. Existing module documentation
-6. Actual implementation
+5. Actual implementation (code is evidence — it cannot lie)
+6. Existing module documentation (claims to verify AGAINST the code)
 7. Tests / mocks / fixtures
 8. Optional guidance
 ```
+
+> **⚠️ AUDITOR-SPECIFIC NOTE on items 5 and 6:**
+> For a forensic auditor, the ACTUAL IMPLEMENTATION is the ground truth of current behavior.
+> Documentation makes CLAIMS about the implementation.
+> The auditor's job is to verify whether those claims are TRUE by inspecting the code.
+> NEVER let documentation override what the code actually does.
+> If docs say "compliant" but code is not → document as AUDIT_DRIFT (documentation is wrong).
+> If code does X and docs say Y → the code is the current reality; docs are stale.
 
 This precedence model is NOT permission to silently ignore conflicting evidence.
 
@@ -719,17 +733,25 @@ If source completeness is uncertain, record the limitation in the coverage ledge
 > Doing 100% of the modules at 20% depth is WRONG and INVALID.
 > There is no partial credit for breadth-over-depth. Depth is the non-negotiable requirement.
 
-## STEP 1: MANDATORY DISCOVERY RUN (Before Any Code Inspection)
+## STEP 1: MANDATORY PHASE 1 — COMBINED TARGET RESOLUTION + DISCOVERY SCAN
 
-Before you inspect any business logic, route, component, or file, your VERY FIRST task is a structural discovery scan. This scan produces the "Audit Chunk Map" that governs the entire audit.
+> **IMPORTANT — RESOLVES ORDERING CONFLICT:**
+> The Target Resolution Gate (Section 9) and the Discovery Scan happen as ONE combined Phase 1 scan.
+> You CANNOT publish the Chunk Map (which requires knowing the framework) without first scanning the project.
+> Therefore: Phase 1 scan MUST happen first, BEFORE publishing the Chunk Map.
+> The Chunk Map is your FIRST RESPONSE AFTER the Phase 1 scan — it is not produced from memory.
 
-During discovery:
-1. Scan the root directory and identify all ROLE CONTAINERS (e.g., `frontend_admin/`, `backend-manager/`).
-2. For each role container, enumerate all FEATURE MODULES inside it.
-3. For each feature module, count the number of authored files (exclude `node_modules`, `dist`, `.git`, vendor artifacts).
-4. Estimate total file density per module.
-5. Identify any modules that are obviously large (>30 files) — these are "Heavy Modules" and MUST be solo batches.
-6. Group smaller modules into "Safe Batches" using the Dynamic Batch Sizing Rule below.
+During Phase 1 combined scan:
+1. Scan the root directory to detect FRAMEWORK (Next.js, NestJS, Django, React Native, etc.) using config files, package.json, requirements.txt, etc.
+2. Resolve the AUDIT TARGET (FRONTEND / BACKEND) per Section 9.
+3. Identify all ROLE CONTAINERS (e.g., `frontend_admin/`, `backend-manager/`).
+4. For each role container, enumerate all FEATURE MODULES inside it.
+5. For each feature module, count the number of authored files (exclude `node_modules`, `dist`, `.git`, vendor artifacts).
+6. Estimate total file density per module.
+7. Identify any modules that are obviously large (>30 files) — these are "Heavy Modules" and MUST be solo batches.
+8. Group smaller modules into "Safe Batches" using the Dynamic Batch Sizing Rule below.
+
+This Phase 1 scan PRODUCES the Chunk Map. Do not produce the Chunk Map from memory.
 
 ## STEP 2: DYNAMIC BATCH SIZING RULE
 
@@ -1021,6 +1043,13 @@ Atomic decomposition must preserve original source meaning.
 
 Do not create artificial sub-rules from one inseparable requirement merely to inflate issue counts.
 
+> **DECOMPOSITION DEPTH CAP:**
+> Decompose until each unit is independently testable — then STOP.
+> A rule with 2 independently testable conditions produces exactly 2 atomic units.
+> Do NOT decompose beyond the point of independent testability.
+> If two parts of a rule can only be tested together (e.g., "create and register a handler"), they are ONE atomic unit.
+> Excessive sub-decomposition creates noise and inflates issue counts — this is as harmful as under-decomposition.
+
 ---
 
 # 18. RULE IDENTITY
@@ -1105,6 +1134,18 @@ BLOCKED_BY_SUPPLIED_SCOPE
 ```
 
 must be used according to the actual reason.
+
+### LATE-DISCOVERED RULES
+
+If a rule is discovered DURING a batch (e.g., by reading a file that references an architecture section not previously extracted):
+
+1. Add it to the Rule Ledger with a `LATE_DISCOVERED` tag.
+2. Assign it the next available Rule ID in sequence.
+3. Evaluate it against the current batch's inspected files.
+4. If it applies to files from a PRIOR batch that cannot be re-inspected in this session, mark it `NOT_VERIFIED` with the note: `LATE_DISCOVERED — requires prior batch re-inspection`.
+5. Include it in the Coverage Ledger's `RULES_DISCOVERED` total.
+
+Do NOT silently ignore a rule merely because it was discovered late.
 
 ---
 
@@ -1217,9 +1258,22 @@ FAIL / MISSING
 
 if the rule is directly applicable and evidence proves absence.
 
+> **PROCESS RULE — When to Use MISSING:**
+> MISSING may ONLY be declared when the ENTIRE relevant scope for the feature/module has been inspected
+> and the required artifact/behavior is absent across ALL inspected files.
+> If inspection was PARTIAL (not all files in scope have been read), use NOT_VERIFIED instead.
+> "I scanned 5 of 20 files and didn't find it" = NOT_VERIFIED, NOT MISSING.
+> "I scanned all 20 files in the feature directory and it's absent" = MISSING.
+
 ## NOT_VERIFIED
 
 Available evidence is insufficient to establish presence or absence.
+
+Use when:
+- Only partial files in the scope have been inspected
+- The file exists but its content could not be read
+- The behavior depends on runtime execution unavailable in this audit
+- A prior batch covered the file but current context does not have its content
 
 ## BLOCKED_BY_SUPPLIED_SCOPE
 
@@ -1981,9 +2035,15 @@ A frontend can still have a contract issue when:
 
 ---
 
-# 38A. DUAL-STACK CONTRACT CROSS-VERIFICATION (GAP-13 Equivalent)
+# 38A. DUAL-STACK CONTRACT CROSS-VERIFICATION
 
-When BOTH frontend and backend implementations are supplied in the audit scope, the auditor MUST perform exact cross-stack verification for every endpoint:
+> **⚠️ SCOPE CLARIFICATION — Does NOT override Section 8:**
+> Section 8 mandates that the audit TARGETS exactly ONE stack (FRONTEND or BACKEND).
+> This section (38A) is a CONTRACT BOUNDARY CHECK only — it does NOT mean you perform a full audit of both stacks simultaneously.
+> You audit the TARGET stack deeply. When you encounter a cross-stack contract surface (an API call, a DTO boundary, a route URL), you MAY inspect the OPPOSITE stack's contract definition ONLY to verify the boundary is consistent.
+> You do NOT flag issues in the opposite stack — you flag them as `CROSS-STACK-CONTRACT-FAILURE` in the TARGET stack's audit.
+
+When BOTH frontend and backend implementations are supplied in the audit scope, the auditor MUST perform exact cross-stack contract verification for every endpoint that is part of the target stack's audit:
 
 1. Frontend `_url_config.ts` URL perfectly matches Backend `@Controller` path + `@Get/Post/etc` path.
 2. Frontend API client HTTP method matches Backend HTTP method.
@@ -1991,7 +2051,9 @@ When BOTH frontend and backend implementations are supplied in the audit scope, 
 4. Frontend Response Expectation (Type) perfectly matches Backend Response DTO.
 5. Frontend Error Handling matches Backend Error throwing shape.
 
-If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE`. Do NOT attempt to fix either side.
+If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE` in the TARGET stack's issue log. Do NOT attempt to fix either side.
+
+If only ONE stack is supplied, skip this section entirely and mark it `BLOCKED_BY_SUPPLIED_SCOPE`.
 
 ---
 
@@ -2220,7 +2282,7 @@ Aesthetic preference is not a documented rule.
 1. The React Native theme module MUST implement ALL token categories: Color, Status, Payment, Spacing, Typography, Radius, Icon Size, Touch Target, Motion, Opacity, Skeleton, Elevation, Z-Index.
 2. No raw hex/RGB colors or arbitrary dp values in any feature component.
 3. Motion durations MUST use named token constants from the theme module.
-4. CI MUST fail when the theme module references an unknown token or a required Light/Dark pair is incomplete.
+4. **AUDIT CHECK (not a repair action):** Verify whether CI is configured to fail when the theme module references an unknown token. If no such CI check exists, classify as `FAIL — CI_TOKEN_VALIDATION_MISSING`.
 
 ---
 
@@ -2432,9 +2494,11 @@ Do not invent backend requirements absent from supplied rules.
 
 ---
 
-# 47A. FRONTEND-FIRST REVERSE ENGINEERING (MANDATORY FOR BACKEND AUDIT)
+# 47A. FRONTEND-FIRST REVERSE ENGINEERING (FOR BACKEND AUDIT)
 
 Agar AUDIT TARGET `BACKEND` hai, aur supplied scope me Frontend files (UI, Actions, API clients) maujood hain, toh direct Backend code read karna start mat karo.
+
+**IF FRONTEND FILES ARE SUPPLIED:**
 
 STAGE 1: Pehle Frontend ko reverse-engineer karo.
 - Extract exact UI requirements, form validations, aur API network payloads.
@@ -2442,6 +2506,14 @@ STAGE 1: Pehle Frontend ko reverse-engineer karo.
 - Is extracted Frontend-baseline ko apna "Source of Truth" banao.
 
 STAGE 2: Ab is frontend baseline (contract) ke against backend ko audit karo. Check karo ki backend exactly un requirements ko meet kar raha hai ya nahi.
+
+**IF FRONTEND FILES ARE NOT SUPPLIED (Pure Backend audit from specs/API docs only):**
+
+STAGE 1: Extract requirements from supplied API specs, feature documents, or domain contracts.
+- Use supplied Swagger/OpenAPI, Postman collections, feature requirement documents, or architecture docs as the baseline.
+- If no such documents exist, derive the expected API shape from backend architecture rules.
+
+STAGE 2: Audit the backend against this derived baseline. Mark all unverifiable contract requirements as `BLOCKED_BY_SUPPLIED_SCOPE` if no frontend or API spec was supplied.
 
 ---
 
@@ -2773,6 +2845,31 @@ Every `_features.md` file MUST contain ALL 9 of these sections. Missing even one
 [ ] Lists concrete, module-specific forbidden patterns (not just generic advice)
 [ ] Forbidden patterns are specific enough for an AI to avoid them
 [ ] Not a copy-paste of generic documentation
+```
+
+### MANDATORY BACKEND DOCUMENTATION (NestJS and Django)
+
+For every backend feature module, verify that the following documentation artifacts exist:
+
+```text
+[ ] Module-level README.md or equivalent module documentation file
+    — Must describe: purpose, role/namespace, owned endpoints, dependencies
+[ ] Each Service / Use Case MUST have inline JSDoc / Python docstring:
+    — Method purpose, expected inputs, expected outputs, thrown exceptions
+[ ] Each DTO / Serializer MUST have inline documentation:
+    — Field descriptions, validation constraints, allowed values
+[ ] Each Job / Celery Task MUST document:
+    — Trigger condition, payload shape, retry behavior, failure behavior
+[ ] Each Domain Event / Redis Stream consumer MUST document:
+    — Event name (from event-registry), payload shape, idempotency guarantee
+```
+
+**BACKEND DOCUMENTATION QUALITY CHECKS:**
+```text
+[ ] No JSDoc/docstring says only "TODO" or "..." — concrete descriptions required
+[ ] Endpoint docs match the actual implementation (not copy-paste boilerplate)
+[ ] Exception types documented match what is actually thrown
+[ ] No documentation contradicts the actual code behavior (AUDIT_DRIFT)
 ```
 
 ### General Documentation Quality
@@ -3263,10 +3360,15 @@ HIGH | MEDIUM | LOW
 [canonical owner / data source / state source / API contract when applicable]
 
 **Dependencies**:
-- Upstream:
-- Downstream:
-- Consumers:
-- Blocking:
+- Upstream: [proven upstream dependency OR "NONE IDENTIFIED — verify before repair"]
+- Downstream: [proven downstream impact OR "NONE IDENTIFIED — verify before repair"]
+- Consumers: [proven consumers OR "NONE IDENTIFIED"]
+- Blocking: [issues this blocks OR "NONE"]
+
+> **DEPENDENCY FIELD RULE:** Do NOT leave these blank. Do NOT invent fictional dependencies.
+> If no proven dependency chain exists from the inspected evidence, write the exact phrase:
+> `NONE IDENTIFIED — verify before repair`
+> This signals the Repair AI to investigate dependencies before making changes.
 
 **Blast radius**:
 [LOCAL | MODULE | CROSS-MODULE | SYSTEM-WIDE]
@@ -3455,11 +3557,21 @@ Do not invent invariants.
 
 Dhyan rahe, agar supplied scope me specialized Role Module documents hain (e.g., `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR` ya `BACKEND_ROLE_MODULE...`), toh unme define kiya gaya reporting structure aur scoring format (jaise "BEFORE REPAIR SCORE: X/10" aur "CATEGORY SCORECARD") sabse zyada authoritative hai.
 
-> **CORRECTION NOTE (GAP-19 Fix):** Is document  me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
+> **CORRECTION NOTE (GAP-19 Fix):** Is document me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
 
 Aise cases me:
-- Is document  ka generalized 1.0–10.0 numeric rating system aur projected rating formula override ho jaata hai — specialized document ka rating format use karo.
+- Is document ka generalized 1.0–10.0 numeric rating system aur projected rating formula override ho jaata hai — specialized document ka rating format use karo.
 - Strictly us specialized document ke "EXACT REPORT STRUCTURE" ko follow karo.
+
+> **CONFLICT RESOLUTION WITH SECTION 76 (MANDATORY TOP-OF-REPORT RATING BLOCK):**
+> Section 76 mandates a specific rating block format within the first 30 lines of the report.
+> If the specialized document also mandates a top-of-report rating block in a DIFFERENT format, apply this protocol:
+> 1. Use the SPECIALIZED document's rating block format as the PRIMARY block.
+> 2. Immediately below it, include a COMPATIBILITY BLOCK using the Section 76 format.
+> 3. Both blocks must contain consistent numerical values.
+> 4. Label the specialized block: `[SOURCE: {specialized_document_name}]`
+> 5. Label the compatibility block: `[SOURCE: FORENSIC-AUDITOR-V6.3 Section 76]`
+> If only one block format is appropriate (the specialized document IS the section 76 equivalent), use that one and note: `SECTION 76 SATISFIED BY SPECIALIZED FORMAT`.
 
 
 ---
@@ -4253,9 +4365,9 @@ Do not publish the unsupported conclusion.
 
 The audit is complete only when ALL of the following are true:
 
-### BATCH EXECUTION GATE (New in V6.1 — MUST be verified first)
+### BATCH EXECUTION GATE (New in V6.3 — MUST be verified first)
 ```text
-[ ] Phase 1 Discovery was completed and Audit Chunk Map was published before any code inspection began
+[ ] Phase 1 Combined Discovery+Target-Resolution scan was completed before any code inspection began
 [ ] User approved the Chunk Map before Batch 1 started
 [ ] ALL batches in the Chunk Map have been completed (none skipped, none merged shallowly)
 [ ] Every batch ended with the mandatory Section 13C Checkpoint Template
@@ -4263,12 +4375,13 @@ The audit is complete only when ALL of the following are true:
 [ ] No module was half-audited — every module received full zero-sampling treatment
 [ ] Final 15-section report was generated ONLY after all batches were complete and checkpointed
 [ ] Issue counts in final report match cumulative running totals from the tracker
+[ ] Any retroactive PASS revisions from later batches are documented in the Coverage Ledger
 ```
 
 ### AUDIT QUALITY GATE
 ```text
-[ ] Correct stack identified
-[ ] Framework identified
+[ ] Correct stack identified from actual project scan (not assumed from memory)
+[ ] Framework identified from actual config files (not assumed)
 [ ] Exact target established
 [ ] Scope locked
 [ ] Source integrity checked
@@ -4278,14 +4391,15 @@ The audit is complete only when ALL of the following are true:
 [ ] All relevant authored files inspected
 [ ] Skipped files documented
 [ ] Complete rules extracted
-[ ] Compound rules decomposed into atomic units where necessary
+[ ] Compound rules decomposed into atomic units (within depth cap)
+[ ] Late-discovered rules tagged and added to ledger
 [ ] All applicable rules have status
 [ ] Cross-stack false positives avoided
 [ ] Source conflicts identified
 [ ] Module ownership checked
 [ ] Duplication checked
 [ ] Isolation checked
-[ ] File-size rules checked
+[ ] File-size rules checked (correct stack ceiling used — Web vs Mobile differ)
 [ ] Contract chains traced
 [ ] Functional closure checked
 [ ] Dead/no-op/disconnected flows checked
@@ -4304,24 +4418,38 @@ The audit is complete only when ALL of the following are true:
 [ ] Visual evidence types separated
 [ ] Accessibility checked when applicable
 [ ] Backend architecture checked when applicable
+[ ] — Modular Monolith Isolation Check done (no .forRoot() in feature modules)
+[ ] — Orchestrator-owns-transactions check done
+[ ] — Redis Responsibility Segregation checked
+[ ] — Event Registry pattern checked (NestJS)
+[ ] — Django: no independent DB connections in feature apps
+[ ] Mobile-specific checks applied when stack is React Native
+[ ] — Mobile: AsyncStorage-for-tokens check done (CRITICAL security)
+[ ] — Mobile: react-native-reanimated vs legacy Animated API check done
+[ ] — Mobile: FlatList / flash-list for large lists check done
+[ ] — Mobile: Query Key Registry per feature check done
+[ ] — Mobile: Screens not calling useMutation() directly check done
+[ ] — Maestro E2E structure verified (mobile_e2e/ + WET principle)
 [ ] Security checked when applicable
 [ ] Data/transaction/concurrency checked when applicable
 [ ] Jobs/events checked when applicable
 [ ] Async contract chain checked when applicable
 [ ] Tests checked for behavioral integrity
 [ ] Mocks/fixtures checked
-[ ] Documentation checked
+[ ] Documentation checked (all 3 frontend files + backend inline docs)
 [ ] Previous audit reconciled when supplied
 [ ] Evidence provenance checked
 [ ] Static/runtime evidence separated
 [ ] No fabricated evidence
 [ ] No fabricated PASS
 [ ] No fabricated FAIL
+[ ] MISSING used only when entire feature scope was inspected (not partial)
+[ ] NOT_VERIFIED used for partial-scope absences
 [ ] Severity assigned
 [ ] Confidence assigned
 [ ] Every issue individually documented
 [ ] Symptom/root cause distinction applied
-[ ] Repair handoff is actionable
+[ ] Repair handoff is actionable (no blank Dependency fields)
 [ ] Do-not-break invariants documented
 [ ] Ratings calculated
 [ ] Rating caps applied
@@ -4525,7 +4653,7 @@ If message limits require splitting:
 
 Every section must remain complete.
 
-## MODE C — MULTI-BATCH AUDIT IN PROGRESS (V6.1)
+## MODE C — MULTI-BATCH AUDIT IN PROGRESS (V6.3)
 
 When the audit is being executed in multiple batches (per Sections 13A/13B/13C), the following delivery rules apply:
 
@@ -4534,7 +4662,17 @@ When the audit is being executed in multiple batches (per Sections 13A/13B/13C),
 3. Batch-level findings must be formatted using the standard ISSUE-[NNN] format from Section 63 so they can be directly incorporated into the final report without re-work.
 4. When the FINAL batch is complete, output: the final batch findings + the checkpoint marked as "ALL BATCHES COMPLETE" + the complete 15-section DEEP-VERIFICATION-REPORT.md that reconciles ALL batches.
 5. The final report's Coverage Ledger (Section 14) and Issue Log (Section 9) MUST include findings from all batches, not just the last one.
-6. If the user starts a new conversation to continue the audit, they must supply the AUDIT_PROGRESS_TRACKER.md from the previous session. Without it, the AI MUST declare `CONTEXT_LOST — TRACKER_NOT_SUPPLIED` and re-run from the last confirmed complete batch.
+6. If the user starts a new conversation to continue the audit, they must supply the AUDIT_PROGRESS_TRACKER.md from the previous session. Without it, the AI MUST declare `CONTEXT_LOST — TRACKER_NOT_SUPPLIED` and restart from Batch 1 of the original Chunk Map (not from a guessed intermediate batch).
+
+### RETROACTIVE PASS REVISION PROTOCOL
+
+If a LATER batch discovers evidence that a PRIOR batch's PASS verdict was incorrect (e.g., batch 5 reveals that a contract used in batch 2's feature is broken):
+
+1. Document the revision in the current batch's findings as: `RETROACTIVE_REVISION: [Rule ID] — Prior PASS from Batch [N] is being revised to [new status]`.
+2. Provide the new evidence that invalidates the prior PASS.
+3. Update the AUDIT_PROGRESS_TRACKER.md's Rules Verified section to reflect the revision.
+4. The final report's Coverage Ledger MUST reconcile the total PASS count after all retroactive revisions.
+5. Do NOT leave a fabricated PASS in the final report because it came from an early batch.
 
 ---
 
@@ -4593,19 +4731,44 @@ The auditor must never silently turn incomplete evidence into a complete verdict
 
 # 85. MANDATORY COGNITIVE SCRATCHPAD (CHAIN OF THOUGHT ENFORCEMENT)
 
-To guarantee zero hallucination, the AI MUST output a cognitive scratchpad block BEFORE generating the final 15-section report. 
+> **⚠️ CRITICAL ANTI-HALLUCINATION RULE FOR SCRATCHPAD:**
+> The scratchpad MUST only reference rules and evidence from files that have been ACTUALLY INSPECTED in this audit session.
+> Do NOT list rules from memory or from general knowledge of architecture documents you have not read.
+> Do NOT write file paths you have not actually opened and read.
+> Do NOT quote code you have not actually seen.
+> The scratchpad is a VERIFICATION tool, not a planning tool. It comes AFTER inspection, not before.
 
-You must wrap your pre-computation reasoning in XML tags: `<forensic_scratchpad> ... </forensic_scratchpad>`.
+## PER-BATCH SCRATCHPAD (Required at end of EVERY batch)
 
-Inside the scratchpad, you MUST:
-1. List every single rule from the supplied Architecture/Design documents.
-2. For each rule, explicitly write out the absolute file path where you searched for evidence.
-3. Explicitly quote the exact code string you found (or write "NOT FOUND").
-4. Explicitly reason whether this constitutes a PASS, FAIL, or NOT_VERIFIED.
-5. Identify any "Devil's Advocate" counter-arguments (e.g., "Wait, I marked this FAIL, but is it possible the logic is inside a custom hook? Let me check `useAdminMembers.ts` first").
+After completing the zero-sampling inspection of all files in the current batch, but BEFORE writing the batch's ISSUE-[NNN] findings, you MUST output a scratchpad block:
 
-Only AFTER closing the `</forensic_scratchpad>` tag are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
+You must wrap your reasoning in XML tags: `<forensic_scratchpad_batch_[N]> ... </forensic_scratchpad_batch_[N]>` (where N = current batch number).
+
+Inside each batch scratchpad, you MUST:
+1. List the files you ACTUALLY inspected in this batch (exact paths from actual tool calls).
+2. For each applicable rule from the supplied architecture docs, write:
+   - The rule ID and source
+   - The exact file + code snippet (or "NOT FOUND IN INSPECTED FILES")
+   - Your PASS / FAIL / PARTIAL / NOT_VERIFIED conclusion
+   - Your Devil's Advocate check: "Wait, could I be wrong about this because...?"
+3. List any Late-Discovered rules found during this batch.
+4. List any retroactive revisions to prior PASS verdicts.
+
+## PRE-FINAL-REPORT SCRATCHPAD (Required before Section 1 of the final 15-section report)
+
+After ALL batches complete, before generating `## SECTION 1 — RATINGS BLOCK`, output a final reconciliation scratchpad:
+
+Wrap in: `<forensic_scratchpad_final> ... </forensic_scratchpad_final>`
+
+Inside the final scratchpad, you MUST:
+1. Confirm that all batch trackers have been read and accumulated.
+2. List the total rules found, total PASS/FAIL/PARTIAL counts.
+3. Identify any rules that appear in MULTIPLE batches (and confirm the status is consistent).
+4. Confirm the running issue count from the tracker matches the issues in the final report.
+5. Final Devil's Advocate check: "Is there any PASS I gave that I am not 100% confident about? Should it be NOT_VERIFIED instead?"
+
+Only AFTER closing `</forensic_scratchpad_final>` are you allowed to begin generating `## SECTION 1 — RATINGS BLOCK`.
 
 This Chain of Thought mechanism is CRITICAL and NON-NEGOTIABLE for a "Great Audit".
 
-# END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V6.2
+# END OF FORENSIC FRONTEND BACKEND ARCHITECTURE RULES AUDITOR FROM ZIP V6.3
