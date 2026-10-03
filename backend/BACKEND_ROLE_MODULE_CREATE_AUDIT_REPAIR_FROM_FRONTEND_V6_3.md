@@ -430,7 +430,7 @@ If INPUT 4 is absent:
 
 - existing external API E2E/Selenium suite audit status = `BLOCKED_BY_SUPPLIED_SCOPE`;
 - the AI MUST NOT claim that the missing external suite was inspected;
-- Stage 3 MAY generate the required API E2E and Selenium files;
+- Stage 3 MUST generate the required API E2E and Selenium files (MANDATORY);
 - generated tests are deliverables, not proof that a previously existing external suite was audited.
 A ZIP containing the exact mirrored E2E/Selenium test folder for the requested domain (e.g., `backend-e2e/backend-admin-e2e/admin-members`). 
 
@@ -2762,7 +2762,7 @@ After all creation units are complete:
 2. perform complete final re-audit;
 3. repair remaining issues;
 4. generate final documentation;
-5. generate API E2E/Selenium deliverables;
+5. generate comprehensive API E2E and Selenium deliverables (MANDATORY);
 6. generate `RE_AUDIT_CHECKLIST_RESULT.md`;
 7. only then create `backend-{role}-v1.zip`.
 
@@ -2807,7 +2807,7 @@ After repairs:
 1. perform complete final re-audit;
 2. verify every applicable rule;
 3. verify frontend-derived requirements;
-4. verify API E2E/Selenium requirements;
+4. generate comprehensive API E2E and Selenium deliverables (MANDATORY);
 5. generate final documentation;
 6. only then package `backend-{role}-v{N}-fix.zip`.
 
@@ -5218,7 +5218,7 @@ Verify:
 
 ## RULE 16 — MODULE-LEVEL API COLLECTION
 
-For every finalized module verify presence and consistency of its Postman/Insomnia collection where required.
+For every finalized module verify presence and consistency of its Postman/Insomnia collection (MANDATORY).
 
 Check:
 
