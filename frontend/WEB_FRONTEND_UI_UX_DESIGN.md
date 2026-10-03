@@ -987,12 +987,13 @@ Usage pattern:
 The project uses `next-intl` for internationalization.
 
 ### Locale File Location
+Per Architecture Rule 18, locales MUST be co-located inside the feature module, NEVER in a central `src/messages/` or `src/locales/` directory.
+
 ```text
-src/
-└── messages/
-    ├── en.json          ← English (default)
-    ├── hi.json          ← Hindi (optional)
-    └── [locale].json    ← Pattern for future locales
+src/app/(admin)/admin-members/_locales/
+    ├── admin_members_en.json    ← English (default)
+    ├── admin_members_hi.json    ← Hindi (optional)
+    └── [moduleName]_[lang].json ← Pattern for future locales
 ```
 
 ### Feature Translation Key Naming
