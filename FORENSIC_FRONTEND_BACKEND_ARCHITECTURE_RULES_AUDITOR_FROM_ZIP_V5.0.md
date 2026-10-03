@@ -1654,7 +1654,7 @@ The auditor MUST strictly verify the Canonical Naming Rules based on the supplie
 4. Files MUST use `PascalCase` or `camelCase` with `{Role}{Module}` prefix (e.g., `AdminMembersTable.tsx`).
 5. Locale files MUST be named `[moduleName]_{lang}.json` and live in `[moduleName]_locales/`.
 6. URL Config files MUST export a `MODULE_URLS` object with UPPER_SNAKE_CASE keys.
-7. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 9 mandatory sections (Purpose, Routes, State Map, API Contract, Permission Matrix, Edge Cases, Error Behavior, Forbidden Patterns, Test Checklist).
+7. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 18 mandatory sections (Purpose, Dependency Manifest, Feature Lifecycle Contract, Screens & Entry Points, Folder Structure, User Flows & Interactions, Data & State Architecture, API Contract, Approved External Dependencies, Permissions Used, Platform-Specific Notes, Offline Behavior, Loading/Empty/Error States, Background Tasks, Edge Cases and AI Warnings, Component Responsibility Map, Rule Compliance Checklist, Known Issues / Tech Debt).
 
 **If MOBILE FRONTEND (React Native) is in scope:**
 8. Child folders use flat naming inside feature folder (e.g., `components/`, `hooks/`, `screens/`, `api/`, `config/`, `state/`, `types/`, `schemas/`, `tests/`).
@@ -1662,7 +1662,7 @@ The auditor MUST strictly verify the Canonical Naming Rules based on the supplie
 10. Hook files MUST use camelCase with `use` prefix + feature name (e.g., `useMembers.ts`).
 11. API/types/schema/store/config files MUST use dot-notation (e.g., `members.api.ts`, `members.types.ts`).
 12. URL config lives in `config/` sub-folder (e.g., `members.url_config.ts`).
-13. Query key registry MUST exist per feature (e.g., `members.query_keys.ts`).
+13. Query key registry MUST exist per feature inside `api/` or `config/` (e.g., `members.query_keys.ts`).
 
 **If BACKEND (NestJS) is in scope:**
 
@@ -2232,6 +2232,9 @@ If the target is Mobile (React Native), inspect ALL of the following where appli
 - Any list rendering more than ~20 items MUST use `FlatList` or `@shopify/flash-list` — NEVER a naively-mapped `ScrollView` wrapping JSX
 - List item components MUST be render-stable (`React.memo` or `useMemo`)
 
+### Charts & Data Visualization
+- Canonical chart library `react-native-gifted-charts` is used — NEVER a web-only DOM/SVG chart library.
+
 ### Haptic Feedback (Premium UX — Check if Implemented)
 - Critical state changes (switch toggle) → light impact haptic
 - Successful mutations (save form, process payment) → success notification haptic
@@ -2244,6 +2247,7 @@ If the target is Mobile (React Native), inspect ALL of the following where appli
 - Generic keys like `['members']` or `['profile']` are forbidden
 - Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateMember.ts`)
 - Screens MUST NOT call `useMutation()` directly
+- `onSuccess` inside `useMutation()` is BANNED — use `.mutateAsync().then()` or global `mutationCache` instead
 - Server state (API data) MUST use TanStack Query — NOT duplicated into a Zustand store
 - Shared client UI state MUST use feature-scoped Zustand stores — NOT one global store
 
@@ -2251,6 +2255,7 @@ If the target is Mobile (React Native), inspect ALL of the following where appli
 - Camera, Location, Storage, Notifications, Biometrics — ALL must go through ONE central permissions module
 - No feature screen calls native permission APIs directly
 - New native dependencies MUST support React Native New Architecture (Fabric/TurboModules)
+- E2E tests MUST use Maestro (YAML-based) as the test tool in the `mobile_e2e/` directory (Section 51C)
 
 Do NOT apply Web/DOM rules to React Native code.
 
@@ -2404,7 +2409,7 @@ Aesthetic preference is not a documented rule.
 
 **If MOBILE FRONTEND (React Native) is in scope**, verify token compliance per `MOBILE_UI_UX_DESIGN.md`:
 
-1. The React Native theme module MUST implement ALL token categories: Color, Status, Payment, Spacing, Typography, Radius, Icon Size, Touch Target, Motion, Opacity, Skeleton, Elevation, Z-Index.
+1. The React Native theme module MUST implement ALL token categories: Color, Status, Payment, Spacing, Typography, Radius, Layout tokens (Section 5A), Icon size tokens (Section 5B), Touch Target, Motion, Opacity, Skeleton, Elevation, Z-Index.
 2. No raw hex/RGB colors or arbitrary dp values in any feature component.
 3. Motion durations MUST use named token constants from the theme module.
 4. **AUDIT CHECK (not a repair action):** Verify whether CI is configured to fail when the theme module references an unknown token. If no such CI check exists, classify as `FAIL — CI_TOKEN_VALIDATION_MISSING`.
@@ -2908,19 +2913,24 @@ Do not label a mock incorrect without evidence of contract mismatch or explicit 
 Where documentation is mandatory, inspect:
 
 ```text
-module purpose
-ownership
-architecture
-flows
-dependencies
-API
-state
-permissions
-edge cases
-forbidden patterns
-theme contract
-test instructions
-error behavior
+Purpose
+Dependency Manifest
+Feature Lifecycle Contract
+Screens & Entry Points
+Folder Structure
+User Flows & Interactions
+Data & State Architecture
+API Contract
+Approved External Dependencies
+Permissions Used
+Platform-Specific Notes
+Offline Behavior
+Loading/Empty/Error States
+Background Tasks
+Edge Cases and AI Warnings
+Component Responsibility Map
+Rule Compliance Checklist
+Known Issues / Tech Debt
 ```
 
 Do not PASS documentation merely because a file exists.
@@ -3653,7 +3663,7 @@ Do not invent invariants.
 
 Dhyan rahe, agar supplied scope me specialized Role Module documents hain (e.g., `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR` ya `BACKEND_ROLE_MODULE...`), toh unme define kiya gaya reporting structure aur scoring format (jaise "BEFORE REPAIR SCORE: X/10" aur "CATEGORY SCORECARD") sabse zyada authoritative hai.
 
-> **CORRECTION NOTE (GAP-19 Fix):** Is document me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
+> **CORRECTION NOTE:** Is document me ek 1.0–10.0 NUMERIC rating system hai, koi A-to-F system nahi hai. Neeche diya gaya override rule isi numeric system ke baare me hai.
 
 Aise cases me:
 - Is document ka generalized 1.0–10.0 numeric rating system aur projected rating formula override ho jaata hai — specialized document ka rating format use karo.
@@ -4537,6 +4547,7 @@ The audit is complete only when ALL of the following are true:
 [ ] — Mobile: FlatList / flash-list for large lists check done
 [ ] — Mobile: Query Key Registry per feature check done
 [ ] — Mobile: Screens not calling useMutation() directly check done
+[ ] — Mobile: onSuccess inside useMutation() banned — .mutateAsync().then() or global mutationCache used instead
 [ ] — Maestro E2E structure verified (mobile_e2e/ + WET principle)
 [ ] Security checked when applicable
 [ ] Data/transaction/concurrency checked when applicable
@@ -4628,7 +4639,7 @@ The audit is complete only when ALL of the following are true:
 
 ---
 
-# 82. LANGUAGE RULE (Clarified Scope - GAP 25 Fix)
+# 82. LANGUAGE RULE (Clarified Scope)
 
 Narrative (WHY / Analytical explanations):
 
@@ -4662,7 +4673,7 @@ English
 
 NEVER use Devanagari.
 
-### Language Scope Clarification (GAP-25 Fix)
+### Language Scope Clarification
 
 To prevent AI from generating machine-unparseable output, the following precise scope applies:
 
