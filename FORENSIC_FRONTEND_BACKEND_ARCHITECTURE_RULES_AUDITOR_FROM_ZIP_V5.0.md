@@ -434,15 +434,15 @@ Resolve the audit target in this order:
 AUDIT TARGET: UNKNOWN
 ```
 
-5. If framework/stack evidence is insufficient to distinguish the target, set:
+6. If framework/stack evidence is insufficient to distinguish the target, set:
 
 ```text
 AUDIT TARGET: UNKNOWN
 ```
 
-6. Never select a target merely because one stack has more files.
-7. Never select a target based on personal expectation.
-8. Opposite-stack inspection is permitted only for necessary boundary/contract verification.
+7. Never select a target merely because one stack has more files.
+8. Never select a target based on personal expectation.
+9. Opposite-stack inspection is permitted only for necessary boundary/contract verification.
 
 If:
 
@@ -786,7 +786,7 @@ The Audit Chunk Map MUST use exactly this format:
 
 ```text
 ╔══════════════════════════════════════════════════════════╗
-║           FORENSIC AUDIT — CHUNK MAP V6.1                ║
+║           FORENSIC AUDIT — CHUNK MAP V6.3                ║
 ╚══════════════════════════════════════════════════════════╝
 
 STACK DETECTED:    [FRONTEND | BACKEND | BOTH | UNKNOWN]
@@ -1125,6 +1125,7 @@ NOT_APPLICABLE_TO_STACK
 OUTSIDE_TARGET_SCOPE
 BLOCKED_BY_SUPPLIED_SCOPE
 SOURCE_CONFLICT
+EVIDENCE_CONFLICT
 ```
 
 Every non-PASS result must explain why.
@@ -2769,7 +2770,7 @@ Do not label an implementation insecure merely because a preferred security mech
 
 # 50A. MULTI-TENANCY STRICT ENFORCEMENT AUDIT
 
-The Smart Gym application is multi-tenant. The auditor MUST verify tenant isolation based on the supplied scope.
+If the supplied architecture defines a multi-tenant application (e.g., Smart Gym), the auditor MUST verify tenant isolation based on the supplied scope.
 
 **If BACKEND is in scope, verify:**
 1. `gymId` and `branchId` are extracted strictly from the **JWT/Auth context** — NEVER from:
@@ -4020,7 +4021,7 @@ Mandatory block from Section 76.
 
 ## SECTION 2 — EXECUTIVE SUMMARY
 
-Maximum 20 lines.
+Maximum 30 lines.
 
 Include:
 
@@ -4762,6 +4763,8 @@ Every section must remain complete.
 
 ## MODE C — MULTI-BATCH AUDIT IN PROGRESS (V6.3)
 
+*(Note: Mode C ONLY applies when a multi-batch execution is in progress per Sections 13A–13C. If the entire repository is small enough for a single-turn audit, ignore this mode and output the final report immediately).*
+
 When the audit is being executed in multiple batches (per Sections 13A/13B/13C), the following delivery rules apply:
 
 1. Do NOT generate the final 15-section DEEP-VERIFICATION-REPORT.md until ALL batches from the Chunk Map are complete.
@@ -4835,8 +4838,6 @@ The auditor must preserve valid implementation rather than unnecessarily directi
 The auditor must never silently turn incomplete evidence into a complete verdict.
 
 ---
-
-# 85. MANDATORY COGNITIVE SCRATCHPAD (CHAIN OF THOUGHT ENFORCEMENT)
 
 # 85. MANDATORY VERIFICATION LEDGER (EVIDENCE RECONCILIATION LOG)
 
