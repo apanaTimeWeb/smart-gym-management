@@ -1357,6 +1357,55 @@ Do not invent a commit hash, timestamp, environment version, or execution result
 
 ---
 
+# 23A. STRICT FORENSIC ANTI-HALLUCINATION GATES
+
+To ensure absolute forensic integrity, the following gates MUST be applied to all evidence processing:
+
+## 1. RULE_CONFLICT_INTERNAL
+If two rules from the SAME supplied architecture document conflict:
+- report `RULE_CONFLICT_INTERNAL`
+- cite both rule locations
+- do not invent a merged interpretation
+- do not choose the stricter rule automatically
+- do not choose the newer-looking rule automatically
+
+## 2. FILE_EXISTENCE RULE (No Implied File Existence)
+A required file is NOT considered present unless:
+- the file was actually discovered in the filesystem
+- the file path was actually inspected
+Architecture expectation alone is NEVER evidence. Expected-by-architecture ≠ Present.
+
+## 3. DIRECTORY EXISTENCE RULE
+Folder existence, naming compliance, and ownership may only be concluded from observed filesystem evidence. Do not infer folders from import paths, documentation references, or expected architecture structure.
+
+## 4. IMPORT INFERENCE RULE
+An import statement (e.g., `import { X } from '@/abc'`) is evidence that the source references a path. It is NOT evidence that:
+- the target file exists
+- the target file is readable
+- the target file was supplied
+- the target implementation is compliant
+
+## 5. COUNT INTEGRITY RULE
+Never invent file counts, rule counts, issue counts, module counts, or coverage percentages. If exact counting is not provable from your internal state tracker, `COUNT_NOT_VERIFIED` MUST be used.
+
+## 6. COVERAGE CLAIM GATE
+Before claiming `COMPLETE COVERAGE`, `ZERO SAMPLING`, or `EXHAUSTIVE AUDIT` in any report, the auditor must prove:
+1. total relevant files identified
+2. total relevant files inspected
+3. skipped files ledger is empty
+Otherwise, you MUST report `PARTIAL COVERAGE`.
+
+## 7. READ VERIFICATION RULE
+If a file's content was not directly read during this execution, any rule depending on that file MUST be marked `NOT_VERIFIED`. Inference is prohibited.
+
+## 8. MEMORY RELIABILITY RULE
+Conversation memory is NOT evidence. Only supplied files, supplied reports, discovered source code, and runtime evidence may be used as audit evidence. Do not carry unverified assumptions across batches.
+
+## 9. CURRENT REALITY RULE
+Implementation reality and Architecture expectation MUST always be reported separately. `Expected-by-Architecture` ≠ `Currently Implemented`.
+
+---
+
 # 24. FEATURE / MODULE BOUNDARY AUDIT
 
 Determine:
@@ -3166,64 +3215,31 @@ The confidence level does not override rule statuses.
 
 ---
 
-# 60. SEVERITY MODEL
+# 60. SEVERITY CALIBRATION
 
-Use:
+Do not inflate severity. Base it strictly on these explicit thresholds:
 
-```text
-P0 — Critical / Production Blocker
-P1 — Major
-P2 — Moderate
-P3 — Minor
-```
+## P0 (Critical / Production Blocker)
+- security breach
+- tenant leak or isolation failure
+- data loss / data corruption
+- auth bypass / severe access control violation
 
-## P0
-
-Only when evidence demonstrates severe impact such as:
-
-- critical security failure
-- tenant isolation failure
-- severe data corruption/loss
-- mission-critical transaction failure
-- catastrophic production blocker
-- severe cross-resource or cross-tenant exposure
-
-## P1
-
-Material:
-
-- functional failure
-- architecture violation
+## P1 (Major)
 - contract violation
-- data problem
-- security problem
-- serious state/flow problem
-- major source-of-truth corruption
-- serious broken integration
+- broken functional feature
+- architecture breach (violates mandatory core rule)
 
-## P2
+## P2 (Moderate)
+- maintainability issues
+- naming convention violations
+- module ownership / boundary violations
+- missing test coverage
 
-Important but non-critical:
-
-- testing gap
-- design-system violation
-- incomplete error/loading behavior
-- moderate architecture issue
-- documentation issue with meaningful impact
-- moderate UX/accessibility gap
-- maintainability issue affecting repair safety
-
-## P3
-
-Low-impact:
-
-- naming
-- comments
-- polish
-- low-risk maintainability issue
-- minor consistency defect
-
-Do not inflate severity.
+## P3 (Minor)
+- documentation missing/incorrect
+- cosmetic UI/UX flaws
+- low-risk improvements
 
 Severity must be evidence-based.
 
@@ -4015,8 +4031,8 @@ CONVERSION LIMITATIONS
 Use:
 
 ```text
-| Rule ID | Source | Section | Requirement | Applicability | Status | Evidence | Evidence Type | Issue IDs |
-|---|---|---|---|---|---|---|---|---|
+| Rule ID | Requirement | Applicable (Y/N) | Reason | Status | Evidence | Issue IDs |
+|---|---|---|---|---|---|---|
 ```
 
 Every applicable source rule must appear.
