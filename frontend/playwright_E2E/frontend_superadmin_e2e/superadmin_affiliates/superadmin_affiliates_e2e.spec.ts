@@ -8,6 +8,9 @@ test.describe('superadmin_affiliates critical frontend journey', () => {
     await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
     
     // The page should not show a Next.js error overlay
+    if (await page.locator('nextjs-portal').count() > 0) {
+      console.log('PORTAL ERROR:', await page.locator('nextjs-portal').innerText());
+    }
     await expect(page.locator('nextjs-portal')).toHaveCount(0);
     
     // The page should have rendered successfully (not a 404, not an unhandled exception)
