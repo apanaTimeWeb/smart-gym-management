@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminDashboardDateFilterDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Pure View component for the Dashboard date filter dropdown, consuming its local hook.
 import { useTranslations } from 'next-intl';

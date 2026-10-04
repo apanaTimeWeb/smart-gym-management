@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesReleaseNotesPanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the feature-owned release-note history and publication form using parent-owned form state and mutation handlers.
 import { Loader2, Send } from 'lucide-react';

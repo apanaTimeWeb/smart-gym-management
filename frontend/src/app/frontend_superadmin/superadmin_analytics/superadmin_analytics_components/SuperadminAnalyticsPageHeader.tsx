@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsPageHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the analytics page heading and feature-owned date-range control.
 import { useTranslations } from 'next-intl';

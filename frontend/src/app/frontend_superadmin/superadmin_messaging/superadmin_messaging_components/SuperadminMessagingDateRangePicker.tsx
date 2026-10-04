@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingDateRangePicker within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the SuperadminMessagingDateRangePicker control; date calculation and state are isolated in the adjacent hook/utility.
 import { Calendar } from 'lucide-react';

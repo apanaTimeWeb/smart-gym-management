@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminUsageMetersMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminUsageMetersMain. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
 /**

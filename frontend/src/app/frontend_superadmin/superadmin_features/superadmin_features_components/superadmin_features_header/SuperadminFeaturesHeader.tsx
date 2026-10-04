@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Product Management heading and feature-owned tab navigation without owning business state or mutations.
 import { useTranslations } from 'next-intl';

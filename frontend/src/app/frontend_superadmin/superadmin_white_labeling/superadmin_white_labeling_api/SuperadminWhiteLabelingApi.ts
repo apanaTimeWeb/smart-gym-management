@@ -10,7 +10,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns HTTP transport and runtime response validation for the Superadmin White-labeling feature.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_url_config';
+import { SUPERADMIN_WHITE_LABELING_API } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_url_config';
 
 import type { SuperadminWhiteLabelingStatusFilter } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_constants/SuperadminWhiteLabelingConstants';
 import type { UpdateDomainStatusDto, UpdateDomainStatusResponse, WhiteLabelDomainsListResponse } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_types/SuperadminWhiteLabelingTypes';
@@ -23,12 +23,12 @@ export const SuperadminWhiteLabelingApi = {
     if (params.search) query.set('search', params.search);
     if (params.status !== 'all') query.set('status', params.status);
     const suffix = query.toString() ? `?${query.toString()}` : '';
-    return apiFetch<WhiteLabelDomainsListResponse>(`${MODULE_URLS.BACKEND_API.DOMAINS}${suffix}`, {
+    return apiFetch<WhiteLabelDomainsListResponse>(`${SUPERADMIN_WHITE_LABELING_API.DOMAINS}${suffix}`, {
       method: 'GET',
       dataSchema: WhiteLabelDomainsDataSchema,
     });
   },
-  updateDomainStatus: async (id: string, dto: UpdateDomainStatusDto, idempotencyKey: string): Promise<UpdateDomainStatusResponse> => apiFetch<UpdateDomainStatusResponse>(MODULE_URLS.BACKEND_API.UPDATE_STATUS(id), {
+  updateDomainStatus: async (id: string, dto: UpdateDomainStatusDto, idempotencyKey: string): Promise<UpdateDomainStatusResponse> => apiFetch<UpdateDomainStatusResponse>(SUPERADMIN_WHITE_LABELING_API.UPDATE_STATUS(id), {
     method: 'PATCH',
     body: JSON.stringify(dto),
     headers: { 'Idempotency-Key': idempotencyKey },

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminGymsFormatCurrency } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminGymsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
@@ -30,6 +31,11 @@ function getPlanBadgeClasses(plan: string | undefined): string {
     const key = plan?.toUpperCase() as keyof typeof GYMS_PLAN_COLORS;
     return GYMS_PLAN_COLORS[key] ?? GYMS_PLAN_COLORS.DEFAULT;
 }
+/**
+ * @description Renders GymsTable within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminGymsTable() {
   const t = useTranslations('superadmin_gyms');
     const locale = useLocale();

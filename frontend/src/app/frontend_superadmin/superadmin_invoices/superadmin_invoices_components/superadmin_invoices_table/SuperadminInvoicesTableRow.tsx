@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminInvoicesTableRow within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import * as WhatsAppFormatter from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_utils/SuperadminInvoicesWhatsappReceiptFormatter';
 import { MessageCircle, Mail, Receipt } from 'lucide-react';
@@ -10,7 +11,7 @@ import { toast } from 'sonner';
 // RESPONSIBILITY: Renders and composes SuperadminInvoicesTableRow for the owning feature module; business logic and API transport remain in module-owned hooks/services.
 import React from 'react';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
+import { SUPERADMIN_INVOICES_EXTERNAL } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
 import { formatCurrency as SuperadminInvoicesFormatCurrency } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_utils/SuperadminInvoicesFormatCurrency';
 
 import type { SuperadminInvoicesTableRowProps } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_types/SuperadminInvoicesTableRowTypes';
@@ -53,7 +54,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
             ],
             footer: inv.status === SUPERADMIN_INVOICE_STATUS_CODES.PAID ? t('ui.whatsapp_thank_you') : t('ui.whatsapp_payment_reminder'),
         });
-        window.open(MODULE_URLS.EXTERNAL.WHATSAPP_SHARE(waText), '_blank', 'noopener,noreferrer');
+        window.open(SUPERADMIN_INVOICES_EXTERNAL.WHATSAPP_SHARE(waText), '_blank', 'noopener,noreferrer');
     };
     const handleDownload = async (e: MouseEvent) => {
         e.stopPropagation();

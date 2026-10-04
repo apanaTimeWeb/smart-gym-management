@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsExportButton within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminReportsExportButton owned by the superadmin_reports feature boundary.

@@ -7,7 +7,7 @@ import { Activity, Database, HardDrive, Server } from 'lucide-react';
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
+import { SUPERADMIN_SYSTEM_OPS_ROUTES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
 import { SuperadminSystemOpsSystemOpsFormatDateTime } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_utils/SuperadminSystemOpsSystemOpsFormatDateTime';
 
 import type { SuperadminSystemOpsDashboardCardDefinition } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_types/SuperadminSystemOpsDashboardTypes';
@@ -22,7 +22,7 @@ export const SUPERADMIN_SYSTEM_OPS_CARD_DEFINITIONS: readonly SuperadminSystemOp
     key: 'infrastructure',
     titleKey: 'ui.card_infrastructure_title',
     descriptionKey: 'ui.card_infrastructure_description',
-    href: MODULE_URLS.PAGES.INFRASTRUCTURE,
+    href: SUPERADMIN_SYSTEM_OPS_ROUTES.INFRASTRUCTURE,
     icon: Server,
     labelKey: 'ui.card_status_label',
     getLabelValues: (summary: SuperadminSystemOpsSummary, _locale: string) => ({ status: summary.infrastructureStatus }),
@@ -32,7 +32,7 @@ export const SUPERADMIN_SYSTEM_OPS_CARD_DEFINITIONS: readonly SuperadminSystemOp
     key: 'jobs',
     titleKey: 'ui.card_jobs_title',
     descriptionKey: 'ui.card_jobs_description',
-    href: MODULE_URLS.PAGES.JOBS,
+    href: SUPERADMIN_SYSTEM_OPS_ROUTES.JOBS,
     icon: Activity,
     labelKey: 'ui.card_jobs_label',
     getLabelValues: (summary: SuperadminSystemOpsSummary, _locale: string) => ({ count: summary.pendingJobs }),
@@ -42,7 +42,7 @@ export const SUPERADMIN_SYSTEM_OPS_CARD_DEFINITIONS: readonly SuperadminSystemOp
     key: 'backups',
     titleKey: 'ui.card_backups_title',
     descriptionKey: 'ui.card_backups_description',
-    href: MODULE_URLS.PAGES.BACKUPS,
+    href: SUPERADMIN_SYSTEM_OPS_ROUTES.BACKUPS,
     icon: HardDrive,
     labelKey: 'ui.card_backup_label',
     getLabelValues: (summary: SuperadminSystemOpsSummary, locale: string) => ({ lastRun: formatBackupDate(summary.lastBackupAt, locale) }),
@@ -52,7 +52,7 @@ export const SUPERADMIN_SYSTEM_OPS_CARD_DEFINITIONS: readonly SuperadminSystemOp
     key: 'migrations',
     titleKey: 'ui.card_migrations_title',
     descriptionKey: 'ui.card_migrations_description',
-    href: MODULE_URLS.PAGES.MIGRATIONS,
+    href: SUPERADMIN_SYSTEM_OPS_ROUTES.MIGRATIONS,
     icon: Database,
     labelKey: 'ui.card_status_label',
     getLabelValues: (summary: SuperadminSystemOpsSummary, _locale: string) => ({ status: summary.migrationStatus }),

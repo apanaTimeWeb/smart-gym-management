@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingMessagesTab within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import SuperadminMessagingDateRangePicker from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_components/SuperadminMessagingDateRangePicker';
 import Pagination from '@/components/ui/Pagination';

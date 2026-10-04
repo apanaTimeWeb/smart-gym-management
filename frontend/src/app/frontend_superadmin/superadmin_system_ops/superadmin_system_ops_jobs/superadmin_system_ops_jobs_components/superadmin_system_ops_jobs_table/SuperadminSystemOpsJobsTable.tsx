@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsJobsTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatDuration, formatDateTime } from '@/lib/formatters';
 import Tooltip from '@/components/ui/Tooltip';

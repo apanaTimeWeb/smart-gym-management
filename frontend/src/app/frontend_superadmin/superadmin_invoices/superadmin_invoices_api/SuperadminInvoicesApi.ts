@@ -12,7 +12,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Encapsulates functionality for superadmin_invoices_api.ts
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
+import { SUPERADMIN_INVOICES_API } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
 
 import type { CreateManualPaymentDto, SaaSInvoice, SuperadminInvoicesTenant } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_types/SuperadminInvoicesTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -21,9 +21,9 @@ import type { ApiResponse } from '@/lib/api';
 export const invoicesApi = {
     fetchInvoices: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<SaaSInvoice[]>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SaaSInvoiceSchema) });
+        return apiFetch<ApiResponse<SaaSInvoice[]>>(`${SUPERADMIN_INVOICES_API.BASE}${q}`, { dataSchema: z.array(SaaSInvoiceSchema) });
     },
-    createManualPayment: (dto: CreateManualPaymentDto, idempotencyKey: string) => apiFetch<ApiResponse<SaaSInvoice>>(MODULE_URLS.BACKEND_API.MANUAL_PAYMENT, {
+    createManualPayment: (dto: CreateManualPaymentDto, idempotencyKey: string) => apiFetch<ApiResponse<SaaSInvoice>>(SUPERADMIN_INVOICES_API.MANUAL_PAYMENT, {
         method: 'POST',
         body: JSON.stringify(dto),
         headers: { 'Idempotency-Key': idempotencyKey },
@@ -31,20 +31,20 @@ export const invoicesApi = {
     }),
     fetchInvoiceDownloadUrl: (id: string) => apiFetch<ApiResponse<{
         downloadUrl: string;
-    }>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}/download`, { dataSchema: SuperadminInvoicesDownloadResponseSchema }),
+    }>>(`${SUPERADMIN_INVOICES_API.BASE}/${id}/download`, { dataSchema: SuperadminInvoicesDownloadResponseSchema }),
     exportInvoiceReport: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
         return apiFetch<ApiResponse<{
             downloadUrl: string;
-        }>>(`${MODULE_URLS.BACKEND_API.BASE}/export${q}`, { dataSchema: SuperadminInvoicesDownloadResponseSchema });
+        }>>(`${SUPERADMIN_INVOICES_API.BASE}/export${q}`, { dataSchema: SuperadminInvoicesDownloadResponseSchema });
     },
-    resendInvoiceEmail: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}/resend`, {
+    resendInvoiceEmail: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${SUPERADMIN_INVOICES_API.BASE}/${id}/resend`, {
         method: 'POST',
         dataSchema: z.null(),
         headers: { 'Idempotency-Key': idempotencyKey }
     }),
     fetchTenants: () => {
         // Local tenant lookup to avoid cross-module business imports
-        return apiFetch<ApiResponse<SuperadminInvoicesTenant[]>>(MODULE_URLS.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminInvoicesTenantSchema) });
+        return apiFetch<ApiResponse<SuperadminInvoicesTenant[]>>(SUPERADMIN_INVOICES_API.TENANTS, { dataSchema: z.array(SuperadminInvoicesTenantSchema) });
     },
 };

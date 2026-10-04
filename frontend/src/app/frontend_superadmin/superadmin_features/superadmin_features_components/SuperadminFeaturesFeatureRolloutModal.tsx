@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesFeatureRolloutModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the SuperadminFeaturesFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary.
 import { useEffect, useRef, useState } from 'react';

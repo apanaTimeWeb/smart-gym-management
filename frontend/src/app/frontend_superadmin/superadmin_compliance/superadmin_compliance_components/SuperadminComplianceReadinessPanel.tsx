@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminComplianceReadinessPanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminComplianceReadinessPanel owned by the superadmin_compliance feature boundary.

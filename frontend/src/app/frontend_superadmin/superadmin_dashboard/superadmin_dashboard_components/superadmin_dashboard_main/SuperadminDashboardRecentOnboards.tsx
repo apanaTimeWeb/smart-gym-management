@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminDashboardRecentOnboards within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import Tooltip from '@/components/ui/Tooltip';
 // RESPONSIBILITY: Renders the recent tenant onboarding records and navigates to the tenant detail page.
@@ -5,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_PLAN_BADGE_FALLBACK_CLASS, DASHBOARD_PLAN_BADGE_CLASSES } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_constants/SuperadminDashboardConstants';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_url_config';
+import { SUPERADMIN_DASHBOARD_ROUTES } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_url_config';
 
 import type { SuperadminDashboardRecentOnboardsProps } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_types/SuperadminDashboardTypes';
 
@@ -25,7 +26,7 @@ export function SuperadminDashboardRecentOnboards({ recentOnboards }: Superadmin
         {recentOnboards.map((tenant) => {
             const planUpper = tenant.plan?.toUpperCase() ?? 'UNKNOWN';
             const planClass = DASHBOARD_PLAN_BADGE_CLASSES[planUpper] ?? DASHBOARD_PLAN_BADGE_FALLBACK_CLASS;
-            return (<button type="button" key={tenant.id} onClick={() => router.push(`${MODULE_URLS.PAGES.GYMS}?id=${tenant.id}`)} data-testid={`superadmin_dashboard-recent-onboards-${tenant.id}-open`} className="flex w-full items-center justify-between rounded-lg border border-border bg-page p-4 text-left hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+            return (<button type="button" key={tenant.id} onClick={() => router.push(`${SUPERADMIN_DASHBOARD_ROUTES.GYMS}?id=${tenant.id}`)} data-testid={`superadmin_dashboard-recent-onboards-${tenant.id}-open`} className="flex w-full items-center justify-between rounded-lg border border-border bg-page p-4 text-left hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
               <div className="min-w-0 flex-1">
                 <Tooltip content={tenant.name}><h3 className="text-sm font-semibold text-primary truncate">{tenant.name}</h3></Tooltip>
                 <Tooltip content={tenant.ownerName}><p className="text-xs text-secondary mt-1 truncate">{tenant.ownerName}</p></Tooltip>

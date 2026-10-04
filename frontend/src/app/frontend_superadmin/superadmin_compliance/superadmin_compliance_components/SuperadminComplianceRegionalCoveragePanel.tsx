@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminComplianceRegionalCoveragePanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminComplianceRegionalCoveragePanel owned by the superadmin_compliance feature boundary.

@@ -10,7 +10,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns all Superadmin migration API calls and validates every response at the API boundary.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
+import { SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
 
 import type { MigrationLog } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_types/SuperadminSystemOpsMigrationsTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -19,9 +19,9 @@ import type { ApiResponse } from '@/lib/api';
 export const migrationsApi = {
     fetchMigrations: (params?: Record<string, string>) => {
         const search = params ? `?${new URLSearchParams(params).toString()}` : '';
-        return apiFetch<ApiResponse<MigrationLog[]>>(`${MODULE_URLS.BACKEND_API.BASE}${search}`, { dataSchema: SuperadminMigrationsListDataSchema });
+        return apiFetch<ApiResponse<MigrationLog[]>>(`${SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API.BASE}${search}`, { dataSchema: SuperadminMigrationsListDataSchema });
     },
-    startMigration: (targetVersion: string, idempotencyKey: string) => apiFetch<ApiResponse<{ id: string; version: string; status: string }>>(MODULE_URLS.BACKEND_API.TRIGGER, {
+    startMigration: (targetVersion: string, idempotencyKey: string) => apiFetch<ApiResponse<{ id: string; version: string; status: string }>>(SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API.TRIGGER, {
         method: 'POST',
         body: JSON.stringify({ targetVersion }),
         headers: { 'Idempotency-Key': idempotencyKey },

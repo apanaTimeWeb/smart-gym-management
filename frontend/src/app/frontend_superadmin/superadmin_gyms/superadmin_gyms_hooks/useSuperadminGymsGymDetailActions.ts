@@ -10,7 +10,7 @@ import { gymsApi } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gy
 import { useSuperadminGymsGymGhostLoginStore } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_store/useSuperadminGymsGymGhostLoginStore';
 
 import { SUPERADMIN_GYMS_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_constants/SuperadminGymsQueryKeys';
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_GHOST_LOGIN } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
 
@@ -43,7 +43,7 @@ export function useSuperadminGymsGymDetailActions() {
       startGhostLoginState(gym);
       await queryClient.invalidateQueries({ queryKey: SUPERADMIN_GYMS_QUERY_KEYS.all });
       toast.success(response.message, { id: 'superadmin-gym-detail-ghost-login-success' });
-      window.location.href = MODULE_URLS.GHOST_LOGIN.ADMIN_DASHBOARD;
+      window.location.href = SUPERADMIN_GYMS_GHOST_LOGIN.ADMIN_DASHBOARD;
     },
     onError: (error: unknown) => {
       const message = error instanceof Error ? error.message : String(error);

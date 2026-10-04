@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
 // DATA FLOW: SuperadminGymsGymWhatsappModal -> useSuperadminGymsGymWhatsappModal -> API
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_EXTERNAL } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 import { SUPERADMIN_GYMS_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_constants/SuperadminGymsQueryKeys';
 import { formatSuperadminGymWhatsappReceiptDate } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsGymWhatsappReceiptUtils';
 import { useSuperadminLayoutUnsavedChangesGuard } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_hooks/useSuperadminLayoutUnsavedChangesGuard';
@@ -83,7 +83,7 @@ export function useSuperadminGymsGymWhatsappModal() {
                     ],
                     footer: 'Powered by Smart Gym 360'
                 });
-                window.open(MODULE_URLS.EXTERNAL.WHATSAPP_CLICK_TO_CHAT(cleanPhone, waText), '_blank', 'noopener,noreferrer');
+                window.open(SUPERADMIN_GYMS_EXTERNAL.WHATSAPP_CLICK_TO_CHAT(cleanPhone, waText), '_blank', 'noopener,noreferrer');
             }
             toast.success(res.message, { id: 'superadmin-toast-e6e0b4a6e8' });
             void queryClient.invalidateQueries({ queryKey: SUPERADMIN_GYMS_QUERY_KEYS.all });

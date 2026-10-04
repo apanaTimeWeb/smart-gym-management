@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminCouponsMain for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminCouponsMain owned by the superadmin_coupons feature boundary.

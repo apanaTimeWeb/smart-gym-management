@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTeamSummaryCards within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminTeamSummaryCards owned by the superadmin_team feature boundary.
@@ -18,6 +19,11 @@ import { SUPERADMIN_TEAM_STATUS_CODES } from '@/app/frontend_superadmin/superadm
 import type { SuperadminTeamSectionProps } from '@/app/frontend_superadmin/superadmin_team/superadmin_team_types/SuperadminTeamTypes';
 
 
+/**
+ * @description Renders TeamSummaryCards within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminTeamSummaryCards({ data }: SuperadminTeamSectionProps) {
   const t = useTranslations('superadmin_team');
     const active = data.users.filter(u => u.status === SUPERADMIN_TEAM_STATUS_CODES.ACTIVE).length;

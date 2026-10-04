@@ -12,14 +12,14 @@ import { SUPERADMIN_MESSAGING_STATUS_CODES } from '@/app/frontend_superadmin/sup
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Module-owned mutable MSW state for Superadmin tenant messaging.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
+
 
 import type { TenantMessage, SuperadminNotification } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_types/SuperadminMessagingTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_MESSAGING_API.BASE}`;
 const DEFAULT_LIMIT = 10;
 
 let mockMessages = [...MOCK_SUPERADMIN_MESSAGING_MESSAGES];

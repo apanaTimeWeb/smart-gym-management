@@ -69,15 +69,12 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | Path | Responsibility | Key Files |
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_analytics`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_analytics_features.md, superadmin_analytics_forbidden.md, superadmin_analytics_theme_contract.md, superadmin_analytics_url_config.ts` |
-| `superadmin_analytics_api/` | Owns module-scoped api artifacts. | `SuperadminAnalyticsApi.ts, SuperadminAnalyticsRetentionInsightsApi.ts` |
 | `superadmin_analytics_components/` | Owns module-scoped components artifacts. | `SuperadminAnalyticsDateFilterDropdown.tsx, SuperadminAnalyticsKpiGrid.tsx, SuperadminAnalyticsMain.tsx, SuperadminAnalyticsMainErrorState.tsx, SuperadminAnalyticsMainLoadingState.tsx` (+7 more) |
 | `superadmin_analytics_constants/` | Owns module-scoped constants artifacts. | `SuperadminAnalyticsDateFilterConstants.test.ts, SuperadminAnalyticsDateFilterConstants.ts, SuperadminAnalyticsDateRangeConstants.ts, SuperadminAnalyticsKpiConstants.ts, SuperadminAnalyticsQueryKeys.ts` |
 | `superadmin_analytics_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_analytics_repair_map.md, superadmin_analytics_retention_insights_features.md, superadmin_analytics_retention_insights_forbidden.md, superadmin_analytics_retention_insights_repair_map.md, superadmin_analytics_retention_insights_theme_contract.md` |
 | `superadmin_analytics_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminAnalyticsChartViewModel.test.ts, useSuperadminAnalyticsChartViewModel.ts, useSuperadminAnalyticsDashboardViewModel.test.ts, useSuperadminAnalyticsDashboardViewModel.ts, useSuperadminAnalyticsDateRangeSuffix.test.ts` (+7 more) |
 | `superadmin_analytics_locales/` | Owns module-scoped locales artifacts. | `superadmin_analytics_en.json, superadmin_analytics_hi.json` |
 | `superadmin_analytics_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_analytics_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminAnalyticsTypesSchemas.ts, SuperadminAnalyticsV1ResponseSchema.ts, SuperadminAnalyticsV1Schema.ts` |
-| `superadmin_analytics_tests/` | Owns module-scoped tests artifacts. | `SuperadminAnalyticsBasic.test.tsx, SuperadminAnalyticsRetentionInsights.test.ts` |
 | `superadmin_analytics_types/` | Owns module-scoped types artifacts. | `SuperadminAnalyticsDashboardViewModelTypes.ts, SuperadminAnalyticsDateFilterTypes.ts, SuperadminAnalyticsKpiGridTypes.ts, SuperadminAnalyticsKpiViewModelTypes.ts, SuperadminAnalyticsMainErrorStateTypes.ts` (+5 more) |
 | `superadmin_analytics_utils/` | Owns module-scoped utils artifacts. | `SuperadminAnalyticsDateRangeUtils.test.ts, SuperadminAnalyticsDateRangeUtils.ts, SuperadminAnalyticsFormatCurrency.test.ts, SuperadminAnalyticsFormatCurrency.ts, SuperadminAnalyticsFormatters.test.ts` (+1 more) |
 
@@ -143,8 +140,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Context files:** None detected.
 - **URL state:** No `useUrlState` usage detected in module-owned source; routes without shareable list state are not required to add it.
 - **Query-key registries:** `superadmin_analytics_constants/SuperadminAnalyticsQueryKeys.ts`
-- **Module MSW handlers:** `superadmin_analytics_mocks/superadmin_analytics_mocks_handlers/SuperadminAnalyticsMockHandlers.ts`, `superadmin_analytics_mocks/superadmin_analytics_mocks_handlers/SuperadminAnalyticsV1MockHandlers.ts`
-- **Module MSW fixtures:** `superadmin_analytics_mocks/superadmin_analytics_mocks_fixtures/SuperadminAnalyticsMockFixtures.ts`, `superadmin_analytics_mocks/superadmin_analytics_mocks_fixtures/SuperadminAnalyticsV1MockFixtures.ts`
 
 ## API Contract
 The module uses centralized URL-config files and the approved role API transport. API response payloads passed to application code are supplied with `dataSchema` contracts where the source defines a response schema. The audit must not infer backend behavior beyond these frontend contracts.
@@ -159,10 +154,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx` | `adoption`, `sources`, `metrics` | `superadmin_analytics_api/SuperadminAnalyticsApi.ts`, `superadmin_analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx` | `cohort` | `superadmin_analytics_api/SuperadminAnalyticsApi.ts`, `superadmin_analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx` | `movement`, `metrics`, `concentration` | `superadmin_analytics_api/SuperadminAnalyticsApi.ts`, `superadmin_analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx` | `metrics` | `superadmin_analytics_api/SuperadminAnalyticsApi.ts`, `superadmin_analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts` | Module-owned fixture/handler |
 
 ## Permissions / Security
 - This module is part of the Superadmin role container.
@@ -222,3 +213,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 ## V13 Repair Freshness
 
 Current repair baseline: `frontend-superadmin-v13-fix`. This feature was re-audited in the v5 repair cycle for module isolation, semantic design-token usage, AI-introspection identifiers, loading/error/not-found coverage, test ownership, and functional-flow evidence. The role-level isolated Playwright journey for this route lives under `playwright_E2E/` at the corresponding `frontend_superadmin_e2e/` path.
+
+
+## V15 Repair Supersession
+
+Removed the orphan retention/insights V1 stack (unused API/hook/components/mocks/tests). Active analytics revenue/date functionality remains; retained V1 type/schema artifacts only where live active code still imports them.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

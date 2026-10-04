@@ -53,7 +53,7 @@ export const SuperadminCouponsCouponModal: React.FC<SuperadminCouponsCouponModal
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">{t('ui.discount_type_f908785b')}<span className="text-danger">{t('ui.text_3389dae3')}</span></label>
-              <Controller name="discountType" control={form.control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS.map((option) => ({ label: option.label, value: option.value }))} data-testid="superadmin_coupons-coupon-modal-discount-type"/>)} data-testid="superadmin_coupons-coupon-modal-discount-type-field"/>
+              <Controller name="discountType" control={form.control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS.map((option) => ({ label: t(option.labelKey), value: option.value }))} data-testid="superadmin_coupons-coupon-modal-discount-type"/>)} data-testid="superadmin_coupons-coupon-modal-discount-type-field"/>
               {form.formState.errors.discountType && <span className="text-xs text-danger">{form.formState.errors.discountType.message}</span>}
             </div>
 

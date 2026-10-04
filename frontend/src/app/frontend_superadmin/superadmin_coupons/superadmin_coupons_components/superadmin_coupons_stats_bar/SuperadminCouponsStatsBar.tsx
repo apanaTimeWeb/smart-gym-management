@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsStatsBar within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminCouponsStatsBar owned by the superadmin_coupons feature boundary.

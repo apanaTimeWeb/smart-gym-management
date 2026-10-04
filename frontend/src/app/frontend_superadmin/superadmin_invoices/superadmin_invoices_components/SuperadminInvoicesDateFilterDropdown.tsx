@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminInvoicesDateFilterDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminInvoicesDateFilterDropdown owned by the superadmin_invoices feature boundary.

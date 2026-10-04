@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsProgressBar within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminReportsProgressBar owned by the superadmin_reports feature boundary.
@@ -13,6 +14,11 @@ import styles from '@/app/frontend_superadmin/superadmin_reports/superadmin_repo
 import type { SuperadminReportsProgressBarProps } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsProgressBarTypes.ts';
 
 
+/**
+ * @description Renders ReportsProgressBar within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminReportsProgressBar({ value, className }: SuperadminReportsProgressBarProps) {
   const bounded = Math.min(100, Math.max(0, Math.round(value)));
   const widthClass = styles[`width${bounded}`] ?? styles.width0;

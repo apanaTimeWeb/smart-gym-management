@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTeamPageHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminTeamPageHeader owned by the superadmin_team feature boundary.

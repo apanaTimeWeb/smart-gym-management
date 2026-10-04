@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminProfileMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Root client orchestrator for the Superadmin Profile page.
 import { useTranslations } from 'next-intl';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminDashboardHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Dashboard header with the local date filter. No API calls.
 import { useTranslations } from 'next-intl';

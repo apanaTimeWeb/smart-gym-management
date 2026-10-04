@@ -4,7 +4,7 @@ import { superadminGymsHandlers, resetSuperadminGymsMockState } from '@/app/fron
 import { SUPERADMIN_GYM_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_constants/SuperadminGymsConstants';
 import { MOCK_GYMS, MOCK_GYM_STATS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_mocks/superadmin_gyms_mocks_fixtures/SuperadminGymsMockFixtures';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_API } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
 
@@ -16,7 +16,7 @@ beforeEach(() => resetSuperadminGymsMockState());
 
 describe('Superadmin Gyms MSW integration', () => {
   it('supports filter and pagination against the authoritative 24-record fixture', async () => {
-    const response = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}?status=ACTIVE&page=1&limit=3&sortBy=memberCount&order=asc`);
+    const response = await fetch(`http://localhost${SUPERADMIN_GYMS_API.BASE}?status=ACTIVE&page=1&limit=3&sortBy=memberCount&order=asc`);
     const body = await response.json();
     expect(response.ok).toBe(true);
     expect(body.meta.total).toBe(MOCK_GYM_STATS.active);
@@ -25,12 +25,12 @@ describe('Superadmin Gyms MSW integration', () => {
   });
 
   it('sorts by the populated lastActiveAt field and returns 404 for an unknown gym', async () => {
-    const asc = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}?page=1&limit=2&sortBy=lastActiveAt&order=asc`);
+    const asc = await fetch(`http://localhost${SUPERADMIN_GYMS_API.BASE}?page=1&limit=2&sortBy=lastActiveAt&order=asc`);
     const ascBody = await asc.json();
     expect(asc.ok).toBe(true);
     expect(ascBody.data.map((gym: { id: string }) => gym.id)).toEqual(['t3', 't15']);
 
-    const missing = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}/does-not-exist`);
+    const missing = await fetch(`http://localhost${SUPERADMIN_GYMS_API.BASE}/does-not-exist`);
     expect(missing.status).toBe(404);
   });
 

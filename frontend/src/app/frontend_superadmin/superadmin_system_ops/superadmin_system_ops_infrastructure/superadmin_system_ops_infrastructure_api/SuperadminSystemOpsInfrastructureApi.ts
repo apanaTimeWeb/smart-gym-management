@@ -11,7 +11,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Modularized API client for the Infrastructure module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
+import { SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
 
 import type { InfrastructureNode, RedisTelemetry, SuperadminInfrastructureTenant } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_types/SuperadminSystemOpsInfrastructureTypes';
 import type { SuperadminInfrastructureUptimePoint } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_types/SuperadminSystemOpsInfrastructureUptimeTypes';
@@ -22,11 +22,11 @@ import type { ApiResponse } from '@/lib/api';
 export const infrastructureApi = {
     fetchInfrastructureNodes: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<InfrastructureNode[]>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: SuperadminInfrastructureNodesDataSchema });
+        return apiFetch<ApiResponse<InfrastructureNode[]>>(`${SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.BASE}${q}`, { dataSchema: SuperadminInfrastructureNodesDataSchema });
     },
-    fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(MODULE_URLS.BACKEND_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),
-    fetchUptimeHistory: () => apiFetch<ApiResponse<SuperadminInfrastructureUptimePoint[]>>(`${MODULE_URLS.BACKEND_API.BASE}/uptime-history`, { dataSchema: SuperadminInfrastructureUptimeDataSchema }),
-    flushGlobalCache: (idempotencyKey: string) => apiFetch<ApiResponse<void>>(MODULE_URLS.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminInfrastructureNullDataSchema }),
-    flushTenantCache: (tenantIds: string[], idempotencyKey: string) => apiFetch<ApiResponse<void>>(MODULE_URLS.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminInfrastructureNullDataSchema }),
-    fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(MODULE_URLS.BACKEND_API.TENANTS, { dataSchema: SuperadminInfrastructureTenantListDataSchema }),
+    fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),
+    fetchUptimeHistory: () => apiFetch<ApiResponse<SuperadminInfrastructureUptimePoint[]>>(`${SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.BASE}/uptime-history`, { dataSchema: SuperadminInfrastructureUptimeDataSchema }),
+    flushGlobalCache: (idempotencyKey: string) => apiFetch<ApiResponse<void>>(SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_FLUSH_GLOBAL, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminInfrastructureNullDataSchema }),
+    flushTenantCache: (tenantIds: string[], idempotencyKey: string) => apiFetch<ApiResponse<void>>(SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminInfrastructureNullDataSchema }),
+    fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.TENANTS, { dataSchema: SuperadminInfrastructureTenantListDataSchema }),
 };

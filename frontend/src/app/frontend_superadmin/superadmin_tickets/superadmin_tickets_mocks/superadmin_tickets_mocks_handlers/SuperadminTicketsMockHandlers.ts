@@ -12,14 +12,14 @@ import { TicketAssigneeInputSchema, replySchema } from '@/app/frontend_superadmi
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
+import { SUPERADMIN_TICKETS_API } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
 
 import type { SupportTicket } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_types/SuperadminTicketsTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_TICKETS_API.BASE}`;
 let mockTickets = [...MOCK_TICKETS];
 export function resetSuperadminTicketsMockState(): void {
     mockTickets = [...MOCK_TICKETS];

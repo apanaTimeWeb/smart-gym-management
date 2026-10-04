@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsPrimaryCharts within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the two primary analytics charts from the feature chart view-model.
 import dynamic from 'next/dynamic';

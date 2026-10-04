@@ -2,12 +2,10 @@ import {describe, expect, it, beforeEach} from 'vitest';
 
 import { resetSuperadminMessagingMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_mocks/superadmin_messaging_mocks_handlers/SuperadminMessagingMockHandlers';
 import { SuperadminMessagingComposeSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingComposeSchema';
-import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_mocks/superadmin_messaging_whatsapp_mocks_handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 
 
 
 beforeEach(() => {
-  resetSuperadminMessagingV1WhatsAppMockState();
 });
 
 beforeEach(() => {

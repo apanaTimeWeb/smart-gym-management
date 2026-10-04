@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminWhiteLabelingTable for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminWhiteLabelingTable owned by the superadmin_white_labeling feature boundary.

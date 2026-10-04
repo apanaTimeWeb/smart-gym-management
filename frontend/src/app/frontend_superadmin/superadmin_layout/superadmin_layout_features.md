@@ -126,3 +126,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 - Canonical forbidden patterns: `superadmin_layout_forbidden.md`.
 - This feature must preserve the documented no-relative-import, no-business-globalization, no-duplicate-feature, and no-unverified-contract shortcuts applicable to the supplied architecture/design rules.
+
+
+## V15 Repair Infrastructure Charter
+
+`superadmin_layout` is explicitly the Superadmin role-level infrastructure boundary for shell transport. `superadmin_layout_api/SuperadminLayoutApiFetch.ts` is a pure transport adapter with no feature-specific business behavior; its role-wide use is intentional and approved. It accepts module-provided paths, does not own module URLs, and may be consumed by role features as application/role infrastructure.
+
+This addendum supersedes any ambiguity about `SuperadminLayoutApiFetch` placement while preserving the feature-isolation rule for business logic.

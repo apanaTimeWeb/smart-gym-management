@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTicketsReplyModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Superadmin ticket reply form. Submission state and API behavior are owned by useSuperadminTicketsTicketReply.
 import { zodResolver } from '@hookform/resolvers/zod';

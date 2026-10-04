@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAffiliatesEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the empty state UI for the Affiliates table when no affiliates exist. Shows icon, message, and CTA to add first affiliate.
 import { Users } from 'lucide-react';
@@ -15,7 +16,7 @@ import type { SuperadminAffiliatesEmptyStateProps } from '@/app/frontend_superad
 export default function SuperadminAffiliatesEmptyState({ onAddClick }: SuperadminAffiliatesEmptyStateProps) {
   const t = useTranslations('superadmin_affiliates');
     return (<div className="flex flex-col items-center justify-center py-16 text-center" data-testid="superadmin_affiliates-superadmin-affiliates-empty-state-affiliates-empty-state-empty">
-      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4" data-testid="superadmin_affiliates-affiliatesemptystate-state">
         <Users size={18} className="text-secondary opacity-50"/>
       </div>
       <h3 className="text-base font-semibold text-primary">{t('ui.no_affiliates_yet_87b9801')}</h3>

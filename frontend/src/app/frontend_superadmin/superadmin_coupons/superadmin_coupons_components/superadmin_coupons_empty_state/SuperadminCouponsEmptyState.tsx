@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminCouponsEmptyState owned by the superadmin_coupons feature boundary.
@@ -15,10 +16,15 @@ import type { SuperadminCouponsEmptyStateProps } from '@/app/frontend_superadmin
 
 
 
+/**
+ * @description Renders CouponsEmptyState within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminCouponsEmptyState({ onCreateClick }: SuperadminCouponsEmptyStateProps) {
   const t = useTranslations('superadmin_coupons');
     return (<div className="flex flex-col items-center justify-center py-16 text-center" data-testid="superadmin_coupons-superadmin-coupons-empty-state-coupons-empty-state-empty">
-      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4" data-testid="superadmin_coupons-couponsemptystate-state">
         <Tag size={18} className="text-secondary opacity-50"/>
       </div>
       <h3 className="text-base font-semibold text-primary">{t('ui.no_coupons_yet_f5da62d1')}</h3>

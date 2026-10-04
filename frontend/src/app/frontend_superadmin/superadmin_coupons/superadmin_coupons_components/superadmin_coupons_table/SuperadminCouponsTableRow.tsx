@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsTableRow within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import * as WhatsAppFormatter from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsWhatsappReceiptFormatter';
 import SuperadminCouponsStatusBadge from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_components/superadmin_coupons_status_badge/SuperadminCouponsStatusBadge';
@@ -8,7 +9,7 @@ import { SUPERADMIN_COUPON_STATUS_CODES } from '@/app/frontend_superadmin/supera
 import { Trash2, RefreshCw, MessageCircle, Edit2, ToggleLeft, ToggleRight, History } from 'lucide-react';
 
 // RESPONSIBILITY: Renders and composes SuperadminCouponsTableRow for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
+import { SUPERADMIN_COUPONS_EXTERNAL } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
 import { formatCurrency as SuperadminCouponsFormatCurrency } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsFormatCurrency';
 
 import type { SuperadminCouponsTableRowProps } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_types/SuperadminCouponsTableRowTypes';
@@ -50,7 +51,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             ],
             footer: t('ui.whatsapp_apply_footer')
         });
-        window.open(MODULE_URLS.EXTERNAL.WHATSAPP_SHARE(waText), '_blank', 'noopener,noreferrer');
+        window.open(SUPERADMIN_COUPONS_EXTERNAL.WHATSAPP_SHARE(waText), '_blank', 'noopener,noreferrer');
     };
     return (<tr tabIndex={0} aria-label={t('ui.edit_coupon_aria', { code: cpn.code })} className={`hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`} onClick={() => { if (!cpn.isDeleted)
         onEdit(cpn); }} onKeyDown={(event) => { if (!cpn.isDeleted && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onEdit(cpn); } }} data-testid={`superadmin_coupons-table-row-${cpn.id}`}>

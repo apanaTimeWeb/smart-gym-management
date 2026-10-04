@@ -11,7 +11,7 @@ import { SUPERADMIN_MIGRATION_STATUS_CODES } from '@/app/frontend_superadmin/sup
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Provides deterministic MSW scenarios for the Superadmin migrations API contract.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
+import { SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
 
 import type { MigrationLog } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_types/SuperadminSystemOpsMigrationsTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -20,7 +20,7 @@ import type { ApiResponse } from '@/lib/api';
 
 const migrationLogs: MigrationLog[] = [...MOCK_MIGRATIONS];
 export const superadminMigrationsHandlers = [
-    http.get('*' + MODULE_URLS.BACKEND_API.BASE, async () => {
+    http.get('*' + SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API.BASE, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<MigrationLog[]>>({
             success: true,
@@ -28,7 +28,7 @@ export const superadminMigrationsHandlers = [
             data: migrationLogs,
         });
     }),
-    http.post('*' + MODULE_URLS.BACKEND_API.TRIGGER, async ({ request }) => {
+    http.post('*' + SUPERADMIN_SYSTEM_OPS_MIGRATIONS_API.TRIGGER, async ({ request }) => {
         await delay(600);
         const body = (await request.json()) as {
             targetVersion?: unknown;

@@ -12,7 +12,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Provides typed API access for Superadmin background-job list and mutation operations.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
+import { SUPERADMIN_SYSTEM_OPS_JOBS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
 
 import type { CountResponse } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_types/SuperadminSystemOpsJobsCountTypes';
 import type { BackgroundJob } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_types/SuperadminSystemOpsJobsTypes';
@@ -23,42 +23,42 @@ import type { ApiResponse } from '@/lib/api';
 export const jobsApi = {
     fetchJobs: (params?: Record<string, string>) => {
         const query = params ? `?${new URLSearchParams(params).toString()}` : '';
-        return apiFetch<ApiResponse<BackgroundJob[]>>(`${MODULE_URLS.BACKEND_API.BASE}${query}`, {
+        return apiFetch<ApiResponse<BackgroundJob[]>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}${query}`, {
             dataSchema: SuperadminJobsListDataSchema,
         });
     },
-    retryAllJobs: (idempotencyKey: string) => apiFetch<ApiResponse<{ queuedCount: number }>>(`${MODULE_URLS.BACKEND_API.BASE}/retry-all`, {
+    retryAllJobs: (idempotencyKey: string) => apiFetch<ApiResponse<{ queuedCount: number }>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/retry-all`, {
         method: 'POST',
         dataSchema: SuperadminJobsRetryAllDataSchema,
         headers: { 'Idempotency-Key': idempotencyKey }
     }),
-    retryJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BackgroundJob>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}/retry`, {
+    retryJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BackgroundJob>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/${id}/retry`, {
         method: 'POST',
         dataSchema: BackgroundJobSchema,
         headers: { 'Idempotency-Key': idempotencyKey }
     }),
-    cancelJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BackgroundJob>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}/cancel`, {
+    cancelJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<BackgroundJob>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/${id}/cancel`, {
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: BackgroundJobSchema,
     }),
-    deleteJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}`, {
+    deleteJob: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/${id}`, {
         method: 'DELETE',
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: SuperadminJobsNullDataSchema,
     }),
-    clearCompletedJobs: (idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${MODULE_URLS.BACKEND_API.BASE}/clear-completed`, {
+    clearCompletedJobs: (idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/clear-completed`, {
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: CountResponseSchema,
     }),
-    bulkRetryJobs: (ids: string[], idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${MODULE_URLS.BACKEND_API.BASE}/bulk-retry`, {
+    bulkRetryJobs: (ids: string[], idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/bulk-retry`, {
         method: 'POST',
         body: JSON.stringify({ ids }),
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
         dataSchema: CountResponseSchema,
     }),
-    bulkDeleteJobs: (ids: string[], idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${MODULE_URLS.BACKEND_API.BASE}/bulk-delete`, {
+    bulkDeleteJobs: (ids: string[], idempotencyKey: string) => apiFetch<ApiResponse<CountResponse>>(`${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}/bulk-delete`, {
         method: 'POST',
         body: JSON.stringify({ ids }),
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },

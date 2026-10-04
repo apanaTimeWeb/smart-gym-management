@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutPageSuspenseSkeleton within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { useTranslations } from 'next-intl';
 

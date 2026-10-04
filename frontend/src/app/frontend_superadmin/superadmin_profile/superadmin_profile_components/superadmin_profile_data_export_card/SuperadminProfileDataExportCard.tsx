@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminProfileDataExportCard within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the authenticated Superadmin data-export settings surface without owning transport or mutation state.
 import { DownloadCloud, Loader2, MailCheck } from 'lucide-react';

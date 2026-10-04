@@ -2,7 +2,7 @@ import { SuperadminGenerateApiKeyFormSchema } from '@/app/frontend_superadmin/su
 import { SuperadminGenerateApiKeyResultSchema, SuperadminIntegrationsResponseSchema } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_schemas/SuperadminIntegrationsTypesSchemas';
 
 // RESPONSIBILITY: Provides API access for the Superadmin Integrations feature. All server communication is contract-validated.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_url_config';
+import { SUPERADMIN_INTEGRATIONS_API } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_url_config';
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
 
 import type { SuperadminGenerateApiKeyFormValues, SuperadminGenerateApiKeyResult } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsGenerateApiKeyTypes';
@@ -12,7 +12,7 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export async function fetchIntegrations(): Promise<ApiResponse<SuperadminIntegrationsResponse>> {
-  return apiFetch<ApiResponse<SuperadminIntegrationsResponse>>(MODULE_URLS.BACKEND_API.BASE, {
+  return apiFetch<ApiResponse<SuperadminIntegrationsResponse>>(SUPERADMIN_INTEGRATIONS_API.BASE, {
     dataSchema: SuperadminIntegrationsResponseSchema,
   });
 }
@@ -26,7 +26,7 @@ export async function generateSuperadminApiKey(
   idempotencyKey: string,
 ): Promise<ApiResponse<SuperadminGenerateApiKeyResult>> {
   const validatedPayload = SuperadminGenerateApiKeyFormSchema.parse(payload);
-  return apiFetch<ApiResponse<SuperadminGenerateApiKeyResult>>(MODULE_URLS.BACKEND_API.GENERATE_API_KEY, {
+  return apiFetch<ApiResponse<SuperadminGenerateApiKeyResult>>(SUPERADMIN_INTEGRATIONS_API.GENERATE_API_KEY, {
     method: 'POST',
     body: JSON.stringify(validatedPayload),
     headers: { 'Idempotency-Key': idempotencyKey },

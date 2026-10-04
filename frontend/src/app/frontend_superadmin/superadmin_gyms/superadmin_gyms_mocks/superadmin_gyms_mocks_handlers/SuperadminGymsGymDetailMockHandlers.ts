@@ -11,11 +11,11 @@ import { SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES } from '@/app/fro
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns MSW handlers for the route-specific Superadmin Gym 360 workspace.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_GYM_DETAIL } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
 export const superadminGymDetailHandlers = [
-    http.get('*' + MODULE_URLS.GYM_DETAIL.BACKEND_API.BASE, ({ request }) => {
+    http.get('*' + SUPERADMIN_GYMS_GYM_DETAIL.BACKEND_API.BASE, ({ request }) => {
         const gymId = new URL(request.url).searchParams.get('gymId');
         const fixture = gymId ? SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES[gymId] : undefined;
         if (!fixture) {

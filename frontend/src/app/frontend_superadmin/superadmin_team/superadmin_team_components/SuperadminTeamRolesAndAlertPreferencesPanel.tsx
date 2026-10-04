@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTeamRolesAndAlertPreferencesPanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminTeamRolesAndAlertPreferencesPanel owned by the superadmin_team feature boundary.

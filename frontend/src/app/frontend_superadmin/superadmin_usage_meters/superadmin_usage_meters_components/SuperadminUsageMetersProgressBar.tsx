@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminUsageMetersProgressBar within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminUsageMetersProgressBar owned by the superadmin_usage_meters feature boundary.

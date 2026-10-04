@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminWhiteLabelingDrawer for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminWhiteLabelingDrawer owned by the superadmin_white_labeling feature boundary.

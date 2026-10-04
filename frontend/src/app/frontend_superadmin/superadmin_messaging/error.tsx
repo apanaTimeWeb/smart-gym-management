@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates error within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the superadmin_messaging route-segment error fallback and provides the documented recovery path.
 import { useEffect } from 'react';

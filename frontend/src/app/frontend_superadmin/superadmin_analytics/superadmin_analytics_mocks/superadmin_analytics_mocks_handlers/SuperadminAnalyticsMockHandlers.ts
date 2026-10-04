@@ -9,14 +9,14 @@ import { MOCK_SUPERADMIN_ANALYTICS } from '@/app/frontend_superadmin/superadmin_
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_url_config';
+import { SUPERADMIN_ANALYTICS_API } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_url_config';
 
 import type { AnalyticsApiData } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_ANALYTICS_API.BASE}`;
 export const superadminAnalyticsHandlers = [
     http.get('*' + BASE_URL, async () => {
         await delay(400);

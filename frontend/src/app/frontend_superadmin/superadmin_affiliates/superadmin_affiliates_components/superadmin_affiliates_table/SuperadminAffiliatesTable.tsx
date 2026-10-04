@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAffiliatesTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Affiliates data table shell (header row + rows). Delegates each row to SuperadminAffiliatesTableRow. No API calls.
 import { useTranslations } from 'next-intl';

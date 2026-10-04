@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminIntegrationsWebhooksAndDeveloperAccessPanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Superadmin integrations webhooks and developer access panel section.
 import { useState } from 'react';

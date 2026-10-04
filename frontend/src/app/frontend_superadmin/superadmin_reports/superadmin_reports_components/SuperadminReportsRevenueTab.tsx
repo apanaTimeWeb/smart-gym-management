@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsRevenueTab within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders and composes SuperadminReportsRevenueTab for the owning feature module; business logic and API transport remain in module-owned hooks/services.
 import dynamic from 'next/dynamic';

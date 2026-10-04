@@ -1,11 +1,10 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminDashboardKpiGrid within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_hooks/useSuperadminDashboardDateRangeSuffix';
 import { AlertCircle, CreditCard, Building2, Activity, Users, DollarSign, Clock, CheckCircle2 } from 'lucide-react';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_url_config';
 import { SuperadminDashboardFormatCurrency } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_utils/SuperadminDashboardFormatCurrency';
 import { formatNumber } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_utils/SuperadminDashboardFormatters';
 
@@ -22,8 +21,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
     const locale = useLocale();
     const t = useTranslations('superadmin_dashboard');
 
-    const router = useRouter();
-    const dateSuffix = useSuperadminDashboardDateRangeSuffix();
+      const dateSuffix = useSuperadminDashboardDateRangeSuffix();
     const lastTwoMonths = revenueChartData.length >= 2 ? revenueChartData.slice(-2) : [];
     const mrrTrendNum = lastTwoMonths.length === 2 && lastTwoMonths[0]!.mrr > 0
         ? Math.round(((lastTwoMonths[1]!.mrr - lastTwoMonths[0]!.mrr) / lastTwoMonths[0]!.mrr) * 100)
@@ -123,7 +121,6 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             icon: AlertCircle,
             colorClass: 'text-warning',
             iconBgClass: 'bg-warning-bg',
-            onClick: () => router.push(MODULE_URLS.PAGES.CANCELLATIONS)
         },
     ];
     return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">

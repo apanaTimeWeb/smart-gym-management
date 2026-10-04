@@ -11,7 +11,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Encapsulates functionality for superadmin_reports_api.ts
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
+import { SUPERADMIN_REPORTS_API } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
 
 import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -20,14 +20,14 @@ import type { ApiResponse } from '@/lib/api';
 export const superadminReportsApi = {
     fetchRevenueData: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<RevenueRow[]>>(`${MODULE_URLS.BACKEND_API.BASE}/revenue${q}`, { dataSchema: z.array(RevenueRowSchema) });
+        return apiFetch<ApiResponse<RevenueRow[]>>(`${SUPERADMIN_REPORTS_API.BASE}/revenue${q}`, { dataSchema: z.array(RevenueRowSchema) });
     },
     fetchCancellationsData: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<CancellationsRecord[]>>(`${MODULE_URLS.BACKEND_API.BASE}/cancellations${q}`, { dataSchema: z.array(CancellationsRecordSchema) });
+        return apiFetch<ApiResponse<CancellationsRecord[]>>(`${SUPERADMIN_REPORTS_API.BASE}/cancellations${q}`, { dataSchema: z.array(CancellationsRecordSchema) });
     },
     fetchHealthData: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<TenantHealthScore[]>>(`${MODULE_URLS.BACKEND_API.BASE}/health${q}`, { dataSchema: z.array(TenantHealthScoreSchema) });
+        return apiFetch<ApiResponse<TenantHealthScore[]>>(`${SUPERADMIN_REPORTS_API.BASE}/health${q}`, { dataSchema: z.array(TenantHealthScoreSchema) });
     },
 };

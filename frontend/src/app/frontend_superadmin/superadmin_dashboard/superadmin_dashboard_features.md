@@ -16,7 +16,6 @@ The Dashboard module is the Superadmin landing surface for platform-wide SaaS he
 ## Component Tree
 
 - Route entry: `page.tsx` → primary module composition.
-- Module-owned component surface: `SuperadminDashboardCharts.tsx`, `SuperadminDashboardDateFilterDropdown.tsx`, `SuperadminDashboardHeader.tsx`, `SuperadminDashboardKpiGrid.tsx`, `SuperadminDashboardMain.tsx`, `SuperadminDashboardRecentOnboards.tsx`, `SuperadminDashboardV1BusinessOverviewHeader.tsx`, `SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`.
 - Child component folders remain feature-prefixed and isolated to this module.
 
 ## API Contract Summary
@@ -70,15 +69,12 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_dashboard`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_dashboard_features.md, superadmin_dashboard_forbidden.md, superadmin_dashboard_theme_contract.md, superadmin_dashboard_url_config.ts` |
 | `superadmin_dashboard_api/` | Owns module-scoped api artifacts. | `SuperadminDashboardApi.ts, SuperadminDashboardBusinessOverviewApi.ts` |
-| `superadmin_dashboard_components/` | Owns module-scoped components artifacts. | `SuperadminDashboardV1BusinessOverviewHeader.tsx, SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx, SuperadminDashboardV1RetentionSummaryCards.tsx` |
 | `superadmin_dashboard_constants/` | Owns module-scoped constants artifacts. | `SuperadminDashboardConstants.test.ts, SuperadminDashboardConstants.ts, SuperadminDashboardDateFilterConstants.ts, SuperadminDashboardDateRangeConstants.ts, SuperadminDashboardQueryKeys.ts` |
 | `superadmin_dashboard_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_dashboard_business_overview_features.md, superadmin_dashboard_business_overview_forbidden.md, superadmin_dashboard_business_overview_repair_map.md, superadmin_dashboard_business_overview_theme_contract.md, superadmin_dashboard_repair_map.md` |
 | `superadmin_dashboard_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminDashboardDateFilter.test.ts, useSuperadminDashboardDateFilter.ts, useSuperadminDashboardDateRangeSuffix.test.ts, useSuperadminDashboardDateRangeSuffix.ts, useSuperadminDashboardMain.test.ts` (+3 more) |
 | `superadmin_dashboard_locales/` | Owns module-scoped locales artifacts. | `superadmin_dashboard_en.json, superadmin_dashboard_hi.json` |
 | `superadmin_dashboard_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_dashboard_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminDashboardTypesSchemas.ts, SuperadminDashboardV1ResponseSchema.ts, SuperadminDashboardV1Schema.ts` |
 | `superadmin_dashboard_tests/` | Owns module-scoped tests artifacts. | `SuperadminDashboardBasic.test.tsx, SuperadminDashboardBusinessOverview.test.ts` |
-| `superadmin_dashboard_types/` | Owns module-scoped types artifacts. | `SuperadminDashboardDateFilterTypes.ts, SuperadminDashboardTypes.ts, SuperadminDashboardV1Types.ts` |
 | `superadmin_dashboard_utils/` | Owns module-scoped utils artifacts. | `SuperadminDashboardDateRangeUtils.test.ts, SuperadminDashboardDateRangeUtils.ts, SuperadminDashboardFormatCurrency.test.ts, SuperadminDashboardFormatCurrency.ts, SuperadminDashboardFormatters.test.ts` (+1 more) |
 
 ## Approved External Dependencies
@@ -142,8 +138,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Context files:** None detected.
 - **URL state:** No `useUrlState` usage detected; no module-owned list/filter URL state was evidenced.
 - **Query-key registries:** `superadmin_dashboard_constants/SuperadminDashboardQueryKeys.ts`
-- **MSW handlers:** `superadmin_dashboard_mocks/superadmin_dashboard_mocks_handlers/SuperadminDashboardMockHandlers.ts`, `superadmin_dashboard_mocks/superadmin_dashboard_mocks_handlers/SuperadminDashboardV1MockHandlers.ts`
-- **MSW fixtures:** `superadmin_dashboard_mocks/superadmin_dashboard_mocks_fixtures/SuperadminDashboardMockFixtures.ts`, `superadmin_dashboard_mocks/superadmin_dashboard_mocks_fixtures/SuperadminDashboardV1MockFixtures.ts`
 
 ## API Contract
 The module uses centralized URL-config files and the approved role API transport. API response payloads passed to application code are supplied with `dataSchema` contracts where the source defines a response schema. The audit must not infer backend behavior beyond these frontend contracts.
@@ -158,8 +152,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx` | `waterfall`, `label`, `value`, `currency`, `leaderboard`, `name`, `plan`, `income` | `superadmin_dashboard_api/SuperadminDashboardApi.ts`, `superadmin_dashboard_api/SuperadminDashboardBusinessOverviewApi.ts` | Module-owned fixture/handler |
-| `superadmin_dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx` | `existingIncomeRetained`, `gymRetention`, `revenueLostPercent`, `customerChurn`, `endingIncome`, `currency` | `superadmin_dashboard_api/SuperadminDashboardApi.ts`, `superadmin_dashboard_api/SuperadminDashboardBusinessOverviewApi.ts` | Module-owned fixture/handler |
 | `superadmin_dashboard_components/superadmin_dashboard_main/SuperadminDashboardCharts.tsx` | `currency`, `revenueByTier`, `toUpperCase`, `revenueByGeography`, `arrDeltaPercent` | `superadmin_dashboard_api/SuperadminDashboardApi.ts`, `superadmin_dashboard_api/SuperadminDashboardBusinessOverviewApi.ts` | Module-owned fixture/handler |
 | `superadmin_dashboard_components/superadmin_dashboard_main/SuperadminDashboardKpiGrid.tsx` | `platformHealthScore`, `monthlyRecurringRevenue`, `currency`, `mrrDeltaPercent`, `totalGyms`, `activeGyms`, `totalEndUsers`, `arpu` | `superadmin_dashboard_api/SuperadminDashboardApi.ts`, `superadmin_dashboard_api/SuperadminDashboardBusinessOverviewApi.ts` | Module-owned fixture/handler |
 | `superadmin_dashboard_components/superadmin_dashboard_main/SuperadminDashboardMain.tsx` | `recentOnboards` | `superadmin_dashboard_api/SuperadminDashboardApi.ts`, `superadmin_dashboard_api/SuperadminDashboardBusinessOverviewApi.ts` | Module-owned fixture/handler |
@@ -223,3 +215,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 ## V13 Repair Freshness
 
 Current repair baseline: `frontend-superadmin-v13-fix`. This feature was re-audited in the v5 repair cycle for module isolation, semantic design-token usage, AI-introspection identifiers, loading/error/not-found coverage, test ownership, and functional-flow evidence. The role-level isolated Playwright journey for this route lives under `playwright_E2E/` at the corresponding `frontend_superadmin_e2e/` path.
+
+
+## V15 Repair Supersession
+
+Removed the orphan business-overview V1 stack and its contract test. Active KPI/chart/recent-onboard dashboard surface is canonical.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

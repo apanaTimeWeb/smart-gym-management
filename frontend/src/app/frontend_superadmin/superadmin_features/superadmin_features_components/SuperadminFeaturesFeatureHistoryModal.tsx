@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesFeatureHistoryModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders one feature flag's change history from the feature-owned API/query boundary.
 import { Clock, Loader2, X } from 'lucide-react';

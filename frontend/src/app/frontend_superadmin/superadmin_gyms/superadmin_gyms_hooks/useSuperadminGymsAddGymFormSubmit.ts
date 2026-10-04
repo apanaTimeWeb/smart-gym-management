@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 // DATA FLOW: Form → provisioning mutation → Query invalidation → visible success/error → gyms list.
 // RESPONSIBILITY: Owns the Superadmin tenant-provisioning submission workflow. It never simulates backend infrastructure steps or sends credentials before confirmed success.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_ROUTES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 import type { OnboardGymFormValues } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_schemas/SuperadminGymsValidationSchemas';
 
@@ -45,7 +45,7 @@ export function useSuperadminGymsAddGymFormSubmit() {
       await queryClient.invalidateQueries({ queryKey: SUPERADMIN_GYMS_QUERY_KEYS.all });
       toast.success(response.message, { id: `superadmin-gym-provisioned-${response.data?.id ?? 'new'}` });
       idempotencyKeyRef.current = null;
-      router.push(MODULE_URLS.PAGES.MAIN);
+      router.push(SUPERADMIN_GYMS_ROUTES.MAIN);
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : t('ui.tenant_provisioning_failed_repair');

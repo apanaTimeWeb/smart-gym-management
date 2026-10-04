@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminProfileAvatarCard within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Displays the superadmin's avatar, name, role badge, and last login info.
 import { ShieldCheck } from 'lucide-react';

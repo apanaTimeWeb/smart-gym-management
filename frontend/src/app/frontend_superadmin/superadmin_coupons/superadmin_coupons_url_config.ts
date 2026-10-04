@@ -1,12 +1,14 @@
 /**
  * Canonical module-owned URL configuration.
- * All page and backend endpoint paths consumed by this feature live in this one file.
- * Endpoint path strings are preserved from the supplied contract.
+ * Each route/endpoint group has a descriptive, module-prefixed export.
+ * Do not import this file outside its owning feature module.
  */
-export const MODULE_URLS = {
-  EXTERNAL: {
+
+export const SUPERADMIN_COUPONS_EXTERNAL = {
           WHATSAPP_SHARE: (message: string) => `https://wa.me/?text=${encodeURIComponent(message)}`,
-      },
-      PAGES: { MAIN: "/frontend_superadmin/superadmin_coupons" },
-      BACKEND_API: { BASE: "/superadmin/saas-billing/coupons" }
-} as const;
+      } as const;
+
+export const SUPERADMIN_COUPONS_ROUTES = { MAIN: "/frontend_superadmin/superadmin_coupons" } as const;
+
+export const SUPERADMIN_COUPONS_API = { BASE: "/superadmin/saas-billing/coupons" } as const;
+

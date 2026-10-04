@@ -69,24 +69,17 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | Path | Responsibility | Key Files |
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_messaging`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_messaging_features.md, superadmin_messaging_forbidden.md, superadmin_messaging_theme_contract.md, superadmin_messaging_url_config.ts` |
-| `superadmin_messaging_api/` | Owns module-scoped api artifacts. | `SuperadminMessagingApi.ts, SuperadminMessagingTemplateInsightsApi.ts` |
 | `superadmin_messaging_components/` | Owns module-scoped components artifacts. | `SuperadminMessagingComposeModal.tsx, SuperadminMessagingDateRangePicker.tsx, SuperadminMessagingMain.tsx, SuperadminMessagingMessagesTab.tsx, SuperadminMessagingNotificationsTab.tsx` (+3 more) |
 | `superadmin_messaging_constants/` | Owns module-scoped constants artifacts. | `SuperadminMessagingConstants.ts, SuperadminMessagingDateRangeConstants.ts, SuperadminMessagingQueryKeys.ts, SuperadminMessagingStatusBadgeConfig.test.ts, SuperadminMessagingStatusBadgeConfig.ts` |
 | `superadmin_messaging_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_messaging_repair_map.md, superadmin_messaging_template_insights_features.md, superadmin_messaging_template_insights_forbidden.md, superadmin_messaging_template_insights_repair_map.md, superadmin_messaging_template_insights_theme_contract.md` (+4 more) |
 | `superadmin_messaging_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminMessaging.test.tsx, useSuperadminMessaging.ts, useSuperadminMessagingCompose.test.ts, useSuperadminMessagingCompose.ts, useSuperadminMessagingDateRangePicker.test.ts` (+15 more) |
 | `superadmin_messaging_locales/` | Owns module-scoped locales artifacts. | `superadmin_messaging_en.json, superadmin_messaging_hi.json` |
 | `superadmin_messaging_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_messaging_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminMessagingApiSchema.ts, SuperadminMessagingComposeSchema.test.ts, SuperadminMessagingComposeSchema.ts, SuperadminMessagingTypesSchemas.ts, SuperadminMessagingV1ResponseSchema.ts` (+4 more) |
-| `superadmin_messaging_tests/` | Owns module-scoped tests artifacts. | `SuperadminMessagingBasic.test.tsx, SuperadminMessagingDateRangeUtils.testBehavior.ts, SuperadminMessagingTemplateInsights.test.ts, SuperadminMessagingV1WhatsApp.test.ts` |
 | `superadmin_messaging_types/` | Owns module-scoped types artifacts. | `SuperadminMessagingComposeModalTypes.ts, SuperadminMessagingComposeTypes.ts, SuperadminMessagingDateRangePickerTypes.ts, SuperadminMessagingDateRangeTypes.ts, SuperadminMessagingMessagesTabTypes.ts` (+13 more) |
 | `superadmin_messaging_utils/` | Owns module-scoped utils artifacts. | `SuperadminMessagingDateRangeUtils.test.ts, SuperadminMessagingDateRangeUtils.ts, SuperadminMessagingFormatCurrency.test.ts, SuperadminMessagingFormatCurrency.ts, SuperadminMessagingFormatters.test.ts` (+1 more) |
 | `superadmin_messaging_whatsapp_api/` | Owns module-scoped whatsapp api artifacts. | `SuperadminMessagingWhatsappApi.ts` |
-| `superadmin_messaging_whatsapp_components/` | Owns module-scoped whatsapp components artifacts. | `SuperadminMessagingV1WhatsAppAudiencePanel.tsx, SuperadminMessagingV1WhatsAppBulkCenter.test.tsx, SuperadminMessagingV1WhatsAppBulkCenter.tsx, SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx, SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx` (+4 more) |
-| `superadmin_messaging_whatsapp_hooks/` | Owns module-scoped whatsapp hooks artifacts. | `useSuperadminMessagingV1WhatsApp.test.tsx, useSuperadminMessagingV1WhatsApp.ts, useSuperadminMessagingV1WhatsAppCampaign.test.tsx, useSuperadminMessagingV1WhatsAppCampaign.ts` |
 | `superadmin_messaging_whatsapp_mocks/` | Owns module-scoped whatsapp mocks artifacts. | `` |
 | `superadmin_messaging_whatsapp_tests/` | Owns module-scoped whatsapp tests artifacts. | `` |
-| `superadmin_messaging_whatsapp_types/` | Owns module-scoped whatsapp types artifacts. | `SuperadminMessagingV1WhatsAppTypes.ts, SuperadminMessagingWhatsAppTypes.ts` |
-| `superadmin_messaging_whatsapp_utils/` | Owns module-scoped whatsapp utils artifacts. | `SuperadminMessagingV1WhatsAppAudienceUtils.test.ts, SuperadminMessagingV1WhatsAppAudienceUtils.ts, SuperadminMessagingV1WhatsAppUtils.test.ts, SuperadminMessagingV1WhatsAppUtils.ts` |
 
 ## Approved External Dependencies
 
@@ -139,8 +132,6 @@ Open WhatsApp center → select tenant/audience/template → edit campaign conte
 - **Context files:** None detected.
 - **URL state:** `useUrlState` detected for shareable list/filter state.
 - **Query-key registries:** `superadmin_messaging_constants/SuperadminMessagingQueryKeys.ts`
-- **MSW handlers:** `superadmin_messaging_mocks/superadmin_messaging_mocks_handlers/SuperadminMessagingMockHandlers.ts`, `superadmin_messaging_mocks/superadmin_messaging_mocks_handlers/SuperadminMessagingV1MockHandlers.ts`, `superadmin_messaging_whatsapp_mocks/superadmin_messaging_whatsapp_mocks_handlers/SuperadminMessagingV1WhatsAppMockHandlers.ts`
-- **MSW fixtures:** `superadmin_messaging_mocks/superadmin_messaging_mocks_fixtures/SuperadminMessagingMockFixtures.ts`, `superadmin_messaging_mocks/superadmin_messaging_mocks_fixtures/SuperadminMessagingV1MockFixtures.ts`, `superadmin_messaging_whatsapp_mocks/superadmin_messaging_whatsapp_mocks_fixtures/SuperadminMessagingV1WhatsAppMockFixtures.ts`
 
 ## API Contract
 The module uses centralized URL-config files and the approved role API transport. API response payloads passed to application code are supplied with `dataSchema` contracts where the source defines a response schema. The audit must not infer backend behavior beyond these frontend contracts.
@@ -157,12 +148,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_messaging_components/SuperadminMessagingV1CampaignEngagementPanel.tsx` | `campaigns` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
-| `superadmin_messaging_components/SuperadminMessagingV1TemplateLibraryPanel.tsx` | `templates` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
-| `superadmin_messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel.tsx` | `id`, `name` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
-| `superadmin_messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter.tsx` | `templates`, `recipients`, `status`, `recipient`, `message`, `audiences`, `variables`, `campaigns` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
-| `superadmin_messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx` | `id`, `name`, `templateName`, `audienceLabel`, `totalRecipients`, `sentCount`, `skippedCount`, `status` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
-| `superadmin_messaging_whatsapp_components/SuperadminMessagingV1WhatsAppQueuePanel.tsx` | `status`, `recipient` | `superadmin_messaging_api/SuperadminMessagingApi.ts`, `superadmin_messaging_api/SuperadminMessagingTemplateInsightsApi.ts`, `superadmin_messaging_whatsapp_api/SuperadminMessagingWhatsappApi.ts` | Module-owned fixture/handler |
 
 ## Permissions / Security
 - This module is part of the Superadmin role container.
@@ -222,3 +207,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 ## V13 Repair Freshness
 
 Current repair baseline: `frontend-superadmin-v13-fix`. This feature was re-audited in the v5 repair cycle for module isolation, semantic design-token usage, AI-introspection identifiers, loading/error/not-found coverage, test ownership, and functional-flow evidence. The role-level isolated Playwright journey for this route lives under `playwright_E2E/` at the corresponding `frontend_superadmin_e2e/` path.
+
+
+## V15 Repair Supersession
+
+Removed the orphan WhatsApp V1 subtree and template-insights V1 test stack. Active tenant messaging API/UI remains canonical.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAffiliatesAffiliateStatusBadge within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the status badge pill for a single affiliate. Purely presentational — maps AffiliateStatus to design system colors.
 import { useTranslations } from 'next-intl';

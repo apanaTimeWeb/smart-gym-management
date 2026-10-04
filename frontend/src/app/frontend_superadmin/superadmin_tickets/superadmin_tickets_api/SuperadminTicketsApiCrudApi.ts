@@ -10,7 +10,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
+import { SUPERADMIN_TICKETS_API } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
 
 import type { SupportTicket } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_types/SuperadminTicketsTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -20,21 +20,21 @@ import type { ApiResponse } from '@/lib/api';
 export const ticketsApi = {
     fetchTickets: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<SupportTicket[]>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: SuperadminTicketsListDataSchema });
+        return apiFetch<ApiResponse<SupportTicket[]>>(`${SUPERADMIN_TICKETS_API.BASE}${q}`, { dataSchema: SuperadminTicketsListDataSchema });
     },
-    fetchTicketById: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}`, { dataSchema: SupportTicketSchema }),
-    updateTicket: (id: string, body: Partial<SupportTicket>, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}`, {
+    fetchTicketById: (id: string) => apiFetch<ApiResponse<SupportTicket>>(`${SUPERADMIN_TICKETS_API.BASE}/${id}`, { dataSchema: SupportTicketSchema }),
+    updateTicket: (id: string, body: Partial<SupportTicket>, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(`${SUPERADMIN_TICKETS_API.BASE}/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(body),
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: SupportTicketSchema
     }),
-    closeTicket: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(MODULE_URLS.BACKEND_API.CLOSE(id), {
+    closeTicket: (id: string, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(SUPERADMIN_TICKETS_API.CLOSE(id), {
         method: 'POST',
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: SupportTicketSchema
     }),
-    assignTicket: (id: string, assignee: string, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(MODULE_URLS.BACKEND_API.ASSIGN(id), {
+    assignTicket: (id: string, assignee: string, idempotencyKey: string) => apiFetch<ApiResponse<SupportTicket>>(SUPERADMIN_TICKETS_API.ASSIGN(id), {
         method: 'POST',
         body: JSON.stringify({ assignee }),
         headers: { 'Idempotency-Key': idempotencyKey },
@@ -43,7 +43,7 @@ export const ticketsApi = {
 };
 
 export async function replyToTicket(id: string, replyText: string, idempotencyKey: string): Promise<ApiResponse<SupportTicket>> {
-    return apiFetch<ApiResponse<SupportTicket>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}/reply`, {
+    return apiFetch<ApiResponse<SupportTicket>>(`${SUPERADMIN_TICKETS_API.BASE}/${id}/reply`, {
         method: 'POST',
         body: JSON.stringify({ replyText }),
         headers: { 'Idempotency-Key': idempotencyKey },

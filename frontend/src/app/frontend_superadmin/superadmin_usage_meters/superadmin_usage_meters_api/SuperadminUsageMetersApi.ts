@@ -11,7 +11,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Encapsulates functionality for superadmin_usage_meters_api.ts
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_url_config';
+import { SUPERADMIN_USAGE_METERS_API } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_url_config';
 
 import type { UsageMeter } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_types/SuperadminUsageMetersTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -20,6 +20,6 @@ import type { ApiResponse } from '@/lib/api';
 export const usageMetersApi = {
     fetchUsageMeters: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<UsageMeter[]>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: z.array(UsageMeterSchema) });
+        return apiFetch<ApiResponse<UsageMeter[]>>(`${SUPERADMIN_USAGE_METERS_API.BASE}${q}`, { dataSchema: z.array(UsageMeterSchema) });
     },
 };

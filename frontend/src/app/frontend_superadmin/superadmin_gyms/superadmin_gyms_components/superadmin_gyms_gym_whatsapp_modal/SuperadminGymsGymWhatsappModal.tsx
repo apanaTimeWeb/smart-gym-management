@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsGymWhatsappModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminGymsGymWhatsappModal owned by the superadmin_gyms feature boundary.

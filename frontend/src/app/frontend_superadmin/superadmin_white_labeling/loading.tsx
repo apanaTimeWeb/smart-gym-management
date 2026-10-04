@@ -1,4 +1,9 @@
 // RESPONSIBILITY: Framework route artifact for white-labeling.
+/**
+ * @description Renders WhiteLabelingLoading within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminWhiteLabelingLoading() {
   return (
     <div className="space-y-6">

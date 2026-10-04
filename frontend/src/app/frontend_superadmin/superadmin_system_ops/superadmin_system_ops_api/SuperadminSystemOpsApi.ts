@@ -10,7 +10,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Provides API access for the Superadmin System Ops summary feature. No UI logic.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
+import { SUPERADMIN_SYSTEM_OPS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
 
 import type { SuperadminSystemOpsSummary } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_types/SuperadminSystemOpsTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -18,7 +18,7 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export function fetchSuperadminSystemOpsSummary(): Promise<ApiResponse<SuperadminSystemOpsSummary>> {
-  return apiFetch<ApiResponse<SuperadminSystemOpsSummary>>(MODULE_URLS.BACKEND_API.SUMMARY, {
+  return apiFetch<ApiResponse<SuperadminSystemOpsSummary>>(SUPERADMIN_SYSTEM_OPS_API.SUMMARY, {
     dataSchema: SuperadminSystemOpsSummarySchema,
   });
 }

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsKpiGrid within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the read-only analytics KPI cards from the feature view-model.
 import { ArrowDown, ArrowUp } from 'lucide-react';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminTicketsMain for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminTicketsMain owned by the superadmin_tickets feature boundary.

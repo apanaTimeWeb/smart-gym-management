@@ -4,7 +4,7 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useSuperadminDashboardDateFilter } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_hooks/useSuperadminDashboardDateFilter';
 
 // DATA FLOW: API / URL state / module client state → useRouter → superadmin_dashboard view components.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_url_config';
+import { SUPERADMIN_DASHBOARD_ROUTES } from '@/app/frontend_superadmin/superadmin_dashboard/superadmin_dashboard_url_config';
 
 
 
@@ -18,7 +18,7 @@ describe('useSuperadminDashboardDateFilter', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         (useRouter as unknown as ReturnType<typeof vi.fn>).mockReturnValue({ replace: replaceMock });
-        (usePathname as unknown as ReturnType<typeof vi.fn>).mockReturnValue(MODULE_URLS.PAGES.MAIN);
+        (usePathname as unknown as ReturnType<typeof vi.fn>).mockReturnValue(SUPERADMIN_DASHBOARD_ROUTES.MAIN);
     });
     it('should initialize with this_month by default', () => {
         (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({

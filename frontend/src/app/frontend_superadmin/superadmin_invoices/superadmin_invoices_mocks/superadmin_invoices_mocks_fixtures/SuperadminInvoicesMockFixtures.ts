@@ -30,5 +30,5 @@ export const MOCK_SUPERADMIN_INVOICES: SaaSInvoice[] = [
     { id: 'inv9', tenantId: 't1', tenantName: 'Iron Paradise', amount: 219900, currency: 'INR', status: SUPERADMIN_INVOICE_STATUS_CODES.PAID, issuedAt: '2026-08-15', dueDate: '2026-08-22', paidAt: '2026-08-20', paymentMethod: 'Credit Card', invoiceType: 'RECURRING', planName: 'Pro' },
     { id: 'inv10', tenantId: 't2', tenantName: 'Fit Life Studio', amount: 509900, currency: 'INR', status: SUPERADMIN_INVOICE_STATUS_CODES.PENDING, issuedAt: '2026-08-12', dueDate: '2026-08-19', invoiceType: 'RECURRING', planName: 'Basic' },
     { id: 'inv13', tenantId: 't3', tenantName: 'CrossFit Box', amount: 1049900, currency: 'INR', status: SUPERADMIN_INVOICE_STATUS_CODES.PAID, issuedAt: '2026-08-10', dueDate: '2026-08-17', paidAt: '2026-08-12', paymentMethod: 'Bank Transfer', invoiceType: 'RECURRING', planName: 'Enterprise' },
-    { id: 'inv13', tenantId: 't4', tenantName: 'Powerhouse Gym', amount: 319900, currency: 'INR', status: SUPERADMIN_INVOICE_STATUS_CODES.OVERDUE, issuedAt: '2026-08-05', dueDate: '2026-08-12', invoiceType: 'RECURRING', planName: 'Pro' },
+    { id: 'inv11', tenantId: 't4', tenantName: 'Powerhouse Gym', amount: 319900, currency: 'INR', status: SUPERADMIN_INVOICE_STATUS_CODES.OVERDUE, issuedAt: '2026-08-05', dueDate: '2026-08-12', invoiceType: 'RECURRING', planName: 'Pro' },
 ];

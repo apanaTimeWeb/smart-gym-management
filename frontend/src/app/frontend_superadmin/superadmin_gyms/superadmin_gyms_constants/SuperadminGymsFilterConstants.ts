@@ -10,26 +10,26 @@
 // DATA FLOW: SuperadminGymsFilterConstants → SuperadminGymsMain/SuperadminGymsToolbar → URL/UI filter state.
 
 export const SUPERADMIN_GYMS_STATUS_FILTER_OPTIONS = [
-  { value: 'All', label: 'All' },
-  { value: 'ACTIVE', label: 'Active' },
-  { value: 'SUSPENDED', label: 'Suspended' },
-  { value: 'TRIAL', label: 'Trial' },
-  { value: 'CANCELLED', label: 'Cancelled' },
+  { value: 'All', labelKey: 'ui.gym_status_all' },
+  { value: 'ACTIVE', labelKey: 'ui.status_active' },
+  { value: 'SUSPENDED', labelKey: 'ui.status_suspended' },
+  { value: 'TRIAL', labelKey: 'ui.status_trial' },
+  { value: 'CANCELLED', labelKey: 'ui.status_cancelled' },
 ] as const;
 
 export const SUPERADMIN_GYMS_STATUS_SELECT_OPTIONS = SUPERADMIN_GYMS_STATUS_FILTER_OPTIONS.map((option) => ({
   value: option.value,
-  label: option.label === 'All' ? 'All Statuses' : option.label,
+  labelKey: option.value === 'All' ? 'ui.gym_status_all' : option.labelKey,
 }));
 
 export const SUPERADMIN_GYMS_PLAN_FILTER_OPTIONS = [
-  { value: 'All', label: 'All Plans' },
-  { value: 'STARTER', label: 'Starter' },
-  { value: 'PRO', label: 'Pro' },
-  { value: 'ENTERPRISE', label: 'Enterprise' },
+  { value: 'All', labelKey: 'ui.gym_plan_all' },
+  { value: 'STARTER', labelKey: 'ui.gym_plan_starter' },
+  { value: 'PRO', labelKey: 'ui.gym_plan_pro' },
+  { value: 'ENTERPRISE', labelKey: 'ui.gym_plan_enterprise' },
 ] as const;
 
 export const SUPERADMIN_GYMS_VIEW_MODE_OPTIONS = [
-  { value: 'list', label: 'List' },
-  { value: 'calendar', label: 'Calendar' },
+  { value: 'list', labelKey: 'ui.gym_view_list' },
+  { value: 'calendar', labelKey: 'ui.gym_view_calendar' },
 ] as const;

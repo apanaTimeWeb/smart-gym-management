@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminProfilePersonalForm within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Form for updating the superadmin's personal profile fields.
 import { useEffect } from 'react';

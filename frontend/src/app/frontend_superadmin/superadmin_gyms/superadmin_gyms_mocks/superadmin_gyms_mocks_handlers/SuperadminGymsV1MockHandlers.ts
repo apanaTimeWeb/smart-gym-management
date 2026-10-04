@@ -12,7 +12,7 @@ import { SUPERADMIN_GYM_STATUS_CODES } from '@/app/frontend_superadmin/superadmi
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns MSW handlers and mutable server-like state for the tenant business-controls feature.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_BUSINESS_CONTROLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 import { SuperadminGymsV1BulkMutationRequestSchema } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_schemas/SuperadminGymsV1ContractSchemas';
 import type { SuperadminGymsV1Data } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsV1Types';
@@ -41,12 +41,12 @@ function filterRows(rows: SuperadminGymsV1Data['rows'], filterKey: string): Supe
 }
 
 export const superadminGymsV1Handlers = [
-  http.get('*' + MODULE_URLS.BUSINESS_CONTROLS.BACKEND_API.BASE, ({ request }) => {
+  http.get('*' + SUPERADMIN_GYMS_BUSINESS_CONTROLS.BACKEND_API.BASE, ({ request }) => {
     const filterKey = new URL(request.url).searchParams.get('filter') ?? 'all';
     const filteredRows = filterRows(mockGymsBusinessControls.rows, filterKey);
     return HttpResponse.json({ success: true, message: 'Tenant business-control data loaded.', data: { ...mockGymsBusinessControls, rows: filteredRows } });
   }),
-  http.post('*' + MODULE_URLS.BUSINESS_CONTROLS.BACKEND_API.BASE, async ({ request }) => {
+  http.post('*' + SUPERADMIN_GYMS_BUSINESS_CONTROLS.BACKEND_API.BASE, async ({ request }) => {
     const parsed = SuperadminGymsV1BulkMutationRequestSchema.safeParse(await request.json());
     if (!parsed.success) {
       return HttpResponse.json({ success: false, message: 'Bulk action payload is invalid.', data: null }, { status: StatusCodes.BAD_REQUEST });

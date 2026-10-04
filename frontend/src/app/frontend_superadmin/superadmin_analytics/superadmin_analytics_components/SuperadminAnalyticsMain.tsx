@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Orchestrates the analytics page sections and route-level loading/error states; owns no business calculations or API calls.
 import { useTranslations } from 'next-intl';

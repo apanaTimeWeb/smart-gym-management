@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureRedisTelemetry within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders Redis memory, cache-hit-ratio, and cached-key telemetry from the module query response.
 import { RefreshCcw, Zap } from 'lucide-react';

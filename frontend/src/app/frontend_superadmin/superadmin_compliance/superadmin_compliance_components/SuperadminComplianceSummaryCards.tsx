@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminComplianceSummaryCards within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminComplianceSummaryCards owned by the superadmin_compliance feature boundary.
@@ -16,6 +17,11 @@ import { formatNumber } from '@/lib/formatters';
 import type { SuperadminComplianceSectionProps } from '@/app/frontend_superadmin/superadmin_compliance/superadmin_compliance_types/SuperadminComplianceTypes';
 
 
+/**
+ * @description Renders ComplianceSummaryCards within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminComplianceSummaryCards({ data }: SuperadminComplianceSectionProps) {
   const t = useTranslations('superadmin_compliance');
     return (<div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

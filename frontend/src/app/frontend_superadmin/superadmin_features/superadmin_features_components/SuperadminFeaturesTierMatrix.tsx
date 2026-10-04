@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesTierMatrix within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations.
 import { Layers, Check, Minus } from 'lucide-react';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders System Ops summary cards from TanStack Query server data and links to the owning detail features. No API calls.
 import Link from 'next/link';

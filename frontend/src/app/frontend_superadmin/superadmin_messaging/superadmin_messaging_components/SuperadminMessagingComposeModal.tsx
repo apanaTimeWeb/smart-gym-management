@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingComposeModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Owns Superadmin Messaging form presentation and client-side Zod validation.
 import { zodResolver } from '@hookform/resolvers/zod';

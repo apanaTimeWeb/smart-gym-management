@@ -79,9 +79,7 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_settings_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminSettingsMain.test.ts, useSuperadminSettingsMain.ts, useSuperadminSettingsPage.test.tsx, useSuperadminSettingsPage.ts, useSuperadminSettingsUpdateMutation.test.ts` (+3 more) |
 | `superadmin_settings_locales/` | Owns module-scoped locales artifacts. | `superadmin_settings_en.json, superadmin_settings_hi.json` |
 | `superadmin_settings_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_settings_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminSettingsContractSchemas.ts, SuperadminSettingsSchemas.test.ts, SuperadminSettingsSchemas.ts, SuperadminSettingsV1ContractSchemas.ts` |
 | `superadmin_settings_tests/` | Owns module-scoped tests artifacts. | `SuperadminSettingsBasic.test.tsx, SuperadminSettingsGovernance.test.ts` |
-| `superadmin_settings_types/` | Owns module-scoped types artifacts. | `SuperadminSettingsTypes.ts, SuperadminSettingsV1Types.ts` |
 
 ## Approved External Dependencies
 
@@ -135,7 +133,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** None detected.
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_settings_hooks/useSuperadminSettingsPage.ts`, `superadmin_settings_hooks/useSuperadminSettingsV1.ts`
 - **URL state:** No `useUrlState` detected.
 - **Observed query keys:** `superadmin_settings_constants/SuperadminSettingsQueryKeys.ts`
 
@@ -174,11 +171,7 @@ Source-derived mapping from current consuming components and module-owned API cl
 | Component File | Responsibility evidence |
 |---|---|
 | `page.tsx` | Pure Server Component for the settings page. Renders the interactive client component. |
-| `superadmin_settings_components/SuperadminSettingsV1DataControlsPanel.tsx` | Renders the Superadmin settings V1 Data controls view. |
 | `superadmin_settings_components/SuperadminSettingsMain.tsx` | Renders platform settings. The view owns only local draft input state; server state and mutations stay in the feature hook. |
-| `superadmin_settings_components/SuperadminSettingsV1SecurityControlsPanel.tsx` | Renders the Superadmin settings V1 Security controls view. |
-| `superadmin_settings_components/SuperadminSettingsV1BillingControlsPanel.tsx` | Renders the Superadmin settings V1 Billing controls view. |
-| `superadmin_settings_components/SuperadminSettingsV1CommunicationDefaultsPanel.tsx` | Renders the Superadmin settings V1 Communication defaults view. |
 
 ## Repository-Verified Repair Notes
 

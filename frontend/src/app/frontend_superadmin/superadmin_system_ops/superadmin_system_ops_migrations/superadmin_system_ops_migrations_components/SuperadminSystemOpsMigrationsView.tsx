@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsMigrationsView within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Superadmin schema rollout screen. Delegates query, mutation, confirmation, and cache logic to the page hook.
 import { AlertTriangle, Database, Loader2 } from 'lucide-react';

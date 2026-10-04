@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminIntegrationsConnectionsEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the dedicated empty state for the Superadmin connections list.
 import { useTranslations } from 'next-intl';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutSaaSBillingNavigation within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminLayoutSaaSBillingNavigation owned by the SuperadminLayoutStyles feature boundary.
@@ -16,6 +17,11 @@ import { SUPERADMIN_SAAS_BILLING_NAVIGATION_ITEMS } from '@/app/frontend_superad
 
 
 
+/**
+ * @description Renders SaaSBillingNavigation within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminSaaSBillingNavigation() {
   const pathname = usePathname();
   const router = useRouter();

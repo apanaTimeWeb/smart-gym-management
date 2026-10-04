@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminProfileSecurityForm within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Security settings form — change password and toggle 2FA.
 import { useState } from 'react';

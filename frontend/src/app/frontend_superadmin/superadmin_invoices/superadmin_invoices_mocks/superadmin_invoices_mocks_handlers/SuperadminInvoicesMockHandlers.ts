@@ -12,20 +12,20 @@ import { CreateManualPaymentDtoSchema } from '@/app/frontend_superadmin/superadm
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
+import { SUPERADMIN_INVOICES_API } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_url_config';
 
 import type { CreateManualPaymentDto, SaaSInvoice } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_types/SuperadminInvoicesTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_INVOICES_API.BASE}`;
 let mockInvoices: SaaSInvoice[] = [...MOCK_SUPERADMIN_INVOICES];
 
 export function resetSuperadminInvoicesMockState(): void {
   mockInvoices = [...MOCK_SUPERADMIN_INVOICES];
 }
 export const superadminInvoicesHandlers = [
-    http.get(`*${MODULE_URLS.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
+    http.get(`*${SUPERADMIN_INVOICES_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
     http.get('*' + BASE_URL, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);

@@ -1,4 +1,9 @@
 // RESPONSIBILITY: Skeleton loader for the page, conforming to enterprise design rules (bg-skeleton-base).
+/**
+ * @description Renders Loading within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function Loading() {
     return (<div className="space-y-6">
       <div className="flex justify-between items-center">

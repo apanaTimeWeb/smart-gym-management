@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminSystemOpsBackupsView for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminSystemOpsBackupsView owned by the superadmin_system_ops_backups feature boundary.

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureFlushTenantModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the infrastructure tenant-selection dialog and owns its confirmed cache-flush mutation lifecycle.
 import { useMemo, useRef, useState } from 'react';

@@ -10,7 +10,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
+import { SUPERADMIN_PROFILE_API } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
 
 import type { SuperadminProfileData, UpdateSuperadminProfilePayload, UpdateSuperadminPasswordPayload, Toggle2FAPayload, } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_types/SuperadminProfileTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -18,20 +18,20 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export const superadminProfileApi = {
-    fetchProfile: () => apiFetch<ApiResponse<SuperadminProfileData>>(MODULE_URLS.BACKEND_API.BASE, { dataSchema: SuperadminProfileDataSchema }),
-    updateProfile: (payload: UpdateSuperadminProfilePayload, idempotencyKey: string) => apiFetch<ApiResponse<SuperadminProfileData>>(MODULE_URLS.BACKEND_API.BASE, {
+    fetchProfile: () => apiFetch<ApiResponse<SuperadminProfileData>>(SUPERADMIN_PROFILE_API.BASE, { dataSchema: SuperadminProfileDataSchema }),
+    updateProfile: (payload: UpdateSuperadminProfilePayload, idempotencyKey: string) => apiFetch<ApiResponse<SuperadminProfileData>>(SUPERADMIN_PROFILE_API.BASE, {
         method: 'PATCH',
         body: JSON.stringify(payload),
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: SuperadminProfileDataSchema
     }),
-    updatePassword: (payload: UpdateSuperadminPasswordPayload, idempotencyKey: string) => apiFetch<ApiResponse<void>>(MODULE_URLS.BACKEND_API.PASSWORD, {
+    updatePassword: (payload: UpdateSuperadminPasswordPayload, idempotencyKey: string) => apiFetch<ApiResponse<void>>(SUPERADMIN_PROFILE_API.PASSWORD, {
         method: 'PATCH',
         body: JSON.stringify(payload),
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: SuperadminProfilePasswordResponseDataSchema
     }),
-    updateTwoFactor: (payload: Toggle2FAPayload, idempotencyKey: string) => apiFetch<ApiResponse<SuperadminProfileData>>(MODULE_URLS.BACKEND_API.TWO_FACTOR, {
+    updateTwoFactor: (payload: Toggle2FAPayload, idempotencyKey: string) => apiFetch<ApiResponse<SuperadminProfileData>>(SUPERADMIN_PROFILE_API.TWO_FACTOR, {
         method: 'PATCH',
         body: JSON.stringify(payload),
         headers: { 'Idempotency-Key': idempotencyKey },

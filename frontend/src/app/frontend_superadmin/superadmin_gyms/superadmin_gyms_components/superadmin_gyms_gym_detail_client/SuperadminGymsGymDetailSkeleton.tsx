@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsGymDetailSkeleton within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminGymsGymDetailSkeleton owned by the superadmin_gyms feature boundary.
@@ -9,6 +10,11 @@
  */
 // RESPONSIBILITY: Renders the route-level structural skeleton for the Gym Detail screen.
 
+/**
+ * @description Renders GymsGymDetailSkeleton within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminGymsGymDetailSkeleton() {
   return (
     <div className="space-y-6" aria-busy="true" data-testid="superadmin_gyms-superadmin-gyms-gym-detail-skeleton-detail-skeleton-loading-state">

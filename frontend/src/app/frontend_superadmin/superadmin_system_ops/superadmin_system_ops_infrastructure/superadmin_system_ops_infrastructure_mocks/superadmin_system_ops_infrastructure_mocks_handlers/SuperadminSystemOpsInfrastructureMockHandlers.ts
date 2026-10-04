@@ -11,13 +11,13 @@ import { MOCK_REDIS_TELEMETRY, MOCK_INFRASTRUCTURE_NODES } from '@/app/frontend_
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
+import { SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
 
 
 
 export const superadminInfrastructureHandlers = [
-    http.get(`*${MODULE_URLS.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS })),
-    http.get('*' + MODULE_URLS.BACKEND_API.BASE, async ({ request }) => {
+    http.get(`*${SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS })),
+    http.get('*' + SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.BASE, async ({ request }) => {
         await delay(300);
         const url = new URL(request.url);
         const statusFilter = url.searchParams.get('statusFilter');
@@ -27,19 +27,19 @@ export const superadminInfrastructureHandlers = [
         }
         return HttpResponse.json({ success: true, message: 'Success', data: filtered });
     }),
-    http.get('*' + `${MODULE_URLS.BACKEND_API.BASE}/uptime-history`, async () => {
+    http.get('*' + `${SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.BASE}/uptime-history`, async () => {
         await delay(250);
         return HttpResponse.json({ success: true, message: 'Historical uptime loaded', data: MOCK_SUPERADMIN_INFRASTRUCTURE_UPTIME });
     }),
-    http.get('*' + MODULE_URLS.BACKEND_API.REDIS_TELEMETRY, async () => {
+    http.get('*' + SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_TELEMETRY, async () => {
         await delay(300);
         return HttpResponse.json({ success: true, message: 'Success', data: MOCK_REDIS_TELEMETRY });
     }),
-    http.post('*' + MODULE_URLS.BACKEND_API.REDIS_FLUSH_GLOBAL, async () => {
+    http.post('*' + SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_FLUSH_GLOBAL, async () => {
         await delay(600);
         return HttpResponse.json({ success: true, message: 'Global cache flushed' });
     }),
-    http.post('*' + MODULE_URLS.BACKEND_API.REDIS_FLUSH_TENANT, async () => {
+    http.post('*' + SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_API.REDIS_FLUSH_TENANT, async () => {
         await delay(600);
         return HttpResponse.json({ success: true, message: 'Tenant cache flushed' });
     }),

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsDateFilterDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminCouponsDateFilterDropdown owned by the superadmin_coupons feature boundary.
@@ -69,7 +70,7 @@ export function SuperadminCouponsDateFilterDropdown() {
     }, [router, searchParams, pathname]);
     return (<div className="flex items-center gap-2 flex-wrap">
       <div className="w-48 bg-input border border-border rounded-lg shadow-card shrink-0">
-        <SearchableDropdown data-testid="superadmin_coupons-superadmin-coupons-date-filter-dropdown-date-filter" options={SUPERADMIN_COUPONS_DATE_FILTER_OPTIONS.map((option) => ({ label: option.label, value: option.value }))} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
+        <SearchableDropdown data-testid="superadmin_coupons-superadmin-coupons-date-filter-dropdown-date-filter" options={SUPERADMIN_COUPONS_DATE_FILTER_OPTIONS.map((option) => ({ label: t(option.labelKey), value: option.value }))} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
       </div>
 
       {value === 'custom' && (<div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-card px-3 py-2 shrink-0">

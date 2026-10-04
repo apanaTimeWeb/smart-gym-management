@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminIntegrationsMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Orchestrates the Superadmin integrations page and its focused child sections.
 import { useTranslations } from 'next-intl';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutHeaderProfile within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminLayoutHeaderProfile owned by the SuperadminLayoutStyles feature boundary.
@@ -16,7 +17,7 @@ import { useTranslations } from 'next-intl';
 
 import { getUser, logout } from '@/lib/api';
 
-import { MODULE_URLS as SUPERADMIN_PROFILE_URLS } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
+import { SUPERADMIN_PROFILE_ROUTES } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
 
 
 
@@ -62,7 +63,7 @@ export function SuperadminLayoutHeaderProfile() {
             {mounted && user?.role && <p className="text-xs text-warning bg-warning-bg inline-block px-1.5 rounded-md font-medium mt-0.5">{user.role}</p>}
           </div>
           <div className="py-1">
-            <Link href={SUPERADMIN_PROFILE_URLS.PAGES.MAIN} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base" onClick={() => setShowProfile(false)} data-testid="SuperadminLayoutStyles-superadmin-header-profile-header-profile-my-profile">
+            <Link href={SUPERADMIN_PROFILE_ROUTES.MAIN} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base" onClick={() => setShowProfile(false)} data-testid="SuperadminLayoutStyles-superadmin-header-profile-header-profile-my-profile">
               <User size={18} /> {t('ui.my_profile_e8956174')}</Link>
           </div>
           <div className="border-t border-border py-1">

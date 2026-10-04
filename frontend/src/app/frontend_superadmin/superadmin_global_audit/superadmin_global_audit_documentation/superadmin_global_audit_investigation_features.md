@@ -23,9 +23,7 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_global_audit_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminGlobalAuditData.test.tsx, useSuperadminGlobalAuditData.ts, useSuperadminGlobalAuditExportMutation.test.ts, useSuperadminGlobalAuditExportMutation.ts, useSuperadminGlobalAuditMain.test.ts` (+3 more) |
 | `superadmin_global_audit_locales/` | Owns module-scoped locales artifacts. | `superadmin_global_audit_en.json, superadmin_global_audit_hi.json` |
 | `superadmin_global_audit_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_global_audit_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminGlobalAuditContractSchemas.ts, SuperadminGlobalAuditExportResponseSchema.ts, SuperadminGlobalAuditV1ContractSchemas.ts` |
 | `superadmin_global_audit_tests/` | Owns module-scoped tests artifacts. | `SuperadminGlobalAuditBasic.test.tsx, SuperadminGlobalAuditInvestigation.test.ts` |
-| `superadmin_global_audit_types/` | Owns module-scoped types artifacts. | `SuperadminGlobalAuditFilterTypes.ts, SuperadminGlobalAuditSeverityBadgeTypes.ts, SuperadminGlobalAuditTypes.ts, SuperadminGlobalAuditV1Types.ts` |
 | `superadmin_global_audit_utils/` | Owns module-scoped utils artifacts. | `SuperadminGlobalAuditExportUtils.test.ts, SuperadminGlobalAuditExportUtils.ts` |
 
 ## Approved External Dependencies
@@ -65,7 +63,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** None detected.
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_global_audit_hooks/useSuperadminGlobalAuditV1.ts`, `superadmin_global_audit_hooks/useSuperadminGlobalAuditData.ts`
 - **URL state:** `useUrlState` detected.
 - **Observed query keys:** `superadmin_global_audit_constants/SuperadminGlobalAuditQueryKeys.ts`
 
@@ -104,10 +101,7 @@ Source-derived mapping from current consuming components and module-owned API cl
 | Component File | Responsibility evidence |
 |---|---|
 | `page.tsx` | Server component entry point for the Superadmin Global Audit module. |
-| `superadmin_global_audit_components/SuperadminGlobalAuditV1SuspiciousActivityPanel.tsx` | Renders the Superadmin global-audit V1 Suspicious activity view. |
 | `superadmin_global_audit_components/SuperadminGlobalAuditMain.tsx` | Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events. |
-| `superadmin_global_audit_components/SuperadminGlobalAuditV1BeforeAndAfterChangesPanel.tsx` | Renders the Superadmin global-audit V1 Before & after changes view. |
-| `superadmin_global_audit_components/SuperadminGlobalAuditV1InvestigationSummaryCards.tsx` | Provides working risk/filter selection for the Superadmin audit-investigation insight view. |
 
 ## Repository-Verified Repair Notes
 
@@ -132,3 +126,7 @@ This addendum is generated from the current source tree and exists to make futur
 - [x] Feature docs contain a concrete directory map and compliance checklist.
 - [x] No marker-only or JSON-stringify tautology test remains.
 - [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+
+## V15 Repair Supersession
+
+The investigation V1 implementation was an orphaned, unmounted stack in the supplied role package and was removed during the V15 repair. This document is retained as historical evidence only and is not an active route/component/API contract.

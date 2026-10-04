@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminInvoicesEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminInvoicesEmptyState owned by the superadmin_invoices feature boundary.
@@ -15,10 +16,15 @@ import type { SuperadminInvoicesEmptyStateProps } from '@/app/frontend_superadmi
 
 
 
+/**
+ * @description Renders InvoicesEmptyState within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminInvoicesEmptyState({ onLogPaymentClick }: SuperadminInvoicesEmptyStateProps) {
   const t = useTranslations('superadmin_invoices');
     return (<div className="flex flex-col items-center justify-center py-16 text-center" data-testid="superadmin_invoices-superadmin-invoices-empty-state-invoices-empty-state-empty">
-      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4" data-testid="superadmin_invoices-invoicesemptystate-state">
         <Receipt size={18} className="text-secondary opacity-50"/>
       </div>
       <h3 className="text-base font-semibold text-primary">{t('ui.no_invoices_yet_741a477d')}</h3>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutTopLoader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the application-wide route transition progress indicator for the Superadmin shell. No business logic.
 

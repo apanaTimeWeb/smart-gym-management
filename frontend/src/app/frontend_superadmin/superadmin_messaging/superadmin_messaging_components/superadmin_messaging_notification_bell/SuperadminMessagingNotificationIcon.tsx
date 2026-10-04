@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingNotificationIcon within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the semantic icon for one Superadmin notification severity.
 import { AlertTriangle, Info } from 'lucide-react';

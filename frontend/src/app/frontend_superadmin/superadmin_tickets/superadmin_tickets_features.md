@@ -16,7 +16,6 @@ The Tickets module gives Superadmins a support-operations workspace for tenant-f
 ## Component Tree
 
 - Route entry: `page.tsx` → primary module composition.
-- Module-owned component surface: `SuperadminTicketsEmptyState.tsx`, `SuperadminTicketsHeader.tsx`, `SuperadminTicketsMain.tsx`, `SuperadminTicketsReplyModal.tsx`, `SuperadminTicketsReplyModal.test.tsx`, `SuperadminTicketsTable.tsx`, `SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx`, `SuperadminTicketsV1SupportCategoriesPanel.tsx`.
 - Child component folders remain feature-prefixed and isolated to this module.
 
 ## API Contract Summary
@@ -69,16 +68,12 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | Path | Responsibility | Key Files |
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_tickets`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_tickets_features.md, superadmin_tickets_forbidden.md, superadmin_tickets_theme_contract.md, superadmin_tickets_url_config.ts` |
-| `superadmin_tickets_api/` | Owns module-scoped api artifacts. | `SuperadminTicketsApiCrudApi.ts, SuperadminTicketsServiceInsightsApi.ts` |
-| `superadmin_tickets_components/` | Owns module-scoped components artifacts. | `SuperadminTicketsMain.tsx, SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx, SuperadminTicketsV1SupportCategoriesPanel.tsx, SuperadminTicketsV1SupportSummaryCards.tsx` |
 | `superadmin_tickets_constants/` | Owns module-scoped constants artifacts. | `SuperadminTicketsConstants.test.ts, SuperadminTicketsConstants.ts, SuperadminTicketsQueryKeys.ts` |
 | `superadmin_tickets_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_tickets_repair_map.md, superadmin_tickets_service_insights_features.md, superadmin_tickets_service_insights_forbidden.md, superadmin_tickets_service_insights_repair_map.md, superadmin_tickets_service_insights_theme_contract.md` |
 | `superadmin_tickets_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminTickets.test.tsx, useSuperadminTickets.ts, useSuperadminTicketsMainViewModel.test.ts, useSuperadminTicketsMainViewModel.ts, useSuperadminTicketsPageActions.test.tsx` (+7 more) |
 | `superadmin_tickets_locales/` | Owns module-scoped locales artifacts. | `superadmin_tickets_en.json, superadmin_tickets_hi.json` |
 | `superadmin_tickets_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_tickets_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminTicketsApiSchema.ts, SuperadminTicketsTypesSchemas.ts, SuperadminTicketsV1ResponseSchema.ts, SuperadminTicketsV1Schema.ts` |
 | `superadmin_tickets_store/` | Owns module-scoped store artifacts. | `useSuperadminTicketsStore.test.ts, useSuperadminTicketsStore.ts` |
-| `superadmin_tickets_tests/` | Owns module-scoped tests artifacts. | `SuperadminTicketsBasic.test.tsx, SuperadminTicketsServiceInsights.test.ts` |
 | `superadmin_tickets_types/` | Owns module-scoped types artifacts. | `SuperadminTicketsHeaderTypes.ts, SuperadminTicketsReplyFormTypes.ts, SuperadminTicketsReplyModalTypes.ts, SuperadminTicketsStoreTypes.ts, SuperadminTicketsTableTypes.ts` (+2 more) |
 | `superadmin_tickets_utils/` | Owns module-scoped utils artifacts. | `SuperadminTicketsFormatters.test.ts, SuperadminTicketsFormatters.ts, SuperadminTicketsSlaUtils.test.ts, SuperadminTicketsSlaUtils.ts` |
 
@@ -133,7 +128,6 @@ Assign/Close → select a ticket → confirm the operational action where requir
 - **Context files:** None detected.
 - **URL state:** No `useUrlState` usage detected; no module-owned list/filter URL state was evidenced.
 - **Query-key registries:** `superadmin_tickets_constants/SuperadminTicketsQueryKeys.ts`
-- **MSW handlers:** `superadmin_tickets_mocks/superadmin_tickets_mocks_handlers/SuperadminTicketsMockHandlers.ts`, `superadmin_tickets_mocks/superadmin_tickets_mocks_handlers/SuperadminTicketsV1MockHandlers.ts`
 - **MSW fixtures:** `superadmin_tickets_mocks/superadmin_tickets_mocks_fixtures/SuperadminTicketsMockData.ts`, `superadmin_tickets_mocks/superadmin_tickets_mocks_fixtures/SuperadminTicketsV1MockFixtures.ts`
 
 ## API Contract
@@ -150,11 +144,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_tickets_components/SuperadminTicketsMain.tsx` | `isPending`, `isError`, `t`, `search`, `setSearch`, `showFilter`, `setShowFilter`, `statusFilter` | `superadmin_tickets_api/SuperadminTicketsApiCrudApi.ts`, `superadmin_tickets_api/SuperadminTicketsServiceInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_tickets_components/SuperadminTicketsV1OperatorWorkloadAndBacklogSection.tsx` | `agents`, `aging` | `superadmin_tickets_api/SuperadminTicketsApiCrudApi.ts`, `superadmin_tickets_api/SuperadminTicketsServiceInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_tickets_components/SuperadminTicketsV1SupportCategoriesPanel.tsx` | `categories` | `superadmin_tickets_api/SuperadminTicketsApiCrudApi.ts`, `superadmin_tickets_api/SuperadminTicketsServiceInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_tickets_components/SuperadminTicketsV1SupportSummaryCards.tsx` | `summary` | `superadmin_tickets_api/SuperadminTicketsApiCrudApi.ts`, `superadmin_tickets_api/SuperadminTicketsServiceInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_tickets_components/superadmin_tickets_table/SuperadminTicketsTable.tsx` | `slaDeadline`, `id`, `tenantId`, `tenantName`, `subject`, `priority`, `status`, `lastUpdated` | `superadmin_tickets_api/SuperadminTicketsApiCrudApi.ts`, `superadmin_tickets_api/SuperadminTicketsServiceInsightsApi.ts` | Module-owned fixture/handler |
 
 ## Permissions / Security
 - This module is part of the Superadmin role container.
@@ -214,3 +203,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 ## V13 Repair Freshness
 
 Current repair baseline: `frontend-superadmin-v13-fix`. This feature was re-audited in the v5 repair cycle for module isolation, semantic design-token usage, AI-introspection identifiers, loading/error/not-found coverage, test ownership, and functional-flow evidence. The role-level isolated Playwright journey for this route lives under `playwright_E2E/` at the corresponding `frontend_superadmin_e2e/` path.
+
+
+## V15 Repair Supersession
+
+Removed the orphan service-insights V1 contract test/stack. Active ticket CRUD/reply flow remains canonical.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTicketsEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the SuperadminTicketsEmptyState component.
 import { MessageSquare } from 'lucide-react';
@@ -14,7 +15,7 @@ export default function SuperadminTicketsEmptyState() {
   const t = useTranslations('superadmin_tickets');
     return (<div data-testid="superadmin_tickets-superadmin-tickets-empty-state-tickets-empty-state-empty" className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <div className="bg-primary-subtle p-4 rounded-full mb-4" data-testid="superadmin_tickets-superadmin-tickets-empty-state-tickets-empty-state-empty-2">
-        <MessageSquare size={18} className="text-primary opacity-80"/>
+        <MessageSquare size={18} className="text-primary opacity-80" data-testid="superadmin_tickets-ticketsemptystate-state"/>
       </div>
       <h3 className="text-lg font-bold text-primary mb-1">{t('ui.no_support_tickets_found_b7a9656')}</h3>
       <p className="text-sm text-secondary max-w-sm">

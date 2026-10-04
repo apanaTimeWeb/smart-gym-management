@@ -1,12 +1,18 @@
+// RESPONSIBILITY: Renders/orchestrates not-found within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_ROUTES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
+/**
+ * @description Renders GymNotFound within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function GymNotFound() {
   const t = useTranslations('superadmin_gyms');
     return (<div className="flex flex-col items-center justify-center min-h-96 gap-4 text-center p-8" data-testid="superadmin_gyms-not-found-not-found-not-found">
@@ -18,7 +24,7 @@ export default function GymNotFound() {
         <p className="text-secondary max-w-sm mx-auto">
           {t('ui.the_gym_you_are_looking_for_does_not_exist_o_d3211293')}</p>
       </div>
-      <Link href={MODULE_URLS.PAGES.MAIN} className="mt-4 px-5 py-2.5 bg-primary text-on-primary font-medium rounded-lg hover:bg-primary-subtle motion-safe:transition-colors" data-testid="superadmin_gyms-not-found-back-to-gyms-directory">
+      <Link href={SUPERADMIN_GYMS_ROUTES.MAIN} className="mt-4 px-5 py-2.5 bg-primary text-on-primary font-medium rounded-lg hover:bg-primary-subtle motion-safe:transition-colors" data-testid="superadmin_gyms-not-found-back-to-gyms-directory">
         {t('ui.back_to_gyms_directory_39d3c97f')}</Link>
     </div>);
 }

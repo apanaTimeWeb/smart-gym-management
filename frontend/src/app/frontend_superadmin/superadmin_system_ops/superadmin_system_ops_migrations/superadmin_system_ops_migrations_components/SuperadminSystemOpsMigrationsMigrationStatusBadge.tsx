@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsMigrationsMigrationStatusBadge within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { AlertTriangle, RefreshCw, XCircle, CheckCircle, Clock } from 'lucide-react';
 
@@ -15,7 +16,7 @@ import type { MigrationLog } from '@/app/frontend_superadmin/superadmin_system_o
  * @edge-case Must preserve the owning feature's loading, empty, error, disabled, keyboard, and repeated-action behavior where applicable.
  */
 export default function SuperadminSystemOpsMigrationsMigrationStatusBadge({ status }: SuperadminMigrationStatusBadgeProps) {
-  const icon = status === SUPERADMIN_MIGRATION_STATUS_CODES.COMPLETED || status === SUPERADMIN_MIGRATION_STATUS_CODES.SUCCESS ? <CheckCircle size={18} aria-hidden="true" data-testid="superadmin_system_ops_migrations-superadmin-system-ops-migrations-migration-status-badge-migration-status-badge-status"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.FAILED ? <XCircle size={18} aria-hidden="true"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.IN_PROGRESS ? <RefreshCw size={18} className="motion-safe:animate-spin" aria-hidden="true"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.ROLLED_BACK || status === SUPERADMIN_MIGRATION_STATUS_CODES.ROLLBACK ? <AlertTriangle size={18} aria-hidden="true"/> : <Clock size={18} aria-hidden="true"/>;
+  const icon = status === SUPERADMIN_MIGRATION_STATUS_CODES.COMPLETED || status === SUPERADMIN_MIGRATION_STATUS_CODES.SUCCESS ? <CheckCircle size={18} aria-hidden="true" data-testid="superadmin_system_ops_migrations-superadmin-system-ops-migrations-migration-status-badge-migration-status-badge-status"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.FAILED ? <XCircle size={18} aria-hidden="true" data-testid="superadmin_system_ops-systemopsmigrationsmigrationstatusbadge-state"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.IN_PROGRESS ? <RefreshCw size={18} className="motion-safe:animate-spin" aria-hidden="true"/> : status === SUPERADMIN_MIGRATION_STATUS_CODES.ROLLED_BACK || status === SUPERADMIN_MIGRATION_STATUS_CODES.ROLLBACK ? <AlertTriangle size={18} aria-hidden="true"/> : <Clock size={18} aria-hidden="true"/>;
   return <span data-testid="superadmin_system_ops_migrations-superadmin-system-ops-migrations-migration-status-badge-superadmin_system_ops_migrations-superadminmigrationstatusbadge-status" className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${SUPERADMIN_MIGRATION_STATUS_STYLES[status as MigrationLog['status']]}`}>{icon}{status.replaceAll('_', ' ')}</span>;
 }
 

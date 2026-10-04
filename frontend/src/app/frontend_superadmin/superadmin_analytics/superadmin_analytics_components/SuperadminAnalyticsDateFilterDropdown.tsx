@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsDateFilterDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: A unified Date Filter dropdown used across Superadmin pages (Dashboard, Analytics, Invoices, Coupons, Onboarding, Reports).
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates not-found within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { SearchX } from 'lucide-react';
 // RESPONSIBILITY: Renders the superadmin_system_ops_migrations route-segment not-found state and provides documented recovery navigation.
@@ -5,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
+import { SUPERADMIN_SYSTEM_OPS_MIGRATIONS_ROUTES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_migrations/superadmin_system_ops_migrations_url_config';
 
 
 
@@ -23,7 +24,7 @@ export default function NotFound() {
       </div>
       <h2 className="text-xl font-bold text-primary">{t('ui.not_found_title')}</h2>
       <p className="max-w-md text-sm text-secondary">{t('ui.not_found_description')}</p>
-      <Link href={MODULE_URLS.PAGES.MAIN} data-testid="superadmin_system_ops_migrations-not-found-superadmin_system_ops_migrations-not-found-back" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">{t('ui.back_to_module')}</Link>
+      <Link href={SUPERADMIN_SYSTEM_OPS_MIGRATIONS_ROUTES.MAIN} data-testid="superadmin_system_ops_migrations-not-found-superadmin_system_ops_migrations-not-found-back" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">{t('ui.back_to_module')}</Link>
     </div>
   );
 }

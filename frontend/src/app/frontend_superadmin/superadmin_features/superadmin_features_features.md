@@ -16,7 +16,6 @@ The Features module manages platform feature flags and release-note publication 
 ## Component Tree
 
 - Route entry: `page.tsx` → primary module composition.
-- Module-owned component surface: `SuperadminFeaturesFeatureHistoryModal.tsx`, `SuperadminFeaturesFeatureRolloutModal.tsx`, `SuperadminFeaturesFlagsPanel.tsx`, `SuperadminFeaturesHeader.tsx`, `SuperadminFeaturesMain.tsx`, `SuperadminFeaturesReleaseNotesPanel.tsx`, `SuperadminFeaturesTierMatrix.tsx`, `SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`.
 - Child component folders remain feature-prefixed and isolated to this module.
 
 ## API Contract Summary
@@ -69,15 +68,11 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | Path | Responsibility | Key Files |
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_features`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_features_features.md, superadmin_features_forbidden.md, superadmin_features_theme_contract.md, superadmin_features_url_config.ts` |
-| `superadmin_features_api/` | Owns module-scoped api artifacts. | `SuperadminFeaturesApi.ts, SuperadminFeaturesRolloutInsightsApi.ts` |
-| `superadmin_features_components/` | Owns module-scoped components artifacts. | `SuperadminFeaturesFeatureHistoryModal.tsx, SuperadminFeaturesFeatureRolloutModal.tsx, SuperadminFeaturesMain.tsx, SuperadminFeaturesTierMatrix.tsx, SuperadminFeaturesV1ReleaseAndRollbackSection.tsx` (+1 more) |
 | `superadmin_features_constants/` | Owns module-scoped constants artifacts. | `SuperadminFeaturesQueryKeys.ts, SuperadminFeaturesTierMatrixConstants.test.ts, SuperadminFeaturesTierMatrixConstants.ts, SuperadminFeaturesUiConstants.ts` |
 | `superadmin_features_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_features_repair_map.md, superadmin_features_rollout_insights_features.md, superadmin_features_rollout_insights_forbidden.md, superadmin_features_rollout_insights_repair_map.md, superadmin_features_rollout_insights_theme_contract.md` |
 | `superadmin_features_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminFeaturesActions.test.ts, useSuperadminFeaturesActions.ts, useSuperadminFeaturesData.test.tsx, useSuperadminFeaturesData.ts, useSuperadminFeaturesFeatureFlagStatusMutation.test.tsx` (+17 more) |
 | `superadmin_features_locales/` | Owns module-scoped locales artifacts. | `superadmin_features_en.json, superadmin_features_hi.json` |
 | `superadmin_features_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_features_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminFeaturesApiSchema.ts, SuperadminFeaturesTypesSchemas.ts, SuperadminFeaturesUiSchema.ts, SuperadminFeaturesV1ResponseSchema.ts, SuperadminFeaturesV1Schema.ts` |
-| `superadmin_features_tests/` | Owns module-scoped tests artifacts. | `SuperadminFeaturesBasic.test.tsx, SuperadminFeaturesRolloutInsights.test.ts` |
 | `superadmin_features_types/` | Owns module-scoped types artifacts. | `SuperadminFeaturesActionsTypes.ts, SuperadminFeaturesFeatureHistoryModalTypes.ts, SuperadminFeaturesFlagsPanelTypes.ts, SuperadminFeaturesHeaderTypes.ts, SuperadminFeaturesMutationTypes.ts` (+5 more) |
 | `superadmin_features_utils/` | Owns module-scoped utils artifacts. | `SuperadminFeaturesDateUtils.test.ts, SuperadminFeaturesDateUtils.ts, SuperadminFeaturesFormatters.test.ts, SuperadminFeaturesFormatters.ts` |
 
@@ -131,8 +126,6 @@ Open flag History/Insights → load feature-scoped data → render loading/empty
 - **Context files:** None detected.
 - **URL state:** No `useUrlState` usage detected; no module-owned list/filter URL state was evidenced.
 - **Query-key registries:** `superadmin_features_constants/SuperadminFeaturesQueryKeys.ts`
-- **MSW handlers:** `superadmin_features_mocks/superadmin_features_mocks_handlers/SuperadminFeaturesMockHandlers.ts`, `superadmin_features_mocks/superadmin_features_mocks_handlers/SuperadminFeaturesV1MockHandlers.ts`
-- **MSW fixtures:** `superadmin_features_mocks/superadmin_features_mocks_fixtures/SuperadminFeaturesMockFixtures.ts`, `superadmin_features_mocks/superadmin_features_mocks_fixtures/SuperadminFeaturesV1MockFixtures.ts`
 
 ## API Contract
 The module uses centralized URL-config files and the approved role API transport. API response payloads passed to application code are supplied with `dataSchema` contracts where the source defines a response schema. The audit must not infer backend behavior beyond these frontend contracts.
@@ -147,9 +140,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_features_components/SuperadminFeaturesFeatureRolloutModal.tsx` | `name`, `id` | `superadmin_features_api/SuperadminFeaturesApi.ts`, `superadmin_features_api/SuperadminFeaturesRolloutInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx` | `releases`, `rollback` | `superadmin_features_api/SuperadminFeaturesApi.ts`, `superadmin_features_api/SuperadminFeaturesRolloutInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_features_components/SuperadminFeaturesV1RolloutControlPanel.tsx` | `rollouts` | `superadmin_features_api/SuperadminFeaturesApi.ts`, `superadmin_features_api/SuperadminFeaturesRolloutInsightsApi.ts` | Module-owned fixture/handler |
 
 ## Permissions / Security
 - This module is part of the Superadmin role container.
@@ -209,3 +199,10 @@ Source-derived mapping from current consuming components and module-owned API cl
 ## V13 Repair Freshness
 
 Current repair baseline: `frontend-superadmin-v13-fix`. This feature was re-audited in the v5 repair cycle for module isolation, semantic design-token usage, AI-introspection identifiers, loading/error/not-found coverage, test ownership, and functional-flow evidence. The role-level isolated Playwright journey for this route lives under `playwright_E2E/` at the corresponding `frontend_superadmin_e2e/` path.
+
+
+## V15 Repair Supersession
+
+Removed the orphan rollout-insights V1 stack and its contract test. Active feature flags/history/rollout controls remain canonical.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

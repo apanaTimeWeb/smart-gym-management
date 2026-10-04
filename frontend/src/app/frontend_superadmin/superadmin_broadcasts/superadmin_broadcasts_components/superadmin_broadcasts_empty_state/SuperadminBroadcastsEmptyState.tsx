@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminBroadcastsEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsEmptyState owned by the superadmin_broadcasts feature boundary.
@@ -14,10 +15,15 @@ import { useTranslations } from 'next-intl';
 import type { SuperadminBroadcastsEmptyStateProps } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsTypes';
 
 
+/**
+ * @description Renders BroadcastsEmptyState within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminBroadcastsEmptyState({ onCreateClick }: SuperadminBroadcastsEmptyStateProps) {
   const t = useTranslations('superadmin_broadcasts');
     return (<div className="flex flex-col items-center justify-center py-16 text-center" data-testid="superadmin_broadcasts-superadmin-broadcasts-empty-state-broadcasts-empty-state-empty">
-      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4" data-testid="superadmin_broadcasts-broadcastsemptystate-state">
         <Megaphone size={18} className="text-secondary opacity-50"/>
       </div>
       <h3 className="text-base font-semibold text-primary">{t('ui.no_broadcasts_yet_2b360f65')}</h3>

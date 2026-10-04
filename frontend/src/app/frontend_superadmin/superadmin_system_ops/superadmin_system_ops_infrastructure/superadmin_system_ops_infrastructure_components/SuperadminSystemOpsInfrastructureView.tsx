@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminSystemOpsInfrastructureView for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminSystemOpsInfrastructureView owned by the superadmin_system_ops_infrastructure feature boundary.
@@ -24,6 +25,11 @@ import { useSuperadminSystemOpsInfrastructureMainViewModel } from '@/app/fronten
  * @dependencies Delegates domain behavior to the feature-local dependencies imported by this file.
  * @state Keeps server state in TanStack Query and module UI state in the owning feature state layer where applicable.
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
+ */
+/**
+ * @description Renders SystemOpsInfrastructureView within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
  */
 export default function SuperadminSystemOpsInfrastructureView() {
   const vm = useSuperadminSystemOpsInfrastructureMainViewModel();

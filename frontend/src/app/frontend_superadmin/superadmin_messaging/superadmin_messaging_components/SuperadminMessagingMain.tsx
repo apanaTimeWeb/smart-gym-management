@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminMessagingMain owned by the superadmin_messaging feature boundary.
@@ -23,6 +24,11 @@ import { useSuperadminMessagingMainViewModel } from '@/app/frontend_superadmin/s
  * @dependencies Delegates domain behavior to the feature-local dependencies imported by this file.
  * @state Keeps server state in TanStack Query and module UI state in the owning feature state layer where applicable.
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
+ */
+/**
+ * @description Renders MessagingMain within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
  */
 export default function SuperadminMessagingMain() {
   const t = useTranslations('superadmin_messaging');

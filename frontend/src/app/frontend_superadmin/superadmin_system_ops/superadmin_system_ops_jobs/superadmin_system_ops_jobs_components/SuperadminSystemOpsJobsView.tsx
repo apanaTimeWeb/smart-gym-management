@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsJobsView within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: SuperadminSystemOpsJobsView.tsx — orchestrator for the Background Jobs page.
 import { SUPERADMIN_JOBS_FILTER_QUEUE_CODES, SUPERADMIN_JOBS_FILTER_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_constants/SuperadminSystemOpsJobsConstants';

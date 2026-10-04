@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutResponsiveTableProvider within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminLayoutResponsiveTableProvider owned by the SuperadminLayoutStyles feature boundary.

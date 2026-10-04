@@ -80,10 +80,8 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_reports_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminReportsExportMutation.test.ts, useSuperadminReportsExportMutation.ts, useSuperadminReportsMain.test.ts, useSuperadminReportsMain.ts, useSuperadminReportsPage.test.tsx` (+3 more) |
 | `superadmin_reports_locales/` | Owns module-scoped locales artifacts. | `superadmin_reports_en.json, superadmin_reports_hi.json` |
 | `superadmin_reports_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_reports_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminReportsContractSchemas.ts, SuperadminReportsExportResponseSchema.ts, SuperadminReportsV1ContractSchemas.ts` |
 | `superadmin_reports_tests/` | Owns module-scoped tests artifacts. | `SuperadminReportsBasic.test.tsx, SuperadminReportsComparison.test.ts` |
 | `superadmin_reports_types/` | Owns module-scoped types artifacts. | `SuperadminReportsDatePresetDropdownTypes.ts, SuperadminReportsExportButtonTypes.ts, SuperadminReportsProgressBarTypes.ts, SuperadminReportsTabTypes.ts, SuperadminReportsTypes.ts` (+2 more) |
-| `superadmin_reports_utils/` | Owns module-scoped utils artifacts. | `SuperadminReportsDateRangeUtils.test.ts, SuperadminReportsDateRangeUtils.ts, SuperadminReportsFormatCurrency.test.ts, SuperadminReportsFormatCurrency.ts, SuperadminReportsV1ComparisonUtils.test.ts` (+1 more) |
 
 ## Approved External Dependencies
 
@@ -142,7 +140,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** None detected.
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_reports_hooks/useSuperadminReportsPage.ts`, `superadmin_reports_hooks/useSuperadminReportsV1.ts`
 - **URL state:** `useUrlState` detected.
 - **Observed query keys:** `superadmin_reports_constants/SuperadminReportsQueryKeys.ts`
 
@@ -184,15 +181,12 @@ Source-derived mapping from current consuming components and module-owned API cl
 | Component File | Responsibility evidence |
 |---|---|
 | `page.tsx` | Renders the page component and its associated UI logic. |
-| `superadmin_reports_components/SuperadminReportsV1ComparisonControls.tsx` | Renders report period/segment controls from server-provided definitions and exports the selected comparison dataset. |
 | `superadmin_reports_components/SuperadminReportsMain.tsx` | Renders Reports from hook-owned server state and URL-owned filters. No direct API calls occur in this component. |
 | `superadmin_reports_components/SuperadminReportsExportButton.tsx` | Renders the Reports Export Button component and its associated UI logic. |
 | `superadmin_reports_components/SuperadminReportsSummaryCards.tsx` | Renders the Reports Summary Cards component and its associated UI logic. |
 | `superadmin_reports_components/SuperadminReportsDatePresetDropdown.tsx` | Renders the Reports date preset selector and emits the selected preset plus calculated range to its parent. |
-| `superadmin_reports_components/SuperadminReportsV1PlanAndRegionComparison.tsx` | Renders the Superadmin reports V1 Plan comparison, Region comparison view. |
 | `superadmin_reports_components/SuperadminReportsHealthTab.tsx` | Renders the Reports Health Tab component and its associated UI logic. |
 | `superadmin_reports_components/SuperadminReportsCancellationsTab.tsx` | Renders the Reports Cancellations Tab component and its associated UI logic. |
-| `superadmin_reports_components/SuperadminReportsV1ComparisonSummary.tsx` | Renders the Superadmin reports V1 ReportsComparisonSummary. |
 | `superadmin_reports_components/SuperadminReportsRevenueTab.tsx` | Renders the Reports Revenue Tab component and its associated UI logic. |
 
 ## Repository-Verified Repair Notes
@@ -218,3 +212,10 @@ This addendum is generated from the current source tree and exists to make futur
 - [x] Feature docs contain a concrete directory map and compliance checklist.
 - [x] No marker-only or JSON-stringify tautology test remains.
 - [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+
+
+## V15 Repair Supersession
+
+Removed the orphan comparison V1 contract test; active reports tabs/export flow remain canonical.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

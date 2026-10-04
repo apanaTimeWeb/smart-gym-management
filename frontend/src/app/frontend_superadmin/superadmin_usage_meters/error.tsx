@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates error within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: error.tsx handles module-level rendering errors.
 import { useEffect } from 'react';
@@ -8,6 +9,11 @@ import { useTranslations } from 'next-intl';
 import { logger } from '@/lib/logger';
 
 
+/**
+ * @description Renders ErrorBoundary within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function ErrorBoundary({ error, reset }: {
     error: Error & {
         digest?: string;

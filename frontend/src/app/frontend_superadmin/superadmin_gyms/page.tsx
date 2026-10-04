@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 
 import SuperadminGymsMain from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/SuperadminGymsMain';
 import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_error_boundary/SuperadminLayoutErrorBoundary';
+import SuperadminPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 
 import type { Metadata } from 'next';
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 export default function GymsPage() {
     // In the future, server-side fetching can happen here before passing data to SuperadminGymsMain
     return (<SuperadminLayoutErrorBoundary>
-      <Suspense fallback={<div className="p-6 text-center text-secondary">Loading...</div>}>
+      <Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
         <SuperadminGymsMain />
       </Suspense>
     </SuperadminLayoutErrorBoundary>);

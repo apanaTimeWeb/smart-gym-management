@@ -4,7 +4,7 @@ import { expect, beforeEach, beforeAll, afterAll, describe, it } from 'vitest';
 import { superadminGymDetailHandlers } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_mocks/superadmin_gyms_mocks_handlers/SuperadminGymsGymDetailMockHandlers';
 import { SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_mocks/superadmin_gyms_mocks_fixtures/SuperadminGymsGymDetailMockFixtures';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_GYM_DETAIL } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
 
@@ -19,7 +19,7 @@ describe('Superadmin Gym 360 MSW integration', () => {
     const ids = Object.keys(SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES);
     expect(ids).toHaveLength(24);
     for (const gymId of ids) {
-      const response = await fetch(`http://localhost${MODULE_URLS.GYM_DETAIL.BACKEND_API.BY_GYM(gymId)}`);
+      const response = await fetch(`http://localhost${SUPERADMIN_GYMS_GYM_DETAIL.BACKEND_API.BY_GYM(gymId)}`);
       expect(response.ok).toBe(true);
       const body = await response.json();
       expect(body.data.gymId).toBe(gymId);

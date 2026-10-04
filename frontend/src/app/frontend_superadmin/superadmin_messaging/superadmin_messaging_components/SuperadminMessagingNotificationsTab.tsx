@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingNotificationsTab within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders notification state and delegates read mutations to the Superadmin Messaging hook.
 import { AlertTriangle, Info, X } from 'lucide-react';

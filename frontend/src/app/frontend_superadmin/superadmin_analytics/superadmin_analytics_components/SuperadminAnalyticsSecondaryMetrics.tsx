@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAnalyticsSecondaryMetrics within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the LTV and CAC secondary analytics cards from the feature view-model.
 import { Activity, IndianRupee } from 'lucide-react';

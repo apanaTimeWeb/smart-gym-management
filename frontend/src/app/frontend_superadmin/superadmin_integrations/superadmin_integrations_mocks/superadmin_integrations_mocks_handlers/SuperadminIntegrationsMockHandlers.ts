@@ -13,7 +13,7 @@ import { SUPERADMIN_INTEGRATION_STATUS_CODES } from '@/app/frontend_superadmin/s
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns feature-specific MSW behavior for Superadmin Integrations, including mutable API-key creation.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_url_config';
+import { SUPERADMIN_INTEGRATIONS_API } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_url_config';
 
 import type { SuperadminGenerateApiKeyResult } from '@/app/frontend_superadmin/superadmin_integrations/superadmin_integrations_types/SuperadminIntegrationsGenerateApiKeyTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -29,8 +29,8 @@ export function resetSuperadminIntegrationsMockState(): void {
 }
 
 export const superadminIntegrationsHandlers = [
-  http.get('*' + MODULE_URLS.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin integrations data loaded.', data: mockIntegrations })),
-  http.post('*' + MODULE_URLS.BACKEND_API.GENERATE_API_KEY, async ({ request }) => {
+  http.get('*' + SUPERADMIN_INTEGRATIONS_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin integrations data loaded.', data: mockIntegrations })),
+  http.post('*' + SUPERADMIN_INTEGRATIONS_API.GENERATE_API_KEY, async ({ request }) => {
     const idempotencyKey = request.headers.get('Idempotency-Key');
     if (idempotencyKey) {
       const replay = idempotentResults.get(idempotencyKey);

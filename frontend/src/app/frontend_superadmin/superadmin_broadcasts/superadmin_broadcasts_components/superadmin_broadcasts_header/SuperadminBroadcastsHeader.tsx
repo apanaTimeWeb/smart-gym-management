@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminBroadcastsHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { Plus, Search, Megaphone } from 'lucide-react';
 /**

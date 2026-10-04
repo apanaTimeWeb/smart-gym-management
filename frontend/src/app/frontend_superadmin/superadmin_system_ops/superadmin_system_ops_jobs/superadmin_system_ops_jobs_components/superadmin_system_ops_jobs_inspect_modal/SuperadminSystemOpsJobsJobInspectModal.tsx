@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsJobsJobInspectModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Job Payload Inspect Modal — shows timing, error trace, and JSON payload.
 import { Eye, AlertTriangle, X as XIcon } from 'lucide-react';

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsSummaryCards within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminReportsFormatCurrency } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_utils/SuperadminReportsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminReportsSummaryCards for the owning feature module; business logic and API transport remain in module-owned hooks/services.

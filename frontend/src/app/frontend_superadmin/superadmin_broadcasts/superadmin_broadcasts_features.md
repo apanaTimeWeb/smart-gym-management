@@ -1,7 +1,6 @@
 ﻿# Superadmin Broadcasts â€” Feature Map
 
 ## Module Purpose
-superadmin_broadcasts_features is a Superadmin-facing business feature module for the workflow implemented at ``/superadmin/broadcasts``. Authenticated Superadmin users can create broadcast; delete broadcast; select all; send broadcast; submit; toggle gym. The module owns its UI, state orchestration, validation, API contract, mocks, and tests; it does not own backend implementation, unrelated sibling-feature business logic, or role-wide shared business state. The primary API boundary evidenced by the repository is ``superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`, `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts``.
 
 
 ## Routes
@@ -75,7 +74,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | Path | Responsibility | Key Files |
 |---|---|---|
 | `./` | Route/documentation root for `superadmin_broadcasts`. | `error.tsx, loading.tsx, not-found.tsx, page.tsx, superadmin_broadcasts_features.md, superadmin_broadcasts_forbidden.md, superadmin_broadcasts_theme_contract.md, superadmin_broadcasts_url_config.ts` |
-| `superadmin_broadcasts_api/` | Owns module-scoped api artifacts. | `SuperadminBroadcastsApi.ts, SuperadminBroadcastsAudienceInsightsApi.ts` |
 | `superadmin_broadcasts_components/` | Owns module-scoped components artifacts. | `SuperadminBroadcastsBroadcastModal.tsx, SuperadminBroadcastsBroadcastQueueModal.test.tsx, SuperadminBroadcastsBroadcastQueueModal.tsx, SuperadminBroadcastsMain.tsx` |
 | `superadmin_broadcasts_constants/` | Owns module-scoped constants artifacts. | `SuperadminBroadcastsBroadcastConstants.test.ts, SuperadminBroadcastsBroadcastConstants.ts, SuperadminBroadcastsQueryKeys.ts` |
 | `superadmin_broadcasts_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_broadcasts_audience_insights_features.md, superadmin_broadcasts_audience_insights_forbidden.md, superadmin_broadcasts_audience_insights_theme_contract.md` |
@@ -83,7 +81,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_broadcasts_locales/` | Owns module-scoped locales artifacts. | `superadmin_broadcasts_en.json, superadmin_broadcasts_hi.json` |
 | `superadmin_broadcasts_mocks/` | Owns module-scoped mocks artifacts. | `` |
 | `superadmin_broadcasts_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminBroadcastsApiSchemas.ts, SuperadminBroadcastsBroadcastDeliveryContractSchemas.ts, SuperadminBroadcastsContractSchemas.ts, SuperadminBroadcastsSchemas.test.ts, SuperadminBroadcastsSchemas.ts` (+1 more) |
-| `superadmin_broadcasts_tests/` | Owns module-scoped tests artifacts. | `SuperadminBroadcastsAudienceInsights.test.ts, SuperadminBroadcastsBasic.test.tsx` |
 | `superadmin_broadcasts_types/` | Owns module-scoped types artifacts. | `SuperadminBroadcastsBroadcastDeliveryTypes.ts, SuperadminBroadcastsBroadcastModalTypes.ts, SuperadminBroadcastsBroadcastQueueModalTypes.ts, SuperadminBroadcastsBroadcastQueueStateTypes.ts, SuperadminBroadcastsTypes.ts` (+1 more) |
 | `superadmin_broadcasts_utils/` | Owns module-scoped utils artifacts. | `SuperadminBroadcastsBroadcastScheduleUtils.test.ts, SuperadminBroadcastsBroadcastScheduleUtils.ts` |
 
@@ -109,7 +106,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 
 | Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Superadmin Broadcasts | `/superadmin/broadcasts` | create broadcast; delete broadcast; select all; send broadcast; submit; toggle gym | `superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`, `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
 ### Flow 1 — Load the primary broadcasts view
@@ -144,14 +140,11 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** None detected.
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_broadcasts_hooks/useSuperadminBroadcastsData.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsBroadcastDelivery.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsV1.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsPage.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsBroadcastQueueState.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsBroadcastModalData.ts`, `superadmin_broadcasts_hooks/useSuperadminBroadcastsMutations.ts`
 - **URL state:** `useUrlState` detected.
 - **Observed query keys:** `superadmin_broadcasts_constants/SuperadminBroadcastsQueryKeys.ts`
 
 ## API Contract
 
-- **API files:** `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`, `superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
-- **Detected API symbols:** `fetchBroadcasts` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `createBroadcast` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `deleteBroadcast` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `updateBroadcast` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchTenants` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchRecipientCount` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `deliverBroadcastToRecipient` — `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`; `fetchBroadcastAudienceInsights` — `superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts`
 - **Runtime response validation:** Zod usage detected.
 
 No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
@@ -162,8 +155,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 
 | UI Source | Observed Data Fields | Module API Source | Mock Ownership |
 |---|---|---|---|
-| `superadmin_broadcasts_components/SuperadminBroadcastsBroadcastModal.tsx` | `id`, `name`, `ownerName` | `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`, `superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts` | Module-owned fixture/handler |
-| `superadmin_broadcasts_components/SuperadminBroadcastsBroadcastQueueModal.tsx` | `id` | `superadmin_broadcasts_api/SuperadminBroadcastsApi.ts`, `superadmin_broadcasts_api/SuperadminBroadcastsAudienceInsightsApi.ts` | Module-owned fixture/handler |
 
 ## Permissions and Security
 
@@ -185,9 +176,7 @@ Source-derived mapping from current consuming components and module-owned API cl
 |---|---|
 | `page.tsx` | Pure Server Component for the broadcasts page. Renders the interactive client component. |
 | `superadmin_broadcasts_components/SuperadminBroadcastsMain.tsx` | Root orchestrator for the Broadcasts page. Composes isolated sub-components and passes state from useSuperadminBroadcastsPage. No business logic here. |
-| `superadmin_broadcasts_components/SuperadminBroadcastsV1AudienceBuilderPanel.tsx` | Lets a Superadmin select an audience insight and exposes the selected audience for the downstream broadcast workflow. |
 | `superadmin_broadcasts_components/SuperadminBroadcastsBroadcastModal.tsx` | Renders the Create/Edit Broadcast modal form. Receives form state via props and server-state preview data from useSuperadminBroadcastsBroadcastModalData. |
-| `superadmin_broadcasts_components/SuperadminBroadcastsV1ChannelResultsAndTemplateSection.tsx` | Renders the Superadmin broadcasts V1 Channel results, Reusable templates view. |
 | `superadmin_broadcasts_components/SuperadminBroadcastsBroadcastQueueModal.tsx` | Renders the Superadmin broadcast delivery queue. Delivery state comes from the feature API/MSW contract; this component contains no delivery simulation or notification persistence. |
 | `superadmin_broadcasts_components/superadmin_broadcasts_empty_state/SuperadminBroadcastsEmptyState.tsx` | Renders the empty state UI for the Broadcasts table when no broadcasts exist. Shows icon, message, and CTA to create first broadcast. |
 | `superadmin_broadcasts_components/superadmin_broadcasts_header/SuperadminBroadcastsHeader.tsx` | Renders the page title, search input, and "New Broadcast" CTA for the Broadcasts page. Receives all state via props — no API calls. |
@@ -217,3 +206,10 @@ This addendum is generated from the current source tree and exists to make futur
 - [x] Feature docs contain a concrete directory map and compliance checklist.
 - [x] No marker-only or JSON-stringify tautology test remains.
 - [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+
+
+## V15 Repair Supersession
+
+Removed the orphan audience-insights V1 API/hook/test stack. Active broadcast create/queue/delivery flows remain the canonical implementation.
+
+Historical V1 references retained above are archival documentation only and do not describe an active mounted route or live dependency.

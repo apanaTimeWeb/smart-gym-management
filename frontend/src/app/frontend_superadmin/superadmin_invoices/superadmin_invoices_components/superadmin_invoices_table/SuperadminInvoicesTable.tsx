@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminInvoicesTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminInvoicesTable owned by the superadmin_invoices feature boundary.

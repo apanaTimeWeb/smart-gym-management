@@ -9,7 +9,7 @@ import { SuperadminGlobalAuditExportResponseSchema } from '@/app/frontend_supera
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns the Global Audit export request contract.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_url_config';
+import { SUPERADMIN_GLOBAL_AUDIT_EXPORT } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_url_config';
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
 import { SuperadminLayoutApiResponseSchema } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_schemas/SuperadminLayoutApiResponseSchema';
 
@@ -18,7 +18,7 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export const superadminGlobalAuditExportApi = {
-  requestExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(MODULE_URLS.EXPORT.BACKEND_API.EXPORT, {
+  requestExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(SUPERADMIN_GLOBAL_AUDIT_EXPORT.BACKEND_API.EXPORT, {
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
     responseSchema: SuperadminLayoutApiResponseSchema(SuperadminGlobalAuditExportResponseSchema),

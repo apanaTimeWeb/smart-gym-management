@@ -83,7 +83,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_invoices_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminInvoicesInvoiceActions.test.tsx, useSuperadminInvoicesInvoiceActions.ts, useSuperadminInvoicesMain.test.ts, useSuperadminInvoicesMain.ts, useSuperadminInvoicesManualPayment.test.ts` (+7 more) |
 | `superadmin_invoices_locales/` | Owns module-scoped locales artifacts. | `superadmin_invoices_en.json, superadmin_invoices_hi.json` |
 | `superadmin_invoices_mocks/` | Owns module-scoped mocks artifacts. | `` |
-| `superadmin_invoices_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminInvoicesApiSchemas.ts, SuperadminInvoicesContractSchemas.ts, SuperadminInvoicesManualPaymentFormSchema.test.ts, SuperadminInvoicesManualPaymentFormSchema.ts, SuperadminInvoicesV1ContractSchemas.ts` |
 | `superadmin_invoices_tests/` | Owns module-scoped tests artifacts. | `SuperadminInvoicesBasic.test.tsx, SuperadminInvoicesRecoveryCenter.test.ts` |
 | `superadmin_invoices_types/` | Owns module-scoped types artifacts. | `SuperadminInvoicesClientTypes.ts, SuperadminInvoicesDateFilterTypes.ts, SuperadminInvoicesEmptyStateTypes.ts, SuperadminInvoicesHeaderTypes.ts, SuperadminInvoicesLogPaymentModalTypes.ts` (+5 more) |
 | `superadmin_invoices_utils/` | Owns module-scoped utils artifacts. | `SuperadminInvoicesAgingUtils.test.ts, SuperadminInvoicesAgingUtils.ts, SuperadminInvoicesDateRangeUtils.test.ts, SuperadminInvoicesDateRangeUtils.ts, SuperadminInvoicesFormatCurrency.test.ts` (+3 more) |
@@ -147,7 +146,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** None detected.
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_invoices_hooks/useSuperadminInvoicesPage.ts`, `superadmin_invoices_hooks/useSuperadminInvoicesV1.ts`, `superadmin_invoices_hooks/useSuperadminInvoicesInvoiceActions.ts`
 - **URL state:** `useUrlState` detected.
 - **Observed query keys:** `superadmin_invoices_constants/SuperadminInvoicesQueryKeys.ts`
 
@@ -189,10 +187,7 @@ Source-derived mapping from current consuming components and module-owned API cl
 |---|---|
 | `page.tsx` | Pure Server Component for the invoices page. Renders the interactive client component. |
 | `superadmin_invoices_components/SuperadminInvoicesDateFilterDropdown.tsx` | A unified Date Filter dropdown used across Superadmin pages (Dashboard, Analytics, Invoices, Coupons, Onboarding, Reports). |
-| `superadmin_invoices_components/SuperadminInvoicesV1PaymentRecoveryQueuePanel.tsx` | Renders the Superadmin invoices V1 Payment recovery queue view. |
-| `superadmin_invoices_components/SuperadminInvoicesV1RecoverySummaryCards.tsx` | Renders the Superadmin invoices V1 InvoicesRecoverySummary summary cards. |
 | `superadmin_invoices_components/SuperadminInvoicesMain.tsx` | Root orchestrator for the Invoices page. Composes sub-components and passes state from useSuperadminInvoicesPage. No inline business logic. |
-| `superadmin_invoices_components/SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSection.tsx` | Renders the Superadmin invoices V1 Recovery schedule, Refunds, credits & write-offs view. |
 | `superadmin_invoices_components/superadmin_invoices_header/SuperadminInvoicesHeader.tsx` | Renders invoice page actions and delegates export behavior to the invoice action hook. |
 | `superadmin_invoices_components/superadmin_invoices_empty_state/SuperadminInvoicesEmptyState.tsx` | Renders the empty state UI for the Invoices table when no invoices exist. Shows icon, message, and CTA to log first payment. |
 | `superadmin_invoices_components/superadmin_invoices_stats_bar/SuperadminInvoicesStatsBar.tsx` | Renders the Superadmin invoices summary statistics. |

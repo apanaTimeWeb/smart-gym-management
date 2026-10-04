@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminIntegrationsGenerateApiKeyModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the validated Superadmin API-key generation form and one-time generated-secret result.
 import { useRef } from 'react';

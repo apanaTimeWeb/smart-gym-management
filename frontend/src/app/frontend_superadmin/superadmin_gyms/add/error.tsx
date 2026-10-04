@@ -1,7 +1,13 @@
+// RESPONSIBILITY: Renders/orchestrates error within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Framework route artifact for superadmin_gyms/add.
 import { useTranslations } from 'next-intl';
 
+/**
+ * @description Renders AddGymError within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminAddGymError({ error, reset }: { error: Error; reset: () => void }) {
   const t = useTranslations('superadmin_gyms');
     return (

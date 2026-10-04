@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTicketsHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the header and filter/search controls for Support Tickets
 import { Search, Filter } from 'lucide-react';

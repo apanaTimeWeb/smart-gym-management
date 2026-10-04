@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminComplianceRegionalCoverageEmptyState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminComplianceRegionalCoverageEmptyState owned by the superadmin_compliance feature boundary.
@@ -13,6 +14,11 @@ import { useTranslations } from 'next-intl';
 import EmptyState from '@/components/ui/EmptyState';
 
 
+/**
+ * @description Renders ComplianceRegionalCoverageEmptyState within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminComplianceRegionalCoverageEmptyState() {
   const t = useTranslations('superadmin_compliance');
     return <EmptyState title={t('ui.regional_coverage_c0135f75')} description={t('ui.regional_registration_records_will_appear_wh_74b9dfca')} data-testid="superadmin_compliance-superadmin-compliance-regional-coverage-empty-state-coverage-empty-state-empty"/>;

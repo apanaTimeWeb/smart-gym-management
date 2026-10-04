@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsBackupsRestoreModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Confirmation view for restoring a backup snapshot; mutation lifecycle is owned by the feature action hook.
 import { Loader2, RotateCcw } from 'lucide-react';

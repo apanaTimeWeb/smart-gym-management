@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminPlansList within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminPlansFormatCurrency } from '@/app/frontend_superadmin/superadmin_plans/superadmin_plans_utils/SuperadminPlansFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminPlansList for the owning feature module; business logic and API transport remain in module-owned hooks/services.

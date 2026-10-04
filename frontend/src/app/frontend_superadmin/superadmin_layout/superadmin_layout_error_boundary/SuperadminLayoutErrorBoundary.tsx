@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutErrorBoundary within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Superadmin module error fallback and exposes the documented recovery action without leaking internal error details.
 import { Component } from 'react';
@@ -50,7 +51,7 @@ export function SuperadminLayoutErrorBoundary({ children, variant = 'default' }:
       variant={variant}
       title={t('ui.error_boundary_title')}
       retry={t('ui.retry')}
-    >
+     data-testid="superadmin_layout-layouterrorboundary-state">
       {children}
     </SuperadminLayoutErrorBoundaryInner>
   );

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGlobalAuditSeverityBadge within its owning Superadmin feature module; no direct backend implementation.
 /**
  * RESPONSIBILITY: React component SuperadminGlobalAuditSeverityBadge owned by the superadmin_global_audit feature boundary.
  * INTENT: Keep this file’s presentation, logic, and state responsibility isolated from unrelated business modules.

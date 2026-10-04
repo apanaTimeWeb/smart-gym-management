@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsCalendar within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminGymsCalendar owned by the superadmin_gyms feature boundary.

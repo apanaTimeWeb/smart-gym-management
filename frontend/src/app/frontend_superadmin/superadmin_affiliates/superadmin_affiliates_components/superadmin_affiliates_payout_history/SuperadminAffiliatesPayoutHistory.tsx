@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminAffiliatesPayoutHistory within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
 import { Loader2 } from 'lucide-react';

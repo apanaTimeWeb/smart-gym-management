@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates error within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Route-level Superadmin recovery boundary.
 import { useTranslations } from 'next-intl';
@@ -6,6 +7,11 @@ import type { SuperadminRouteErrorProps } from '@/app/frontend_superadmin/supera
 
 
 
+/**
+ * @description Renders Error within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function Error({ reset }: SuperadminRouteErrorProps) {
   const t = useTranslations('superadmin_team');
     return (<div className="flex min-h-80 items-center justify-center" data-testid="superadmin_team-error-team-error-error">

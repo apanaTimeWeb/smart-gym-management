@@ -10,7 +10,7 @@ import { SUPERADMIN_FEATURE_HISTORY, SUPERADMIN_FEATURE_FLAGS, SUPERADMIN_RELEAS
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_url_config';
+import { SUPERADMIN_FEATURES_API } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_url_config';
 import { formatSuperadminFeaturesCalendarDate } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_utils/SuperadminFeaturesDateUtils';
 
 import type { FeatureFlag, ReleaseNote, SuperadminFeatureHistoryEntry } from '@/app/frontend_superadmin/superadmin_features/superadmin_features_types/SuperadminFeaturesTypes';
@@ -18,7 +18,7 @@ import type { ApiResponse } from '@/lib/api';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_FEATURES_API.BASE}`;
 export let mockFlags: FeatureFlag[] = [...SUPERADMIN_FEATURE_FLAGS];
 export let mockNotes: ReleaseNote[] = [...SUPERADMIN_RELEASE_NOTES];
 
@@ -27,7 +27,7 @@ export function resetSuperadminFeaturesMockState(): void {
     mockNotes = [...SUPERADMIN_RELEASE_NOTES];
 }
 export const superadminFeaturesHandlers = [
-    http.get(`*${MODULE_URLS.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_TENANTS })),
+    http.get(`*${SUPERADMIN_FEATURES_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_TENANTS })),
     http.get('*' + `${BASE_URL}/flags/:id/history`, async ({ params }) => {
         await delay(250);
         const id = String(params.id);

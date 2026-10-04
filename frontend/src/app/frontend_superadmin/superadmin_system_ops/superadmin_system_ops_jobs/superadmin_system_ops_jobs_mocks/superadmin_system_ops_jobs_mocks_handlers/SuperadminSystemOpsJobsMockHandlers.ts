@@ -12,11 +12,11 @@ import { SUPERADMIN_JOBS_STATUS_CODES, SUPERADMIN_JOBS_FILTER_STATUS_CODES } fro
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns module-specific MSW handlers for Superadmin background-job list and mutation scenarios.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
+import { SUPERADMIN_SYSTEM_OPS_JOBS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_SYSTEM_OPS_JOBS_API.BASE}`;
 let mockJobs = [...MOCK_BACKGROUND_JOBS];
 
 export function resetSuperadminJobsMockState(): void {

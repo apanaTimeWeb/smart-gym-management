@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsDatePresetDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminReportsDatePresetDropdown owned by the superadmin_reports feature boundary.

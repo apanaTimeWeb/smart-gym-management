@@ -3,13 +3,11 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { MOCK_SUPERADMIN_MESSAGING_MESSAGES, MOCK_SUPERADMIN_MESSAGING_TENANTS, MOCK_SUPERADMIN_NOTIFICATIONS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_mocks/superadmin_messaging_mocks_fixtures/SuperadminMessagingMockFixtures';
 import { resetSuperadminMessagingMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_mocks/superadmin_messaging_mocks_handlers/SuperadminMessagingMockHandlers';
-import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_mocks/superadmin_messaging_whatsapp_mocks_handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 
 
 
 beforeEach(() => {
   resetSuperadminMessagingMockState();
-  resetSuperadminMessagingV1WhatsAppMockState();
 });
 
 describe('Superadmin Messaging fixture behavior', () => {

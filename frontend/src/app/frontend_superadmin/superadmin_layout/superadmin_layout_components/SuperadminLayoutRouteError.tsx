@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutRouteError within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Shared App Router error surface for role-owned child routes; never exposes raw exceptions.
 import { useTranslations } from 'next-intl';

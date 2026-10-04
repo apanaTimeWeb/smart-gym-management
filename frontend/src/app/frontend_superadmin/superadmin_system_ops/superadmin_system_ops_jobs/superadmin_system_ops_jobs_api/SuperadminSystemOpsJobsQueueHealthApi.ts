@@ -2,7 +2,7 @@ import { SuperadminJobsV1DataSchema } from '@/app/frontend_superadmin/superadmin
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
 
 // RESPONSIBILITY: Provides API access for the Background Job Queue Health feature within Superadmin only.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
+import { SUPERADMIN_SYSTEM_OPS_JOBS_QUEUE_HEALTH } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_url_config';
 
 import type { SuperadminJobsV1Data } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_jobs/superadmin_system_ops_jobs_types/SuperadminSystemOpsJobsV1Types';
 import type { ApiResponse } from '@/lib/api';
@@ -10,5 +10,5 @@ import type { ApiResponse } from '@/lib/api';
 
 
 export async function fetchJobsQueueHealth(): Promise<ApiResponse<SuperadminJobsV1Data>> {
-    return apiFetch<ApiResponse<SuperadminJobsV1Data>>(MODULE_URLS.QUEUE_HEALTH.BACKEND_API.BASE, { dataSchema: SuperadminJobsV1DataSchema });
+    return apiFetch<ApiResponse<SuperadminJobsV1Data>>(SUPERADMIN_SYSTEM_OPS_JOBS_QUEUE_HEALTH.BACKEND_API.BASE, { dataSchema: SuperadminJobsV1DataSchema });
 }

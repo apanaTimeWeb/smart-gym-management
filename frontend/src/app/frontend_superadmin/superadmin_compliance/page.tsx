@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates page within its owning Superadmin feature module; no direct backend implementation.
 import { Suspense } from 'react';
 import SuperadminLayoutPageSuspenseSkeleton from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutPageSuspenseSkeleton';
 // RESPONSIBILITY: Framework route artifact for compliance.

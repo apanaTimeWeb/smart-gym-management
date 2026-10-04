@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useSuperadminGymsGymMutations } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_hooks/useSuperadminGymsGymMutations';
 
 // DATA FLOW: Owning feature API/query/store state → useSuperadminGymsTable → consuming feature component.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_ROUTES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 import type { SuperadminGymsSortOrder } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTableTypes';
 import type { Tenant } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTypes';
@@ -68,7 +68,7 @@ export function useSuperadminGymsTable() {
         return gyms;
     }, [gyms]);
     const { actionLoadingId, onGhostLoginClick, onSuspendClick, } = useSuperadminGymsGymMutations(gyms);
-    const handleRowClick = (gym: Tenant) => { router.push(`${MODULE_URLS.PAGES.MAIN}/${encodeURIComponent(gym.id)}`); };
+    const handleRowClick = (gym: Tenant) => { router.push(`${SUPERADMIN_GYMS_ROUTES.MAIN}/${encodeURIComponent(gym.id)}`); };
     const onDeleteClick = (e: MouseEvent, gym: Tenant) => {
         e.stopPropagation();
         openDeleteModal(gym);

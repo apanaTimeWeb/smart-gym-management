@@ -11,14 +11,14 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns the reports export request contract.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
+import { SUPERADMIN_REPORTS_EXPORT } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
 
 import type { ApiResponse } from '@/lib/api';
 
 
 
 export const superadminReportsExportApi = {
-  requestExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(MODULE_URLS.EXPORT.BACKEND_API.EXPORT, {
+  requestExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(SUPERADMIN_REPORTS_EXPORT.BACKEND_API.EXPORT, {
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
     responseSchema: SuperadminLayoutApiResponseSchema(SuperadminReportsExportResponseSchema),

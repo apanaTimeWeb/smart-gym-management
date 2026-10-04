@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates error within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the superadmin_system_ops_infrastructure route-segment error fallback and provides documented recovery actions.
 import { useTranslations } from 'next-intl';
@@ -5,7 +6,7 @@ import { RefreshCcw, AlertTriangle } from 'lucide-react';
 
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
+import { SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_ROUTES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_infrastructure/superadmin_system_ops_infrastructure_url_config';
 
 import type { SuperadminNextErrorProps } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_types/SuperadminLayoutInfrastructureTypes';
 
@@ -30,7 +31,7 @@ export default function ErrorBoundary({ reset }: SuperadminNextErrorProps) {
           <RefreshCcw size={18} aria-hidden="true" />
           {t('ui.error_retry')}
         </button>
-        <Link href={MODULE_URLS.PAGES.MAIN} data-testid="superadmin_system_ops_infrastructure-error-superadmin_system_ops_infrastructure-error-back" className="inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-semibold text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">
+        <Link href={SUPERADMIN_SYSTEM_OPS_INFRASTRUCTURE_ROUTES.MAIN} data-testid="superadmin_system_ops_infrastructure-error-superadmin_system_ops_infrastructure-error-back" className="inline-flex min-h-11 items-center rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-semibold text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">
           {t('ui.back_to_module')}
         </Link>
       </div>

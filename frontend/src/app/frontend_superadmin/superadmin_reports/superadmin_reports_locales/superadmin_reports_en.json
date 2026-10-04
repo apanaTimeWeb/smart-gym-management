@@ -47,7 +47,10 @@
       "export_csv_0e36f4bc": "Export CSV",
       "page_not_found_title": "Page not found",
       "page_not_found_message": "The requested page is unavailable or no longer exists in this Superadmin area.",
-      "back_to_module": "Back to module"
+      "back_to_module": "Back to module",
+      "reports_tab_revenue": "Revenue",
+      "reports_tab_cancellations": "Cancellations",
+      "reports_tab_health": "Health"
     },
     "actions": {
       "retry": "Retry",

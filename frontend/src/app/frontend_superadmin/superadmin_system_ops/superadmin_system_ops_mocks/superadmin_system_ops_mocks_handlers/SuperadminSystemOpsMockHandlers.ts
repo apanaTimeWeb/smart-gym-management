@@ -10,7 +10,7 @@ import { SUPERADMIN_SYSTEM_OPS_SUMMARY_MOCK_FIXTURE } from '@/app/frontend_super
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Provides MSW handlers for the System Ops summary feature and resettable fixture state.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
+import { SUPERADMIN_SYSTEM_OPS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
 
 import type { SuperadminSystemOpsSummary } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_types/SuperadminSystemOpsTypes';
 
@@ -23,7 +23,7 @@ export function resetSuperadminSystemOpsMockState(): void {
 }
 
 export const superadminSystemOpsHandlers = [
-  http.get(`*${MODULE_URLS.BACKEND_API.SUMMARY}`, () => HttpResponse.json({
+  http.get(`*${SUPERADMIN_SYSTEM_OPS_API.SUMMARY}`, () => HttpResponse.json({
     success: true,
     message: 'System Ops summary loaded.',
     data: summaryState,

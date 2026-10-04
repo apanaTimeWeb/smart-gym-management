@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders infrastructure page heading, status filter, and manual refresh control without owning query state.
 import { RefreshCcw } from 'lucide-react';

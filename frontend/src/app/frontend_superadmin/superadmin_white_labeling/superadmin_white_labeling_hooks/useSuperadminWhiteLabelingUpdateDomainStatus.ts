@@ -1,3 +1,4 @@
+// DATA FLOW: Feature API/query state → custom hook → owning component/store → UI result.
 'use client';
 import { useRef } from 'react';
 

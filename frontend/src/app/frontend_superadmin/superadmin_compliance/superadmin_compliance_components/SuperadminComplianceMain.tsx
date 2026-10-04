@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminComplianceMain for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminComplianceMain owned by the superadmin_compliance feature boundary.

@@ -3,7 +3,7 @@ import { SuperadminSystemOpsBackupsScheduleSchema } from '@/app/frontend_superad
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
 
 // RESPONSIBILITY: Provides API access for Superadmin backup operations; demo behavior is owned by this module's MSW handlers.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_url_config';
+import { SUPERADMIN_SYSTEM_OPS_BACKUPS_API } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_url_config';
 
 import type { SuperadminBackupsSchedule, SuperadminBackupsScheduleInput } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_types/SuperadminSystemOpsBackupsScheduleTypes';
 import type { BackupRecord } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_types/SuperadminSystemOpsBackupsTypes';
@@ -13,7 +13,7 @@ import type { ApiResponse } from '@/lib/api';
 
 export async function fetchBackups(params?: Record<string, string>): Promise<ApiResponse<BackupRecord[]>> {
     const query = params ? `?${new URLSearchParams(params).toString()}` : '';
-    return apiFetch<ApiResponse<BackupRecord[]>>(`${MODULE_URLS.BACKEND_API.BASE}${query}`, { dataSchema: SuperadminBackupsListDataSchema });
+    return apiFetch<ApiResponse<BackupRecord[]>>(`${SUPERADMIN_SYSTEM_OPS_BACKUPS_API.BASE}${query}`, { dataSchema: SuperadminBackupsListDataSchema });
 }
 
 /**
@@ -23,7 +23,7 @@ export async function fetchBackups(params?: Record<string, string>): Promise<Api
  * @edge-case Preserves mutation failure semantics for the owning retry/confirmation flow.
  */
 export async function createBackupSnapshot(idempotencyKey: string): Promise<ApiResponse<null>> {
-    return apiFetch<ApiResponse<null>>(MODULE_URLS.BACKEND_API.TRIGGER, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminBackupsNullDataSchema });
+    return apiFetch<ApiResponse<null>>(SUPERADMIN_SYSTEM_OPS_BACKUPS_API.TRIGGER, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminBackupsNullDataSchema });
 }
 
 /**
@@ -32,21 +32,21 @@ export async function createBackupSnapshot(idempotencyKey: string): Promise<ApiR
  * @edge-case Propagates the backend response message/error so the caller can expose the real failure and retry safely.
  */
 export async function restoreBackupSnapshot(id: string, idempotencyKey: string): Promise<ApiResponse<null>> {
-    return apiFetch<ApiResponse<null>>(MODULE_URLS.BACKEND_API.RESTORE(id), { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminBackupsNullDataSchema });
+    return apiFetch<ApiResponse<null>>(SUPERADMIN_SYSTEM_OPS_BACKUPS_API.RESTORE(id), { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: SuperadminBackupsNullDataSchema });
 }
 
 export async function fetchBackupDownloadUrl(id: string): Promise<ApiResponse<{ downloadUrl: string }>> {
-    return apiFetch<ApiResponse<{ downloadUrl: string }>>(MODULE_URLS.BACKEND_API.DOWNLOAD(id), { dataSchema: SuperadminBackupDownloadDataSchema });
+    return apiFetch<ApiResponse<{ downloadUrl: string }>>(SUPERADMIN_SYSTEM_OPS_BACKUPS_API.DOWNLOAD(id), { dataSchema: SuperadminBackupDownloadDataSchema });
 }
 
 export async function fetchBackupSchedule(): Promise<ApiResponse<SuperadminBackupsSchedule>> {
-    return apiFetch<ApiResponse<SuperadminBackupsSchedule>>(MODULE_URLS.BACKEND_API.SCHEDULE, {
+    return apiFetch<ApiResponse<SuperadminBackupsSchedule>>(SUPERADMIN_SYSTEM_OPS_BACKUPS_API.SCHEDULE, {
         dataSchema: SuperadminSystemOpsBackupsScheduleSchema,
     });
 }
 
 export async function updateBackupSchedule(input: SuperadminBackupsScheduleInput, idempotencyKey: string): Promise<ApiResponse<SuperadminBackupsSchedule>> {
-    return apiFetch<ApiResponse<SuperadminBackupsSchedule>>(MODULE_URLS.BACKEND_API.SCHEDULE, {
+    return apiFetch<ApiResponse<SuperadminBackupsSchedule>>(SUPERADMIN_SYSTEM_OPS_BACKUPS_API.SCHEDULE, {
         method: 'PATCH',
         body: JSON.stringify(input),
         dataSchema: SuperadminSystemOpsBackupsScheduleSchema,

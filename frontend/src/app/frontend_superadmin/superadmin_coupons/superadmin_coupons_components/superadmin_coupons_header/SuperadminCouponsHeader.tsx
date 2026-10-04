@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsHeader within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
 
@@ -26,6 +27,11 @@ import type { SuperadminCouponsHeaderProps } from '@/app/frontend_superadmin/sup
  * @state Keeps server state in TanStack Query and module UI state in the owning feature state layer where applicable.
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  */
+/**
+ * @description Renders CouponsHeader within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, onCreateClick, statusFilter, onStatusFilterChange }: SuperadminCouponsHeaderProps) {
   const t = useTranslations('superadmin_coupons');
     return (<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -43,7 +49,7 @@ export default function SuperadminCouponsHeader({ searchQuery, onSearchChange, o
         </div>
         
         {onStatusFilterChange && (<div className="w-40 border-none bg-input rounded-lg">
-            <SearchableDropdown data-testid="superadmin_coupons-superadmin-coupons-header-status-filter" options={SUPERADMIN_COUPON_STATUS_OPTIONS.map((option) => ({ label: option.label, value: option.value }))} value={statusFilter || SUPERADMIN_COUPON_STATUS_CODES.ALL} onChange={(val) => onStatusFilterChange(String(val))} className="bg-transparent border-border"/>
+            <SearchableDropdown data-testid="superadmin_coupons-superadmin-coupons-header-status-filter" options={SUPERADMIN_COUPON_STATUS_OPTIONS.map((option) => ({ label: t(option.labelKey), value: option.value }))} value={statusFilter || SUPERADMIN_COUPON_STATUS_CODES.ALL} onChange={(val) => onStatusFilterChange(String(val))} className="bg-transparent border-border"/>
           </div>)}
 
         <button onClick={onCreateClick} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-medium rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" data-testid="superadmin_coupons-superadmin-coupons-header-coupons-header-create-coupon">

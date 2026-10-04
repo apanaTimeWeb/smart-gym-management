@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import { MOCK_SUPERADMIN_COUPONS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_mocks/superadmin_coupons_mocks_fixtures/SuperadminCouponsMockFixtures';
 import { SUPERADMIN_COUPON_STATUS_CODES } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_constants/SuperadminCouponsConstants';
-import { CouponStatusSchema, CouponSchema } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_schemas/SuperadminCouponsContractSchemas';
+import { CouponStatusSchema, CouponApiPayloadSchema, CouponRecordSchema } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_schemas/SuperadminCouponsContractSchemas';
 
 /**
  * RESPONSIBILITY: Module-owned TypeScript module SuperadminCouponsMockHandlers owned by the superadmin_coupons feature boundary.
@@ -12,14 +12,14 @@ import { CouponStatusSchema, CouponSchema } from '@/app/frontend_superadmin/supe
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
+import { SUPERADMIN_COUPONS_API } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_url_config';
 import { formatSuperadminCouponDateForInput } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsDateUtils';
 
 import type { Coupon, RedemptionRecord } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_types/SuperadminCouponsTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_COUPONS_API.BASE}`;
 let mockCoupons: Coupon[] = [...MOCK_SUPERADMIN_COUPONS];
 export function resetSuperadminCouponsMockState(): void { mockCoupons = MOCK_SUPERADMIN_COUPONS.map((coupon) => ({ ...coupon, redemptions: coupon.redemptions ? [...coupon.redemptions] : [] })); }
 export const superadminCouponsHandlers = [
@@ -50,7 +50,7 @@ export const superadminCouponsHandlers = [
     http.post('*' + BASE_URL, async ({ request }) => {
         await delay(500);
         const raw = await request.json();
-        const parsed = CouponSchema.safeParse(raw);
+        const parsed = CouponApiPayloadSchema.safeParse(raw);
         if (!parsed.success) return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: false, message: 'Invalid coupon payload', data: null }, { status: StatusCodes.BAD_REQUEST });
         const body = parsed.data;
         const newCoupon: Coupon = {
@@ -77,7 +77,7 @@ export const superadminCouponsHandlers = [
         await delay(500);
         const id = params.id as string;
         const raw = await request.json();
-        const parsed = CouponSchema.partial().safeParse(raw);
+        const parsed = CouponApiPayloadSchema.partial().safeParse(raw);
         if (!parsed.success) return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: false, message: 'Invalid coupon payload', data: null }, { status: StatusCodes.BAD_REQUEST });
         const body = parsed.data;
         let updated: Coupon | null = null;

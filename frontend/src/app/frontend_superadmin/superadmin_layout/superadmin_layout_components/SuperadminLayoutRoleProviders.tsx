@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutRoleProviders within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Composes the role-level providers required by the Superadmin application shell without owning feature business state.
 import { SuperadminLayoutSocketProvider } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/SuperadminLayoutSocketProvider';

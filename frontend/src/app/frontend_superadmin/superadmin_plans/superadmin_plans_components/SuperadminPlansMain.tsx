@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminPlansMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminPlansMain owned by the superadmin_plans feature boundary.
@@ -21,6 +22,11 @@ import { useSuperadminPlansStore } from '@/app/frontend_superadmin/superadmin_pl
  * @dependencies Delegates domain behavior to the feature-local dependencies imported by this file.
  * @state Keeps server state in TanStack Query and module UI state in the owning feature state layer where applicable.
  * @edge-cases Preserves documented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
+ */
+/**
+ * @description Renders PlansMain within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
  */
 export default function SuperadminPlansMain() {
   const t = useTranslations('superadmin_plans');

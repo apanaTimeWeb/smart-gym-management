@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutSocketProvider within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Provides the shared Superadmin WebSocket lifecycle context using socket.io-client and websocket-only transport.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';

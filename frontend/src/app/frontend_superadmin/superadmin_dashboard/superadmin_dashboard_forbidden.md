@@ -17,3 +17,12 @@ The following are forbidden inside this module:
 
 ## Repair discipline
 When a violation is found, repair the owning module rather than broadening the blast radius. If a rule genuinely requires application infrastructure, document that dependency before changing it.
+
+## Module-Specific Forbidden Baseline (Rule 40)
+
+- Do not place feature mock data outside this module.
+- Do not create duplicate global mock handlers for this module.
+- Do not create role-wide business components, stores, APIs, schemas, or utilities for this module.
+- Do not import sibling feature business logic; only approved global infrastructure is allowed.
+- Do not bypass the module URL config, runtime validation, query-key ownership, cache invalidation, or mutation idempotency requirements.
+- Do not hardcode feature UI copy, business status labels, currency symbols, raw theme colors, or arbitrary Tailwind values.

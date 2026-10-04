@@ -11,15 +11,15 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Modularized API client for the Settings module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_settings/superadmin_settings_url_config';
+import { SUPERADMIN_SETTINGS_API } from '@/app/frontend_superadmin/superadmin_settings/superadmin_settings_url_config';
 
 import type { PlatformSetting } from '@/app/frontend_superadmin/superadmin_settings/superadmin_settings_types/SuperadminSettingsTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
 export const settingsApi = {
-    fetchSettings: () => apiFetch<ApiResponse<PlatformSetting[]>>(MODULE_URLS.BACKEND_API.BASE, { dataSchema: z.array(PlatformSettingSchema) }),
-    updateSetting: (id: string, body: Record<string, unknown>, idempotencyKey: string) => apiFetch<ApiResponse<PlatformSetting>>(`${MODULE_URLS.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+    fetchSettings: () => apiFetch<ApiResponse<PlatformSetting[]>>(SUPERADMIN_SETTINGS_API.BASE, { dataSchema: z.array(PlatformSettingSchema) }),
+    updateSetting: (id: string, body: Record<string, unknown>, idempotencyKey: string) => apiFetch<ApiResponse<PlatformSetting>>(`${SUPERADMIN_SETTINGS_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
         headers: { 'Idempotency-Key': idempotencyKey },
         dataSchema: PlatformSettingSchema
     }),

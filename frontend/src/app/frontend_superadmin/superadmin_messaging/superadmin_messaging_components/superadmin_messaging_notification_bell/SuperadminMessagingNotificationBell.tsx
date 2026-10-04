@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingNotificationBell within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { CheckCheck, Bell } from 'lucide-react';
 import SuperadminMessagingNotificationIcon from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_components/superadmin_messaging_notification_bell/SuperadminMessagingNotificationIcon';
@@ -8,7 +9,7 @@ import { useSuperadminMessagingNotifications } from '@/app/frontend_superadmin/s
 import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
+import { SUPERADMIN_MESSAGING_ROUTES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
 import { formatDateTime } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_utils/SuperadminMessagingFormatters';
 
 
@@ -63,7 +64,7 @@ export default function SuperadminMessagingNotificationBell() {
               </div>
             )}
           </div>
-          <div className="p-2 border-t border-border bg-header"><Link href={`${MODULE_URLS.PAGES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="min-h-11 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="superadmin_messaging-superadmin-messaging-notification-bell-notification-bell-view-2">{t('ui.view_in_notification_center_9ee4379')}</Link></div>
+          <div className="p-2 border-t border-border bg-header"><Link href={`${SUPERADMIN_MESSAGING_ROUTES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="min-h-11 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="superadmin_messaging-superadmin-messaging-notification-bell-notification-bell-view-2">{t('ui.view_in_notification_center_9ee4379')}</Link></div>
         </div>
       )}
     </div>

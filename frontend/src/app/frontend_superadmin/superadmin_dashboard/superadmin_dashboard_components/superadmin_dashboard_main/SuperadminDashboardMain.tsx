@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminDashboardMain within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Orchestrates the Superadmin Dashboard layout and child data-view sections. No API calls; server state comes from the owning hook.
 import { useTranslations } from 'next-intl';
@@ -18,6 +19,11 @@ import { SuperadminLayoutErrorBoundary } from '@/app/frontend_superadmin/superad
  * @edge-case Preserves loading, safe error, translated labels, responsive layout, and child-section retry behavior.
  * @dependencies Consumes feature-local state/data through its declared props and hooks; it does not own unrelated business state.
  * @edge-case Must preserve the owning feature's loading, empty, error, disabled, keyboard, and repeated-action behavior where applicable.
+ */
+/**
+ * @description Renders DashboardMain within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
  */
 export default function SuperadminDashboardMain() {
   const t = useTranslations('superadmin_dashboard');

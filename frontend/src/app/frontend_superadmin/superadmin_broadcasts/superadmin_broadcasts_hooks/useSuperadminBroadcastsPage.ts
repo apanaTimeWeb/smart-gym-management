@@ -144,8 +144,6 @@ export const useSuperadminBroadcastsPage = () => {
         queueModalOpen: queueState.queueModalOpen,
         queueRecipients: queueState.queueRecipients,
         queueBroadcastId: queueState.queueBroadcastId,
-        queueTitle: queueState.queueTitle,
-        onQueueComplete,
-        setQueueModalOpen: queueState.setQueueModalOpen
+        queueTitle: queueState.queueTitle, onQueueComplete, setQueueModalOpen: queueState.setQueueModalOpen
     };
 };

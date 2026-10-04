@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminPlansPlanCreateModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminPlansPlanCreateModal owned by the superadmin_plans feature boundary.

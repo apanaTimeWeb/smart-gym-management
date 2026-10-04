@@ -11,7 +11,7 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Modularized API client for the Global Audit module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_url_config';
+import { SUPERADMIN_GLOBAL_AUDIT_API } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_url_config';
 
 import type { AuditLog } from '@/app/frontend_superadmin/superadmin_global_audit/superadmin_global_audit_types/SuperadminGlobalAuditTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -20,6 +20,6 @@ import type { ApiResponse } from '@/lib/api';
 export const auditLogsApi = {
     fetchGlobalLogs: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<AuditLog[]>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: z.array(AuditLogSchema) });
+        return apiFetch<ApiResponse<AuditLog[]>>(`${SUPERADMIN_GLOBAL_AUDIT_API.BASE}${q}`, { dataSchema: z.array(AuditLogSchema) });
     },
 };

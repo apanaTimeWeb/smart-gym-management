@@ -11,14 +11,14 @@ import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns the Superadmin tenant-data export request contract.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
+import { SUPERADMIN_PROFILE_API } from '@/app/frontend_superadmin/superadmin_profile/superadmin_profile_url_config';
 
 import type { ApiResponse } from '@/lib/api';
 
 
 
 export const superadminProfileDataExportApi = {
-  requestFullDataExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(MODULE_URLS.BACKEND_API.EXPORT_DATA, {
+  requestFullDataExport: (idempotencyKey: string) => apiFetch<ApiResponse<null>>(SUPERADMIN_PROFILE_API.EXPORT_DATA, {
     method: 'POST',
     headers: { 'Idempotency-Key': idempotencyKey },
     responseSchema: SuperadminLayoutApiResponseSchema(SuperadminDataExportResponseSchema),

@@ -9,7 +9,7 @@ import { AnalyticsApiDataSchema } from '@/app/frontend_superadmin/superadmin_ana
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Encapsulates functionality for superadmin_analytics_api.ts
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_url_config';
+import { SUPERADMIN_ANALYTICS_API } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_url_config';
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
 
 import type { AnalyticsApiData } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_types/SuperadminAnalyticsTypes';
@@ -20,6 +20,6 @@ import type { ApiResponse } from '@/lib/api';
 export const analyticsApi = {
     fetchRevenueMetrics: (params?: Record<string, string>) => {
         const q = params ? '?' + new URLSearchParams(params).toString() : '';
-        return apiFetch<ApiResponse<AnalyticsApiData>>(`${MODULE_URLS.BACKEND_API.BASE}${q}`, { dataSchema: AnalyticsApiDataSchema });
+        return apiFetch<ApiResponse<AnalyticsApiData>>(`${SUPERADMIN_ANALYTICS_API.BASE}${q}`, { dataSchema: AnalyticsApiDataSchema });
     },
 };

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsBackupsTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatNumber, formatDateTime } from '@/lib/formatters';
 import SuperadminSystemOpsBackupsEmptyState from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_backups/superadmin_system_ops_backups_components/superadmin_system_ops_backups_empty_state/SuperadminSystemOpsBackupsEmptyState';

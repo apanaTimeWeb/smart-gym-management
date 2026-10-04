@@ -14,14 +14,14 @@ import { MOCK_SUPERADMIN_AFFILIATE_PAYOUT_HISTORY } from '@/app/frontend_superad
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns MSW handlers for Superadmin affiliate list and mutation contracts.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_url_config';
+import { SUPERADMIN_AFFILIATES_API } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_url_config';
 
 import type { Affiliate, AffiliatePayoutRecord } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_types/SuperadminAffiliatesTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_AFFILIATES_API.BASE}`;
 let mockAffiliates: Affiliate[] = [...MOCK_SUPERADMIN_AFFILIATES];
 
 export function resetSuperadminAffiliatesMockState(): void {

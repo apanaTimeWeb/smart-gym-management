@@ -23,3 +23,12 @@
 10. **No ApexCharts without `dynamic()` + `ssr: false`** — ApexCharts uses browser APIs and will crash on SSR. Always import via `next/dynamic` with `ssr: false`.
 
 11. **No unchecked array access** — `REVENUE_DATA[REVENUE_DATA.length - 1]` must be typed safely. With `noUncheckedIndexedAccess`, this returns `RevenueRow | undefined`. Always assert or guard.
+
+## Module-Specific Forbidden Baseline (Rule 40)
+
+- Do not place feature mock data outside this module.
+- Do not create duplicate global mock handlers for this module.
+- Do not create role-wide business components, stores, APIs, schemas, or utilities for this module.
+- Do not import sibling feature business logic; only approved global infrastructure is allowed.
+- Do not bypass the module URL config, runtime validation, query-key ownership, cache invalidation, or mutation idempotency requirements.
+- Do not hardcode feature UI copy, business status labels, currency symbols, raw theme colors, or arbitrary Tailwind values.

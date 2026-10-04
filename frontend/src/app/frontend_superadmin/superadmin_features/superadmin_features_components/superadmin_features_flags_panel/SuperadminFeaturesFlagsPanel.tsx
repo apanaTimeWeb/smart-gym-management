@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminFeaturesFlagsPanel within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders feature-flag search, status rows, rollout actions, history actions, and toggle controls from parent-owned state.
 import { Clock, Search, ToggleLeft, Users } from 'lucide-react';

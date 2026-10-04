@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminTicketsTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import CopyButton from '@/components/ui/CopyButton';
 import SuperadminTicketsEmptyState from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_components/superadmin_tickets_empty_state/SuperadminTicketsEmptyState';
@@ -8,7 +9,7 @@ import { formatDateTime } from '@/app/frontend_superadmin/superadmin_tickets/sup
 import { SUPERADMIN_TICKETS_STATUS_CODES, PriorityColors, StatusColors } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_constants/SuperadminTicketsConstants';
 
 // RESPONSIBILITY: Renders and composes SuperadminTicketsTable for the owning feature module; business logic and API transport remain in module-owned hooks/services.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
+import { SUPERADMIN_TICKETS_ROUTES } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_url_config';
 import { getSuperadminTicketsSlaRemainingMs } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_utils/SuperadminTicketsSlaUtils';
 
 import type { SuperadminTicketsTableProps } from '@/app/frontend_superadmin/superadmin_tickets/superadmin_tickets_types/SuperadminTicketsTableTypes';
@@ -63,7 +64,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                 <td className="p-4 text-sm text-secondary" data-mobile-label={t('ui.mobile_gym')}>
                   <button  type="button" onClick={(e) => {
                     e.stopPropagation();
-                    router.push(`${MODULE_URLS.PAGES.GYMS}?id=${ticket.tenantId}`);
+                    router.push(`${SUPERADMIN_TICKETS_ROUTES.GYMS}?id=${ticket.tenantId}`);
                 }} className="min-w-11 min-h-11 flex items-center gap-1 hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page motion-safe:active:scale-95" title={t('ui.view_gym_37e8508')} data-testid={`superadmin_tickets-table-view-${index}`}>
                     {ticket.tenantName} <ExternalLink size={18}/>
                   </button>

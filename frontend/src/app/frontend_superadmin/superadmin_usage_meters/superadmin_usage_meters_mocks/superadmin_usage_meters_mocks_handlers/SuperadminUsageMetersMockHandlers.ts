@@ -9,13 +9,13 @@ import { MOCK_SUPERADMIN_USAGE_METERS } from '@/app/frontend_superadmin/superadm
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_url_config';
+import { SUPERADMIN_USAGE_METERS_API } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_url_config';
 
 import type { UsageMeter } from '@/app/frontend_superadmin/superadmin_usage_meters/superadmin_usage_meters_types/SuperadminUsageMetersTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_USAGE_METERS_API.BASE}`;
 export const superadminUsageMetersHandlers = [
     http.get('*' + BASE_URL, async () => {
         await delay(400);

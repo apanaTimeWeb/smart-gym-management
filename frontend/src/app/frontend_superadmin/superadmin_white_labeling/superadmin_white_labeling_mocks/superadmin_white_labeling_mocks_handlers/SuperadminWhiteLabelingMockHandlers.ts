@@ -12,7 +12,7 @@ import { UpdateDomainStatusSchema } from '@/app/frontend_superadmin/superadmin_w
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
 // RESPONSIBILITY: Owns feature-specific MSW list filtering and mutable domain-status mutation behavior.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_url_config';
+import { SUPERADMIN_WHITE_LABELING_API } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_url_config';
 
 import type { WhiteLabelDomain, UpdateDomainStatusDto } from '@/app/frontend_superadmin/superadmin_white_labeling/superadmin_white_labeling_types/SuperadminWhiteLabelingTypes';
 import type { ApiResponse } from '@/lib/api';
@@ -26,7 +26,7 @@ export function resetSuperadminWhiteLabelingMockState(): void {
 }
 
 export const superadminWhiteLabelingHandlers = [
-  http.get('*' + MODULE_URLS.BACKEND_API.DOMAINS, ({ request }) => {
+  http.get('*' + SUPERADMIN_WHITE_LABELING_API.DOMAINS, ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') ?? '').trim().toLowerCase();
     const status = url.searchParams.get('status');
@@ -37,7 +37,7 @@ export const superadminWhiteLabelingHandlers = [
     });
     return HttpResponse.json<ApiResponse<WhiteLabelDomain[]>>({ success: true, message: 'Domains retrieved successfully.', data: filtered });
   }),
-  http.patch('*' + MODULE_URLS.BACKEND_API.UPDATE_STATUS(':id'), async ({ params, request }) => {
+  http.patch('*' + SUPERADMIN_WHITE_LABELING_API.UPDATE_STATUS(':id'), async ({ params, request }) => {
     const parsed = UpdateDomainStatusSchema.safeParse(await request.json());
     if (!parsed.success) return HttpResponse.json<ApiResponse<WhiteLabelDomain>>({ success: false, message: 'Invalid domain status.', data: null }, { status: StatusCodes.BAD_REQUEST });
     const id = String(params.id);

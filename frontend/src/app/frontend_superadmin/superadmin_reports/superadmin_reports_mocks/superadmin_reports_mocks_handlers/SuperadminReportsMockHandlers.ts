@@ -9,13 +9,13 @@ import { MOCK_SUPERADMIN_REPORTS_HEALTH, MOCK_SUPERADMIN_REPORTS_REVENUE, MOCK_S
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
+import { SUPERADMIN_REPORTS_API } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_url_config';
 
 import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_types/SuperadminReportsTypes';
 import type { ApiResponse } from '@/lib/api';
 
 
-const BASE_URL = `*${MODULE_URLS.BACKEND_API.BASE}`;
+const BASE_URL = `*${SUPERADMIN_REPORTS_API.BASE}`;
 export const superadminReportsHandlers = [
     http.get('*' + `${BASE_URL}/revenue`, async ({ request }) => {
         await delay(300);

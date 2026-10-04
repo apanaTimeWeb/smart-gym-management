@@ -12,7 +12,7 @@ import { SUPERADMIN_GYM_STATUS_CODES } from '@/app/frontend_superadmin/superadmi
 
 // RESPONSIBILITY: Manage Superadmin gym tenant impersonation and suspension mutations, confirmations, cache invalidation, and feedback.
 // DATA FLOW: feature API/schema → hook/context → useSuperadminGymsGymMutations consumers.
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_GHOST_LOGIN } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 import type { Tenant } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTypes';
 import type { MouseEvent } from 'react';
@@ -57,7 +57,7 @@ export function useSuperadminGymsGymMutations(gyms: Tenant[]) {
                 void queryClient.invalidateQueries({ queryKey: SUPERADMIN_GYMS_QUERY_KEYS.all });
                 ghostCookieKeysRef.current.delete(variables.id);
                 impersonateKeysRef.current.delete(variables.id);
-                window.location.href = MODULE_URLS.GHOST_LOGIN.ADMIN_DASHBOARD;
+                window.location.href = SUPERADMIN_GYMS_GHOST_LOGIN.ADMIN_DASHBOARD;
             } else {
                 toast.error(res.message, { id: 'superadmin-toast-85fa002e4f' });
             }

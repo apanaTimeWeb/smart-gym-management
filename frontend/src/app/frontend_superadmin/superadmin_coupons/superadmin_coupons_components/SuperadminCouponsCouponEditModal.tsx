@@ -20,6 +20,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_constants/SuperadminCouponsConstants';
 import { CouponSchema } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_schemas/SuperadminCouponsContractSchemas';
 import { formatSuperadminCouponDateForInput } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsDateUtils';
+import { fromSuperadminCouponsMinorUnits } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsDiscountValueUtils';
 import { useSuperadminLayoutUnsavedChangesGuard } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_hooks/useSuperadminLayoutUnsavedChangesGuard';
 
 import type { SuperadminCouponsCouponEditModalProps } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_types/SuperadminCouponsCouponEditModalTypes';
@@ -42,7 +43,7 @@ export const SuperadminCouponsCouponEditModal: React.FC<SuperadminCouponsCouponE
             reset({
                 code: coupon.code,
                 discountType: coupon.discountType,
-                discountValue: coupon.discountValue,
+                discountValue: coupon.discountType === 'EXACT' ? fromSuperadminCouponsMinorUnits(coupon.discountValue, coupon.currency || 'INR') : coupon.discountValue,
                 maxUses: coupon.maxUses,
                 expiryDate: formatSuperadminCouponDateForInput(coupon.expiryDate),
             });
@@ -74,7 +75,7 @@ export const SuperadminCouponsCouponEditModal: React.FC<SuperadminCouponsCouponE
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">{t('ui.discount_type_f908785b')}<span className="text-danger">{t('ui.text_3389dae3')}</span></label>
-              <Controller name="discountType" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS.map((option) => ({ label: option.label, value: option.value }))} data-testid="superadmin_coupons-coupon-edit-modal-discount-type"/>)} data-testid="superadmin_coupons-coupon-edit-modal-discount-type-field"/>
+              <Controller name="discountType" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS.map((option) => ({ label: t(option.labelKey), value: option.value }))} data-testid="superadmin_coupons-coupon-edit-modal-discount-type"/>)} data-testid="superadmin_coupons-coupon-edit-modal-discount-type-field"/>
               {errors.discountType && <span className="text-xs text-danger">{errors.discountType.message}</span>}
             </div>
 

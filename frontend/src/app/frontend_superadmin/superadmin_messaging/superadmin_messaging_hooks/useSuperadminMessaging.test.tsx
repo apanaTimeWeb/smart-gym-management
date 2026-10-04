@@ -6,7 +6,6 @@ import {describe, expect, it, vi, beforeEach} from 'vitest';
 import { superadminMessagingApi } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_api/SuperadminMessagingApi';
 import { useSuperadminMessaging } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_hooks/useSuperadminMessaging';
 import { resetSuperadminMessagingMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_mocks/superadmin_messaging_mocks_handlers/SuperadminMessagingMockHandlers';
-import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_whatsapp_mocks/superadmin_messaging_whatsapp_mocks_handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 
 import type { ReactNode } from 'react';
 
@@ -40,7 +39,6 @@ function wrapper({ children }: { children: ReactNode }) {
 }
 
 beforeEach(() => {
-  resetSuperadminMessagingV1WhatsAppMockState();
 });
 
 beforeEach(() => {

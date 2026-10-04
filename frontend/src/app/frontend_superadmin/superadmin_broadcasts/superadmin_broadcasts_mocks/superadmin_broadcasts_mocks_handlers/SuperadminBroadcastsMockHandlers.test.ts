@@ -3,7 +3,7 @@ import { expect, beforeEach, beforeAll, afterAll, describe, it } from 'vitest';
 import { resetSuperadminBroadcastsMockState, superadminBroadcastsHandlers } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_mocks/superadmin_broadcasts_mocks_handlers/SuperadminBroadcastsMockHandlers';
 import { MOCK_SUPERADMIN_BROADCASTS } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_mocks/superadmin_broadcasts_mocks_fixtures/SuperadminBroadcastsMockFixtures';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_url_config';
+import { SUPERADMIN_BROADCASTS_API } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_url_config';
 
 
 
@@ -18,7 +18,7 @@ describe('Superadmin Broadcasts MSW integration', () => {
     const id = MOCK_SUPERADMIN_BROADCASTS[0]!.id;
     const firstKey = 'broadcast-edit-intent-1';
     const secondKey = 'broadcast-edit-intent-2';
-    const first = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}/${id}`, {
+    const first = await fetch(`http://localhost${SUPERADMIN_BROADCASTS_API.BASE}/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': firstKey },
       body: JSON.stringify({ title: 'Title X' }),
@@ -27,7 +27,7 @@ describe('Superadmin Broadcasts MSW integration', () => {
     expect(first.ok).toBe(true);
     expect(firstBody.data.title).toBe('Title X');
 
-    const retry = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}/${id}`, {
+    const retry = await fetch(`http://localhost${SUPERADMIN_BROADCASTS_API.BASE}/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': firstKey },
       body: JSON.stringify({ title: 'Ignored Retry Payload' }),
@@ -36,7 +36,7 @@ describe('Superadmin Broadcasts MSW integration', () => {
     expect(retry.ok).toBe(true);
     expect(retryBody.data.title).toBe('Title X');
 
-    const second = await fetch(`http://localhost${MODULE_URLS.BACKEND_API.BASE}/${id}`, {
+    const second = await fetch(`http://localhost${SUPERADMIN_BROADCASTS_API.BASE}/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': secondKey },
       body: JSON.stringify({ title: 'Title Y' }),

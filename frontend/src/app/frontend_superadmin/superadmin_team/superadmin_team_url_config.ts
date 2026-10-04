@@ -1,8 +1,10 @@
 /**
  * Canonical module-owned URL configuration.
- * All page and backend endpoint paths consumed by this feature live in this one file.
- * Endpoint path strings are preserved from the supplied contract.
+ * Each route/endpoint group has a descriptive, module-prefixed export.
+ * Do not import this file outside its owning feature module.
  */
-export const MODULE_URLS = {
-  PAGES: { MAIN: '/frontend_superadmin/superadmin_team' }, BACKEND_API: { BASE: '/frontend_superadmin/superadmin_team', ALERT_PREFERENCES: '/superadmin/team/alerts' }
-} as const;
+
+export const SUPERADMIN_TEAM_ROUTES = { MAIN: '/frontend_superadmin/superadmin_team' } as const;
+
+export const SUPERADMIN_TEAM_API = { BASE: '/frontend_superadmin/superadmin_team', ALERT_PREFERENCES: '/superadmin/team/alerts' } as const;
+

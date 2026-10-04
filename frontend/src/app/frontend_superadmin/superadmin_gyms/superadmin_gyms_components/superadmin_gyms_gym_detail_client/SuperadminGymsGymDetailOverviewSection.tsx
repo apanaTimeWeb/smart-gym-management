@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsGymDetailOverviewSection within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminGymsGymDetailOverviewSection owned by the superadmin_gyms feature boundary.
@@ -21,6 +22,11 @@ import type { SuperadminGymsGymDetailOverviewSectionProps } from '@/app/frontend
 
 
 
+/**
+ * @description Renders GymsGymDetailOverviewSection within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminGymsGymDetailOverviewSection({ gym, locale }: SuperadminGymsGymDetailOverviewSectionProps) {
   const t = useTranslations('superadmin_gyms');
   const cards = [

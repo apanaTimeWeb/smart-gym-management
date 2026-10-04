@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsStatusBadge within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminCouponsStatusBadge owned by the superadmin_coupons feature boundary.
@@ -17,13 +18,18 @@ import type { CouponStatus } from '@/app/frontend_superadmin/superadmin_coupons/
 
 
 
+/**
+ * @description Renders CouponsStatusBadge within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminCouponsStatusBadge({ status }: SuperadminCouponsStatusBadgeProps) {
   const t = useTranslations('superadmin_coupons');
     switch (status) {
         case SUPERADMIN_COUPON_STATUS_CODES.ACTIVE:
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success" data-testid="superadmin_coupons-superadmin-coupons-status-badge-coupons-status-badge-status">{t('ui.active_18ff74f4')}</span>;
         case SUPERADMIN_COUPON_STATUS_CODES.INACTIVE:
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">{t('ui.inactive_6b273343')}</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary" data-testid="superadmin_coupons-couponsstatusbadge-state">{t('ui.inactive_6b273343')}</span>;
         case SUPERADMIN_COUPON_STATUS_CODES.EXPIRED:
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">{t('ui.expired_38afd7ae')}</span>;
         case SUPERADMIN_COUPON_STATUS_CODES.DEPLETED:

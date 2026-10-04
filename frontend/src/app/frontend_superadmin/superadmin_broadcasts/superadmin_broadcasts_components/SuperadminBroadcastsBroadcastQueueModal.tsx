@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminBroadcastsBroadcastQueueModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsBroadcastQueueModal owned by the superadmin_broadcasts feature boundary.

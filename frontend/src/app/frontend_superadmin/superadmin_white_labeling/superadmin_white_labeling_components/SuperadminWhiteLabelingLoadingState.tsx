@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminWhiteLabelingLoadingState within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminWhiteLabelingLoadingState owned by the superadmin_white_labeling feature boundary.
@@ -10,11 +11,16 @@
 // RESPONSIBILITY: Renders the layout-matching loading skeleton for the White-labeling domain list.
 import { useTranslations } from 'next-intl';
 
+/**
+ * @description Renders WhiteLabelingLoadingState within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminWhiteLabelingLoadingState() {
   const t = useTranslations('superadmin_white_labeling');
   return (
     <div className="space-y-4" aria-busy="true" aria-label={t('ui.loading_custom_domains_f3977843')} data-testid="superadmin_white_labeling-superadmin-white-labeling-loading-state-loading-state-loading-state">
-      <div className="h-10 w-48 rounded-md bg-skeleton-base motion-safe:animate-pulse" />
+      <div className="h-10 w-48 rounded-md bg-skeleton-base motion-safe:animate-pulse"  data-testid="superadmin_white_labeling-whitelabelingloadingstate-state"/>
       <div className="h-14 w-full rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
       <div className="h-64 w-full rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
     </div>

@@ -79,7 +79,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 | `superadmin_plans_components/` | Owns module-scoped components artifacts. | `SuperadminPlansList.tsx, SuperadminPlansMain.tsx, SuperadminPlansPlanCreateModal.tsx, SuperadminPlansPlanEditModal.tsx` |
 | `superadmin_plans_constants/` | Owns module-scoped constants artifacts. | `SuperadminPlansQueryKeys.ts` |
 | `superadmin_plans_documentation/` | Owns module-scoped documentation artifacts. | `superadmin_plans_business_controls_features.md, superadmin_plans_business_controls_forbidden.md, superadmin_plans_business_controls_theme_contract.md` |
-| `superadmin_plans_hooks/` | Owns module-scoped hooks artifacts. | `useSuperadminPlansList.test.tsx, useSuperadminPlansList.ts, useSuperadminPlansPlanMutations.test.tsx, useSuperadminPlansPlanMutations.ts, useSuperadminPlansV1.test.tsx` (+1 more) |
 | `superadmin_plans_locales/` | Owns module-scoped locales artifacts. | `superadmin_plans_en.json, superadmin_plans_hi.json` |
 | `superadmin_plans_mocks/` | Owns module-scoped mocks artifacts. | `` |
 | `superadmin_plans_schemas/` | Owns module-scoped schemas artifacts. | `SuperadminPlansApiSchemas.ts, SuperadminPlansContractSchemas.ts, SuperadminPlansSchema.ts, SuperadminPlansSchemas.test.ts, SuperadminPlansSchemas.ts` (+1 more) |
@@ -141,7 +140,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** `superadmin_plans_store/useSuperadminPlansStore.ts`
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_plans_hooks/useSuperadminPlansList.ts`, `superadmin_plans_store/useSuperadminPlansStore.ts`, `superadmin_plans_hooks/useSuperadminPlansV1.ts`, `superadmin_plans_hooks/useSuperadminPlansPlanMutations.ts`
 - **URL state:** No `useUrlState` detected.
 - **Observed query keys:** `superadmin_plans_constants/SuperadminPlansQueryKeys.ts`
 
@@ -186,8 +184,6 @@ Source-derived mapping from current consuming components and module-owned API cl
 | `superadmin_plans_components/SuperadminPlansPlanCreateModal.tsx` | Renders the modal form for creating a new subscription plan. Reads/writes via useSuperadminPlansStore. |
 | `superadmin_plans_components/SuperadminPlansMain.tsx` | SuperadminPlansMain.tsx is the root client entry for the Plans page. Initialises the Zustand store on mount. |
 | `superadmin_plans_components/SuperadminPlansPlanEditModal.tsx` | Renders the modal form for editing an existing subscription plan. Reads/writes via useSuperadminPlansStore. |
-| `superadmin_plans_components/SuperadminPlansV1HistoryAddonsAndMigrationSection.tsx` | Renders the Superadmin plans V1 Price history, Add-ons, Plan move preview view. |
-| `superadmin_plans_components/SuperadminPlansV1ComparisonPanel.tsx` | Renders the Superadmin plans V1 Plan comparison view. |
 
 ## Repository-Verified Repair Notes
 

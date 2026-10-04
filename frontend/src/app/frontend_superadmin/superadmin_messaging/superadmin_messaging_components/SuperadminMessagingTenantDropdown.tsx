@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminMessagingTenantDropdown within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 import { useState, useRef, useEffect } from 'react';

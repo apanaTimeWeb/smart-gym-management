@@ -11,7 +11,7 @@ import { SUPERADMIN_BROADCAST_STATUS_CODES } from '@/app/frontend_superadmin/sup
  * EDGE CASES: Preserve implemented loading, empty, error, disabled, cancellation, retry, and repeated-action behavior.
  * REPAIR CONSTRAINT: Cross-feature business dependencies require explicit documentation; do not move business logic into global UI infrastructure.
  */
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_url_config';
+import { SUPERADMIN_BROADCASTS_API } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_url_config';
 
 import type { SuperadminBroadcastDeliveryResult } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsBroadcastDeliveryTypes';
 import type { Broadcast } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsTypes';
@@ -30,7 +30,7 @@ export function resetSuperadminBroadcastsMockState(): void {
   idempotentBroadcastResponses.clear();
 }
 export const superadminBroadcastsHandlers = [
-    http.get('*' + MODULE_URLS.BACKEND_API.TENANTS, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_BROADCAST_TENANTS })),
+    http.get('*' + SUPERADMIN_BROADCASTS_API.TENANTS, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_BROADCAST_TENANTS })),
     http.get('*' + BASE_URL, async ({ request }) => {
         await delay(350);
         const url = new URL(request.url);

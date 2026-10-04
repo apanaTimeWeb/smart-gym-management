@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminBroadcastsBroadcastStatusBadge within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsBroadcastStatusBadge owned by the superadmin_broadcasts feature boundary.
@@ -15,13 +16,18 @@ import { SUPERADMIN_BROADCAST_STATUS_FILTER_CODES } from '@/app/frontend_superad
 import type { SuperadminBroadcastStatusBadgeProps } from '@/app/frontend_superadmin/superadmin_broadcasts/superadmin_broadcasts_types/SuperadminBroadcastsTypes';
 
 
+/**
+ * @description Renders BroadcastsBroadcastStatusBadge within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminBroadcastsBroadcastStatusBadge({ status }: SuperadminBroadcastStatusBadgeProps) {
   const t = useTranslations('superadmin_broadcasts');
     switch (status) {
         case SUPERADMIN_BROADCAST_STATUS_FILTER_CODES.SENT:
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success" data-testid="superadmin_broadcasts-superadmin-broadcasts-broadcast-status-badge-broadcast-status-badge-status">{t('ui.sent_145d6301')}</span>;
         case SUPERADMIN_BROADCAST_STATUS_FILTER_CODES.SCHEDULED:
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">{t('ui.scheduled_1ebf150f')}</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning" data-testid="superadmin_broadcasts-broadcastsbroadcaststatusbadge-state">{t('ui.scheduled_1ebf150f')}</span>;
         case SUPERADMIN_BROADCAST_STATUS_FILTER_CODES.DRAFT:
         default:
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">{t('ui.draft_52101904')}</span>;

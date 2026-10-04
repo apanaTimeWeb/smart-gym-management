@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders/orchestrates not-found within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the superadmin_system_ops route-segment not-found state and provides the documented recovery navigation.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
+import { SUPERADMIN_SYSTEM_OPS_ROUTES } from '@/app/frontend_superadmin/superadmin_system_ops/superadmin_system_ops_url_config';
 
 
 
@@ -24,7 +25,7 @@ export default function SuperadminSystemOpsNotFound() {
         <h2 className="text-lg font-semibold text-primary">{t('ui.page_not_found_title_v3')}</h2>
         <p className="mt-1 max-w-md text-sm text-secondary">{t('ui.page_not_found_message_v3')}</p>
       </div>
-      <Link href={MODULE_URLS.PAGES.MAIN} data-testid="superadmin_system_ops-not-found-superadmin_system_ops-not-found-back" className="min-h-11 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">{t('ui.back_to_module_v3')}</Link>
+      <Link href={SUPERADMIN_SYSTEM_OPS_ROUTES.MAIN} data-testid="superadmin_system_ops-not-found-superadmin_system_ops-not-found-back" className="min-h-11 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">{t('ui.back_to_module_v3')}</Link>
     </div>
   );
 }

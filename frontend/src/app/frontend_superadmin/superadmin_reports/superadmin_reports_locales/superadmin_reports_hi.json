@@ -47,7 +47,10 @@
       "export_csv_0e36f4bc": "CSV निर्यात करें",
       "page_not_found_title": "पेज नहीं मिला",
       "page_not_found_message": "मांगा गया पेज उपलब्ध नहीं है या इस Superadmin क्षेत्र में मौजूद नहीं है।",
-      "back_to_module": "मॉड्यूल पर वापस जाएँ"
+      "back_to_module": "मॉड्यूल पर वापस जाएँ",
+      "reports_tab_revenue": "राजस्व",
+      "reports_tab_cancellations": "रद्दीकरण",
+      "reports_tab_health": "स्वास्थ्य"
     },
     "actions": {
       "retry": "पुनः प्रयास करें",

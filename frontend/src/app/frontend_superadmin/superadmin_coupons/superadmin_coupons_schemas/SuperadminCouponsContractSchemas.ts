@@ -24,6 +24,23 @@ export const CouponRecordSchema = z.object({
   isDeleted: z.boolean(),
   currency: z.string().optional(),
   redemptions: z.array(RedemptionRecordSchema).optional(),
+}).superRefine(({ discountType, discountValue }, ctx) => {
+  if (discountType === 'EXACT' && !Number.isInteger(discountValue)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Exact coupon discounts must use integer minor units.', path: ['discountValue'] });
+  }
+});
+
+export const CouponApiPayloadSchema = z.object({
+  code: z.string().min(3).max(20),
+  discountType: z.enum(['PERCENTAGE', 'EXACT']),
+  discountValue: z.number().positive(),
+  maxUses: z.number().int().min(1),
+  expiryDate: z.string().min(1),
+  currency: z.string().optional(),
+}).superRefine(({ discountType, discountValue }, ctx) => {
+  if (discountType === 'EXACT' && !Number.isInteger(discountValue)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Exact coupon discounts must use integer minor units.', path: ['discountValue'] });
+  }
 });
 export const CouponSchema = z.object({
   code: z.string().min(3, 'Coupon code must be at least 3 characters.').max(20, 'Coupon code cannot exceed 20 characters.').regex(/^[A-Z0-9-]+$/, 'Code must be uppercase letters, digits, and hyphens only.'),

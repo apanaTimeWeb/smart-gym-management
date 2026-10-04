@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminInvoicesAgingReport within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminInvoicesFormatCurrency } from '@/app/frontend_superadmin/superadmin_invoices/superadmin_invoices_utils/SuperadminInvoicesFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminInvoicesAgingReport for the owning feature module; business logic and API transport remain in module-owned hooks/services.

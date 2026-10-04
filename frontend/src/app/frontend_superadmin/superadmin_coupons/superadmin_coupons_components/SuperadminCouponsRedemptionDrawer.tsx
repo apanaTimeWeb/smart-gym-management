@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminCouponsRedemptionDrawer within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminCouponsFormatCurrency } from '@/app/frontend_superadmin/superadmin_coupons/superadmin_coupons_utils/SuperadminCouponsFormatCurrency';
 // RESPONSIBILITY: Renders and composes SuperadminCouponsRedemptionDrawer for the owning feature module; business logic and API transport remain in module-owned hooks/services.

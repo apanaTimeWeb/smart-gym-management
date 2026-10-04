@@ -11,6 +11,7 @@ export const GYMS_STATUS_LABELS = {
     SUSPENDED: 'Suspended',
     TRIAL: 'Trial',
     EXPIRED: 'Expired',
+    CANCELLED: 'Cancelled',
 } as const;
 /** Plan badge color map — used in SuperadminGymsTable plan badge rendering. */
 export const GYMS_PLAN_COLORS = {
@@ -29,6 +30,7 @@ export const getSuperadminGymStatusBadgeClasses = (status: keyof typeof GYMS_STA
         SUSPENDED: 'border-border bg-danger-bg text-danger',
         TRIAL: 'border-border bg-warning-bg text-warning',
         EXPIRED: 'border-border bg-danger-bg text-danger',
+        CANCELLED: 'border-border bg-danger-bg text-danger',
     };
     return classes[status];
 };
@@ -44,8 +46,8 @@ export const SUPERADMIN_GYM_STATUS_CODES = Object.freeze({
 } as const);
 
 export const SUPERADMIN_GYM_DETAIL_MAIN_TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'branches', label: 'Branches & Franchises' },
-  { id: 'lifecycle', label: 'Lifecycle & Billing' },
-  { id: 'whitelabel', label: 'White-labeling' },
+  { id: 'overview', labelKey: 'ui.gym_detail_tab_overview' },
+  { id: 'branches', labelKey: 'ui.gym_detail_tab_branches_franchises' },
+  { id: 'lifecycle', labelKey: 'ui.gym_detail_tab_lifecycle_billing' },
+  { id: 'whitelabel', labelKey: 'ui.gym_detail_tab_white_labeling' },
 ] as const;

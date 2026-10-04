@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminReportsHealthTab within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import SuperadminReportsProgressBar from '@/app/frontend_superadmin/superadmin_reports/superadmin_reports_components/SuperadminReportsProgressBar';
 /**

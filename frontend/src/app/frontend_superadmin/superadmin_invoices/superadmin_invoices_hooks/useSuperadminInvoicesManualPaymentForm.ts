@@ -17,7 +17,7 @@ import type { SuperadminInvoicesManualPaymentFormValues } from '@/app/frontend_s
  */
 export function useSuperadminInvoicesManualPaymentForm(onSave: (amount: number) => Promise<boolean>) {
   const form = useForm<SuperadminInvoicesManualPaymentFormValues>({
-    resolver: zodResolver(SuperadminInvoicesManualPaymentFormSchema) as any,
+    resolver: zodResolver(SuperadminInvoicesManualPaymentFormSchema),
     defaultValues: { amount: undefined },
   });
 

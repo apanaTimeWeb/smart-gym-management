@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsTableSortIcon within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminGymsTableSortIcon owned by the superadmin_gyms feature boundary.
@@ -13,6 +14,11 @@ import { ArrowUpDown } from 'lucide-react';
 import type { SuperadminGymsTableSortIconProps } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_types/SuperadminGymsTableSortIconTypes';
 
 
+/**
+ * @description Renders GymsTableSortIcon within the owning Superadmin feature module.
+ * @dependencies Uses only dependencies declared in this module file and documented feature infrastructure.
+ * @edge-case Preserves documented loading, empty, error, disabled, retry, and repeated-action behavior.
+ */
 export default function SuperadminGymsTableSortIcon({ active }: SuperadminGymsTableSortIconProps) {
   return <ArrowUpDown size={18} className={`ml-1 inline ${active ? 'text-primary' : 'text-disabled'}`} aria-hidden="true"/>;
 }

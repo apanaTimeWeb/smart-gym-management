@@ -1,117 +1,81 @@
-# INTEGRATION GUIDE — frontend_superadmin V14
+# Superadmin Frontend Module Integration Guide
 
-## Package
+## 1. Route integration
+This package uses Next.js App Router feature-owned route files. Do **not** create a second route tree and do **not** duplicate business implementations.
 
-`frontend-superadmin-v14-fix.zip`
-
-This package is a canonical `frontend_superadmin` role container for a Next.js App Router host. The business feature implementation remains inside the supplied feature modules; the host should register only the role container and required application infrastructure.
-
-## 1. Global Route Registration
-
-Copy the packaged `frontend_superadmin/` directory under the host application's `src/app/` so the final layout is:
+Copy the package role directory to the host frontend:
 
 ```text
-src/app/
-└── frontend_superadmin/
+src/app/frontend_superadmin/
 ```
 
-The package already owns framework route files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`) inside their canonical feature modules. Do not create a second duplicate feature tree.
+The supplied feature folders own their `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, and `not-found.tsx` files. Because routing is physically owned by the feature modules, no additional React Router `<Route>` registration or parallel route facade should be added.
 
-For a host using explicit navigation imports, import the feature route entry by the host's canonical Next.js route structure rather than creating duplicate business components:
+The role shell can remain the host composition boundary:
 
 ```tsx
-// Example host composition only when the host uses a custom route registry.
-import '@/app/frontend_superadmin/superadmin_dashboard/page';
+// src/app/frontend_superadmin/layout.tsx
+import SuperadminLayout from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_components/superadmin_layout_shell/SuperadminLayout';
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <SuperadminLayout>{children}</SuperadminLayout>;
+}
 ```
 
-## 2. Provider / Global State Wrapping
+## 2. Import alias requirement
+Use the host project's `@/` TypeScript alias. Cross-module integration must not use `../../` relative paths.
 
-The package's role layout owns its role-local provider composition. The host must provide the application's canonical TanStack Query client/provider once.
-
-If the host already has a `QueryClientProvider`, do not add a second client. Otherwise use the host's canonical provider location:
-
-```tsx
-'use client';
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient();
-
-export function Providers({{ children }}: {{ children: React.ReactNode }}) {{
-  return <QueryClientProvider client={{{{queryClient}}}}>
-    {{{{children}}}}
-  </QueryClientProvider>;
-}}
-```
-
-> Host note: the placeholder provider snippet above is illustrative because the host's existing provider architecture was not supplied. The package itself does not add a new global query provider.
-
-## 3. Path Alias / Import Resolution
-
-The package expects the canonical alias form used throughout the architecture rules:
+Example:
 
 ```ts
-import { Something } from '@/app/frontend_superadmin/superadmin_members/...';
+import SuperadminGymsMain from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_components/SuperadminGymsMain';
 ```
 
-Avoid cross-module relative imports such as `../../...`.
+## 3. Providers / global infrastructure
+The module expects the host application to provide the project's existing:
 
-## 4. Global Styling / Theme
+- TanStack Query provider.
+- `next-intl` locale/messages integration.
+- authenticated session infrastructure.
+- global API transport (`@/lib/api`).
+- approved global logging/monitoring infrastructure.
+- approved zero-business UI primitives.
 
-The role layout imports its module-owned layout stylesheet from:
+Do not introduce feature business state into a global provider.
 
-```text
-frontend_superadmin/superadmin_layout/superadmin_layout_styles/SuperadminLayoutStyles.css
+## 4. Environment variable
+The supplied source references:
+
+```env
+NEXT_PUBLIC_SUPERADMIN_WS_URL=...
 ```
 
-The host remains responsible for the global semantic token source (`globals.css` or equivalent). Do not duplicate the global token implementation inside feature modules.
+Set this in the host application's environment when the Superadmin realtime infrastructure is enabled.
 
-## 5. Environment Variables
-
-V14 introduces no new environment variables.
-
-API transport continues to use the host application's existing canonical transport/base configuration.
-
-## 6. NPM Dependencies
-
-V14 does not introduce a new dependency.
-
-The supplied frontend rules expect the host environment to provide its approved package set, including TanStack Query v5, React Hook Form v7, Zod, next-intl, sonner, lucide-react, and the supplied test tooling where applicable.
-
-## 7. Verification
-
-After integration, run the host's canonical commands:
+## 5. Approved packages
+The host should already satisfy the approved frontend package registry. Relevant packages evidenced by the module include:
 
 ```bash
-npm run typecheck
-npm run lint
-npm run test
-npm run build
-npx playwright test
+npm install next@15 zustand@5 @tanstack/react-query@5 react-hook-form@7 zod@3 @hookform/resolvers@3 next-intl lucide-react msw sonner http-status-codes
 ```
 
-Where browser tooling is available, additionally verify responsive states at 375px, 768px, and 1280px and run the host's accessibility checks.
+Only install packages actually missing from the host project. Do not add unapproved alternatives.
 
-## 8. V14 Repair Verification Already Completed
+## 6. Styling / theme
+The host application's canonical `globals.css` / theme implementation must expose the semantic design tokens consumed by the module. The feature theme contracts document the exact dependencies for each module.
 
-Static source checks on the repaired package report:
+Do not replace semantic classes with hardcoded colors or arbitrary Tailwind values.
 
-- `1477` frontend role files
-- `22` role feature roots
-- `45` API facade files
-- `26` URL config files
-- `52` module locale files
-- `274` frontend test files
-- `27` E2E spec files
-- 57 `useMutation` blocks with `onSuccess` present
-- zero relative-import matches
-- zero `react-hot-toast` matches
-- zero `window.confirm` matches
-- zero `console.log` matches
-- zero `@ts-ignore` / `@ts-nocheck` matches
-- zero semantic background opacity-modifier matches
-- zero URL-config contract violations
-- zero feature-map mandatory-section omissions
-- zero E2E specs with fewer than two test blocks
+## 7. Verification in the host app
+After integration:
 
-Host build/runtime verification remains outside the supplied package scope.
+1. Run the host dependency install and lockfile validation.
+2. Run the host TypeScript check and lint.
+3. Run the module/unit test suite with the host's configured test runner.
+4. Start the application and exercise every Superadmin route.
+5. Verify loading, empty, error, retry, mutation-success and mutation-error states.
+6. Verify mutation idempotency and cache reconciliation.
+7. Run the available Playwright/browser suite.
+8. Verify responsive behavior at desktop, tablet and approximately 320px mobile width.
+9. Verify keyboard focus, Escape handling, dialog focus restoration and reduced-motion behavior.
+10. Verify the deployed API/WebSocket environment values.

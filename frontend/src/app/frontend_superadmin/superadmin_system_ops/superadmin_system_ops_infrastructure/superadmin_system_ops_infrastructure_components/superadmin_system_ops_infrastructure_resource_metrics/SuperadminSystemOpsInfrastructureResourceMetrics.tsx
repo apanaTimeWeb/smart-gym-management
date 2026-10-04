@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureResourceMetrics within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders CPU, RAM, and storage resource KPI cards from already-derived infrastructure metrics.
 import { Cpu, HardDrive, Server } from 'lucide-react';

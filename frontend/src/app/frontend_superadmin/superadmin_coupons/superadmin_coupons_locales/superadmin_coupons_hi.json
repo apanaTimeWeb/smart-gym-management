@@ -82,7 +82,21 @@
       "whatsapp_apply_footer": "चेकआउट पर यह कोड लागू करें!",
       "page_not_found_title": "पेज नहीं मिला",
       "page_not_found_message": "मांगा गया पेज उपलब्ध नहीं है या इस Superadmin क्षेत्र में मौजूद नहीं है।",
-      "back_to_module": "मॉड्यूल पर वापस जाएँ"
+      "back_to_module": "मॉड्यूल पर वापस जाएँ",
+      "option_all_statuses": "सभी स्टेटस",
+      "option_active": "सक्रिय",
+      "option_inactive": "निष्क्रिय",
+      "option_deleted": "हटाए गए",
+      "option_percentage": "प्रतिशत",
+      "option_exact_amount": "निश्चित राशि",
+      "date_this_month": "इस महीने",
+      "date_last_month": "पिछले महीने",
+      "date_last_3_months": "पिछले 3 महीने",
+      "date_last_6_months": "पिछले 6 महीने",
+      "date_this_year": "इस वर्ष",
+      "date_monthly_all_time": "मासिक (सभी समय)",
+      "date_yearly_all_time": "वार्षिक (सभी समय)",
+      "date_custom_range": "कस्टम अवधि"
     },
     "actions": {
       "retry": "पुनः प्रयास करें",

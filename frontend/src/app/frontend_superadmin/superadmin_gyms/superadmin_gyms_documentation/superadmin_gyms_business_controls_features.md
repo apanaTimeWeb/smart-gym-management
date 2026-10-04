@@ -68,7 +68,6 @@ Lifecycle capabilities below are derived only from current module-owned API sour
 - **Server state:** TanStack Query `useQuery` detected.
 - **Zustand stores:** `superadmin_gyms_store/useSuperadminGymsStore.ts`, `superadmin_gyms_store/useSuperadminGymsGymGhostLoginStore.ts`
 - **Context files:** None detected.
-- **Custom hooks:** `superadmin_gyms_store/useSuperadminGymsStore.ts`, `superadmin_gyms_store/useSuperadminGymsGymGhostLoginStore.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymDetail.ts`, `superadmin_gyms_hooks/useSuperadminGymsV1.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymDetailActions.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymWhatsappModal.ts`, `superadmin_gyms_hooks/useSuperadminGymsAddGymForm.ts`, `superadmin_gyms_hooks/useSuperadminGymsAddGymFormSubmit.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymEditModal.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymDeleteModal.ts`, `superadmin_gyms_hooks/useSuperadminGymsTable.ts`, `superadmin_gyms_hooks/useSuperadminGymsGymMutations.ts`, `superadmin_gyms_hooks/useSuperadminGymsToolbar.ts`
 - **URL state:** `useUrlState` detected.
 - **Observed query keys:** `superadmin_gyms_constants/SuperadminGymsQueryKeys.ts`
 
@@ -115,9 +114,7 @@ Source-derived mapping from current consuming components and module-owned API cl
 |---|---|
 | `page.tsx` | Server Component that acts as the entry point for the Tenants (Gyms) list page. |
 | `add/page.tsx` | Server Component that acts as the entry point for the Add Gym page. |
-| `superadmin_gyms_components/SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection.tsx` | Renders executable tenant filters, saved views, tenant selection, and bulk actions for the V1 controls feature. |
 | `superadmin_gyms_components/SuperadminGymsMain.tsx` | Root orchestrator for the Gyms page. Renders the layout, toolbar, and table. |
-| `superadmin_gyms_components/SuperadminGymsV1TenantComparisonPanel.tsx` | Renders the current filtered tenant dataset and exposes row selection for bulk operations. |
 | `[id]/page.tsx` | Server entry for the Superadmin gym detail route; passes the route gym ID to client views. |
 | `superadmin_gyms_components/superadmin_gyms_gym_whatsapp_modal/SuperadminGymsGymWhatsappModal.tsx` | Renders the modal UI for sending a WhatsApp message to a Gym owner. Purely a view component. |
 | `superadmin_gyms_components/superadmin_gyms_empty_state/SuperadminGymsEmptyState.tsx` | Renders the empty state UI for the Gyms table when no gyms match the current search. Shows icon, message, and search adjustment hint. |

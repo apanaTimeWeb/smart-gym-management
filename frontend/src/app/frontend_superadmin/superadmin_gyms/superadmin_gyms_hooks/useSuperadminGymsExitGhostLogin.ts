@@ -7,7 +7,7 @@ import { gymsApi } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gy
 import { useSuperadminGymsGymGhostLoginStore } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_store/useSuperadminGymsGymGhostLoginStore';
 
 import { SUPERADMIN_GYMS_QUERY_KEYS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_constants/SuperadminGymsQueryKeys';
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_ROUTES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 
 
 
@@ -27,7 +27,7 @@ export function useSuperadminGymsExitGhostLogin() {
       keyRef.current = null;
       clearGhostLogin();
       await queryClient.invalidateQueries({ queryKey: SUPERADMIN_GYMS_QUERY_KEYS.all });
-      window.location.href = MODULE_URLS.PAGES.MAIN;
+      window.location.href = SUPERADMIN_GYMS_ROUTES.MAIN;
     },
   });
   const exitGhostLogin = () => { keyRef.current ??= crypto.randomUUID(); return mutation.mutateAsync(keyRef.current); };

@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders/orchestrates not-found within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the superadmin_messaging route-segment not-found state and provides the documented recovery navigation.
 import { useTranslations } from 'next-intl';
 
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
+import { SUPERADMIN_MESSAGING_ROUTES } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
 
 
 
@@ -26,7 +27,7 @@ export default function MessagingNotFound() {
           {t('ui.the_message_or_notification_you_are_looking_for__29e2904')}
         </p>
       </div>
-      <Link href={MODULE_URLS.PAGES.MAIN} className="min-h-11 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="superadmin_messaging-not-found-messaging-not-found-back">
+      <Link href={SUPERADMIN_MESSAGING_ROUTES.MAIN} className="min-h-11 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="superadmin_messaging-not-found-messaging-not-found-back">
         
         {t('ui.back_to_dashboard_0305aa1')}
       </Link>

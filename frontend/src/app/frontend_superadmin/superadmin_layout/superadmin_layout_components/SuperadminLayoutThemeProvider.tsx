@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminLayoutThemeProvider within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Provides the application theme state and theme-mode presentation contract without owning module business data.
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';

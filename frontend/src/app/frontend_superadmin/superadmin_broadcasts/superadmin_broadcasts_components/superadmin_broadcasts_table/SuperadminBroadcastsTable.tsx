@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminBroadcastsTable within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsTable owned by the superadmin_broadcasts feature boundary.

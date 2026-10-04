@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureUptimeChart within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders the validated historical infrastructure uptime series. No API calls are performed in the component.
 import dynamic from 'next/dynamic';

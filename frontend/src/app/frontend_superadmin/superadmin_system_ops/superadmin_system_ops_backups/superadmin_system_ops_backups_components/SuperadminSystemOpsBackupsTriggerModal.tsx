@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsBackupsTriggerModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Confirmation view for the global backup trigger; asynchronous mutation is owned by the feature action hook.
 import { DatabaseBackup, Loader2 } from 'lucide-react';

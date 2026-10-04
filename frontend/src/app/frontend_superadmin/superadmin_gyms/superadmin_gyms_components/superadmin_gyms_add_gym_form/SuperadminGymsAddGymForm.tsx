@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminGymsAddGymForm within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 import { formatCurrency as SuperadminGymsFormatCurrency } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_utils/SuperadminGymsFormatCurrency';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -9,7 +10,7 @@ import { Save, ArrowLeft, Database, Eye, EyeOff, Loader2 } from 'lucide-react';
 // RESPONSIBILITY: Renders and composes SuperadminGymsAddGymForm for the owning feature module; business logic and API transport remain in module-owned hooks/services.
 import Link from 'next/link';
 
-import { MODULE_URLS } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
+import { SUPERADMIN_GYMS_ROUTES } from '@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_url_config';
 import { useSuperadminLayoutUnsavedChangesGuard } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_hooks/useSuperadminLayoutUnsavedChangesGuard';
 
 
@@ -28,7 +29,7 @@ export default function SuperadminGymsAddGymForm() {
     useSuperadminLayoutUnsavedChangesGuard(isDirty && !isProvisioning, 'You have unsaved gym details. Discard?');
     return (<div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={MODULE_URLS.PAGES.MAIN} className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-on-primary motion-safe:transition-colors" data-testid="superadmin_gyms-superadmin-gyms-add-gym-form-add-gym-form-link">
+        <Link href={SUPERADMIN_GYMS_ROUTES.MAIN} className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-on-primary motion-safe:transition-colors" data-testid="superadmin_gyms-superadmin-gyms-add-gym-form-add-gym-form-link">
           <ArrowLeft size={18}/>
         </Link>
         <div>
@@ -105,7 +106,7 @@ export default function SuperadminGymsAddGymForm() {
             {t('ui.provisioning_console_05a04f51')}</div>
           <div className="bg-card rounded-lg p-4 font-mono text-xs text-secondary h-64 overflow-y-auto space-y-2 border border-border">
             {provisioningLogs.length === 0 ? (<p className="text-secondary italic">{t('ui.awaiting_submit_b697b448')}</p>) : (provisioningLogs.map((log, i) => (<p key={`log-${i}-${log.slice(0, 12)}`} className="motion-safe:animate-in motion-safe:fade-in slide-in-from-bottom-1 text-success">
-                  <span className="text-secondary mr-2">{t('ui.text_da26c78b')}</span>{log}
+                  <span aria-hidden="true" className="text-secondary mr-2">›</span>{log}
                 </p>)))}
           </div>
         </div>

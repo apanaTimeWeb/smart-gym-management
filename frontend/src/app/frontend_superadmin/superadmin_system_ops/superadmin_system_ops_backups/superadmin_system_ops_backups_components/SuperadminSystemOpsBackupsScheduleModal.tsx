@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsBackupsScheduleModal within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: View-only modal for editing the Superadmin backup schedule. Server state and mutation lifecycle are owned by useSuperadminSystemOpsBackupsSchedule.
 import { useEffect } from 'react';

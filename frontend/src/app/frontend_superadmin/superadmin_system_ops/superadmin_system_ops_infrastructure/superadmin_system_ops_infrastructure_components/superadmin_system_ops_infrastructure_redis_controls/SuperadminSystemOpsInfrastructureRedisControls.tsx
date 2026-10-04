@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates SuperadminSystemOpsInfrastructureRedisControls within its owning Superadmin feature module; no direct backend implementation.
 'use client';
 // RESPONSIBILITY: Renders global and tenant-specific Redis flush actions and delegates mutation intent to the module orchestrator.
 import { Loader2, Zap } from 'lucide-react';

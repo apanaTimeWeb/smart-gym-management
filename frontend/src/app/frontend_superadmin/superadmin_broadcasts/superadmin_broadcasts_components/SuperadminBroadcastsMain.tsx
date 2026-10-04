@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders and orchestrates SuperadminBroadcastsMain for the owning Superadmin feature module; presentation stays free of direct API calls.
 'use client';
 /**
  * RESPONSIBILITY: React component SuperadminBroadcastsMain owned by the superadmin_broadcasts feature boundary.
