@@ -1,6 +1,7 @@
 import { TenantMessageCreatePayloadSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingTypesSchemas';
 import { SuperadminMessagingMessageResponseSchema, SuperadminMessagingMessagesResponseSchema, SuperadminMessagingNotificationsResponseSchema, SuperadminMessagingNotificationResponseSchema, SuperadminMessagingTenantsResponseSchema } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_schemas/SuperadminMessagingApiSchema';
 import { SuperadminLayoutApiFetch as apiFetch } from '@/app/frontend_superadmin/superadmin_layout/superadmin_layout_api/SuperadminLayoutApiFetch';
+import { SUPERADMIN_MESSAGING_API } from '@/app/frontend_superadmin/superadmin_messaging/superadmin_messaging_url_config';
 
 /**
  * RESPONSIBILITY: Module-owned TypeScript module SuperadminMessagingApi owned by the superadmin_messaging feature boundary.

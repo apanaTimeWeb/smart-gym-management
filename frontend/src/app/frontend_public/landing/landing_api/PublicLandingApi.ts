@@ -17,7 +17,7 @@ function parsePublicLandingApiResponse(value: unknown): PublicLandingApiResponse
       isBackendMessage: false,
     });
   }
-  return parsed.data;
+  return parsed.data as PublicLandingApiResponse<null>;
 }
 
 function resolvePublicLandingFailure(response: PublicLandingApiResponse<null>): PublicLandingApiResponse<null> {

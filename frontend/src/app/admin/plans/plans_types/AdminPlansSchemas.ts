@@ -39,22 +39,22 @@ export const plansContextTypeSchema = z.object({
         type: toastTypeSchema
     }).nullable(),
     search: z.string(),
-    setSearch: z.function({ input: [z.string()], output: z.void() }),
+    setSearch: z.function(z.tuple([z.string()]), z.void()),
     tierFilter: z.string(),
-    setTierFilter: z.function({ input: [z.string()], output: z.void() }),
+    setTierFilter: z.function(z.tuple([z.string()]), z.void()),
     currentPage: z.number(),
-    setCurrentPage: z.function({ input: [z.number()], output: z.void() }),
+    setCurrentPage: z.function(z.tuple([z.number()]), z.void()),
     showModal: z.boolean(),
-    setShowModal: z.function({ input: [z.boolean()], output: z.void() }),
+    setShowModal: z.function(z.tuple([z.boolean()]), z.void()),
     editId: z.string().nullable(),
     form: planFormValuesSchema,
-    setForm: z.function({ input: [planFormValuesSchema], output: z.void() }),
-    showToast: z.function({ input: [z.string(), toastTypeSchema], output: z.void() }),
-    loadPlans: z.function({ input: [], output: z.custom<Promise<void>>(() => z.promise(z.void())) }),
-    openAdd: z.function({ input: [], output: z.void() }),
-    openEdit: z.function({ input: [planSchema], output: z.void() }),
-    savePlan: z.function({ input: [planFormValuesSchema], output: z.custom<Promise<void>>(() => z.promise(z.void())) }),
-    deletePlan: z.function({ input: [z.string()], output: z.custom<Promise<void>>(() => z.promise(z.void())) })
+    setForm: z.function(z.tuple([planFormValuesSchema]), z.void()),
+    showToast: z.function(z.tuple([z.string(), toastTypeSchema]), z.void()),
+    loadPlans: z.function(z.tuple([]), z.custom<Promise<void>>(() => z.promise(z.void()))),
+    openAdd: z.function(z.tuple([]), z.void()),
+    openEdit: z.function(z.tuple([planSchema]), z.void()),
+    savePlan: z.function(z.tuple([planFormValuesSchema]), z.custom<Promise<void>>(() => z.promise(z.void()))),
+    deletePlan: z.function(z.tuple([z.string()]), z.custom<Promise<void>>(() => z.promise(z.void())))
 });
 
 export const planFormSchema = z.object({

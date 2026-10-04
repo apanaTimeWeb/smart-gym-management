@@ -109,14 +109,14 @@ export const reportDataSchema = z.object({
 
 export const reportsContextTypeSchema = z.object({
     activeTab: reportTabSchema,
-    setActiveTab: z.function({ input: [reportTabSchema], output: z.void() }),
+    setActiveTab: z.function(z.tuple([reportTabSchema]), z.void()),
     dateRange: reportDateRangeSchema,
-    setDateRange: z.function({ input: [reportDateRangeSchema], output: z.void() }),
+    setDateRange: z.function(z.tuple([reportDateRangeSchema]), z.void()),
     startDate: z.string(),
     endDate: z.string(),
-    setCustomDateRange: z.function({ input: [z.string(), z.string()], output: z.void() }),
+    setCustomDateRange: z.function(z.tuple([z.string(), z.string()]), z.void()),
     selectedGymId: z.string(),
-    setSelectedGymId: z.function({ input: [z.string()], output: z.void() }),
+    setSelectedGymId: z.function(z.tuple([z.string()]), z.void()),
     reportData: reportDataSchema.nullable(),
     status: statusSchema
 });

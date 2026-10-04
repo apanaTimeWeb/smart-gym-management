@@ -59,7 +59,7 @@ export default function SuperadminGymsMain() {
                 : 'border-transparent text-secondary hover:text-primary hover:border-border'
             }`}
            data-testid={`gyms-superadmin-gyms-main-status-${value.toLowerCase()}`}>
-            {label}
+            {t(labelKey)}
           </button>
         ))}
       </div>

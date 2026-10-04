@@ -44,7 +44,7 @@ export const CouponApiPayloadSchema = z.object({
 });
 export const CouponSchema = z.object({
   code: z.string().min(3, 'Coupon code must be at least 3 characters.').max(20, 'Coupon code cannot exceed 20 characters.').regex(/^[A-Z0-9-]+$/, 'Code must be uppercase letters, digits, and hyphens only.'),
-  discountType: z.enum(['PERCENTAGE', 'EXACT'], { error: 'Select a discount type.' }),
+  discountType: z.enum(['PERCENTAGE', 'EXACT'], { required_error: 'Select a discount type.' }),
   discountValue: z.number().positive('Discount value must be greater than zero.'),
   maxUses: z.number().int('Must be a whole number.').min(1, 'Must allow at least 1 use.'),
   expiryDate: z.string().min(1, 'Expiry date is required.').refine((val) => new Date(val) > new Date(), { message: 'Expiry date must be in the future.' }),

@@ -77,7 +77,7 @@ export const superadminCouponsHandlers = [
         await delay(500);
         const id = params.id as string;
         const raw = await request.json();
-        const parsed = CouponApiPayloadSchema.partial().safeParse(raw);
+        const parsed = CouponApiPayloadSchema.safeParse(raw);
         if (!parsed.success) return HttpResponse.json<ApiResponse<Coupon> | ApiResponse<null>>({ success: false, message: 'Invalid coupon payload', data: null }, { status: StatusCodes.BAD_REQUEST });
         const body = parsed.data;
         let updated: Coupon | null = null;

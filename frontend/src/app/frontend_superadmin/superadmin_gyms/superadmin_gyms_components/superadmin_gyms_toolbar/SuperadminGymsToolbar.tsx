@@ -41,7 +41,7 @@ export default function SuperadminGymsToolbar() {
       <div className="flex bg-input border border-border rounded-lg p-1">
         {SUPERADMIN_GYMS_VIEW_MODE_OPTIONS.map((option) => (
           <button key={option.value} onClick={() => setViewMode(option.value)} className={`px-3 py-1.5 text-sm rounded-md motion-safe:transition-colors ${viewMode === option.value ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`} data-testid={`gyms-superadmin-gyms-toolbar-${option.value}`}>
-            {option.label}
+            {option.labelKey}
           </button>
         ))}
       </div>

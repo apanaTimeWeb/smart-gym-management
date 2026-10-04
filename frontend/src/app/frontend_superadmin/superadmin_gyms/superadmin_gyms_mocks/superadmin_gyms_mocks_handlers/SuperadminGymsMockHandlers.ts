@@ -100,7 +100,7 @@ export const superadminGymsHandlers = [
         const validStatus = status as typeof SUPERADMIN_GYM_STATUS_CODES[keyof typeof SUPERADMIN_GYM_STATUS_CODES];
         const exists = mockGymsList.some(g => g.id === params.id);
         if (!exists) return HttpResponse.json({ success: false, message: 'Gym not found.', data: null }, { status: StatusCodes.NOT_FOUND });
-        mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, status: validStatus } : g);
+        mockGymsList = mockGymsList.map(g => g.id === params.id ? { ...g, status: validStatus as any } : g);
         return HttpResponse.json({ success: true, message: 'Status updated', data: mockGymsList.find(g => g.id === params.id) });
     }),
     http.get('*' + `${SUPERADMIN_GYMS_API.BASE}/stats`, async () => {

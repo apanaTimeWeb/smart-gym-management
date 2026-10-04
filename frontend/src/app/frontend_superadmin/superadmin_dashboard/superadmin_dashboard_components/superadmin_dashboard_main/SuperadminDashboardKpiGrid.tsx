@@ -40,6 +40,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             icon: CreditCard,
             colorClass: 'text-success',
             iconBgClass: 'bg-success-bg',
+            onClick: undefined as (() => void) | undefined,
         },
         {
             label: t('ui.kpi_total_gyms'),
