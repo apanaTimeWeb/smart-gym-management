@@ -232,10 +232,10 @@
     "range_this_year": "Is Saal",
     "range_custom": "Custom",
     "messaging_could_not_be_loaded_6e1b20a": "मैसेजिंग डेटा लोड नहीं हो सका। कृपया फिर से प्रयास करें।",
-    "ui.kpi_helper_whatsapp_ready_queue_v3": "WhatsApp के लिए तैयार कतार",
-    "ui.kpi_helper_need_a_manual_send_v3": "मैनुअल भेजना आवश्यक",
-    "ui.kpi_helper_confirmed_by_operator_v3": "ऑपरेटर द्वारा पुष्टि",
-    "ui.kpi_helper_removed_from_this_run_v3": "इस रन से हटाया गया"
+    "ui_kpi_helper_whatsapp_ready_queue_v3": "WhatsApp के लिए तैयार कतार",
+    "ui_kpi_helper_need_a_manual_send_v3": "मैनुअल भेजना आवश्यक",
+    "ui_kpi_helper_confirmed_by_operator_v3": "ऑपरेटर द्वारा पुष्टि",
+    "ui_kpi_helper_removed_from_this_run_v3": "इस रन से हटाया गया"
   },
   "superadmin_messaging": {
     "module": {

@@ -112,10 +112,10 @@
     "page_not_found_title_v3": "पेज नहीं मिला।",
     "page_not_found_message_v3": "इस Superadmin मॉड्यूल में अनुरोधित पेज नहीं मिला।",
     "back_to_module_v3": "मॉड्यूल पर वापस जाएँ",
-    "ui.kpi_helper_external_services_v3": "बाहरी सेवाएँ",
-    "ui.kpi_helper_need_review_v3": "समीक्षा आवश्यक",
-    "ui.kpi_helper_tenant_developer_access_v3": "टेनेंट डेवलपर एक्सेस",
-    "ui.kpi_helper_connection_health_v3": "कनेक्शन स्वास्थ्य"
+    "ui_kpi_helper_external_services_v3": "बाहरी सेवाएँ",
+    "ui_kpi_helper_need_review_v3": "समीक्षा आवश्यक",
+    "ui_kpi_helper_tenant_developer_access_v3": "टेनेंट डेवलपर एक्सेस",
+    "ui_kpi_helper_connection_health_v3": "कनेक्शन स्वास्थ्य"
   },
   "superadmin_integrations": {
     "module": {

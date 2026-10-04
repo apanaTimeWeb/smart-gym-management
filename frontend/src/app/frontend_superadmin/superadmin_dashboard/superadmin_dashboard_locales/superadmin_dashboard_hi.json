@@ -124,11 +124,11 @@
     "back_to_module_v3": "मॉड्यूल पर वापस जाएँ",
     "custom_start_date_v3": "आरंभ तिथि",
     "custom_end_date_v3": "समाप्ति तिथि",
-    "ui.kpi_helper_existing_gym_income_retained_v3": "मौजूदा जिम की बरकरार आय",
-    "ui.kpi_helper_superadmin_gyms_still_active_v3": "सक्रिय जिम",
-    "ui.kpi_helper_share_of_opening_income_v3": "प्रारंभिक आय का हिस्सा",
-    "ui.kpi_helper_superadmin_gyms_that_left_v3": "छोड़ चुके जिम",
-    "ui.kpi_helper_current_recurring_income_v3": "वर्तमान आवर्ती आय"
+    "ui_kpi_helper_existing_gym_income_retained_v3": "मौजूदा जिम की बरकरार आय",
+    "ui_kpi_helper_superadmin_gyms_still_active_v3": "सक्रिय जिम",
+    "ui_kpi_helper_share_of_opening_income_v3": "प्रारंभिक आय का हिस्सा",
+    "ui_kpi_helper_superadmin_gyms_that_left_v3": "छोड़ चुके जिम",
+    "ui_kpi_helper_current_recurring_income_v3": "वर्तमान आवर्ती आय"
   },
   "superadmin_dashboard": {
     "module": {

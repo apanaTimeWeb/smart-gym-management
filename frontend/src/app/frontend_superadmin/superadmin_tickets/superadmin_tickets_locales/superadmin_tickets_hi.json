@@ -154,12 +154,12 @@
     "page_not_found_title_v3": "पेज नहीं मिला।",
     "page_not_found_message_v3": "इस Superadmin मॉड्यूल में अनुरोधित पेज नहीं मिला।",
     "back_to_module_v3": "मॉड्यूल पर वापस जाएँ",
-    "ui.kpi_helper_current_backlog_v3": "वर्तमान लंबित कार्य",
-    "ui.kpi_helper_need_fast_response_v3": "तेज़ प्रतिक्रिया आवश्यक",
-    "ui.kpi_helper_watch_closely_v3": "नज़दीकी निगरानी",
-    "ui.kpi_helper_service_target_missed_v3": "सेवा लक्ष्य चूक गया",
-    "ui.kpi_helper_average_v3": "औसत",
-    "ui.kpi_helper_recent_surveys_v3": "हाल के सर्वेक्षण"
+    "ui_kpi_helper_current_backlog_v3": "वर्तमान लंबित कार्य",
+    "ui_kpi_helper_need_fast_response_v3": "तेज़ प्रतिक्रिया आवश्यक",
+    "ui_kpi_helper_watch_closely_v3": "नज़दीकी निगरानी",
+    "ui_kpi_helper_service_target_missed_v3": "सेवा लक्ष्य चूक गया",
+    "ui_kpi_helper_average_v3": "औसत",
+    "ui_kpi_helper_recent_surveys_v3": "हाल के सर्वेक्षण"
   },
   "superadmin_tickets": {
     "module": {
