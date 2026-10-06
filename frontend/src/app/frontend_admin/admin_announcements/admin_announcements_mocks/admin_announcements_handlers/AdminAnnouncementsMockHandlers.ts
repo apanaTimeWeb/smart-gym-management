@@ -100,8 +100,8 @@ export const adminAnnouncementsMockHandlers = [
     const gymId = url.searchParams.get('gymId');
     const filtered = getAdminAnnouncementsMockState().filter((item) => {
       const matchSearch = !search || item.title.toLowerCase().includes(search) || item.body.toLowerCase().includes(search);
-      const matchStatus = !status || item.status === status;
-      const matchPriority = !priority || item.priority === priority;
+      const matchStatus = !status || status === 'all' || item.status === status;
+      const matchPriority = !priority || priority === 'all' || item.priority === priority;
       const matchGym = !gymId || item.gymIds.includes(gymId) || item.gymIds.includes('all');
       return matchSearch && matchStatus && matchPriority && matchGym;
     });

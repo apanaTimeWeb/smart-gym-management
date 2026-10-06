@@ -92,12 +92,12 @@ export const MOCK_ADMIN_PAYROLLS_EXPANDED: Payroll[] = [
     return {
       id: `pr${n}`,
       staffId: `s${n}`,
-      month: '2026-09',
+      month: '2026-10',
       amount,
       paidAmount: paid,
       pendingAmount: amount - paid,
       status: (paid === amount ? PAYROLL_STATUS.PAID : paid === 0 ? PAYROLL_STATUS.PENDING : PAYROLL_STATUS.PARTIAL) as Payroll['status'],
-      ...(paid > 0 ? { paidAt: '2026-09-01T10:00:00Z' } : {}),
+      ...(paid > 0 ? { paidAt: '2026-10-01T10:00:00Z' } : {}),
       staff: { name: ['Neha Kapoor', 'Vikram Patel', 'Sana Khan', 'Arjun Nair'][index % 4]! + ` ${n}`, role: ['Trainer', 'Receptionist', 'Accountant'][index % 3]! },
     };
   }),
