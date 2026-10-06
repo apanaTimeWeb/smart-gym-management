@@ -21,6 +21,8 @@ test('creates an exercise from the modal and shows success feedback', async ({ p
   await page.getByTestId('manager_library-managerlibraryexercisemodal-managersearchabledropdown-1-options').locator('[data-testid*="-option-"]').first().click();
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-sets').fill('3');
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-reps').fill('10');
+  await page.getByTestId('manager_library-managerlibraryexercisemodal-searchable-dropdown-1-trigger').click();
+  await page.getByRole('option').first().click();
   await page.getByTestId('manager_library-manager-library-exercise-modal-button-submit').click();
   await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

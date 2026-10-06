@@ -24,7 +24,7 @@ test('status filtering changes the shareable query state', async ({ page }) => {
 
 test('marks all notifications as read and shows success feedback', async ({ page }) => {
   await page.goto('/frontend_manager/manager_notifications');
-  const markAll = page.getByTestId(/manager_notifications-.*mark-all-read/);
+  const markAll = page.getByRole('button', { name: /mark all (as )?read/i });
   await expect(markAll).toBeVisible();
   await markAll.click();
   await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
