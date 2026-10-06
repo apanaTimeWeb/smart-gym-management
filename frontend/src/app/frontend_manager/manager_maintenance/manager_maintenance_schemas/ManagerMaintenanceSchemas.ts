@@ -1,0 +1,34 @@
+// RESPONSIBILITY: Owns all Maintenance Zod runtime validation schemas and their inferred schema contracts.
+import { z } from 'zod';
+
+/**
+ * @description Provides the ManagerMaintenanceSchemas implementation for the maintenance module.
+ * @dependencies Only local module configuration and approved framework primitives.
+ * @edge-case Preserves loading, empty, error, disabled, retry, and cancellation behavior defined by the owning module contract; does not introduce cross-feature business ownership.
+ */
+export const MaintenanceStatusSchema = z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED']);
+export const MaintenancePrioritySchema = z.enum(['LOW', 'MEDIUM', 'HIGH']);
+export const MaintenanceTicketSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  equipment: z.string(),
+  status: MaintenanceStatusSchema,
+  priority: MaintenancePrioritySchema,
+  assignedVendor: z.string().optional(),
+  estimatedCost: z.number().optional(),
+  reportedAt: z.string(),
+  resolvedAt: z.string().optional(),
+});
+export const CreateMaintenanceTicketSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  equipment: z.string().min(1, 'Equipment is required'),
+  priority: MaintenancePrioritySchema,
+  estimatedCost: z.number().nonnegative().optional(),
+});
+
+export const CreateMaintenanceTicketRequestSchema = z.object({
+  title: z.string().min(1),
+  equipment: z.string().min(1),
+  priority: MaintenancePrioritySchema,
+  estimatedCost: z.number().int().nonnegative().optional(),
+});

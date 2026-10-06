@@ -1,0 +1,23 @@
+export const MANAGER_MEMBERS_STATUS_ALL = 'ALL' as const;
+export const MANAGER_MEMBERS_STATUS_EXPIRED = 'EXPIRED' as const;
+export const MANAGER_MEMBERS_PAYMENT_STATUS_PAID = 'PAID' as const;
+export const MANAGER_MEMBERS_PAYMENT_STATUS_VALUES = {
+  PAID: 'PAID',
+  PENDING: 'PENDING',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+} as const;
+export const MANAGER_MEMBERS_STATUS_FROZEN = 'FROZEN' as const;
+
+export const MANAGER_MEMBERS_STATUS_VALUES = {
+  ALL_STATUS_FILTER: 'All',
+  P: 'P',
+  PAID: 'PAID',
+  ALL_FILTER: 'all',
+  ACTIVE: 'ACTIVE',
+  PENDING: 'PENDING',
+  EXPIRED: 'EXPIRED',
+  SUSPENDED: 'SUSPENDED',
+  A: 'A',
+  ALL: 'ALL',
+} as const;

@@ -1,0 +1,7 @@
+{
+  "MANAGER_INFRASTRUCTURE": {
+    "COPY_PERMISSION_DENIED_1": "Permission denied",
+    "COPY_PERMISSION_DENIED_2": "Permission denied",
+    "COPY_CURRENT_ROLE_DOES_NOT_HAVE_ACCESS_MANAGER_WORKSPACE": "Your current role does not have access to this Manager workspace."
+  }
+}

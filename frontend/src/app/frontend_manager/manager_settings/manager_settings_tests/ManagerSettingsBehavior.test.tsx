@@ -1,0 +1,53 @@
+// RESPONSIBILITY: Renders or orchestrates the owning Manager feature UI; API transport and business rules remain in module-owned hooks/services.
+import { MANAGER_HTTP_STATUS } from '@/app/frontend_manager/manager_infrastructure/ManagerHttpStatus';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach } from 'vitest';
+import { managerMswServer } from '@/app/frontend_manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/frontend_manager/manager_mocks/ManagerTestProviders';
+import { ManagerSettingsApi } from '@/app/frontend_manager/manager_settings/manager_settings_api/ManagerSettingsApi';
+import ManagerSettingsMain from '@/app/frontend_manager/manager_settings/manager_settings_components/manager_settings_main/ManagerSettingsMain';
+import { resetManagerSettingsMockState } from '@/app/frontend_manager/manager_settings/manager_settings_mocks/manager_settings_mocks_handlers/ManagerSettingsMockHandlers';
+import { ManagerSettingsUrlConfig } from '@/app/frontend_manager/manager_settings/manager_settings_url_config';
+
+
+beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
+beforeEach(() => resetManagerSettingsMockState());
+afterEach(() => managerMswServer.resetHandlers());
+afterAll(() => managerMswServer.close());
+
+describe('Manager Settings user-visible behavior', () => {
+  it('renders real feature data through module MSW', async () => {
+    render(<ManagerTestProviders><ManagerSettingsMain /></ManagerTestProviders>);
+    expect(await screen.findByText('App Settings')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('Smart Gym')).toBeInTheDocument();
+  });
+
+  it('saves an edited setting and keeps the authoritative server response in the visible form', async () => {
+    const user = userEvent.setup();
+    render(<ManagerTestProviders><ManagerSettingsMain /></ManagerTestProviders>);
+    const nameField = await screen.findByDisplayValue('Smart Gym');
+    await user.clear(nameField);
+    await user.type(nameField, 'Smart Gym Updated');
+    await user.click(screen.getByRole('button', { name: 'Save Settings' }));
+    await waitFor(() => expect(screen.getByDisplayValue('Smart Gym Updated')).toBeInTheDocument());
+    const response = await ManagerSettingsApi.fetchSettings();
+    expect(response.data?.gymProfile.gymName).toBe('Smart Gym Updated');
+  });
+
+  it('renders the standardized query error and retry control', async () => {
+    managerMswServer.use(http.get(ManagerSettingsUrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: false, message: 'Settings temporarily unavailable', data: null }, { status: MANAGER_HTTP_STATUS.SERVER_ERROR })));
+    render(<ManagerTestProviders><ManagerSettingsMain /></ManagerTestProviders>);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Settings temporarily unavailable');
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+  });
+
+  it('supports changing the active settings tab', async () => {
+    const user = userEvent.setup();
+    render(<ManagerTestProviders><ManagerSettingsMain /></ManagerTestProviders>);
+    await screen.findByDisplayValue('Smart Gym');
+    await user.click(screen.getByRole('tab', { name: 'Membership Settings' }));
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('Grace Period');
+  });
+});

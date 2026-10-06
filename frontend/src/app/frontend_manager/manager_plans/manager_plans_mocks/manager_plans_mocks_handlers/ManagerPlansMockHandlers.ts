@@ -1,0 +1,91 @@
+import { http, HttpResponse } from 'msw';
+import { MANAGER_HTTP_STATUS } from '@/app/frontend_manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/frontend_manager/manager_infrastructure/ManagerMockApiUrl';
+import { MANAGER_PLANS_STATUS_VALUES } from '@/app/frontend_manager/manager_plans/manager_plans_constants/ManagerPlansConstants';
+import { MOCK_PLANS_MEMBERSHIP_OVERVIEW } from '@/app/frontend_manager/manager_plans/manager_plans_mocks/manager_plans_mocks_fixtures/ManagerPlansMembershipMockData';
+import { MOCK_PLANS } from '@/app/frontend_manager/manager_plans/manager_plans_mocks/manager_plans_mocks_fixtures/ManagerPlansMockData';
+import { ManagerPlansUrlConfig } from '@/app/frontend_manager/manager_plans/manager_plans_url_config';
+import type { Plan } from '@/app/frontend_manager/manager_plans/manager_plans_types/ManagerPlansTypes';
+
+
+let mockPlans = [...MOCK_PLANS];
+let mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
+
+let mockChangeRequestIdCounter = 1000;
+let mockPlanIdCounter = 1000;
+/**
+ * @description Provides the ManagerPlansMockHandlers implementation for the plans module.
+ * @dependencies @/app/frontend_manager/manager_infrastructure/ManagerHttpStatus; @/app/frontend_manager/manager_infrastructure/ManagerMockApiUrl; @/app/frontend_manager/manager_plans/manager_plans_mocks/manager_plans_mocks_fixtures/ManagerPlansMembershipMockData; @/app/frontend_manager/manager_plans/manager_plans_mocks/manager_plans_mocks_fixtures/ManagerPlansMockData; @/app/frontend_manager/manager_plans/manager_plans_url_config
+ * @edge-case Preserves loading, empty, error, disabled, retry, and cancellation behavior defined by the owning module contract; does not introduce cross-feature business ownership.
+ */
+export function resetManagerPlansMockState(): void {
+  mockPlans = [...MOCK_PLANS];
+  mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
+  mockChangeRequestIdCounter = 1000;
+  mockPlanIdCounter = 1000;
+}
+
+export const managerPlansHandlers = [
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_OVERVIEW), () =>
+    HttpResponse.json({ success: true, message: 'Membership overview fetched', data: mockMembershipOverview })
+  ),
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_ACTIVATE), async ({ request }) => {
+    const body = await request.json() as { memberId: string; planId: string; startDate: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, planId: body.planId, status: MANAGER_PLANS_STATUS_VALUES.ACTIVE, expiryDate: body.startDate } : member) };
+    return HttpResponse.json({ success: true, message: 'Membership activated successfully', data: {} });
+  }),
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_RENEW), async ({ request }) => {
+    const body = await request.json() as { memberId: string; planId: string; newExpiryDate: string };
+    const update = (member: typeof mockMembershipOverview.memberOptions[number]) => member.id === body.memberId ? { ...member, planId: body.planId, expiryDate: body.newExpiryDate, status: MANAGER_PLANS_STATUS_VALUES.ACTIVE } : member;
+    mockMembershipOverview = { memberOptions: mockMembershipOverview.memberOptions.map(update), renewalCandidates: mockMembershipOverview.renewalCandidates.map(update) };
+    return HttpResponse.json({ success: true, message: 'Membership renewed successfully', data: {} });
+  }),
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_FREEZE), async ({ request }) => {
+    const body = await request.json() as { memberId: string; freezeFrom: string; freezeUntil: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, status: MANAGER_PLANS_STATUS_VALUES.FROZEN, expiryDate: body.freezeUntil } : member) };
+    return HttpResponse.json({ success: true, message: 'Membership freeze applied successfully', data: {} });
+  }),
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.CHANGE_REQUESTS), async ({ request }) => {
+    await request.json();
+    return HttpResponse.json({ success: true, message: 'Plan change request submitted', data: { requestId: `change-${mockChangeRequestIdCounter++}`, status: MANAGER_PLANS_STATUS_VALUES.PENDING } });
+  }),
+
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.BASE), ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const tier = (url.searchParams.get('tier') || '').trim();
+    const status = (url.searchParams.get('status') || '').trim().toUpperCase();
+    const filtered = mockPlans.filter((plan) => {
+      const matchesSearch = !search || plan.name.toLowerCase().includes(search) || plan.tier.toLowerCase().includes(search);
+      const matchesTier = !tier || tier === 'ALL' || plan.tier === tier;
+      const matchesStatus = !status || status === MANAGER_PLANS_STATUS_VALUES.ALL || (status === MANAGER_PLANS_STATUS_VALUES.ACTIVE ? plan.isActive : !plan.isActive);
+      return matchesSearch && matchesTier && matchesStatus;
+    });
+    return HttpResponse.json({ success: true, message: 'Success', data: { plans: filtered, total: filtered.length } });
+  }),
+
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
+    const plan = mockPlans.find(p => p.id === params.id) || mockPlans[0];
+    return HttpResponse.json({ success: true, message: 'Success', data: plan });
+  }),
+
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.BASE), async ({ request }) => {
+    const body = await request.json() as Partial<Plan>;
+    const newPlan = { ...mockPlans[0], ...body, id: `plan-${mockPlanIdCounter++}` } as Plan;
+    mockPlans = [newPlan, ...mockPlans];
+    return HttpResponse.json({ success: true, message: 'Created', data: newPlan });
+  }),
+
+  http.patch(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), async ({ request, params }) => {
+    const body = await request.json() as Partial<Plan>;
+    const idx = mockPlans.findIndex(p => p.id === params.id);
+    if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
+    mockPlans[idx] = { ...mockPlans[idx], ...body } as Plan;
+    return HttpResponse.json({ success: true, message: 'Updated', data: mockPlans[idx] });
+  }),
+
+  http.delete(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
+    mockPlans = mockPlans.filter(p => p.id !== params.id);
+    return HttpResponse.json({ success: true, message: 'Removed', data: { id: params.id } });
+  }),
+];
