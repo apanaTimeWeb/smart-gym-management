@@ -57,7 +57,8 @@ test.describe('Auth Login', () => {
     expect(response.ok()).toBeTruthy();
     const body = await response.json();
     expect(body.data).toBeNull();
-    expect(await response.headerValue('set-cookie')).toContain('HttpOnly');
+    const setCookieHeader = response.headers()['set-cookie'] || '';
+    expect(setCookieHeader).toContain('HttpOnly');
   });
 
   test('keeps the Login surface usable at the mobile breakpoint', async ({ page }) => {

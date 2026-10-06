@@ -3,12 +3,13 @@
 // All page navigation in the app must use these constants — never hardcode route strings.
 export const ROUTES = {
   LOGIN: '/frontend_auth/auth/login',
-  ADMIN_DASHBOARD: '/admin/dashboard',
-  MANAGER_DASHBOARD: '/manager/dashboard',
-  TRAINER_DASHBOARD: '/trainer/dashboard',
+  ADMIN_DASHBOARD: '/frontend_admin/admin_dashboard',
+  MANAGER_DASHBOARD: '/frontend_manager/manager_dashboard',
+  TRAINER_DASHBOARD: '/frontend_trainer/trainer_dashboard',
   SUPERADMIN_DASHBOARD: '/frontend_superadmin/superadmin_dashboard',
   ADMIN_PREFIXES: [
-    '/admin/dashboard',
+    '/frontend_admin',
+    '/admin',
     '/admin/members',
     '/admin/plans',
     '/admin/finance',
@@ -23,7 +24,8 @@ export const ROUTES = {
     '/admin/audit',
   ],
   MANAGER_PREFIXES: [
-    '/manager/dashboard',
+    '/frontend_manager',
+    '/manager',
     '/manager/members',
     '/manager/plans',
     '/manager/finance',
@@ -38,7 +40,8 @@ export const ROUTES = {
     '/manager/audit',
   ],
   TRAINER_PREFIXES: [
-    '/trainer/dashboard',
+    '/frontend_trainer',
+    '/trainer',
     '/trainer/members',
     '/trainer/attendance',
     '/trainer/workout',

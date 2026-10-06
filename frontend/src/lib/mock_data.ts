@@ -6,7 +6,7 @@ import { mockFlags, mockNotes } from '@/app/frontend_superadmin/superadmin_featu
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const ok = <T>(data: T, message = 'Success') => ({
   success: true, message, data,
-  meta: { total: Array.isArray(data) ? (data as unknown[]).length : 1, page: 1, limit: 50, totalPages: 1 },
+  meta: { total: Array.isArray(data) ? (data as unknown[]).length : 1, page: 1, limit: 50, totalPages: 1, hasNextPage: false, hasPrevPage: false },
 });
 
 // ─── shared sub-shapes ───────────────────────────────────────────────────────
@@ -552,6 +552,10 @@ export function getMockResponse(path: string): unknown {
   // Auth
   if (p.includes('/auth/login'))   return ok({ accessToken: 'mock_token', refreshToken: 'mock_refresh', user: { id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' } });
   if (p.includes('/auth/me'))      return ok({ id: 'u1', name: 'Demo Admin', email: 'admin@gymsmart.com', role: 'ADMIN', tenantId: 'tenant_001' });
+
+  // Landing
+  if (p.includes('/landing/bookings')) return ok(null, 'Booking submitted successfully');
+  if (p.includes('/landing/contact')) return ok(null, 'Message sent successfully');
 
   // Superadmin Specific
   if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
