@@ -37,7 +37,7 @@ export function useManagerAttendanceQrScannerLogic() {
   const queryClient = useQueryClient();
   const checkInKeyRef = useRef<string | null>(null);
   const [status, setStatus] = useState<ManagerQrScanStatus>(MANAGER_QR_STATUS_IDLE);
-  const [history, setHistory] = useState<ManagerQrScanHistoryRecord[]>(MANAGER_QR_INITIAL_HISTORY);
+  const [history, setHistory] = useState<ManagerQrScanHistoryRecord[]>([...MANAGER_QR_INITIAL_HISTORY]);
   const [currentMember, setCurrentMember] = useState<MemberSnapshot | null>(null);
   const [scanValue, setScanValue] = useState('');
   const [scanCounter, setScanCounter] = useState(10);

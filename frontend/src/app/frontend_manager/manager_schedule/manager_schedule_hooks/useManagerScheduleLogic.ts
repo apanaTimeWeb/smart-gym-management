@@ -109,6 +109,6 @@ export function useManagerScheduleLogic(): ManagerScheduleViewModel {
     openEditShift,
     closeShiftModal,
     saving,
-    saveShift,
-    deleteShift };
+    saveShift: async (data) => { await saveShift(data); },
+    deleteShift: async (id) => { await deleteShift(id); } };
 }

@@ -4,13 +4,13 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_INQUIRIES_UI_PAGE_HOME_URL = '/manager/inquiries';
-export const MANAGER_INQUIRIES_BACKEND_API_BASE_URL = '/manager/inquiries';
-export const MANAGER_INQUIRIES_BACKEND_API_STATS_URL = '/manager/inquiries/stats';
-export const MANAGER_INQUIRIES_BACKEND_API_PLANS_URL = '/manager/inquiries/plans';
-export const MANAGER_INQUIRIES_BACKEND_API_PLANS_SNAPSHOT_URL = '/manager/inquiries/plans-snapshot';
-export const MANAGER_INQUIRIES_BACKEND_API_GET_ONE_URL = (id: string) => `/manager/inquiries/${id}`;
-export const MANAGER_INQUIRIES_BACKEND_API_CONVERT_URL = (id: string) => `/manager/inquiries/${id}/convert`;
+export const MANAGER_INQUIRIES_UI_PAGE_HOME_URL = '/frontend_manager/manager_inquiries';
+export const MANAGER_INQUIRIES_BACKEND_API_BASE_URL = '/frontend_manager/manager_inquiries';
+export const MANAGER_INQUIRIES_BACKEND_API_STATS_URL = '/frontend_manager/manager_inquiries/stats';
+export const MANAGER_INQUIRIES_BACKEND_API_PLANS_URL = '/frontend_manager/manager_inquiries/plans';
+export const MANAGER_INQUIRIES_BACKEND_API_PLANS_SNAPSHOT_URL = '/frontend_manager/manager_inquiries/plans-snapshot';
+export const MANAGER_INQUIRIES_BACKEND_API_GET_ONE_URL = (id: string) => `/frontend_manager/manager_inquiries/${id}`;
+export const MANAGER_INQUIRIES_BACKEND_API_CONVERT_URL = (id: string) => `/frontend_manager/manager_inquiries/${id}/convert`;
 export const MANAGER_INQUIRIES_INTEGRATIONS_WHATSAPP_WEB_BASE_URL = 'https://wa.me';
 
 export const MANAGER_INQUIRIES_URLS = {

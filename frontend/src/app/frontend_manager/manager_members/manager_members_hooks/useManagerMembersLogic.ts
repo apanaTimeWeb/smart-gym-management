@@ -110,7 +110,16 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showAddModal: ui.showAddModal, setShowAddModal: ui.setShowAddModal, editId: ui.editId, editData: ui.editData,
     showRenewModal: ui.showRenewModal, setShowRenewModal: ui.setShowRenewModal,
     showPaymentModal: ui.showPaymentModal, setShowPaymentModal: ui.setShowPaymentModal,
-    openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
+    openAdd, openEdit, 
+    saveMember: async (data, idempotencyKey) => { await saveMember(data, idempotencyKey); }, 
+    deleteMember: async (id) => { await deleteMember(id); }, 
+    assignDiet: async (memberId, diet) => { await assignDiet(memberId, diet as any); }, 
+    assignWorkout: async (memberId, workout) => { await assignWorkout(memberId, workout as any); }, 
+    renewMember: async (data, key) => { await renewMember(data, key); }, 
+    recordPayment: async (data, key) => { await recordPayment(data, key); }, 
+    freezeMember: async (frozen, until) => { await freezeMember(frozen, until); }, 
+    toggleSuspend: async (suspend) => { await toggleSuspend(suspend); }, 
+    assignTrainer: async (memberId, trainerId, trainerName, isPT) => { await assignTrainer(memberId, trainerId, trainerName, isPT); },
     msgModal: ui.msgModal, openMsg, closeMsg,
     printData: ui.printData, handlePrint, handleSharePaymentWhatsApp, setPrintData: ui.setPrintData, exportMembers
   };

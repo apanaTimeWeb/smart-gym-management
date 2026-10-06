@@ -11,7 +11,7 @@ import ManagerFinanceKpiCards from '@/app/frontend_manager/manager_finance/manag
 import ManagerFinanceRevenueChart from '@/app/frontend_manager/manager_finance/manager_finance_components/manager_finance_revenue_chart/ManagerFinanceRevenueChart';
 import ManagerFinanceTable from '@/app/frontend_manager/manager_finance/manager_finance_components/manager_finance_table/ManagerFinanceTable';
 import { useManagerFinanceLogic } from '@/app/frontend_manager/manager_finance/manager_finance_hooks/useManagerFinanceLogic';
-
+import { FINANCE_TABS } from '@/app/frontend_manager/manager_finance/manager_finance_constants/ManagerFinanceSharedConstants';
 
 /** @description Renders the ManagerFinanceContent component for its owning Manager frontend boundary. @dependencies Local dependencies are owned by this feature module (8 documented module/import dependencies).. @edge-case Preserves error state. */
 export function ManagerFinanceContent() {
@@ -31,15 +31,15 @@ export function ManagerFinanceContent() {
 
         {/* Tabs */}
         <div className="flex gap-1 bg-input rounded-xl p-1 w-fit">
-          {([t('COPY_PAYMENTS'), t('COPY_SUMMARY')] as const).map((t, mapIndex) => (
+          {FINANCE_TABS.map((tabValue, mapIndex) => (
             <button className={ ["focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page", (`px-5 py-2 text-sm font-medium rounded-lg motion-safe:transition-all ${
-                tab === t ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+                tab === tabValue ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
               } motion-safe:duration-base ease-in-out motion-safe:active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none hover:brightness-110`)].filter((value) => Boolean(value)).join(' ') } data-testid={`manager_finance-finance-managerfinancecontent-button-payments-${mapIndex}`}
-              key={t}
-              onClick={() => setTab(t)}
+              key={tabValue}
+              onClick={() => setTab(tabValue)}
               
             >
-              {t}
+              {tabValue === 'Payments' ? t('COPY_PAYMENTS') : t('COPY_SUMMARY')}
             </button>
           ))}
         </div>

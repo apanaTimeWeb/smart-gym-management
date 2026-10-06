@@ -18,7 +18,7 @@ export default function ManagerScheduleWeeklyGrid() {
   const { trainers, selectedDay, openAddShift, openEditShift, deleteShift } = useManagerScheduleLogic();
   const { confirm } = useConfirm();
 
-  const days: ShiftDay[] = selectedDay === 'All' ? SHIFT_DAYS : [selectedDay];
+  const days: ShiftDay[] = selectedDay === 'All' ? [...SHIFT_DAYS] : [selectedDay as ShiftDay];
 
   const handleDelete = async (shift: TrainerShift) => {
     const ok = await confirm({

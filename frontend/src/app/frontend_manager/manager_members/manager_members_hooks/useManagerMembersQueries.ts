@@ -113,7 +113,7 @@ export function useFetchAttendance(memberId: string) {
  */
 export function useFetchMember(memberId: string | null) {
   return useQuery({
-    queryKey: ManagerMembersQueryKeys.detail(memberId),
+    queryKey: ManagerMembersQueryKeys.detail(memberId || ''),
     queryFn: async () => {
       if (!memberId) return null;
       const res = await ManagerMembersApi.fetchMemberById(memberId);

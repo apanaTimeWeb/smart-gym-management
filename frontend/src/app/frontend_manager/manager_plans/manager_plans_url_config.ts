@@ -4,16 +4,16 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_PLANS_PAGES_LIST_URL = '/manager/plans';
-export const MANAGER_PLANS_BACKEND_API_BASE_URL = '/manager/plans';
-export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_OVERVIEW_URL = '/manager/plans/membership-overview';
-export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_ACTIVATE_URL = '/manager/plans/membership-activate';
-export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_RENEW_URL = '/manager/plans/membership-renew';
-export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_FREEZE_URL = '/manager/plans/membership-freeze';
-export const MANAGER_PLANS_BACKEND_API_CHANGE_REQUESTS_URL = '/manager/plans/change-requests';
-export const MANAGER_PLANS_BACKEND_API_GET_ONE_URL = (id: string) => `/manager/plans/${id}`;
-export const MANAGER_PLANS_BACKEND_API_UPDATE_URL = (id: string) => `/manager/plans/${id}`;
-export const MANAGER_PLANS_BACKEND_API_DELETE_URL = (id: string) => `/manager/plans/${id}`;
+export const MANAGER_PLANS_PAGES_LIST_URL = '/frontend_manager/manager_plans';
+export const MANAGER_PLANS_BACKEND_API_BASE_URL = '/frontend_manager/manager_plans';
+export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_OVERVIEW_URL = '/frontend_manager/manager_plans/membership-overview';
+export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_ACTIVATE_URL = '/frontend_manager/manager_plans/membership-activate';
+export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_RENEW_URL = '/frontend_manager/manager_plans/membership-renew';
+export const MANAGER_PLANS_BACKEND_API_MEMBERSHIP_FREEZE_URL = '/frontend_manager/manager_plans/membership-freeze';
+export const MANAGER_PLANS_BACKEND_API_CHANGE_REQUESTS_URL = '/frontend_manager/manager_plans/change-requests';
+export const MANAGER_PLANS_BACKEND_API_GET_ONE_URL = (id: string) => `/frontend_manager/manager_plans/${id}`;
+export const MANAGER_PLANS_BACKEND_API_UPDATE_URL = (id: string) => `/frontend_manager/manager_plans/${id}`;
+export const MANAGER_PLANS_BACKEND_API_DELETE_URL = (id: string) => `/frontend_manager/manager_plans/${id}`;
 
 export const MANAGER_PLANS_URLS = {
   PAGES: {

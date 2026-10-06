@@ -28,7 +28,7 @@ export default function ManagerPtMain() {
   const { activeTab, setActiveTab, packages, assignments, kpis, workload, expiringPackages, totalAssignments, currentPage, limit, setPage, isPending, isError, errorMessage, markingId, handleMarkSession, createAssignment, assignmentSaving } = useManagerPtLogic();
 
   const handleCreateAssignment = async (values: ManagerPtAssignmentFormValues) => {
-    await createAssignment({ ...values, idempotencyKey: createManagerIdempotencyKey() });
+    await createAssignment({ body: values, idempotencyKey: createManagerIdempotencyKey() });
     setIsAssignModalOpen(false);
   };
 

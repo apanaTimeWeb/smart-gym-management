@@ -6,7 +6,7 @@
  */
 export const MANAGER_PLANS_QUERY_KEYS = {
   all: ['manager', 'plans'] as const,
-  list: <T extends object>(params: T) => [...MANAGER_PLANS_QUERY_KEYS.all, 'list', params] as const,
+  list: <T extends object>(params?: T) => [...MANAGER_PLANS_QUERY_KEYS.all, 'list', params] as const,
   membershipOverview: () => [...MANAGER_PLANS_QUERY_KEYS.all, 'membership-overview'] as const,
   detail: (id: string) => [...MANAGER_PLANS_QUERY_KEYS.all, 'detail', id] as const,
 } as const;

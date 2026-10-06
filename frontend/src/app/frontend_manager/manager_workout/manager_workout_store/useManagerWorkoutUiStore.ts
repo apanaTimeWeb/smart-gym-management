@@ -52,7 +52,7 @@ export const useManagerWorkoutUiStore = create<ManagerWorkoutUiState>((set) => (
     editWkId: workout.id,
     wkForm: {
       name: workout.name,
-      level: workout.level,
+      level: workout.level as "BEGINNER" | "INTERMEDIATE" | "ADVANCED",
       days: Array.isArray(workout.days) ? workout.days.length : workout.days,
       exercises: workout.exercises,
       focus: workout.focus,
@@ -66,5 +66,5 @@ export const useManagerWorkoutUiStore = create<ManagerWorkoutUiState>((set) => (
       name: exercise.name,
       muscle: Array.isArray(exercise.muscleGroup) ? exercise.muscleGroup.join(', ') : (exercise.muscleGroup || ''),
       equipment: exercise.equipment || '',
-      difficulty: exercise.difficulty },
+      difficulty: exercise.difficulty as "BEGINNER" | "INTERMEDIATE" | "ADVANCED" },
     showExModal: true }) }));

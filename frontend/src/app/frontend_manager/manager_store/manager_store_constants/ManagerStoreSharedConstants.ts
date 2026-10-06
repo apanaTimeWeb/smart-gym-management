@@ -12,7 +12,7 @@ export const ERR_EMPTY_ORDER = 'Add items to order first';
 export const STORE_RETURN_STATUS_VALUES = ['NONE', 'PARTIAL', 'FULL'] as const;
 
 export const STORE_COMPLETED_ORDER_STATUS = 'COMPLETED' as const;
-export const STORE_PENDING_ORDER_STATUS = ['PENDING'][0] as const;
+export const STORE_PENDING_ORDER_STATUS = 'PENDING' as const;
 
 export const STORE_RETURN_NONE_STATUS = 'NONE' as const;
 

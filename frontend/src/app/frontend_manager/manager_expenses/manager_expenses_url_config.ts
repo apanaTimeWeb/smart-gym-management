@@ -4,12 +4,12 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_EXPENSES_UI_PAGE_HOME_URL = '/manager/expenses';
-export const MANAGER_EXPENSES_BACKEND_API_BASE_URL = '/manager/expenses';
-export const MANAGER_EXPENSES_BACKEND_API_GET_ONE_URL = (id: string) => `/manager/expenses/${id}`;
-export const MANAGER_EXPENSES_BACKEND_API_UPDATE_URL = (id: string) => `/manager/expenses/${id}`;
-export const MANAGER_EXPENSES_BACKEND_API_DELETE_URL = (id: string) => `/manager/expenses/${id}`;
-export const MANAGER_EXPENSES_BACKEND_API_STATS_URL = '/manager/expenses/stats';
+export const MANAGER_EXPENSES_UI_PAGE_HOME_URL = '/frontend_manager/manager_expenses';
+export const MANAGER_EXPENSES_BACKEND_API_BASE_URL = '/frontend_manager/manager_expenses';
+export const MANAGER_EXPENSES_BACKEND_API_GET_ONE_URL = (id: string) => `/frontend_manager/manager_expenses/${id}`;
+export const MANAGER_EXPENSES_BACKEND_API_UPDATE_URL = (id: string) => `/frontend_manager/manager_expenses/${id}`;
+export const MANAGER_EXPENSES_BACKEND_API_DELETE_URL = (id: string) => `/frontend_manager/manager_expenses/${id}`;
+export const MANAGER_EXPENSES_BACKEND_API_STATS_URL = '/frontend_manager/manager_expenses/stats';
 
 export const MANAGER_EXPENSES_URLS = {
   UI: {

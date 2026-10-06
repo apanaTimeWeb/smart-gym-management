@@ -19,7 +19,7 @@ export default function ManagerCommunicationsBulkMessageModal({
   whatsappUrlBuilder }: ManagerCommunicationsBulkMessageModalProps) {
   const t = useTranslations('MANAGER_COMMUNICATIONS');
 
-  const { message, setMessage, subject, setSubject, openedRecipientKeys, setOpenedRecipientKeys, initialSubject } = useManagerCommunicationsBulkMessageDraft(open, defaultMessage);
+  const { message, setMessage, subject, setSubject, openedRecipientKeys, setOpenedRecipientKeys, initialSubject } = useManagerCommunicationsBulkMessageDraft(open || false, defaultMessage);
 
   if (!open) return null;
 

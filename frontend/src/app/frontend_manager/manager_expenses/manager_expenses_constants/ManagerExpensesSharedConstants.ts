@@ -33,6 +33,6 @@ export const EXPENSES_TABLE_HEADERS = [
 export const EXPENSE_STATUS_VALUES = ['PAID', 'PENDING'] as const;
 export const EXPENSE_ALL_STATUS_FILTER = 'All' as const;
 
-export const EXPENSE_PENDING_STATUS = ['PENDING'][0] as const;
+export const EXPENSE_PENDING_STATUS = 'PENDING' as const;
 
 export const EXPENSE_PAID_STATUS = 'PAID' as const;

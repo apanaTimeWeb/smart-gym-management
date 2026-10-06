@@ -4,14 +4,14 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_PT_UI_PAGE_HOME_URL = '/manager/pt';
-export const MANAGER_PT_BACKEND_API_BASE_URL = '/manager/pt';
-export const MANAGER_PT_BACKEND_API_STATS_URL = '/manager/pt/stats';
-export const MANAGER_PT_BACKEND_API_KPIS_URL = '/manager/pt/kpis';
-export const MANAGER_PT_BACKEND_API_WORKLOAD_URL = '/manager/pt/workload';
-export const MANAGER_PT_BACKEND_API_PACKAGES_URL = '/manager/pt/packages';
-export const MANAGER_PT_BACKEND_API_ASSIGNMENTS_URL = '/manager/pt/assignments';
-export const MANAGER_PT_BACKEND_API_COMPLETE_SESSION_URL = (id: string) => `/manager/pt/assignments/${id}/complete-session`;
+export const MANAGER_PT_UI_PAGE_HOME_URL = '/frontend_manager/manager_pt';
+export const MANAGER_PT_BACKEND_API_BASE_URL = '/frontend_manager/manager_pt';
+export const MANAGER_PT_BACKEND_API_STATS_URL = '/frontend_manager/manager_pt/stats';
+export const MANAGER_PT_BACKEND_API_KPIS_URL = '/frontend_manager/manager_pt/kpis';
+export const MANAGER_PT_BACKEND_API_WORKLOAD_URL = '/frontend_manager/manager_pt/workload';
+export const MANAGER_PT_BACKEND_API_PACKAGES_URL = '/frontend_manager/manager_pt/packages';
+export const MANAGER_PT_BACKEND_API_ASSIGNMENTS_URL = '/frontend_manager/manager_pt/assignments';
+export const MANAGER_PT_BACKEND_API_COMPLETE_SESSION_URL = (id: string) => `/frontend_manager/manager_pt/assignments/${id}/complete-session`;
 
 export const MANAGER_PT_URLS = {
   UI: {

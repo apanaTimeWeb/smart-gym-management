@@ -37,7 +37,7 @@ export const managerAttendanceHandlers = [
       const name = record.member?.name || record.staff?.name || '';
       const matchesSearch = !search || name.toLowerCase().includes(search);
       const matchesDate = !date || record.date === date;
-      const matchesStatus = !status || (record.status || '').toLowerCase() === status;
+      const matchesStatus = !status || status === 'all' || (record.status || '').toLowerCase() === status;
       const matchesType = !type || record.type === type;
       return matchesSearch && matchesDate && matchesStatus && matchesType;
     });

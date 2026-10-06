@@ -4,14 +4,14 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_STORE_PAGES_PRODUCTS_URL = '/manager/store';
-export const MANAGER_STORE_PAGES_ORDERS_URL = '/manager/store';
-export const MANAGER_STORE_BACKEND_API_BASE_URL = '/manager/store';
-export const MANAGER_STORE_BACKEND_API_PRODUCTS_BASE_URL = '/manager/store/products';
-export const MANAGER_STORE_BACKEND_API_PRODUCT_UPDATE_URL = (id: string) => `/manager/store/products/${id}`;
-export const MANAGER_STORE_BACKEND_API_PRODUCT_DELETE_URL = (id: string) => `/manager/store/products/${id}`;
-export const MANAGER_STORE_BACKEND_API_ORDERS_BASE_URL = '/manager/store/orders';
-export const MANAGER_STORE_BACKEND_API_SUMMARY_URL = '/manager/store/summary';
+export const MANAGER_STORE_PAGES_PRODUCTS_URL = '/frontend_manager/manager_store';
+export const MANAGER_STORE_PAGES_ORDERS_URL = '/frontend_manager/manager_store';
+export const MANAGER_STORE_BACKEND_API_BASE_URL = '/frontend_manager/manager_store';
+export const MANAGER_STORE_BACKEND_API_PRODUCTS_BASE_URL = '/frontend_manager/manager_store/products';
+export const MANAGER_STORE_BACKEND_API_PRODUCT_UPDATE_URL = (id: string) => `/frontend_manager/manager_store/products/${id}`;
+export const MANAGER_STORE_BACKEND_API_PRODUCT_DELETE_URL = (id: string) => `/frontend_manager/manager_store/products/${id}`;
+export const MANAGER_STORE_BACKEND_API_ORDERS_BASE_URL = '/frontend_manager/manager_store/orders';
+export const MANAGER_STORE_BACKEND_API_SUMMARY_URL = '/frontend_manager/manager_store/summary';
 export const MANAGER_STORE_INTEGRATIONS_WHATSAPP_WEB_BASE_URL = 'https://wa.me';
 
 export const MANAGER_STORE_URLS = {

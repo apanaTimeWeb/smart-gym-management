@@ -34,7 +34,7 @@ export function useManagerHrStaffMutations(
 
   const saveStaffMutation = useMutation({
     mutationFn: async (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number; idempotencyKey: string }) => {
-      const payload: Partial<Staff> & { joinDate?: string | Date } = {
+      const payload: Omit<Partial<Staff>, 'joinDate'> & { joinDate?: string | Date } = {
         ...data,
         salary: toManagerMinorUnits(Number(data.salary || 0)),
         advanceSalary: toManagerMinorUnits(Number(data.advanceSalary || 0)),
@@ -56,10 +56,10 @@ export function useManagerHrStaffMutations(
 
   const deleteStaffMutation = useMutation({
     mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => ManagerHrApi.deleteStaff(id, idempotencyKey),
-    onSuccess: (response, id) => {
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: ManagerHrQueryKeys.staff() });
       queryClient.invalidateQueries({ queryKey: ManagerHrQueryKeys.summary() });
-      deleteIntentKeysRef.current.delete(id);
+      deleteIntentKeysRef.current.delete(variables.id);
       showToast(response.message, 'success');
     },
     onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); } });

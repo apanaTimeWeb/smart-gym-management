@@ -29,7 +29,7 @@ import { superadminAnalyticsHandlers } from '@/app/frontend_superadmin/superadmi
 import { adminHandlers } from '@/app/frontend_admin/AdminMswBootstrap';
 import { AuthMockHandlers } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_handlers/AuthMockHandlers';
 import { landingHandlers } from '@/app/frontend_public/landing/landing_mocks/PublicLandingMockHandlers';
-import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
+import { managerHandlers } from '@/app/frontend_manager/manager_mocks/ManagerMockHandlers';
 
 import { trainerAttendanceHandlers } from '@/app/trainer/attendance/attendance_mocks/handlers/TrainerAttendanceMockHandlers';
 import { trainerDashboardHandlers } from '@/app/trainer/dashboard/dashboard_mocks/handlers/TrainerDashboardMockHandlers';

@@ -14,7 +14,7 @@ import { useManagerInquiriesUiStore } from "@/app/frontend_manager/manager_inqui
 import { EMPTY_INQUIRY_FORM } from "@/app/frontend_manager/manager_inquiries/manager_inquiries_types/ManagerInquiriesFormTypes";
 import type { InquiryFormValues } from "@/app/frontend_manager/manager_inquiries/manager_inquiries_types/ManagerInquiriesFormTypes";
 import type { ManagerInquiriesMessageType } from "@/app/frontend_manager/manager_inquiries/manager_inquiries_types/ManagerInquiriesMessageTypes";
-import type { Inquiry, ManagerInquiriesViewModel } from "@/app/frontend_manager/manager_inquiries/manager_inquiries_types/ManagerInquiriesTypes";
+import type { Inquiry, ManagerInquiriesViewModel, ManagerInquiriesWritePayload } from "@/app/frontend_manager/manager_inquiries/manager_inquiries_types/ManagerInquiriesTypes";
 
 
 /** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
@@ -53,9 +53,9 @@ export function useManagerInquiriesLogic(): ManagerInquiriesViewModel {
   const { createInquiry, updateInquiry, deleteInquiry: removeInquiry, convertLead: convertLeadMutation, isCreating, isUpdating, isConverting } = useManagerInquiriesMutations({ showToast: ui.showToast, onSuccessCallback: () => { ui.setShowModal(false); ui.setConvertLead(null); } });
   const openAdd = useCallback(() => { ui.setEditId(null); ui.setEditData(EMPTY_INQUIRY_FORM as InquiryFormValues); ui.setShowModal(true); }, [ui]);
   const openEdit = useCallback((inq: Inquiry) => { ui.setEditId(inq.id); ui.setEditData({ name: inq.name, phone: inq.phone, email: inq.email || "", interest: inq.interest, status: inq.status as InquiryFormValues["status"], source: inq.source || "Walk-in", notes: inq.notes || "" }); ui.setShowModal(true); }, [ui]);
-  const saveInquiry = useCallback(async (data: ManagerInquiriesWritePayload) => { if (ui.editId) updateInquiry({ id: ui.editId, data }); else createInquiry(data); }, [createInquiry, ui.editId, updateInquiry]);
+  const saveInquiry = useCallback(async (data: ManagerInquiriesWritePayload) => { if (ui.editId) updateInquiry({ id: ui.editId, data, idempotencyKey: createManagerIdempotencyKey() }); else createInquiry({ data, idempotencyKey: createManagerIdempotencyKey() }); }, [createInquiry, ui.editId, updateInquiry]);
   const deleteInquiry = useCallback(async (id: string) => { const idempotencyKey = deleteKeyByIdRef.current.get(id) ?? createManagerIdempotencyKey(); deleteKeyByIdRef.current.set(id, idempotencyKey); await removeInquiry({ id, idempotencyKey }); deleteKeyByIdRef.current.delete(id); }, [removeInquiry]);
-  const updateStatus = useCallback(async (id: string, status: string) => { updateInquiry({ id, data: { status: status as InquiryFormValues["status"] } }); }, [updateInquiry]);
+  const updateStatus = useCallback(async (id: string, status: string) => { updateInquiry({ id, data: { status: status as InquiryFormValues["status"] }, idempotencyKey: createManagerIdempotencyKey() }); }, [updateInquiry]);
   const openMsg = useCallback((inq: Inquiry, type: ManagerInquiriesMessageType) => { ui.setMsgModal({ open: true, type, recipient: { name: inq.name, phone: inq.phone, email: inq.email || "" }, message: generateDefaultMessage(inq.name, inq.interest) }); }, [ui]);
   const openBulkMsg = useCallback((type: ManagerInquiriesMessageType) => { const recipients = inquiries.filter((inq) => ui.selectedIds.includes(inq.id)).map((inq) => ({ name: inq.name, phone: inq.phone, email: inq.email || "" })); ui.setBulkMsgModal({ open: true, type, recipients }); }, [inquiries, ui]);
   const toggleSelectAll = useCallback((selectAll: boolean) => ui.setSelectedIds(selectAll ? inquiries.map((inq) => inq.id) : []), [inquiries, ui]);
@@ -65,5 +65,5 @@ export function useManagerInquiriesLogic(): ManagerInquiriesViewModel {
     inquiries, stats: statsQuery.data ?? null, isPending: listQuery.isPending || statsQuery.isPending, isError: listQuery.isError, errorMessage, totalInquiries: listQuery.data?.total ?? 0, toast: ui.toast, showToast: ui.showToast, hideToast: ui.hideToast,
     search, debouncedSearch, setSearch: (value) => setUrlParam("search", value || null), statusFilter, setStatusFilter: (value) => setUrlParam("status", value), dateFilter, setDateFilter: (value) => setUrlParam("date", value), currentPage, setCurrentPage: (value) => setUrlParam("page", String(value)),
     selectedIds: ui.selectedIds, toggleSelectAll, toggleSelectOne, clearSelection: () => ui.setSelectedIds([]), showModal: ui.showModal, setShowModal: ui.setShowModal, editId: ui.editId, editData: ui.editData, saving: isCreating || isUpdating, openAdd, openEdit, saveInquiry, deleteInquiry, updateStatus,
-    msgModal: ui.msgModal, openMsg, closeMsg: () => ui.setMsgModal(null), bulkMsgModal: ui.bulkMsgModal, openBulkMsg, closeBulkMsg: () => ui.setBulkMsgModal(null), convertLead: ui.convertLead, openConvert, closeConvert: () => ui.setConvertLead(null), convertLeadMutation, isConverting, refresh };
+    msgModal: ui.msgModal, openMsg, closeMsg: () => ui.setMsgModal(null), bulkMsgModal: ui.bulkMsgModal, openBulkMsg, closeBulkMsg: () => ui.setBulkMsgModal(null), convertLead: ui.convertLead, openConvert, closeConvert: () => ui.setConvertLead(null), convertLeadMutation: async (args: { id: string; data: Record<string, unknown> }) => convertLeadMutation({ ...args, idempotencyKey: createManagerIdempotencyKey() }), isConverting, refresh };
 }

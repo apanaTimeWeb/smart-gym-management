@@ -24,12 +24,10 @@ export default function ManagerHrLedgerTable() {
 
   const { staff } = useManagerHrLogic();
   const [selectedStaffId, setSelectedStaffId] = useState<string>('');
+  const effectiveStaffId = selectedStaffId || staff[0]?.id || '';
   const { data: ledgerResponse, isPending: loading, isError, error } = useManagerHrLedgerQuery(effectiveStaffId);
   const ledger = ledgerResponse?.data?.ledger ?? [];
 
-
-
-  const effectiveStaffId = selectedStaffId || staff[0]?.id || '';
   const selectedStaff = staff.find(s => String(s.id) === String(effectiveStaffId));
 
   return (

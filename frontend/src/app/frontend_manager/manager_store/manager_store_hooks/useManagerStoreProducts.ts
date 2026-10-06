@@ -25,8 +25,8 @@ export function useManagerStoreProducts(
     editProductData: ui.editProductData,
     openAddProduct: ui.openAddProduct,
     openEditProduct: ui.openEditProduct,
-    saveProduct: (data: Partial<ProductFormValues>) => mutations.saveProduct(data),
-    deleteProduct: (id: string) => mutations.deleteProduct(id),
+    saveProduct: async (data: Partial<ProductFormValues>) => { await mutations.saveProduct(data); },
+    deleteProduct: async (id: string) => { await mutations.deleteProduct(id); },
     isSaving: mutations.isSaving,
   };
 }

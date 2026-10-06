@@ -13,7 +13,7 @@ export const managerMembersMutationHandlers = [
     const body = await request.json() as Record<string, unknown>;
     const existing = managerMembersMockState.paymentByMemberId[memberId] ?? [];
     const paymentId = managerMembersMockState.paymentIdCounter++;
-    const payment = { id: `pay-${paymentId}`, amount: Number(body.amount ?? 0), method: String(body.method ?? 'UPI'), paidAt: new Date().toISOString(), status: MANAGER_MEMBERS_STATUS_VALUES.PAID as const, invoiceNumber: `INV-${paymentId}` };
+    const payment = { id: `pay-${paymentId}`, amount: Number(body.amount ?? 0), method: String(body.method ?? 'UPI'), paidAt: new Date().toISOString(), status: MANAGER_MEMBERS_STATUS_VALUES.PAID, invoiceNumber: `INV-${paymentId}` };
     managerMembersMockState.paymentByMemberId[memberId] = [payment, ...existing];
     return HttpResponse.json({ success: true, message: 'Payment recorded', data: payment });
   }),

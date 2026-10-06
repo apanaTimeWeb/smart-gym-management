@@ -28,7 +28,7 @@ export const managerExpensesHandlers = [
 
     let filtered = [...mockExpenses];
     
-    if (status && status !== MANAGER_EXPENSES_STATUS_VALUES.ALL) {
+    if (status && status !== 'ALL' && status !== 'all' && status !== MANAGER_EXPENSES_STATUS_VALUES.ALL) {
       filtered = filtered.filter(e => e.status === status);
     }
     if (search) {

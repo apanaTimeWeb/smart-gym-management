@@ -6,3 +6,5 @@ export const managerMembersHandlers = [
   ...managerMembersReadHandlers,
   ...managerMembersMutationHandlers,
 ];
+
+export { resetManagerMembersMockState } from '@/app/frontend_manager/manager_members/manager_members_mocks/manager_members_mocks_handlers/ManagerMembersMockState';

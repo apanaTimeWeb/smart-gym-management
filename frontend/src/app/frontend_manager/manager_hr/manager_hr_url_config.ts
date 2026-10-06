@@ -4,25 +4,25 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_HR_PAGES_STAFF_LIST_URL = '/manager/hr';
-export const MANAGER_HR_PAGES_PAYROLL_URL = '/manager/hr';
-export const MANAGER_HR_BACKEND_API_BASE_URL = '/manager/hr';
-export const MANAGER_HR_BACKEND_API_STAFF_BASE_URL = '/manager/hr/staff';
-export const MANAGER_HR_BACKEND_API_STAFF_GET_ONE_URL = (id: string) => `/manager/hr/staff/${id}`;
-export const MANAGER_HR_BACKEND_API_STAFF_UPDATE_URL = (id: string) => `/manager/hr/staff/${id}`;
-export const MANAGER_HR_BACKEND_API_STAFF_DELETE_URL = (id: string) => `/manager/hr/staff/${id}`;
-export const MANAGER_HR_BACKEND_API_PAYROLLS_BASE_URL = '/manager/hr/payrolls';
-export const MANAGER_HR_BACKEND_API_PAYROLL_GET_ONE_URL = (id: string) => `/manager/hr/payrolls/${id}`;
-export const MANAGER_HR_BACKEND_API_PAYROLL_CREATE_URL = '/manager/hr/payrolls';
-export const MANAGER_HR_BACKEND_API_PAYROLL_UPDATE_URL = (id: string) => `/manager/hr/payrolls/${id}`;
-export const MANAGER_HR_BACKEND_API_PAYROLL_GENERATE_URL = '/manager/hr/payrolls/generate';
-export const MANAGER_HR_BACKEND_API_PAYROLL_STATUS_UPDATE_URL = (id: string) => `/manager/hr/payrolls/${id}/status`;
-export const MANAGER_HR_BACKEND_API_SUMMARY_URL = '/manager/hr/summary';
-export const MANAGER_HR_BACKEND_API_LEDGER_URL = (staffId: string) => `/manager/hr/ledger/${staffId}`;
-export const MANAGER_HR_BACKEND_API_LEDGER_ADVANCE_URL = '/manager/hr/ledger/advance';
-export const MANAGER_HR_BACKEND_API_LEDGER_PAY_DUE_URL = '/manager/hr/ledger/paydue';
-export const MANAGER_HR_BACKEND_API_STAFF_ATTENDANCE_BASE_URL = (staffId: string) => `/manager/hr/staff/${staffId}/attendance`;
-export const MANAGER_HR_BACKEND_API_STAFF_ATTENDANCE_URL = (staffId: string, month: string) => `/manager/hr/staff/${staffId}/attendance?month=${encodeURIComponent(month)}`;
+export const MANAGER_HR_PAGES_STAFF_LIST_URL = '/frontend_manager/manager_hr';
+export const MANAGER_HR_PAGES_PAYROLL_URL = '/frontend_manager/manager_hr';
+export const MANAGER_HR_BACKEND_API_BASE_URL = '/frontend_manager/manager_hr';
+export const MANAGER_HR_BACKEND_API_STAFF_BASE_URL = '/frontend_manager/manager_hr/staff';
+export const MANAGER_HR_BACKEND_API_STAFF_GET_ONE_URL = (id: string) => `/frontend_manager/manager_hr/staff/${id}`;
+export const MANAGER_HR_BACKEND_API_STAFF_UPDATE_URL = (id: string) => `/frontend_manager/manager_hr/staff/${id}`;
+export const MANAGER_HR_BACKEND_API_STAFF_DELETE_URL = (id: string) => `/frontend_manager/manager_hr/staff/${id}`;
+export const MANAGER_HR_BACKEND_API_PAYROLLS_BASE_URL = '/frontend_manager/manager_hr/payrolls';
+export const MANAGER_HR_BACKEND_API_PAYROLL_GET_ONE_URL = (id: string) => `/frontend_manager/manager_hr/payrolls/${id}`;
+export const MANAGER_HR_BACKEND_API_PAYROLL_CREATE_URL = '/frontend_manager/manager_hr/payrolls';
+export const MANAGER_HR_BACKEND_API_PAYROLL_UPDATE_URL = (id: string) => `/frontend_manager/manager_hr/payrolls/${id}`;
+export const MANAGER_HR_BACKEND_API_PAYROLL_GENERATE_URL = '/frontend_manager/manager_hr/payrolls/generate';
+export const MANAGER_HR_BACKEND_API_PAYROLL_STATUS_UPDATE_URL = (id: string) => `/frontend_manager/manager_hr/payrolls/${id}/status`;
+export const MANAGER_HR_BACKEND_API_SUMMARY_URL = '/frontend_manager/manager_hr/summary';
+export const MANAGER_HR_BACKEND_API_LEDGER_URL = (staffId: string) => `/frontend_manager/manager_hr/ledger/${staffId}`;
+export const MANAGER_HR_BACKEND_API_LEDGER_ADVANCE_URL = '/frontend_manager/manager_hr/ledger/advance';
+export const MANAGER_HR_BACKEND_API_LEDGER_PAY_DUE_URL = '/frontend_manager/manager_hr/ledger/paydue';
+export const MANAGER_HR_BACKEND_API_STAFF_ATTENDANCE_BASE_URL = (staffId: string) => `/frontend_manager/manager_hr/staff/${staffId}/attendance`;
+export const MANAGER_HR_BACKEND_API_STAFF_ATTENDANCE_URL = (staffId: string, month: string) => `/frontend_manager/manager_hr/staff/${staffId}/attendance?month=${encodeURIComponent(month)}`;
 
 export const MANAGER_HR_URLS = {
   PAGES: {

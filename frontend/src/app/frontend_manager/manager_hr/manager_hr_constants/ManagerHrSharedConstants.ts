@@ -47,7 +47,7 @@ export const STAFF_MODAL_FIELDS = [
   { label: 'Address', labelKey: 'TEXT_STAFF_FIELD_ADDRESS', key: 'address', type: 'text', placeholder: 'Full Address', placeholderKey: 'TEXT_STAFF_PLACEHOLDER_ADDRESS' },
 ] as const;
 
-export const HR_PENDING_STATUS = ['PENDING'][0] as const;
+export const HR_PENDING_STATUS = 'PENDING' as const;
 
 export const HR_ROLE_FILTER_OPTIONS = [
   { value: 'All', labelKey: 'COPY_ALL_ROLES' },

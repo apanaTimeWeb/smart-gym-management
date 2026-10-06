@@ -1,4 +1,5 @@
 import { LayoutDashboard, Users, FileBarChart, UserCog, Utensils, Dumbbell, Wrench, MessageSquare, CalendarCheck, CalendarClock, Receipt, Tags, Megaphone, Gift, Frown } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { ManagerAttendanceUrlConfig } from '@/app/frontend_manager/manager_attendance/manager_attendance_url_config';
 import { ManagerCommunicationsUrlConfig } from '@/app/frontend_manager/manager_communications/manager_communications_url_config';
 import { ManagerDashboardUrlConfig } from '@/app/frontend_manager/manager_dashboard/manager_dashboard_url_config';
@@ -25,7 +26,18 @@ import { ManagerWorkoutUrlConfig } from '@/app/frontend_manager/manager_workout/
  * @dependencies @/app/frontend_manager/manager_attendance/manager_attendance_url_config; @/app/frontend_manager/manager_communications/manager_communications_url_config; @/app/frontend_manager/manager_dashboard/manager_dashboard_url_config; @/app/frontend_manager/manager_expenses/manager_expenses_url_config; @/app/frontend_manager/manager_finance/manager_finance_url_config
  * @edge-case Preserves loading, empty, error, disabled, retry, and cancellation behavior defined by the owning module contract; does not introduce cross-feature business ownership.
  */
-export const MANAGER_NAV_GROUPS = [
+export interface ManagerNavItem {
+  href: string;
+  labelKey: string;
+  icon: LucideIcon;
+}
+
+export interface ManagerNavGroup {
+  groupKey: string;
+  items: ManagerNavItem[];
+}
+
+export const MANAGER_NAV_GROUPS: ManagerNavGroup[] = [
   { groupKey: 'NAV_GROUP_OVERVIEW', items: [{ href: ManagerDashboardUrlConfig.PAGES.HOME, labelKey: 'NAV_DASHBOARD', icon: LayoutDashboard }] },
   {
     groupKey: 'NAV_GROUP_OPERATIONS',

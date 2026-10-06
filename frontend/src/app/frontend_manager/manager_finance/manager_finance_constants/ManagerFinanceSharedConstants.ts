@@ -24,7 +24,7 @@ export const FINANCE_ALL_FILTER = 'ALL' as const;
 
 export const FINANCE_PAYMENT_STATUS_VALUES = ['PAID', 'PENDING', 'REFUNDED', 'PARTIAL'] as const;
 
-export const FINANCE_PENDING_STATUS = ['PENDING'][0] as const;
+export const FINANCE_PENDING_STATUS = 'PENDING' as const;
 
 export const FINANCE_STATUS_FILTER_OPTIONS = [
   { value: 'ALL', labelKey: 'COPY_ALL_STATUS' },

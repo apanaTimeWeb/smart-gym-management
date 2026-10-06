@@ -12,4 +12,4 @@ export type SalesTab = typeof SALES_TABS[number];
 
 
 
-export const SALES_ACTIVE_STATUS = ['ACTIVE'][0] as const;
+export const SALES_ACTIVE_STATUS = 'ACTIVE' as const;

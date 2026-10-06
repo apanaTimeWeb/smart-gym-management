@@ -33,7 +33,7 @@ export default function ManagerSalesAllMemberships() {
   const t = useTranslations('MANAGER_SALES');
   const locale = useLocale();
 
-  const [filter, setFilter] = useState(MANAGER_SALES_MEMBERSHIP_FILTER_VALUES.ALL);
+  const [filter, setFilter] = useState<typeof MANAGER_MEMBERSHIP_FILTERS[number]>(MANAGER_SALES_MEMBERSHIP_FILTER_VALUES.ALL);
   const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
   const [now] = useState(() => Date.now());
 

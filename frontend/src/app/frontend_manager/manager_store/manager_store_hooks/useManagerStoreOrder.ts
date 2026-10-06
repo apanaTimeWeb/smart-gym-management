@@ -71,7 +71,7 @@ export function useManagerStoreOrder(
     },
   );
 
-  const addToOrder = (product: { id: string; name: string; price: number; unit?: string | null }) => ui.setOrderItems((prev) => prev.some((item) => item.productId === product.id) ? prev : [...prev, { productId: product.id, qty: 1, name: product.name, price: product.price, unit: product.unit }]);
+  const addToOrder = (product: { id: string; name: string; price: number; unit?: string }) => ui.setOrderItems((prev) => prev.some((item) => item.productId === product.id) ? prev : [...prev, { productId: product.id, qty: 1, name: product.name, price: product.price, unit: product.unit }]);
   const removeFromOrder = (productId: string) => ui.setOrderItems((prev) => prev.filter((item) => item.productId !== productId));
   const updateOrderQty = (productId: string, qty: number) => { if (qty <= 0) return removeFromOrder(productId); ui.setOrderItems((prev) => prev.map((item) => item.productId === productId ? { ...item, qty } : item)); };
   const placeOrder = async () => {
@@ -85,7 +85,7 @@ export function useManagerStoreOrder(
     });
     if (confirmed) await mutations.placeOrder();
   };
-  const closeOrderModal = () => { void confirmAndClose(() => { mutations.resetIdempotency(); ui.resetOrder(); }); };
+  const closeOrderModal = async () => { await confirmAndClose(() => { mutations.resetIdempotency(); ui.resetOrder(); }); };
   return {
     showOrderModal: ui.showOrderModal,
     setShowOrderModal: ui.setShowOrderModal,

@@ -57,6 +57,13 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): ManagerHr
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal: ui.showModal, setShowModal: ui.setShowModal, showPayrollModal: ui.showPayrollModal, setShowPayrollModal: ui.setShowPayrollModal,
     paymentModal: ui.paymentModal, setPaymentModal: ui.setPaymentModal, editId: ui.editId, editData: ui.editData, viewProfileData: ui.viewProfileData, setViewProfileData: ui.setViewProfileData, saving: ui.saving,
-    openAdd: ui.openAdd, openEdit: ui.openEdit, openAddPayroll: ui.openAddPayroll, saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue,
+    openAdd: ui.openAdd, openEdit: ui.openEdit, openAddPayroll: ui.openAddPayroll, 
+    saveStaff: async (staff) => { await saveStaff(staff); }, 
+    savePayroll: async (p) => { await savePayroll(p); }, 
+    deleteStaff: async (id) => { await deleteStaff(id); }, 
+    toggleStaffStatus: async (staff) => { await toggleStaffStatus(staff); }, 
+    markPayrollPaid: async (id, amount, key) => { await markPayrollPaid(id, amount, key); }, 
+    giveAdvance: async (data, key) => { await giveAdvance(data, key); }, 
+    payDue: async (data, key) => { await payDue(data, key); },
     bulkGeneratePayroll, downloadPayslip, exportStaff, payrollMonth, setPayrollMonth };
 }

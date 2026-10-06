@@ -4,25 +4,25 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_MEMBERS_PAGES_LIST_URL = '/manager/members';
-export const MANAGER_MEMBERS_PAGES_ADD_URL = '/manager/members';
-export const MANAGER_MEMBERS_BACKEND_API_BASE_URL = '/manager/members';
-export const MANAGER_MEMBERS_BACKEND_API_STATS_URL = '/manager/members/stats';
-export const MANAGER_MEMBERS_BACKEND_API_PLANS_SNAPSHOT_URL = '/manager/members/plans';
-export const MANAGER_MEMBERS_BACKEND_API_TRAINERS_URL = '/manager/members/trainers';
-export const MANAGER_MEMBERS_BACKEND_API_DIET_PLANS_URL = '/manager/members/diet-plans';
-export const MANAGER_MEMBERS_BACKEND_API_WORKOUTS_URL = '/manager/members/workouts';
-export const MANAGER_MEMBERS_BACKEND_API_ATTENDANCE_URL = (id: string) => `/manager/members/${id}/attendance`;
-export const MANAGER_MEMBERS_BACKEND_API_PAYMENTS_URL = (id: string) => `/manager/members/${id}/payments`;
-export const MANAGER_MEMBERS_BACKEND_API_RENEW_URL = (id: string) => `/manager/members/${id}/renew`;
-export const MANAGER_MEMBERS_BACKEND_API_GET_ONE_URL = (id: string) => `/manager/members/${id}`;
-export const MANAGER_MEMBERS_BACKEND_API_UPDATE_URL = (id: string) => `/manager/members/${id}`;
-export const MANAGER_MEMBERS_BACKEND_API_DELETE_URL = (id: string) => `/manager/members/${id}`;
-export const MANAGER_MEMBERS_BACKEND_API_POST_PAYMENT_URL = (id: string) => `/manager/members/${id}/payments`;
-export const MANAGER_MEMBERS_BACKEND_API_DIET_ASSIGN_URL = (id: string) => `/manager/members/${id}/diet-plans`;
-export const MANAGER_MEMBERS_BACKEND_API_WORKOUT_ASSIGN_URL = (id: string) => `/manager/members/${id}/workouts`;
-export const MANAGER_MEMBERS_BACKEND_API_EXPORT_URL = '/manager/members/export';
-export const MANAGER_MEMBERS_BACKEND_API_RESEND_WELCOME_URL = (id: string) => `/manager/members/${id}/resend-welcome`;
+export const MANAGER_MEMBERS_PAGES_LIST_URL = '/frontend_manager/manager_members';
+export const MANAGER_MEMBERS_PAGES_ADD_URL = '/frontend_manager/manager_members';
+export const MANAGER_MEMBERS_BACKEND_API_BASE_URL = '/frontend_manager/manager_members';
+export const MANAGER_MEMBERS_BACKEND_API_STATS_URL = '/frontend_manager/manager_members/stats';
+export const MANAGER_MEMBERS_BACKEND_API_PLANS_SNAPSHOT_URL = '/frontend_manager/manager_members/plans';
+export const MANAGER_MEMBERS_BACKEND_API_TRAINERS_URL = '/frontend_manager/manager_members/trainers';
+export const MANAGER_MEMBERS_BACKEND_API_DIET_PLANS_URL = '/frontend_manager/manager_members/diet-plans';
+export const MANAGER_MEMBERS_BACKEND_API_WORKOUTS_URL = '/frontend_manager/manager_members/workouts';
+export const MANAGER_MEMBERS_BACKEND_API_ATTENDANCE_URL = (id: string) => `/frontend_manager/manager_members/${id}/attendance`;
+export const MANAGER_MEMBERS_BACKEND_API_PAYMENTS_URL = (id: string) => `/frontend_manager/manager_members/${id}/payments`;
+export const MANAGER_MEMBERS_BACKEND_API_RENEW_URL = (id: string) => `/frontend_manager/manager_members/${id}/renew`;
+export const MANAGER_MEMBERS_BACKEND_API_GET_ONE_URL = (id: string) => `/frontend_manager/manager_members/${id}`;
+export const MANAGER_MEMBERS_BACKEND_API_UPDATE_URL = (id: string) => `/frontend_manager/manager_members/${id}`;
+export const MANAGER_MEMBERS_BACKEND_API_DELETE_URL = (id: string) => `/frontend_manager/manager_members/${id}`;
+export const MANAGER_MEMBERS_BACKEND_API_POST_PAYMENT_URL = (id: string) => `/frontend_manager/manager_members/${id}/payments`;
+export const MANAGER_MEMBERS_BACKEND_API_DIET_ASSIGN_URL = (id: string) => `/frontend_manager/manager_members/${id}/diet-plans`;
+export const MANAGER_MEMBERS_BACKEND_API_WORKOUT_ASSIGN_URL = (id: string) => `/frontend_manager/manager_members/${id}/workouts`;
+export const MANAGER_MEMBERS_BACKEND_API_EXPORT_URL = '/frontend_manager/manager_members/export';
+export const MANAGER_MEMBERS_BACKEND_API_RESEND_WELCOME_URL = (id: string) => `/frontend_manager/manager_members/${id}/resend-welcome`;
 export const MANAGER_MEMBERS_INTEGRATIONS_WHATSAPP_WEB_BASE_URL = 'https://wa.me';
 
 export const MANAGER_MEMBERS_URLS = {

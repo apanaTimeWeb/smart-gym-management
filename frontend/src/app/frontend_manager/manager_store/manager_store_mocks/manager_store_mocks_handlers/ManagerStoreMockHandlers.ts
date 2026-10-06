@@ -111,7 +111,7 @@ export const managerStoreHandlers = [
     const filtered = mockOrders.filter((order) => {
       const matchesSearch = !search || order.id.toLowerCase().includes(search) || order.items?.some((item) => item.product.name.toLowerCase().includes(search));
       const matchesMethod = !method || method === 'all' || order.method.toLowerCase() === method;
-      const matchesStatus = !status || status === 'ALL' || order.status === status;
+      const matchesStatus = !status || status === 'ALL' || status === 'all' || order.status === status;
       const matchesStart = !startDate || order.createdAt.slice(0, 10) >= startDate;
       const matchesEnd = !endDate || order.createdAt.slice(0, 10) <= endDate;
       return matchesSearch && matchesMethod && matchesStatus && matchesStart && matchesEnd;

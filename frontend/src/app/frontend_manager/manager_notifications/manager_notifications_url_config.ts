@@ -4,12 +4,12 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_NOTIFICATIONS_UI_PAGE_HOME_URL = '/manager/notifications';
-export const MANAGER_NOTIFICATIONS_BACKEND_API_BASE_URL = '/manager/notifications';
-export const MANAGER_NOTIFICATIONS_BACKEND_API_STATS_URL = '/manager/notifications/stats';
-export const MANAGER_NOTIFICATIONS_BACKEND_API_MARK_READ_URL = (id: string) => `/manager/notifications/${id}/read`;
-export const MANAGER_NOTIFICATIONS_BACKEND_API_MARK_ALL_READ_URL = '/manager/notifications/read-all';
-export const MANAGER_NOTIFICATIONS_BACKEND_API_DELETE_URL = (id: string) => `/manager/notifications/${id}`;
+export const MANAGER_NOTIFICATIONS_UI_PAGE_HOME_URL = '/frontend_manager/manager_notifications';
+export const MANAGER_NOTIFICATIONS_BACKEND_API_BASE_URL = '/frontend_manager/manager_notifications';
+export const MANAGER_NOTIFICATIONS_BACKEND_API_STATS_URL = '/frontend_manager/manager_notifications/stats';
+export const MANAGER_NOTIFICATIONS_BACKEND_API_MARK_READ_URL = (id: string) => `/frontend_manager/manager_notifications/${id}/read`;
+export const MANAGER_NOTIFICATIONS_BACKEND_API_MARK_ALL_READ_URL = '/frontend_manager/manager_notifications/read-all';
+export const MANAGER_NOTIFICATIONS_BACKEND_API_DELETE_URL = (id: string) => `/frontend_manager/manager_notifications/${id}`;
 
 export const MANAGER_NOTIFICATIONS_URLS = {
   UI: {

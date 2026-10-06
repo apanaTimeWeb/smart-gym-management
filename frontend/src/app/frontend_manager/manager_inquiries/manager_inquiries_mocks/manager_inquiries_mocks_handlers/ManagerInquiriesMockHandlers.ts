@@ -36,7 +36,7 @@ export const managerInquiriesHandlers = [
     if (search) {
       results = results.filter(i => i.name.toLowerCase().includes(search) || i.phone.includes(search) || (i.email && i.email.toLowerCase().includes(search)));
     }
-    if (status && status !== 'ALL' && status !== MANAGER_INQUIRIES_STATUS_VALUES.ALL) {
+    if (status && status !== 'ALL' && status !== 'all' && status !== MANAGER_INQUIRIES_STATUS_VALUES.ALL) {
       results = results.filter(i => i.status === status);
     }
     if (date) {

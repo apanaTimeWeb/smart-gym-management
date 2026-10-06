@@ -27,4 +27,4 @@ export const NOTIFICATION_STATUS_VALUES = ['UNREAD', 'READ'] as const;
 
 export const NOTIFICATION_PRIORITY_VALUES = ['HIGH', 'MEDIUM', 'LOW'] as const;
 
-export const MANAGER_NOTIFICATION_DELETE_ACTION = ['DELETE'][0] as const;
+export const MANAGER_NOTIFICATION_DELETE_ACTION = 'DELETE' as const;

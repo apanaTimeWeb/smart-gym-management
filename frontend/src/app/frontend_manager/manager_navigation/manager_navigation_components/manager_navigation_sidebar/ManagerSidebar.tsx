@@ -172,7 +172,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
             <div className="text-center py-4 text-sm text-secondary">{t("COPY_NO_MATCHES_FOUND")}</div>
           ); } return (
             filteredNavGroups.map((group, mapIndex) => (
-              <div key={group.group}>
+              <div key={group.groupKey}>
                 {(!isCollapsed || isMobileOpen) && (
                   <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
                     {group.translatedGroup}
@@ -180,7 +180,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                 )}
                 <div className="space-y-1">
                   {group.items.map((item) => {
-                    const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    const active = pathname === item.href || ((item.href as string) !== '/' && pathname.startsWith(item.href));
                     const Icon = item.icon;
                     const showLabel = !isCollapsed || isMobileOpen;
 

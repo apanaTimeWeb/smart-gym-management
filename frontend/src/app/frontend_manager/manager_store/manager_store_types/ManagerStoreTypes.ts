@@ -4,6 +4,7 @@ import type { ProductFormValues } from '@/app/frontend_manager/manager_store/man
 import type { ManagerStoreReceiptData } from '@/app/frontend_manager/manager_store/manager_store_types/ManagerStoreThermalReceiptTypes';
 export type ReturnStatus = typeof STORE_RETURN_STATUS_VALUES[number];
 export type ManagerStoreSortOrder = typeof STORE_SORT_ORDER_VALUES[number];
+export type ManagerStoreProductFieldType = 'text' | 'number' | 'textarea' | 'select' | 'switch' | 'file';
 
 export interface StoreInitialData {
   products: Product[];

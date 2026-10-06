@@ -21,7 +21,7 @@ export type AttendanceTab = typeof ATTENDANCE_TABS[number];
 
 /** Formats an attendance calendar heading with a stable month/year locale. */
 export function formatAttendanceMonthYear(value: Date | string): string {
-  return format(parseISO(value), 'MMMM yyyy');
+  return format(value instanceof Date ? value : parseISO(value), 'MMMM yyyy');
 }
 
 export const ATTENDANCE_MEMBER_STATUS_VALUES = ['ACTIVE', 'PENDING', 'EXPIRED', 'FROZEN', 'SUSPENDED', 'BANNED'] as const;

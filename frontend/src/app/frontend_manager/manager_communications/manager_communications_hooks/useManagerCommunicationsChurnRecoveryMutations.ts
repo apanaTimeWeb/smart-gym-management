@@ -35,7 +35,10 @@ export function useManagerCommunicationsChurnRecoveryMutations(closeComposer: ()
       message: string;
       subject: string;
       idempotencyKey: string;
-    }) => ManagerCommunicationsApi.sendWinBackMessage(payload),
+    }) => {
+      const { idempotencyKey, ...rest } = payload;
+      return ManagerCommunicationsApi.sendWinBackMessage(rest, idempotencyKey);
+    },
     onSuccess: (res, variables) => {
       if (winBackIntentRef.current?.key === variables.idempotencyKey) winBackIntentRef.current = null;
       showManagerSuccessToast(res.message, 'manager-churn-winback-success');

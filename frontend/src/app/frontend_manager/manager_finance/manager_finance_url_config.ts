@@ -4,13 +4,13 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_FINANCE_PAGES_LIST_URL = '/manager/finance';
-export const MANAGER_FINANCE_BACKEND_API_BASE_URL = '/manager/finance';
-export const MANAGER_FINANCE_BACKEND_API_PAYMENTS_BASE_URL = '/manager/finance/payments';
-export const MANAGER_FINANCE_BACKEND_API_PAYMENTS_BY_MEMBER_URL = (memberId: string) => `/manager/finance/payments/member/${memberId}`;
-export const MANAGER_FINANCE_BACKEND_API_SUMMARY_URL = '/manager/finance/summary';
-export const MANAGER_FINANCE_BACKEND_API_EXPORT_URL = '/manager/finance/export';
-export const MANAGER_FINANCE_BACKEND_API_CHART_URL = '/manager/finance/chart';
+export const MANAGER_FINANCE_PAGES_LIST_URL = '/frontend_manager/manager_finance';
+export const MANAGER_FINANCE_BACKEND_API_BASE_URL = '/frontend_manager/manager_finance';
+export const MANAGER_FINANCE_BACKEND_API_PAYMENTS_BASE_URL = '/frontend_manager/manager_finance/payments';
+export const MANAGER_FINANCE_BACKEND_API_PAYMENTS_BY_MEMBER_URL = (memberId: string) => `/frontend_manager/manager_finance/payments/member/${memberId}`;
+export const MANAGER_FINANCE_BACKEND_API_SUMMARY_URL = '/frontend_manager/manager_finance/summary';
+export const MANAGER_FINANCE_BACKEND_API_EXPORT_URL = '/frontend_manager/manager_finance/export';
+export const MANAGER_FINANCE_BACKEND_API_CHART_URL = '/frontend_manager/manager_finance/chart';
 
 export const MANAGER_FINANCE_URLS = {
   PAGES: {

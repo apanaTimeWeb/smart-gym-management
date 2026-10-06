@@ -1,7 +1,7 @@
-import type { ManagerPtKpis, ManagerPtPackage, ManagerPtTrainerWorkload } from '@/app/frontend_manager/manager_pt/manager_pt_types/ManagerPtTypes';
+import type { PtDashboardKpis, PtAssignment, PtTrainerWorkload } from '@/app/frontend_manager/manager_pt/manager_pt_types/ManagerPtTypes';
 
 export interface ManagerPtDashboardTabProps {
-  kpis: ManagerPtKpis;
-  workload: ManagerPtTrainerWorkload[];
-  expiringPackages: ManagerPtPackage[];
+  kpis: PtDashboardKpis | null;
+  workload: PtTrainerWorkload[];
+  expiringPackages: PtAssignment[];
 }

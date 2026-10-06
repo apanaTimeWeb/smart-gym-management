@@ -42,5 +42,5 @@ export const generateDefaultMessage = (name: string, interest: string) => {
 
 /** Formats inquiry activity timestamps for consistent manager UI display. */
 export function formatInquiryTime(value: Date | string): string {
-  return format(parseISO(value), 'hh:mm a');
+  return format(value instanceof Date ? value : parseISO(value), 'hh:mm a');
 }

@@ -32,7 +32,7 @@ export function useManagerPtLogic() {
 
   const activeTab = useMemo(() => {
     const value = searchParams.get('tab') as PtActiveTab | null;
-    return value && MANAGER_PT_TAB_OPTIONS.some((tab) => tab.id === value) ? value : 'dashboard';
+    return value && MANAGER_PT_TAB_OPTIONS.includes(value) ? value : 'dashboard';
   }, [searchParams]);
 
   const setActiveTab = useCallback((tab: PtActiveTab) => {
@@ -73,6 +73,7 @@ export function useManagerPtLogic() {
     isError,
     errorMessage,
     handleMarkSession: ptMutations.handleMarkSession,
+    markingId: ptMutations.markingId,
     createAssignment: ptMutations.createAssignment,
     assignmentSaving: ptMutations.assignmentSaving };
 }

@@ -1,6 +1,6 @@
 import { ManagerAttendanceUrlConfig } from '@/app/frontend_manager/manager_attendance/manager_attendance_url_config';
 import { ManagerNotificationsUrlConfig } from '@/app/frontend_manager/manager_notifications/manager_notifications_url_config';
-import { ManagerMembersProfileUrlConfig } from '@/app/frontend_manager/manager_profile/manager_profile_url_config';
+import { ManagerProfileUrlConfig } from '@/app/frontend_manager/manager_profile/manager_profile_url_config';
 import { ManagerSettingsUrlConfig } from '@/app/frontend_manager/manager_settings/manager_settings_url_config';
 
 
@@ -12,6 +12,6 @@ import { ManagerSettingsUrlConfig } from '@/app/frontend_manager/manager_setting
 export const MANAGER_HEADER_NAVIGATION = {
   scanner: `${ManagerAttendanceUrlConfig.UI.HOME}?qrScanner=open`,
   notifications: ManagerNotificationsUrlConfig.UI.HOME,
-  profile: ManagerMembersProfileUrlConfig.UI.HOME,
+  profile: ManagerProfileUrlConfig.UI.HOME,
   settings: ManagerSettingsUrlConfig.PAGES.SETTINGS,
 } as const;

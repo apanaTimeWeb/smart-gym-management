@@ -13,7 +13,7 @@ import { resetManagerMembersMockState } from '@/app/frontend_manager/manager_mem
 import { managerHandlers } from '@/app/frontend_manager/manager_mocks/ManagerMockHandlers';
 import { resetManagerNotificationsMockState } from '@/app/frontend_manager/manager_notifications/manager_notifications_mocks/manager_notifications_mocks_handlers/ManagerNotificationsMockHandlers';
 import { resetManagerPlansMockState } from '@/app/frontend_manager/manager_plans/manager_plans_mocks/manager_plans_mocks_handlers/ManagerPlansMockHandlers';
-import { resetManagerMembersProfileMockState } from '@/app/frontend_manager/manager_profile/manager_profile_mocks/manager_profile_mocks_handlers/ManagerProfileMockHandlers';
+import { resetManagerProfileMockState } from '@/app/frontend_manager/manager_profile/manager_profile_mocks/manager_profile_mocks_handlers/ManagerProfileMockHandlers';
 import { resetManagerPtMockState } from '@/app/frontend_manager/manager_pt/manager_pt_mocks/manager_pt_mocks_handlers/ManagerPtMockHandlers';
 import { resetManagerReferralsMockState } from '@/app/frontend_manager/manager_referrals/manager_referrals_mocks/manager_referrals_mocks_handlers/ManagerReferralsMockHandlers';
 import { resetManagerScheduleMockState } from '@/app/frontend_manager/manager_schedule/manager_schedule_mocks/manager_schedule_mocks_handlers/ManagerScheduleMockHandlers';
@@ -42,7 +42,7 @@ beforeEach(() => {
   resetManagerMembersMockState();
   resetManagerNotificationsMockState();
   resetManagerPlansMockState();
-  resetManagerMembersProfileMockState();
+  resetManagerProfileMockState();
   resetManagerPtMockState();
   resetManagerReferralsMockState();
   resetManagerScheduleMockState();

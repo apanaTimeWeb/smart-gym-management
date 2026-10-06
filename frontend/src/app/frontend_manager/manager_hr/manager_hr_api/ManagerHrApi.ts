@@ -20,12 +20,12 @@ export const ManagerHrApi = {
   fetchStaffById: async (id: string): Promise<ApiResponse<Staff>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { dataSchema: staffSchema });
   },
-  createStaff: async (body: Partial<Staff> & { joinDate?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Staff>> => {
-    const serializedBody = { ...body, ...(body.joinDate ? { joinDate: body.joinDate instanceof Date ? body.joinDate.toISOString() : body.joinDate } : {}) };
+  createStaff: async (body: Omit<Partial<Staff>, 'joinDate'> & { joinDate?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Staff>> => {
+    const serializedBody = { ...body, ...(body.joinDate ? { joinDate: (body.joinDate as any) instanceof Date ? (body.joinDate as any).toISOString() : body.joinDate } : {}) };
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(serializedBody), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: staffSchema });
   },
-  updateStaff: async (id: string, body: Partial<Staff> & { joinDate?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Staff>> => {
-    const serializedBody = { ...body, ...(body.joinDate ? { joinDate: body.joinDate instanceof Date ? body.joinDate.toISOString() : body.joinDate } : {}) };
+  updateStaff: async (id: string, body: Omit<Partial<Staff>, 'joinDate'> & { joinDate?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Staff>> => {
+    const serializedBody = { ...body, ...(body.joinDate ? { joinDate: (body.joinDate as any) instanceof Date ? (body.joinDate as any).toISOString() : body.joinDate } : {}) };
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { method: 'PATCH', body: JSON.stringify(serializedBody), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: staffSchema });
   },
   deleteStaff: async (id: string, idempotencyKey: string): Promise<ApiResponse<{ id: string }>> => {
@@ -38,12 +38,12 @@ export const ManagerHrApi = {
   generatePayrolls: async (month: string, idempotencyKey: string): Promise<ApiResponse<{ payrolls: Payroll[] }>> => {
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_GENERATE, { method: 'POST', body: JSON.stringify({ month }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.object({ payrolls: z.array(payrollSchema) }) });
   },
-  createPayroll: async (body: Partial<Payroll> & { paidAt?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {
-    const serializedBody = { ...body, ...(body.paidAt ? { paidAt: body.paidAt instanceof Date ? body.paidAt.toISOString() : body.paidAt } : {}) };
+  createPayroll: async (body: Omit<Partial<Payroll>, 'paidAt'> & { paidAt?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {
+    const serializedBody = { ...body, ...(body.paidAt ? { paidAt: (body.paidAt as any) instanceof Date ? (body.paidAt as any).toISOString() : body.paidAt } : {}) };
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_CREATE, { method: 'POST', body: JSON.stringify(serializedBody), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: payrollSchema });
   },
-  updatePayroll: async (id: string, body: Partial<Payroll> & { paidAt?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {
-    const serializedBody = { ...body, ...(body.paidAt ? { paidAt: body.paidAt instanceof Date ? body.paidAt.toISOString() : body.paidAt } : {}) };
+  updatePayroll: async (id: string, body: Omit<Partial<Payroll>, 'paidAt'> & { paidAt?: string | Date }, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {
+    const serializedBody = { ...body, ...(body.paidAt ? { paidAt: (body.paidAt as any) instanceof Date ? (body.paidAt as any).toISOString() : body.paidAt } : {}) };
     return apiFetch(ManagerHrUrlConfig.BACKEND_API.PAYROLL_UPDATE(id), { method: 'PATCH', body: JSON.stringify(serializedBody), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: payrollSchema });
   },
   updatePayrollStatus: async (id: string, status: string, idempotencyKey: string): Promise<ApiResponse<Payroll>> => {

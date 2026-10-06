@@ -60,7 +60,7 @@ export const managerMembersReadHandlers = [
     const filtered = managerMembersMockState.members.filter((member) => {
       const searchText = [member.name, member.email, member.phone, member.id].join(' ').toLowerCase();
       const matchesSearch = !search || searchText.includes(search);
-      const matchesStatus = !status || status === MANAGER_MEMBERS_STATUS_VALUES.ALL || member.status.toLowerCase() === status;
+      const matchesStatus = !status || status === 'all' || status === MANAGER_MEMBERS_STATUS_VALUES.ALL.toLowerCase() || member.status.toLowerCase() === status;
       const matchesGender = !gender || gender === 'all' || member.gender?.toLowerCase() === gender;
       const matchesPlan = !plan || plan === 'all' || member.planId.toLowerCase() === plan || member.plan?.name.toLowerCase() === plan;
       const expiry = member.expiryDate || '';
@@ -87,8 +87,8 @@ export const managerMembersReadHandlers = [
   http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), ({ params }) => {
     const memberId = String(params.id);
     const seed = managerMembersMockState.paymentByMemberId[memberId] ?? [
-      { id: 'pay1', amount: 1500000, method: 'UPI', paidAt: new Date().toISOString(), status: MANAGER_MEMBERS_STATUS_VALUES.PAID as const, invoiceNumber: 'INV-001' },
-      { id: 'pay2', amount: 500000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: MANAGER_MEMBERS_STATUS_VALUES.PAID as const, invoiceNumber: 'INV-002' },
+      { id: 'pay1', amount: 1500000, method: 'UPI', paidAt: new Date().toISOString(), status: MANAGER_MEMBERS_STATUS_VALUES.PAID, invoiceNumber: 'INV-001' },
+      { id: 'pay2', amount: 500000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: MANAGER_MEMBERS_STATUS_VALUES.PAID, invoiceNumber: 'INV-002' },
     ];
     managerMembersMockState.paymentByMemberId[memberId] = [...seed];
     return HttpResponse.json({ success: true, message: 'Success', data: managerMembersMockState.paymentByMemberId[memberId] });

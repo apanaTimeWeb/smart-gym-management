@@ -4,12 +4,12 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_ATTENDANCE_UI_PAGE_HOME_URL = '/manager/attendance';
-export const MANAGER_ATTENDANCE_BACKEND_API_BASE_URL = '/manager/attendance';
-export const MANAGER_ATTENDANCE_BACKEND_API_STATS_URL = '/manager/attendance/stats';
-export const MANAGER_ATTENDANCE_BACKEND_API_HISTORY_URL = '/manager/attendance/history';
-export const MANAGER_ATTENDANCE_BACKEND_API_MEMBERS_URL = '/manager/attendance/members';
-export const MANAGER_ATTENDANCE_BACKEND_API_STAFF_URL = '/manager/attendance/staff';
+export const MANAGER_ATTENDANCE_UI_PAGE_HOME_URL = '/frontend_manager/manager_attendance';
+export const MANAGER_ATTENDANCE_BACKEND_API_BASE_URL = '/frontend_manager/manager_attendance';
+export const MANAGER_ATTENDANCE_BACKEND_API_STATS_URL = '/frontend_manager/manager_attendance/stats';
+export const MANAGER_ATTENDANCE_BACKEND_API_HISTORY_URL = '/frontend_manager/manager_attendance/history';
+export const MANAGER_ATTENDANCE_BACKEND_API_MEMBERS_URL = '/frontend_manager/manager_attendance/members';
+export const MANAGER_ATTENDANCE_BACKEND_API_STAFF_URL = '/frontend_manager/manager_attendance/staff';
 
 export const MANAGER_ATTENDANCE_URLS = {
   UI: {

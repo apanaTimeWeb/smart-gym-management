@@ -37,5 +37,6 @@ export function useManagerPtMutations() {
     assignmentSaving: createAssignmentMutation.isPending,
     handleMarkSession: async (assignmentId: string) => { const key = sessionKeysRef.current.get(assignmentId) ?? createManagerIdempotencyKey(); sessionKeysRef.current.set(assignmentId, key); const response = await markSessionMutation.mutateAsync({ assignmentId, idempotencyKey: key }); sessionKeysRef.current.delete(assignmentId); return response; },
     sessionSaving: markSessionMutation.isPending,
+    markingId: markSessionMutation.isPending ? markSessionMutation.variables?.assignmentId : null,
   };
 }

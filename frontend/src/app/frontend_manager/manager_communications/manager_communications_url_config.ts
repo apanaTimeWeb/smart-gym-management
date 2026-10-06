@@ -4,17 +4,17 @@
  * @dependencies Only module routing/API contract consumers; no business logic.
  * @edge-case Dynamic resource paths preserve the supplied identifier/query string exactly.
  */
-export const MANAGER_COMMUNICATIONS_UI_PAGE_HOME_URL = '/manager/communications';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_BASE_URL = '/manager/communications';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_CAMPAIGNS_URL = '/manager/communications/campaigns';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_KPIS_URL = '/manager/communications/kpis';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_SEGMENT_URL = (segment: string) => `/manager/communications/segments/${segment}`;
-export const MANAGER_COMMUNICATIONS_BACKEND_API_AUTOMATIONS_URL = '/manager/communications/automations';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_AUTOMATION_URL = (id: string) => `/manager/communications/automations/${id}`;
-export const MANAGER_COMMUNICATIONS_BACKEND_API_CHURNED_MEMBERS_URL = '/manager/communications/churned-members';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_CHURN_KPIS_URL = '/manager/communications/churn-kpis';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_WIN_BACK_URL = '/manager/communications/win-back';
-export const MANAGER_COMMUNICATIONS_BACKEND_API_STATS_URL = '/manager/communications/stats';
+export const MANAGER_COMMUNICATIONS_UI_PAGE_HOME_URL = '/frontend_manager/manager_communications';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_BASE_URL = '/frontend_manager/manager_communications';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_CAMPAIGNS_URL = '/frontend_manager/manager_communications/campaigns';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_KPIS_URL = '/frontend_manager/manager_communications/kpis';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_SEGMENT_URL = (segment: string) => `/frontend_manager/manager_communications/segments/${segment}`;
+export const MANAGER_COMMUNICATIONS_BACKEND_API_AUTOMATIONS_URL = '/frontend_manager/manager_communications/automations';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_AUTOMATION_URL = (id: string) => `/frontend_manager/manager_communications/automations/${id}`;
+export const MANAGER_COMMUNICATIONS_BACKEND_API_CHURNED_MEMBERS_URL = '/frontend_manager/manager_communications/churned-members';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_CHURN_KPIS_URL = '/frontend_manager/manager_communications/churn-kpis';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_WIN_BACK_URL = '/frontend_manager/manager_communications/win-back';
+export const MANAGER_COMMUNICATIONS_BACKEND_API_STATS_URL = '/frontend_manager/manager_communications/stats';
 export const MANAGER_COMMUNICATIONS_INTEGRATIONS_WHATSAPP_WEB_BASE_URL = 'https://wa.me';
 
 export const MANAGER_COMMUNICATIONS_URLS = {
