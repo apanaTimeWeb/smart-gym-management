@@ -1,0 +1,44 @@
+{
+  "superadmin_global_audit": {
+    "module": {
+      "name": "superadmin_global_audit",
+      "namespace": "superadmin_global_audit"
+    },
+    "ui": {
+      "failed_to_load_view_f0191174": "लोड करने में विफल देखें",
+      "an_unexpected_error_occurred_while_rendering_1a97607b": "An unexpected error occurred while rendering this module. कृपया फिर से प्रयास करें या contact support if यह issue persists.",
+      "try_again_d876a9fe": "फिर से प्रयास करें",
+      "global_audit_logs_could_not_be_loaded_a4731105": "वैश्विक audit logs could not be loaded.",
+      "retry_6327b4e5": "पुनः प्रयास करें",
+      "global_audit_logs_84dfccdf": "वैश्विक Audit Logs",
+      "immutable_security_ledger_for_system_wide_in_cf9942a7": "Immutable security ledger के लिए सिस्टम-wide infrastructure और बिलिंग events.",
+      "search_audit_logs_abc6cb83": "audit logs खोजें",
+      "search_by_action_actor_or_resource_0f20fc52": "by action, actor, या resource खोजें...",
+      "timestamp_a3d5de3e": "Timestamp",
+      "severity_007cc954": "Severity",
+      "action_amp_resource_7092f2db": "Action &amp; Resource",
+      "actor_origin_ip_ba2d92b2": "Actor / Origin IP",
+      "no_audit_logs_match_your_search_738cf1b6": "No audit logs match your खोज.",
+      "refreshing_3c7a1d2e": "रीफ्रेश हो रहा है...",
+      "refresh_5b2e9d1c": "रीफ्रेश",
+      "exporting_6cf5a1d2": "निर्यात हो रहा है...",
+      "export_csv_0e36f4bc": "CSV निर्यात करें",
+      "global_audit_logs_unavailable_repair": "ग्लोबल ऑडिट लॉग उपलब्ध नहीं हैं।",
+      "page_not_found_title": "पेज नहीं मिला",
+      "page_not_found_message": "मांगा गया पेज उपलब्ध नहीं है या इस Superadmin क्षेत्र में मौजूद नहीं है।",
+      "back_to_module": "मॉड्यूल पर वापस जाएँ"
+    },
+    "actions": {
+      "retry": "पुनः प्रयास करें",
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "close": "बंद करें",
+      "submit": "जमा करें",
+      "delete": "हटाएँ",
+      "edit": "संपादित करें",
+      "create": "बनाएँ",
+      "export": "निर्यात करें",
+      "search": "खोजें"
+    }
+  }
+}

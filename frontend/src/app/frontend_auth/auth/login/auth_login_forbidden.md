@@ -1,0 +1,21 @@
+# Forbidden Patterns for `auth/login`
+
+- No direct Auth backend calls from Login JSX.
+- No access/refresh token exposure in browser JSON, fixtures, constants, URLs, or UI.
+- No `document.cookie`, `localStorage`, or `sessionStorage` in Login components.
+- No duplicate Login URL configuration.
+- No business components/global abstractions imported from sibling features or role buckets.
+- No raw colors, arbitrary Tailwind values, inline style objects, or semantic background opacity modifiers.
+- No hardcoded Login UI copy in production JSX; use module-local `next-intl` translations.
+- No direct TanStack mutation invocation from presentation components; use `useAuthLoginMutation`.
+- No API response consumption before Zod validation.
+- No fake Save/Submit/Retry/demo interactions.
+- No fresh idempotency key for a retry of the same intent.
+- No credentials in `AuthMockPublicFixtures`; browser fixtures must remain credential-free.
+- No business test data in constants/stores/components.
+- No removal of required `data-testid` attributes.
+- No unguarded animations/transitions.
+- No server-only environment access from Login Client Components.
+- No technical/raw error details surfaced to users.
+- No `key={index}` for dynamic Login collections.
+- No `console.log`, `@ts-ignore`, `@ts-nocheck`, or `any`.

@@ -1,0 +1,117 @@
+{
+  "coupons": {
+    "admin_coupons_empty_state": {
+      "text_6511a4c55d": "No coupons found",
+      "text_0c9ea45172": "Create your first discount coupon to get started",
+      "text_ef780dfea9": "Create Coupon"
+    },
+    "admin_coupons_kpis": {
+      "text_7d485b4ab7": "Total Coupons",
+      "text_9ca2d93313": "Active Coupons",
+      "text_fb84cffc14": "Total Redeemed",
+      "text_38070154ce": "Revenue Lost",
+      "auto_currentlyLive": "वर्तमान में सक्रिय",
+      "auto_allTime": "सभी समय",
+      "auto_toDiscounts": "डिस्काउंट पर"
+    },
+    "admin_coupons_modal": {
+      "text_70d3a544a3": "Close modal",
+      "text_0938f3dd7b": "Coupon Code",
+      "text_fd6fb2dc5e": "e.g. WELCOME20",
+      "text_55f8ebc805": "Description",
+      "text_6c1c764659": "Short description of this coupon",
+      "text_ab547ca1cd": "Discount Type",
+      "text_8dce170de2": "Value",
+      "text_56551a1daa": "e.g. 20",
+      "text_6bd88b8a35": "Min Order",
+      "text_222c927402": "Max Discount",
+      "text_0eb6dbfd2a": "0 = unlimited",
+      "text_b456dc42d2": "Usage Limit",
+      "text_f48d8391a9": "e.g. 100",
+      "text_85d7edabb6": "Assign to Gyms",
+      "text_5366942a24": "Valid From",
+      "text_a144230d85": "Valid Until",
+      "text_77dfd2135f": "रद्द करें",
+      "auto_1ef60f7612": "कूपन बनाएँ",
+      "auto_69cc82eca6": "कूपन अपडेट करें",
+      "auto_0741bc9942": "सहेजा जा रहा है...",
+      "auto_f637f1087c": "कूपन संपादित करें"
+    },
+    "admin_coupons_table": {
+      "text_45312a0aa0": "Copy coupon code",
+      "text_21be6e4ee3": "Min:",
+      "text_02c0e4a1da": "Used",
+      "text_11f5c0dfb7": "Used (Unlimited)",
+      "text_cc2be0893e": "Edit coupon",
+      "text_408815991b": "Delete coupon",
+      "auto_56f64a5e4d": "सक्रिय",
+      "auto_d4b4f4c7e6": "कूपन सक्रिय करें",
+      "auto_de2ee1a936": "कूपन निष्क्रिय करें"
+    },
+    "admin_coupons_toolbar": {
+      "text_9932ce7a96": "Search by code or description...",
+      "text_eabec7e58d": "Search coupons",
+      "text_6b308de777": "All Status",
+      "text_521f58fd09": "New Coupon",
+      "remaining_allTime": "पूरे समय",
+      "remaining_thisWeek": "इस सप्ताह",
+      "remaining_thisMonth": "इस महीने",
+      "remaining_customRange": "कस्टम सीमा"
+    },
+    "AdminCouponsConfirm": {
+      "deleteTitle": "कूपन हटाएँ",
+      "deleteMessage": "यह कूपन स्थायी रूप से हट जाएगा। यह कार्रवाई पूर्ववत नहीं की जा सकती।",
+      "deleteConfirm": "हटाएँ"
+    },
+    "AdminAuditRepair": {
+      "today": "आज"
+    },
+    "AdminCouponsCatalog": {
+      "type": {
+        "percentage": "प्रतिशत (%)",
+        "flat": "स्थिर राशि"
+      },
+      "status": {
+        "all": "सभी स्थिति",
+        "active": "सक्रिय",
+        "inactive": "निष्क्रिय",
+        "expired": "समाप्त"
+      },
+      "gyms": {
+        "all": "सभी जिम",
+        "andheriEast": "अंधेरी ईस्ट",
+        "bandraWest": "बांद्रा वेस्ट",
+        "powai": "पवई",
+        "thane": "ठाणे"
+      },
+      "table": {
+        "code": "कोड",
+        "typeValue": "प्रकार / मान",
+        "assignedGyms": "असाइन किए गए जिम",
+        "usage": "उपयोग",
+        "validUntil": "मान्य तिथि",
+        "status": "स्थिति",
+        "actions": "क्रियाएँ"
+      },
+      "off": "छूट"
+    },
+    "validation": {
+      "codeMin": "कोड कम से कम 3 अक्षरों का होना चाहिए।",
+      "codeMax": "कोड अधिकतम 20 अक्षरों का होना चाहिए।",
+      "descriptionRequired": "विवरण आवश्यक है।",
+      "positiveNumber": "सकारात्मक संख्या दर्ज करें।",
+      "nonNegativeNumber": "0 या उससे बड़ी संख्या दर्ज करें।",
+      "usageMin": "उपयोग सीमा कम से कम 1 होनी चाहिए।",
+      "gymsRequired": "कम से कम एक जिम असाइन करें।",
+      "startRequired": "आरंभ तिथि आवश्यक है।",
+      "endRequired": "समाप्ति तिथि आवश्यक है।"
+    },
+    "AdminCouponsModal": {
+      "text_zeroPlaceholder": "0"
+    }
+  },
+  "admin_coupons_table": {
+    "auto_editCoupon": "कूपन {code} संपादित करें",
+    "auto_couponUsage": "कूपन {code} उपयोग"
+  }
+}

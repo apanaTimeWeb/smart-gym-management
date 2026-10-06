@@ -1,0 +1,66 @@
+{
+  "attendance": {
+    "admin_attendance_main": {
+      "text_480de365cc": "View-only mode — Manual check-in is managed by Branch Managers.",
+      "text_9f5cd8a2e8": "फिर से प्रयास करें",
+      "text_28a8490d8e": "Attendance Records"
+    },
+    "admin_attendance_toolbar": {
+      "text_9ecaf04b35": "Search by member name or phone...",
+      "text_617d2d01c3": "Search attendance records",
+      "text_24345a1437": "Today",
+      "text_6b308de777": "All Status",
+      "text_0bf51d9a45": "All Branches"
+    },
+    "admin_attendance_trend_chart": {
+      "text_a70e43d730": "Weekly Attendance Trend",
+      "text_7be3443a0f": "Daily check-in count for the current week",
+      "series_checkIns": "चेक-इन",
+      "tooltip_checkIns": "{count} चेक-इन"
+    },
+    "AdminAttendanceError": {
+      "text_b304c3222c": "Failed to load attendance data",
+      "text_975588cab2": "An error occurred while loading the attendance module.",
+      "text_cef2fe093b": "फिर से प्रयास करें"
+    },
+    "admin_attendance_empty_state": {
+      "auto_c615f80782": "सदस्य चेक-इन शुरू करने के बाद उपस्थिति रिकॉर्ड यहाँ दिखाई देंगे।",
+      "auto_7727fbc5ff": "तारीख अवधि, स्थिति या शाखा फ़िल्टर बदलने का प्रयास करें।",
+      "auto_8da6855922": "कोई उपस्थिति रिकॉर्ड नहीं मिला",
+      "auto_78cd6b3dc7": "आपके फ़िल्टर से कोई रिकॉर्ड मेल नहीं खाता"
+    },
+    "AdminAuditRepair": {
+      "today": "आज",
+      "presentToday": "आज उपस्थित",
+      "lateArrivals": "देर से आने वाले",
+      "weeklyAverage": "साप्ताहिक औसत",
+      "allBranches": "सभी शाखाएँ",
+      "todayCheckIns": "आज के चेक-इन"
+    },
+    "metadata": {
+      "title": "उपस्थिति अवलोकन — एडमिन | Smart Gym 360",
+      "description": "उपस्थिति गतिविधि और रुझानों की समीक्षा करें।"
+    },
+    "static": {
+      "today": "आज",
+      "yesterday": "कल",
+      "this_week": "इस सप्ताह",
+      "this_month": "इस महीने",
+      "last_month": "पिछले महीने",
+      "all_status": "सभी स्थिति",
+      "present": "उपस्थित",
+      "late": "देर से",
+      "absent": "अनुपस्थित"
+    },
+    "table": {
+      "member": "सदस्य",
+      "branch": "शाखा",
+      "plan": "प्लान",
+      "trainer": "ट्रेनर",
+      "checkIn": "चेक-इन",
+      "checkOut": "चेक-आउट",
+      "duration": "अवधि",
+      "status": "स्थिति"
+    }
+  }
+}

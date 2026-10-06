@@ -32,7 +32,7 @@ export interface ApiResponse<T = unknown> {
 }
 
 
-import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { AuthUrlConfig } from '@/app/frontend_auth/auth/auth_url_config';
 import { StatusCodes } from 'http-status-codes';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
@@ -114,7 +114,9 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
   // answer it. The local hardcoded mock_data is only a last-resort fallback for
   // requests that no handler/backend can serve (see catch/5xx branches below).
   try {
-    finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+    const isProxyApi = Object.values(AuthUrlConfig.PROXY_API).includes(path as any);
+    const url = isProxyApi ? path : `${BASE_URL}${path}`;
+    finalRes = await fetch(url, { ...rest, headers });
 
     if (finalRes.status === StatusCodes.UNAUTHORIZED && auth) {
       // Attempt to refresh the token
@@ -123,7 +125,7 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
         const { accessToken } = await refreshRes.json();
         if (accessToken) {
           headers['Authorization'] = `Bearer ${accessToken}`;
-          finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
+          finalRes = await fetch(url, { ...rest, headers });
         }
       } else {
         // In dev/demo mode (no real backend), fall back to mock data instead of logging out

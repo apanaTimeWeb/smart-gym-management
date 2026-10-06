@@ -1,0 +1,24 @@
+@media screen {
+  .adminShellRoot { min-height: 100vh; }
+}
+
+@media print {
+  :global(body) {
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+  :global([data-admin-shell-header]),
+  :global([data-admin-shell-sidebar]),
+  :global([data-admin-shell-toasts]),
+  :global([data-admin-shell-command-palette]) {
+    display: none !important;
+  }
+  :global([data-admin-shell-main]) {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  :global(*) {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}

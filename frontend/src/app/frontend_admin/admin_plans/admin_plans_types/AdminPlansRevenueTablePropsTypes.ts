@@ -1,0 +1,2 @@
+import type { PlanRevenueRecord, RevenueSortKey, RevenueSortDirection } from '@/app/frontend_admin/admin_plans/admin_plans_types/AdminPlansRevenueTypes';
+export interface AdminPlansRevenueTableProps { data: PlanRevenueRecord[]; sortKey: RevenueSortKey; sortDir: RevenueSortDirection; onSort: (key: RevenueSortKey) => void; currentPage: number; totalPages: number; totalItems: number; onPageChange: (page: number) => void; }

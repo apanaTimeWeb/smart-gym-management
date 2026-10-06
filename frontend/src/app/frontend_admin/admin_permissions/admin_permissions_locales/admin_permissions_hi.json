@@ -1,0 +1,171 @@
+{
+  "permissions": {
+    "PermissionsError": {
+      "text_06340cfc2a": "Failed to load permissions",
+      "text_cef2fe093b": "फिर से प्रयास करें"
+    },
+    "admin_permissions_staff_overrides": {
+      "text_347718c2e3": "Per-Staff Overrides",
+      "text_05a1c7e503": "No custom overrides — all staff are using their role defaults.",
+      "text_fe080f8a0d": "Changes require confirmation and are applied immediately.",
+      "text_299ef4aaf3": "Reset to Defaults",
+      "text_c6c69f06e9": "Custom override",
+      "text_59b732d48e": "Backend authorization remains authoritative for privilege escalation.",
+      "auto_759b88491c": "अक्षम",
+      "auto_5037b668d6": "सक्षम",
+      "auto_5b6239be97": "सक्षम करें",
+      "auto_32447c7d34": "अक्षम करें",
+      "auto_permissionToggle": "{action} {feature} के लिए {name}"
+    },
+    "admin_permissions_matrix": {
+      "text_c2bcde8908": "Role Permission Matrix",
+      "text_62d0417cb2": "Role defaults are shown here. Staff-specific changes are managed in the override panel.",
+      "text_1785713451": "Permission",
+      "text_babe3050e2": "Manager",
+      "text_63deca910c": "Trainer",
+      "text_1db62ec5e7": "Receptionist",
+      "auto_620ad07fd6": "अक्षम",
+      "auto_abfb1a2940": "सक्षम"
+    },
+    "admin_permissions_role_card": {
+      "text_de04fa0e29": "of",
+      "text_4a93eb442a": "permissions enabled",
+      "text_3ea3f9802a": "enabled"
+    },
+    "admin_permissions_toolbar": {
+      "text_b22d435d78": "Permission role filter",
+      "text_c9c81e99d9": "All Roles",
+      "text_efceb97cfb": "Search staff name or ID"
+    },
+    "AdminPermissionsConfirm": {
+      "changeTitle": "अनुमति बदलें",
+      "changeMessage": "{staffName} के लिए {permission} बदलें? यह तुरंत लागू होगा।",
+      "changeConfirm": "पुष्टि करें",
+      "resetTitle": "अनुमतियाँ रीसेट करें",
+      "resetMessage": "{staffName} की अनुमतियों को {role} डिफ़ॉल्ट पर रीसेट करें? सभी कस्टम ओवरराइड हट जाएँगे।",
+      "resetConfirm": "रीसेट करें"
+    },
+    "admin_permissions_empty_state": {
+      "title": "कोई अनुमति कॉन्फ़िगर नहीं है",
+      "description": "बैकएंड ने इस मॉड्यूल के लिए कोई अनुमति परिभाषा नहीं लौटाई है।"
+    },
+    "AdminPermissionsCatalog": {
+      "members": {
+        "view": {
+          "label": "सदस्य देखें",
+          "description": "View member profiles and member lists."
+        },
+        "create": {
+          "label": "सदस्य बनाएँ",
+          "description": "Create new member records."
+        },
+        "edit": {
+          "label": "सदस्य संपादित करें",
+          "description": "Edit member records."
+        },
+        "delete": {
+          "label": "सदस्य हटाएँ",
+          "description": "Delete member records."
+        }
+      },
+      "finance": {
+        "view": {
+          "label": "वित्त देखें",
+          "description": "View financial information."
+        },
+        "collect": {
+          "label": "भुगतान एकत्र करें",
+          "description": "Collect member payments."
+        },
+        "expenses": {
+          "label": "खर्च प्रबंधित करें",
+          "description": "Create and manage expenses."
+        },
+        "refunds": {
+          "label": "रिफंड जारी करें",
+          "description": "Issue financial refunds."
+        }
+      },
+      "hr": {
+        "view": {
+          "label": "एचआर देखें",
+          "description": "View staff and HR records."
+        },
+        "manage": {
+          "label": "स्टाफ प्रबंधित करें",
+          "description": "Manage staff records."
+        },
+        "payroll": {
+          "label": "पेरोल प्रबंधित करें",
+          "description": "Manage payroll workflows."
+        }
+      },
+      "attendance": {
+        "view": {
+          "label": "उपस्थिति देखें",
+          "description": "View attendance records."
+        },
+        "mark": {
+          "label": "उपस्थिति दर्ज करें",
+          "description": "Mark member attendance."
+        }
+      },
+      "reports": {
+        "view": {
+          "label": "रिपोर्ट देखें",
+          "description": "View reports."
+        },
+        "export": {
+          "label": "रिपोर्ट निर्यात करें",
+          "description": "Export reports."
+        }
+      },
+      "settings": {
+        "view": {
+          "label": "सेटिंग्स देखें",
+          "description": "View application settings."
+        },
+        "edit": {
+          "label": "सेटिंग्स संपादित करें",
+          "description": "Edit application settings."
+        }
+      },
+      "store": {
+        "view": {
+          "label": "स्टोर देखें",
+          "description": "View store data."
+        },
+        "manage": {
+          "label": "स्टोर प्रबंधित करें",
+          "description": "Manage store data."
+        }
+      },
+      "roles": {
+        "manager": {
+          "label": "प्रबंधक",
+          "description": "परिचालन ब्रांच प्रबंधन।"
+        },
+        "trainer": {
+          "label": "ट्रेनर",
+          "description": "प्रशिक्षण और उपस्थिति वर्कफ़्लो।"
+        },
+        "receptionist": {
+          "label": "रिसेप्शनिस्ट",
+          "description": "फ्रंट-डेस्क और सदस्य सहायता।"
+        }
+      },
+      "groups": {
+        "members": "सदस्य",
+        "finance": "वित्त",
+        "hr": "एचआर",
+        "attendance": "उपस्थिति",
+        "reports": "रिपोर्ट",
+        "settings": "सेटिंग्स",
+        "store": "स्टोर"
+      }
+    }
+  },
+  "admin_permissions_role_card": {
+    "auto_permissionsEnabled": "{role} अनुमतियाँ सक्रिय"
+  }
+}

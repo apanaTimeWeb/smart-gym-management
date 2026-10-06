@@ -1,0 +1,83 @@
+{
+  "branches": {
+    "admin_branches_card": {
+      "text_6a5638d4a1": "Failed to load branches",
+      "text_36f1f2dde6": "Please refresh the page or try again later.",
+      "text_9f5cd8a2e8": "फिर से प्रयास करें",
+      "text_35cf82f9d2": "Revenue",
+      "text_badd385121": "View details",
+      "text_8d437dbf95": "Expenses",
+      "text_fcfac3efb6": "Students",
+      "text_a4730a22cf": "Staff",
+      "text_d789a1e992": "ID:"
+    },
+    "admin_branches_detail_drawer": {
+      "text_cf7fcd62b8": "Close branch details",
+      "text_c43f7b7c3a": "Unable to load branch details",
+      "text_9f5cd8a2e8": "फिर से प्रयास करें",
+      "auto_c531903b50": "कृपया फिर प्रयास करें।"
+    },
+    "admin_branches_empty_state": {
+      "text_ca43a19c5d": "No branches found",
+      "text_62a18fb502": "Try a different search or status filter to view another branch.",
+      "text_412226715c": "Clear filters"
+    },
+    "admin_branches_header_selector": {
+      "text_fcf716ea9b": "Select branch"
+    },
+    "admin_branches_toolbar": {
+      "text_b6d6b08977": "Branch Analytics",
+      "text_377d867c5c": "Read-only • Click any metric to see details",
+      "text_ab2f8364dc": "Search branches",
+      "text_a51f2fb3bd": "Search branches...",
+      "text_1f1f8bfdd5": "Filter branch status",
+      "text_9cb29e734a": "All Statuses",
+      "text_a1c4a4c55b": "Select date range",
+      "text_119c12c518": "Select range",
+      "text_c4d63e4c56": "From:",
+      "text_7e7fbc8110": "To:"
+    },
+    "AdminBranchesError": {
+      "text_1647b9db6c": "पहुँच अस्वीकृत",
+      "text_1879a51e18": "You don&apos;t have permission to view this page.",
+      "text_cdac261089": "डैशबोर्ड पर लौटें",
+      "text_8d886c0ba6": "कुछ गलत हो गया",
+      "text_f10af425f9": "Please retry. If the issue continues, contact support.",
+      "text_042c862e44": "फिर से प्रयास करें"
+    },
+    "admin_branches_detail_loading": {
+      "text_loading_branch_details": "ब्रांच विवरण लोड हो रहा है।"
+    },
+    "admin_branches_detail_content": {
+      "auto_bdbd7c154c": "कोई छात्र रिकॉर्ड नहीं मिला।",
+      "auto_5ebf3ca704": "कोई स्टाफ रिकॉर्ड नहीं मिला।",
+      "auto_9fe77cb956": "कोई व्यय रिकॉर्ड नहीं मिला।",
+      "auto_71b0df7a57": "कोई राजस्व रिकॉर्ड नहीं मिला।"
+    },
+    "AdminAuditRepair": {
+      "allBranchesAggregate": "सभी शाखाएँ (समग्र)"
+    },
+    "metadata": {
+      "title": "शाखाएँ | एडमिन | GymSmart",
+      "description": "सभी जिम स्थानों का अवलोकन।"
+    },
+    "static": {
+      "this_week": "इस सप्ताह",
+      "this_month": "इस महीने",
+      "this_year": "इस वर्ष",
+      "custom_range": "कस्टम अवधि",
+      "all_statuses": "सभी स्थिति",
+      "active": "सक्रिय",
+      "inactive": "निष्क्रिय",
+      "revenue_breakdown": "राजस्व विवरण",
+      "expense_breakdown": "व्यय विवरण",
+      "staff_list": "स्टाफ सूची",
+      "students": "छात्र",
+      "on_leave": "छुट्टी पर",
+      "expired": "समाप्त"
+    },
+    "AdminBranchesDetailContent": {
+      "text_joined": "जुड़ा"
+    }
+  }
+}

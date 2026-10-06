@@ -4,7 +4,7 @@ Please follow these strict architectural rules:
 
 1. **Micro-Modularization, Feature-Based Sub-folders & File Size Ceilings (Crucial)**: 
 Break down all large or mixed files. Every **React component file** MUST contain one primary React component. Non-component files MAY contain multiple closely related declarations when they represent one cohesive responsibility, such as an API service for one entity family, a schema family, or a constants set. **CRITICAL:** Do not dump all these micro-files into a single flat directory. Group them logically into cohesive sub-folders within the module. 
-**IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name (e.g., use `[moduleName]_components/`, `[moduleName]_context/`, `[moduleName]_utils/` instead of generic names like `components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/Header/`).
+**IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name exactly once (e.g., use `[moduleName]_components/`, `[moduleName]_store/`, `[moduleName]_api/` instead of generic names like `components/`). Do NOT double-prefix folders (e.g., if the module is `superadmin_analytics`, the folder MUST be `superadmin_analytics_components/`, NOT `superadmin_analytics_analytics_components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/[role]_[module]_table/`).
 **File Size Ceiling:** React Component: hard maximum 300 lines. If a component's JSX grows beyond that, extract sub-sections into their own child component files inside the same feature folder to force real component-level granularity.
 
 ### Extended File Size Ceilings
@@ -14,9 +14,14 @@ The component size limit alone is insufficient. AI agents also lose context in l
 - React Component (`.tsx`): maximum 300 lines
 - Custom Hook (`use*.ts`): maximum 150 lines
 - Utility / formatter file: maximum 120 lines
-- Zustand Store (`*.store.ts`): maximum 180 lines
-- Zod Schema / type file (`*.types.ts`, `*.schema.ts`): maximum 200 lines
-- API service file (`*.api.ts`): maximum 200 lines
+- Zustand Store (`use*Store.ts`): maximum 180 lines
+- Zod Schema / type file (`*Schema.ts`, `*Types.ts`): maximum 200 lines
+- API service file (`*Api.ts`): maximum 200 lines
+
+### Child Component Size Rule
+If a component contains more than **3 major visual sections**, it MUST be split.
+- ✅ **GOOD:** `AdminMembersMain` split into `AdminMembersHeader`, `AdminMembersFilters`, `AdminMembersKpis`, `AdminMembersTable` (separate components).
+- ❌ **BAD:** A 250-line monster file containing the entire page layout.
 
 If a file exceeds its limit:
 - Split by feature responsibility, not randomly by line count.
@@ -34,13 +39,13 @@ This includes:
 
 - Components
 - Hooks
-- Contexts
-- Module-scoped state
+- Module-scoped Zustand state
 - API clients
 - Types
 - Schemas
 - Constants
-- Feature-specific utilities
+- Utilities
+- Feature-specific formatters
 - Tests
 - Mock fixtures
 - MSW handlers
@@ -131,7 +136,7 @@ This hierarchy applies to EVERY frontend project regardless of business domain.
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate frontend folders from backend folders. 
 - **The Rule:** EVERY top-level frontend role container or domain folder MUST be prefixed with `frontend_`.
 - **Primary Examples:** `src/app/frontend_admin/`, `src/app/frontend_manager/`, `src/app/frontend_superadmin/`.
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager_billing/`, there is zero ambiguity for the AI or the human developer.
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/app/frontend_manager/billing/`, it may hallucinate and write backend NestJS code inside a frontend React file. By strictly enforcing `src/app/frontend_manager/manager_billing/`, there is zero ambiguity for the AI or the human developer.
 
 Examples of ROLE CONTAINERS:
 
@@ -151,11 +156,16 @@ src/app/frontend_manager/manager_attendance/
 src/app/frontend_superadmin/superadmin_plans/
 src/app/frontend_superadmin/superadmin_reports/
 src/app/frontend_superadmin/superadmin_gyms/
-src/app/frontend_settings/settings_profile/
-src/app/frontend_analytics/
+src/app/frontend_admin/admin_settings/
+  └── admin_settings_profile/
+src/app/frontend_superadmin/superadmin_analytics/
 ```
 
 The exact names will differ by project, but the `frontend_` prefix is non-negotiable for root containers.
+
+### 1E. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
+
+Never double-prefix feature names or folders. If a module is named `superadmin_analytics`, its child folders must be named `superadmin_analytics_components` or `superadmin_analytics_api`, NEVER `superadmin_analytics_analytics_components` or `superadmin_analytics_superadmin_analytics_api`. Double-prefixing breaks readability and violates the naming contract.
 
 IMPORTANT:
 
@@ -189,6 +199,91 @@ The normal repair context is:
 
 ---
 
+## 1D. CANONICAL FILESYSTEM AND NEXT.JS ROUTING RULE — MANDATORY
+
+The frontend MUST have exactly ONE canonical representation of each feature.
+
+The canonical hierarchy is:
+
+APPLICATION
+└── ROLE CONTAINER
+    └── FEATURE MODULE
+        ├── page.tsx / layout.tsx / loading.tsx / error.tsx where required
+        ├── [moduleName]_components/
+        ├── [moduleName]_hooks/
+        ├── [moduleName]_api/
+        ├── [moduleName]_types/
+        ├── [moduleName]_schemas/
+        ├── [moduleName]_constants/
+        ├── [moduleName]_store/
+        ├── [moduleName]_utils/
+        ├── [moduleName]_tests/
+        ├── [moduleName]_mocks/
+        ├── [moduleName]_locales/
+        ├── [moduleName]_features.md
+        ├── [moduleName]_forbidden.md
+        ├── [moduleName]_theme_contract.md
+        ├── [moduleName]_url_config.ts
+        └── ... etc
+
+Example:
+
+src/app/frontend_superadmin/
+└── superadmin_dashboard/
+
+There MUST NOT simultaneously exist:
+
+src/app/frontend_superadmin/dashboard/
+AND
+src/app/frontend_superadmin/superadmin_dashboard/
+
+for the same business feature.
+
+No parallel route tree, duplicate route tree, mirror directory, compatibility copy,
+or second implementation of the same feature is permitted.
+
+### NEXT.JS ROUTING
+
+Next.js route files MUST be physically owned by the corresponding feature module.
+
+A feature's `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, dynamic route
+segments, and route-specific layout MUST NOT be duplicated outside that feature module.
+
+If clean public URLs require Next.js route groups, use a route-group structure that
+preserves feature ownership without creating a second business implementation.
+
+Route groups are routing infrastructure only and MUST contain no duplicated business
+components, hooks, APIs, schemas, stores, fixtures, handlers, or feature logic.
+
+### SINGLE SOURCE OF TRUTH
+
+For every business feature:
+
+FEATURE MODULE = SINGLE SOURCE OF TRUTH
+
+Any route representation is only a routing entry point and MUST delegate to the
+canonical feature module. It MUST NOT duplicate feature implementation.
+
+AI MUST detect and remove duplicate representations before delivery.
+
+### DUPLICATE FEATURE STRUCTURE CHECK
+
+Before final packaging, mechanically verify:
+
+1. Every feature has exactly one canonical feature module.
+2. No unprefixed sibling directory represents the same feature.
+3. No route directory duplicates a prefixed feature directory.
+4. No duplicate page/component implementation exists for the same feature.
+5. No duplicate API/hooks/store/schema/constants/fixtures/handlers exist outside
+   the owning feature module.
+6. The final ZIP contains exactly one role container:
+   `frontend_[role]/`
+7. The final ZIP contains exactly one canonical module for each business feature.
+
+If any duplicate representation exists:
+STATUS = INCOMPLETE
+Do not package or deliver the ZIP.
+
 ### Feature Module Self-Containment Requirement
 
 Every feature module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that feature.
@@ -196,22 +291,21 @@ Every feature module MUST own all business-specific artifacts required to unders
 Where applicable, the feature module MUST contain:
 
 ```text
-[feature]/
-├── [feature]_components/
-├── [feature]_hooks/
-├── [feature]_store/
-├── [feature]_context/
-├── [feature]_api/
-├── [feature]_types/
-├── [feature]_schemas/
-├── [feature]_constants/
-├── [feature]_utils/
-├── [feature]_mocks/
-├── [feature]_tests/
-├── [feature]_features.md
-├── [feature]_forbidden.md
-├── [feature]_theme_contract.md
-└── [feature]_url_config.ts
+[moduleName]/
+├── [moduleName]_components/
+├── [moduleName]_hooks/
+├── [moduleName]_store/
+├── [moduleName]_api/
+├── [moduleName]_types/
+├── [moduleName]_schemas/
+├── [moduleName]_constants/
+├── [moduleName]_utils/
+├── [moduleName]_mocks/
+├── [moduleName]_tests/
+├── [moduleName]_features.md
+├── [moduleName]_forbidden.md
+├── [moduleName]_theme_contract.md
+└── [moduleName]_url_config.ts
 ```
 
 Only folders that are actually required by the feature need to exist.
@@ -395,7 +489,26 @@ FEATURE PORTABILITY
 
 not minimum source-code duplication.
 
----
+### FEATURE-LOCAL SINGLE SOURCE OF TRUTH
+
+The phrase "single source of truth" applies **ONLY within the owning feature module**.
+
+Allowed:
+```text
+admin_members/
+└── AdminMembersConstants.ts
+
+admin_billing/
+└── AdminBillingConstants.ts
+```
+Both modules may contain similar or even identical business constants. Cross-feature consolidation is NOT required.
+
+AI agents MUST NOT create shared business registries, shared business constants, shared business schemas, shared business hooks, or shared business utilities merely because similar data exists elsewhere.
+
+- **Within a feature:** one authoritative source
+- **Across features:** duplication is allowed and preferred when it improves isolation
+
+
 
 ### Canonical Definition
 
@@ -424,18 +537,79 @@ To completely eliminate the risk of cross-role AI hallucinations, there is no un
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
 - **Role + Module Name Prefixing (CRITICAL):** EVERY single file name (not just the containing folder) MUST begin with the parent Role name (e.g., `Manager`, `Admin`) followed by the Module name as a prefix. This applies to EVERYTHING: components, hooks, api services, stores, schemas, constants, and utilities. 
   - ❌ **BAD:** `useMembers.ts`, `members.api.ts`, `members.store.ts`, `MembersTable.tsx`
-  - ✅ **GOOD:** `useManagerMembers.ts`, `manager-members.api.ts`, `manager-members.store.ts`, `ManagerMembersTable.tsx`
-  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `admin-members.api.ts` and `manager-members.api.ts`.
-- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `_locales/{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
+  - ✅ **GOOD:** `useManagerMembers.ts`, `ManagerMembersApi.ts`, `useManagerMembersStore.ts`, `ManagerMembersTable.tsx`
+  This strict 1-to-1 symmetry with the backend guarantees that an AI will never hallucinate between `AdminMembersTable` and `ManagerMembersTable`, or `AdminMembersApi.ts` and `ManagerMembersApi.ts`.
+- **Framework-reserved filenames are exempt from the module-prefix naming rule.** This includes `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and other filenames mandated by Next.js/framework conventions. Standardized tooling-managed locale filenames under `[moduleName]_locales/[moduleName]_{lang}.json` are also an explicit exception. All non-reserved module-owned files MUST use the Role + Module prefix.
 - Test files are also module-owned files and MUST follow Role + Module prefixing, while retaining the source artifact's semantic basename. Example: `ManagerMembersTable.test.tsx`, `useManagerMembersTable.test.ts`.
 - **Export Name Matching:** The primary React component, class, or primary exported callable inside the file MUST exactly match the filename (minus extension).
 - **No Abbreviations**: Never use `Btn`, `Nav`, `Utils`. Use `Button`, `Navigation`, `Utilities`.
 - **Strict Suffixing**: Component names must end with their exact UI structural type (e.g., `...Modal.tsx`, `...Table.tsx`, `...Form.tsx`).
 - **Prop Naming**: Do not export generic `Props` or `Data` interfaces. Always prefix them (e.g., `export interface ManagerInquiriesTableProps`).
 
+### Canonical File Naming Matrix
+
+To eliminate AI naming hallucinations, strictly follow this pattern:
+
+
+- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `admin_members_filters/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `AdminMembers/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
+- **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`)
+- **Business Logic Files (Constants, Schemas, QueryKeys, API, Types):** PascalCase with Role+Module (e.g., `AdminMembersConstants.ts`, `AdminMembersSchema.ts`, `AdminMembersQueryKeys.ts`, `AdminMembersCrudApi.ts`, `AdminMembersTypes.ts`).
+- **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
+- **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
+- **Special Config/Doc Files:** snake_case with role and module (e.g., `admin_members_url_config.ts`, `admin_members_features.md`, `admin_members_forbidden.md`, `admin_members_theme_contract.md`)
+
+### Locale File Naming Convention (GAP-1 Fix)
+Locale files MUST follow: `[moduleName]_{lang}.json`
+(e.g., `admin_members_en.json`, `admin_members_hi.json`)
+The `[moduleName]_locales/` folder MUST contain ONLY locale files.
+Locale files are grouped by module, NOT by language.
+Do NOT create `src/locales/en/` global folders.
+
+### URL Config Contract (GAP-2 Fix)
+Every feature module MUST have exactly one `[moduleName]_url_config.ts` which MUST export:
+1. All API endpoint URL strings as named constants (UPPER_SNAKE_CASE).
+2. A typed MODULE_URLS object grouping all endpoints.
+3. NO hardcoded base URLs — only paths relative to API base.
+4. NO business logic — only URL string definitions.
+
+Example export shape:
+```typescript
+export const ADMIN_MEMBERS_URLS = {
+  LIST:   '/api/v1/admin/members',
+  DETAIL: (id: string) => `/api/v1/admin/members/${id}`,
+  CREATE: '/api/v1/admin/members',
+} as const;
+```
+
+### `[moduleName]_features.md` Content Specification (MANDATORY — GAP-4 Fix)
+This file MUST contain ALL of:
+1. Module Purpose — exact business purpose
+2. Routes — all URL paths with their page components
+3. User Flows — numbered steps for every major user action
+4. Component Tree — rendered hierarchy
+5. API Contract Summary — all endpoints with method + URL
+6. State Map — TanStack Query vs Zustand vs local
+7. Permissions — which role can see/do what
+8. External Dependencies — non-local infrastructure imports only
+9. Known Forbidden Patterns — cross-reference to _forbidden.md
+Generic boilerplate defeats the AI-portable goal.
+
+### Child Folder Naming Contract
+
+Every child folder MUST inherit Role + Module identity.
+- ✅ **GOOD:** `admin_members_table/`, `admin_members_filters/`, `admin_members_profile/`
+- ❌ **BAD:** `table/`, `filters/`, `profile/`, `modal/`
+*Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `admin_billing_HeaderConstants.ts` inside the `/Header` folder) or a module-level `[ModuleName]SharedConstants.ts` for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingPaymentModeConstants.ts` inside the `admin_billing_constants/` folder) or a module-level constants file prefixed with the full Role+Module name (e.g., `AdminBillingConstants.ts`) for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
+
+### Constants Organization (No Barrel Files)
+Place all module-wide constants strictly inside the `[moduleName]_constants/` folder. Do not create barrel files or entry points to re-export constants. Import the specific constant file you need directly using absolute imports.
+
+### Enum Registry Rule
+Business statuses MUST originate from one constants source.
+Status literals (e.g., `'ACTIVE'`, `'PENDING'`, `'SUSPENDED'`) are completely forbidden outside of constants and schemas. This prevents the AI from scattering magic strings everywhere.
 
 ### 3B.1 Static UI Configuration vs Server/API Data
 
@@ -510,14 +684,78 @@ Because the components will be heavily micro-modularized, avoid creating a massi
 - **Zustand (module-scoped store):** For UI-only shared state within a module (active filters, selected rows, wizard progress, table column preferences, local draft state). Do NOT store API response data or loading states here — see Rule 15C for the canonical Server State vs Client State decision matrix (TanStack Query is the single source of truth for all server/async data).
 - **Local `useState`:** Only for state that is strictly private to a single component and never needs to be shared.
 
+### One Store Rule
+**Preferred:** Single primary Zustand store (e.g. `useAdminMembersStore.ts`).
+**Allowed:** Multiple stores (like `useManagerMembersTableStore.ts`, `useManagerMembersSelectionStore.ts`) ONLY when they represent genuinely independent repair boundaries for large modules. Explicit documentation is required.
+*Why:* Strict single-store rules can collide with Extreme Isolation in massive modules.
+
+### Derived Data Ownership Rule
+Derived calculations MUST have exactly one owner.
+- ✅ **Allowed:** `fullName`, `membershipStatus`, `expiryIndicator`, `kpiSummaries` centralized in one place.
+- ❌ **Forbidden:** Same derivation repeated across components, hooks, and tables.
+
+### Circular Dependency Rule
+Forbidden:
+- `A -> B -> A`
+- `Hooks -> Store -> Hooks`
+- `Components -> Components -> Parent`
+- `API -> Hook -> API`
+Every dependency chain MUST remain acyclic. AI accidentally creates loops, and this strictly bans them.
+
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
 Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
 Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentName].ts`). The actual `.tsx` file should act purely as a "View" layer that consumes the hook.
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
 
-7. **Interface & Type Isolation (The Prop Blueprint)**: 
-Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types.ts` file or folder.
-- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants.ts` or `_types.ts` file.
+### Main Component Ownership Rule
+Every feature module MUST contain exactly one `[ModuleName]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
+*(Note: `page.tsx` in the root folder is just a minimal Next.js wrapper that imports and renders `[ModuleName]Main.tsx`).*
+- **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
+*Why:* Prevents the AI from creating a monolithic "God Component".
+
+### Dependency Direction Rule
+The dependency flow within a module MUST be strictly unidirectional to prevent architectural loops:
+- ✅ **Allowed:** `Page -> Main -> Hooks -> API` OR `Page -> Main -> Store`
+- ❌ **Forbidden:** `API -> Component`, `Store -> Component`, `Component -> API` (bypassing the hook), `Schema -> Component`
+
+### NO FAKE INTERACTION RULE
+A visible user interaction MUST produce its documented downstream behavior.
+
+❌ **Forbidden:**
+- Empty `onClick` handlers
+- `console.log`-only handlers
+- TODO handlers
+- Placeholder alerts
+- Fake success messages
+- Save buttons that do not persist data
+- Apply buttons that do not affect results
+- Filters that do not affect data
+- Pagination that does not change result pages
+- Retry buttons that do not retry
+- Export buttons that do not generate output
+
+A user interaction is considered complete only when:
+```
+UI Interaction
+→ Handler
+→ State Change
+→ API / Domain Action
+→ Success or Error Feedback
+→ UI Update
+```
+A visible control without functional closure MUST be treated as a defect.
+
+7. **Interface & Type Isolation (The Prop Blueprint)**:
+Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types/` folder.
+- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants/` or `_types/` folder.
+
+#### SCHEMA ORGANIZATION (NO BARREL FILES)
+Place all schema files strictly inside the `[moduleName]_schemas/` folder. Do not create barrel files or single entry points to re-export them. Import the specific schema you need directly using absolute imports.
+
+Separate schemas where responsibility requires them. Examples:
+- `AdminMembersCreateSchema.ts`
+- `AdminMembersUpdateSchema.ts`
+- `AdminMembersSearchSchema.ts`
 
 ### TypeScript Strictness and Runtime Contract Validation
 
@@ -544,12 +782,18 @@ Recommended structure:
 ```text
 [moduleName]_types/
   ManagerMembersApiGenerated.ts
-  [moduleName].schema.ts
-  [moduleName].types.ts
+  [ModuleName]Schema.ts
+  [ModuleName]Types.ts
 ```
 
 8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
 Respect the Next.js App Router architecture. `page.tsx` and `layout.tsx` MUST remain Server Components unless a documented framework exception exists.
+
+### Route Ownership Rule
+One route = One `page.tsx`.
+`page.tsx` owns ONLY rendering, server prefetch, and layout assembly.
+- ❌ **Forbidden in page.tsx:** Business calculations, validation, API orchestration.
+
 For data-driven interactive modules using TanStack Query + MSW, prefer the module API client/query layer as the canonical data access path.
 Server-side prefetching/hydration MAY be used when explicitly implemented. When the backend is unavailable, server-side prefetch/hydration MUST either be disabled for that feature or use an explicitly documented server-compatible mock transport. Browser MSW remains the standard frontend/client test transport. The module API contract and query key MUST remain identical in either path.
 Do not create separate server-only and client-only data contracts for the same feature.
@@ -573,6 +817,49 @@ If initial server data is passed into a Client Component:
 - Document the query key.
 - Hydrate/cache it through the approved server-state library.
 - Avoid maintaining an unrelated duplicate local state copy.
+
+### Query Key Registry Rule
+Every feature module MUST contain a dedicated registry for TanStack query keys located strictly inside the `[moduleName]_constants/` or `[moduleName]_api/` folder (e.g., `AdminMembersQueryKeys.ts`):
+```typescript
+export const ADMIN_MEMBERS_QUERY_KEYS = {
+  all: ['admin_members'] as const,
+  lists: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'list'] as const,
+  list: (filters: Record<string, unknown>) => [...ADMIN_MEMBERS_QUERY_KEYS.lists(), filters] as const,
+  details: () => [...ADMIN_MEMBERS_QUERY_KEYS.all, 'detail'] as const,
+  detail: (id: string) => [...ADMIN_MEMBERS_QUERY_KEYS.details(), id] as const,
+};
+```
+*Why:* Prevents the AI from inventing random, uncoordinated query keys like `['members']`, `['member']`, or `['member-list']`. This factory pattern also allows surgical invalidation.
+
+#### RESOURCE IDENTITY PRESERVATION RULE
+Whenever data belongs to a specific resource, query keys MUST include the resource identity.
+
+❌ **Forbidden:**
+- `['member']`
+- `['profile']`
+- `['gym']`
+
+✅ **Required:**
+- `['admin_members', 'detail', memberId]`
+- `['manager_attendance', 'profile', memberId]`
+- `['superadmin_gyms', 'detail', gymId]`
+
+Two different resources MUST NOT share the same cache entry.
+
+Resource identity must remain consistent across:
+```
+Route
+→ Selected Resource
+→ Query Key
+→ Request Parameter
+→ API Response
+→ Rendered UI
+```
+A route representing Resource A MUST NOT display cached data from Resource B. Failure to preserve resource identity is a **CRITICAL architectural violation**.
+
+### Mutation Hook Rule
+Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateAdminMember.ts`, `useUpdateAdminMember.ts`, `useDeleteAdminMember.ts`).
+Components MUST NEVER call TanStack mutations directly or mix mutation logic inside JSX.
 
 9. **Leverage Next.js Native Features & Typed Error Boundaries**: 
 Ensure that the module properly utilizes Next.js native routing features for a great user experience.
@@ -613,11 +900,73 @@ Error fallback hierarchy:
 - **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
-Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/gyms/gyms_context/GymsContext`).
+Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_context/SuperadminGymsContext`).
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
+
+### CANONICAL `[moduleName]_url_config.ts` TEMPLATE (GAP-18 Fix)
+
+Every `[moduleName]_url_config.ts` MUST follow this exact shape. AI agents MUST generate this file for every module — no improvisation allowed.
+
+```typescript
+// [moduleName]_url_config.ts
+// Owned by: [role]/[module] feature module
+// DO NOT import this file from outside this module boundary.
+
+// ─── Internal Navigation Routes ────────────────────────────────────────────
+// These are the Next.js page routes owned by this module.
+export const [MODULE_NAME]_ROUTES = {
+  /** Root list / index page */
+  root: '/[role]/[module]' as const,
+  /** Dynamic detail page — usage: `[MODULE_NAME]_ROUTES.detail(memberId)` */
+  detail: (id: string) => `/[role]/[module]/${id}` as const,
+  /** Create/add page (if applicable) */
+  create: '/[role]/[module]/add' as const,
+} as const;
+
+// ─── External API Endpoints ─────────────────────────────────────────────────
+// These are the backend API endpoint paths consumed by this module.
+export const [MODULE_NAME]_API = {
+  /** GET  /api/v1/[role]/[module]  — paginated list */
+  list: '/api/v1/[role]/[module]' as const,
+  /** POST /api/v1/[role]/[module]  — create */
+  create: '/api/v1/[role]/[module]' as const,
+  /** GET  /api/v1/[role]/[module]/:id  — single record */
+  detail: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+  /** PATCH /api/v1/[role]/[module]/:id  — update */
+  update: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+  /** DELETE /api/v1/[role]/[module]/:id  — delete */
+  delete: (id: string) => `/api/v1/[role]/[module]/${id}` as const,
+} as const;
+```
+
+**Rules:**
+- Replace `[MODULE_NAME]`, `[role]`, `[module]` with the actual values.
+- Add/remove endpoint entries to match the actual backend contract.
+- All string literals MUST use `as const` for type safety.
+- Dynamic segments use a function form (e.g., `detail: (id: string) => ...`).
+- AI MUST NOT hardcode these strings directly in API client files.
+
+#### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
+All files (Constants, Schemas, QueryKeys, API, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
+DO NOT place facade files or entry-point files in the root of the feature module folder. 
+
+**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
+
+For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). This keeps the root directory entirely clean.
+
+
+
+#### NO API FACADES (NO BARREL FILES)
+Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
+
+Internally, the module MUST organize implementation into specific files when required. Examples:
+- `AdminMembersCrudApi.ts`
+- `AdminMembersExportApi.ts`
+- `AdminMembersPaymentApi.ts`
+
 
 12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
@@ -636,7 +985,7 @@ Billing invoice filter is broken
 
 Preferred AI context:
 
-/billing/
+/admin_billing/
 ```
 
 NOT:
@@ -807,7 +1156,7 @@ The expected normal result is:
 
 ```text
 Changed files:
-[feature]/**
+[moduleName]/**
 ```
 
 with only documented application-infrastructure changes allowed as exceptions.
@@ -825,7 +1174,9 @@ Once the entire refactor is complete, generate or update a `[moduleName]_feature
 Handles gyms operations, UI display, and logic isolation.
 
 ## Feature Inventory
-| Core UI | /gyms | Main module view | TBD | Frontend Team |
+| Feature Name | Route Path | Description      | API Endpoint | Status        |
+|--------------|------------|------------------|--------------|---------------|
+| Core UI      | /gyms      | Main module view | TBD          | Frontend Team |
 
 ## Edge Cases / AI Warnings
 - Do not bypass API interceptors.
@@ -835,22 +1186,24 @@ Handles gyms operations, UI display, and logic isolation.
 ✅ **GOOD (what this rule mandates — gives full context to any AI or human):**
 ```
 ## Module Purpose
-The Gyms module is the master tenant registry for the GymSmart SaaS platform. Superadmins
+The Gyms module is the master tenant registry for the Smart Gym Management SaaS platform. Superadmins
 use it to onboard new gym branches, view all active/suspended tenants, manage their
 subscription tier, and drill into per-gym usage metrics. It is the entry point for all
-tenant lifecycle operations (create → activate → suspend → delete).
+tenant lifecycle operations (create → activate → suspend).
 
 ## Feature Inventory
-| Gym List        | /frontend_superadmin/gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | GET /frontend_superadmin/gyms?page&limit&search&status | ✅ Live |
-| Add Gym         | /frontend_superadmin/gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | POST /frontend_superadmin/gyms                         | ✅ Live |
-| Gym Detail      | /frontend_superadmin/gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | GET /frontend_superadmin/gyms/:id                      | ✅ Live |
-| Suspend/Restore | /frontend_superadmin/gyms (inline) | Toggle gym active status — requires double-confirm modal                             | PATCH /frontend_superadmin/gyms/:id/status             | ✅ Live |
+| Feature         | Route                                         | What the User Can Do                                                                 | Key Components                   | Main API Calls                                       | Status  |
+|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------|------------------------------------------------------|---------|
+| Gym List        | /frontend_superadmin/superadmin_gyms          | Paginated table of all tenants with status badges, search, and filter by plan/status | `SuperadminGymsTable.tsx`        | GET /api/v1/superadmin/gyms?page&limit&search&status&planId | ✅ Live |
+| Add Gym         | /frontend_superadmin/superadmin_gyms/add      | Multi-step onboarding form: gym details → owner account → plan selection → confirm   | `SuperadminGymsAddWizard.tsx`    | POST /api/v1/superadmin/gyms                         | ✅ Live |
+| Gym Detail      | /frontend_superadmin/superadmin_gyms/[id]     | Full profile: contact info, subscription history, usage stats, staff count           | `SuperadminGymsProfile.tsx`      | GET /api/v1/superadmin/gyms/:id                      | ✅ Live |
+| Suspend/Restore | /frontend_superadmin/superadmin_gyms (inline) | Toggle gym active status — requires double-confirm modal                             | `SuperadminGymsSuspendModal.tsx` | PATCH /api/v1/superadmin/gyms/:id/status             | ✅ Live |
 
 ## Edge Cases / AI Warnings
 - Suspending a gym immediately blocks ALL users of that tenant from logging in — this is
-  irreversible until manually restored. Always use useConfirm() with a typed warning message.
+  irreversible until manually restored. Always use useConfirm() from SuperadminConfirmProvider with a typed warning message.
 - The Add Gym form is a 3-step wizard. Step 3 (plan selection) fetches live plan data from
-  GET /frontend_superadmin/plans — do NOT hardcode plan options.
+  GET /api/v1/superadmin/plans — do NOT hardcode plan options.
 - Gym IDs are UUIDs, not sequential integers. Never use array index as a key.
 - The status badge color mapping lives in SuperadminGymsConstants.ts — do not inline colors.
 ```
@@ -870,6 +1223,12 @@ Every module feature map MUST use this structure. Each section has mandatory con
 can DO in this module? (4) What is strictly OFF-LIMITS for this role in this module?
 Generic phrases like "handles X operations" are forbidden.]
 
+## Dependency Manifest
+[REQUIRED: Explicit list of the exact stack technologies used by this module. Example: TanStack Query, Zustand, React Hook Form, Zod. This allows an AI to instantly know what stack is used.]
+
+## Feature Lifecycle Contract
+[REQUIRED: Every module must define its CRUD capability: Create, Read, Update, Delete. If a lifecycle operation does not exist, it MUST be explicitly documented *why* it does not exist, to prevent AI from blindly assuming standard CRUD capability.]
+
 ## Directory Structure
 [REQUIRED: A table or bullet list of EVERY folder inside this module with a one-line
 description of its exact responsibility. Must name the actual files/components inside
@@ -877,14 +1236,14 @@ each folder, not just the folder name. Example:]
 
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `members_components/ManagerMembersTable/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableHeaders.ts` |
-| `members_components/ManagerMembersProfile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
-| `members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersApi.ts`, `manager_members_url_config.ts` |
-| `members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
-| `members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
-| `members_context/` | React Context bridging store state to deeply nested components | `ManagerMembersContext.tsx`, `ManagerMembersProvider.tsx` |
-| `members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
-| `members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
+| `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableColumns.ts` |
+| `manager_members_components/manager_members_profile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
+| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersCrudApi.ts` |
+| `manager_members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
+| `manager_members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
+| `manager_members_constants/` | Hardcoded data, dropdown options, query keys, enums | `ManagerMembersConstants.ts`, `ManagerMembersQueryKeys.ts` |
+| `manager_members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
+| `manager_members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
 
 ### Approved External Dependencies
 
@@ -940,9 +1299,9 @@ without reading every component file. Example:]
 1. User clicks "Add Member" button in `ManagerMembersMain` toolbar
 2. `ManagerMembersAddModal` opens (managed by `useManagerMembersStore.openAddModal`)
 3. User fills 3-tab form: Personal Info → Membership Plan → Payment
-4. On submit, `createMember(dto)` is called from `ManagerMembersApi.ts`
+4. On submit, `createMember(dto)` is called from `ManagerMembersCrudApi.ts`
 5. On success: reconcile/invalidate the relevant TanStack Query cache using the authoritative backend response, modal closes, toast shows backend message
-6. On error: form preserves entered data, inline error shown from `res.message`
+6. On error: form preserves entered data, inline error shown from `res.validationErrors` or `res.error`
 
 ### Flow 2: Renew Membership
 1. User clicks any member row → `ManagerMembersProfileModal` opens
@@ -953,9 +1312,8 @@ without reading every component file. Example:]
 ## Data and State Architecture
 [REQUIRED: Must name the ACTUAL store files, context files, and query keys — not "TBD".]
 
-- **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state. React Context for cross-tree bridging."]
-- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab, searchQuery, statusFilter, currentPage]
-- **Context providers:** [List actual provider files, e.g., `MembersProvider` in `ManagerMembersContext.tsx` — wraps `ManagerMembersMain`, provides store values to `ManagerMembersTable` and `ManagerMembersProfileModal`]
+- **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state."]
+- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab. (Note: searchQuery and currentPage MUST go in URL state, not Zustand)]
 - **Local-storage keys:** ["None" is a valid answer if accurate]
 - **MSW handler location:** [actual module-owned handler file]
 - **MSW fixture location:** [actual module-owned fixture file]
@@ -971,12 +1329,12 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: b
 
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/frontend_manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
-| `fetchMemberById(id)` | GET | `/frontend_manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/frontend_manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/frontend_manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/frontend_manager/members/:id` | — | `null` |
-| `renewMembership(id, dto)` | POST | `/frontend_manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
+| `fetchMembers(params)` | GET | `/api/v1/manager/members` | `{ page, limit, search, status }` | `Member[]` + `PaginationMeta` |
+| `fetchMemberById(id)` | GET | `/api/v1/manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/api/v1/manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/manager/members/:id` | — | `null` |
+| `renewMembership(id, dto)` | POST | `/api/v1/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
 
 ## UI Data Requirements
 [REQUIRED: List every table column, KPI, chart series, filter, dropdown, detail field,
@@ -986,10 +1344,10 @@ Generic entries like "All fields" are forbidden — name every column and field 
 
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
 |---|---|---|---|---|---|
-| Table: Member Name | `name` | `GET /frontend_manager/members` | `data.items[].name` | No | Yes |
-| Table: Status Badge | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
-| KPI: Total Members | `totalCount` | `GET /frontend_manager/members/stats` | `data.totalCount` | No | Yes |
-| Filter: Status | `status` | `GET /frontend_manager/members` | `data.items[].status` | No | Yes |
+| Table: Member Name | `name` | `GET /api/v1/manager/members` | `data.items[].name` | No | Yes |
+| Table: Status Badge | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
+| KPI: Total Members | `totalCount` | `GET /api/v1/manager/members/stats` | `data.totalCount` | No | Yes |
+| Filter: Status | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
 
 *(Replace the example rows above with the real field names, endpoint names, and response
 paths for this specific module. Every rendered UI element must have a row here.)*
@@ -998,7 +1356,7 @@ paths for this specific module. Every rendered UI element must have a row here.)
 [REQUIRED: Must specify the exact role, what actions are protected, and HOW they are
 protected (which hook/component/guard). Generic statements are not acceptable.]
 
-- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `gymsmart_token` cookie]
+- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `smart_gym_token` cookie]
 - **Destructive actions and their guards:** [e.g., "Delete member → `useConfirm()` from `ManagerConfirmProvider` with message 'This will permanently delete the member and all their records.'"]
 - **Sensitive data handling:** [e.g., "Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal."]
 - **Cross-role isolation:** [e.g., "Zero imports from `src/app/frontend_admin`, `src/app/frontend_trainer`, `src/app/frontend_superadmin`. Enforced in `manager_members_forbidden.md`."]
@@ -1081,7 +1439,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 75: Module-Owned MSW — feature-specific handlers live inside the owning module
 - [ ] Module-Owned Fixtures — feature-specific mock data lives inside the owning module
 - [ ] Global MSW Bootstrap Isolation — global MSW code contains infrastructure only
-- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `_features.md` is complete
+- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `[moduleName]_features.md` is complete
 - [ ] Module Self-Containment — all feature-specific business code, components, hooks, state, API clients, types, schemas, constants, utilities, tests, mocks, fixtures, handlers, and documentation are owned by this feature module
 - [ ] Feature Dependency Firewall — zero imports from sibling business features or role-level business folders
 - [ ] AI Portability — this feature can be provided independently to an AI as the default repair context
@@ -1100,9 +1458,9 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Design §29: `motion-safe:` prefix on all transitions and animations
 ```
 
-### Sub-Module `[feature]_features.md` Files
+### Sub-Module `[moduleName]_features.md` Files
 
-For large modules (5+ sub-features), each sub-folder MAY have its own `[feature]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
+For large modules (5+ sub-features), each sub-folder MAY have its own `[moduleName]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
 - A real Module Purpose (not "handles X operations")
 - A real Feature Inventory with actual API endpoints
 - A real Edge Cases section with module-specific warnings (minimum 3 items)
@@ -1112,7 +1470,7 @@ Sub-module files with only generic boilerplate content are considered **undocume
 
 ### Documentation Freshness Rule
 
-Every time a component is added, an API endpoint changes, or a new user flow is implemented, the `_features.md` for that module MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
+Every time a component is added, an API endpoint changes, or a new user flow is implemented, the `[moduleName]_features.md` for that module MUST be updated in the same commit. Stale documentation is worse than no documentation because it actively misleads future AI agents.
 
 14. **Backend-Driven UI Messages (No Hardcoded Toasts/Alerts)**: 
 Never hardcode success or error messages (e.g., "User created successfully" or "Invalid credentials") in the frontend components, hooks, or toast notifications. The frontend must strictly display the `message` string provided by the backend's standardized JSON response envelope.
@@ -1154,10 +1512,10 @@ Co-location rule (Unit & Component Tests ONLY):
 - ManagerMembersFormatting.ts → ManagerMembersFormatting.test.ts
 
 **Complete Isolation for E2E Testing (The AI Zip Principle):**
-1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `frontend_e2e/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `frontend_e2e/` MUST strictly mirror the frontend route structure (e.g., `frontend_e2e/frontend_admin_e2e/members/members.spec.ts`).
-2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `billing` test need a login helper, duplicate it directly into BOTH the `members` and `billing` test folders.
-   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `frontend_e2e/frontend_admin_e2e/members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinate.
-3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/billing/`.
+1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `playwright_E2E/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `playwright_E2E/` MUST mirror the frontend route structure, but the role container must be suffixed with `_e2e` (e.g., `playwright_E2E/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
+2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `admin_members` test and `admin_billing` test need a login helper, duplicate it directly into BOTH the `admin_members` and `admin_billing` test folders.
+   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `playwright_E2E/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinates.
+3. **No Cross-Module Imports:** A test script in `playwright_E2E/frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `playwright_E2E/frontend_manager_e2e/manager_billing/`.
 
 Minimum expectations:
 - Utilities: 90% branch coverage
@@ -1165,16 +1523,12 @@ Minimum expectations:
 - Core components: interaction tests for all user events (clicks, typing, dropdowns), loading, success, empty, error, and disabled states.
 
 **Component Testing vs Frontend E2E Philosophy (No Playwright for Components):**
-1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above.
-2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `frontend_e2e/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
+1. **Co-located Unit & Component Tests (Vitest/RTL):** MUST live directly inside the feature module folder as shown above. For internal frontend logic, you MUST use React Testing Library (RTL) + MSW to verify that:
    - Buttons trigger the correct actions and loading states.
    - Dropdowns open and select the correct values.
    - Modals appear and close correctly.
    - Component empty, error, and success states render properly.
-
-
-   - Core components: interaction tests for loading, success, empty, error, and disabled states
-- Critical journeys: Playwright E2E coverage
+2. **Frontend E2E Scope:** The frontend does not own backend/system-level E2E infrastructure. However, the frontend MUST provide isolated Playwright E2E coverage for applicable critical user journeys. These tests MUST live in the separate `playwright_E2E/` tree and follow the module-isolation rules defined above. Backend/system-level E2E orchestration may remain in the external QA pipeline.
 
 Mandatory E2E flows:
 - Login/logout/session expiry
@@ -1234,17 +1588,53 @@ are meaningless.
 
 15B. **Form Management, Validation, and Submission Architecture**:
 All non-trivial forms MUST use:
-- React Hook Form
+- React Hook Form **v7** (the project-locked version)
 - Zod
 - `@hookform/resolvers`
 
+### React Hook Form Canonical Import Pattern (GAP-17 Fix)
+
+AI agents MUST use this exact import pattern. Do NOT use v6 patterns:
+
+```typescript
+// ✅ CORRECT — React Hook Form v7 pattern
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Schema definition
+const [ModuleName]Schema = z.object({
+  fieldName: z.string().min(1, 'Required'),
+  // ... more fields
+});
+
+type [ModuleName]FormValues = z.infer<typeof [ModuleName]Schema>;
+
+// Hook usage
+const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<[ModuleName]FormValues>({
+  resolver: zodResolver([ModuleName]Schema),
+  defaultValues: { fieldName: '' },
+});
+
+// ❌ FORBIDDEN — v6 pattern (do NOT use these)
+// import { useForm } from 'react-hook-form';
+// yupResolver, joiResolver, or any non-Zod resolver
+// errors.fieldName?.message?.toString() (v6 casting pattern) — use errors.fieldName?.message directly
+```
+
+**Version-Specific Rules:**
+- Use `register()` for simple uncontrolled inputs.
+- Use `Controller` component (or `useController` hook) for custom/third-party UI components (e.g., selects, date pickers).
+- Use `formState.isSubmitting` (not a custom `loading` state) to disable the submit button during pending requests.
+- Trigger `form.setError('root', { message: ... })` for server-level errors returned from the API.
+
 Form structure:
 ```text
-[Feature]Form/
-  [Feature]Form.tsx
-  use[Feature]Form.ts
-  [Feature]Schema.ts
-  [Feature]Form.test.tsx
+[ModuleName]Form/
+  [ModuleName]Form.tsx
+  use[ModuleName]Form.ts
+  [ModuleName]Schema.ts
+  [ModuleName]Form.test.tsx
 ```
 
 Responsibilities:
@@ -1272,10 +1662,49 @@ File upload rules:
 - Show upload progress where supported.
 - Never trust client validation alone; backend validation remains mandatory.
 
+
+
 15C. **State Management Decision Matrix**:
 State must be placed according to its ownership and lifecycle.
 
-1. **Server State — TanStack Query / React Query**
+1. **Server State — TanStack Query v5** (the project-locked version — GAP-13 Fix)
+
+> **IMPORTANT:** This project uses TanStack Query **v5**. AI agents MUST NOT use v4 APIs.
+
+Key v5 API changes that AI commonly gets wrong:
+
+| v4 (FORBIDDEN) | v5 (REQUIRED) |
+|---|---|
+| `mutation.isLoading` | `mutation.isPending` |
+| `useQuery({ onSuccess, onError })` | Callbacks removed — use `useEffect` or mutate callbacks |
+| `status === 'loading'` | `status === 'pending'` |
+| `keepPreviousData: true` | `placeholderData: keepPreviousData` |
+| `cacheTime` | `gcTime` |
+| Error type `unknown` needs manual cast | Use `isError` narrowing |
+
+Canonical v5 query usage:
+```typescript
+// ✅ CORRECT — TanStack Query v5
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+const { data, isPending, isError } = useQuery({
+  queryKey: ADMIN_MEMBERS_QUERY_KEYS.list(filters),
+  queryFn: () => fetchMembers(filters),
+});
+
+const queryClient = useQueryClient();
+const { mutate, isPending: isMutating } = useMutation({
+  mutationFn: createMember,
+  onSuccess: (data) => {
+    queryClient.invalidateQueries({ queryKey: ADMIN_MEMBERS_QUERY_KEYS.all });
+    toast.success(data.message);
+  },
+  onError: (error) => {
+    toast.error(error.message);
+  },
+});
+```
+
 Use for:
 - API responses
 - Loading/error states from APIs
@@ -1287,10 +1716,11 @@ Use for:
 Rules:
 - Backend data MUST NOT be stored as the primary source of truth in Zustand or Context.
 - Every query key must be namespaced by module:
-  `['members', 'list', filters]`
-  `['members', 'detail', memberId]`
+  `['admin_members', 'list', filters]`
+  `['admin_members', 'detail', memberId]`
 - After mutations, invalidate or update the relevant query cache intentionally.
 - Do not refetch the whole application after a small mutation.
+
 
 2. **Zustand — Module-Level Shared Client State**
 Use for:
@@ -1406,8 +1836,9 @@ Every **user-browsable data table** MUST implement applicable pagination, sortin
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
 
-32. **The "No Barrel File" Rule (Avoid `index.ts`)**:
-Strictly avoid using `index.ts` or `index.js` files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies.
+32. **The "No Barrel File" Rule (Avoid `index.ts` and Re-exports)**:
+Strictly avoid using `index.ts`, `index.js`, or any other barrel/facade files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies and maintain clean tree-shaking.
+- **No Facade/Re-export Exceptions:** You MUST NOT create files like `*Export.ts` or `*Facade.ts` to consolidate exports. Direct absolute imports (`@/`) are mandatory for every file.
 
 33. **Framework-Specific Media Optimization**:
 Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit documented exceptions for third-party controlled markup, emails, SVG assets, or technically incompatible external content where standard `<img>` tags are needed.
@@ -1431,8 +1862,9 @@ Every component file must have a single-line comment at the very top declaring i
 Responsibility comments MUST describe the component's rendering/orchestration responsibility and MUST NOT imply that business/API logic belongs inside the component.
 
 39. **Explicit Data Flow Direction Comments**:
-In every Context file and custom hook, document the data flow direction at the top:
-`// DATA FLOW: API → useMembersTable.ts → MembersContext → MembersTable`
+In every Zustand store and custom hook, document the data flow direction at the top:
+`// DATA FLOW: API → useManagerMembersTable.ts → useManagerMembersStore → ManagerMembersTable`
+*(Note: As per Rule 5, React Context MUST NOT be used for feature data or state. Use Zustand).*
 
 40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
 Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module.
@@ -1468,10 +1900,10 @@ Any modified form/modal must intercept `beforeunload` to warn the user: "You hav
 Any field displaying a unique, non-sensitive identifier or tracking code may have a small copy icon next to it. **Forbidden from copying:** credentials, OTPs, reset tokens, full Aadhaar/national ID numbers, full bank account numbers, full card numbers, and any other explicitly sensitive secret. These fields must never expose a copy affordance.
 
 48. **Consistent Empty State per Entity**:
-Every list/table MUST have a dedicated empty state component (`[Module]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
+Every list/table MUST have a dedicated empty state component (`[ModuleName]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
 
 49. **Strict Import Order Convention**:
-Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/gyms/...`), Types-only.
+Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/frontend_superadmin/superadmin_gyms/...`), Types-only.
 
 50. **Prop Spreading is Forbidden (`...props` ban)**:
 Never write `<Component {...props} />`. All props must be explicitly named, except for primitive HTML wrappers.
@@ -1668,7 +2100,7 @@ evolved independently
 ```
 
 without requiring unrelated business modules.
-- `Rule 35 (magic values)` -> custom `no-restricted-syntax` / custom rule
+
 
 You MUST implement a **pre-commit hook** (`husky` + `lint-staged`) that runs `tsc --noEmit` and linters before any commit. These rules must be physically blocked by tooling to ensure extreme safety in an AI-driven codebase. Detailed test practices should reside in Rule 15A.
 
@@ -1962,7 +2394,7 @@ The MSW response MUST contain all fields that the UI actually consumes.
 
 ### Required Data Coverage Matrix
 
-Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `_features.md` — see Rule 13):
+Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `[moduleName]_features.md` — see Rule 13):
 
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
 |---|---|---|---|---|---|
@@ -2095,7 +2527,7 @@ When the real backend endpoint becomes available:
 - The UI MUST continue consuming the same API contract.
 - The feature API client MUST remain the same unless the backend contract legitimately changes.
 - Components MUST NOT require a rewrite merely because mocked responses are replaced by real responses.
-- Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `_features.md` documentation, and tests in the same change.
+- Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `[moduleName]_features.md` documentation, and tests in the same change.
 
 Backend integration does NOT require moving module-owned mocks or handlers into a global mock folder.
 
@@ -2114,7 +2546,7 @@ Module-owned handlers and fixtures remain available for development, tests, erro
 ### AI Verification Requirement
 
 Before declaring a frontend feature complete, the AI MUST verify:
-1. Every displayed data field has a documented source (in `## UI Data Requirements` of `_features.md`).
+1. Every displayed data field has a documented source (in `## UI Data Requirements` of `[moduleName]_features.md`).
 2. Every source exists in the response type/schema.
 3. Every required response field is returned by the MSW handler.
 4. Every MSW field is consumed correctly by the UI where applicable.
@@ -2194,7 +2626,7 @@ Never render completely blank table cells or profile field values when an API re
 - **Why:** A blank cell is visually indistinguishable from a broken render or a missing API field. An en-dash is an explicit, intentional signal to the user that the data does not exist. This is especially critical in financial tables, member profiles, and audit logs where a blank value could be misread as a data integrity issue.
 - ❌ **BAD:** `<td>{member.trainerName}</td>` — renders nothing if `null`
 - ✅ **GOOD:** `<td>{displayValue(member.trainerName)}</td>` — renders `—` explicitly
-- **Centralize the fallback:** Define a shared utility `displayValue` in `src/lib/formatters.ts`. `displayValue()` accepts all primitive display values required by the UI, including string, number, boolean, null, and undefined, while preserving meaningful zero/false values.
+- **Centralize the fallback:** Define a shared utility `displayValue` in `src/lib/formatters.ts`. `displayValue()` accepts all primitive display values required by the UI, including string, number, boolean, null, and undefined, while preserving meaningful zero/false values. *(Note: `displayValue()` contains zero business logic and qualifies as approved global infrastructure under Rule 63. It is the only formatter permitted in `src/lib/`. All other formatters must remain feature-local per Rule 80).*
 
 79. **Unsaved Changes Guard (Data Loss Prevention)**:
 Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to prevent accidental data loss. Rule 79 supersedes Rule 46 for scope; Rule 46 defines only the browser `beforeunload` mechanism.
@@ -2262,8 +2694,8 @@ This rule is the authoritative web frontend rule for Idempotency-Key generation 
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
 - **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using `git mv`).
-- ❌ **BAD:** File is `UserComponent.tsx`, imported as `import UserComponent from './userComponent'`.
-- ✅ **GOOD:** File is `UserComponent.tsx`, imported as `import UserComponent from '@/components/UserComponent'`.
+- ❌ **BAD:** File is `Button.tsx`, imported as `import Button from './button'`.
+- ✅ **GOOD:** File is `Button.tsx`, imported as `import Button from '@/components/ui/Button'`.
 
 ---
 *INTERNAL INSTRUCTION: Think step-by-step and create a detailed internal implementation plan. Do NOT stop for user review. Execute it perfectly without breaking existing data flows.*
@@ -2275,13 +2707,13 @@ EVERY frontend API client function that performs a mutation MUST require an `ide
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MEMBER_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
+import { MANAGER_MEMBERS_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
 export const updateMemberProfile = async (
   id: string,
   body: unknown,
   idempotencyKey: string,
-) => apiFetch(MEMBER_URLS.PROFILE(id), {
+) => apiFetch(MANAGER_MEMBERS_URLS.PROFILE(id), {
   method: 'PATCH',
   body: JSON.stringify(body),
   headers: {
@@ -2290,7 +2722,7 @@ export const updateMemberProfile = async (
 });
 ```
 
-## Rule 15 — WebSockets & Real-Time Communication
+## Extended Rule 15 — WebSocket Centralization
 * **The Rule:** WebSockets must never be instantiated directly via `new WebSocket()` or `io()` inside UI components. 
 * **Implementation:** Always use a centralized `WebSocketContext` or `SocketProvider` to manage connection lifecycles (connect, disconnect, reconnect). Feature modules must consume WebSockets via dedicated custom hooks (e.g., `useSocketEvent('NOTIFICATION_RECEIVED', callback)`). This guarantees that event listeners are correctly cleaned up on component unmount and avoids memory leaks.
 
@@ -2312,51 +2744,51 @@ The frontend uses `next-intl` (Next.js) with **co-located locale files inside ea
 
 ### Stack
 - **Library:** `next-intl` (Next.js) or `react-i18next` (plain React/Vite)
-- **Base language:** English (`en.json`) — written by AI agent when creating the module
+- **Base language:** English (`[moduleName]_en.json`) — written by AI agent when creating the module
 - **Other languages:** Written by the AI agent in the same commit
 - **Runtime cost:** Zero — all files are static JSON, bundled at build time
 
 ### Module-Level File Structure
-Each feature module owns its own `_locales/` folder:
+Each feature module owns its own `[moduleName]_locales/` folder:
 ```text
 src/app/
   frontend_admin/
     admin_members/
-      _locales/
-        en.json   ← AI writes this when creating the module
-        hi.json   ← AI translates this in the same commit
+      [moduleName]_locales/
+        admin_members_en.json   ← AI writes this when creating the module
+        admin_members_hi.json   ← AI translates this in the same commit
       admin_members_components/
       admin_members_hooks/
   frontend_superadmin/
-    superadmin_tenants/
-      _locales/
-        en.json
-        hi.json
-      superadmin_tenants_components/
-      superadmin_tenants_hooks/
+    superadmin_gyms/
+      [moduleName]_locales/
+        superadmin_gyms_en.json
+        superadmin_gyms_hi.json
+      superadmin_gyms_components/
+      superadmin_gyms_hooks/
 scripts/
   merge-locales.ts   ← Merges all _locales into one bundle at build time
 ```
 
-### `_locales/en.json` (Source of Truth per Module)
+### `[moduleName]_locales/[moduleName]_en.json` (Source of Truth per Module)
 ```json
 {
-  "MEMBERS": {
-    "PAGE_TITLE": "Members",
-    "ADD_MEMBER": "Add Member",
-    "EMPTY_STATE": "No members found. Add your first member to get started."
+  "SUPERADMIN_GYMS": {
+    "PAGE_TITLE": "Gyms",
+    "ADD_GYM": "Add Gym",
+    "EMPTY_STATE": "No gyms found. Add your first gym to get started."
   }
 }
 ```
 
 ### AI Agent Translation Rule
 When writing a new feature module, the AI MUST:
-1. Create `_locales/en.json` with all English UI strings used in the module.
+1. Create `[moduleName]_locales/[moduleName]_en.json` with all English UI strings used in the module.
 2. In the **same commit**, create locale files for all currently active languages defined in the "Currently Active Languages" section, using its own translation capability.
 3. Translations must be **contextually correct** for a Gym Management SaaS.
 
 ```json
-// _locales/hi.json — AI writes this, context-aware
+// [moduleName]_locales/[moduleName]_hi.json — AI writes this, context-aware
 {
   "MEMBERS": {
     "PAGE_TITLE": "सदस्य",
@@ -2371,7 +2803,7 @@ Always use the `t()` function — **never** hardcode English strings in JSX:
 ```tsx
 import { useTranslations } from 'next-intl';
 
-export const MembersPage = () => {
+export const ManagerMembersPage = () => {
   const t = useTranslations('MEMBERS');
   // ❌ BAD: <h1>Members</h1>
   // ✅ GOOD:
@@ -2385,7 +2817,7 @@ export const MembersPage = () => {
 ```
 
 ### `scripts/merge-locales.ts` (Build-Time Merge Script)
-Merges all module `_locales/` folders into a single bundle per language. Runs automatically at build time.
+Merges all module `[moduleName]_locales/` folders into a single bundle per language. Runs automatically at build time.
 
 ```typescript
 // scripts/merge-locales.ts
@@ -2397,7 +2829,7 @@ import { globSync } from 'glob';
 const OUTPUT_DIR = 'public/locales';
 const merged: Record<string, Record<string, unknown>> = {};
 
-for (const file of globSync('src/app/frontend_*/**/_locales/*.json')) {
+for (const file of globSync('src/app/frontend_*/**/[moduleName]_locales/*.json')) {
   const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
   const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
   merged[lang] = { ...merged[lang], ...content };
@@ -2435,14 +2867,14 @@ export const apiFetch = async (url: string, options?: RequestInit) => {
 ```
 
 ### Developer Workflow
-1. AI writes a new feature module and creates `_locales/en.json`.
-2. AI, in the **same response**, creates all currently active target-language `_locales/{lang}.json` files.
+1. AI writes a new feature module and creates `[moduleName]_locales/[moduleName]_en.json`.
+2. AI, in the **same response**, creates all currently active target-language `[moduleName]_locales/[moduleName]_{lang}.json` files.
 3. Run `npm run i18n:merge` (or let CI/build do it automatically).
-4. Commit all `_locales/` files alongside the feature module code.
+4. Commit all `[moduleName]_locales/` files alongside the feature module code.
 5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
 
 ### Currently Active Languages
-This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
+This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `[moduleName]_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2470,7 +2902,7 @@ When a planned language becomes officially active, every affected module MUST ad
 
 > **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
 
-> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `_locales/en.json` AND all currently active target-language files (e.g., `_locales/hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `[moduleName]_locales/[moduleName]_en.json` AND all currently active target-language files (e.g., `[moduleName]_locales/[moduleName]_hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
@@ -2484,7 +2916,7 @@ The backend sends all monetary amounts as **integers in the smallest currency un
 
 ### Canonical Formatting Utility
 Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
-``````typescript
+```typescript
 // admin_billing_utils/adminBillingFormatCurrency.ts (co-located inside the feature module)
 /**
  * Formats a monetary amount from its smallest unit to a locale-aware display string.
@@ -2513,7 +2945,7 @@ export const adminBillingFormatCurrency = (
 // adminBillingFormatCurrency(9999, 'USD', 'en-US')  →  '$99.99'
 // adminBillingFormatCurrency(9999, 'EUR', 'nl-NL')  →  '€99,99'
 // adminBillingFormatCurrency(100,  'JPY', 'ja-JP')  →  '¥100'
-``````
+```
 
 ### Rules
 - ❌ Never do `amount / 100` inline in JSX.
@@ -2521,7 +2953,7 @@ export const adminBillingFormatCurrency = (
 - ❌ Never store the formatted string in state or TanStack Query cache — store the raw integer.
 - ✅ Always derive the locale from the active i18n locale (`useLocale()` from `next-intl`).
 
-``````tsx
+```tsx
 // ❌ BAD
 <Text>₹{plan.amount / 100}</Text>
 
@@ -2529,7 +2961,7 @@ export const adminBillingFormatCurrency = (
 import { useLocale } from 'next-intl';
 const locale = useLocale();
 <Text>{adminBillingFormatCurrency(plan.amount, plan.currency, locale)}</Text>
-``````
+```
 
 > **AI AGENT NOTE:** Every time you display a monetary amount, use the module-local `[module]FormatCurrency()` utility (e.g., `adminBillingFormatCurrency()`). The raw integer from the API must never be rendered directly in JSX. The locale MUST come from the active i18n context — never hardcode `'en-IN'`. No currency symbol may appear as a literal string anywhere in JSX.
 
@@ -2550,7 +2982,7 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
 3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
    *"Export started. You will receive an email with a secure download link within a few minutes."*
 4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
-5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
+5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `EXPORT.DATA.COMPLETED`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
 
 > **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
 
@@ -2562,12 +2994,26 @@ If the user's browser tab is closed or loses internet connection when a WebSocke
 
 ### The Rule
 The WEB application MUST implement a hybrid notification architecture:
-1. **Real-time:** Listen to WebSocket events (e.g., `notification.received`) and update the web UI immediately.
+1. **Real-time:** Listen to WebSocket events (e.g., `NOTIFICATION.RECEIVED`) and update the web UI immediately.
 2. **Recovery:** On initial application load and after a recovered WebSocket/session connection, fetch missed notifications using the exact endpoint defined by the supplied feature API contract. The AI MUST NOT invent or shorten the notification endpoint.
 
    Canonical project pattern: `GET /api/v1/{role}/notifications`
 
    Do not depend exclusively on WebSocket delivery for critical notifications.
+
+### No Duplicate Responsibility Rule
+Each responsibility MUST have exactly one owner to kill hallucination vectors:
+- Search State -> Store
+- Validation -> Schema
+- API Calls -> API File
+- Formatting -> Utility File
+Forbidden: having the same responsibility duplicated in multiple places.
+
+### Entry Point Discovery Rule
+An AI MUST be able to discover the module architecture within 60 seconds by reading exactly two files:
+1. `admin_members_features.md`
+2. `admin_members_components/AdminMembersMain.tsx`
+If this is not possible, the module FAILS the portability and architecture review.
 
 
 ## AI Introspection & Agentic Compatibility Rules
@@ -2575,10 +3021,323 @@ The WEB application MUST implement a hybrid notification architecture:
 ### Rule 22 — AI-Testable UI (Mandatory data-testid)
 * **The Problem:** When an AI agent writes or executes E2E tests (using Playwright, Cypress, or Puppeteer), it cannot "see" the UI like a human. If semantic IDs are missing, the AI will fail to interact with the page.
 * **The Rule:** Every single interactive element (Buttons, Inputs, Dropdowns, Links, Checkboxes) and critical state indicator (Status Badges, Error Messages) MUST have a strictly formatted `data-testid` attribute.
-* **Format:** `data-testid="[module]-[component]-[action/state]"`. Example: `data-testid="members-addform-submit"` or `data-testid="billing-invoice-status-paid"`.
+* **Format:** `data-testid="[moduleName]-[component]-[action/state]"`. Example: `data-testid="admin_members-addform-submit"` or `data-testid="admin_billing-invoice-status-paid"`.
 * **Why:** This makes the entire UI programmatically introspectable for autonomous AI testing and Web-Browsing Agents.
 
 ### Rule 23 — Component-Level AI Docstrings (JSDoc)
-* **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
+* **The Problem:** The `[moduleName]_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
 * **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`
+
+---
+
+## APPROVED FRONTEND NPM PACKAGE REGISTRY (GAP-21 Fix)
+
+The following are the ONLY approved npm packages for feature modules. AI agents MUST NOT introduce packages outside this list without explicit documented approval.
+
+| Concern | Approved Package | Version Lock | FORBIDDEN Alternatives |
+|---|---|---|---|
+| Framework | `next` | 15.x | CRA, Remix, Vite standalone |
+| UI State | `zustand` | 5.x | Redux, MobX, Jotai, Recoil |
+| Server State | `@tanstack/react-query` | 5.x | SWR, Apollo Client |
+| Forms | `react-hook-form` | 7.x | Formik, Final Form |
+| Form Validation | `zod` | 3.x | Yup, Joi |
+| Form Resolver | `@hookform/resolvers` | 3.x | — |
+| Icons | `lucide-react` | latest | heroicons, react-icons mixed use |
+| Toast | `sonner` | latest | react-hot-toast, react-toastify |
+| HTTP Client | Global `apiFetch` (wrapping `fetch`) | — | axios, ky (in feature modules) |
+| Charts | `react-apexcharts` | 1.x | victory, nivo, chart.js, recharts |
+| Date Utilities | `date-fns` | 3.x | moment, dayjs |
+| Routing Progress | `nextjs-toploader` | latest | — |
+| i18n | `next-intl` | latest | i18next, react-i18next |
+| Theme | `next-themes` | latest | — |
+
+**Rules:**
+- Introducing a package NOT in this list requires: (a) adding it to this registry, (b) documenting the justification in the feature's `_features.md`, and (c) explicit human developer approval.
+- Never use two packages from the "FORBIDDEN Alternatives" column for the same concern.
+- Do NOT install and use two different HTTP clients; all feature API calls go through the global `apiFetch` at `@/lib/api`.
+
+---
+
+## CANONICAL `globals.css` STRUCTURE TEMPLATE (GAP-24 Fix)
+
+Every project MUST have a `globals.css` (or equivalent canonical theme stylesheet) following this exact structure. AI agents MUST generate this file if it does not exist — it is the single source of truth for all CSS variables.
+
+```css
+/* globals.css — Smart Gym 360 Design System
+ * SINGLE SOURCE OF TRUTH for all semantic theme tokens.
+ * DO NOT hardcode any of these values in component files.
+ * Structure: :root (light) → .dark (dark) → @theme inline (Tailwind mapping)
+ * ─────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+/* ── 1. LIGHT MODE (default) ──────────────────────────────── */
+:root {
+  /* Core Surface */
+  --primary: #EAB308;
+  --primary-hover: #CA8A04;
+  --primary-subtle: #FEF9C3;
+  --bg-page: #F4F4F5;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #FAFAFA;
+  --bg-header: #FFFFFF;
+  --bg-header-translucent: rgba(255, 255, 255, 0.8);
+  --bg-input: #FFFFFF;
+  --bg-floating: #FFFFFF;
+  --bg-overlay: #FAFAFA;
+  --bg-popover: #F4F4F5;
+  --surface-hover: rgba(234, 179, 8, 0.08);
+  --surface-highlight: rgba(234, 179, 8, 0.05);
+  --surface-zebra: #FAFAFA;
+  --overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --focus-ring: #A16207;
+  --border: #E4E4E7;
+  --border-focus: #A16207;
+  /* Text */
+  --text-primary: #000000;
+  --text-secondary: #52525B;
+  --text-disabled: #A1A1AA;
+  --text-on-primary: #111111;
+  --text-on-danger: #FFFFFF;
+  --text-on-warning: #111111;
+  --text-on-success: #FFFFFF;
+  --text-on-info: #FFFFFF;
+  /* Skeleton */
+  --skeleton-base: #E4E4E7;
+  --skeleton-highlight: #F4F4F5;
+  /* Status */
+  --success: #047857;
+  --warning: #F59E0B;
+  --danger: #B91C1C;
+  --info: #1D4ED8;
+  --success-text: #065F46;
+  --success-bg: #D1FAE5;
+  --warning-text: #92400E;
+  --warning-bg: #FEF3C7;
+  --danger-text: #991B1B;
+  --danger-bg: #FEE2E2;
+  --info-text: #1E40AF;
+  --info-bg: #DBEAFE;
+  --purple-text: #7E22CE;
+  --purple-bg: #EDE9FE;
+  /* Pay */
+  --pay-cash-text: #0F766E;
+  --pay-cash-bg: #CCFBF1;
+  --pay-upi-text: #0E7490;
+  --pay-upi-bg: #CFFAFE;
+  --pay-card-text: #334155;
+  --pay-card-bg: #F1F5F9;
+  --pay-bank-text: #0369A1;
+  --pay-bank-bg: #E0F2FE;
+  /* Chart */
+  --chart-primary: #EAB308;
+  --chart-success: #16A34A;
+  --chart-danger: #DC2626;
+  --chart-warning: #F59E0B;
+  --chart-info: #2563EB;
+  --chart-secondary: #7C3AED;
+  --chart-grid: rgba(0, 0, 0, 0.06);
+  --chart-tooltip-bg: #FFFFFF;
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-popover: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-dialog: 0 20px 60px rgba(0,0,0,0.16), 0 8px 16px rgba(0,0,0,0.08);
+  --shadow-toast: 0 8px 24px rgba(0,0,0,0.12);
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+  /* Layout */
+  --layout-header-height: 64px;
+  --layout-sidebar-width: 240px;
+  --layout-sidebar-width-collapsed: 60px;
+  --layout-content-padding: 24px;
+  --control-height: 40px;
+  --touch-target-min: 44px;
+  --table-row-height: 48px;
+  --table-row-height-compact: 32px;
+  --modal-width: 480px;
+  --drawer-width: 480px;
+}
+
+/* ── 2. DARK MODE ──────────────────────────────────────────── */
+.dark {
+  --primary: #FACC15;
+  --primary-hover: #EAB308;
+  --primary-subtle: rgba(250, 204, 21, 0.15);
+  --bg-page: #050505;
+  --bg-card: #111111;
+  --bg-sidebar: #050505;
+  --bg-header: #111111;
+  --bg-header-translucent: rgba(17, 17, 17, 0.8);
+  --bg-input: #1A1A1A;
+  --bg-floating: #1A1A1A;
+  --bg-overlay: #242424;
+  --bg-popover: #2E2E2E;
+  --surface-hover: rgba(250, 204, 21, 0.08);
+  --surface-highlight: rgba(250, 204, 21, 0.05);
+  --surface-zebra: #141414;
+  --focus-ring: #FACC15;
+  --border: #27272A;
+  --border-focus: #FACC15;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-disabled: #52525B;
+  --text-on-primary: #111111;
+  --skeleton-base: #111111;
+  --skeleton-highlight: #1A1A1A;
+  --success: #15803D;
+  --success-text: #4ADE80;
+  --success-bg: #064E3B;
+  --warning-text: #FBBF24;
+  --warning-bg: #451A03;
+  --danger: #B91C1C;
+  --danger-text: #F87171;
+  --danger-bg: #450A0A;
+  --info-text: #60A5FA;
+  --info-bg: #172554;
+  --purple-text: #D8B4FE;
+  --purple-bg: #3B0764;
+  --pay-cash-text: #5EEAD4;
+  --pay-cash-bg: #134E4A;
+  --pay-upi-text: #67E8F9;
+  --pay-upi-bg: #164E63;
+  --pay-card-text: #CBD5E1;
+  --pay-card-bg: #1E293B;
+  --pay-bank-text: #7DD3FC;
+  --pay-bank-bg: #0C4A6E;
+  --chart-primary: #FACC15;
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-tooltip-bg: #111111;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-popover: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-dialog: 0 20px 60px rgba(0,0,0,0.6);
+  --shadow-toast: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* ── 3. TAILWIND TOKEN MAPPING (@theme inline) ─────────────── */
+/* Maps all CSS variables to Tailwind utility class names      */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-subtle: var(--primary-subtle);
+  --color-page: var(--bg-page);
+  --color-card: var(--bg-card);
+  --color-sidebar: var(--bg-sidebar);
+  --color-header: var(--bg-header);
+  --color-header-translucent: var(--bg-header-translucent);
+  --color-input: var(--bg-input);
+  --color-floating: var(--bg-floating);
+  --color-overlay: var(--bg-overlay);
+  --color-popover: var(--bg-popover);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-zebra: var(--surface-zebra);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-disabled: var(--text-disabled);
+  --color-on-primary: var(--text-on-primary);
+  --color-on-danger: var(--text-on-danger);
+  --color-on-warning: var(--text-on-warning);
+  --color-on-success: var(--text-on-success);
+  --color-on-info: var(--text-on-info);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-text: var(--warning-text);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-text: var(--danger-text);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-text: var(--info-text);
+  --color-purple-text: var(--purple-text);
+  --color-purple-bg: var(--purple-bg);
+  --color-pay-cash-text: var(--pay-cash-text);
+  --color-pay-cash-bg: var(--pay-cash-bg);
+  --color-pay-upi-text: var(--pay-upi-text);
+  --color-pay-upi-bg: var(--pay-upi-bg);
+  --color-pay-card-text: var(--pay-card-text);
+  --color-pay-card-bg: var(--pay-card-bg);
+  --color-pay-bank-text: var(--pay-bank-text);
+  --color-pay-bank-bg: var(--pay-bank-bg);
+  --color-skeleton-base: var(--skeleton-base);
+  --color-skeleton-highlight: var(--skeleton-highlight);
+  --color-border: var(--border);
+  --color-border-focus: var(--border-focus);
+  --color-focus-ring: var(--focus-ring);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-success: var(--chart-success);
+  --color-chart-danger: var(--chart-danger);
+  --color-chart-warning: var(--chart-warning);
+  --color-chart-info: var(--chart-info);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-dialog: var(--shadow-dialog);
+  --shadow-toast: var(--shadow-toast);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --animate-duration-fast: 150ms;
+  --animate-duration-base: 200ms;
+  --animate-duration-slow: 300ms;
+  --animate-duration-xslow: 500ms;
+}
+
+/* ── 4. REDUCED MOTION GLOBAL OVERRIDE ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 5. PREMIUM SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-disabled); }
+```
+
+> **AI AGENT NOTE (GAP-24):** When creating a new frontend project or a new role module, check for `globals.css` first. If it is missing or incomplete, regenerate it using this template before writing any component code. The Tailwind classes like `bg-card`, `text-primary`, etc. will NOT work without this mapping.
+
+---
+
+## FRONTEND DELIVERY FREEZE GATE (GAP-20 Fix)
+
+Before delivering any frontend module ZIP, the AI MUST run this gate. If ANY item fails, the ZIP MUST NOT be delivered — it must be repaired first.
+
+```text
+FRONTEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
+
+[ ] 1. No CRITICAL findings remain open (broken user flow, wrong resource identity, data integrity issue)
+[ ] 2. No MAJOR architecture violations remain (wrong state ownership, forbidden cross-module imports, naming violations)
+[ ] 3. globals.css / tailwind.config.ts token mapping verified — all semantic tokens produce working Tailwind classes
+[ ] 4. No hardcoded colors, hex values, or arbitrary CSS var brackets in ANY JSX file
+[ ] 5. No forbidden opacity modifiers (bg-success/10, bg-danger/5) in ANY JSX file
+[ ] 6. All `[moduleName]_url_config.ts` files present and contain real endpoint values (not placeholders)
+[ ] 7. All `[moduleName]_features.md` files are non-generic (no "TBD", "Core UI", "Do not bypass API interceptors" filler)
+[ ] 8. TanStack Query v5 APIs used (no mutation.isLoading, no onSuccess/onError in useQuery)
+[ ] 9. React Hook Form v7 APIs used (zodResolver, no Yup/Joi resolvers)
+[ ] 10. No barrel files (no index.ts re-exports) in any module
+[ ] 11. Changed-file list produced — only files within the target module are changed (or approved infrastructure exceptions documented)
+[ ] 12. Multi-tenancy is enforced if applicable — gymId/branchId come from auth context, not client input
+[ ] 13. All loading/empty/error states implemented (no blank screens, no generic spinners for full-page loads)
+[ ] 14. CHANGELOG inside ZIP is specific and accurate (maps each fix to the original audit finding)
+
+If ANY box is unchecked: STATUS = BLOCKED_DELIVERY — do not deliver the ZIP.
+```
+
+

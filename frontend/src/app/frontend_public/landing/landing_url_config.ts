@@ -2,8 +2,8 @@
 export const PublicLandingUrlConfig = {
   PAGES: {
     LANDING: '/landing',
-    ERP_LOGIN: '/auth/login',
-    SAAS_LOGIN: '/superadmin/dashboard',
+    ERP_LOGIN: '/frontend_auth/auth/login',
+    SAAS_LOGIN: '/frontend_auth/auth/login',
   },
   ANCHORS: {
     HOME: '#home',

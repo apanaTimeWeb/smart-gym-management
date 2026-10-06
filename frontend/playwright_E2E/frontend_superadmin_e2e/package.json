@@ -1,0 +1,13 @@
+{
+  "name": "frontend-superadmin-playwright-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test -c playwright.config.ts",
+    "test:headed": "playwright test -c playwright.config.ts --headed",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

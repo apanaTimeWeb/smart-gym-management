@@ -2,11 +2,11 @@
 // Used by middleware.ts to protect authenticated pages and redirect unauthenticated users.
 // All page navigation in the app must use these constants — never hardcode route strings.
 export const ROUTES = {
-  LOGIN: '/auth/login',
+  LOGIN: '/frontend_auth/auth/login',
   ADMIN_DASHBOARD: '/admin/dashboard',
   MANAGER_DASHBOARD: '/manager/dashboard',
   TRAINER_DASHBOARD: '/trainer/dashboard',
-  SUPERADMIN_DASHBOARD: '/superadmin/dashboard',
+  SUPERADMIN_DASHBOARD: '/frontend_superadmin/superadmin_dashboard',
   ADMIN_PREFIXES: [
     '/admin/dashboard',
     '/admin/members',

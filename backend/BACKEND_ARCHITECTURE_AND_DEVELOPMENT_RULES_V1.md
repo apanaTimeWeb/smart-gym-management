@@ -82,7 +82,7 @@ The backend strictly follows a 3-tier hierarchy:
 
 ```text
 APPLICATION
-  └── DOMAIN / ROLE CONTAINER (e.g. backend_admin)
+  └── DOMAIN / ROLE CONTAINER (e.g. backend-admin)
         └── FEATURE MODULE
               └── SUB-FEATURE / USE CASE
 ```
@@ -93,14 +93,42 @@ APPLICATION
 ### 0D. BACKEND NAMESPACE PREFIXING (MANDATORY)
 
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate backend folders from frontend folders. 
-- **The Rule:** EVERY top-level backend role container or domain folder MUST be prefixed with `backend_`.
-- **Primary Examples:** `backend_admin/`, `backend_manager/`, `backend_superadmin/`.
+- **The Rule:** EVERY top-level backend role container or domain folder MUST be prefixed with `backend-`.
+- **Primary Examples:** `backend-admin/`, `backend-manager/`, `backend-superadmin/`.
 - **E2E / Selenium Testing Folders:** If tests are grouped in a separate root directory, the test root AND the role subfolders inside it MUST carry the namespace to maintain context.
-  - Example E2E: `backend_e2e/backend_admin_e2e/`, `backend_e2e/backend_manager_e2e/`
-  - Example Selenium: `backend_selenium/backend_admin_selenium/`
-- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend_manager/manager_billing/` and `backend_e2e/backend_manager_e2e/`, there is zero ambiguity for the AI or the human developer.
+  - Example E2E: `backend-e2e/backend-admin-e2e/`, `backend-e2e/backend-manager-e2e/`
+  - Example Selenium: `backend-selenium/backend-admin-selenium/`
+- **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend-manager/manager-modules/manager-billing/` and `backend-e2e/backend-manager-e2e/`, there is zero ambiguity for the AI or the human developer.
 
-When fixing a bug in `backend_superadmin/superadmin_billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+When fixing a bug in `backend-superadmin/superadmin-modules/superadmin-billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+
+### 0F. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
+
+Never double-prefix feature names or folders. If a backend module is named `admin-billing`, its child **sub-folders** MUST be named using the **module name only** as prefix (e.g., `billing-controllers/`, `billing-services/`), NEVER using the full role+module (e.g., NEVER `admin-billing-controllers/`). The role prefix applies to **file names** inside those folders (e.g., `admin-billing-invoice-search.service.ts`), NOT to the folder name itself. This is the single canonical rule — there is no alternative.
+
+### 0H. CANONICAL NAMING SINGLE SOURCE OF TRUTH (GAP-14 Fix)
+
+To eliminate all ambiguity between Rule 0F and Rule 2 (file naming), the following is the definitive unified rule:
+
+| Level | Pattern | Correct Example | FORBIDDEN Example |
+|---|---|---|---|
+| Root feature module folder | `{role}-{module}/` | `admin-members/` | `members/` or `admin-admin-members/` |
+| Sub-folders inside a feature module | `{module}-{artifact}/` ONLY | `members-services/` | `admin-members-services/` |
+| Files inside those sub-folders | `{role}-{module}-{description}.{type}.ts` | `admin-members-registration.service.ts` | `members-registration.service.ts` |
+
+**The key rule in one sentence:** Folders use the MODULE name as prefix; files use the ROLE+MODULE name as prefix. Never mix them up.
+
+```text
+admin-members/                                    ← root: {role}-{module}
+├── members-services/                             ← sub-folder: {module}-{artifact}
+│   └── admin-members-registration.service.ts     ← file: {role}-{module}-{description}
+├── members-controllers/                          ← sub-folder: {module}-{artifact}
+│   └── admin-members-command.controller.ts       ← file: {role}-{module}-{description}
+└── members-dto/                                  ← sub-folder: {module}-{artifact}
+    └── admin-members-create.dto.ts               ← file: {role}-{module}-{description}
+```
+
+AI agents MUST consult this table before creating any folder or file name. Any deviation = architecture violation.
 
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
@@ -124,7 +152,7 @@ A feature repair FAILS the architecture gate when the AI:
 
 ### 0E. ISOLATED CONTEXT IMPLIES MODULAR MONOLITH, NOT MICROSERVICE (CRITICAL)
 
-When an AI is provided with a single feature module or domain folder in isolation (e.g., a developer zips only the `backend_manager` folder or provides only the `dashboard` module), the AI MUST assume the module operates within a **Modular Monolith architecture**, NOT as an independent Microservice.
+When an AI is provided with a single feature module or domain folder in isolation (e.g., a developer zips only the `backend-manager` folder or provides only the `dashboard` module), the AI MUST assume the module operates within a **Modular Monolith architecture**, NOT as an independent Microservice.
 * **The Rule:** Never attempt to bootstrap independent database connections, isolated global infrastructure (like Config or Redis setup), or framework-level root configurations within a feature module. 
 * **Framework-independent contract:** Rely on the global application monolith to provide the core infrastructure.
 * **NestJS implementation:** Feature modules should strictly rely on `.forFeature()` registrations and should bundle/export their domain-specific providers into a module so the global Monolithic App can safely consume them. Never use `.forRoot()` / `.forRootAsync()` in a feature module.
@@ -154,19 +182,183 @@ mark `FRAMEWORK_NOT_VERIFIED` rather than guessing.
 
 ---
 
-## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
+## 0G. MULTI-TENANCY CONTRACT — MANDATORY (GAP-23 Fix)
+
+This application is **multi-tenant**. Every feature module across every role MUST enforce tenant isolation at every layer.
+
+### Tenant Identity Contract
+
+| Field | Source | Description |
+|---|---|---|
+| `gymId` | JWT payload ONLY | Primary tenant identifier (the gym/organization) |
+| `branchId` | JWT payload ONLY | Sub-tenant identifier (the gym branch) |
+
+**CRITICAL RULES:**
+1. `gymId` and `branchId` MUST be extracted from the authenticated JWT payload — NEVER from the request body, URL query string, or client-supplied headers.
+2. Services MUST NOT accept `gymId`/`branchId` as input parameters from controllers — they receive them from the auth context/JWT payload resolved by the auth guard.
+3. Route parameters containing a resource ID (e.g., `/members/:memberId`) MUST be verified against the JWT tenant before returning data.
+
+### Repository Tenant Filter Rule (P0 Security Requirement)
+
+Every repository query that retrieves or modifies business data MUST include a tenant filter:
+
+```typescript
+// NestJS/TypeORM example
+await this.memberRepo.findOne({
+  where: {
+    id: memberId,
+    gymId: jwtPayload.gymId,      // MANDATORY — never omit
+    branchId: jwtPayload.branchId, // MANDATORY where applicable
+  }
+});
+```
+
+```python
+# Django ORM example
+Member.objects.filter(
+    id=member_id,
+    gym_id=request.user.gym_id,       # MANDATORY
+    branch_id=request.user.branch_id,  # MANDATORY where applicable
+)
+```
+
+**Omitting the tenant filter = P0 Security Failure.** Any query that can return or modify data across tenant boundaries is a critical vulnerability.
+
+### Response DTO Tenant Safety
+
+- Response DTOs MUST NOT expose `gymId`/`branchId` to the client unless explicitly required by the frontend contract.
+- Response DTOs MUST NOT include internal IDs or relationship references that could leak cross-tenant information.
+
+### AI Audit Checklist for Tenant Isolation
+
+Before marking any data endpoint PASS, verify ALL of the following:
+
+```text
+[ ] JWT payload extraction verified at auth guard level (not from body/query)
+[ ] gymId/branchId NEVER accepted from request body params
+[ ] Every findOne/findMany/update/delete query includes tenant filter
+[ ] Response DTOs do not leak cross-tenant identifiers
+[ ] Route param IDs (e.g., :memberId) are validated against JWT tenant
+[ ] Tests verify that Tenant A cannot access Tenant B data
+[ ] Bulk operations (where clauses) include tenant scope
+```
+
+### 0G-D. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
+
+All implementation files (Controllers, Services, DTOs, Mappers, Domain Models, Constants) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `{module}-controllers/`, `{module}-dto/`). 
+DO NOT place any of these implementation files in the root of the feature module folder. 
+
+For example, in NestJS, the ONLY `.ts` file that belongs in the root of the feature module folder is the `[role]-[module].module.ts` file itself (alongside the mandatory `.md` documentation files like `-backend-feature.md`). Everything else MUST go into sub-folders. This keeps the backend feature module root entirely clean and identical in philosophy to the frontend root folder rule.
+
+---
+
+## 0G-A. APPROVED BACKEND NPM PACKAGE REGISTRY (GAP-22 Fix)
+
+The following are the ONLY approved npm packages for backend feature modules. AI agents MUST NOT introduce packages outside this list without explicit documented approval.
+
+| Concern | Approved Package | FORBIDDEN Alternatives |
+|---|---|---|
+| Framework | `@nestjs/core`, `@nestjs/common` | Express raw, Fastify standalone |
+| ORM | `typeorm` | Prisma, Sequelize, Drizzle |
+| Database Driver | `pg` (via TypeORM config) | `mysql2`, `better-sqlite3` |
+| Validation | `class-validator`, `class-transformer` | Joi, Zod (backend), Yup |
+| Redis Client | `ioredis` | `redis` npm v4 (conflicting API surface) |
+| Queue | `bullmq` | `bull` (deprecated), `agenda`, `bee-queue` |
+| Logging | `nestjs-pino`, `pino` | Winston, `console.log` direct |
+| Config | `@nestjs/config` + Zod env schema | `dotenv` direct usage |
+| JWT | `@nestjs/jwt` | `jsonwebtoken` direct usage |
+| API Docs | `@nestjs/swagger` | none |
+| Unit Testing | `jest`, `@nestjs/testing` | mocha, vitest, jasmine |
+| E2E Testing | Python `pytest` + `httpx` | Jest E2E, Supertest |
+
+**Django equivalent packages:** `djangorestframework`, `celery`, `django-redis`, `python-jose` or `djangorestframework-simplejwt`, `pytest-django`, `httpx` for E2E.
+
+---
+
+## 0G-B. SEED FILE SPECIFICATION (GAP-15 Fix)
+
+Seed files MUST follow these rules without exception:
+
+1. **Location:** `{feature-module}/{module}-seeds/`
+2. **Naming:** `{role}-{module}-{description}.seed.ts`
+   - Example: `admin-members-default-plans.seed.ts`
+3. **Idempotency:** MANDATORY — repeated execution MUST NOT create duplicate data. Use `upsert` or explicit existence checks.
+4. **Export shape:**
+   ```typescript
+   export async function seedAdminMembersDefaultPlans(dataSource: DataSource): Promise<void>
+   ```
+5. **Scope:** ONLY seed reference/initial data required for the application to function. NEVER seed production-exclusive or demo-only data.
+6. **Transaction:** Seed operations MUST run inside a transaction for atomicity.
+
+---
+
+## 0G-C. REDIS RESPONSIBILITY DECISION TABLE (GAP-16 Fix)
+
+Before choosing a Redis mechanism, consult this table:
+
+| Scenario | Correct Redis Mechanism | FORBIDDEN Alternatives |
+|---|---|---|
+| Cache API response for 5–60 min | Redis Cache (ioredis + TTL) | Pub/Sub, Streams |
+| Background email / SMS after event | BullMQ job | Pub/Sub (not durable — subscriber must be online) |
+| Critical domain event that must not be lost | Redis Streams | Pub/Sub (ephemeral — lost if no active subscriber) |
+| Real-time dashboard metric broadcast | Redis Pub/Sub | Streams (overkill for ephemeral fan-out) |
+| Prevent double-processing a payment | Redis Distributed Lock | Streams, BullMQ |
+| Rate limiting per user / IP | Redis Cache + sliding window TTL | BullMQ |
+| Session storage / token blacklist | Redis Cache + TTL | Pub/Sub |
+
+> **CRITICAL:** Redis Pub/Sub is ephemeral. A message published when there are no active subscribers is permanently lost. NEVER use Pub/Sub for critical business events that must survive a service restart or a subscriber being temporarily offline. Use Redis Streams for durable event delivery.
+
+---
+
+
 Do not create monolithic Services, Controllers, or Views. A generic `UserService` or `MemberController` will quickly grow to 1000+ lines. When you feed a 1000-line file to an AI, token costs explode, and the AI loses focus, increasing the chance of collateral damage.
 
 **The Solution: Use-Case Driven Files**
 Break down large files into micro-features. Every file must handle only one specific business flow.
-- ❌ **BAD:** `admin-admin-members.service.ts` (Handles registration, billing, attendance, emails)
+- ❌ **BAD:** `admin-members.service.ts` (Handles registration, billing, attendance, emails — monolithic)
 - ✅ **GOOD:** 
-  - `admin-member-registration.service.ts`
-  - `admin-member-billing.service.ts`
-  - `admin-member-attendance.service.ts`
-  - `admin-member-notifications.service.ts`
+  - `admin-members-registration.service.ts`
+  - `admin-members-billing.service.ts`
+  - `admin-members-attendance.service.ts`
+  - `admin-members-notifications.service.ts`
 
-**IMPORTANT FOLDER NAMING:** Always group these micro-files logically into cohesive sub-folders within the module (e.g., `backend_manager/manager_members/manager_members_services/`, `backend_manager/manager_members/manager_members_controllers/`).
+**IMPORTANT FOLDER NAMING (CRITICAL ENFORCEMENT):** ALL folders in the backend MUST use `kebab-case` (e.g., `members-services/`, `billing-dto/`). You are STRICTLY FORBIDDEN from using PascalCase, camelCase, or snake_case for folder names (e.g., NEVER use `ManagerMembersServices/` or `admin_billing`). Always group these micro-files logically into cohesive sub-folders within the module using this casing.
+
+### Sub-Folder Naming Standard (MANDATORY — No Exceptions)
+
+Every feature module sub-folder MUST be named using the module name as prefix followed by the artifact type. The following table is the ONLY permitted naming convention:
+
+| Artifact Type | Mandatory Folder Name | ❌ Forbidden Alternatives |
+|---|---|---|
+| Services | `{module}-services/` | `service/`, `services/`, `svc/` |
+| Controllers | `{module}-controllers/` | `controller/`, `controllers/`, `ctrl/` |
+| Repositories | `{module}-repositories/` | `repo/`, `repositories/`, `data/` |
+| DTOs | `{module}-dto/` | `dto/`, `dtos/`, `DTO/`, `schemas/` |
+| Mappers | `{module}-mappers/` | `mappers/`, `mapper/`, `utils/` |
+| Domain Models | `{module}-domain/` | `domain/`, `models/`, `entities/` |
+| Types/Interfaces | `{module}-types/` | `types/`, `interfaces/`, `typings/` |
+| Constants/Enums | `{module}-constants/` | `constants/`, `enums/`, `config/` |
+| Exceptions | `{module}-exceptions/` | `exceptions/`, `errors/`, `exception/` |
+| Locales | `{module}-locales/` | `_locales/`, `locale/`, `i18n/` |
+| Jobs | `{module}-jobs/` | `jobs/`, `workers/`, `queues/` |
+| Adapters | `{module}-adapters/` | `adapters/`, `external/`, `integrations/` |
+
+> **AI AGENT NOTE:** When creating any sub-folder inside a feature module, you MUST consult this table first. Creating a folder not following `{module}-{artifact}/` pattern is an architecture violation and MUST be flagged.
+
+**Examples (role: admin, module: members):**
+```text
+admin-members/
+├── members-services/            ✅ CORRECT
+├── members-controllers/         ✅ CORRECT
+├── members-repositories/        ✅ CORRECT
+├── members-dto/                 ✅ CORRECT
+├── members-mappers/             ✅ CORRECT
+├── members-domain/              ✅ CORRECT
+├── members-types/               ✅ CORRECT
+├── members-constants/           ✅ CORRECT (module-level constants)
+├── members-exceptions/          ✅ CORRECT
+└── members-locales/             ✅ CORRECT
+```
 
 ## 2. Highly Descriptive, AI-Contextual Filenames & Module Prefixing
 Rename all controllers, services, and models to be extremely descriptive based on exactly what they do, AND they must strictly begin with the module name as a prefix.
@@ -176,39 +368,180 @@ When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantl
 * **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exception: Global configuration, constants, types, utilities, and root tooling files like `api-response.types.ts`, `database.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories such as `src/core/`, `src/infrastructure/`, or root-level tooling folders like `scripts/`.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
-  - ❌ **BAD:** `backend_superadmin/core/`, `backend_manager/modules/`, `backend_admin/config/`, `backend_trainer/utils/`
-  - ✅ **GOOD:** `backend_superadmin/superadmin_core/`, `backend_manager/manager_modules/`, `backend_admin/admin_config/`, `backend_trainer/trainer_utils/` ..etc
+  - ❌ **BAD:** `backend-superadmin/core/`, `backend-manager/modules/`, `backend-admin/config/`, `backend-trainer/utils/`
+  - ✅ **GOOD:** `backend-superadmin/superadmin-core/`, `backend-manager/manager-modules/` ..etc
+
+### Mandatory Role Container Structure (NON-OPTIONAL)
+
+Every backend role container MUST contain exactly two top-level business directories:
+
+- `{role}-core/`
+- `{role}-modules/`
+
+Direct feature placement under `backend-{role}/` is **forbidden**.
+
+❌ **FORBIDDEN — AI agents MUST flag this as Architecture Violation:**
+```text
+backend-admin/
+├── admin-core/
+├── admin-auth/        <-- VIOLATION: feature directly under backend-admin/
+├── admin-members/     <-- VIOLATION: feature directly under backend-admin/
+└── admin-billing/     <-- VIOLATION: feature directly under backend-admin/
+```
+
+✅ **REQUIRED — the ONLY compliant structure:**
+```text
+backend-admin/
+├── admin-core/
+│
+└── admin-modules/
+    ├── admin-auth/
+    ├── admin-members/
+    └── admin-billing/
+```
+
+The `{role}-modules/` folder is **NOT optional**. All business feature modules MUST be located inside `{role}-modules/`. AI agents MUST NOT place feature modules directly under `backend-{role}/`.
+
+### {role}-core/ Scope Restriction (CRITICAL)
+
+The `{role}-core/` folder is strictly a **framework infrastructure container**. It MUST NOT contain any business logic, domain services, or feature helpers.
+
+**Permitted inside `{role}-core/`:**
+- Guards (e.g., JWT auth guards, roles guards)
+- Decorators (e.g., `@Roles()`, `@CurrentUser()`)
+- Interceptors (e.g., response interceptor, logging interceptor)
+- Pipes (e.g., validation pipe wrappers)
+- Middleware (e.g., tenant resolution middleware)
+- Framework infrastructure (e.g., the role's root NestJS module file)
+
+**FORBIDDEN inside `{role}-core/` — Architecture Violation:**
+- Any business logic service (e.g., `admin-members-suspension.service.ts`)
+- Any feature-specific helper (e.g., `admin-billing-helper.ts`)
+- Any repository (e.g., `admin-auth.repository.ts`)
+- Any DTO (e.g., `admin-members-create.dto.ts`)
+- Any entity or domain model
+
+```text
+❌ VIOLATION:
+admin-core/
+├── admin-guards/
+├── admin-members-suspension.service.ts   <-- business logic FORBIDDEN in core
+└── admin-billing-helper.ts              <-- feature helper FORBIDDEN in core
+
+✅ COMPLIANT:
+admin-core/
+├── admin-guards/
+│   └── admin-core-jwt-auth.guard.ts
+├── admin-decorators/
+│   └── admin-core-current-user.decorator.ts
+├── admin-interceptors/
+│   └── admin-core-response.interceptor.ts
+└── admin-core.module.ts
+```
+
 * **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). These root-level generic folders may contain standard un-prefixed sub-folders (like `src/core/utils/`, `src/core/dtos/`, `src/core/config/`) provided they are strictly global and cross-cutting. Never put business logic in these generic folders.
   
-  **Canonical Example of Complete Prefixing Architecture:**
+  **Canonical Mandatory Backend Structure — Complete Physical Module Tree:**
+
+  > The following structure is mandatory. Any deviation is considered architecture non-compliant. AI agents MUST use this tree as the reference template when generating any backend role module.
+
   ```text
-  backend_admin/
-  ├── admin_core/                                <-- (Top-level prefixed)
-  │   ├── admin_guards/                          <-- (Sub-folder prefixed)
-  │   │   └── admin-core-jwt-auth.guard.ts       <-- (Role: admin, Module: core, Resp: jwt-auth)
-  │   └── admin-core.module.ts                   <-- (Main Core Module)
+  backend-admin/
   │
-  └── admin_modules/                             <-- (Top-level prefixed)
-      └── admin_billing/                         <-- (Feature Folder prefixed)
-          ├── billing_controllers/               <-- (Sub-folder prefixed with module name)
-          │   └── admin-billing-invoice.controller.ts
-          ├── billing_dto/                       <-- (Sub-folder prefixed with module name)
-          │   └── admin-billing-create-invoice.dto.ts
-          └── admin-billing.module.ts            <-- (Main Feature Module)
+  ├── admin-core/                                          <-- Role-level framework infrastructure ONLY
+  │   ├── admin-guards/
+  │   │   └── admin-core-jwt-auth.guard.ts                <-- RESPONSIBILITY + FLOW comment required
+  │   ├── admin-decorators/
+  │   │   └── admin-core-current-user.decorator.ts
+  │   ├── admin-interceptors/
+  │   │   └── admin-core-response.interceptor.ts
+  │   └── admin-core.module.ts                            <-- Role root NestJS module
+  │
+  └── admin-modules/                                      <-- ALL feature modules live here
+      │
+      ├── admin-auth/                                     <-- Feature module (example)
+      │   ├── auth-controllers/
+      │   │   ├── admin-auth-command.controller.ts        <-- Write operations (POST/PATCH/DELETE)
+      │   │   └── admin-auth-query.controller.ts          <-- Read operations (GET)
+      │   ├── auth-services/
+      │   │   ├── admin-auth-login.service.ts
+      │   │   ├── admin-auth-token-refresh.service.ts
+      │   │   └── admin-auth-orchestrator.service.ts      <-- Orchestrator: opens TX, calls services
+      │   ├── auth-repositories/
+      │   │   ├── admin-auth-read.repository.ts           <-- Concern-based split (Rule 7)
+      │   │   └── admin-auth-write.repository.ts          <-- Concern-based split (Rule 7)
+      │   ├── auth-mappers/
+      │   │   └── admin-auth.mapper.ts                    <-- toDomain() / toEntity() ONLY
+      │   ├── auth-domain/
+      │   │   └── admin-auth.domain.ts                    <-- Pure domain model — zero ORM imports
+      │   ├── auth-dto/
+      │   │   ├── admin-auth-login.dto.ts
+      │   │   └── admin-auth-token-response.dto.ts
+      │   ├── auth-types/
+      │   │   └── admin-auth-jwt-payload.type.ts
+      │   ├── auth-constants/
+      │   │   └── admin-auth.constants.ts
+      │   ├── auth-exceptions/
+      │   │   └── admin-auth.exceptions.ts
+      │   ├── auth-locales/
+      │   │   ├── en/
+      │   │   │   ├── admin-auth-errors.json
+      │   │   │   └── admin-auth-messages.json
+      │   │   └── hi/
+      │   │       ├── admin-auth-errors.json
+      │   │       └── admin-auth-messages.json
+      │   ├── admin-auth.module.ts                        <-- NestJS module registration
+      │   ├── admin-auth-backend-feature.md               <-- MANDATORY: module doc (Rule 19)
+      │   ├── admin-auth-dependencies.md                  <-- MANDATORY: dependency graph (Rule 49)
+      │   └── admin-auth-forbidden.md                     <-- MANDATORY: forbidden patterns (Rule 78)
+      │
+      └── admin-members/                                  <-- Another feature module (same pattern)
+          ├── members-controllers/
+          ├── members-services/
+          ├── members-repositories/
+          ├── members-mappers/
+          ├── members-domain/
+          ├── members-dto/
+          ├── members-types/
+          ├── members-constants/
+          ├── members-exceptions/
+          ├── members-locales/
+          ├── admin-members.module.ts
+          ├── admin-members-backend-feature.md
+          ├── admin-members-dependencies.md
+          └── admin-members-forbidden.md
   ```
+
+### Mandatory Feature Module Structure
+
+Every feature module MUST contain:
+- `{module}-controllers/`
+- `{module}-services/`
+- `{module}-repositories/`
+- `{module}-dto/`
+- `{module}-types/`
+- `{module}-constants/`
+- `{module}-exceptions/`
+- `{module}-domain/`
+- `{module}-mappers/`
+
+Optional:
+- `{module}-locales/`
+- `{module}-jobs/`
+- `{module}-adapters/`
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
-Extract all validation logic (Zod schemas, Class-Validator DTOs, Django Forms/Serializers) into their own isolated files.
-- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-create-member.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
+Extract all validation logic (NestJS: Class-Validator DTOs, Django: Forms/Serializers, Config: Zod) into their own isolated files.
+- **Why?** If the business logic is fine but the API is rejecting a payload, you only feed the AI `admin-members-create.dto.ts`. The AI won't even see the database logic, guaranteeing 0% chance of breaking the database flow.
 
 ## 4. Interface & Type Isolation (The AI's Blueprint)
 AI relies heavily on data shapes to write correct code. If the AI knows the exact shape of a `User` or a `PaymentPayload`, it doesn't need to see the database schema or the entire service file.
-* **The Rule:** Extract all TypeScript `Interfaces` or `Types` into a dedicated file inside a prefixed types folder (e.g., `billing_types/admin-billing-payment-payload.type.ts`). Never dump them inline or use generic `interfaces.ts` files.
+* **The Rule:** Extract all TypeScript `Interfaces` or `Types` into a dedicated file inside a prefixed types folder (e.g., `billing-types/admin-billing-payment-payload.type.ts`). Never dump them inline or use generic `interfaces.ts` files.
 * **Why?** When you want the AI to write a new function, you just feed it the `interfaces` file. The AI instantly knows exactly what properties are available without having to read 500 lines of implementation code.
 
 ## 5. Centralized Constants (Single Source of Truth)
-Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[role]-[module].constants.ts` (or `[role]_[module]_constants.py`).
+Find all hardcoded strings, error messages, magic numbers, and default config values scattered across your backend. Extract them into a module-level `[role]-[module].constants.ts` (or `[role]-[module]-constants.py`).
 - ❌ **BAD:** `throw new Error("User age must be over 18")`
 - ✅ **GOOD:** `throw new Error(MEMBER_ERRORS.AGE_RESTRICTION)`
 - **Why?** Tomorrow, if the business requirement changes from 18 to 21, or if you need to translate error messages to a different language, you only feed the AI `admin-members.constants.ts`. The business logic remains untouched.
@@ -220,7 +553,7 @@ Handling errors with generic `throw new Error()` makes it hard for AI to write p
 
 ## 7. Isolated Database/Query Layer (The Repository Pattern)
 Never write massive, complex raw SQL or 50-line ORM queries directly inside your business logic services.
-Extract complex queries into a dedicated Repository or Query file (e.g., `admin-member-analytics.repository.ts`).
+Extract complex queries into a dedicated Repository or Query file.
 * **The Rule:** The project has a fixed ORM per supported framework. The repository pattern is mandatory.
   - NestJS / TypeScript → TypeORM + PostgreSQL.
   - Django / Python → Django ORM + PostgreSQL.
@@ -228,6 +561,36 @@ Extract complex queries into a dedicated Repository or Query file (e.g., `admin-
   - Prisma is not permitted in this project.
   - ORM-specific implementation MUST remain behind the repository/data-access boundary so business services do not become coupled to ORM-specific APIs.
 - **Why?** If the dashboard stats are calculating incorrectly, it's a database query issue. You provide the AI the `repository` file, not the `service` file.
+
+### Repository Naming Standard (MANDATORY)
+
+To maximize AI repair isolation and minimize blast radius, **concern-based repository splitting is encouraged.**
+
+When a module has complex queries, splitting the repository by concern (read, write, search, analytics) creates smaller context windows for AI agents.
+
+✅ **Allowed Concern-Based Splitting:**
+- `{role}-{module}-read.repository.ts`
+- `{role}-{module}-write.repository.ts`
+- `{role}-{module}-search.repository.ts`
+- `{role}-{module}-analytics.repository.ts`
+
+If a module is extremely simple, a single `{role}-{module}.repository.ts` is permitted.
+
+**Anti-Fragmentation Rule:**
+While concern-based splitting is encouraged, **method-level over-fragmentation is strictly forbidden.** You cannot create a repository for a single find method.
+
+❌ **Forbidden Over-Fragmentation:**
+- `member-find-by-id.repository.ts`
+- `member-find-by-email.repository.ts`
+- `member-find-active.repository.ts`
+- `member-update-name.repository.ts`
+- `member-delete.repository.ts` (this is method-level fragmentation)
+
+❌ **Forbidden Naming Violations:**
+- `member-query.repository.ts` ("query" suffix reserved for CQRS controllers)
+- `member.repository.ts` (missing role prefix)
+
+All repositories MUST live inside the module's `{module}-repositories/` sub-folder.
 
 ---
 
@@ -245,13 +608,7 @@ For events that require durable delivery or cross-instance processing, the appli
 
 In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
 
-Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.
-
-For events that require durable delivery or cross-instance processing, the application event contract MUST be backed by Redis Streams.
-
-In-process event emitters MUST NOT be treated as the durable transport for critical domain events.
-
-Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events.`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
+Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
 
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
@@ -268,18 +625,55 @@ Repositories
 ORM
 ```
 
+#### Orchestrator Naming Convention (MANDATORY)
+
+All Orchestrators MUST use the following naming pattern — no exceptions:
+
+```
+{role}-{module}-orchestrator.service.ts
+```
+
+**Examples:**
+- `admin-members-orchestrator.service.ts`
+- `manager-billing-orchestrator.service.ts`
+- `superadmin-gyms-orchestrator.service.ts`
+
+❌ **FORBIDDEN orchestrator names — AI agents MUST NOT use these:**
+- `facade.service.ts`
+- `workflow.service.ts`
+- `transaction-handler.service.ts`
+- `admin-members-transaction.service.ts`
+- `admin-members.facade.ts`
+
+The exported class MUST follow PascalCase matching the filename: `admin-billing-orchestrator.service.ts` → `class AdminBillingOrchestratorService`.
+
+Orchestrators MUST live inside the module's `{module}-services/` sub-folder alongside other micro-services.
+
+### Feature Module File Rule
+
+Every feature module MUST contain exactly one module registration file.
+
+Pattern:
+`{role}-{module}.module.ts`
+
+Examples:
+- `admin-members.module.ts`
+- `manager-billing.module.ts`
+
+Multiple NestJS module files inside a feature module are forbidden.
+
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a utility, enum, or type is used by the Finance module, put it in `backend_finance/finance_utils/`. If the HR module needs the exact same utility, **duplicate the code** into `backend_hr/hr_utils/`. 
-* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `erp` domain, they MUST get their own independent copies of a shared utility. There is no `erp/_shared/` folder.
+Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-mappers/` (or `billing-constants/`, `billing-types/` respectively). If the Attendance module needs the exact same helper, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-mappers/`. 
+* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `manager` domain, they MUST get their own independent copies of a shared utility. There is no `manager/shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
 > **CRITICAL WARNING TO AI AGENTS:** 
 > Do NOT attempt to "DRY up" business logic, utilities, or services by moving them to global folders like `src/shared/` or `src/common/`. 
 > Anything containing domain-specific business behavior MUST be duplicated per feature, NEVER globalized. 
 > Only pure infrastructure plumbing (like database connection pools) belongs in global core folders.
-* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
+* **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), the Feature Flag Service (Rule 108), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
 *Scenario:* When your backend talks to the outside world (Stripe, AWS S3, SendGrid), never put the `axios.post()` or SDK calls directly inside your business logic.
@@ -304,19 +698,19 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ## Django Framework Reference Appendix
 
-For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.controller.ts`).
+For Non-NestJS projects, strictly adhere to the role and module isolation principles. Regardless of the framework, do NOT use generic structural folders like `dtos/`, `services/`, or `controllers/`. File naming MUST follow the role-prefix convention (e.g., `admin-billing-invoice.views.py`).
 
 *(Note: In non-NestJS frameworks like Django, framework-native file naming such as `models.py` or `serializers.py` is permitted, but generic sub-folders must still be module-prefixed.)*
 
 ### In Django (Python) — Reference Only
-- Avoid massive `views.py`. Create a `my_module_views/` folder and split class-based views into individual files (e.g., `admin_member_registration_view.py`).
-- Avoid "fat models". Move complex business logic from `models.py` into a `my_module_services/` directory.
+- Avoid massive `views.py`. Create a `my-module-views/` folder and split class-based views into individual files (e.g., `admin-member-registration-view.py`).
+- Avoid "fat models". Move complex business logic from `models.py` into a `my-module-services/` directory.
 - Keep `serializers.py` strictly for validation and data formatting.
 
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
-Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-member-registration.service.spec.ts` next to `admin-member-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend_e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+Never put tests in a global `tests/` or `pytest-tests/` directory separate from the application code. 
+* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-members-registration.service.spec.ts` next to `admin-members-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend-e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
 * **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
 
 
@@ -341,7 +735,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
   - `requestId` (unique per-request UUID, injected at the middleware boundary)
   - `tenantId` (where permitted by data privacy policy — never log tenant-specific personal data alongside it)
   - `traceId` and `spanId` (injected via OpenTelemetry/AsyncLocalStorage)
-  - `context` (the exact class or service name emitting the log, e.g., `MemberRegistrationService`)
+  - `context` (the exact class or service name emitting the log, e.g., `AdminMembersRegistrationService`)
   - `responseTime` (milliseconds, for access logs)
 * **What MUST NEVER appear in any log line:**
   - Raw `req` or `res` objects — these contain auth headers, cookies, request bodies, and response bodies by default.
@@ -357,7 +751,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** AI might take shortcuts and manually instantiate classes inside business logic, creating tight coupling. Enforcing Dependency Injection ensures that tests can easily mock out databases, external APIs, and child services.
 
 ## 16. Module-Specific API Collections (Postman/Insomnia)
-* **The Rule:** Whenever a module is created or finalized, generate a `[role]_[module]_collection.json` file directly inside the module's folder (e.g., `backend_admin/admin_auth/admin_auth_collection.json`). 
+* **The Rule:** Whenever a module is created or finalized, generate a `[role]-[module]-collection.json` file directly inside the module's folder (e.g., `backend-admin/admin-modules/admin-auth/admin-auth-collection.json`). 
 * **Why:** This ensures that any developer (or human QA) can instantly import this JSON into Postman and manually test the module's endpoints without having to manually construct the headers, payloads, or figure out the routes. It provides immediate, highly-accessible testing verification.
 
 ## 17. Standardized Pagination, Sorting & Filtering (Enterprise Scale - Backend Driven)
@@ -373,12 +767,24 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
-* **The Rule:** Every single module must contain a `[role]_[module]_backend_feature.md` file at its root (e.g., `backend_admin/admin_auth/admin_auth_backend_feature.md`). 
+* **The Rule:** Every single module must contain a `[role]-[module]-backend-feature.md` file at its root (e.g., `backend-admin/admin-modules/admin-auth/admin-auth-backend-feature.md`). 
 * **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+
+### Documentation Placement Rule
+
+The following files MUST exist directly inside the feature module root:
+- `{role}-{module}-backend-feature.md`
+- `{role}-{module}-dependencies.md`
+- `{role}-{module}-forbidden.md`
+
+These files MUST NOT be placed inside:
+- `docs/`
+- `documentation/`
+- `wiki/`
 
 ### Documentation Quality Standard
 
-**The purpose of `_backend_feature.md` is that an AI given ONLY that file + the module folder can fully understand, modify, or debug the module without reading anything else. Generic boilerplate defeats this entirely.**
+**The purpose of `-backend-feature.md` is that an AI given ONLY that file + the module folder can fully understand, modify, or debug the module without reading anything else. Generic boilerplate defeats this entirely.**
 
 #### ❌ BAD — What AI agents produce without quality enforcement:
 ```markdown
@@ -386,7 +792,9 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 Handles billing operations.
 
 ## Feature Inventory
-| POST /billing/charge | /billing/charge | Handles charging | CreateChargeDto |
+| Endpoint | Path | Description | DTO |
+|---|---|---|---|
+| POST /billing/charge | /billing/charge | Handles charging | AdminBillingChargeCreateDto |
 
 ## Edge Cases / AI Warnings
 - TBD
@@ -394,7 +802,7 @@ Handles billing operations.
 ```
 *Why this fails: "Handles billing operations" tells an AI nothing. "TBD" is worse than no doc. "Do not bypass the Orchestrator" with no context is unactionable.*
 
-#### ✅ GOOD — What every `_backend_feature.md` must look like:
+#### ✅ GOOD — What every `-backend-feature.md` must look like:
 ```markdown
 ## Module Purpose
 Processes all wallet top-ups, plan purchases, and refunds for gym members.
@@ -403,8 +811,10 @@ AdminBillingOrchestratorService to guarantee atomic DB + audit log writes.
 Never call AdminBillingWalletRepository directly from outside this module.
 
 ## Feature Inventory
-| POST /billing/wallet/topup | AdminWalletCommandController | Top up member wallet | AdminWalletTopupDto |
-| POST /billing/plans/purchase | AdminPlanCommandController | Purchase a plan | AdminPlanPurchaseDto |
+| Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
+|---|---|---|---|---|---|
+| `AdminBillingWalletCommandController` | POST | `/billing/wallet/topup` | Top up member wallet with real currency | `AdminBillingWalletTopupDto` | `AdminBillingWalletTopupResponseDto` |
+| `AdminBillingPlanCommandController` | POST | `/billing/plans/purchase` | Purchase a membership plan | `AdminBillingPlanPurchaseDto` | `AdminBillingPlanPurchaseResponseDto` |
 
 ## Edge Cases / AI Warnings
 - Wallet deductions use pessimistic locking (Rule 41) — never remove the
@@ -416,18 +826,18 @@ Never call AdminBillingWalletRepository directly from outside this module.
 ```
 *Why this works: An AI can read this and immediately know the invariants, the danger zones, and exactly which rules apply — without reading a single source file.*
 
-**Failure Conditions — A `_backend_feature.md` FAILS quality review if it contains:**
+**Failure Conditions — A `-backend-feature.md` FAILS quality review if it contains:**
 - Any section with "TBD" or "N/A" as the entire content
 - Module Purpose under 3 sentences
 - Edge Cases with fewer than 3 concrete, module-specific entries
 - Generic warnings not tied to a specific rule number (e.g., "be careful with transactions" with no Rule citation)
 - Feature Inventory rows where Purpose column is just "Handles X"
 
-**Documentation Freshness Rule:** `_backend_feature.md` MUST be updated in the same commit as any code change to the module. A stale feature doc is worse than no doc — it actively misleads AI agents.
+**Documentation Freshness Rule:** `-backend-feature.md` MUST be updated in the same commit as any code change to the module. A stale feature doc is worse than no doc — it actively misleads AI agents.
 
 ---
 
-### Mandatory `[role]_[module]_backend_feature.md` Template
+### Mandatory `[role]-[module]-backend-feature.md` Template
 Every backend module MUST use this minimum structure:
 
 ```markdown
@@ -443,10 +853,10 @@ should an AI NEVER do in this module?]
 |---|---|
 | [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
 | [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
-| [role]_[module]_services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| [role]_[module]_repositories/[role]-[module].repository.ts | [REQUIRED: what queries it owns] |
-| [role]_[module]_dtos/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
-| [role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
+| {module}-services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
+| {module}-repositories/[role]-[module]-<concern>.repository.ts | [REQUIRED: what queries it owns] |
+| {module}-dto/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
+| {module}-repositories/[role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
 
 ## Feature Inventory
 [REQUIRED: One row per endpoint. Purpose must be a full sentence, not "Handles X".]
@@ -470,8 +880,8 @@ should an AI NEVER do in this module?]
 ## Business Flow / Key Sequences
 [REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
 **Example — Plan Purchase:**
-1. AdminPlanCommandController receives POST /billing/plans/purchase
-2. Validates AdminPlanPurchaseDto (Rule 3)
+1. AdminBillingPlanCommandController receives POST /billing/plans/purchase
+2. Validates AdminBillingPlanPurchaseDto (Rule 3)
 3. Calls AdminBillingOrchestratorService.purchasePlan(dto)
 4. Orchestrator opens DB transaction
 5. Calls AdminBillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
@@ -492,7 +902,7 @@ should an AI NEVER do in this module?]
 | POST /billing/wallet/topup | MANAGER, ADMIN | Actor must belong to same branch as member |
 | GET /billing/history | MANAGER, ADMIN, MEMBER | Member can only see own history |
 
-CODEOWNERS path: `src/backend_[role]/[role]_[module]/` → @[reviewer-handle]
+CODEOWNERS path: `src/backend-[role]/[role]-[module]/` → @[reviewer-handle]
 
 ## Edge Cases / AI Warnings
 [REQUIRED: Minimum 3 entries. Each must cite a specific Rule number and explain
@@ -534,6 +944,9 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
 - [ ] Rule 29: Soft-delete by default. (Exception: Immutable event logs (Rule 118) and financial ledgers (Rule 119) are strictly append-only and exempt from standard soft-delete rules. Furthermore, the 90-day tenant hard-delete (Rule 110) must explicitly archive/retain legally required financial/audit ledgers rather than blindly deleting them.)
+- [ ] Rule 115: AI-contextual docstrings added to entities/services/controllers
+- [ ] Rule 116: MCP-Ready API Design conventions followed
+- [ ] Rule 117: RAG-Ready API Projection (`?format=rag`) implemented
 - [ ] Rule 103: Idempotency-Key enforced on all state-mutating endpoints
 - [ ] Rule 34: N+1 queries prevented — eager loading used where needed
 - [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
@@ -546,7 +959,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 - [ ] Rule 80: Framework-appropriate method documentation on all service methods, repositories, and utilities
 - [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
 - [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
-- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements from the Frozen API Contract section in this `_backend_feature.md` — no missing table columns, KPI fields, chart series, or relationship fields
+- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements from the Frozen API Contract section in this `-backend-feature.md` — no missing table columns, KPI fields, chart series, or relationship fields
 - [ ] Rule 82A-SYNC: Frozen API Contract section in this file is up-to-date with frontend `_features.md` API contract
 - [ ] Rule 86: Verb contract naming applied (createX, findXById, findXByIdOrThrow)
 - [ ] Rule 87: Every service method ≤ 20 lines, single responsibility
@@ -593,8 +1006,54 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 
   No Prisma Migrate, Flyway, Liquibase, Hibernate schema-update, or alternate migration system is approved for this project.
 
+### Migration File Naming Convention (GAP-3 Fix)
+
+All migration files MUST use this exact naming pattern:
+
+**NestJS / TypeORM:**
+```text
+{timestamp}-{RoleModule}-{Description}.ts
+```
+Example:
+```text
+1720000000000-AdminMembers-AddGymIdIndex.ts
+1720000000001-AdminBilling-AddInvoiceStatusColumn.ts
+```
+- Timestamp MUST be `Date.now()` (milliseconds) at the time of generation.
+- `{RoleModule}` MUST use PascalCase and follow the `{Role}{Module}` convention.
+- `{Description}` MUST be a plain-English description of what the migration does.
+- Every migration file MUST export exactly: `public up()` and `public down()`.
+- `down()` MUST reverse EVERY operation in `up()` exactly — it is not optional.
+
+**Django:**
+```text
+{NNNN}_{role}_{module}_{description}.py
+```
+Example:
+```text
+0001_admin_members_add_gym_id_index.py
+0002_admin_billing_add_invoice_status_column.py
+```
+- Django auto-generates the `{NNNN}` prefix — do not invent it.
+- Human-authored migration names must match the snake_case pattern above.
+
+### Migration Audit Checklist
+Before marking any migration PASS:
+```text
+[ ] File name follows the canonical naming pattern above
+[ ] up() performs ONLY the documented schema change — no business logic
+[ ] down() correctly reverts EVERY operation in up()
+[ ] No column dropped and re-added in the same migration (two-phase rule)
+[ ] No NOT NULL column added to a non-empty table without a DEFAULT value
+[ ] Migration does not touch tables outside its owning feature module
+[ ] NestJS: migration included in migrations array of TypeORM config
+[ ] Django: makemigrations was run and the auto-generated file is committed
+```
+
 * **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
 * **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
+
+
 
 ## 25. Graceful Shutdown & Health Probes (Kubernetes/Docker Ready)
 * **The Rule:** Enterprise apps are deployed in containers. You must include a `/health` or `/ping` endpoint for Kubernetes/AWS liveness probes. Furthermore, the application must intercept termination signals (`SIGINT`, `SIGTERM`).
@@ -607,8 +1066,8 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ## 27. API Testing Strategy (Three-Tier: Jest Unit + API E2E + Selenium UI)
 * **The Rule:** This project uses a strict three-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
-  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend_e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend_e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/test_superadmin_dashboard_api.py`). Never dump test files into a flat `backend_e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
-  3. **Python Selenium (UI Behavior Tests):** Lives in a top-level `backend_selenium/` directory. Tests the complete frontend-to-backend user flow as a real browser would.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `backend-e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `backend-e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e2e files MUST end with `-e2e.py` to identify them immediately, e.g., `backend-e2e/backend-superadmin-e2e/superadmin-dashboard/test-superadmin-dashboard-e2e.py`). Never dump test files into a flat `backend-e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  3. **Python Selenium (UI Behavior Tests):** Lives in a top-level `backend-selenium/` directory. Tests the complete frontend-to-backend user flow as a real browser would. Files MUST end with `-selenium.py` (e.g., `test-superadmin-dashboard-selenium.py`).
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These three tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -616,7 +1075,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 2. Select the **one or two** micro-files associated with that layer.
 3. Pass ONLY those files to the AI.
 4. Review the AI's isolated changes.
-* **For E2E Test Fixes/Updates:** If an API contract changes and the E2E test needs updating, provide the AI with ONLY the specific feature's E2E folder (e.g., `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/`) and the corresponding backend module. Do NOT feed the entire `backend_e2e/` directory to the AI to prevent token explosion.
+* **For E2E Test Fixes/Updates:** If an API contract changes and the E2E test needs updating, provide the AI with ONLY the specific feature's E2E folder (e.g., `backend-e2e/backend-superadmin-e2e/superadmin-dashboard/`) and the corresponding backend module. Do NOT feed the entire `backend-e2e/` directory to the AI to prevent token explosion.
 
 ---
 
@@ -769,21 +1228,66 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 ---
 
 ## 38. Domain-Driven Module Grouping (The "Route Group" Equivalent)
-* **The Rule:** Just like modern frontend frameworks (e.g., Next.js) use `(group)` folders to isolate UI domains like `(erp)` or `(superadmin)`, the backend MUST group its modules into top-level role/domain folders before splitting them into specific features.
-  - ❌ **BAD:** `src/billing/`, `src/superadmin_stats/`, `src/attendance/` (All dumped into a flat directory).
-  - ✅ **GOOD:** `src/backend_manager/manager_billing/`, `src/backend_superadmin/superadmin_stats/`, `src/backend_admin/admin_attendance/`.
-* **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
-* **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
-* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `billing/` → backend folder `manager_billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
-* **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
-* **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
+* **The Rule:** Just like the frontend uses prefixed role containers like `frontend_erp` or `frontend_superadmin` to isolate UI domains, the backend MUST group its modules into top-level role/domain folders before splitting them into specific features.
+  - ❌ **BAD:** `src/billing/`, `src/superadmin-stats/`, `src/attendance/` (All dumped into a flat directory).
+  - ✅ **GOOD:**
+    ```
+    src/backend-manager/
+    └── manager-modules/
+        └── manager-billing/
+    src/backend-superadmin/
+    └── superadmin-modules/
+        └── superadmin-stats/
+    src/backend-admin/
+    └── admin-modules/
+        └── admin-attendance/
+    ```
+* **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend, but translated to kebab-case. Renaming a feature's core semantic meaning during backend development is strictly forbidden.
+* **Casing Translation Rule (CRITICAL):** The semantic name stays identical across frontend/backend; ONLY the casing style changes per language/framework convention. The frontend uses `snake_case` and the backend uses `kebab-case` for folders (e.g., frontend `admin_billing`, backend `backend-admin/admin-modules/admin-billing`). This enforces a hard visual boundary between stacks through the mandatory `backend-` namespace prefix (Rule 0D) and the strict casing difference.
+* **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/v1/superadmin/stats`, `/api/v1/admin/members`). *(Naming Rule: The semantic module name stays identical to the frontend module name — the backend physical namespace only adds the mandatory role prefix. Example: frontend `manager_billing/` → backend folder `manager-billing/`, files `manager-billing-*.ts`, route `/api/v1/manager/billing/...`.)* The **canonical route namespace** is `/api/v1/{role}/{module}/...` for role-scoped routes (e.g., `/api/v1/manager/billing/invoices`) and `/api/v1/{module}/...` for genuinely public/shared endpoints (e.g., `/api/v1/auth/login`). Avoid mixing these two forms within the same module. Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named (modulo dashes/underscores).
+* **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `frontend_superadmin` domain has 5 feature folders (e.g., `superadmin_broadcasts`, `superadmin_coupons`, `superadmin_affiliates`), the backend `backend-superadmin` domain MUST have exactly 5 matching modules.
+
+#### Top-Level Role Structure (MANDATORY — See also Rule 2)
+
+All backend role containers MUST follow this exact two-directory structure. This is not a recommendation — it is a hard architectural constraint:
+
+```text
+backend-{role}/
+├── {role}-core/
+└── {role}-modules/
+```
+
+Feature modules MUST always be children of `{role}-modules/`. Direct placement of any feature module under `backend-{role}/` is forbidden.
+
+❌ **FORBIDDEN:**
+```text
+backend-manager/
+├── manager-core/
+├── manager-members/    <-- VIOLATION
+├── manager-billing/    <-- VIOLATION
+└── manager-attendance/ <-- VIOLATION
+```
+
+✅ **REQUIRED:**
+```text
+backend-manager/
+├── manager-core/
+└── manager-modules/
+    ├── manager-members/
+    ├── manager-billing/
+    └── manager-attendance/
+```
+
+* **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../frontend_superadmin/superadmin_coupons/` and `backend/.../backend-superadmin/superadmin-modules/superadmin-coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
+
+
 
 ---
 
 ## 39. True Multi-Tenancy (Database-per-Tenant Architecture)
-* **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms or whatever the project is ' data into a single database with a `tenant_id` column (row-level multi-tenancy).
+* **The Rule:** The application MUST be built using a strict **Database-per-Tenant** architecture to guarantee absolute data isolation, high performance, and security. It is unacceptable to dump all gyms' data into a single database with a `tenant_id` column (row-level multi-tenancy).
 * **Architecture Strategy:**
-  1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
+  1. **Master Database:** A central database (e.g., `smart_gym_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single PostgreSQL server infrastructure unless the infrastructure architecture explicitly defines otherwise; do not spin up new physical servers/VPS per tenant).*
   3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
   4. **Strict Tenant Authorization (CRITICAL):** `x-tenant-id` MUST NOT be trusted merely because the client supplied it. The server MUST verify that the authenticated actor is explicitly authorized to access that tenant in the master database before selecting the tenant DataSource. The flow must be: `Request → Authentication → Tenant Authorization → Trusted Tenant Context → DataSource Resolver`.
@@ -792,6 +1296,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
 * **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it can reduce dataset size per tenant and improve isolation/performance characteristics, avoiding massive multi-tenant table bottlenecks.
+* **Tenant DB vs Query Filters (Belt & Suspenders):** Even though Database-per-Tenant provides physical isolation, ALL ORM queries MUST still strictly include `gymId` and `branchId` filters as mandated by Rule 0G. This double-security approach ensures logic remains perfectly isolated and future-proofs the codebase if tenants are ever merged into a shared DB.
 
 ---
 
@@ -846,14 +1351,34 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
 
 ## 48. CQRS Lite (Query vs Command Controllers)
-* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
+* **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[role]-[module]-query.controller.ts` and `[role]-[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
 
 ## 49. Explicit Module Dependency Graph (Including Runtime Events)
-* **The Rule:** Every module must have a `[role]_[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
-* **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in the module's `[role]_[module]_dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
+* **The Rule:** Every module must have a `[role]-[module]-dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
+* **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in the module's `[role]-[module]-dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
 
 ## 50. Standardized Event Naming Convention
 * **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`, `MEMBERS.MEMBER.REGISTERED`, `ATTENDANCE.SESSION.CLOSED`) and be registered in a centralized `event-registry.constants.ts`. Two-part forms like `MEMBER_REGISTERED` or `MEMBER.REGISTERED` are non-compliant.
+
+### Single Event Registry Enforcement (NON-NEGOTIABLE)
+
+There MUST be exactly **one** `event-registry.constants.ts` file in the entire codebase, located at:
+
+```
+src/core/event-registry.constants.ts
+```
+
+Creation of any secondary event registry file is **strictly forbidden**, regardless of intent:
+
+❌ **FORBIDDEN — these MUST NOT exist:**
+- `billing-events.constants.ts`
+- `member-events.ts`
+- `admin-event-registry.ts`
+- Any file attempting to define a subset of domain events outside the central registry
+
+When a new event is needed, the AI MUST add it to the existing `src/core/event-registry.constants.ts` — never create a new file. If a secondary event registry file is discovered during an audit, it MUST be flagged as an architecture violation and its contents merged into the central registry.
+
+> **AI AGENT NOTE:** Before emitting or consuming any event, verify the event name exists in `src/core/event-registry.constants.ts`. If it does not exist, add it there — never inline the string or create a parallel constants file.
 
 ## 51. API Changelog & Deprecation Policy
 * **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
@@ -868,7 +1393,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** After 5 failed login attempts, the account is temporarily locked via Redis. Lockout state must be logged in the audit trail.
 
 ## 55. Deterministic Seed Data Strategy
-* **The Rule:** Every module must have a co-located `[role]-[module].seeder.ts` that is deterministic and idempotent. A master seed script orchestrates them in dependency order for local testing.
+* **The Rule:** Every module must define seed files that are deterministic and idempotent. Placement and naming (`.seed.ts`) MUST strictly follow the canonical specification defined in Section 0G-B (Seed File Specification). A master seed script orchestrates them in dependency order for local testing.
 
 ## 56. Strict Null Safety in Repository Returns
 * **The Rule:** Repositories must correctly type `findById()` as returning `Entity | null`. AI must use a dedicated `findByIdOrThrow()` method to ensure null exceptions are handled defensively.
@@ -914,7 +1439,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
 
 ## 62. Explicit Return Types on ALL Service Methods
-* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberDomainModel>`).
+* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<ManagerMembersDomainModel>`).
 
 ## 63. Database Connection Pool Configuration
 * **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
@@ -961,7 +1486,7 @@ Backend implementation (services, repositories, DB queries)
   - Rename fields unilaterally (e.g., `ownerName` → `owner_display_name`) after the contract is frozen.
   - Add or remove required fields without updating the frontend types, Zod schemas, MSW handlers, and tests in the same change.
 
-* **Why:** The previous "backend writes DTOs first" rule conflicted with the frontend-first workflow used in this project. The backend AI writing a DTO without inspecting the frontend's UI Data Requirements produces exactly the minimal-response failure mode that Rules 75A and 82A are designed to prevent.
+* **Why:** The previous "backend writes DTOs first" rule conflicted with the frontend-first workflow used in this project. The backend AI writing a DTO without inspecting the frontend's UI Data Requirements produces exactly the minimal-response failure mode that Rule 82A is designed to prevent.
 
 ## 68. Health Check Depth Levels
 * **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
@@ -1005,12 +1530,12 @@ Backend implementation (services, repositories, DB queries)
 ## 77. Dependency-Addition Guardrail
 * **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
 
-## 78. Forbidden Patterns File (`[role]_[module]_forbidden.md`)
-* **The Rule:** Every backend module must have a `[role]_[module]_forbidden.md` file listing what is explicitly NOT allowed in that specific module.
+## 78. Forbidden Patterns File (`[role]-[module]-forbidden.md`)
+* **The Rule:** Every backend module must have a `[role]-[module]-forbidden.md` file listing what is explicitly NOT allowed in that specific module.
 
-### `_forbidden.md` Content Quality Standard
+### `-forbidden.md` Content Quality Standard
 
-**Failure Conditions — A `_forbidden.md` FAILS quality review if it contains:**
+**Failure Conditions — A `-forbidden.md` FAILS quality review if it contains:**
 - Fewer than 5 entries
 - Generic entries not tied to a specific rule number (e.g., "Never bypass the Orchestrator" with no rule citation)
 - Entries that apply to every module equally (e.g., "Do not use console.log") — those belong in the global instruction, not here
@@ -1018,7 +1543,7 @@ Backend implementation (services, repositories, DB queries)
 
 #### ❌ BAD — Generic, unactionable:
 ```markdown
-# admin_billing_forbidden.md
+# admin-billing-forbidden.md
 - Never bypass the Orchestrator for payments.
 - Never mutate the DB without pessimistic locking.
 - Do not use console.log.
@@ -1028,7 +1553,7 @@ Backend implementation (services, repositories, DB queries)
 
 #### ✅ GOOD — Specific, rule-cited, consequence-explained:
 ```markdown
-# admin_billing_forbidden.md
+# admin-billing-forbidden.md
 
 ## What is NEVER allowed in this module
 
@@ -1051,13 +1576,13 @@ Backend implementation (services, repositories, DB queries)
    Consequence: Network retries from mobile clients will double-charge the member.
    Rule: 31 (Idempotency Keys for Critical Mutations).
 
-5. **Never return raw MemberEntity or WalletEntity from billing service methods.**
+5. **Never return raw ManagerMembersEntity or ManagerBillingWalletEntity from billing service methods.**
    Consequence: ORM entity leakage means a DB column rename breaks service-layer
    callers that should be completely unaware of the schema.
    Rule: 89 (Domain Object vs ORM Entity Separation).
 ```
 
-**Minimum requirement:** Every `_forbidden.md` must have at least **5 entries**, each with a specific consequence and a Rule citation.
+**Minimum requirement:** Every `-forbidden.md` must have at least **5 entries**, each with a specific consequence and a Rule citation.
 
 ---
 
@@ -1081,14 +1606,14 @@ Backend implementation (services, repositories, DB queries)
 
   ```text
   // RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
-  // FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
+  // FLOW: AdminMembersCommandController → AdminMembersSuspensionService → AdminMembersRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
 
 * **Format example — Python / Django:**
 
   ```text
   # RESPONSIBILITY: Handles member suspension logic. No direct DB writes — emits events only.
-  # FLOW: MemberCommandController → MemberSuspensionService → MemberRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
+  # FLOW: AdminMembersCommandController → AdminMembersSuspensionService → AdminMembersRepository → EventBus.emit('MEMBERS.MEMBER.SUSPENDED')
   ```
 
 * The FLOW must represent the actual ownership and execution path.
@@ -1122,17 +1647,17 @@ Backend implementation (services, repositories, DB queries)
    * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
    * @param memberId - The UUID of the member to suspend.
    * @param actorId - The UUID of the staff member performing the action (for audit log).
-   * @returns The updated MemberDomainModel with status SUSPENDED.
+   * @returns The updated ManagerMembersDomainModel with status SUSPENDED.
    * @throws MemberNotFoundException if the memberId does not exist.
    * @throws MemberAlreadySuspendedException if the member is already suspended.
    * @remarks Uses a database transaction to ensure the audit log write and status update are atomic.
    */
-  async suspendMember(memberId: string, actorId: string): Promise<MemberDomainModel> { ... }
+  async suspendMember(memberId: string, actorId: string): Promise<ManagerMembersDomainModel> { ... }
   ```
 
 * **Python / Django example (docstring):**
   ```python
-  def suspend_member(self, member_id: str, actor_id: str) -> MemberDomainModel:
+  def suspend_member(self, member_id: str, actor_id: str) -> ManagerMembersDomainModel:
       """
       Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
 
@@ -1141,11 +1666,11 @@ Backend implementation (services, repositories, DB queries)
           actor_id: The UUID of the staff member performing the action (for audit log).
 
       Returns:
-          The updated MemberDomainModel with status SUSPENDED.
+          The updated ManagerMembersDomainModel with status SUSPENDED.
 
       Raises:
-          MemberNotFoundException: If the member_id does not exist.
-          MemberAlreadySuspendedException: If the member is already suspended.
+          ManagerMembersNotFoundException: If the member_id does not exist.
+          ManagerMembersAlreadySuspendedException: If the member is already suspended.
 
       Note:
           Uses a database transaction to ensure the audit log write and status update are atomic.
@@ -1171,12 +1696,12 @@ Backend implementation (services, repositories, DB queries)
 
 ## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
 * **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
-  - ❌ **BAD (Ambiguous):** `data: { member: MemberEntity, invoice: InvoiceEntity }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
-  - ✅ **GOOD:** `data: MemberWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
-  - ❌ **BAD (Inconsistent):** One code path returns `data: MemberEntity`, another returns `data: { member: MemberEntity }`.
-  - ✅ **GOOD:** Always `data: MemberResponseDTO` — one shape, all paths.
+  - ❌ **BAD (Ambiguous):** `data: { member: ManagerMembersResponseDto, invoice: AdminBillingInvoiceResponseDto }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
+  - ✅ **GOOD:** `data: ManagerMembersWithInvoiceDTO` — a single, explicitly defined DTO that contains both.
+  - ❌ **BAD (Inconsistent):** One code path returns `data: ManagerMembersResponseDto`, another returns `data: { member: ManagerMembersResponseDto }`.
+  - ✅ **GOOD:** Always `data: ManagerMembersResponseDTO` — one shape, all paths.
 * **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
-* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+* **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<ManagerMembersResponseDto>` mapping exactly. If the backend AI returns `data: { member: ManagerMembersResponseDto }` instead of `data: ManagerMembersResponseDto`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
 
 ---
 
@@ -1185,9 +1710,9 @@ Backend implementation (services, repositories, DB queries)
 
 Before implementing an endpoint, the backend AI MUST verify the corresponding frontend feature's
 frozen API contract from the `## Frozen API Contract` section inside the backend feature's own
-`_backend_feature.md`. At API Contract Freeze (Rule 67), the frontend publishes its complete
-data requirements and the backend copies a snapshot into its own `_backend_feature.md` — then
-the backend AI can remain inside `src/backend_[role]/...` without needing the frontend folder.
+`-backend-feature.md`. At API Contract Freeze (Rule 67), the frontend publishes its complete
+data requirements and the backend copies a snapshot into its own `-backend-feature.md` — then
+the backend AI can remain inside `src/backend-[role]/...` without needing the frontend folder.
 
 **If the `## Frozen API Contract` section is not yet populated,** the backend AI MUST inspect:
 1. Frontend `_features.md` → `## UI Data Requirements`
@@ -1267,7 +1792,7 @@ with all fields assembled via JOIN or dedicated query.
 If a backend implementation cannot provide a field currently required by the frontend:
 1. Do NOT silently omit the field from the response.
 2. Do NOT fabricate a placeholder value in production.
-3. Document the limitation clearly in the `_backend_feature.md`.
+3. Document the limitation clearly in the `-backend-feature.md`.
 4. Propose the contract change explicitly.
 5. Update the frontend `## UI Data Requirements`, API Contract, TypeScript types, Zod schema, MSW handler, and tests in the same PR before merging the breaking change.
 
@@ -1288,13 +1813,15 @@ If a backend implementation cannot provide a field currently required by the fro
 
 ---
 
-## 84. No Barrel File / Re-Export Index Rule
+## 84. No Barrel File / Re-Export Index Rule & Facade Naming
 * **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This restriction exists to preserve AI context isolation and prevent dependency expansion. Always import directly from the explicitly named source file.
-  - ❌ **BAD:** `import { MemberService } from '@/backend_manager/manager_members'` (where `members/index.ts` re-exports everything)
-  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend_manager/manager_members/manager_members_services/member-registration.service'`
+  - ❌ **BAD:** `import { MemberService } from '@/backend-manager/manager-modules/manager-members'` (where `members/index.ts` re-exports everything)
+  - ✅ **GOOD:** `import { MemberRegistrationService } from '@/backend-manager/manager-modules/manager-members/members-services/manager-members-registration.service'`
+* **Facade / Re-export Naming:** If a module absolutely requires a facade or re-export file (e.g., to export multiple schemas or mappers from a sub-folder into one file), the file name MUST explicitly end with `-export.ts` to immediately signal its purpose to AI and developers.
+  - Example: `manager-attendance-schema-export.ts` (placed inside `attendance-schemas/`).
 * **Why barrel files are dangerous in AI-driven codebases:**
   1. **Circular Dependencies:** Barrel files are the #1 cause of circular dependency errors in NestJS and Django projects. An AI adding a new export to a barrel file can silently create a circular import cycle that causes runtime crashes.
-  2. **AI Context Pollution:** When an AI imports `from '@/backend_manager/manager_members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
+  2. **AI Context Pollution:** When an AI imports `from '@/backend-manager/manager-modules/manager-members'`, it loads the entire barrel into context — all services, all DTOs, all repositories. With direct imports, the AI only loads exactly what it needs, drastically reducing hallucination risk.
   3. **Dead Code Masking:** Barrel files make tree-shaking and unused-code detection nearly impossible, hiding dead code from AI and human reviewers alike.
 * **Enforcement:** Mechanically enforce via ESLint `no-restricted-imports` or a custom rule that flags imports from `index.ts` paths.
 
@@ -1317,15 +1844,15 @@ If a backend implementation cannot provide a field currently required by the fro
     ```
   - ✅ **GOOD (Guard Clauses + Repository-Owned Mutation):**
     ```typescript
-    async suspendMember(id: string): Promise<MemberDomain> {
+    async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
       const member = await this.memberRepo.findByIdOrThrow(id);
 
       if (member.status === MemberStatus.SUSPENDED) {
-        throw new MemberAlreadySuspendedException(id);
+        throw new ManagerMembersAlreadySuspendedException(id);
       }
 
       if (!member.hasActiveSubscription) {
-        throw new NoActiveSubscriptionException(id);
+        throw new ManagerMembersNoActiveSubscriptionException(id);
       }
 
       return this.memberRepo.suspendById(id, new Date());
@@ -1377,7 +1904,7 @@ This rule MUST remain consistent with Rule 99.
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
   3. **Third-party packages** (e.g., `class-validator`, `class-transformer`, `bcrypt`, `typeorm`)
   4. **Internal absolute imports — Infrastructure** (e.g., `@/infrastructure/config/`, `@/infrastructure/database/`)
-  5. **Internal absolute imports — Module-specific** (e.g., `@/backend_manager/manager_billing/...`)
+  5. **Internal absolute imports — Module-specific** (e.g., `@/backend-manager/manager-modules/manager-billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
   7. **Type-only imports** (`import type { ... }`) must always be last
 * **Blank line separation:** Each group must be separated by a blank line. No mixing of groups.
@@ -1385,15 +1912,14 @@ This rule MUST remain consistent with Rule 99.
   ```typescript
   import { Injectable } from '@nestjs/common';
 
-  import { InjectableRepository } from 'typeorm';
+  import { Repository } from 'typeorm';
 
   import { DatabaseConfig } from '@/infrastructure/config/database.config';
 
-  import { MemberEntity } from '@/backend_manager/manager_members/entities/member.entity';
-  import { MemberNotFoundException } from '@/backend_manager/manager_members/exceptions/member.exceptions';
+  import { ManagerMembersEntity } from '@/backend-manager/manager-modules/manager-members/members-repositories/manager-members.entity';
+  import { ManagerMembersNotFoundException } from '@/backend-manager/manager-modules/manager-members/members-exceptions/manager-members.exceptions';
 
-  import type { CreateMemberDto } from '@/backend_manager/manager_members/dtos/member-create.dto';
-  ```
+  import type { ManagerMembersCreateDto } from '@/backend-manager/manager-modules/manager-members/members-dto/manager-members-create.dto';
   ```
 * **Why:** Chaotic import ordering in AI-generated code causes two specific problems: (1) Merge conflicts explode because every AI agent adds imports in a different location, (2) Circular dependency detection becomes nearly impossible because the import graph is visually unreadable. A strict, mechanical ESLint rule makes import diffs surgical and circular deps immediately obvious.
 
@@ -1402,12 +1928,52 @@ This rule MUST remain consistent with Rule 99.
 ## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
-  1. **ORM Model / Entity** (`admin-member.entity.ts` for TypeORM, or the corresponding Django ORM model): Contains only database schema definition. Lives in the repository layer only.
-  2. **Domain Model** (`member.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
-  2b. **Response DTO** (`member-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
-  3. **Mapper** (`admin-member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
+  1. **ORM Model / Entity** (`admin-members.entity.ts` for TypeORM, or the corresponding Django ORM model): Contains only database schema definition. Lives in the repository layer only.
+  2. **Domain Model** (`admin-members.domain.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. Services and event handlers receive and return this. It is NOT the same as a Response DTO.
+  2b. **Response DTO** (`admin-members-response.dto.ts`): The API-serializable shape returned to the caller. Explicitly mapped from the Domain Model. Request DTOs are also distinct — never share one DTO for both directions.
+  3. **Mapper** (`admin-members.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
-* **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+* **Why:** AI agents default to using ORM entities everywhere — passing `ManagerMembersEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
+
+### Mapper Physical Location Rule (MANDATORY)
+
+All mappers MUST live inside the owning module's `{module}-mappers/` sub-folder. No other location is permitted.
+
+```
+{role}-{module}/
+└── {module}-mappers/
+    └── {role}-{module}.mapper.ts
+```
+
+**Examples:**
+- `admin-members/members-mappers/admin-members.mapper.ts`
+- `manager-billing/billing-mappers/manager-billing.mapper.ts`
+
+❌ **FORBIDDEN mapper locations:**
+- `admin-members/mappers/admin-members.mapper.ts` (unprefixed folder)
+- `admin-members/utils/admin-members.mapper.ts` (wrong folder type)
+- `admin-members/admin-members.mapper.ts` (root of module — not allowed)
+
+### Domain Model Physical Location Rule (MANDATORY)
+
+All domain models MUST live inside the owning module's `{module}-domain/` sub-folder. No other location is permitted.
+
+```
+{role}-{module}/
+└── {module}-domain/
+    └── {role}-{module}.domain.ts
+```
+
+**Examples:**
+- `admin-members/members-domain/admin-member.domain.ts`
+- `manager-billing/billing-domain/manager-billing.domain.ts`
+
+❌ **FORBIDDEN domain model locations:**
+- `admin-members/models/member.ts` (generic, no prefix)
+- `admin-members/domain/member.domain.ts` (unprefixed folder)
+- `admin-members/entities/member.domain.ts` (entities/ is for ORM entities only)
+
+> **AI AGENT NOTE:** ORM Entity files (`*.entity.ts`) belong ONLY inside the `{module}-repositories/` folder — never in `{module}-domain/`. The domain folder contains pure business objects with zero ORM imports. Mixing them defeats the entire purpose of Rule 89.
 
 ---
 
@@ -1603,7 +2169,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 ## 96. Scheduled Job Documentation & Centralized Inventory
 * **The Rule:** Rule 42 mandates distributed cron jobs technically, but in a large system with 10+ scheduled jobs across multiple modules, nobody — human or AI — knows what jobs exist, when they run, what data they touch, or what happens if they fail. This is a critical operational blind spot. Every scheduled job MUST be registered in a centralized inventory.
 * **Required File (NestJS):** `src/core/scheduled-jobs.registry.ts` — a single file that serves as the master inventory of ALL background scheduled jobs.
-* **Required File (Django):** `core/scheduled_jobs_registry.py` (or central Celery Beat schedule configuration) — serves as the master inventory.
+* **Required File (Django):** `core/scheduled-jobs-registry.py` (or central Celery Beat schedule configuration) — serves as the master inventory.
   ```typescript
   // Example for NestJS: src/core/scheduled-jobs.registry.ts
   // RESPONSIBILITY: Master inventory of all scheduled jobs. Update this file whenever
@@ -1613,7 +2179,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'MembershipExpiryNotifier',
       module: 'members',
-      file: 'src/backend_manager/manager_members/jobs/manager-members-expiry-notifier.job.ts',
+      file: 'src/backend-manager/manager-modules/manager-members/members-jobs/manager-members-expiry-notifier.job.ts',
       schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
       description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
       touchesEntities: ['members', 'notifications'],
@@ -1624,7 +2190,7 @@ When adding a new enum value, a database migration MUST be generated to update t
     {
       name: 'WalletAutoDeductionJob',
       module: 'billing',
-      file: 'src/backend_manager/manager_billing/jobs/manager-billing-wallet-auto-deduction.job.ts',
+      file: 'src/backend-manager/manager-modules/manager-billing/billing-jobs/manager-billing-wallet-auto-deduction.job.ts',
       schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
@@ -1635,7 +2201,7 @@ When adding a new enum value, a database migration MUST be generated to update t
   ] as const;
   ```
 * **Mandatory fields per entry:** `name`, `module`, `file`, `schedule` (cron expression), `description` (what it does in plain English), `touchesEntities` (which DB tables it reads/writes), `failureBehavior` (what breaks if the job fails), `idempotent` (boolean — is it safe to run twice?).
-* **`_backend_feature.md` Integration:** The "Data and State Architecture" section of every module's `_backend_feature.md` (Rule 19) MUST list all scheduled jobs owned by that module, referencing the registry entry by name.
+* **`-backend-feature.md` Integration:** The "Data and State Architecture" section of every module's `-backend-feature.md` (Rule 19) MUST list all scheduled jobs owned by that module, referencing the registry entry by name.
 * **Operational Rules:**
   - A new scheduled job MUST be added to the registry in the same PR as the job implementation. A job without a registry entry is considered undocumented and must be blocked at code review.
   - Any job that touches financial data (`wallets`, `payment_transactions`, `subscriptions`) is automatically subject to the CODEOWNERS human review gate (Rule 93).
@@ -1732,7 +2298,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **The Forbidden Pattern:**
   ```typescript
   // ❌ BAD — Service directly mutates entity and calls save()
-  async suspendMember(id: string): Promise<MemberDomainModel> {
+  async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
     const member = await this.memberRepo.findByIdOrThrow(id);
     member.status = MemberStatus.SUSPENDED;   // Direct mutation
     member.suspendedAt = new Date();           // Direct mutation
@@ -1742,15 +2308,15 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **The Required Pattern — Repository owns all mutations:**
   ```typescript
   // ✅ GOOD — Repository exposes a named, intention-revealing method
-  // In member.repository.ts:
-  async suspendById(id: string, suspendedAt: Date): Promise<MemberDomainModel> {
+  // In admin-members-write.repository.ts:
+  async suspendById(id: string, suspendedAt: Date): Promise<ManagerMembersDomainModel> {
     // All mutation logic, audit hooks, and constraint checks live here
     const entity = await this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
     return this.mapper.toDomain(entity);
   }
 
-  // In member-suspension.service.ts:
-  async suspendMember(id: string): Promise<MemberDomainModel> {
+  // In admin-members-suspension.service.ts:
+  async suspendMember(id: string): Promise<ManagerMembersDomainModel> {
     await this.memberRepo.findByIdOrThrow(id); // Existence check
     return this.memberRepo.suspendById(id, new Date()); // Repository owns the mutation
   }
@@ -1760,8 +2326,8 @@ When adding a new enum value, a database migration MUST be generated to update t
   - Services may call named repository mutation methods (e.g., `suspendById`, `updateEmail`, `markAsDeleted`).
   - Services must NEVER call the generic `repo.save(entity)` directly after mutating entity properties inline.
   - The generic `save()` method on the repository is `protected` or `private` — only callable from within the repository class itself.
-  - Every repository mutation method must have its own framework-appropriate method documentation (Rule 80) and be listed in the module's `_backend_feature.md` File Responsibility Map (Rule 19).
-* **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: MemberUpdateInput): Promise<MemberDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `UpdateMemberDto` directly, ensuring the domain layer remains decoupled from the API layer.
+  - Every repository mutation method must have its own framework-appropriate method documentation (Rule 80) and be listed in the module's `-backend-feature.md` File Responsibility Map (Rule 19).
+* **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: ManagerMembersUpdateInput): Promise<ManagerMembersDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `ManagerMembersUpdateDto` directly, ensuring the domain layer remains decoupled from the API layer.
 * **Why:** When an AI is asked to "add an audit log entry whenever a member is suspended", the correct answer is to add it inside `memberRepo.suspendById()`. If suspension logic is scattered across 5 different service methods that all do `member.status = 'SUSPENDED'; repo.save(member)`, the AI must find and modify all 5 — and will inevitably miss one. A single named repository method is the single place to add cross-cutting concerns.
 
 ---
@@ -1782,7 +2348,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 * **Implementation (TypeORM entity example):**
   ```typescript
   @Entity({ name: 'members' })
-  export class MemberEntity {
+  export class ManagerMembersEntity {
     @PrimaryGeneratedColumn('uuid', { name: 'id' })
     // PK_members
     id: string;
@@ -1816,7 +2382,7 @@ When adding a new enum value, a database migration MUST be generated to update t
   - Constraint names must be unique across the entire database — prefix with the table name to guarantee this.
   - When a constraint is dropped and recreated in a migration (e.g., adding a column to a composite unique constraint), the migration MUST reference the constraint by its exact name. Auto-generated names make this impossible.
   - Check constraints for business invariants (e.g., `balance >= 0`, `age >= 18`) are MANDATORY for all financial and safety-critical columns. Application-level validation (Rule 3) is the first line of defense; DB check constraints are the last.
-  - All constraint names must be added to the module's `_backend_feature.md` under the "Data and State Architecture" section so future AI agents know what constraints exist before writing migration files.
+  - All constraint names must be added to the module's `-backend-feature.md` under the "Data and State Architecture" section so future AI agents know what constraints exist before writing migration files.
 * **Why:** When a production `INSERT` fails with `ERROR: duplicate key value violates unique constraint "UQ_3f4a8b2c1d"`, the on-call engineer has no idea which table or column caused it without running a separate DB query. With `UQ_members_email`, the error message is self-documenting. More critically, when an AI writes a migration to drop and recreate a constraint, it must reference the constraint by name — if the name is auto-generated and unknown, the AI will hallucinate a name, causing the migration to fail in production.
 
 ---
@@ -1824,7 +2390,7 @@ When adding a new enum value, a database migration MUST be generated to update t
 ## Updated Summary Checklist (v5 — Final):
 1. Identify the exact layer (Validation? Query? Business Logic? External Adapter? Permission Guard? Mapper?).
 2. Select the **one or two** micro-files associated with that layer.
-3. Check the module's `_backend_feature.md` for context before giving the AI any files.
+3. Check the module's `-backend-feature.md` for context before giving the AI any files.
 4. Pass ONLY those files to the AI along with the feature doc.
 5. After the AI writes code, verify:
    - Is there an N+1 query?
@@ -1841,6 +2407,8 @@ When adding a new enum value, a database migration MUST be generated to update t
    - Does the global `ValidationExceptionFilter` transform `400` errors into the canonical `validationErrors` shape? (Rule 98)
    - Do service methods call named repository mutation methods — never directly mutating entity properties and calling `save()` inline? (Rule 99)
    - Are all DB constraints (FK, UQ, IDX, CHK) explicitly named following the `FK_[table]_[ref]_[col]` convention — never auto-generated? (Rule 100)
+   - Does the role container contain the mandatory `{role}-core/` and `{role}-modules/` directories? (Rule 2 — Mandatory Role Container Structure)
+   - Are all feature modules located inside `{role}-modules/` rather than directly under `backend-{role}/`? Direct feature placement under `backend-{role}/` is an Architecture Violation. (Rule 2 + Rule 38)
    - Do all AI-generated tests verify real observable behavior — no placeholder assertions, no tests that would pass if the feature were broken? (Rule 101)
    - Are there any barrel file imports or relative path imports?
    - Does every new method follow the verb naming convention with `OrThrow` where needed? (Rule 86)
@@ -1914,7 +2482,7 @@ The build passing is not equivalent to behavioral correctness.
 ### Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
+- **Rule:** A mismatch between import case (e.g., `trainer-url-config`) and file case (e.g., `Trainer-url-config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
 
 
@@ -1923,7 +2491,7 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the framework's entity/model definition (e.g., `admin_campaigns`, `superadmin_saas_invoices`).
 * **NestJS implementation:** Use the `@Entity('prefix_table')` decorator. Always explicitly hardcode the name rather than using implicit global naming strategies.
 * **Django implementation:** Use `class Meta: db_table = 'prefix_table'`. Always explicitly hardcode the name rather than relying on app-label prefixing defaults.
-* **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
+* **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin-gyms`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
 ## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
 
@@ -1944,7 +2512,7 @@ Use the project's centralized middleware/decorator/request enforcement mechanism
 - Atomic Concurrency Lock: perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
 - completion recorded only after DB commit (storing the final response payload)
 - fail closed if the idempotency store is unavailable (return `503 Service Unavailable`)
-- Idempotency must be enforced at the Command Controller level (e.g. `[module]-command.controller.ts`), never buried inside the service layer.
+- Idempotency must be enforced at the Command Controller level (e.g. `[role]-[module]-command.controller.ts`), never buried inside the service layer.
 - `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
 
 ## Rule 104 — WebSockets & Real-Time Communication
@@ -1995,7 +2563,7 @@ The backend uses framework-native internationalization (e.g., `nestjs-i18n` for 
 
 ### Stack
 - **Library:** `nestjs-i18n` (NestJS) or Django native translation framework (Django)
-- **Base language:** English (`en/errors.json` and `en/messages.json`) — written by developer / AI agent
+- **Base language:** English (`en/{role}-{module}-errors.json` and `en/{role}-{module}-messages.json`) — written by developer / AI agent
 - **Other languages:** Written by the AI agent in the same commit that creates the module
 - **Runtime cost:** Zero — all files are static JSON, bundled with the app
 
@@ -2011,42 +2579,46 @@ The backend uses framework-native internationalization (e.g., `nestjs-i18n` for 
 ### NestJS implementation
 
 **Module-Level File Structure**
-Each module owns its own `_locales/` folder:
-```
+Each module owns its own `{module}-locales/` folder:
+```text
 src/
-  backend_admin/
-    admin_members/
-        _locales/
+  backend-admin/
+    admin-modules/
+      admin-members/
+        members-locales/
           en/
-            errors.json   ← AI writes this when creating the module
-            messages.json
+            admin-members-errors.json   ← AI writes this when creating the module
+            admin-members-messages.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
-            errors.json
-            messages.json
+            admin-members-errors.json
+            admin-members-messages.json
           fr/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE (not in ACTIVE_LANGUAGES)
-            errors.json
-            messages.json
-        admin-members.controller.ts
-        admin-members.service.ts
-    superadmin_tenants/  ← NOTE: superadmin-scoped; should live under backend_superadmin/ not backend_admin/
-
-        _locales/
+            admin-members-errors.json
+            admin-members-messages.json
+        members-controllers/
+          admin-members-command.controller.ts
+        members-services/
+          admin-members-registration.service.ts
+  backend-superadmin/
+    superadmin-modules/
+      superadmin-gyms/
+        tenants-locales/
           en/
-            errors.json
+            superadmin-gyms-errors.json
           nl/    ← FUTURE/NON-ACTIVE — DO NOT GENERATE
-            errors.json
+            superadmin-gyms-errors.json
 scripts/                  ← (Global tooling folder exception allowed under Rule 2)
-  merge-locales.ts        ← Merges all module _locales into one bundle at build time
+  merge-locales.ts        ← Merges all module locales into one bundle at build time
 ```
 
 **AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST:
-1. Create `_locales/en/errors.json` with the English strings.
-2. In the **same commit**, create `_locales/hi/errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
+1. Create `members-locales/en/admin-members-errors.json` with the English strings.
+2. In the **same commit**, create `members-locales/hi/admin-members-errors.json` (and any other currently `ACTIVE_LANGUAGES`), using its own translation capability. Generate ONLY the `ACTIVE_LANGUAGES`.
 3. Translations must be **contextually correct** for a Gym Management SaaS — not literal word-for-word.
 
 ```json
-// _locales/en/errors.json
+// members-locales/en/admin-members-errors.json
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Member not found.",
@@ -2054,7 +2626,7 @@ When an AI agent writes a new module or adds new error/message keys, it MUST:
   }
 }
 
-// _locales/nl/errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
+// members-locales/nl/admin-members-errors.json  ← FUTURE/NON-ACTIVE example only — DO NOT GENERATE unless nl is in ACTIVE_LANGUAGES
 {
   "ERRORS": {
     "MEMBER_NOT_FOUND": "Lid niet gevonden.",
@@ -2069,7 +2641,7 @@ Always throw with a module-scoped translation key — never a hardcoded English 
 // ❌ FORBIDDEN
 throw new NotFoundException('Member not found.');
 
-// ✅ CORRECT — key maps to _locales/{lang}/errors.json
+// ✅ CORRECT — key maps to {module}-locales/{lang}/{role}-{module}-errors.json
 throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 ```
 
@@ -2078,7 +2650,7 @@ throw new NotFoundException({ key: 'members.ERRORS.MEMBER_NOT_FOUND' });
 Use Django's native translation framework and the project's approved Django middleware/translation integration.
 
 **App-Level File Structure**
-Each app owns its own `locale/` folder containing `.po`/`.mo` message files.
+Each app owns its own `{module}-locales/` folder containing `.po`/`.mo` message files.
 
 **AI Agent Translation Rule**
 When an AI agent writes a new module or adds new error/message keys, it MUST generate translations using standard `gettext` syntax and ensure locale messages are updated for ALL active languages using `django-admin makemessages`.
@@ -2102,7 +2674,7 @@ The AI MUST implement only the branch corresponding to the verified
 active framework.
 
 ### Configured Target Languages
-This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`_locales/` JSON for NestJS, or `locale/` message files for Django).
+This is the **authoritative list of languages** this project supports. There is no central config file — this instruction document IS the config. When an AI agent creates any new module, it MUST generate locale files for every currently active language (`{module}-locales/` JSON for NestJS, or `{module}-locales/` message files for Django).
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -2126,11 +2698,11 @@ This is the **authoritative list of languages** this project supports. There is 
 
 > **Indian Script Note:** Devanagari, Tamil, Telugu, Kannada, Bengali, Gujarati, Malayalam, and Gurmukhi are complex scripts. Ensure the server sends correct UTF-8 encoded strings. The native framework translation system handles this natively — no extra configuration needed.
 
-> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `_locales/.../errors.json` for NestJS or `locale/.../django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
+> **AI AGENT NOTE:** When creating any new module/app, you MUST create its locale files (e.g., `{module}-locales/.../{role}-{module}-errors.json` for NestJS or `{module}-locales/.../{role}-{module}-django.po` for Django) for the `ACTIVE_LANGUAGES`. Generate ONLY the `ACTIVE_LANGUAGES`. Use your own translation capability - do NOT call any external translation API. Keys must be namespaced by module name. Hardcoding English strings in exceptions is a critical violation.
 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
-* **Implementation:** Always use a centralized `FeatureFlagService` (backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
+* **Implementation:** Always use a centralized `{role}-core-feature-flag.service.ts` (e.g. `AdminCoreFeatureFlagService`, backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
 
 
 ## Rule 109 — Multi-Currency Monetary Amounts
@@ -2150,18 +2722,18 @@ For Django, use the corresponding integer/big-integer field.
 Never use FLOAT/DOUBLE for monetary amounts.
 - Every monetary response field MUST be accompanied by its `currency` code (ISO 4217):
 
-``````typescript
+```typescript
 // ❌ FORBIDDEN — float and no currency
 { "amount": 99.99 }
 
 // ✅ CORRECT — integer smallest unit + ISO 4217 currency code
 { "amount": 9999, "currency": "INR" }
-``````
+```
 
 ### DTO Rule
 Every DTO that includes a monetary field MUST include the paired currency code:
-``````typescript
-export class CreatePlanDto {
+```typescript
+export class AdminBillingPlanCreateDto {
   @IsInt()
   @Min(0)
   price: number; // in smallest unit (paise, cents, etc.)
@@ -2170,16 +2742,16 @@ export class CreatePlanDto {
   @IsISO4217CurrencyCode()
   currency: string; // e.g. 'INR', 'USD', 'EUR'
 }
-``````
+```
 
 ### Never Hardcode Currency Symbols
-``````typescript
+```typescript
 // ❌ FORBIDDEN
 return `₹${amount / 100}`;
 
 // ✅ CORRECT — pass raw integer + currency code to frontend; let frontend format
 return { amount, currency };
-``````
+```
 
 > **AI AGENT NOTE:** Every monetary field in a DTO or Entity MUST be stored as an `INT` or `BIGINT` in the smallest currency unit (paise/cents). Every monetary response object MUST include a paired `currency: string` (ISO 4217 code). Never divide by 100 or format amounts on the backend — that is the frontend's responsibility using `Intl.NumberFormat`.
 
@@ -2187,13 +2759,13 @@ return { amount, currency };
 ## Rule 110 — Tenant Data Export & Offboarding
 
 ### The Problem
-When a B2B tenant (e.g., Gym, School) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
+When a B2B tenant (e.g., Gym) churns and requests their data, a synchronous API call to dump the database will timeout (HTTP 504) for large datasets. Furthermore, non-technical users cannot read raw JSON or SQL dumps.
 
 ### Implementation Strategy
 All data exports MUST be processed asynchronously via background jobs and delivered as a compressed ZIP of CSV files.
 - **Role Constraint:** This functionality belongs strictly to the **Superadmin** (or top-level Gym Admin) role container. Do NOT implement data export routes inside manager, frontdesk, or member modules.
 
-1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex School/Hospital with deep relationships (e.g., Student -> Class -> Transport Route -> Driver), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder for NestJS or the corresponding Django ORM query facilities) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Route Name`, `Driver Name`, `Plan Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
+1. **Data Format (Denormalized & Deeply Resolved):** Generate `.csv` files for all core entities. **CRITICAL:** Do NOT export raw database tables with isolated UUID foreign keys. Non-technical business owners cannot perform SQL JOINs. Whether it is a simple Gym or a complex enterprise gym with deep relationships (e.g., Member -> Membership Plan -> Trainer -> Training Session), you MUST use ORM-specific query builders (e.g., TypeORM QueryBuilder for NestJS or the corresponding Django ORM query facilities) to flatten the data completely. All foreign keys MUST be resolved into human-readable reference names (e.g., `Trainer Name`, `Plan Name`, `Class Name`) and included explicitly in the CSV row. Compress these CSVs into a single `.zip` file.
 2. **Trigger:** `POST /api/v1/superadmin/export-data` MUST respond immediately with `202 Accepted` and enqueue a job.
 3. **Background Job (Project Message Infrastructure):** A worker processes the job using:
    - NestJS → BullMQ backed by Redis
@@ -2202,7 +2774,7 @@ All data exports MUST be processed asynchronously via background jobs and delive
 Redis Pub/Sub MUST NOT be used as the durable job queue.
 4. **Storage:** The worker saves the `.zip` securely to the local server disk (e.g., in a protected volume) OR uploads to a private S3 bucket if configured.
 5. **Delivery:** The backend generates a secure, time-limited **download token/URL** (valid for 24-48 hours) and sends an email to the admin. If using local storage, the URL points to a protected backend route (e.g., `GET /api/v1/superadmin/download-export?token=xyz`) that streams the file.
-6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `export.completed`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
+6. **Real-time Notification:** Upon successful email dispatch, the backend MUST emit a WebSocket event (e.g., `EXPORT.DATA.COMPLETED`) to the Superadmin so the dashboard can reflect the "Email Sent" status.
 
 ### Data Retention & Hard Deletion
 - When a tenant cancels, their account is **Soft Deleted** (suspended).
@@ -2265,26 +2837,26 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 ### Implementation Constraints
 
 1. **Strict 1-to-1 Folder Mirroring (The "Suffix Rule"):** The E2E and Selenium directory structure MUST be an exact 1-to-1 mirror of the backend domain structure, but with the specific testing type appended to the folder name.
-   - **Root Level:** `src/backend_superadmin/` ➔ `backend_e2e/backend_superadmin_e2e/` (API) or `backend_selenium/backend_superadmin_selenium/` (UI)
-   - **Feature Level:** `src/backend_superadmin/superadmin_dashboard/` ➔ `backend_e2e/backend_superadmin_e2e/superadmin_dashboard/` (API) or `backend_selenium/backend_superadmin_selenium/superadmin_dashboard/` (UI)
+   - **Root Level:** `src/backend-superadmin/` ➔ `backend-e2e/backend-superadmin-e2e/` (API) or `backend-selenium/backend-superadmin-selenium/` (UI)
+   - **Feature Level:** `src/backend-superadmin/superadmin-modules/superadmin-dashboard/` ➔ `backend-e2e/backend-superadmin-e2e/superadmin-modules/superadmin-dashboard/` (API) or `backend-selenium/backend-superadmin-selenium/superadmin-modules/superadmin-dashboard/` (UI)
    - This exact 1-to-1 path mirroring ensures that developers and AI agents always know exactly where the E2E or Selenium test for a specific module lives.
    - ❌ **BAD:** `e2e/admin/` or `selenium/members/`
-   - ✅ **GOOD:** `backend_e2e/backend_admin_e2e/` and `backend_selenium/backend_superadmin_selenium/`
+   - ✅ **GOOD:** `backend-e2e/backend-admin-e2e/` and `backend-selenium/backend-superadmin-selenium/`
 
-2. **Strict File Naming Convention (Testing Filename Exception — Rule 2 Exemption):** Python test discovery requires the `test_` prefix. Therefore Rule 112 test files are exempt from the role/module-first filename rule (Rule 2) **only in the leading position**. The role and module MUST immediately follow `test_`. Just like backend development files, every E2E and Selenium test file MUST encode the role and module name to prevent any ambiguity.
-   - **E2E (API) Format:** `test_[role]_[module]_api.py` (e.g., `test_superadmin_dashboard_api.py`)
-   - **Selenium (UI) Format:** `test_[role]_[module]_ui.py` (e.g., `test_superadmin_dashboard_ui.py`)
+2. **Strict File Naming Convention (Suffix Enforced):** Every E2E and Selenium test file MUST encode the role and module name to prevent any ambiguity. Additionally, they MUST end with the explicit suffix (`-e2e.py` or `-selenium.py`) to instantly identify their purpose.
+   - **E2E (API) Format:** `test-[role]-[module]-e2e.py` (e.g., `test-superadmin-dashboard-e2e.py`)
+   - **Selenium (UI) Format:** `test-[role]-[module]-selenium.py` (e.g., `test-superadmin-dashboard-selenium.py`)
    - ❌ **BAD:** `test_dashboard.py` or `api_test.py`
-   - ✅ **GOOD:** `test_admin_members_api.py` (lives inside `backend_e2e/backend_admin_e2e/members/`)
+   - ✅ **GOOD:** `test-admin-members-e2e.py` (lives inside `backend-e2e/backend-admin-e2e/admin-modules/admin-members/`)
 
-3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend_manager_e2e/helpers/`). If the `dashboard` test and `billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `dashboard` and `billing` test folders.
-   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend_e2e/backend_manager_e2e/dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
-   - ❌ **BAD:** `backend_e2e/backend_manager_e2e/helpers/auth_helper.py`
-   - ✅ **GOOD:** `backend_e2e/backend_manager_e2e/dashboard/manager_auth_helper.py` AND `backend_e2e/backend_manager_e2e/billing/manager_auth_helper.py`
+3. **WET Over DRY (Module-Level "AI Zip" Principle):** E2E and Selenium tests must be 100% self-contained at the **MODULE level**, exactly like the backend source code. You MUST NOT create a shared `helpers/` or `utils/` folder even within a specific role (e.g., no `backend-manager-e2e/helpers/`). If the `manager-dashboard` test and `manager-billing` test both need a login helper, you MUST duplicate the helper directly into BOTH the `manager-dashboard` and `manager-billing` test folders.
+   - **Why:** If a bug occurs in the Dashboard E2E test, a developer must be able to ZIP *only* the `backend-e2e/backend-manager-e2e/manager-modules/manager-dashboard/` folder and feed it to an AI agent. If the test relies on parent or sibling helper directories, the AI loses context, wastes tokens, and breaks other modules.
+   - ❌ **BAD:** `backend-e2e/backend-manager-e2e/helpers/auth-helper.py`
+   - ✅ **GOOD:** `backend-e2e/backend-manager-e2e/manager-modules/manager-dashboard/manager-auth-helper.py` AND `backend-e2e/backend-manager-e2e/manager-modules/manager-billing/manager-auth-helper.py`
 
-4. **No Cross-Module Imports:** A test script in `backend_manager_e2e/dashboard/` MUST NOT import a fixture, constant, or helper from `backend_manager_e2e/billing/`, nor from `backend_admin_e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
+4. **No Cross-Module Imports:** A test script in `backend-manager-e2e/manager-modules/manager-dashboard/` MUST NOT import a fixture, constant, or helper from `backend-manager-e2e/manager-modules/manager-billing/`, nor from `backend-admin-e2e`. Isolation is absolute down to the sub-feature level. Tests are completely siloed to minimize context windows and prevent cascading failures.
 
-5. **Test-Specific Forbidden Patterns (`_test_forbidden.md`):** Every top-level testing role container — both in `backend_e2e/backend_[role]_e2e/` and `backend_selenium/backend_[role]_selenium/` — MUST contain a `_test_forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables. (*Note: `_test_forbidden.md` and global test config files are explicitly exempt from the Rule 2 role-prefixing requirement.*)
+5. **Test-Specific Forbidden Patterns (`_test-forbidden.md`):** Every top-level testing role container — both in `backend-e2e/backend-[role]-e2e/` and `backend-selenium/backend-[role]-selenium/` — MUST contain a `_test-forbidden.md` file documenting exactly what external dependencies are forbidden, what databases it is NOT allowed to mock directly, and the consequences of violating these boundaries. Both files are mandatory deliverables. (*Note: `_test-forbidden.md` and global test config files are explicitly exempt from the Rule 2 role-prefixing requirement.*)
 
 6. **Self-Contained Artifacts:** Any mock data (JSON fixtures, mock images, test PDFs) required by Selenium or E2E tests must be stored inside the specific feature's test folder. Do not use a global `tests_data/` folder at the root.
 
@@ -2292,9 +2864,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 8. **Anti-False-Passing (No "Always-Pass" Dummy Code):** AI agents MUST NOT generate trivial, superficial tests (e.g., `assert True` or just checking if a route returns 200 without inspecting the payload or database side effects) simply to appease test coverage or impress the user. A test is ONLY valid if it asserts the true business logic, validates exact payload shapes, and verifies database state changes. If the test would still pass after the actual business logic is deliberately broken, the test is invalid and will be rejected.
 
-9. **Selenium Backup Locators (Resiliency Rule):** Every Selenium or UI interaction MUST define and utilize **backup locators**. The UI changes frequently, and tests shouldn't crash because a single class name changed.
-   - ❌ **BAD:** Hardcoding a single brittle locator: `driver.find_element(By.ID, "submit-btn")`
-   - ✅ **GOOD:** Writing robust selector logic that attempts a primary locator (e.g., `data-testid`), and if that fails, gracefully falls back to a secondary locator (e.g., specific CSS class, XPath, or ARIA label). The AI must ensure that if the primary locator fails, the backup locator works to complete the action.
+9. **Selenium Strict Locators (The data-testid Contract):** Every Selenium or UI interaction MUST strictly rely on `data-testid` attributes as the primary and only locator for interactive elements. The frontend is architecturally required (Rule 22) to provide a strictly formatted `data-testid` for all interactive elements and states. The UI changes frequently, and tests shouldn't crash because a single CSS class name changed. Do not write fallback locators that use brittle XPaths or CSS classes, as this encourages AI agents to ignore missing `data-testid` contracts.
+   - ❌ **BAD:** Hardcoding a brittle locator: `driver.find_element(By.CSS_SELECTOR, ".submit-btn-active")`
+   - ✅ **GOOD:** Strictly using the immutable contract: `driver.find_element(By.CSS_SELECTOR, "[data-testid='admin_members-addform-submit']")`
 
 **Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized. Tests must be real and resilient, not just "green" checkboxes.
 
@@ -2312,11 +2884,11 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 
 ## Rule 115 - Exhaustive, AI-Contextual Documentation for EVERYTHING (The "No-Guessing" Rule)
-* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage_*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The documentation syntax is framework-specific:
+* **The Rule:** EVERY module-level backend construct MUST carry exhaustive, multi-line documentation. Applies to: Classes, Controllers, Services, DTOs, Entities, Repository methods, Event handlers, Middleware, Guards. Intentionally excluded: delivery artifacts (`stage-*.md`, `INTEGRATION_GUIDE.md`), locale files, seed scripts, and test fixtures. The documentation syntax is framework-specific:
   - **TypeScript / JavaScript classes, methods, DTOs, services, controllers** → JSDoc block comments
   - **Python / Django classes, methods, DTO-equivalent constructs, services, controllers** → Python docstrings
   - **Database columns** → ORM/schema-level documentation mechanism where supported (e.g., TypeORM `@Column({ comment: '...' })` for NestJS, Django model field `help_text='...'` for Django); otherwise documented in migration/DDL
-  - **Config variables** → Joi/Zod configuration-schema documentation and `.env.example` annotations
+  - **Config variables** → Zod / class-validator configuration-schema documentation and `.env.example` annotations
 * **Why:** When an AI reads an entity property `is_active`, it shouldn't guess if it means "email verified" or "billing active". The documentation must explicitly declare it.
 * **What MUST be included in every documented construct:**
   1. **Intent:** Deep explanation of the business context.
@@ -2333,8 +2905,8 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 ## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
 * **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
-* **The Rule:** The backend must expose a dedicated `/api/v1/_rag/` namespace (or specific `?format=rag` query params) for AI agents and Chatbots. 
-* **Implementation:** These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
+* **The Rule:** The backend must support "RAG-Ready" API projections for AI agents and Chatbots. However, you MUST NOT create a generic root-level `_rag` namespace, as this violates Rule 0D (Strict API Namespacing). RAG endpoints must remain strictly within their role and module boundary.
+* **Implementation:** You must expose these endpoints either via a dedicated sub-route within the module (e.g., `/api/v1/manager/members/rag`) or via a strict query parameter on the primary endpoint (e.g., `/api/v1/manager/members?format=rag`). These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
 * **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
 
 ## Rule 118 - Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
@@ -2344,6 +2916,9 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 * **Why:** All AI Analytics engines, forecasting models, and **historical/state-transition analytics (e.g., member lifecycle, revenue trends, forecasting) MUST query this immutable event log**. Current operational widgets (e.g., live attendance, active sessions) MAY query the transactional read model directly (see Rule 114). Dashboards that mix both widget types must source each widget from its appropriate layer (CQRS read-replica pattern) instead of running heavy `JOIN` operations on the live transactional database. This ensures the transactional DB stays fast and analytics are 100% historically accurate.
 
 ## Rule 119 - The Double-Entry Financial Ledger (For Billing & Wallets)
+
+**Cached Balance Projection Pattern:**
+While the ledger is the absolute source of truth and balances must never be mutated directly via API calls (`UPDATE members SET balance = X`), entities MAY contain a `balance` column (e.g., `balance: bigint`) for **fast read-model caching**. This cached balance column is updated strictly by the backend either synchronously in the same database transaction as the ledger insert, or asynchronously via event handlers. An API consumer must never be allowed to pass a `balance` value in a request payload to update this column.
 * **The Problem:** AI agents typically write naive database queries for financial transactions (e.g., `UPDATE members SET wallet_balance = wallet_balance - 500`). In a production environment, concurrent requests or failed network calls lead to race conditions, lost money, and untraceable missing funds.
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 

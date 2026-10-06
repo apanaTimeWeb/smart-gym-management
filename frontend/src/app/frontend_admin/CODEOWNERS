@@ -1,0 +1,8 @@
+# Human review gate for Admin security-critical frontend changes.
+# The host repository must replace @security-reviewers with its verified ownership group if different.
+/admin_permissions/ @security-reviewers
+/admin_settings/ @security-reviewers
+/admin_subscriptions/ @security-reviewers
+/admin_finance/ @security-reviewers
+/admin_payouts/ @security-reviewers
+/admin_layout/admin_layout_utils/AdminLayoutMonitoring.ts @security-reviewers

@@ -1,0 +1,4 @@
+/* RESPONSIBILITY: Keeps the alerts table horizontally scrollable without arbitrary Tailwind values. */
+.table {
+  min-width: 57.5rem;
+}

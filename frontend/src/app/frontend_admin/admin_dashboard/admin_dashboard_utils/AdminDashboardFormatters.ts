@@ -1,0 +1,20 @@
+/**
+ * Locale-aware numeric/date formatters owned by the Admin feature.
+ * @remarks These utilities contain presentation formatting only; server data remains owned by TanStack Query.
+ */
+
+/** Formats an integer/number using the active UI locale. */
+export const formatNumber = (value: number, locale: string): string =>
+  new Intl.NumberFormat(locale).format(value);
+
+/** Formats a KPI using locale-aware compact notation for dashboard-scale values. */
+export const formatKPI = (value: number, locale: string): string =>
+  new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(value);
+
+/** Formats dashboard dates with the active UI locale. */
+export const formatDate = (value: string, locale: string): string =>
+  new Intl.DateTimeFormat(locale, { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
+
+/** Formats dashboard weekday labels with the active UI locale. */
+export const formatWeekday = (value: string, locale: string): string =>
+  new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(value));

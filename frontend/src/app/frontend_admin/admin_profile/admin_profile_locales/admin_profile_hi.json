@@ -1,0 +1,39 @@
+{
+  "profile": {
+    "AdminProfileError": {
+      "text_176517bebf": "Failed to load profile.",
+      "text_cef2fe093b": "फिर से प्रयास करें"
+    },
+    "admin_profile_main": {
+      "text_9f5cd8a2e8": "फिर से प्रयास करें",
+      "text_9ba8d391c5": "My Profile",
+      "text_28dfd9f67e": "Manage your account details and password.",
+      "text_a733b809d2": "सक्रिय",
+      "text_ad12e4228c": "Personal Information",
+      "text_64346b483c": "Full Name",
+      "text_09ba557fd1": "Email Address",
+      "text_a23bc17981": "Email cannot be changed here.",
+      "text_ab25d61bb1": "Phone Number",
+      "text_38d7a68249": "+91 XXXXX XXXXX",
+      "text_c3f104d136": "Role",
+      "text_fa2984b367": "Save Changes",
+      "text_49289db43e": "Change Password",
+      "text_61dcf34e70": "Update Password",
+      "auto_7ee35f2834": "नया पासवर्ड पुष्टि करें",
+      "auto_856b015424": "नया पासवर्ड",
+      "auto_898ba9670f": "वर्तमान पासवर्ड",
+      "auto_a9257207f9": "प्रोफ़ाइल लोड नहीं हो सकी।",
+      "tabPersonal": "व्यक्तिगत जानकारी",
+      "tabSecurity": "सुरक्षा",
+      "validation_passwordMismatch": "नए पासवर्ड एक समान होने चाहिए।"
+    },
+    "AdminProfilePasswordField": {
+      "auto_hide": "{label} छिपाएँ",
+      "auto_show": "{label} दिखाएँ"
+    },
+    "metadata": {
+      "title": "मेरी प्रोफ़ाइल | एडमिन | GymSmart",
+      "description": "एडमिन प्रोफ़ाइल प्रबंधित करें।"
+    }
+  }
+}

@@ -128,26 +128,30 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 | `--pay-bank-text` | `#7DD3FC` (Sky) | `#0369A1` |
 | `--pay-bank-bg` | `#0C4A6E` | `#E0F2FE` |
 
-### Chart Semantic Tokens
-| Token | Usage |
-|---|---|
-| `--chart-primary` | Primary series (e.g., Gold) |
-| `--chart-success` | Positive series (e.g., Green) |
-| `--chart-danger` | Negative series (e.g., Red) |
-| `--chart-warning` | Warning series (e.g., Amber) |
-| `--chart-info` | Info series (e.g., Blue) |
-| `--chart-secondary`| Secondary breakdown (e.g., Purple) |
-| `--chart-grid` | Gridlines (`rgba(255,255,255,0.05)`) |
-| `--chart-tooltip-bg`| Tooltip backgrounds (`--bg-card`) |
+### Chart Semantic Tokens (GAP-10 Fix — Values Now Defined)
+| Token | Dark Mode Value | Light Mode Value | Usage |
+|---|---|---|---|
+| `--chart-primary` | `#FACC15` (Gold) | `#EAB308` | Primary series (e.g., Gold) |
+| `--chart-success` | `#4ADE80` (Green) | `#16A34A` | Positive series (e.g., Green) |
+| `--chart-danger` | `#F87171` (Red) | `#DC2626` | Negative series (e.g., Red) |
+| `--chart-warning` | `#FBBF24` (Amber) | `#F59E0B` | Warning series (e.g., Amber) |
+| `--chart-info` | `#60A5FA` (Blue) | `#2563EB` | Info series (e.g., Blue) |
+| `--chart-secondary` | `#D8B4FE` (Purple) | `#7C3AED` | Secondary breakdown (e.g., Purple) |
+| `--chart-grid` | `rgba(255,255,255,0.05)` | `rgba(0,0,0,0.06)` | Gridlines |
+| `--chart-tooltip-bg` | `#111111` (= `--bg-card`) | `#FFFFFF` (= `--bg-card`) | Tooltip backgrounds |
 
-### Semantic Shadows
+> **AI AGENT NOTE:** These tokens MUST be defined in `globals.css` and mapped in `@theme inline` exactly as specified in the canonical `globals.css` template in `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+
+### Semantic Shadows (GAP-11 Fix — Values Now Defined)
 The design document defines token meaning. The canonical global theme stylesheet (`globals.css`) defines actual values. Components must consume semantic tokens and must never contain raw shadow colors when a semantic token exists.
-| Token | Usage |
-|---|---|
-| `--shadow-card` | Subtle elevation for cards |
-| `--shadow-popover` | Pronounced elevation for dropdowns |
-| `--shadow-dialog` | Deep elevation for modals |
-| `--shadow-toast` | Floating toast shadows |
+| Token | Dark Mode Value | Light Mode Value | Usage |
+|---|---|---|---|
+| `--shadow-card` | `0 1px 3px rgba(0,0,0,0.4)` | `0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)` | Subtle elevation for cards |
+| `--shadow-popover` | `0 4px 16px rgba(0,0,0,0.5)` | `0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06)` | Pronounced elevation for dropdowns |
+| `--shadow-dialog` | `0 20px 60px rgba(0,0,0,0.6)` | `0 20px 60px rgba(0,0,0,0.16), 0 8px 16px rgba(0,0,0,0.08)` | Deep elevation for modals |
+| `--shadow-toast` | `0 8px 24px rgba(0,0,0,0.5)` | `0 8px 24px rgba(0,0,0,0.12)` | Floating toast shadows |
+
+
 
 ### Border Radius Scale
 | Token | Value | Usage |
@@ -234,7 +238,6 @@ To remove ambiguity for AI generation, Tailwind classes MUST map to these underl
 | `bg-header-translucent` | `--bg-header-translucent` |
 | `bg-sidebar` | `--bg-sidebar` |
 | `bg-input` | `--bg-input` |
-| `text-on-warning` | `--text-on-warning` |
 | `bg-floating` | `--bg-floating` |
 | `bg-overlay` | `--bg-overlay` |
 | `bg-popover` | `--bg-popover` |
@@ -250,6 +253,16 @@ To remove ambiguity for AI generation, Tailwind classes MUST map to these underl
 | `border-border` | `--border` |
 | `border-focus` | `--border-focus` |
 | `ring-primary` | `--focus-ring` |
+| `bg-purple-bg` | `--purple-bg` (Subtle purple) |
+| `text-purple` | `--purple-text` |
+| `bg-pay-cash-bg` | `--pay-cash-bg` (GAP-9 Fix) |
+| `text-pay-cash` | `--pay-cash-text` (GAP-9 Fix) |
+| `bg-pay-upi-bg` | `--pay-upi-bg` (GAP-9 Fix) |
+| `text-pay-upi` | `--pay-upi-text` (GAP-9 Fix) |
+| `bg-pay-card-bg` | `--pay-card-bg` (GAP-9 Fix) |
+| `text-pay-card` | `--pay-card-text` (GAP-9 Fix) |
+| `bg-pay-bank-bg` | `--pay-bank-bg` (GAP-9 Fix) |
+| `text-pay-bank` | `--pay-bank-text` (GAP-9 Fix) |
 
 ---
 
@@ -894,3 +907,128 @@ Theme tokens required:
 ---
 
 *END OF GLOBAL DESIGN SYSTEM — Feature modules reference this system through their theme contract; the complete document is not required as module repair context.*
+
+---
+
+## MOTION TOKEN SPECIFICATION (GAP-7 Fix — Values Now Defined)
+
+Motion duration tokens were previously named but never assigned values. They are now fully specified:
+
+| Token | CSS Variable | `@theme inline` Key | Value | Usage |
+|---|---|---|---|---|
+| `duration-fast` | `--animate-duration-fast` | `--animate-duration-fast` | `150ms` | Quick micro-feedback (button press, toggle) |
+| `duration-base` | `--animate-duration-base` | `--animate-duration-base` | `200ms` | Standard transitions (hover, focus, card elevation) |
+| `duration-slow` | `--animate-duration-slow` | `--animate-duration-slow` | `300ms` | Tooltip/popover reveal, sidebar collapse |
+| `duration-xslow` | `--animate-duration-xslow` | `--animate-duration-xslow` | `500ms` | Page-level entry, skeleton reveal |
+
+### Motion Token Usage Pattern
+```tsx
+// ✅ CORRECT — semantic duration token via Tailwind
+className="transition-all duration-base ease-in-out"
+
+// ✅ CORRECT — motion-safe prefix (MANDATORY for all transitions)
+className="motion-safe:transition-all motion-safe:duration-base ease-in-out"
+
+// ❌ FORBIDDEN — hardcoded duration
+className="transition-all duration-200"
+```
+
+> **AI AGENT NOTE:** ALL transition/animation class names MUST be prefixed with `motion-safe:`. This ensures they are disabled automatically when the user has `prefers-reduced-motion: reduce` set — no manual `@media` query needed. The `@media (prefers-reduced-motion: reduce)` override in `globals.css` is a safety net, not the primary mechanism.
+
+---
+
+## SKELETON ANIMATION PATTERN (GAP-7 Supplement)
+
+Skeleton loading states MUST use these token-based patterns:
+
+```tsx
+// ✅ CORRECT — skeleton that respects design tokens and reduced motion
+className="bg-skeleton-base rounded-radius-md motion-safe:animate-pulse"
+```
+
+```css
+/* In globals.css — already defined */
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+```
+
+---
+
+## PURPLE TOKEN SPECIFICATION (GAP-8 Fix — Values Now Defined)
+
+Purple tokens were listed in the payment section but never fully specified. They are used for premium plans, VIP members, and specialized status badges:
+
+| Token | Dark Mode Value | Light Mode Value | Usage |
+|---|---|---|---|
+| `--purple-text` | `#D8B4FE` | `#7E22CE` | Purple foreground text (Premium label) |
+| `--purple-bg` | `#3B0764` | `#EDE9FE` | Purple subtle background (Premium badge) |
+
+### Tailwind Classes
+| Tailwind Class | Maps to | Usage |
+|---|---|---|
+| `text-purple` | `--purple-text` | Badge text, label |
+| `bg-purple-bg` | `--purple-bg` | Badge background |
+
+Usage pattern:
+```tsx
+// ✅ CORRECT
+<span className="text-purple bg-purple-bg px-2 py-0.5 rounded-full text-xs font-medium">
+  Premium
+</span>
+```
+
+---
+
+## LOCALE/I18N FILE NAMING RULES (GAP-5 Fix)
+
+The project uses `next-intl` for internationalization.
+
+### Locale File Location
+Per Architecture Rule 18, locales MUST be co-located inside the feature module, NEVER in a central `src/messages/` or `src/locales/` directory.
+
+```text
+src/app/(admin)/admin-members/_locales/
+    ├── admin_members_en.json    ← English (default)
+    ├── admin_members_hi.json    ← Hindi (optional)
+    └── [moduleName]_[lang].json ← Pattern for future locales
+```
+
+### Feature Translation Key Naming
+Translation keys MUST follow this pattern:
+```
+{role}.{module}.{section}.{key}
+```
+
+Example:
+```json
+{
+  "manager": {
+    "members": {
+      "table": {
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "joinDate": "Join Date"
+        }
+      },
+      "add": {
+        "title": "Add Member",
+        "submit": "Add Member"
+      }
+    }
+  }
+}
+```
+
+### Rules
+1. NEVER hardcode UI text strings directly in JSX — use `t('key')` from `next-intl`.
+2. Backend `message` responses (Rule 14) are displayed as-is — do NOT pass them through the i18n system.
+3. Locale detection is done globally via `next-intl` middleware — do NOT implement per-module locale detection.
+4. The default locale is `en` (English) — all keys must exist in `en.json` before any other locale can add them.
+
+---
+
+*END OF GLOBAL DESIGN SYSTEM — Feature modules reference this system through their theme contract; the complete document is not required as module repair context.*

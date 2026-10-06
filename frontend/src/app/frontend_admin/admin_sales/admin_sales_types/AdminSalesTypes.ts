@@ -1,0 +1,141 @@
+export type MembershipFilter = 'all' | 'active' | 'expiring_soon' | 'expired';
+export type SalesTab = 'overview' | 'membership_report' | 'pending_payments' | 'all_memberships' | 'store_sales';
+export type DateFilter = 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year' | 'monthly' | 'yearly' | 'custom';
+
+// RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
+import type { QueryStatus } from '@tanstack/react-query';
+
+
+// ------- Membership Types -------
+export interface Member {
+  id: string; name: string; email: string; phone: string;
+  gender: string; address?: string; branch: string;
+  planId: string; plan?: { id: string; name: string; tier: string };
+  billingCycle: string; status: string;
+  joinDate: string; expiryDate: string;
+  paidAmount: number; pendingAmount: number; photo?: string;
+  createdAt: string;
+}
+
+export type PendingPaymentMember = Omit<Member, 'plan'> & {
+  plan?: string;
+  pendingAmount?: number;
+  daysOverdue?: number;
+};
+
+export interface OverviewDataPoint {
+  date: string;
+  revenue: number;
+  newMembers: number;
+}
+
+export interface ReferralDataPoint {
+  source: string;
+  revenue: number;
+}
+
+export interface MembershipReportItem {
+  id?: number;
+  name?: string;
+  totalMembers?: number;
+  activeMembers?: number;
+  revenue?: number;
+  plan?: string;
+  receivable?: number;
+  received?: number;
+  remaining?: number;
+  refund?: number;
+  referralSource?: string;
+  couponCode?: string;
+  renewalCount?: number;
+}
+
+export interface MembershipTotals {
+  activeCount?: number;
+  revenue?: number;
+  totalReceivable?: number;
+  totalReceived?: number;
+  remaining?: number;
+  refunds?: number;
+}
+
+// ------- Store Types (self-contained copy for Rule 67 compliance) -------
+export interface StoreProduct {
+  id: string; name: string; category: string; price: number;
+  stock: number; description?: string; imageUrl?: string; isActive: boolean;
+}
+export interface StoreOrderItem {
+  id: string; qty: number; price: number;
+  product: { name: string };
+}
+export interface StoreOrder {
+  id: string; total: number; method: string; status: string;
+  notes?: string; createdAt: string;
+  items?: StoreOrderItem[];
+}
+export interface StoreSummary {
+  totalProducts: number; totalOrders: number;
+  totalRevenue: number; lowStockProducts: StoreProduct[];
+}
+
+
+export interface StoreOrdersQuery {
+  branchId?: string;
+  range?: string;
+  search?: string;
+  page: number;
+  limit: number;
+}
+
+export interface StoreOrdersResponse {
+  orders: StoreOrder[];
+  total: number;
+}
+
+export interface StoreSummaryResponse {
+  summary: StoreSummary;
+}
+
+// ------- Aggregate Data Shapes -------
+export interface SalesInitialData {
+  overviewData?: OverviewDataPoint[];
+  membershipReport?: MembershipReportItem[];
+  membershipTotals?: MembershipTotals;
+  pendingPayments?: PendingPaymentMember[];
+  pendingTotal?: number;
+  allMemberships?: Member[];
+  allMembershipsTotal?: number;
+  storeOrders?: StoreOrder[];
+  storeOrdersTotal?: number;
+  storeSummary?: StoreSummary | null;
+}
+
+export interface AdminSalesState {
+  tab: SalesTab;
+  setTab: (tab: SalesTab) => void;
+  membershipFilter: MembershipFilter;
+  setMembershipFilter: (filter: MembershipFilter) => void;
+  search: string;
+  setSearch: (search: string) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+
+  overviewData: OverviewDataPoint[];
+  referralData: ReferralDataPoint[];
+  membershipReport: MembershipReportItem[];
+  membershipTotals: MembershipTotals;
+  pendingPayments: PendingPaymentMember[];
+  pendingTotal: number;
+  allMemberships: Member[];
+  allMembershipsTotal: number;
+  storeOrders: StoreOrder[];
+  storeOrdersTotal: number;
+  storeSummary: StoreSummary | null;
+
+  status: QueryStatus;
+  storeStatus: QueryStatus;
+  storeError: string;
+  loadAll: () => Promise<void>;
+
+}
+

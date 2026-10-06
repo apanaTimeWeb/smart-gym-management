@@ -1,0 +1,82 @@
+{
+  "dashboard": {
+    "admin_dashboard_alerts": {
+      "text_f663d709ad": "System Alerts",
+      "text_a5f995a220": "Action required",
+      "text_04b7b26c8c": "Critical",
+      "text_3409e17794": "No alerts at this time.",
+      "text_5590566204": "View All Alerts"
+    },
+    "admin_dashboard_attendance_trend": {
+      "text_0bf09b5516": "Weekly Attendance",
+      "text_393230b08a": "Cross-branch daily check-ins",
+      "text_cdc93143c6": "Avg",
+      "text_9613df14d6": "/day",
+      "text_a34f9d7e15": "No attendance trend data available.",
+      "series_checkIns": "चेक-इन",
+      "tooltip_checkIns": "{count} चेक-इन"
+    },
+    "admin_dashboard_branch_leaderboard": {
+      "text_b84bd2d793": "No branch leaderboard data",
+      "text_186698a248": "Branch Leaderboard",
+      "text_f2cb6cc8de": "Top performing locations by revenue",
+      "text_dd48a11495": "Rank",
+      "text_dae07c6ee8": "Trend",
+      "auto_d88f3d054d": "वर्तमान डैशबोर्ड दायरे के लिए कोई शाखा प्रदर्शन रिकॉर्ड उपलब्ध नहीं है।",
+      "auto_9ad7e475b7": "सक्रिय सदस्य",
+      "auto_53620f46a5": "राजस्व",
+      "auto_fd1e365daf": "राजस्व",
+      "auto_427d80bd4b": "शाखा का नाम"
+    },
+    "AdminDashboardDateFilterDropdown": {
+      "text_12e1289bac": "Select Range"
+    },
+    "admin_dashboard_expiring_widget": {
+      "text_8eb6a72b06": "Expiring Memberships",
+      "text_a126722ec0": "Needs attention",
+      "text_4e68dca8ab": "This Week",
+      "text_bdf25fc1fa": "Expiring This Week",
+      "text_90cc4645c0": "d left",
+      "text_6c8c925d4a": "View All Expiring"
+    },
+    "admin_dashboard_revenue_trend": {
+      "text_cc3465852a": "Revenue & Profit Trend",
+      "text_75caecb7dc": "6-month trailing performance",
+      "series_totalRevenue": "कुल राजस्व",
+      "series_netProfit": "शुद्ध लाभ"
+    },
+    "DashboardError": {
+      "text_1647b9db6c": "पहुँच अस्वीकृत",
+      "text_1879a51e18": "You don&apos;t have permission to view this page.",
+      "text_cdac261089": "डैशबोर्ड पर लौटें",
+      "text_2dc9d37464": "कुछ गलत हो गया!",
+      "text_22b2c820bf": "Please retry. If the problem continues, contact support with the current request time.",
+      "text_042c862e44": "फिर से प्रयास करें"
+    },
+    "admin_dashboard_kpis": {
+      "auto_avgAttendance": "औसत उपस्थिति दर{suffix}",
+      "auto_renewalsPending": "लंबित नवीनीकरण{suffix}",
+      "auto_totalIncome": "कुल आय{suffix}",
+      "auto_netProfit": "शुद्ध लाभ{suffix}",
+      "auto_activeMembers": "सक्रिय सदस्य{suffix}",
+      "auto_totalOutstanding": "कुल बकाया{suffix}"
+    },
+    "AdminAuditRepair": {
+      "thisMonth": "इस महीने",
+      "lastMonth": "पिछला महीना",
+      "last3Months": "पिछले 3 महीने",
+      "last6Months": "पिछले 6 महीने",
+      "thisYear": "इस वर्ष",
+      "monthlyAllTime": "मासिक (सभी समय)",
+      "yearlyAllTime": "वार्षिक (सभी समय)",
+      "customRange": "कस्टम सीमा"
+    }
+  },
+  "admin_dashboard_kpis": {
+    "auto_thisMonth": "इस महीने",
+    "auto_next7Days": "अगले 7 दिन",
+    "auto_allTime": "सभी समय",
+    "auto_capacity": "{percent}% क्षमता",
+    "auto_membersDue": "{count} सदस्य बकाया"
+  }
+}
