@@ -1,0 +1,126 @@
+{
+  "blacklist": {
+    "admin_blacklist_cross_gym_view": {
+      "text_dd683b697d": "कोई जिम-विशिष्ट प्रतिबंध नहीं",
+      "text_a956fd7d18": "All active bans are already global. Gym-specific bans will appear here so you can review and propagate them across all branches.",
+      "text_ea3e10e942": "gym-specific ban",
+      "text_80929f9c4f": "found. These members are blocked only at specific branches. Use",
+      "text_901bb4c2c3": "Propagate to All",
+      "text_fcc98f082f": "to upgrade any entry to a global ban.",
+      "text_d789a1e992": "ID:",
+      "text_bb67a0d7d8": "Propagate ban to all branches",
+      "text_95f4f02070": "Remove from blacklist",
+      "member": "सदस्य",
+      "contact": "संपर्क",
+      "reason": "कारण",
+      "bannedAtBranches": "प्रतिबंधित ब्रांच",
+      "blacklistedBy": "ब्लैकलिस्ट द्वारा",
+      "date": "तारीख",
+      "actions": "कार्रवाई"
+    },
+    "admin_blacklist_empty_state": {
+      "text_209fc8147a": "No blacklisted members",
+      "text_c92ec0d993": "Blacklist a member to restrict their access across gyms",
+      "text_e0b464e57f": "Blacklist Member"
+    },
+    "admin_blacklist_kpis": {
+      "text_697df5412b": "Total Blacklisted",
+      "text_d0838925b1": "Global Bans",
+      "text_d4569d3f03": "Gym-Specific Bans",
+      "text_c161761c78": "Added This Month",
+      "auto_acrossAllGyms": "सभी जिम में",
+      "auto_targetedBranches": "चयनित शाखाएँ"
+    },
+    "admin_blacklist_modal": {
+      "text_e0b464e57f": "Blacklist Member",
+      "text_bbfa773e5a": "बंद करें",
+      "text_7a88b2371d": "Member ID",
+      "text_bae8fcee2a": "e.g. M1042",
+      "text_64346b483c": "Full Name",
+      "text_d2fbdd7c0d": "Member name",
+      "text_77064d5265": "Phone",
+      "text_84add5b295": "Email",
+      "text_5f1bc37f9c": "member@email.com",
+      "text_f219cc0614": "Reason",
+      "text_301589da9a": "Describe the reason for blacklisting...",
+      "text_fcb84ff6bf": "Ban Scope",
+      "text_e787b8cb73": "Select Gyms",
+      "text_77dfd2135f": "रद्द करें",
+      "auto_6a52089785": "सदस्य को ब्लैकलिस्ट करें",
+      "auto_5bc493f10a": "ब्लैकलिस्ट किया जा रहा है...",
+      "auto_51fddaa265": "विशिष्ट जिम",
+      "auto_a3c4f8abb1": "वैश्विक (सभी जिम)",
+      "auto_85fd03cbf9": "वैश्विक"
+    },
+    "admin_blacklist_table": {
+      "text_d789a1e992": "ID:",
+      "text_e922812370": "Toggle blacklist",
+      "text_ed59206098": "Unblock member",
+      "text_12aabd251c": "Unblock",
+      "auto_dfef94ff4f": "निष्क्रिय",
+      "auto_0aecfd61ed": "सक्रिय",
+      "auto_4666088d01": "वैश्विक",
+      "auto_d68c6eb6ce": "वैश्विक",
+      "member": "सदस्य",
+      "contact": "संपर्क",
+      "reason": "कारण",
+      "scope": "स्कोप",
+      "blacklistedBy": "ब्लैकलिस्ट द्वारा",
+      "date": "तारीख",
+      "status": "स्थिति",
+      "actions": "कार्रवाई"
+    },
+    "admin_blacklist_toolbar": {
+      "text_212b62a779": "Search by name, ID, or phone...",
+      "text_b64efd493e": "All Scopes",
+      "text_1ea6687cfe": "All Gyms",
+      "text_e0b464e57f": "Blacklist Member"
+    },
+    "admin_blacklist_cross_gym_empty_state": {
+      "text_no_gym_bans": "कोई जिम-विशिष्ट प्रतिबंध नहीं",
+      "text_no_members": "चयनित जिम में कोई ब्लैकलिस्ट सदस्य असाइन नहीं है।"
+    },
+    "admin_blacklist_main": {
+      "auto_1f0b9339cd": "सभी"
+    },
+    "AdminBlacklistConfirm": {
+      "addMessage": "{name} को ब्लैकलिस्ट करें?",
+      "restoreMessage": "{name} को ब्लैकलिस्ट से पुनर्स्थापित करें?",
+      "propagateMessage": "{name} के लिए यह ब्लैकलिस्ट बदलाव लागू करें?",
+      "removeTitle": "ब्लैकलिस्ट से हटाएँ",
+      "removeMessage": "{name} को ब्लैकलिस्ट से हटाएँ?",
+      "removeConfirm": "हटाएँ",
+      "addTitle": "सदस्य को ब्लैकलिस्ट करें",
+      "addConfirm": "ब्लैकलिस्ट करें",
+      "restoreTitle": "सदस्य पुनर्स्थापित करें",
+      "restoreConfirm": "पुनर्स्थापित करें",
+      "propagateTitle": "ब्लैकलिस्ट बदलाव लागू करें",
+      "propagateConfirm": "लागू करें"
+    },
+    "admin_blacklist_tabs": {
+      "allEntries": "सभी प्रविष्टियाँ",
+      "crossBranchView": "क्रॉस-ब्रांच दृश्य"
+    },
+    "admin_blacklist_filters": {
+      "allGyms": "सभी जिम",
+      "gymAndheriEast": "अंधेरी ईस्ट",
+      "gymBandraWest": "बांद्रा वेस्ट",
+      "gymPowai": "पवई",
+      "gymThane": "ठाणे",
+      "allScopes": "सभी स्कोप",
+      "globalBan": "ग्लोबल प्रतिबंध",
+      "gymSpecific": "जिम-विशिष्ट"
+    },
+    "validation": {
+      "memberIdRequired": "आईडी आवश्यक है।",
+      "nameRequired": "नाम आवश्यक है।",
+      "phoneInvalid": "मान्य फोन नंबर दर्ज करें।",
+      "emailInvalid": "मान्य ईमेल पता दर्ज करें।",
+      "reasonMin": "कारण कम से कम 10 अक्षरों का होना चाहिए।",
+      "gymRequired": "कम से कम एक जिम चुनें।"
+    },
+    "AdminBlacklistModal": {
+      "text_phoneExample": "उदा. 9876543210"
+    }
+  }
+}

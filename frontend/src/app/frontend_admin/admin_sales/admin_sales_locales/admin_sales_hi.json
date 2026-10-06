@@ -1,0 +1,114 @@
+{
+  "sales": {
+    "SalesError": {
+      "text_1647b9db6c": "पहुँच अस्वीकृत",
+      "text_1879a51e18": "You don&apos;t have permission to view this page.",
+      "text_cdac261089": "डैशबोर्ड पर लौटें",
+      "text_2dc9d37464": "कुछ गलत हो गया!",
+      "text_22b2c820bf": "Please retry. If the problem continues, contact support with the current request time.",
+      "text_042c862e44": "फिर से प्रयास करें"
+    },
+    "AdminSalesDateFilterDropdown": {
+      "text_12e1289bac": "Select Range"
+    },
+    "admin_sales_membership_report": {
+      "text_a873abb3d3": "Loading membership report",
+      "text_b25928c699": "Total",
+      "auto_b254e610f8": "सदस्यता रिपोर्ट डेटा नहीं है",
+      "auto_8bae4e6d16": "सदस्यता रिपोर्ट लोड नहीं हो सकी",
+      "auto_refreshSales": "Sales दृश्य को रिफ्रेश करें और फिर प्रयास करें।",
+      "auto_noMembershipRecords": "वर्तमान Sales फ़िल्टर से कोई सदस्यता प्राप्य रिकॉर्ड नहीं मिला।"
+    },
+    "admin_sales_overview": {
+      "text_41bdcad919": "Sales overview could not be loaded.",
+      "text_762e600e5f": "Monthly Revenue",
+      "text_c7474256e3": "New Members Trend",
+      "text_6f62ec7108": "Marketing ROI: Revenue by Referral Source",
+      "remaining_newMembers": "नए सदस्य",
+      "series_revenue": "आय"
+    },
+    "admin_sales_pending_payments": {
+      "text_315dc9e5fb": "members with pending payments",
+      "text_ae2f98a099": "Plan",
+      "text_acb1814fce": "days overdue",
+      "text_f3789fc9e6": "Open Reminder in WhatsApp",
+      "auto_d5bc7150da": "सभी सदस्य अपडेट हैं।",
+      "auto_6f3655f8b3": "कोई लंबित भुगतान नहीं है",
+      "whatsappReminderTitle": "भुगतान अनुस्मारक",
+      "whatsappMemberLabel": "सदस्य",
+      "whatsappOutstandingDues": "बकाया राशि",
+      "whatsappPendingAmount": "लंबित राशि",
+      "whatsappOverdueBy": "इतने दिन से लंबित",
+      "whatsappFooter": "सेवा में रुकावट से बचने के लिए कृपया बकाया राशि जल्द से जल्द जमा करें।"
+    },
+    "admin_sales_store_sales": {
+      "text_42f8f91b08": "Loading store sales",
+      "text_9f5cd8a2e8": "फिर से प्रयास करें",
+      "text_c48f2bf5b2": "Total Products",
+      "text_408fa7b3a9": "Total Orders",
+      "text_3b56959818": "Total Store Revenue",
+      "text_e6240146f7": "Recent Store Orders",
+      "text_88fcf03353": "total orders",
+      "text_f1e486fe3f": "Order #",
+      "text_44d25b5d1b": "Items",
+      "text_b25928c699": "Total",
+      "text_163d8174ff": "Showing",
+      "text_de04fa0e29": "of",
+      "text_50f94286ba": "पिछला",
+      "text_bc981983e7": "अगला",
+      "auto_03aef17c06": "वर्तमान बिक्री दायरे से कोई स्टोर ऑर्डर मेल नहीं खाता।",
+      "auto_39613b51eb": "कोई स्टोर ऑर्डर नहीं मिला",
+      "auto_storeSalesLoadFailed": "स्टोर बिक्री लोड नहीं हो सकी।"
+    },
+    "admin_sales_toolbar": {
+      "text_6d7a30a931": "खोजें...",
+      "text_f3e4fadb9e": "निर्यात करें",
+      "remaining_csvHeader": "दिनांक,राजस्व,नए सदस्य"
+    },
+    "admin_sales_all_memberships": {
+      "auto_7f704f07a0": "कोई अन्य फ़िल्टर चुनें।",
+      "auto_8819ce96c1": "सभी",
+      "auto_112a3f9892": "समाप्त",
+      "status_active": "सक्रिय",
+      "status_expired": "समाप्त"
+    },
+    "AdminAuditRepair": {
+      "totalMembers": "कुल सदस्य",
+      "active": "सक्रिय",
+      "expiringSoon": "जल्द समाप्त होने वाले",
+      "expired": "समाप्त",
+      "thisMonth": "इस महीने",
+      "lastMonth": "पिछला महीना",
+      "last3Months": "पिछले 3 महीने",
+      "last6Months": "पिछले 6 महीने",
+      "thisYear": "इस वर्ष",
+      "monthlyAllTime": "मासिक (सभी समय)",
+      "yearlyAllTime": "वार्षिक (सभी समय)",
+      "customRange": "कस्टम सीमा",
+      "plan": "योजना",
+      "totalReceivable": "कुल प्राप्य",
+      "amountReceived": "प्राप्त राशि",
+      "remaining": "शेष",
+      "refund": "रिफंड",
+      "member": "सदस्य",
+      "start": "शुरू",
+      "endDate": "समाप्ति तिथि",
+      "status": "स्थिति",
+      "amount": "राशि",
+      "daysLeft": "बाकी दिन"
+    },
+    "AdminSalesTabs": {
+      "overview": "अवलोकन",
+      "membershipReport": "सदस्यता रिपोर्ट",
+      "pendingPayments": "लंबित भुगतान",
+      "allMemberships": "सभी सदस्यताएँ",
+      "storeSales": "स्टोर बिक्री"
+    },
+    "AdminSalesAllMemberships": {
+      "auto_4b31b4cf4c": "कोई सदस्यता नहीं मिली"
+    }
+  },
+  "admin_sales_membership_report": {
+    "auto_sortBy": "{header} के अनुसार क्रमबद्ध करें"
+  }
+}

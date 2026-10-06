@@ -1,0 +1,36 @@
+{
+  "notifications": {
+    "NotificationsError": {
+      "text_1647b9db6c": "पहुँच अस्वीकृत",
+      "text_1879a51e18": "You don&apos;t have permission to view this page.",
+      "text_cdac261089": "डैशबोर्ड पर लौटें",
+      "text_2dc9d37464": "कुछ गलत हो गया!",
+      "text_22b2c820bf": "Please retry. If the problem continues, contact support with the current request time.",
+      "text_042c862e44": "फिर से प्रयास करें"
+    },
+    "admin_notifications_client": {
+      "text_215ed57ea0": "All Notifications",
+      "text_6403f2b7eb": "New",
+      "text_8958e22c23": "Mark all read",
+      "text_b75e7880cd": "Unable to load notifications.",
+      "text_9f5cd8a2e8": "फिर से प्रयास करें"
+    },
+    "admin_notifications_header": {
+      "text_753a22b2eb": "Notifications",
+      "text_f0252bf7d6": "Close notifications",
+      "text_6631dc85a2": "No new notifications",
+      "text_382194f7b8": "View All Notifications"
+    },
+    "admin_notifications_list_skeleton": {
+      "text_dc258532ad": "Loading notifications"
+    },
+    "admin_notifications_empty_state": {
+      "text_none": "अभी दिखाने के लिए कोई नई नोटिफिकेशन नहीं है।",
+      "remaining_caughtUp": "आप सभी नोटिफिकेशन देख चुके हैं!"
+    },
+    "metadata": {
+      "title": "सूचनाएँ | एडमिन | GymSmart",
+      "description": "एडमिन सूचनाएँ देखें और प्रबंधित करें।"
+    }
+  }
+}

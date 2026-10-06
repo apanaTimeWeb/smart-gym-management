@@ -1,0 +1,4 @@
+/* RESPONSIBILITY: Keeps the permission matrix horizontally scrollable without arbitrary Tailwind values. */
+.table {
+  min-width: 45rem;
+}

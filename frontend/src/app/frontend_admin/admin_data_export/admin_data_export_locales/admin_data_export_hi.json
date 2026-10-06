@@ -1,0 +1,19 @@
+{
+  "data-export": {
+    "AdminDataExportPage": {
+      "text_title": "डेटा निर्यात",
+      "text_description": "इस रूट के लिए निर्यात निर्माण और निर्यात जॉब इतिहास दस्तावेजीकृत हैं।",
+      "text_blocked": "प्रदत्त स्कोप द्वारा अवरुद्ध",
+      "text_no_invented": "कोई काल्पनिक निर्यात नियंत्रण नहीं दिखाया गया है",
+      "text_scope_gap": "The supplied Admin feature map specifies export creation, export history, API integration, and MSW support, but it does not provide the export request/response contract, field definitions, status model, or mock transport.",
+      "text_no_fabrication": "Per the frontend audit specification, missing API/product contract details must remain explicitly blocked rather than being fabricated to make the route appear complete."
+    },
+    "AdminDataExportLoading": {
+      "text_loading": "डेटा निर्यात लोड हो रहा है"
+    },
+    "metadata": {
+      "title": "डेटा एक्सपोर्ट — एडमिन | Smart Gym 360",
+      "description": "डेटा एक्सपोर्ट सेटिंग्स।"
+    }
+  }
+}

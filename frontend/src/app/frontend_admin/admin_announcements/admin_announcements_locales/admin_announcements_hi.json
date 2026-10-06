@@ -1,0 +1,121 @@
+{
+  "announcements": {
+    "admin_announcements_empty_state": {
+      "text_4242d274f9": "No announcements found",
+      "text_2683f14609": "Create an announcement to start communicating with gym members.",
+      "text_9a45c17c89": "Send First Announcement"
+    },
+    "admin_announcements_kpis": {
+      "text_4e68410f3b": "Total Announcements",
+      "text_9644b22eec": "Active Now",
+      "text_1cd1bdad46": "Scheduled",
+      "text_a689a999a5": "Expired",
+      "text_d7f83b735d": "Total Views",
+      "text_f9312169ef": "Pinned",
+      "auto_liveVisible": "लाइव और दिखाई दे रहा है",
+      "auto_upcoming": "आगामी",
+      "auto_acrossAll": "सभी के लिए",
+      "auto_alwaysOnTop": "हमेशा सबसे ऊपर"
+    },
+    "admin_announcements_main": {
+      "text_ad3057e65c": "Send a Branch Announcement",
+      "text_71ccab9dbd": "Broadcast a notice to members, trainers, or staff at your gym branches. Supports scheduling and pinning.",
+      "text_30642945b5": "Send Announcement"
+    },
+    "admin_announcements_modal": {
+      "text_bbfa773e5a": "बंद करें",
+      "text_9616975c7a": "Title *",
+      "text_b6d5688f06": "e.g. Grand Opening — New Branch!",
+      "text_d0f19ecb98": "Message Body *",
+      "text_6021925ec7": "Write the full announcement message here...",
+      "text_7568d32184": "Priority *",
+      "text_f49bd7f256": "Pin Announcement",
+      "text_81962d4053": "Always show at top",
+      "text_ed59b37623": "Target Audience *",
+      "text_5193fbc75c": "Target Branches *",
+      "text_0ed4cd1e4c": "Publish Date & Time *",
+      "text_c8f7179844": "Expiry Date & Time *",
+      "text_77dfd2135f": "रद्द करें",
+      "auto_0727937d60": "घोषणा प्रकाशित करें",
+      "auto_ab2edcb408": "परिवर्तन सहेजें",
+      "auto_a2deb25a6b": "अपने शाखा सदस्यों, ट्रेनरों या स्टाफ को प्रसारित करें",
+      "auto_20f51762b1": "घोषणा विवरण अपडेट करें",
+      "auto_721b86aeda": "नई घोषणा",
+      "auto_b07da8e396": "घोषणा संपादित करें"
+    },
+    "admin_announcements_table": {
+      "text_931dc77aed": "Failed to load announcements",
+      "text_52fbc15299": "Search announcements...",
+      "text_26b646aa94": "Search announcements",
+      "text_30642945b5": "Send Announcement",
+      "text_f43653d7fa": "Filter by status",
+      "text_870c2d046e": "Filter by priority",
+      "text_8b807ad7ec": "All Priority",
+      "text_aee7f4f0e8": "Filter by branch",
+      "text_56553100b0": "Reset filters",
+      "text_44c57abd88": "रीसेट करें",
+      "text_bd63359087": "announcement",
+      "text_e8b9965bfd": "Edit announcement",
+      "text_bec58ef798": "Delete announcement",
+      "auto_8f947cbef2": "घोषणा पिन करें",
+      "auto_ed86d9759e": "घोषणा अनपिन करें",
+      "auto_3f34490255": "भेजा गया",
+      "header": {
+        "empty": "",
+        "titlePreview": "शीर्षक और पूर्वावलोकन",
+        "audience": "दर्शक",
+        "branches": "ब्रांच",
+        "schedule": "समय-सारणी",
+        "priority": "प्राथमिकता",
+        "status": "स्थिति",
+        "views": "दृश्य",
+        "acknowledged": "स्वीकृत",
+        "delivery": "डिलीवरी",
+        "actions": "कार्रवाई"
+      },
+      "status": {
+        "active": "सक्रिय",
+        "scheduled": "निर्धारित",
+        "expired": "समाप्त",
+        "draft": "ड्राफ्ट"
+      },
+      "priority": {
+        "high": "उच्च",
+        "medium": "मध्यम",
+        "low": "कम"
+      }
+    },
+    "AdminAnnouncementsError": {
+      "text_3d61be7ff8": "Failed to load Announcements",
+      "text_cef2fe093b": "फिर से प्रयास करें"
+    },
+    "AdminAnnouncementsFilters": {
+      "allMyBranches": "मेरी सभी ब्रांच",
+      "gymAndheriEast": "अंधेरी ईस्ट",
+      "gymBandraWest": "बांद्रा वेस्ट",
+      "gymPowai": "पवई",
+      "gymThane": "ठाणे",
+      "everyoneAtBranch": "ब्रांच में सभी",
+      "members": "सदस्य",
+      "trainers": "ट्रेनर",
+      "staff": "स्टाफ",
+      "high": "उच्च",
+      "medium": "मध्यम",
+      "low": "कम",
+      "allStatus": "सभी स्थिति",
+      "active": "सक्रिय",
+      "scheduled": "निर्धारित",
+      "expired": "समाप्त",
+      "draft": "ड्राफ्ट"
+    },
+    "metadata": {
+      "title": "घोषणाएँ | एडमिन - GymSmart",
+      "description": "सदस्यों, स्टाफ और ट्रेनरों के लिए घोषणाएँ और सूचनाएँ प्रसारित करें।"
+    },
+    "AdminAnnouncementsConfirm": {
+      "deleteTitle": "घोषणा हटाएँ",
+      "deleteMessage": "क्या आप यह घोषणा हटाना चाहते हैं?",
+      "deleteConfirm": "हटाएँ"
+    }
+  }
+}

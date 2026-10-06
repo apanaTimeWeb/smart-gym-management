@@ -1,0 +1,146 @@
+{
+  "reports": {
+    "ReportsError": {
+      "text_fc856e9f9e": "Failed to load reports",
+      "text_cef2fe093b": "फिर से प्रयास करें"
+    },
+    "admin_reports_attendance": {
+      "text_aff29fd842": "Attendance Summary by Gym",
+      "text_0e47830c90": "No attendance records found",
+      "text_373e6c1e10": "Attendance Heatmap (Simulated by Day)",
+      "text_cabfc9d38a": "High (80%+)",
+      "text_ff8daa2365": "Medium (60%+)",
+      "text_c040292c67": "Low (40%+)",
+      "text_4e0fa4378f": "Poor",
+      "text_bc4359231d": "Gym",
+      "text_c221964277": "No heatmap data available",
+      "auto_f0707f1ee7": "इस अवधि के लिए कोई जिम उपस्थिति रिकॉर्ड नहीं है।",
+      "auto_1d0c4b148c": "चयनित अवधि से कोई उपस्थिति रिकॉर्ड मेल नहीं खाता।",
+      "auto_attendanceRate": "{gym} उपस्थिति दर"
+    },
+    "AdminReportsDateFilterDropdown": {
+      "text_12e1289bac": "Select Range"
+    },
+    "admin_reports_main": {
+      "text_1ea6687cfe": "All Gyms",
+      "exportPdf": "PDF के रूप में निर्यात करें",
+      "exportCsv": "CSV के रूप में निर्यात करें"
+    },
+    "admin_reports_membership": {
+      "text_fd05c3efa5": "Membership Growth by Gym",
+      "text_e044ab4747": "New members, renewals, exits and net growth for the selected period",
+      "text_b25928c699": "Total"
+    },
+    "admin_reports_payroll": {
+      "text_86bb288973": "Staff Payroll by Gym",
+      "text_9062d7cc94": "No payroll data",
+      "text_3aab2cfaf7": "Fully Paid",
+      "text_96f608c16c": "लंबित",
+      "auto_2a76b3d03a": "चयनित रिपोर्ट दायरे के लिए कोई पेरोल रिकॉर्ड उपलब्ध नहीं है।"
+    },
+    "admin_reports_pnl": {
+      "text_abc7e55ec9": "Profit & Loss by Gym",
+      "text_c51b793f71": "Full revenue, cost, and profit breakdown for the selected period",
+      "text_b25928c699": "Total",
+      "auto_profitMargin": "{gym} लाभ मार्जिन"
+    },
+    "admin_reports_revenue": {
+      "text_177bf7fe0c": "Revenue by Gym",
+      "text_a47fd0727f": "Revenue by Payment Method",
+      "text_8764bbb6f1": "No payment-method data",
+      "text_098e8b7646": "Revenue by Plan",
+      "text_9dd0910563": "No plan revenue data",
+      "text_3757697e2a": "members)",
+      "text_d965c78fbc": "Monthly Revenue Trend",
+      "text_096b9d52b6": "No monthly revenue data",
+      "auto_a64dbf269d": "चयनित रिपोर्ट दायरे के लिए कोई मासिक राजस्व रिकॉर्ड उपलब्ध नहीं है।",
+      "auto_2e04c86d5b": "चयनित रिपोर्ट दायरे के लिए प्लान के अनुसार कोई राजस्व उपलब्ध नहीं है।",
+      "auto_fdf7814a62": "चयनित रिपोर्ट दायरे के लिए भुगतान विधि के अनुसार कोई राजस्व उपलब्ध नहीं है।",
+      "auto_revenueShare": "{gym} राजस्व हिस्सा",
+      "auto_methodRevenueShare": "{method} राजस्व हिस्सा",
+      "auto_planRevenueShare": "{plan} राजस्व हिस्सा"
+    },
+    "admin_reports_kpis": {
+      "auto_totalIncome": "कुल आय{suffix}",
+      "auto_netProfit": "शुद्ध लाभ{suffix}",
+      "auto_totalExpenses": "कुल खर्च{suffix}",
+      "auto_totalMembers": "कुल सदस्य{suffix}",
+      "auto_totalPayroll": "कुल पेरोल{suffix}",
+      "auto_avgAttendance": "औसत उपस्थिति दर{suffix}",
+      "auto_margin": "{value} मार्जिन",
+      "auto_newMembers": "+{count} नए"
+    },
+    "AdminAuditRepair": {
+      "gym": "जिम",
+      "avgDailyCheckIns": "औसत दैनिक चेक-इन",
+      "totalCheckIns": "कुल चेक-इन",
+      "attendanceRate": "उपस्थिति दर",
+      "peakDay": "सबसे अधिक उपस्थिति का दिन",
+      "thisMonth": "इस महीने",
+      "lastMonth": "पिछला महीना",
+      "last3Months": "पिछले 3 महीने",
+      "last6Months": "पिछले 6 महीने",
+      "thisYear": "इस वर्ष",
+      "monthlyAllTime": "मासिक (सभी समय)",
+      "yearlyAllTime": "वार्षिक (सभी समय)",
+      "customRange": "कस्टम सीमा",
+      "allGyms": "सभी जिम",
+      "totalPayroll": "कुल पेरोल",
+      "paid": "भुगतान किया गया",
+      "pending": "लंबित",
+      "advances": "अग्रिम",
+      "revenue": "राजस्व",
+      "expenses": "खर्च",
+      "netProfit": "शुद्ध लाभ",
+      "margin": "मार्जिन",
+      "trend": "रुझान",
+      "month": "महीना",
+      "monday": "सोम",
+      "tuesday": "मंगल",
+      "wednesday": "बुध",
+      "thursday": "गुरु",
+      "friday": "शुक्र",
+      "saturday": "शनि",
+      "sunday": "रवि",
+      "staffCount": "स्टाफ संख्या",
+      "status": "स्थिति",
+      "membershipRevenue": "सदस्यता आय",
+      "storeRevenue": "स्टोर आय",
+      "staffCost": "स्टाफ लागत",
+      "operationalCost": "संचालन लागत",
+      "activeMembers": "सक्रिय सदस्य",
+      "newMembers": "नए सदस्य",
+      "renewals": "नवीनीकरण",
+      "exits": "निकासी",
+      "netGrowth": "शुद्ध वृद्धि",
+      "totalRevenue": "कुल राजस्व",
+      "totalExpenses": "कुल खर्च"
+    },
+    "AdminReportsAttendance": {
+      "auto_attendanceRate": "{gymName} की उपस्थिति दर"
+    },
+    "static": {
+      "revenue": "राजस्व",
+      "membership_growth": "सदस्यता वृद्धि",
+      "attendance": "उपस्थिति",
+      "payroll": "पेरोल",
+      "p_l": "P&L",
+      "this_month": "इस महीने",
+      "last_month": "पिछले महीने",
+      "last_3_months": "पिछले 3 महीने",
+      "last_6_months": "पिछले 6 महीने",
+      "this_year": "इस वर्ष",
+      "custom_range": "कस्टम अवधि",
+      "export_as_pdf": "PDF के रूप में निर्यात करें",
+      "export_as_csv": "CSV के रूप में निर्यात करें"
+    }
+  },
+  "admin_reports_kpis": {
+    "auto_vsLastPeriod": "पिछली अवधि की तुलना में",
+    "auto_acrossAllGyms": "सभी जिम में",
+    "auto_thisPeriod": "इस अवधि"
+  },
+  "admin_reports_revenue": {
+    "auto_sortBy": "{header} के अनुसार क्रमबद्ध करें"
+  }
+}

@@ -1,0 +1,7 @@
+/* RESPONSIBILITY: Owns exact geometry for the audit-log drawer where the host Tailwind config is unavailable in the supplied artifact. */
+.drawer {
+  max-width: var(--drawer-width);
+}
+.content {
+  height: calc(100% - var(--layout-header-height));
+}
