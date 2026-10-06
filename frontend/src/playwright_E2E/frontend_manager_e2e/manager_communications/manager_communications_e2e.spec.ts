@@ -21,7 +21,7 @@ test('sends a campaign from a predefined template and shows success feedback', a
   await expect(submit).toBeEnabled({ timeout: 10000 });
   await page.getByTestId('manager_communications-manager-communications-composer-input-text-1').fill('Test Subject');
   await page.getByTestId('manager_communications-manager-communications-composer-managersearchabledropdown-1-trigger').click();
-  await page.getByRole('option').first().click();
+  await page.locator('[role="listbox"] [role="option"]').first().click();
   await submit.click();
   await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

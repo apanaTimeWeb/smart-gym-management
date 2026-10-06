@@ -30,7 +30,7 @@ test('creates a trainer shift and shows success feedback', async ({ page }) => {
   await page.getByTestId(optionsTestId).locator('[data-testid*="-option-"]').first().click();
 
   await page.getByTestId('manager_schedule-managerscheduleshiftmodal-managersearchabledropdown-1-trigger').click();
-  await page.getByRole('option').first().click();
+  await page.locator('[role="listbox"] [role="option"]').first().click();
   await page.getByTestId('manager_schedule-manager-schedule-shift-modal-button-submit').click();
   await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });
