@@ -18,7 +18,7 @@ test('creates an expense and confirms the save workflow', async ({ page }) => {
   await page.getByTestId('manager_expenses-manager-expenses-toolbar-add').click();
   await page.getByTestId('manager_expenses-manager-expenses-modal-input-text-1').fill('E2E Test Expense');
   await page.getByTestId('manager_expenses-manager-expenses-modal-input-number').fill('1250');
-  await page.getByTestId('manager_expenses-managerexpensesmodal-searchable-dropdown-1-trigger').click();
+  await page.getByTestId('manager_expenses-managerexpensesmodal-managersearchabledropdown-1-trigger').click();
   await page.getByRole('option').first().click();
   await page.getByTestId('manager_expenses-manager-expenses-modal-button-submit').click();
   await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });

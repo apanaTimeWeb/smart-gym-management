@@ -63,6 +63,7 @@ export const AuthCookieUtilities = {
     setAccessAndRefreshCookies(response, accessToken, refreshToken);
     response.cookies.set(AuthSessionConstants.COOKIES.USER, JSON.stringify(user), {
       ...secureCookieBase,
+      httpOnly: false, // The client needs to read this cookie to determine role permissions
       maxAge: AuthSessionConstants.MAX_AGE_SECONDS.REFRESH_TOKEN,
     });
   },
@@ -101,6 +102,7 @@ export const AuthCookieUtilities = {
       if (validatedUser) {
         response.cookies.set(AuthSessionConstants.COOKIES.USER, JSON.stringify(validatedUser), {
           ...secureCookieBase,
+          httpOnly: false, // The client needs to read this cookie to determine role permissions
           maxAge: AuthSessionConstants.MAX_AGE_SECONDS.REFRESH_TOKEN,
         });
       }
