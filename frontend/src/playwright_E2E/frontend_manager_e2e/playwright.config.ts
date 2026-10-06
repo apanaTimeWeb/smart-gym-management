@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './frontend_manager_e2e',
+  testDir: '.',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -14,6 +14,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  testIgnore: '*auth_setup.spec.ts',
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],

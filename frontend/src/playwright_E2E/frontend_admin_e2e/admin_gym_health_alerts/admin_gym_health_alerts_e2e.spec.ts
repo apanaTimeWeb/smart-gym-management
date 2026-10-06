@@ -11,8 +11,8 @@ test.describe('admin_gym_health_alerts', () => {
   test('loads the module and exercises a safe interactive path', async ({ page }) => {
     test.skip(!process.env.PLAYWRIGHT_AUTH_STATE, 'Host-authenticated storage state is required for runtime verification.');
 
-    await page.goto(new URL('/admin/gym-health-alerts', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveURL(new RegExp('/admin/gym\-health\-alerts(?:\?.*)?$'));
+    await page.goto(new URL('/frontend_admin/admin_gym_health_alerts', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(new RegExp('/frontend_admin/admin_gym_health_alerts(?:\\?.*)?$'));
 
     const moduleSurface = page.locator('[data-testid^="admin_gym_health_alerts-"]');
     await expect(moduleSurface.first()).toBeVisible();

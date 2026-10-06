@@ -1,0 +1,35 @@
+{
+  "cookies": [
+    {
+      "name": "gymsmart_token",
+      "value": "mock_access_63381ecb-b18c-4a49-90ef-c2852bd479db",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1791311268.15365,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "gymsmart_refresh_token",
+      "value": "mock_refresh_077ea6f2-bfde-42b2-896c-0d4a9f3ffed5",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1791915168.154322,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "gymsmart_user",
+      "value": "%7B%22id%22%3A%22mock-admin%22%2C%22name%22%3A%22Demo%20Admin%22%2C%22email%22%3A%22admin%40gymsmart.com%22%2C%22role%22%3A%22ADMIN%22%2C%22tenantId%22%3A%22tenant-demo%22%7D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1791915168.154364,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "origins": []
+}

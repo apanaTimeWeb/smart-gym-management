@@ -1,20 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
 
+/** Minimal config used only by the admin auth setup step. */
 export default defineConfig({
   testDir: '.',
-  timeout: 30_000,
-  expect: { timeout: 5_000 },
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  reporter: [['list']],
+  retries: 0,
+  workers: 1,
+  reporter: 'list',
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
-    storageState: require('path').join(__dirname, 'adminAuth.json'),
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  testIgnore: '*auth_setup.spec.ts',
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],

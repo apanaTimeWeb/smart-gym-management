@@ -11,8 +11,8 @@ test.describe('admin_profile', () => {
   test('loads the module and exercises a safe interactive path', async ({ page }) => {
     test.skip(!process.env.PLAYWRIGHT_AUTH_STATE, 'Host-authenticated storage state is required for runtime verification.');
 
-    await page.goto(new URL('/admin/profile', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveURL(new RegExp('/admin/profile(?:\?.*)?$'));
+    await page.goto(new URL('/frontend_admin/admin_profile', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(new RegExp('/frontend_admin/admin_profile(?:\\?.*)?$'));
 
     const moduleSurface = page.locator('[data-testid^="admin_profile-"]');
     await expect(moduleSurface.first()).toBeVisible();

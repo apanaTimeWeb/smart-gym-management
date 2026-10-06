@@ -1,0 +1,15 @@
+{
+  "cookies": [
+    {
+      "name": "gymsmart_user",
+      "value": "%7B%22name%22%3A%22Demo%20Manager%22%2C%22email%22%3A%22manager%40gymsmart.com%22%2C%22role%22%3A%22manager%22%2C%22tenantId%22%3A%22demo-tenant%22%7D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

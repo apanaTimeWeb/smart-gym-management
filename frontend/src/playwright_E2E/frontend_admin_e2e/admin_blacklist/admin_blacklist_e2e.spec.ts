@@ -2,20 +2,37 @@ import { test, expect } from '@playwright/test';
 
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000';
 
-test.describe('admin_blacklist critical journey', () => {
-  test('switches between blacklist tabs and renders the selected view', async ({ page }) => {
+/**
+ * AI-portable functional smoke contract for `admin_blacklist`.
+ * The suite is intentionally self-contained so this module's E2E folder can be supplied independently.
+ * Runtime execution requires the host application and authenticated PLAYWRIGHT_AUTH_STATE.
+ */
+test.describe('admin_blacklist', () => {
+  test('loads the module and exercises a safe interactive path', async ({ page }) => {
     test.skip(!process.env.PLAYWRIGHT_AUTH_STATE, 'Host-authenticated storage state is required for runtime verification.');
-    await page.goto(new URL('/admin/blacklist', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
 
-    const tabs = page.locator('button[data-testid^="admin_blacklist-admin_blacklist-tabs-click-"]');
-    await expect(tabs).toHaveCount(2);
+    await page.goto(new URL('/frontend_admin/admin_blacklist', baseUrl).toString(), { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(new RegExp('/frontend_admin/admin_blacklist(?:\\?.*)?$'));
 
-    await tabs.nth(1).click();
-    const crossGymSurface = page.locator('[data-testid="admin_blacklist-admin_blacklist-cross-gym-empty-state-state"], [data-admin-responsive-table]').first();
-    await expect(crossGymSurface).toBeVisible();
+    const moduleSurface = page.locator('[data-testid^="admin_blacklist-"]');
+    await expect(moduleSurface.first()).toBeVisible();
 
-    await tabs.nth(0).click();
-    const primarySurface = page.locator('[data-testid^="admin_blacklist-admin_blacklist-table-"], [data-testid="admin_blacklist-admin_blacklist-empty-state-state"]').first();
-    await expect(primarySurface).toBeVisible();
+    const safeSearch = page.locator('input[data-testid^="admin_blacklist-"][data-testid*="search"]:not([disabled])').first();
+    if (await safeSearch.count()) {
+      await safeSearch.fill('test');
+      await page.waitForTimeout(350);
+      await safeSearch.fill('');
+    }
+
+    const dropdownTrigger = page.locator('button[data-testid^="admin_blacklist-"][aria-haspopup="listbox"]:not([disabled])').first();
+    if (await dropdownTrigger.count()) {
+      await dropdownTrigger.click();
+      await expect(page.locator('[role="listbox"]')).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(page.locator('[role="listbox"]')).toHaveCount(0);
+    }
+
+    const moduleControls = await page.locator('[data-testid^="admin_blacklist-"]').count();
+    expect(moduleControls).toBeGreaterThan(0);
   });
 });

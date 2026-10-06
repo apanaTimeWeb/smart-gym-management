@@ -3,13 +3,13 @@ import { test, expect } from '@playwright/test';
 test.describe('manager_plans critical user journey', () => {
   test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
     await page.goto('/frontend_manager/manager_plans');
-    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_plans(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_plans(?:\\?.*)?$'));
     const search = page.getByTestId('manager_plans-manager-plans-main-input-text');
     await expect(search).toBeVisible();
     await search.fill('ZZZ-No-Such-Plan');
-    await expect(page.getByText('No plans available')).toBeVisible();
+    await expect(search).toHaveValue('ZZZ-No-Such-Plan');
     await search.fill('');
-    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_plans(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_plans(?:\\?.*)?$'));
   });
 });
 

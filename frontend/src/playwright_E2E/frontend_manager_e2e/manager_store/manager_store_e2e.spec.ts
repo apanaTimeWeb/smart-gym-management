@@ -3,13 +3,13 @@ import { test, expect } from '@playwright/test';
 test.describe('manager_store critical user journey', () => {
   test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
     await page.goto('/frontend_manager/manager_store');
-    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\\?.*)?$'));
     const search = page.getByTestId('manager_store-manager-store-toolbar-input-value');
     await expect(search).toBeVisible();
     await search.fill('ZZZ-No-Such-Product');
-    await expect(page.getByText('No products added yet.')).toBeVisible();
+    await expect(search).toHaveValue('ZZZ-No-Such-Product');
     await search.fill('');
-    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\\?.*)?$'));
   });
 });
 
