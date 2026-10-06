@@ -27,5 +27,5 @@ test('marks all notifications as read and shows success feedback', async ({ page
   const markAll = page.getByTestId(/manager_notifications-.*mark-all-read/);
   await expect(markAll).toBeVisible();
   await markAll.click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

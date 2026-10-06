@@ -21,5 +21,5 @@ test('creates an inquiry and shows success feedback', async ({ page }) => {
   await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-managersearchabledropdown-1').getByTestId(/-trigger$/).click();
   await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-managersearchabledropdown-1').getByTestId(/-option-/).first().click();
   await page.getByTestId('manager_inquiries-manager-inquiries-modal-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

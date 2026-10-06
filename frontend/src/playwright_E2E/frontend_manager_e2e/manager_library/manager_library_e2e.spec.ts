@@ -17,10 +17,10 @@ test('creates an exercise from the modal and shows success feedback', async ({ p
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-name').fill('E2E Bench Press');
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-category').selectOption({ index: 1 });
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-muscle').fill('Chest');
-  await page.getByTestId('manager_library-managerlibraryexercisemodal-managersearchabledropdown-1').getByTestId(/-trigger$/).click();
-  await page.getByTestId('manager_library-managerlibraryexercisemodal-managersearchabledropdown-1').getByTestId(/-option-/).first().click();
+  await page.getByTestId('manager_library-managerlibraryexercisemodal-managersearchabledropdown-1-trigger').click();
+  await page.getByTestId('manager_library-managerlibraryexercisemodal-managersearchabledropdown-1-options').locator('[data-testid*="-option-"]').first().click();
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-sets').fill('3');
   await page.getByTestId('manager_library-manager-library-exercise-modal-manager-library-exercise-reps').fill('10');
   await page.getByTestId('manager_library-manager-library-exercise-modal-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

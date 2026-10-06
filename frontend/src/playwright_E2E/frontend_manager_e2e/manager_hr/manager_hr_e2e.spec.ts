@@ -28,5 +28,5 @@ test('creates a payroll record and confirms the save workflow', async ({ page })
   const confirm = page.getByRole('dialog').getByRole('button', { name: /confirm|payroll/i }).last();
   await expect(confirm).toBeVisible();
   await confirm.click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

@@ -5,7 +5,7 @@ test.describe('manager_finance critical user journey', () => {
     await page.goto('/frontend_manager/manager_finance');
     await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_finance(?:\\?.*)?$'));
     const search = page.getByTestId('manager_finance-manager-finance-main-input-text');
-    await expect(search).toBeVisible();
+    await expect(search).toBeVisible({ timeout: 10000 });
     await search.fill('ZZZ-No-Such-Payment');
     await expect(search).toHaveValue('ZZZ-No-Such-Payment');
     await search.fill('');

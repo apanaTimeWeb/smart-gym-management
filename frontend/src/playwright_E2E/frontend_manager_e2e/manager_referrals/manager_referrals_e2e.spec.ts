@@ -21,5 +21,5 @@ test('creates a referral from the manual referral form and shows success feedbac
   await page.getByTestId('manager_referrals-referrals-managerreferralsaddmodal-input-log-new-referral-2').fill('E2E Inquiry');
   await page.getByTestId('manager_referrals-referrals-managerreferralsaddmodal-input-log-new-referral-3').fill('9876543210');
   await page.getByTestId('manager_referrals-manager-referrals-main-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });

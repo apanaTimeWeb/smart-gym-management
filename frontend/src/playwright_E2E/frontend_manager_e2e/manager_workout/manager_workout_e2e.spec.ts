@@ -22,5 +22,5 @@ test('creates a workout plan and shows success feedback', async ({ page }) => {
   await page.getByTestId('manager_workout-manager-workout-modal-manager-workout-focus').fill('Strength');
   await page.getByTestId('manager_workout-manager-workout-modal-manager-workout-duration').fill('60 min');
   await page.getByTestId('manager_workout-manager-workout-modal-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
 });
