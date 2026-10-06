@@ -4,7 +4,7 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_AUDIT_LOGS_ROUTES = {
-  root: '/admin/audit_logs' as const,
+  root: '/frontend_admin/admin_audit_logs' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────

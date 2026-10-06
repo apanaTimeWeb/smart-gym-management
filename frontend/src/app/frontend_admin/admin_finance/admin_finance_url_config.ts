@@ -4,8 +4,8 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_FINANCE_ROUTES = {
-  root: '/admin/finance' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_finance' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
@@ -13,7 +13,7 @@ export const ADMIN_FINANCE_PAYMENTS_BASE_URL = '/admin/finance/payments' as cons
 export const ADMIN_FINANCE_PAYMENTS_URL = '/admin/finance/payments/fetchPayments' as const;
 export const ADMIN_FINANCE_EXPENSES_URL = '/admin/finance/payments/fetchExpenses' as const;
 export const ADMIN_FINANCE_SUMMARY_URL = '/admin/finance/summary' as const;
-export const ADMIN_FINANCE_PNL_COMPARISON_URL = '/admin/finance/pnl' as const;
+export const ADMIN_FINANCE_PNL_COMPARISON_URL = '/frontend_admin/admin_finance/admin_finance_pnl' as const;
 export const ADMIN_FINANCE_PENDING_DUES_URL = '/admin/finance/pending-dues' as const;
 export const ADMIN_FINANCE_PAYMENTS_BY_MEMBER_URL = (memberId: string) => `/admin/finance/payments/member/${memberId}` as const;
 

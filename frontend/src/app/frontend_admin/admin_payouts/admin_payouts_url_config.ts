@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_PAYOUTS_ROUTES = {
-  root: '/admin/payouts' as const,
+  root: '/frontend_admin/admin_payouts' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_PAYOUTS_BASE_URL = '/admin/payouts' as const;
+export const ADMIN_PAYOUTS_BASE_URL = '/frontend_admin/admin_payouts' as const;
 export const ADMIN_PAYOUTS_PNL_URL = '/admin/payouts/pnl' as const;
 export const ADMIN_PAYOUTS_KPIS_URL = '/admin/payouts/kpis' as const;
 export const ADMIN_PAYOUTS_DETAIL_URL = (id: string) => `/admin/payouts/${encodeURIComponent(id)}` as const;

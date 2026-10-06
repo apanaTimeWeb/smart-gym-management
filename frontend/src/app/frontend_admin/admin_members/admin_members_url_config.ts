@@ -4,13 +4,13 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_MEMBERS_ROUTES = {
-  root: '/admin/members' as const,
+  root: '/frontend_admin/admin_members' as const,
   detail: (memberId: string) => `/admin/members?memberId=${encodeURIComponent(memberId)}` as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
 export const ADMIN_MEMBERS_BRANCH_REFERENCE_URL = '/admin/branches/fetchBranches' as const;
-export const ADMIN_MEMBERS_BASE_URL = '/admin/members' as const;
+export const ADMIN_MEMBERS_BASE_URL = '/frontend_admin/admin_members' as const;
 export const ADMIN_MEMBERS_SUMMARY_URL = '/admin/members/summary' as const;
 export const ADMIN_MEMBERS_LIST_URL = '/admin/members/list' as const;
 export const ADMIN_MEMBERS_DETAIL_URL = (memberId: string) => `/admin/members/${encodeURIComponent(memberId)}` as const;

@@ -4,13 +4,13 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_DASHBOARD_ROUTES = {
-  root: '/admin/dashboard' as const,
-  auditLogs: '/admin/audit_logs' as const,
-  members: '/admin/members' as const,
+  root: '/frontend_admin/admin_dashboard' as const,
+  auditLogs: '/frontend_admin/admin_audit_logs' as const,
+  members: '/frontend_admin/admin_members' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_DASHBOARD_BASE_URL = '/admin/dashboard' as const;
+export const ADMIN_DASHBOARD_BASE_URL = '/frontend_admin/admin_dashboard' as const;
 export const ADMIN_DASHBOARD_STATS_URL = '/admin/dashboard/fetchDashboardStats' as const;
 
 export const ADMIN_DASHBOARD_URLS = {

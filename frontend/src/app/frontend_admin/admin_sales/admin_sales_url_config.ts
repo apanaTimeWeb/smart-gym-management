@@ -4,8 +4,8 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_SALES_ROUTES = {
-  root: '/admin/sales' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_sales' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
