@@ -1,0 +1,25 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('manager_inquiries critical user journey', () => {
+  test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
+    await page.goto('/manager/inquiries');
+    await expect(page).toHaveURL(new RegExp('/manager/inquiries(?:\?.*)?$'));
+    const search = page.getByTestId('manager_inquiries-manager-inquiries-toolbar-input-value');
+    await expect(search).toBeVisible();
+    await search.fill('ZZZ-No-Such-Inquiry');
+    await expect(page.getByText('No inquiries yet. Add your first inquiry!')).toBeVisible();
+    await search.fill('');
+    await expect(page).toHaveURL(new RegExp('/manager/inquiries(?:\?.*)?$'));
+  });
+});
+
+test('creates an inquiry and shows success feedback', async ({ page }) => {
+  await page.goto('/manager/inquiries');
+  await page.getByTestId('manager_inquiries-manager-inquiries-toolbar-add').click();
+  await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-input-edit-inquiry-0').fill('E2E Test Lead');
+  await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-input-edit-inquiry-1').fill('9876543210');
+  await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-managersearchabledropdown-1').getByTestId(/-trigger$/).click();
+  await page.getByTestId('manager_inquiries-inquiries-managerinquiriesmodal-managersearchabledropdown-1').getByTestId(/-option-/).first().click();
+  await page.getByTestId('manager_inquiries-manager-inquiries-modal-button-submit').click();
+  await expect(page.getByTestId('ui-toast-status')).toBeVisible();
+});
