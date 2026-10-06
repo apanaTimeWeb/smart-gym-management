@@ -4,13 +4,13 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_PLANS_ROUTES = {
-  root: '/admin/plans' as const,
-  dashboard: '/admin/dashboard' as const,
-  revenue: '/admin/plans/revenue' as const,
+  root: '/frontend_admin/admin_plans' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
+  revenue: '/frontend_admin/admin_plans/admin_plans_revenue' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_PLANS_BASE_URL = '/admin/plans' as const;
+export const ADMIN_PLANS_BASE_URL = '/frontend_admin/admin_plans' as const;
 export const ADMIN_PLANS_GET_ALL_URL = '/admin/plans/fetchAllPlans' as const;
 export const ADMIN_PLANS_GET_ONE_CONTRACT_URL = '/admin/plans/fetchPlanById' as const;
 export const ADMIN_PLANS_CREATE_URL = '/admin/plans/createPlan' as const;

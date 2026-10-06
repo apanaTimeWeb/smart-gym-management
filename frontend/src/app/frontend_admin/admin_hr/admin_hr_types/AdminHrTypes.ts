@@ -71,11 +71,11 @@ export interface HrServerState {
   error: string;
   saving: boolean;
   loadAll: () => Promise<void>;
-  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
-  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
-  deleteStaff: (id: string) => Promise<void>;
-  toggleStaffStatus: (staff: Staff) => Promise<void>;
-  markPayrollPaid: (id: string, amount: number) => Promise<void>;
+  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void | boolean>;
+  savePayroll: (data: Partial<Payroll> & { amount?: string | number; paidAmount?: string | number }) => Promise<void | boolean>;
+  deleteStaff: (id: string) => Promise<void | boolean>;
+  toggleStaffStatus: (staff: Staff) => Promise<void | boolean>;
+  markPayrollPaid: (id: string, amount: number) => Promise<void | boolean>;
   giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<boolean>;
   payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<boolean>;
 }

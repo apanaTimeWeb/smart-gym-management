@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin dashboard feature.
 import type { DashboardStats } from '@/app/frontend_admin/admin_dashboard/admin_dashboard_types/AdminDashboardTypes';
+import type { AdminDashboardRange } from '@/app/frontend_admin/admin_dashboard/admin_dashboard_types/AdminDashboardRangeTypes';
 
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin dashboard feature.
 

@@ -4,7 +4,7 @@ import { apiFetch, type ApiResponse } from '@/lib/api';
 import { ADMIN_HR_API } from '@/app/frontend_admin/admin_hr/admin_hr_url_config';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrTypes';
 import type { StaffPerformanceRecord, PerformancePeriod, PerformanceSortKey, PerformanceSortDirection } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrPerformanceTypes';
-import { staffSchema, payrollSchema, hrSummarySchema, ledgerEntrySchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrPerformanceSchemas';
+import { staffSchema, payrollSchema, hrSummarySchema, ledgerEntrySchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrSchemas';
 import { staffPerformanceRecordSchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrPerformanceSchemas';
 
 export const AdminHrApi = {

@@ -75,7 +75,7 @@ export function AdminSettingsGST({ initialData }: AdminSettingsGSTProps) {
               {...form.register('taxRate')}
               className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base ease-in-out focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11"
              data-testid="admin_settings-admin_settings-gst-control-3">
-              {TAX_RATE_OPTIONS.map((o, __testIdIndex76) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-gst-control-4-map76-${__testIdIndex76}-1`}>{o.label}</option>)}
+              {TAX_RATE_OPTIONS.map((o, __testIdIndex76) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-gst-control-4-map76-${__testIdIndex76}-1`}>{t(o.labelKey)}</option>)}
             </select>
           </div>
           <div>
@@ -84,7 +84,7 @@ export function AdminSettingsGST({ initialData }: AdminSettingsGSTProps) {
               {...form.register('stateCode')}
               className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base ease-in-out focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11"
              data-testid="admin_settings-admin_settings-gst-control-5">
-              {GST_STATE_CODES.map((o, __testIdIndex85) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-gst-control-6-map85-${__testIdIndex85}-1`}>{o.label}</option>)}
+              {GST_STATE_CODES.map((o, __testIdIndex85) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-gst-control-6-map85-${__testIdIndex85}-1`}>{t(o.labelKey)}</option>)}
             </select>
           </div>
           <div>

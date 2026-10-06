@@ -4,12 +4,12 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_SETTINGS_ROUTES = {
-  root: '/admin/settings' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_settings' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_SETTINGS_BASE_URL = '/admin/settings' as const;
+export const ADMIN_SETTINGS_BASE_URL = '/frontend_admin/admin_settings' as const;
 export const ADMIN_SETTINGS_FETCH_SETTINGS_URL = '/admin/settings/fetchSettings' as const;
 export const ADMIN_SETTINGS_UPDATE_SETTINGS_URL = '/admin/settings/updateSettings' as const;
 export const ADMIN_SETTINGS_TWO_FACTOR_STATUS_URL = '/admin/settings/2fa/status' as const;

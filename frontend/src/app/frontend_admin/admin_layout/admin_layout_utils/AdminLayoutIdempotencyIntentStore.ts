@@ -2,6 +2,7 @@
 // DATA FLOW: confirmed user intent → getAdminIdempotencyKey → module mutation API → retry with same key → clear on success/abandon.
 
 import { createAdminIdempotencyKey } from '@/app/frontend_admin/admin_layout/admin_layout_utils/AdminLayoutCreateIdempotencyKey';
+import type { AdminIdempotencyIntentRegistry } from '@/app/frontend_admin/admin_layout/admin_layout_types/AdminLayoutTypes';
 
 /** Returns the existing key for an intent or creates exactly one new key for that intent. */
 export function getAdminIdempotencyKey(

@@ -4,7 +4,7 @@ import { AdminFinanceFormatCurrency } from '@/app/frontend_admin/admin_finance/a
 
 import { useAdminFinanceLogic } from '@/app/frontend_admin/admin_finance/admin_finance_hooks/useAdminFinanceLogic';
 
-const fmt = (n: number) => AdminFinanceFormatCurrency(n || 0);
+const fmt = (n: number) => AdminFinanceFormatCurrency(n || 0, 'INR', 'en-US');
 
 /**
  * AdminFinanceRevenueByMethod renders the admin finance revenue by method UI surface and coordinates only the state or handlers required by its owning module.

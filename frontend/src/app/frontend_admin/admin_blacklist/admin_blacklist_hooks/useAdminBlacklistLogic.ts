@@ -23,9 +23,9 @@ export function useAdminBlacklistLogic() {
   const { confirm } = useAdminLayoutConfirm();
   const { activeTab, setActiveTab, showModal, setShowModal, form, setForm, search, scopeFilter, gymFilter, currentPage, setCurrentPage } = useAdminBlacklistStore();
   useAdminLayoutUrlQuerySync([
-    { key: 'search', value: search, defaultValue: '', setValue: useAdminBlacklistStore.getState().setSearch },
-    { key: 'scope', value: scopeFilter, defaultValue: 'all', setValue: useAdminBlacklistStore.getState().setScopeFilter },
-    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: useAdminBlacklistStore.getState().setGymFilter },
+    { key: 'search', value: search, defaultValue: '', setValue: (val) => useAdminBlacklistStore.getState().setSearch(val as string) },
+    { key: 'scope', value: scopeFilter, defaultValue: 'all', setValue: (val) => useAdminBlacklistStore.getState().setScopeFilter(val as any) },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: (val) => useAdminBlacklistStore.getState().setGymFilter(val as string) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 

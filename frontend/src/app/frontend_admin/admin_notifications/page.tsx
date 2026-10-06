@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminNotificationsMain from '@/app/frontend_admin/admin_notifications/admin_notifications_components/admin_notifications_main/AdminNotificationsMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_notifications.metadata');
+  const t = await getTranslations('notifications.metadata');
   return { title: t('title'), description: t('description') };
 }
 

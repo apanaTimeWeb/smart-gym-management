@@ -55,7 +55,7 @@ export function AdminSettingsGeneral({ initialData }: AdminSettingsGeneralProps)
                 {...form.register(f.key)}
                 className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base ease-in-out focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11"
                data-testid={`admin_settings-admin_settings-general-control-map49-${__testIdIndex49}-1`}>
-                {f.options.map((o, __testIdIndex56) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-general-control-2-map49-${__testIdIndex49}-2`}>{o.label}</option>)}
+                {f.options.map((o, __testIdIndex56) => <option key={o.value} value={o.value} data-testid={`admin_settings-admin_settings-general-control-2-map49-${__testIdIndex49}-2`}>{t(o.labelKey)}</option>)}
               </select>
             </div>
           ))}

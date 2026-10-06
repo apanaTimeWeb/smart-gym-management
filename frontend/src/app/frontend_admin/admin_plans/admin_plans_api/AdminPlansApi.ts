@@ -5,7 +5,7 @@ import { ADMIN_PLANS_API } from '@/app/frontend_admin/admin_plans/admin_plans_ur
 import type { Plan } from '@/app/frontend_admin/admin_plans/admin_plans_types/AdminPlansTypes';
 import type { PlanRevenueRecord, RevenuePeriod, RevenueSortKey, RevenueSortDirection } from '@/app/frontend_admin/admin_plans/admin_plans_types/AdminPlansRevenueTypes';
 import { planSchema } from '@/app/frontend_admin/admin_plans/admin_plans_schemas/AdminPlansSchemas';
-import { planRevenueRecordSchema } from '@/app/frontend_admin/admin_plans/admin_plans_schemas/AdminPlansSchemas';
+import { planRevenueRecordSchema } from '@/app/frontend_admin/admin_plans/admin_plans_schemas/AdminPlansRevenueSchemas';
 
 export const AdminPlansApi = {
   fetchAllPlans: async (params?: { search?: string; tier?: string; page?: number; limit?: number }) => {

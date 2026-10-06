@@ -13,6 +13,8 @@ import AdminLayoutToastBridge from '@/app/frontend_admin/admin_layout/admin_layo
 import AdminLayoutWebSocketProvider from '@/app/frontend_admin/admin_layout/admin_layout_shared/AdminLayoutWebSocketProvider';
 import type { AdminRootLayoutProps } from '@/app/frontend_admin/admin_layout/admin_layout_types/AdminLayoutTypes';
 
+import AdminBranchesHeaderSelector from '@/app/frontend_admin/admin_branches/admin_branches_components/admin_branches_header_selector/AdminBranchesHeaderSelector';
+
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,7 +39,7 @@ export default function ADMINLayout({ children }: AdminRootLayoutProps) {
             <AdminLayoutToastProvider />
             <AdminLayoutDialogAccessibilityProvider />
             <AdminLayoutToastBridge />
-            <AdminLayout>{children}</AdminLayout>
+            <AdminLayout headerContextSlot={<AdminBranchesHeaderSelector />}>{children}</AdminLayout>
           </AdminLayoutConfirmProvider>
         </AdminLayoutWebSocketProvider>
       </AdminLayoutI18nProvider>

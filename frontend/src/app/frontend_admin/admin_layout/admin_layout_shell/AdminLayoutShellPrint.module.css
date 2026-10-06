@@ -3,21 +3,21 @@
 }
 
 @media print {
-  :global(body) {
+  .adminShellRoot :global(body) {
     background: Canvas !important;
     color: CanvasText !important;
   }
-  :global([data-admin-shell-header]),
-  :global([data-admin-shell-sidebar]),
-  :global([data-admin-shell-toasts]),
-  :global([data-admin-shell-command-palette]) {
+  .adminShellRoot :global([data-admin-shell-header]),
+  .adminShellRoot :global([data-admin-shell-sidebar]),
+  .adminShellRoot :global([data-admin-shell-toasts]),
+  .adminShellRoot :global([data-admin-shell-command-palette]) {
     display: none !important;
   }
-  :global([data-admin-shell-main]) {
+  .adminShellRoot :global([data-admin-shell-main]) {
     margin: 0 !important;
     padding: 0 !important;
   }
-  :global(*) {
+  .adminShellRoot :global(*) {
     box-shadow: none !important;
     text-shadow: none !important;
   }

@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAdminHrViewModel } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrViewModel';
 import { useAdminHrBranchReference } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrBranchReference';
 import { useAdminHrUnsavedChangesGuard } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrUnsavedChangesGuard';
-import { staffFormSchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrPerformanceSchemas';
+import { staffFormSchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrSchemas';
 import { EMPTY_STAFF, STAFF_MODAL_FIELDS } from '@/app/frontend_admin/admin_hr/admin_hr_constants/AdminHrConstants';
 import type { AdminHrBranchReference, StaffFormValues } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrTypes';
 

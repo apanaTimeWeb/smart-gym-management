@@ -8,7 +8,7 @@ import type { Resolver } from 'react-hook-form';
 import { useAdminHrViewModel } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrViewModel';
 import { useAdminHrUnsavedChangesGuard } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrUnsavedChangesGuard';
 import { adminHrDueFormSchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrDueFormSchema';
-import type { AdminHrDueFormValues } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrDueFormSchema';
+import type { AdminHrDueFormValues } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrDueFormTypes';
 import { HR_DEFAULT_PAYMENT_MODE } from '@/app/frontend_admin/admin_hr/admin_hr_constants/AdminHrConstants';
 
 /**

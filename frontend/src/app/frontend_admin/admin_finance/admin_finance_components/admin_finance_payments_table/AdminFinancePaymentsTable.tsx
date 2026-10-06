@@ -72,8 +72,8 @@ export default function AdminFinancePaymentsTable() {
                   <td className="px-4 py-3 text-sm font-mono text-secondary">{payment.invoiceNo}</td>
                   <td className="px-4 py-3 text-sm font-medium text-primary">{payment.member?.name ?? `Member #${payment.memberId}`}</td>
                   <td className="px-4 py-3 text-sm font-bold text-success">{AdminFinanceFormatCurrency(payment.amount, undefined, locale)}</td>
-                  <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${methodStyle.bg} ${methodStyle.text}`}>{FINANCE_PAYMENT_METHOD_LABEL_KEYS[payment.method] ? t(FINANCE_PAYMENT_METHOD_LABEL_KEYS[payment.method]) : payment.method}</span></td>
-                  <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>{FINANCE_PAYMENT_STATUS_LABEL_KEYS[payment.status] ? t(FINANCE_PAYMENT_STATUS_LABEL_KEYS[payment.status]) : payment.status}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${methodStyle.bg} ${methodStyle.text}`}>{FINANCE_PAYMENT_METHOD_LABEL_KEYS[payment.method] ? t(FINANCE_PAYMENT_METHOD_LABEL_KEYS[payment.method] as string) : payment.method}</span></td>
+                  <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>{FINANCE_PAYMENT_STATUS_LABEL_KEYS[payment.status] ? t(FINANCE_PAYMENT_STATUS_LABEL_KEYS[payment.status] as string) : payment.status}</span></td>
                   <td className="px-4 py-3 text-sm text-secondary">{formatDate(payment.paidAt, locale)}</td>
                 </tr>
               );

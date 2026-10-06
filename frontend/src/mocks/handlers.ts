@@ -26,7 +26,7 @@ import { superadminFeaturesHandlers } from '@/app/frontend_superadmin/superadmin
 import { superadminAffiliatesHandlers } from '@/app/frontend_superadmin/superadmin_affiliates/superadmin_affiliates_mocks/superadmin_affiliates_mocks_handlers/SuperadminAffiliatesMockHandlers';
 import { superadminAnalyticsHandlers } from '@/app/frontend_superadmin/superadmin_analytics/superadmin_analytics_mocks/superadmin_analytics_mocks_handlers/SuperadminAnalyticsMockHandlers';
 
-import { adminHandlers } from '@/app/admin/admin_layout/admin_mocks/handlers/AdminMockHandlers';
+import { adminHandlers } from '@/app/frontend_admin/AdminMswBootstrap';
 import { AuthMockHandlers } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_handlers/AuthMockHandlers';
 import { landingHandlers } from '@/app/frontend_public/landing/landing_mocks/PublicLandingMockHandlers';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';

@@ -24,10 +24,10 @@ export function useAdminAnnouncementsLogic() {
   const store = useAdminAnnouncementsStore();
   const { search, statusFilter, priorityFilter, gymFilter, currentPage } = store;
   useAdminLayoutUrlQuerySync([
-    { key: 'search', value: search, defaultValue: '', setValue: store.setSearch },
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: store.setStatusFilter },
-    { key: 'priority', value: priorityFilter, defaultValue: 'all', setValue: store.setPriorityFilter },
-    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: store.setGymFilter },
+    { key: 'search', value: search, defaultValue: '', setValue: (val) => store.setSearch(val as string) },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => store.setStatusFilter(val as any) },
+    { key: 'priority', value: priorityFilter, defaultValue: 'all', setValue: (val) => store.setPriorityFilter(val as any) },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: (val) => store.setGymFilter(val as string) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => store.setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 

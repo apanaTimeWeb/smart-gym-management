@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminFinancePnl from '@/app/frontend_admin/admin_finance/admin_finance_components/admin_finance_pnl/AdminFinancePnl';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_finance.metadata');
+  const t = await getTranslations('finance.metadata');
   return { title: t('title'), description: t('description') };
 }
 

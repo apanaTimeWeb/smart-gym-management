@@ -25,7 +25,7 @@ import AdminLayoutTableSkeleton from '@/app/frontend_admin/admin_layout/admin_la
 export default function AdminHrTabs() {
   const t = useTranslations();
 
-  const [activeTab, setActiveTab] = useState(HR_TABS[0]);
+  const [activeTab, setActiveTab] = useState<typeof HR_TABS[number]>(HR_TABS[0]);
   const { loadAll, openAdd, openAddPayroll, status, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useAdminHrViewModel();
   const { data: branches = [] } = useAdminHrBranchReference();
 

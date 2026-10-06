@@ -31,7 +31,7 @@ export function useAdminHrPerformanceLogic() {
 
   useAdminLayoutUrlQuerySync([
     { key: 'period', value: period, defaultValue: 'THIS_MONTH', setValue: (value) => setPeriod(value as PerformancePeriod) },
-    { key: 'search', value: searchQuery, defaultValue: '', setValue: setSearchQuery },
+    { key: 'search', value: searchQuery, defaultValue: '', setValue: (val) => setSearchQuery(val as string) },
   ]);
 
   const { data: rawResponse, isPending, isError } = useQuery({

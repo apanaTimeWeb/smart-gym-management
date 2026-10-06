@@ -46,7 +46,7 @@ export function useAdminHrPayrollMutations(
     const pendingAmount = Math.max(0, amount - paidAmount);
     const status = pendingAmount === 0 ? PAYROLL_STATUS.PAID : paidAmount > 0 ? PAYROLL_STATUS.PARTIAL : PAYROLL_STATUS.PENDING;
     const intentId = `create-payroll:${String(data.staffId)}:${String(data.month ?? '')}`;
-    const confirmed = await confirm({ title: t('hr.AdminHrMutations.auto_disburseTitle'), message: t('hr.AdminHrMutations.auto_disburseMessage', { amount: String(amount), staffName: staffMember?.name ?? data.staffId }), confirmText: t('hr.AdminHrMutations.auto_disburseConfirm'), type: 'warning' });
+    const confirmed = await confirm({ title: t('hr.AdminHrMutations.auto_disburseTitle'), message: t('hr.AdminHrMutations.auto_disburseMessage', { amount: String(amount), staffName: staffMember?.name ?? data.staffId ?? '' }), confirmText: t('hr.AdminHrMutations.auto_disburseConfirm'), type: 'warning' });
     if (!confirmed) { clearIntentKey(intentId); return false; }
     if (staffMember?.advanceSalary && staffMember.advanceSalary > 0) {
       const deduction = Math.min(staffMember.salary || 0, staffMember.advanceSalary);

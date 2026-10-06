@@ -4,12 +4,12 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_NOTIFICATIONS_ROUTES = {
-  root: '/admin/notifications' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_notifications' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_NOTIFICATIONS_BASE_URL = '/admin/notifications' as const;
+export const ADMIN_NOTIFICATIONS_BASE_URL = '/frontend_admin/admin_notifications' as const;
 export const ADMIN_NOTIFICATIONS_MARK_READ_URL = (id: string) => `/admin/notifications/${encodeURIComponent(id)}/read` as const;
 export const ADMIN_NOTIFICATIONS_MARK_ALL_READ_URL = '/admin/notifications/read-all' as const;
 

@@ -4,12 +4,12 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_REPORTS_ROUTES = {
-  root: '/admin/reports' as const,
+  root: '/frontend_admin/admin_reports' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
 export const ADMIN_REPORTS_BRANCH_REFERENCE_URL = '/admin/branches/fetchBranches' as const;
-export const ADMIN_REPORTS_BASE_URL = '/admin/reports' as const;
+export const ADMIN_REPORTS_BASE_URL = '/frontend_admin/admin_reports' as const;
 export const ADMIN_REPORTS_REVENUE_URL = '/admin/reports/revenue' as const;
 export const ADMIN_REPORTS_ATTENDANCE_URL = '/admin/reports/attendance' as const;
 export const ADMIN_REPORTS_MEMBERS_URL = '/admin/reports/members' as const;

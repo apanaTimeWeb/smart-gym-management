@@ -25,9 +25,9 @@ export function useAdminAttendanceLogic() {
   const selectedBranchId = searchParams.get('branchId') || 'all';
   const { search, statusFilter, branchFilter, dateRange, currentPage, setCurrentPage } = useAdminAttendanceStore();
   useAdminLayoutUrlQuerySync([
-    { key: 'search', value: search, defaultValue: '', setValue: useAdminAttendanceStore.getState().setSearch },
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => useAdminAttendanceStore.getState().setStatusFilter(val as AdminAttendanceStatusFilter) },
-    { key: 'branch', value: branchFilter, defaultValue: 'all', setValue: useAdminAttendanceStore.getState().setBranchFilter },
+    { key: 'search', value: search, defaultValue: '', setValue: (val) => useAdminAttendanceStore.getState().setSearch(val as string) },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => useAdminAttendanceStore.getState().setStatusFilter(val as any) },
+    { key: 'branch', value: branchFilter, defaultValue: 'all', setValue: (val) => useAdminAttendanceStore.getState().setBranchFilter(val as string) },
     { key: 'range', value: dateRange, defaultValue: 'today', setValue: (val) => useAdminAttendanceStore.getState().setDateRange(val as DateRangeFilter) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);

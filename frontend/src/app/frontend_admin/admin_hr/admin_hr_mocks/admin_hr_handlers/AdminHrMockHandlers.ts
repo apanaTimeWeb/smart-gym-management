@@ -114,7 +114,7 @@ export const adminHrMockHandlers = [
     const branchNameById: Record<string, string> = { b1: 'Downtown Main', b2: 'Westside Gym', b3: 'Northside Arena', b4: 'Eastside Fitness' };
     const filtered = payrollState.filter((payroll) => {
       const staff = staffState.find((record) => record.id === payroll.staffId);
-      return (!month || !payroll.month || payroll.month === month) &&
+      return (!month || month === 'all' || !payroll.month || payroll.month === month) &&
         (!status || status === 'all' || payroll.status === status) &&
         (!branchId || branchId === 'all' || staff?.branch === branchNameById[branchId]) &&
         (!search || `${staff?.name ?? payroll.staff?.name ?? ''} ${staff?.role ?? payroll.staff?.role ?? ''} ${payroll.staffId}`.toLowerCase().includes(search));

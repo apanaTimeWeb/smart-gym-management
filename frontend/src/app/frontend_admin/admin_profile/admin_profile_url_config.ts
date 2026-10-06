@@ -5,12 +5,12 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_PROFILE_ROUTES = {
-  root: '/admin/profile' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_profile' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_PROFILE_BASE_URL = '/admin/profile' as const;
+export const ADMIN_PROFILE_BASE_URL = '/frontend_admin/admin_profile' as const;
 export const ADMIN_PROFILE_FETCH_PROFILE_URL = '/admin/adminProfile/fetchProfile' as const;
 export const ADMIN_PROFILE_UPDATE_PROFILE_URL = '/admin/adminProfile/updateProfile' as const;
 export const ADMIN_PROFILE_UPDATE_PASSWORD_URL = '/admin/adminProfile/updatePassword' as const;

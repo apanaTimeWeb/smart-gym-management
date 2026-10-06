@@ -4,15 +4,15 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_GYM_HEALTH_ALERTS_ROUTES = {
-  root: '/admin/gym-health-alerts' as const,
-  members: '/admin/members' as const,
-  finance: '/admin/finance' as const,
-  hr: '/admin/hr' as const,
-  attendance: '/admin/attendance' as const,
+  root: '/frontend_admin/admin_gym_health_alerts' as const,
+  members: '/frontend_admin/admin_members' as const,
+  finance: '/frontend_admin/admin_finance' as const,
+  hr: '/frontend_admin/admin_hr' as const,
+  attendance: '/frontend_admin/admin_attendance' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_GYM_HEALTH_ALERTS_ALERTS_URL = '/admin/gym-health-alerts' as const;
+export const ADMIN_GYM_HEALTH_ALERTS_ALERTS_URL = '/frontend_admin/admin_gym_health_alerts' as const;
 export const ADMIN_GYM_HEALTH_ALERTS_SUMMARY_URL = '/admin/gym-health-alerts/summary' as const;
 export const ADMIN_GYM_HEALTH_ALERTS_DISMISS_URL = (id: string) => `/admin/gym-health-alerts/${id}/dismiss` as const;
 

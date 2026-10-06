@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminHrPerformance from '@/app/frontend_admin/admin_hr/admin_hr_components/admin_hr_performance/AdminHrPerformance';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_hr.metadata');
+  const t = await getTranslations('hr.metadata');
   return { title: t('title'), description: t('description') };
 }
 

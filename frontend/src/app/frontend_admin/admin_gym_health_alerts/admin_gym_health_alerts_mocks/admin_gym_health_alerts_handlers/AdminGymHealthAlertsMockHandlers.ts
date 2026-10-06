@@ -10,7 +10,7 @@ export const adminGymHealthAlertsMockHandlers = [
     const url = new URL(request.url);
     const severity = url.searchParams.get('severity');
     const search = url.searchParams.get('search')?.trim().toLowerCase() ?? '';
-    const alerts = healthAlertsState.filter((item) => (!severity || item.severity === severity) && (!search || `${item.title} ${item.description} ${item.gymName}`.toLowerCase().includes(search)));
+    const alerts = healthAlertsState.filter((item) => (!severity || severity === 'all' || item.severity === severity) && (!search || `${item.title} ${item.description} ${item.gymName}`.toLowerCase().includes(search)));
     return ok(alerts);
   }),
   http.get('*/admin/gym-health-alerts/summary', () => ok({

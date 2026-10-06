@@ -6,6 +6,10 @@ import type { PayoutsKPIData } from '@/app/frontend_admin/admin_payouts/admin_pa
 import type { GymPayout, PnLEntry } from '@/app/frontend_admin/admin_payouts/admin_payouts_types/AdminPayoutsTypes';
 
 export const MOCK_PAYOUTS: GymPayout[] = [
+  { gymId: 'g1', gymName: 'Andheri East', month: '2026-10', grossRevenue: 450000, staffPayroll: 90000, operationalExpenses: 45000, platformFee: 13500, netProfit: 301500, payoutStatus: PAYOUT_STATUS_VALUES.PENDING },
+  { gymId: 'g2', gymName: 'Bandra West', month: '2026-10', grossRevenue: 395000, staffPayroll: 80000, operationalExpenses: 39500, platformFee: 11850, netProfit: 263650, payoutStatus: PAYOUT_STATUS_VALUES.PROCESSING },
+  { gymId: 'g3', gymName: 'Powai', month: '2026-10', grossRevenue: 320000, staffPayroll: 67000, operationalExpenses: 32000, platformFee: 9600, netProfit: 211400, payoutStatus: PAYOUT_STATUS_VALUES.PENDING },
+  { gymId: 'g4', gymName: 'Thane', month: '2026-10', grossRevenue: 200000, staffPayroll: 53000, operationalExpenses: 22000, platformFee: 6000, netProfit: 119000, payoutStatus: PAYOUT_STATUS_VALUES.PENDING },
   { gymId: 'g1', gymName: 'Andheri East', month: '2026-06', grossRevenue: 420000, staffPayroll: 85000, operationalExpenses: 42000, platformFee: 12600, netProfit: 280400, payoutStatus: PAYOUT_STATUS_VALUES.PAID, paidOn: '2026-07-03' },
   { gymId: 'g2', gymName: 'Bandra West', month: '2026-06', grossRevenue: 380000, staffPayroll: 78000, operationalExpenses: 38000, platformFee: 11400, netProfit: 252600, payoutStatus: PAYOUT_STATUS_VALUES.PAID, paidOn: '2026-07-03' },
   { gymId: 'g3', gymName: 'Powai', month: '2026-06', grossRevenue: 310000, staffPayroll: 65000, operationalExpenses: 31000, platformFee: 9300, netProfit: 204700, payoutStatus: PAYOUT_STATUS_VALUES.PROCESSING },

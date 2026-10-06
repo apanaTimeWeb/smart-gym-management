@@ -4,8 +4,8 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_BRANCHES_ROUTES = {
-  root: '/admin/branches' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_branches' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────

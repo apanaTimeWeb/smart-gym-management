@@ -18,6 +18,7 @@ export default function AdminFinancePnlPeriodSelector({
   period,
   onPeriodChange,
 }: AdminFinancePnlPeriodSelectorProps) {
+  const t = useTranslations();
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">

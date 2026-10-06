@@ -6,7 +6,7 @@ import { AdminFinanceFormatCurrency } from '@/app/frontend_admin/admin_finance/a
 import { useAdminFinanceLogic } from '@/app/frontend_admin/admin_finance/admin_finance_hooks/useAdminFinanceLogic';
 import AdminLayoutProgressBar from '@/app/frontend_admin/admin_layout/admin_layout_shared/admin_layout_progress_bar/AdminLayoutProgressBar';
 
-const fmt = (n: number) => AdminFinanceFormatCurrency(n || 0);
+const fmt = (n: number) => AdminFinanceFormatCurrency(n || 0, 'INR', 'en-US');
 
 /**
  * AdminFinanceRevenueSummary renders the admin finance revenue summary UI surface and coordinates only the state or handlers required by its owning module.

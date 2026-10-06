@@ -4,12 +4,12 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_USAGE_ROUTES = {
-  root: '/admin/usage' as const,
-  subscriptions: '/admin/subscriptions' as const,
+  root: '/frontend_admin/admin_usage' as const,
+  subscriptions: '/frontend_admin/admin_subscriptions' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_USAGE_MY_USAGE_URL = '/admin/usage' as const;
+export const ADMIN_USAGE_MY_USAGE_URL = '/frontend_admin/admin_usage' as const;
 export const ADMIN_USAGE_UPGRADE_REQUEST_URL = '/admin/usage/upgrade-request' as const;
 
 export const ADMIN_USAGE_URLS = {

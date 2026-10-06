@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminBranchesMain from '@/app/frontend_admin/admin_branches/admin_branches_components/admin_branches_main/AdminBranchesMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_branches.metadata');
+  const t = await getTranslations('branches.metadata');
   return { title: t('title'), description: t('description') };
 }
 

@@ -24,7 +24,7 @@ export const adminAuditLogsMockHandlers = [
     const limit = Number(url.searchParams.get('limit')) || 10;
     const items = MOCK_AUDIT_LOGS.filter((log) => {
       const date = new Date(log.timestamp).getTime();
-      return (!actor || log.actor === actor) && (!action || log.action.includes(action)) && (!entityType || log.entityType === entityType) && (!entityId || log.entityId === entityId) && (!from || date >= new Date(from).getTime()) && (!to || date <= new Date(`${to}T23:59:59.999Z`).getTime());
+      return (!actor || actor === 'all' || log.actor === actor) && (!action || log.action.includes(action)) && (!entityType || entityType === 'all' || log.entityType === entityType) && (!entityId || entityId === 'all' || log.entityId === entityId) && (!from || date >= new Date(from).getTime()) && (!to || date <= new Date(`${to}T23:59:59.999Z`).getTime());
     });
     return HttpResponse.json(page(items, pageNumber, limit));
   }),
@@ -40,7 +40,7 @@ export const adminAuditLogsMockHandlers = [
     const actor = url.searchParams.get('actor');
     const action = url.searchParams.get('action');
     const entityType = url.searchParams.get('entityType');
-    const filtered = MOCK_AUDIT_LOGS.filter((log) => (!actor || log.actor === actor) && (!action || log.action.includes(action)) && (!entityType || log.entityType === entityType));
+    const filtered = MOCK_AUDIT_LOGS.filter((log) => (!actor || actor === 'all' || log.actor === actor) && (!action || log.action.includes(action)) && (!entityType || entityType === 'all' || log.entityType === entityType));
     const header = 'timestamp,actor,action,entityType,entityId,branchId,severity,details';
     const rows = filtered.map((log) => [log.timestamp, log.actor, log.action, log.entityType, log.entityId ?? '', log.branchId, log.severity, log.details.replaceAll('"', '""')].map((value) => `"${value}"`).join(','));
     return new HttpResponse([header, ...rows].join('\n'), { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="audit_logs.csv"' } });

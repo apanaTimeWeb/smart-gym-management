@@ -4,7 +4,7 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_ATTENDANCE_ROUTES = {
-  root: '/admin/attendance' as const,
+  root: '/frontend_admin/admin_attendance' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────

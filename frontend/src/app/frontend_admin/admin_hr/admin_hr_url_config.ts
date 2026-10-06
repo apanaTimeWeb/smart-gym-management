@@ -4,8 +4,8 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_HR_ROUTES = {
-  root: '/admin/hr' as const,
-  dashboard: '/admin/dashboard' as const,
+  root: '/frontend_admin/admin_hr' as const,
+  dashboard: '/frontend_admin/admin_dashboard' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
@@ -22,7 +22,7 @@ export const ADMIN_HR_LEDGER_URL = (id: string) => `/admin/hr/staff/${encodeURIC
 export const ADMIN_HR_SUMMARY_URL = '/admin/hr/summary' as const;
 export const ADMIN_HR_ADVANCES_URL = '/admin/hr/advances' as const;
 export const ADMIN_HR_DUES_PAY_URL = '/admin/hr/dues/pay' as const;
-export const ADMIN_HR_PERFORMANCE_URL = '/admin/hr/performance' as const;
+export const ADMIN_HR_PERFORMANCE_URL = '/frontend_admin/admin_hr/admin_hr_performance' as const;
 
 export const ADMIN_HR_URLS = {
   branchReference: ADMIN_HR_BRANCH_REFERENCE_URL,

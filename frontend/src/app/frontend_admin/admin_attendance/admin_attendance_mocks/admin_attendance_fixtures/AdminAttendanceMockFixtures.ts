@@ -19,32 +19,32 @@ import type { AdminAttendanceRecord, AdminAttendanceTrendPoint } from '@/app/fro
 export const MOCK_ADMIN_ATTENDANCE_RECORDS = [
   {
     id: 'a1', memberId: 'm1', memberName: 'Rahul Sharma', memberPhone: '9876543210',
-    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T06:30:00Z',
-    checkOutTime: '2026-09-19T08:00:00Z', date: '2026-09-19', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Annual Pro',
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-10-06T06:30:00Z',
+    checkOutTime: '2026-10-06T08:00:00Z', date: '2026-10-06', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Annual Pro',
     sessionType: 'General'
   },
   {
     id: 'a2', memberId: 'm2', memberName: 'Priya Singh', memberPhone: '9876543211',
-    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T07:15:00Z',
-    checkOutTime: '2026-09-19T08:45:00Z', date: '2026-09-19', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Gold Plan',
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-10-06T07:15:00Z',
+    checkOutTime: '2026-10-06T08:45:00Z', date: '2026-10-06', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Gold Plan',
     sessionType: 'PT', trainerId: 't1', trainerName: 'Vikram'
   },
   {
     id: 'a3', memberId: 'm3', memberName: 'Amit Patel', memberPhone: '9876543212',
-    branchId: 'b2', branchName: 'Uptown Branch', checkInTime: '2026-09-19T18:00:00Z',
-    checkOutTime: null, date: '2026-09-19', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Monthly Flex',
+    branchId: 'b2', branchName: 'Uptown Branch', checkInTime: '2026-10-06T18:00:00Z',
+    checkOutTime: null, date: '2026-10-06', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Monthly Flex',
     sessionType: 'General'
   },
   {
     id: 'a4', memberId: 'm4', memberName: 'Sneha Joshi', memberPhone: '9876543213',
-    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T09:30:00Z',
-    checkOutTime: '2026-09-19T10:30:00Z', date: '2026-09-19', status: ATTENDANCE_STATUS_VALUES.LATE, planName: 'Silver Plan',
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-10-05T09:30:00Z',
+    checkOutTime: '2026-10-05T10:30:00Z', date: '2026-10-05', status: ATTENDANCE_STATUS_VALUES.LATE, planName: 'Silver Plan',
     sessionType: 'Class'
   },
   {
     id: 'a5', memberId: 'm5', memberName: 'Kiran Kumar', memberPhone: '9876543214',
-    branchId: 'b3', branchName: 'Suburban Elite', checkInTime: '2026-09-19T05:45:00Z',
-    checkOutTime: '2026-09-19T07:00:00Z', date: '2026-09-19', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Annual Pro',
+    branchId: 'b3', branchName: 'Suburban Elite', checkInTime: '2026-10-04T05:45:00Z',
+    checkOutTime: '2026-10-04T07:00:00Z', date: '2026-10-04', status: ATTENDANCE_STATUS_VALUES.PRESENT, planName: 'Annual Pro',
     sessionType: 'General'
   }
 ];
@@ -73,9 +73,9 @@ export const MOCK_ADMIN_ATTENDANCE_RECORDS_EXPANDED: AdminAttendanceRecord[] = [
       memberPhone: `987654${(3210 + n).toString().slice(-4)}`,
       branchId: ['b1', 'b2', 'b3', 'b4'][index % 4]!,
       branchName: ['Downtown Main', 'Westside Gym', 'Northside Arena', 'Eastside Fitness'][index % 4]!,
-      checkInTime: `2026-09-${String((index % 5) + 12).padStart(2, '0')}T${String(6 + (index % 8)).padStart(2, '0')}:15:00Z`,
-      checkOutTime: index % 3 === 0 ? null : `2026-09-${String((index % 5) + 12).padStart(2, '0')}T${String(7 + (index % 8)).padStart(2, '0')}:30:00Z`,
-      date: '2026-09-16',
+      checkInTime: `2026-10-${String(Math.max(1, 6 - (index % 5))).padStart(2, '0')}T${String(6 + (index % 8)).padStart(2, '0')}:15:00Z`,
+      checkOutTime: index % 3 === 0 ? null : `2026-10-${String(Math.max(1, 6 - (index % 5))).padStart(2, '0')}T${String(7 + (index % 8)).padStart(2, '0')}:30:00Z`,
+      date: `2026-10-${String(Math.max(1, 6 - (index % 5))).padStart(2, '0')}`,
       status: ['present', 'late', 'absent'][index % 3] as AdminAttendanceRecord['status'],
       planName: ['Annual Pro', 'Quarterly Classic', 'Monthly Basic'][index % 3]!,
       sessionType: index % 3 === 0 ? 'PT' : 'General',

@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_SUBSCRIPTIONS_ROUTES = {
-  root: '/admin/subscriptions' as const,
+  root: '/frontend_admin/admin_subscriptions' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_SUBSCRIPTIONS_BASE_URL = '/admin/subscriptions' as const;
+export const ADMIN_SUBSCRIPTIONS_BASE_URL = '/frontend_admin/admin_subscriptions' as const;
 export const ADMIN_SUBSCRIPTIONS_SALES_EMAIL_URL = 'mailto:sales@gymsmart.in' as const;
 export const ADMIN_SUBSCRIPTIONS_EXTERNAL_URLS = { salesEmail: ADMIN_SUBSCRIPTIONS_SALES_EMAIL_URL } as const;
 export const ADMIN_SUBSCRIPTIONS_SUBSCRIPTION_URL = '/admin/subscriptions/fetchSubscription' as const;

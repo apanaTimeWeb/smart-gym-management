@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_PERMISSIONS_ROUTES = {
-  root: '/admin/permissions' as const,
+  root: '/frontend_admin/admin_permissions' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_PERMISSIONS_PERMISSIONS_URL = '/admin/permissions' as const;
+export const ADMIN_PERMISSIONS_PERMISSIONS_URL = '/frontend_admin/admin_permissions' as const;
 export const ADMIN_PERMISSIONS_OVERRIDES_URL = '/admin/permissions/overrides' as const;
 export const ADMIN_PERMISSIONS_STAFF_URL = (staffId: string) => `/admin/permissions/${staffId}` as const;
 export const ADMIN_PERMISSIONS_RESET_URL = (staffId: string) => `/admin/permissions/${staffId}/reset` as const;

@@ -4,7 +4,7 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_CAMPAIGNS_ROUTES = {
-  root: '/admin/campaigns' as const,
+  root: '/frontend_admin/admin_campaigns' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────

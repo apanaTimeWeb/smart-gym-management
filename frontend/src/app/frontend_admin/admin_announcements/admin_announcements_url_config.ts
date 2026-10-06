@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_ANNOUNCEMENTS_ROUTES = {
-  root: '/admin/announcements' as const,
+  root: '/frontend_admin/admin_announcements' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_ANNOUNCEMENTS_BASE_URL = '/admin/announcements' as const;
+export const ADMIN_ANNOUNCEMENTS_BASE_URL = '/frontend_admin/admin_announcements' as const;
 export const ADMIN_ANNOUNCEMENTS_KPIS_URL = '/admin/announcements/kpis' as const;
 export const ADMIN_ANNOUNCEMENTS_DETAIL_URL = (id: string) => `/admin/announcements/${encodeURIComponent(id)}` as const;
 export const ADMIN_ANNOUNCEMENTS_PIN_URL = (id: string) => `/admin/announcements/${encodeURIComponent(id)}/pin` as const;

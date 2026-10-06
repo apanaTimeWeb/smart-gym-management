@@ -1,5 +1,5 @@
-import { COUPON_STATUS } from '@/app/frontend_admin/admin_coupons/admin_coupons_constants/AdminCouponsConstants';
 "use client";
+import { COUPON_STATUS } from '@/app/frontend_admin/admin_coupons/admin_coupons_constants/AdminCouponsConstants';
 // RESPONSIBILITY: Custom hook encapsulating all business logic for the Coupons module.
 import { ADMIN_COUPONS_QUERY_KEYS } from '@/app/frontend_admin/admin_coupons/admin_coupons_constants/AdminCouponsQueryKeys';
 // DATA FLOW: AdminCouponsMain → useAdminCouponsLogic → AdminCouponsApi
@@ -24,9 +24,9 @@ export function useAdminCouponsLogic() {
   const t = useTranslations();
   const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage, dateRange, setDateRange } = useAdminCouponsStore();
   useAdminLayoutUrlQuerySync([
-    { key: 'search', value: search, defaultValue: '', setValue: useAdminCouponsStore.getState().setSearch },
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: useAdminCouponsStore.getState().setStatusFilter },
-    { key: 'dateRange', value: dateRange, defaultValue: 'all_time', setValue: useAdminCouponsStore.getState().setDateRange },
+    { key: 'search', value: search, defaultValue: '', setValue: (val) => useAdminCouponsStore.getState().setSearch(val as string) },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => useAdminCouponsStore.getState().setStatusFilter(val as any) },
+    { key: 'dateRange', value: dateRange, defaultValue: 'all_time', setValue: (val) => useAdminCouponsStore.getState().setDateRange(val as any) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
@@ -68,8 +68,8 @@ export function useAdminCouponsLogic() {
       assignedGymNames: data.assignedGyms.includes('all') ? ['All Gyms'] : data.assignedGyms,
       validFrom: data.validFrom, validUntil: data.validUntil, status: COUPON_STATUS.ACTIVE,
     };
-    if (editId) { const intentId = `update-coupon:${editId}`; updateMutation.mutate({ id: editId, payload, idempotencyKey: getIntentKey(intentId), intentId }); }
-    else { const intentId = 'create-coupon'; createMutation.mutate({ payload, idempotencyKey: getIntentKey(intentId), intentId }); }
+    if (editId) { const intentId = `update-coupon:${editId}`; updateMutation.mutate({ id: editId, payload: payload as any, idempotencyKey: getIntentKey(intentId), intentId }); }
+    else { const intentId = 'create-coupon'; createMutation.mutate({ payload: payload as any, idempotencyKey: getIntentKey(intentId), intentId }); }
   }, [editId, createMutation, getIntentKey, updateMutation]);
 
   const deleteCoupon = useCallback(async (id: string) => {

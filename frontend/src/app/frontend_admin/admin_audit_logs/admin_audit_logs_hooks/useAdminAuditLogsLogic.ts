@@ -19,11 +19,11 @@ export function useAdminAuditLogsLogic() {
   const store = useAdminAuditLogsStore();
   const queryClient = useQueryClient();
   useAdminLayoutUrlQuerySync([
-    { key: 'actor', value: store.actorFilter, defaultValue: 'all', setValue: store.setActorFilter },
-    { key: 'action', value: store.actionFilter, defaultValue: 'all', setValue: store.setActionFilter },
-    { key: 'entity', value: store.entityFilter, defaultValue: 'all', setValue: store.setEntityFilter },
-    { key: 'from', value: store.dateFrom, defaultValue: '', setValue: store.setDateFrom },
-    { key: 'to', value: store.dateTo, defaultValue: '', setValue: store.setDateTo },
+    { key: 'actor', value: store.actorFilter, defaultValue: 'all', setValue: (val) => store.setActorFilter(val as string) },
+    { key: 'action', value: store.actionFilter, defaultValue: 'all', setValue: (val) => store.setActionFilter(val as string) },
+    { key: 'entity', value: store.entityFilter, defaultValue: 'all', setValue: (val) => store.setEntityFilter(val as string) },
+    { key: 'from', value: store.dateFrom, defaultValue: '', setValue: (val) => store.setDateFrom(val as string) },
+    { key: 'to', value: store.dateTo, defaultValue: '', setValue: (val) => store.setDateTo(val as string) },
     { key: 'page', value: store.currentPage, defaultValue: 1, setValue: (value) => store.setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
@@ -55,10 +55,10 @@ export function useAdminAuditLogsLogic() {
   const openDetail = useCallback((id: string) => store.setSelectedLogId(id), [store]);
   const closeDetail = useCallback(() => store.setSelectedLogId(null), [store]);
 
-  const totalItems = logsQuery.data?.meta?.total ?? logsQuery.data?.data.length ?? 0;
+  const totalItems = logsQuery.data?.meta?.total ?? logsQuery.data?.data?.length ?? 0;
   return {
     logs: logsQuery.data?.data ?? [],
-    actors: actorsQuery.data?.data.actors ?? [],
+    actors: actorsQuery.data?.data?.actors ?? [],
     kpis: kpiQuery.data?.data ?? null,
     status: logsQuery.status,
     detailStatus: detailQuery.status,

@@ -42,9 +42,12 @@ export const adminAttendanceMockHandlers = [
     const dateRange = url.searchParams.get('dateRange') ?? 'today';
     const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
     const limit = Math.max(1, Number(url.searchParams.get('limit')) || 10);
-    const now = new Date('2026-09-19T12:00:00Z');
-    const start = new Date(now);
-    const end = new Date(now);
+    const now = new Date();
+    const todayStr = now.toUTCString().slice(0,16).replace(/ /g, '-').slice(5, 15).replace(/[A-Z][a-z]{2} /, '');
+    // Use ISO date for today
+    const nowISO = now.toISOString().slice(0, 10);
+    const start = new Date(nowISO + 'T00:00:00Z');
+    const end = new Date(nowISO + 'T23:59:59Z');
     if (dateRange === 'yesterday') { start.setUTCDate(start.getUTCDate() - 1); end.setUTCDate(end.getUTCDate() - 1); }
     else if (dateRange === 'this_week') { start.setUTCDate(start.getUTCDate() - 6); }
     else if (dateRange === 'this_month') { start.setUTCDate(1); }
@@ -54,7 +57,7 @@ export const adminAttendanceMockHandlers = [
       const matchesBranch = !branchId || branchId === 'all' || a.branchId === branchId;
       const matchesStatus = !status || status === 'all' || a.status.toLowerCase() === status;
       const day = new Date(`${a.date}T12:00:00Z`);
-      const matchesDate = dateRange === 'today' ? a.date === now.toISOString().slice(0, 10) : day >= start && day <= end;
+      const matchesDate = dateRange === 'today' ? a.date === nowISO : day >= start && day <= end;
       return matchesText && matchesBranch && matchesStatus && matchesDate;
     });
     return paged(filtered, page, limit);

@@ -4,7 +4,7 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_DATA_EXPORT_ROUTES = {
-  root: '/admin/data-export' as const,
+  root: '/frontend_admin/admin_data_export' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────

@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_COUPONS_ROUTES = {
-  root: '/admin/coupons' as const,
+  root: '/frontend_admin/admin_coupons' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_COUPONS_BASE_URL = '/admin/coupons' as const;
+export const ADMIN_COUPONS_BASE_URL = '/frontend_admin/admin_coupons' as const;
 export const ADMIN_COUPONS_KPIS_URL = '/admin/coupons/kpis' as const;
 export const ADMIN_COUPONS_DETAIL_URL = (id: string) => `/admin/coupons/${encodeURIComponent(id)}` as const;
 export const ADMIN_COUPONS_TOGGLE_URL = (id: string) => `/admin/coupons/${encodeURIComponent(id)}/toggle` as const;

@@ -13,7 +13,7 @@ function missingIdempotencyKeyError(): Response {
 }
 
 export const landingHandlers = [
-  http.post('*/api/landing/bookings', async ({ request }) => {
+  http.post('*/landing/bookings', async ({ request }) => {
     const idempotencyKey = request.headers.get('Idempotency-Key');
     if (!idempotencyKey) return missingIdempotencyKeyError();
     const parsed = PublicLandingBookingApiPayloadSchema.safeParse(await request.json());
@@ -24,7 +24,7 @@ export const landingHandlers = [
     }
     return HttpResponse.json({ success: true, message: 'Booking submitted successfully. Our team will contact you shortly.', data: null });
   }),
-  http.post('*/api/landing/contact', async ({ request }) => {
+  http.post('*/landing/contact', async ({ request }) => {
     const idempotencyKey = request.headers.get('Idempotency-Key');
     if (!idempotencyKey) return missingIdempotencyKeyError();
     const parsed = PublicLandingContactApiPayloadSchema.safeParse(await request.json());
@@ -38,6 +38,6 @@ export const landingHandlers = [
 ];
 
 export const landingErrorScenarioHandlers = [
-  http.post('*/api/landing/bookings-error', () => HttpResponse.json({ success: false, message: 'Booking service is temporarily unavailable. Please try again.', data: null, errorCode: 'BOOKING_SERVICE_UNAVAILABLE' }, { status: StatusCodes.SERVICE_UNAVAILABLE })),
-  http.post('*/api/landing/contact-error', () => HttpResponse.json({ success: false, message: 'Messaging service is temporarily unavailable. Please try again.', data: null, errorCode: 'CONTACT_SERVICE_UNAVAILABLE' }, { status: StatusCodes.SERVICE_UNAVAILABLE })),
+  http.post('*/landing/bookings-error', () => HttpResponse.json({ success: false, message: 'Booking service is temporarily unavailable. Please try again.', data: null, errorCode: 'BOOKING_SERVICE_UNAVAILABLE' }, { status: StatusCodes.SERVICE_UNAVAILABLE })),
+  http.post('*/landing/contact-error', () => HttpResponse.json({ success: false, message: 'Messaging service is temporarily unavailable. Please try again.', data: null, errorCode: 'CONTACT_SERVICE_UNAVAILABLE' }, { status: StatusCodes.SERVICE_UNAVAILABLE })),
 ];

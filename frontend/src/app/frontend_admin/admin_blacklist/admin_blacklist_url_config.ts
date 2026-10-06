@@ -4,11 +4,11 @@
 //
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 export const ADMIN_BLACKLIST_ROUTES = {
-  root: '/admin/blacklist' as const,
+  root: '/frontend_admin/admin_blacklist' as const,
 } as const;
 
 // ─── Backend API Endpoints ─────────────────────────────────────────────────
-export const ADMIN_BLACKLIST_BASE_URL = '/admin/blacklist' as const;
+export const ADMIN_BLACKLIST_BASE_URL = '/frontend_admin/admin_blacklist' as const;
 export const ADMIN_BLACKLIST_KPIS_URL = '/admin/blacklist/kpis' as const;
 export const ADMIN_BLACKLIST_DETAIL_URL = (id: string) => `/admin/blacklist/${encodeURIComponent(id)}` as const;
 export const ADMIN_BLACKLIST_REMOVE_URL = (id: string) => `/admin/blacklist/${encodeURIComponent(id)}/remove` as const;
