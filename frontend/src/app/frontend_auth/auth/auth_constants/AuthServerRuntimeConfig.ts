@@ -29,6 +29,6 @@ export const AuthServerRuntimeConfig = {
 
   isLoginDemoEnabled(): boolean {
     const env = readAuthServerRuntimeEnv();
-    return env.NODE_ENV !== 'production' && env.AUTH_DEMO_MODE === 'true';
+    return env.AUTH_DEMO_MODE === 'true';
   },
 } as const;

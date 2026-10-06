@@ -25,6 +25,6 @@ function readAuthClientRuntimeEnv() {
 export const AuthClientRuntimeConfig = {
   isLoginDemoEnabled(): boolean {
     const env = readAuthClientRuntimeEnv();
-    return env.NODE_ENV !== 'production' && env.NEXT_PUBLIC_AUTH_DEMO_MODE === 'true';
+    return env.NEXT_PUBLIC_AUTH_DEMO_MODE === 'true';
   },
 } as const;
