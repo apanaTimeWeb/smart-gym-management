@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('manager_referrals critical user journey', () => {
   test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
-    await page.goto('/manager/referrals');
-    await expect(page).toHaveURL(new RegExp('/manager/referrals(?:\?.*)?$'));
+    await page.goto('/frontend_manager/manager_referrals');
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_referrals(?:\?.*)?$'));
     const search = page.getByTestId('manager_referrals-manager-referrals-main-input-text');
     await expect(search).toBeVisible();
     await search.fill('ZZZ-No-Such-Referral');
     await expect(page.getByText('No referrals found')).toBeVisible();
     await search.fill('');
-    await expect(page).toHaveURL(new RegExp('/manager/referrals(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_referrals(?:\?.*)?$'));
   });
 });
 
 test('creates a referral from the manual referral form and shows success feedback', async ({ page }) => {
-  await page.goto('/manager/referrals');
+  await page.goto('/frontend_manager/manager_referrals');
   await page.getByTestId('manager_referrals-manager-referrals-main-button-add-referral').click();
   await page.getByTestId('manager_referrals-referrals-managerreferralsaddmodal-input-log-new-referral-0').fill('Existing Member');
   await page.getByTestId('manager_referrals-referrals-managerreferralsaddmodal-input-log-new-referral-1').fill('M001');

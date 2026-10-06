@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('manager_members critical user journey', () => {
   test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
-    await page.goto('/manager/members');
-    await expect(page).toHaveURL(new RegExp('/manager/members(?:\?.*)?$'));
+    await page.goto('/frontend_manager/manager_members');
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_members(?:\?.*)?$'));
     const search = page.getByTestId('manager_members-members-toolbar-input-value');
     await expect(search).toBeVisible();
     await search.fill('ZZZ-No-Such-Member');
     await expect(page.getByText('No members yet')).toBeVisible();
     await search.fill('');
-    await expect(page).toHaveURL(new RegExp('/manager/members(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_members(?:\?.*)?$'));
   });
 });
 
 test('records a payment for a selected member and shows success feedback', async ({ page }) => {
-  await page.goto('/manager/members');
+  await page.goto('/frontend_manager/manager_members');
   const firstRow = page.locator('tr[data-testid^="manager_members-members-managermemberstable-row-"]').first();
   await expect(firstRow).toBeVisible();
   await firstRow.click();

@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 
 test.describe('manager_store critical user journey', () => {
   test('renders the canonical route and exercises the primary search flow', async ({ page }) => {
-    await page.goto('/manager/store');
-    await expect(page).toHaveURL(new RegExp('/manager/store(?:\?.*)?$'));
+    await page.goto('/frontend_manager/manager_store');
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\?.*)?$'));
     const search = page.getByTestId('manager_store-manager-store-toolbar-input-value');
     await expect(search).toBeVisible();
     await search.fill('ZZZ-No-Such-Product');
     await expect(page.getByText('No products added yet.')).toBeVisible();
     await search.fill('');
-    await expect(page).toHaveURL(new RegExp('/manager/store(?:\?.*)?$'));
+    await expect(page).toHaveURL(new RegExp('/frontend_manager/manager_store(?:\?.*)?$'));
   });
 });
 
 test('creates a store product and shows success feedback', async ({ page }) => {
-  await page.goto('/manager/store');
+  await page.goto('/frontend_manager/manager_store');
   await page.getByTestId('manager_store-manager-store-toolbar-add-product').click();
   await page.getByTestId('manager_store-store-managerstoreproductmodal-input-primary-0').fill('E2E Protein Product');
   await page.getByTestId('manager_store-store-managerstoreproductmodal-input-primary-2').fill('999');
