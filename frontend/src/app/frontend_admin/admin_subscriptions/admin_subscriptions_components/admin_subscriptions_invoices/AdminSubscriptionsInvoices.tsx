@@ -10,7 +10,7 @@ import { useAdminSubscriptionsLogic } from '@/app/frontend_admin/admin_subscript
 import { ADMIN_SUBSCRIPTIONS_INVOICE_STATUS_STYLES } from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_constants/AdminSubscriptionsConstants';
 import { AdminSubscriptionsEmptyState } from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_components/admin_subscriptions_empty_state/AdminSubscriptionsEmptyState';
 import type { InvoiceStatus } from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_types/AdminSubscriptionsTypes';
-import { ADMIN_SUBSCRIPTIONS_INVOICE_STATUS } from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_constants/AdminSubscriptionsConstants';
+import { ADMIN_SUBSCRIPTIONS_INVOICE_STATUS_VALUES as ADMIN_SUBSCRIPTIONS_INVOICE_STATUS } from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_constants/AdminSubscriptionsConstants';
 
 /**
  * renderInvoiceStatusIcon is the primary function implementation owned by this Admin module.

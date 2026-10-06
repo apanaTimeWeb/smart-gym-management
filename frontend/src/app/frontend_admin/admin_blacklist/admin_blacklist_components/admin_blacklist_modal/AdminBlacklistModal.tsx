@@ -83,7 +83,7 @@ export default function AdminBlacklistModal() {
                   return (
                     <button key={opt.value} type="button" onClick={() => toggleGym(opt.value)}
                       className={`motion-safe:duration-base ease-in-out min-h-11 min-w-11 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-danger text-on-danger border-border' : 'bg-input text-secondary border-border hover:border-border'}`} data-testid={`admin_blacklist-admin_blacklist-modal-click-4-map80-${__testIdIndex80}-1`}>
-                      {opt.label}
+                      {opt.labelKey ? t(opt.labelKey) : (opt as any).label}
                     </button>
                   );
                 })}

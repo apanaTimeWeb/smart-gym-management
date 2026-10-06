@@ -98,7 +98,7 @@ export default function AdminCouponsTable() {
                 <td className="px-5 py-4 text-sm text-primary whitespace-nowrap">{coupon.validUntil}</td>
                 <td className="px-5 py-4">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${COUPON_STATUS_STYLES[coupon.status] ?? 'bg-input text-secondary'}`}>
-                    {t(COUPON_STATUS_LABEL_KEYS[coupon.status])}
+                    {t(COUPON_STATUS_LABEL_KEYS[coupon.status] as string)}
                   </span>
                 </td>
                 <td className="px-5 py-4">

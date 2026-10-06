@@ -11,7 +11,7 @@ import { useAdminCouponsStore } from '@/app/frontend_admin/admin_coupons/admin_c
 import { adminToast } from '@/app/frontend_admin/admin_layout/admin_layout_feedback/AdminLayoutToastService';
 import { getAdminBackendMessage } from '@/app/frontend_admin/admin_layout/admin_layout_feedback/AdminLayoutBackendMessage';
 import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/frontend_admin/admin_layout/admin_layout_utils/AdminLayoutIdempotencyIntentStore';
-import type { Coupon } from '@/app/frontend_admin/admin_coupons/admin_coupons_types/AdminCouponsTypes';
+import type { Coupon, CouponFormValues } from '@/app/frontend_admin/admin_coupons/admin_coupons_types/AdminCouponsTypes';
 /**
  * @description useAdminCouponsMutations: Owns all TanStack Query mutations and cache updates for Admin Coupons.
  * @dependencies Consumes AdminCouponsQueryKeys, AdminCouponsApi, useAdminCouponsStore, AdminLayoutToastService, AdminLayoutBackendMessage, AdminLayoutIdempotencyIntentStore.
@@ -26,7 +26,7 @@ export function useAdminCouponsMutations() {
   const invalidate = () => void queryClient.invalidateQueries({ queryKey: ADMIN_COUPONS_QUERY_KEYS.key('list') });
 
   const createMutation = useMutation({
-    mutationFn: ({ payload, idempotencyKey, intentId }: { payload: Partial<Coupon>; idempotencyKey: string; intentId: string }) => AdminCouponsApi.createCoupon(payload, idempotencyKey),
+    mutationFn: ({ payload, idempotencyKey, intentId }: { payload: CouponFormValues; idempotencyKey: string; intentId: string }) => AdminCouponsApi.createCoupon(payload, idempotencyKey),
     onSuccess: (res, variables) => { clearIntentKey(variables.intentId); adminToast.success(res.message, 'admin-success-28c64429b0'); store.setShowModal(false); invalidate(); },
     onError: (err) => { const message = getAdminBackendMessage(err); if (message) adminToast.error(message, 'admin-error-000fe5d6ed'); },
   });

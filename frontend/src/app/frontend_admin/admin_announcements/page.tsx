@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminAnnouncementsMain from '@/app/frontend_admin/admin_announcements/admin_announcements_components/admin_announcements_main/AdminAnnouncementsMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_announcements.metadata');
+  const t = await getTranslations('announcements.metadata');
   return { title: t('title'), description: t('description') };
 }
 

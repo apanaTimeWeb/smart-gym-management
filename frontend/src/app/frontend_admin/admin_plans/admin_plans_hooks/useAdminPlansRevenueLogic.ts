@@ -24,7 +24,7 @@ export function useAdminPlansRevenueLogic() {
 
   useAdminLayoutUrlQuerySync([
     { key: 'period', value: period, defaultValue: 'THIS_MONTH', setValue: (value) => setPeriod(value as RevenuePeriod) },
-    { key: 'search', value: searchQuery, defaultValue: '', setValue: setSearchQuery },
+    { key: 'search', value: searchQuery, defaultValue: '', setValue: (val) => setSearchQuery(val as string) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 

@@ -45,7 +45,9 @@ export function useAdminSalesLogic(): AdminSalesState {
     await queryClient.invalidateQueries({ queryKey: ADMIN_SALES_QUERY_KEYS.key() });
   }, [queryClient]);
 
-  const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, membershipFilter: membershipFilter === 'all' ? undefined : membershipFilter, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
+  const queryParams: Record<string, string> = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId };
+  if (membershipFilter !== 'all') queryParams.membershipFilter = membershipFilter;
+  if (debouncedSearch) queryParams.search = debouncedSearch;
   const overviewQuery = useQuery({
     queryKey: ADMIN_SALES_QUERY_KEYS.key('overview', range, selectedBranchId),
     queryFn: () => AdminSalesApi.fetchOverview(selectedBranchId, range),

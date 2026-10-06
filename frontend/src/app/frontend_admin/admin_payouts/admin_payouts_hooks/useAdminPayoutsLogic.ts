@@ -22,9 +22,9 @@ export function useAdminPayoutsLogic() {
   const [pnlSortKey, setPnlSortKey] = useState<PnlSortKey>('netProfit');
   const [pnlSortDir, setPnlSortDir] = useState<PnlSortDirection>('desc');
   useAdminLayoutUrlQuerySync([
-    { key: 'month', value: monthFilter, defaultValue: '', setValue: useAdminPayoutsStore.getState().setMonthFilter },
-    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: useAdminPayoutsStore.getState().setGymFilter },
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: useAdminPayoutsStore.getState().setStatusFilter },
+    { key: 'month', value: monthFilter, defaultValue: '', setValue: (val) => useAdminPayoutsStore.getState().setMonthFilter(val as string) },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: (val) => useAdminPayoutsStore.getState().setGymFilter(val as string) },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => useAdminPayoutsStore.getState().setStatusFilter(val as string) },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 

@@ -36,7 +36,7 @@ export default function AdminUsagePlanCard({ planTiers, onRequestUpgrade, pendin
           return (
             <div key={plan.name} className={`rounded-xl border p-4 space-y-3 motion-safe:transition-all motion-safe:duration-base ${plan.isCurrent ? 'border-focus bg-primary-subtle' : 'border-border bg-input hover:border-focus'}`}>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-bold text-primary">{t(plan.nameKey)}</p>
+                <p className="text-sm font-bold text-primary">{t(`usage.admin_usage_plan_card.${plan.name}` as any)}</p>
                 {plan.isCurrent && <span className="text-xs font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded-full">{t('usage.admin_usage_plan_card.text_4fc0e2bc80')}</span>}
               </div>
               <p className="text-xl font-bold text-primary">{plan.price === 0 ? t('usage.admin_usage_plan_card.customPrice') : `${AdminUsageFormatCurrency(plan.price, undefined, locale)}/mo`}</p>

@@ -17,8 +17,8 @@ async function parseRequestBody(request: Request): Promise<unknown> {
  * asRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function asRecord(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 const ok = <T>(data: T, message = 'Success') =>
@@ -56,7 +56,7 @@ function gymNamesFor(ids: string[]): { ids: string[]; names: string[] } {
  * buildCouponRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function buildCouponRecord(input: JsonObject): CouponRecord {
+function buildCouponRecord(input: Record<string, unknown>): CouponRecord {
   const gyms = Array.isArray(input.assignedGyms) ? (input.assignedGyms as string[]) : ['all'];
   const names = gymNamesFor(gyms);
   return {
@@ -82,7 +82,7 @@ function buildCouponRecord(input: JsonObject): CouponRecord {
  * applyCouponUpdate is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function applyCouponUpdate(record: CouponRecord, input: JsonObject): CouponRecord {
+function applyCouponUpdate(record: CouponRecord, input: Record<string, unknown>): CouponRecord {
   const gyms = Array.isArray(input.assignedGyms) ? (input.assignedGyms as string[]) : record.assignedGyms;
   const names = gymNamesFor(gyms);
   return {

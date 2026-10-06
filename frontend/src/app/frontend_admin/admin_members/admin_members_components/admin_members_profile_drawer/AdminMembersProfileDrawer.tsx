@@ -55,7 +55,7 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
             <div>
               <h3 className="text-lg font-bold text-primary">{member.name}</h3>
               <span className={`text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${STATUS_STYLES[member.status] ?? 'bg-input text-secondary'}`}>
-                {MEMBER_STATUS_LABEL_KEYS[member.status] ? t(MEMBER_STATUS_LABEL_KEYS[member.status]) : member.status}
+                {MEMBER_STATUS_LABEL_KEYS[member.status] ? t(MEMBER_STATUS_LABEL_KEYS[member.status] as string) : member.status}
               </span>
             </div>
           </div>

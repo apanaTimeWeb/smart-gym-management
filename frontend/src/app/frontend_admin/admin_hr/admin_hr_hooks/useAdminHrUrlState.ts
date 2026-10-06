@@ -3,6 +3,7 @@
 import { useCallback, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useAdminHrDebounce } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrDebounce';
+import type { AdminHrSortDirection, AdminHrStaffSortKey } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrTypes';
 /**
  * @description useAdminHrUrlState: Owns the useAdminHrUrlState responsibility for the admin_hr feature.
  * @dependencies Consumes useAdminLayoutDebounce.
@@ -15,9 +16,9 @@ export function useAdminHrUrlState() {
   const search = searchParams.get('search') || '';
   const currentPage = Math.max(1, Number.parseInt(searchParams.get('page') || '1', 10) || 1);
   const staffSortKey = searchParams.get('staffSortKey') || 'name';
-  const staffSortDir = searchParams.get('staffSortDir') || 'asc';
+  const staffSortDir = (searchParams.get('staffSortDir') || 'asc') as AdminHrSortDirection;
   const payrollSortKey = searchParams.get('payrollSortKey') || 'month';
-  const payrollSortDir = searchParams.get('payrollSortDir') || 'desc';
+  const payrollSortDir = (searchParams.get('payrollSortDir') || 'desc') as AdminHrSortDirection;
   const roleFilter = searchParams.get('role') || 'All';
   const branchFilter = searchParams.get('branch') || 'All';
   const payrollMonth = searchParams.get('month') || new Date().toISOString().substring(0, 7);
@@ -30,14 +31,14 @@ export function useAdminHrUrlState() {
     router.push(`${pathname}?${next.toString()}`);
   }, [pathname, router, searchParams]);
 
-  const setStaffSort = useCallback((key: string, direction: string) => {
+  const setStaffSort = useCallback((key: AdminHrStaffSortKey, direction: AdminHrSortDirection) => {
     const next = new URLSearchParams(searchParams.toString());
     next.set('staffSortKey', key);
     next.set('staffSortDir', direction);
     next.set('page', '1');
     router.push(`${pathname}?${next.toString()}`);
   }, [pathname, router, searchParams]);
-  const setPayrollSort = useCallback((key: string, direction: string) => {
+  const setPayrollSort = useCallback((key: string, direction: AdminHrSortDirection) => {
     const next = new URLSearchParams(searchParams.toString());
     next.set('payrollSortKey', key);
     next.set('payrollSortDir', direction);

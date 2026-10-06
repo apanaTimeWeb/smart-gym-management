@@ -23,7 +23,7 @@ export function useAdminLayoutDialogAccessibility({
     document.body.style.overflow = 'hidden';
 
     const getFocusableElements = (): HTMLElement[] => {
-      const container = containerRef.current;
+      const container = containerRef?.current;
       if (!container) return [];
       return Array.from(container.querySelectorAll<HTMLElement>(
         'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -31,7 +31,7 @@ export function useAdminLayoutDialogAccessibility({
     };
 
     const focusFirstElement = () => {
-      const container = containerRef.current;
+      const container = containerRef?.current;
       if (!container) return;
       const first = getFocusableElements()[0];
       if (first) first.focus();
@@ -41,7 +41,7 @@ export function useAdminLayoutDialogAccessibility({
     const animationFrame = window.requestAnimationFrame(focusFirstElement);
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const container = containerRef.current;
+      const container = containerRef?.current;
       if (!container) return;
 
       if (event.key === 'Escape') {
@@ -61,6 +61,7 @@ export function useAdminLayoutDialogAccessibility({
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();

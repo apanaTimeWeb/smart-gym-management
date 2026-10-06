@@ -107,7 +107,7 @@ export default function AdminReportsRevenue() {
                     <span className="text-primary font-medium">{row.method}</span>
                     <span className="text-secondary">{AdminReportsFormatCurrency(row.amount, undefined, locale)} <span className="text-xs">({pct}%)</span></span>
                   </div>
-                  <AdminLayoutProgressBar value={pct} label={t('reports.admin_reports_revenue.auto_methodRevenueShare', { method: row.method })} />
+                  <AdminLayoutProgressBar value={Number(pct)} label={t('reports.admin_reports_revenue.auto_methodRevenueShare', { method: row.method })} />
                 </div>
               );
             })}
@@ -130,7 +130,7 @@ export default function AdminReportsRevenue() {
                     <span className="text-primary font-medium">{row.planName}</span>
                     <span className="text-secondary">{AdminReportsFormatCurrency(row.amount, undefined, locale)} <span className="text-xs">({row.count} {t('reports.admin_reports_revenue.text_3757697e2a')}</span></span>
                   </div>
-                  <AdminLayoutProgressBar value={pct} label={t('reports.admin_reports_revenue.auto_planRevenueShare', { plan: row.planName })} variant="info" />
+                  <AdminLayoutProgressBar value={Number(pct)} label={t('reports.admin_reports_revenue.auto_planRevenueShare', { plan: row.planName })} variant="info" />
                 </div>
               );
             })}

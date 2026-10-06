@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminProfileMain from '@/app/frontend_admin/admin_profile/admin_profile_components/admin_profile_main/AdminProfileMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_profile.metadata');
+  const t = await getTranslations('profile.metadata');
   return { title: t('title'), description: t('description') };
 }
 

@@ -17,8 +17,8 @@ async function parseRequestBody(request: Request): Promise<unknown> {
  * asRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function asRecord(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 const ok = <T>(data: T, message = 'Success') =>
@@ -47,7 +47,7 @@ function gymNamesFor(ids: string[]): string[] { return ids.map((id) => gymNameBy
  * buildAnnouncementRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function buildAnnouncementRecord(input: JsonObject): AnnouncementRecord {
+function buildAnnouncementRecord(input: Record<string, unknown>): AnnouncementRecord {
   const gymIds = Array.isArray(input.gymIds) ? (input.gymIds as string[]) : ['g1'];
   const audience = (Array.isArray(input.audience) ? input.audience : ['all']) as AnnouncementRecord['audience'];
   const now = new Date().toISOString();
@@ -73,7 +73,7 @@ function buildAnnouncementRecord(input: JsonObject): AnnouncementRecord {
  * applyAnnouncementUpdate is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function applyAnnouncementUpdate(record: AnnouncementRecord, input: JsonObject): AnnouncementRecord {
+function applyAnnouncementUpdate(record: AnnouncementRecord, input: Record<string, unknown>): AnnouncementRecord {
   const gymIds = Array.isArray(input.gymIds) ? (input.gymIds as string[]) : record.gymIds;
   return {
     ...record,

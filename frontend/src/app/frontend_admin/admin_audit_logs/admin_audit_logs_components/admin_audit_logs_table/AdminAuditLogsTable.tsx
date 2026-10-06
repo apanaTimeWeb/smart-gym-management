@@ -39,7 +39,7 @@ export default function AdminAuditLogsTable() {
   const t = useTranslations();
   const locale = useLocale();
 
-  const { logs, status, currentPage, setCurrentPage, totalPages, totalItems, openDetail, selectedLogId, closeDetail } = useAdminAuditLogsLogic();
+  const { logs, status, currentPage, setCurrentPage, totalPages, totalItems, openDetail, selectedLogId, closeDetail, detail } = useAdminAuditLogsLogic();
   if (status === 'pending') return <AdminLayoutTableSkeleton rows={8} cols={6} />;
   if (status === 'error') return <div className="rounded-xl border border-border bg-danger-bg p-6 text-sm text-danger">{t('audit_logs.admin_audit_logs_table.text_8631a11f58')}</div>;
   return (
@@ -73,7 +73,7 @@ export default function AdminAuditLogsTable() {
         </div>
         <AdminLayoutPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} totalItems={totalItems} itemsPerPage={10} />
       </div>
-      {selectedLogId && <AdminAuditLogsDetailDrawer onClose={closeDetail} />}
+      {selectedLogId && <AdminAuditLogsDetailDrawer log={detail} isOpen={Boolean(selectedLogId)} onClose={closeDetail} />}
     </>
   );
 }

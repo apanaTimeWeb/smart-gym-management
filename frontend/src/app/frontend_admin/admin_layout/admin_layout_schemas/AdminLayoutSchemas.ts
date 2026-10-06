@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const adminSidebarPropsSchema = z.object({
     isCollapsed: z.boolean(),
-    setIsCollapsed: z.function({ input: [z.boolean()], output: z.void() })
+    setIsCollapsed: z.function().args(z.boolean()).returns(z.void())
 });
 
 export const adminHeaderPropsSchema = z.object({

@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminSubscriptionsMain from '@/app/frontend_admin/admin_subscriptions/admin_subscriptions_components/admin_subscriptions_main/AdminSubscriptionsMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_subscriptions.metadata');
+  const t = await getTranslations('subscriptions.metadata');
   return { title: t('title'), description: t('description') };
 }
 

@@ -36,6 +36,7 @@ export interface AdminLayoutDialogAccessibilityOptions {
   isOpen: boolean;
   onClose: () => void;
   initialFocusRef?: { current: HTMLElement | null };
+  containerRef?: import('react').RefObject<HTMLElement | null>;
 }
 
 export type AdminIdempotencyIntentRegistry = Map<string, string>;

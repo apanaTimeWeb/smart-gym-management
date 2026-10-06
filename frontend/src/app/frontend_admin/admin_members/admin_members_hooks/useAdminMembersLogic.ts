@@ -9,11 +9,12 @@ import { ADMIN_MEMBERS_QUERY_KEYS } from '@/app/frontend_admin/admin_members/adm
 import { useCallback } from 'react';
 import { useAdminMembersStore } from '@/app/frontend_admin/admin_members/admin_members_store/useAdminMembersStore';
 import { useAdminLayoutUrlQuerySync } from '@/app/frontend_admin/admin_layout/admin_layout_utils/useAdminLayoutUrlQuerySync';
-import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/frontend_admin/admin_members/admin_members_constants/AdminMembersConstants';
+import { ADMIN_MEMBERS_ITEMS_PER_PAGE, MEMBER_STATUS_VALUES } from '@/app/frontend_admin/admin_members/admin_members_constants/AdminMembersConstants';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AdminMembersStatusFilter,  AdminMember, AdminMembersSummary, MemberStatus } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTypes';
 import { useAdminMembersDebounce } from '@/app/frontend_admin/admin_members/admin_members_hooks/useAdminMembersDebounce';
-import { AdminMembersApi, type FetchMembersParams } from '@/app/frontend_admin/admin_members/admin_members_api/AdminMembersApi';
+import { AdminMembersApi } from '@/app/frontend_admin/admin_members/admin_members_api/AdminMembersApi';
+import type { FetchMembersParams } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersApiQueryTypes';
 import { adminToast } from '@/app/frontend_admin/admin_layout/admin_layout_feedback/AdminLayoutToastService';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -27,10 +28,10 @@ export function useAdminMembersLogic() {
   const selectedBranchId = searchParams.get('branchId') || 'all';
   const { search, statusFilter, branchFilter, expiryFilter, genderFilter, planFilter, currentPage, setCurrentPage } = useAdminMembersStore();
   useAdminLayoutUrlQuerySync([
-    { key: 'search', value: search, defaultValue: '', setValue: useAdminMembersStore.getState().setSearch },
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => { if (val === 'all' || Object.values(MEMBER_STATUS_VALUES).includes(val as typeof MEMBER_STATUS_VALUES[keyof typeof MEMBER_STATUS_VALUES])) useAdminMembersStore.getState().setStatusFilter(val as AdminMembersStatusFilter); } },
-    { key: 'branch', value: branchFilter, defaultValue: 'all', setValue: useAdminMembersStore.getState().setBranchFilter },
-    { key: 'expiry', value: expiryFilter, defaultValue: 'all', setValue: (val) => { if (val === 'all' || val === 'this_week' || val === 'this_month') useAdminMembersStore.getState().setExpiryFilter(val); } },
+    { key: 'search', value: search, defaultValue: '', setValue: (val) => useAdminMembersStore.getState().setSearch(val as string) },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => { if (val === 'all' || Object.values(MEMBER_STATUS_VALUES).includes(val as any)) useAdminMembersStore.getState().setStatusFilter(val as AdminMembersStatusFilter); } },
+    { key: 'branch', value: branchFilter, defaultValue: 'all', setValue: (val) => useAdminMembersStore.getState().setBranchFilter(val as string) },
+    { key: 'expiry', value: expiryFilter, defaultValue: 'all', setValue: (val) => { if (val === 'all' || val === 'this_week' || val === 'this_month') useAdminMembersStore.getState().setExpiryFilter(val as any); } },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
   const memberId = searchParams.get('memberId');

@@ -10,7 +10,7 @@ export const BLACKLIST_SCOPE_VALUES = {
 
 
 
-export const BLACKLIST_TAB_OPTIONS: { value: BlacklistActiveTab; label: string }[] = [
+export const BLACKLIST_TAB_OPTIONS: { value: BlacklistActiveTab; labelKey: string }[] = [
   { value: 'all', labelKey: 'blacklist.admin_blacklist_tabs.allEntries' },
   { value: 'cross-branch', labelKey: 'blacklist.admin_blacklist_tabs.crossBranchView' },
 ];

@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { adminHrPaymentFormSchema, type AdminHrPaymentFormValues } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrPaymentFormSchema';
+import { adminHrPaymentFormSchema } from '@/app/frontend_admin/admin_hr/admin_hr_schemas/AdminHrPaymentFormSchema';
+import type { AdminHrPaymentFormValues } from '@/app/frontend_admin/admin_hr/admin_hr_types/AdminHrPaymentFormTypes';
 import { useAdminHrViewModel } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrViewModel';
 import { useAdminHrUnsavedChangesGuard } from '@/app/frontend_admin/admin_hr/admin_hr_hooks/useAdminHrUnsavedChangesGuard';
 

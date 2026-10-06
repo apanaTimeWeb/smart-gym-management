@@ -35,7 +35,7 @@ function annotateTables(root: ParentNode = document) {
 export default function AdminLayoutResponsiveTableProvider() {
   // EFFECT: Annotates mounted tables after route changes so responsive semantics remain available without owning feature data.
   useEffect(() => {
-    document.documentElement.classList.add(styles.responsiveTableScope);
+    if (styles.responsiveTableScope) document.documentElement.classList.add(styles.responsiveTableScope);
     annotateTables();
     const observer = new MutationObserver(() => annotateTables());
     observer.observe(document.body, { childList: true, subtree: true });

@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminGymHealthAlertsMain from '@/app/frontend_admin/admin_gym_health_alerts/admin_gym_health_alerts_components/admin_gym_health_alerts_main/AdminGymHealthAlertsMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_gym_health_alerts.metadata');
+  const t = await getTranslations('gym-health-alerts.metadata');
   return { title: t('title'), description: t('description') };
 }
 

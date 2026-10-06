@@ -173,7 +173,7 @@ export default function AdminAnnouncementsTable() {
                   </td>
                   {/* Status */}
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${ANNOUNCEMENT_STATUS_STYLES, ANNOUNCEMENT_STATUS_LABEL_KEYS, ANNOUNCEMENT_PRIORITY_LABEL_KEYS[a.status as AnnouncementStatus]}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${ANNOUNCEMENT_STATUS_STYLES[a.status as AnnouncementStatus]}`}>
                       {t(ANNOUNCEMENT_STATUS_LABEL_KEYS[a.status as AnnouncementStatus])}
                     </span>
                   </td>

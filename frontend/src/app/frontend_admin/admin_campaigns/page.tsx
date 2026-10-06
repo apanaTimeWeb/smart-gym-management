@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import AdminCampaignsMain from '@/app/frontend_admin/admin_campaigns/admin_campaigns_components/admin_campaigns_main/AdminCampaignsMain';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin_campaigns.metadata');
+  const t = await getTranslations('campaigns.metadata');
   return { title: t('title'), description: t('description') };
 }
 

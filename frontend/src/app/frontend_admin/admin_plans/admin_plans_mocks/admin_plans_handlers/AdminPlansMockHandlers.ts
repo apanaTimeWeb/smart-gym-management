@@ -16,8 +16,8 @@ async function parseRequestBody(request: Request): Promise<unknown> {
  * asRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function asRecord(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 const ok = <T>(data: T, message = 'Success') =>
@@ -48,7 +48,7 @@ function toNumber(value: unknown, fallback = 0): number { const n = Number(value
  * buildPlanRecord is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function buildPlanRecord(input: JsonObject): PlanRecord {
+function buildPlanRecord(input: Record<string, unknown>): PlanRecord {
   return {
     id: `p-demo-${++planSequence}`,
     name: String(input.name ?? 'New Plan'),
@@ -70,7 +70,7 @@ function buildPlanRecord(input: JsonObject): PlanRecord {
  * applyPlanUpdate is the primary function implementation owned by this Admin module.
  * @remarks Keep this declaration isolated from unrelated business modules and preserve its documented contract.
  */
-function applyPlanUpdate(record: PlanRecord, input: JsonObject): PlanRecord {
+function applyPlanUpdate(record: PlanRecord, input: Record<string, unknown>): PlanRecord {
   return {
     ...record,
     name: input.name !== undefined ? String(input.name) : record.name,

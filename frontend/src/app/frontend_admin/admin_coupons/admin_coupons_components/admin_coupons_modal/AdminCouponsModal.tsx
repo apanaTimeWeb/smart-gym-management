@@ -97,7 +97,7 @@ export default function AdminCouponsModal() {
                     onClick={() => toggleGym(opt.value)}
                     className={`motion-safe:duration-base ease-in-out min-h-11 min-w-11 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-primary border-focus' : 'bg-input text-secondary border-border hover:border-focus'}`}
                    data-testid={`admin_coupons-admin_coupons-modal-click-3-map90-${__testIdIndex90}-1`}>
-                    {opt.label}
+                    {t((opt as any).labelKey)}
                   </button>
                 );
               })}
