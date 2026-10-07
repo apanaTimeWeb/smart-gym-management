@@ -9107,6 +9107,32 @@ The following alone NEVER establish completeness:
 
 The final verdict MUST separately report all of the following. Never collapse multiple dimensions into one.
 
+## REQUIREMENT COVERAGE CALCULATION
+
+Before printing the final verdict, produce this mandatory stakeholder summary:
+
+```text
+REQUIREMENT COVERAGE SUMMARY
+=============================
+Total Requirements Discovered:       N
+  → Implemented & Verified:          N  (X%)
+  → Implemented, Not Verified:       N  (X%)
+  → Partially Implemented:           N  (X%)
+  → Not Implemented:                 N  (X%)
+  → Blocked:                         N  (X%)
+  → Not a Backend Requirement:       N  (X%)
+  → Frontend Change Required:        N  (X%)
+
+Overall Compliance Rate:  X%   (Implemented+Verified / [Total − Not_Backend − Blocked])
+Overall Coverage Rate:    X%   (Actioned requirements / Total Discovered)
+```
+
+Rules:
+- `NOT_A_BACKEND_REQUIREMENT` items are excluded from the denominator.
+- `BLOCKED` items reduce confidence but are not counted as failures.
+- `IMPLEMENTED_NOT_VERIFIED` counts as partial, never as COMPLIANT.
+- If `Not Implemented` count > 0, overall readiness MUST NOT be `READY_FOR_PRODUCTION`.
+
 ```text
 COMPLETENESS & QUALITY METRICS:
 - Requirements Fulfilled:        [X%] (Total: N, Met: N, Blocked: N)

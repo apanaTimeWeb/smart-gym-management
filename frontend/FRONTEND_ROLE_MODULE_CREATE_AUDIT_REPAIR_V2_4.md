@@ -348,6 +348,31 @@ rather than pretending it is a documentation rule.
 
 ---
 
+## FRONTEND EVIDENCE RELIABILITY HIERARCHY
+
+When deriving requirements from frontend sources, not all evidence is equally trustworthy. When two sources conflict, prefer the higher-ranked source. Do NOT silently choose the lower-ranked source.
+
+Resolve conflicts in the following order (highest → lowest trust):
+
+```text
+1. RUNTIME_EVIDENCE             — Network traces, browser logs, actual API responses observed at runtime
+2. API_CLIENT_EVIDENCE          — Typed API client functions, SDK call signatures, actual HTTP method + URL + params
+3. SCHEMA_EVIDENCE              — Zod schemas, TypeScript types, response/request shape definitions
+4. PRODUCTION_COMPONENT_EVIDENCE — Active, rendered components — non-dead, non-conditional-only code paths
+5. TEST_EVIDENCE                — Integration tests, contract tests (with MSW) — these reflect INTENDED behavior
+6. MSW_MOCK_EVIDENCE            — MSW handler fixtures — reflect frontend-assumed contract, may lag real API
+7. STORYBOOK_OR_STATIC_EVIDENCE — Storybook stories, static demo data — illustrative only
+8. DEAD_CODE_EVIDENCE           — Commented-out code, unreachable branches, unused imports
+```
+
+Rules:
+- If an API client says `POST /api/v1/admin/members` but an MSW handler says `POST /api/admin/members` → API client wins (rank 2 beats rank 6). Record the conflict explicitly.
+- If a Zod schema defines a required field but a mock fixture omits it → schema wins (rank 3 beats rank 6).
+- Dead code MUST NOT be used as a requirement source. Classify it explicitly as `DEAD_CODE_EVIDENCE` and exclude it.
+- When conflict cannot be resolved from existing sources → record `UNRESOLVABLE_EVIDENCE_CONFLICT` and list both sources.
+
+---
+
 # 3A. COMPLETE DOCUMENTATION RULE COVERAGE — MANDATORY
 
 The audit MUST verify the target module against EVERY APPLICABLE requirement contained in:
@@ -574,6 +599,30 @@ Explicit exclusions (out of scope):
 ```
 
 **Coverage gate:** If total inspected coverage falls below 80% of discovered items, the audit MUST report `PARTIAL AUDIT — COVERAGE INSUFFICIENT` and explicitly list what a follow-up audit must cover. A partial audit MUST NOT be presented as exhaustive.
+
+## REQUIREMENT COVERAGE CALCULATION (MANDATORY)
+
+At the end of every audit, produce this summary. This is a stakeholder-facing metric — it MUST be honest and machine-verifiable.
+
+```text
+REQUIREMENT COVERAGE SUMMARY
+=============================
+Total Requirements Discovered:      N
+  → Verified (PASS):                N  (X%)
+  → Partial (PARTIAL):              N  (X%)
+  → Failed (FAIL):                  N  (X%)
+  → Not Applicable (NOT_APPLICABLE):N  (X%)
+  → Unverifiable (NOT_VERIFIED):    N  (X%)
+
+Overall Compliance Rate:  X%   (Verified / [Total − Not_Applicable − Unverifiable])
+Overall Coverage Rate:    X%   (Inspected / Total Discovered)
+```
+
+Rules:
+- `NOT_APPLICABLE` items MUST NOT inflate the compliance rate. Exclude from denominator.
+- `NOT_VERIFIED` items MUST NOT be counted as PASS. They reduce confidence, not compliance rate.
+- If `Unverifiable` rate exceeds 20%, append: `AUDIT CONFIDENCE: LOW — Insufficient evidence for meaningful compliance rating.`
+- If `Failed` count > 0, the audit MUST NOT be marked as `COMPLIANT_OVERALL`.
 
 ---
 
@@ -1139,6 +1188,22 @@ URL config
 
 ---
 
+### MEANINGFUL FORM DEFINITION
+
+Not all forms require the same audit depth. Before auditing, classify each form:
+
+| Class | Examples | Audit Depth |
+|---|---|---|
+| `CRITICAL_FORM` | Payment, member enrollment, billing, approval, contract | Full deep audit — all fields, validation, idempotency, error states, accessibility |
+| `STANDARD_FORM` | Edit profile, update settings, create note | Standard audit — validation, submission, error/success states |
+| `SIMPLE_INPUT` | Newsletter subscribe, single search, filter toggle | Lightweight audit — basic validation and submission only |
+| `DEMO_OR_STUB` | Placeholder UI, demo-only form not wired to API | Mark as `NOT_AUDITABLE — DEMO` — do NOT audit as production form |
+
+Rules:
+- `SIMPLE_INPUT` forms MUST NOT be audited at the same depth as `CRITICAL_FORM`.
+- `DEMO_OR_STUB` forms MUST NOT generate audit failures for missing validation.
+- Every audited form MUST have its class explicitly stated before audit findings.
+
 # 16. FORM AUDIT
 
 Identify every non-trivial form.
@@ -1180,6 +1245,22 @@ Form View
 → Backend message / UI feedback
 
 ---
+
+### MEANINGFUL TABLE DEFINITION
+
+Not all tables require the same audit depth. Before auditing, classify each table:
+
+| Class | Examples | Audit Depth |
+|---|---|---|
+| `PRODUCTION_DATA_TABLE` | Members list, invoices, attendance log, bookings | Full audit — pagination, sorting, filtering, empty states, row actions, accessibility |
+| `SUMMARY_TABLE` | Dashboard KPI grid, role permission matrix | Standard audit — data accuracy, empty state, loading state |
+| `DEMO_TABLE` | Static hardcoded demo rows, placeholder UI | Mark as `NOT_AUDITABLE — DEMO` — do NOT audit as production table |
+| `READ_ONLY_TABLE` | Audit log display, exported report preview | Lightweight audit — rendering, empty state, column labels |
+
+Rules:
+- `DEMO_TABLE` MUST NOT generate audit failures for missing sort/filter.
+- `PRODUCTION_DATA_TABLE` MUST be fully audited including accessible sorting state.
+- Every audited table MUST have its class explicitly stated before audit findings.
 
 # 17. TABLE AUDIT
 
@@ -4283,6 +4364,30 @@ Check:
 - exact same key on retry;
 - new key only for new user intent;
 - no fresh key per retry.
+
+## RETRY / IDEMPOTENCY CLASSIFICATION (MANDATORY FOR HIGH-RISK MUTATIONS)
+
+For every mutation in the module, classify it using ONE of the following:
+
+| Class | Meaning | Retry Safe? | Required Frontend Safeguard |
+|---|---|---|---|
+| `IDEMPOTENT` | Same request produces the same outcome if repeated | ✅ Yes | Optional deduplication, standard error handling |
+| `RETRY_SAFE_WITH_KEY` | Not naturally idempotent but made safe via Idempotency-Key | ✅ Yes | `idempotencyKey` required; same key on retry |
+| `NON_IDEMPOTENT` | Repetition causes duplication (e.g. charge twice, create twice) | ❌ No | Submit button MUST disable after first click; no auto-retry |
+| `DESTRUCTIVE` | Permanently deletes or irreversibly modifies data | ❌ No | Confirmation gate required; cannot be retried silently |
+
+High-risk flows that MUST be classified:
+- **Payment / billing flows** → `RETRY_SAFE_WITH_KEY` or `NON_IDEMPOTENT`
+- **Subscription renewal / activation** → classify explicitly
+- **Member invite / enrollment** → classify explicitly
+- **Approval / rejection flows** → `NON_IDEMPOTENT` or `DESTRUCTIVE`
+- **Bulk operations** → classify explicitly per operation type
+
+Rules:
+- A mutation MUST NOT be left unclassified.
+- `NON_IDEMPOTENT` mutations MUST have submit-button disabled state audited.
+- `DESTRUCTIVE` mutations MUST have a user-confirmation step audited.
+- If the mutation calls an endpoint with an Idempotency-Key header requirement → classification MUST be `RETRY_SAFE_WITH_KEY`.
 
 ---
 

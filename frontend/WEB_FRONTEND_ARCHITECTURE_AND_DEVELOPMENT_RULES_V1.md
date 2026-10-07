@@ -1829,6 +1829,55 @@ File upload rules:
 
 
 
+## CLIENT STATE vs SERVER STATE — CANONICAL DEFINITIONS
+
+This is the most common source of AI confusion in React Query + Zustand projects. Read this BEFORE writing any state management code.
+
+### Server State
+**Definition:** Any data whose source of truth lives on the server or in an external API.
+
+Properties:
+- It can be stale (your local copy may be outdated)
+- It needs fetching, caching, background-refetching, and invalidation
+- Multiple clients may have conflicting versions
+
+**Owner: TanStack Query (ALWAYS)**
+
+Examples:
+- Member list from `GET /api/v1/admin/members`
+- Invoice records
+- Subscription status
+- Gym settings
+- Analytics results
+- Any data fetched from an API endpoint
+
+### Client State
+**Definition:** UI-only state that exists only on the client, has no server representation, and does not need caching or syncing.
+
+Properties:
+- It never goes stale (no server to sync with)
+- It is local, transient, and UI-driven
+
+**Owner: Zustand (module-scoped) or local `useState`**
+
+Examples:
+- Which table row is selected
+- Active tab or wizard step
+- Modal open/close
+- Active filter panel toggle
+- Column visibility preferences (unless persisted to server)
+
+### The Mixing Trap — FORBIDDEN Patterns
+
+| ❌ WRONG | ✅ CORRECT |
+|---|---|
+| Store API response in Zustand | Use TanStack Query for all API data |
+| Put `isLoading` from API in Zustand | Use `query.isPending` from TanStack Query |
+| Fetch in `useEffect` + store in Context | Use `useQuery` with query key |
+| `useQuery` for local UI toggle state | Use `useState` or Zustand |
+
+> **AI RULE:** If the state has ever touched an API — even if you plan to mock it — it is Server State and MUST live in TanStack Query. Zustand is NEVER the cache for API data.
+
 15C. **State Management Decision Matrix**:
 State must be placed according to its ownership and lifecycle.
 
