@@ -32,7 +32,8 @@ No feature/screen/component may contain:
 - arbitrary shadow/elevation values
 - arbitrary z-index/elevation values
 
-Every visual value must resolve through a documented global token, unless the exception is explicitly documented.
+Every visual value must resolve through a documented global token. 
+**Exception Process:** Locally derived layout values (e.g., dynamic dimensions, safe-area insets, viewport calculations) are permitted only when explicitly documented and approved through a named exception mechanism (e.g., via a `// design-exception: <reason>` comment).
 
 ## Token Architecture Chain
 
@@ -58,6 +59,10 @@ The theme module MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
 Ensure `primary` (#4F46E5) and `destructive` (#DC2626) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
+
+## 1B. Semantic Accessibility Tokens
+
+Mobile UI quality requires proper focus states, screen-reader semantics, and contrast targets. The theme MUST define and consume accessibility tokens (e.g., `focus-visible`, `focus-ring-width`, `focus-ring-offset`, and disabled-state semantics) to ensure screen-reader feedback, keyboard/switch-control navigation, and error/success announcements are universally consistent.
 
 ## 1. Color Tokens
 
@@ -109,7 +114,8 @@ Feature UI must use these named spacing tokens and may not invent arbitrary spac
   - `letter-spacing-heading = -0.5`
 
 Every typography visual value must resolve to a named token unless an explicit exception is documented.
-Size values are expressed in platform-independent typography units; React Native theme modules MUST translate them to native text units.
+Size values must be specified as explicit React Native units (`fontSize`, `lineHeight`, `letterSpacing`).
+**Font Scaling Guidance:** The theme MUST handle Dynamic Type and Android font scaling properly. Developers must configure `allowFontScaling` and `maxFontSizeMultiplier` to ensure accessibility without breaking UI layouts at increased device text sizes.
 
 | Token | Size | Weight | Usage |
 |---|---|---|---|
@@ -131,8 +137,8 @@ Size values are expressed in platform-independent typography units; React Native
 
 `icon-sm (16)`, `icon-md (20)`, `icon-lg (24)` — default stroke/weight `1.75`.
 
-Never use 17, 18, 21, 22, 23 etc. 
-**Note:** Icon visual size and interactive hit area are separate concepts. No arbitrary icon sizes. Touch targets remain governed by the 44 iOS pt / 48 Android dp rule.
+Use named `icon-*` size tokens. Introduce a new token when a supported icon library or specific platform convention strictly requires a new standard size.
+**Note:** Icon visual size and interactive hit area are separate concepts. No arbitrary icon sizes without justification. Touch targets remain governed by the 44 iOS pt / 48 Android dp rule.
 
 ## 6. Touch Targets
 `min-touch-target = 44` (iOS pt) / `48` (Android dp) — every tappable element
@@ -379,7 +385,7 @@ When any button triggers an async action it MUST transition to a loading state i
 |---|---|
 | Default | Label text, `primary` fill |
 | Loading | Label remains available; spinner may be shown before or beside the label, `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading` |
-| Success | Brief checkmark flash (`duration-fast`), then revert or navigate |
+| Success | Conditional: Brief checkmark flash (`duration-fast`) ONLY if the user remains on the same screen with a visible completion state. Do NOT use before immediate navigation, destructive operations, or operations with eventual consistency. |
 | Error | Revert to default state — error shown in toast or inline field |
 
 **Token:** Loading spinner uses `on-primary` / `on-destructive` on primary/destructive fill buttons.
@@ -427,10 +433,14 @@ Feature UI                 ← consumes semantic tokens ONLY; never hardcodes va
 - Elevation/shadow tokens (Section 10)
 - Z-index/elevation stack (Section 15)
 
-**CI Check Requirements (Mandatory Sync):**
+**CI Check Requirements (Mandatory Sync & Enforcements):**
 CI MUST fail when:
 - the React Native theme implementation references an unknown token;
-- a required Light/Dark token pair is incomplete.
+- a required Light/Dark token pair is incomplete;
+- token values are out of sync with the theme module;
+- deprecated tokens are used;
+- defined text/background semantic pairs fail WCAG AA contrast requirements;
+- interactive controls fail the required minimum touch-target size (44pt/48dp).
 
 ---
 
@@ -438,7 +448,7 @@ CI MUST fail when:
 
 To ensure the application feels like a world-class, premium native app, **every developer and AI agent MUST adhere to these interaction details:**
 
-1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states should scale down slightly (`press-scale = 0.96`). Bottom sheets must slide in smoothly.
+1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states should scale down slightly (`press-scale = 0.96`). Bottom sheets must slide in smoothly. **Reduced-Motion Compliance:** Always respect the OS-level reduced-motion preference as strictly outlined in Section 7. Remove non-essential motion and never use animation as the sole indicator of a state change.
 2. **Haptic Feedback:** Pair visual feedback with tactile feedback.
    - **Light Impact:** Minor UI changes (switches, dropdown toggles, pulling to refresh).
    - **Success Notification:** Completing a wizard, saving a form, processing payment.
