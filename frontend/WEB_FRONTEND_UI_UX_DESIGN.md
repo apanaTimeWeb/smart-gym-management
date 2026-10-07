@@ -1,5 +1,34 @@
 # 🎨 SMART GYM 360 — GLOBAL DESIGN SYSTEM
 
+## PLATFORM APPLICABILITY MATRIX
+
+This document governs the **web frontend only** (Next.js / React / Tailwind). Rules reference web-specific technologies such as semantic HTML, Tailwind CSS, `prefers-reduced-motion` media queries, and CSS variables.
+
+| Rule Area | Web (Next.js) | Mobile (React Native) | Shared / Both |
+|---|---|---|---|
+| Semantic HTML, Tailwind classes, CSS variables | ✅ | ❌ | — |
+| Color tokens and semantic naming | ✅ | ✅ (see MOBILE_UI_UX_DESIGN.md) | ✅ |
+| Accessibility (WCAG 2.2 AA) | ✅ | ✅ (via AccessibilityInfo) | ✅ |
+| Responsive breakpoints (mobile/tablet/desktop) | ✅ | ❌ (React Native uses Flexbox) | — |
+| Dark/Light mode via CSS variables | ✅ | ❌ (RN uses theme context) | — |
+| Status/payment/chart token palette | ✅ | ✅ | ✅ |
+| `prefers-reduced-motion` via Tailwind `motion-safe:` | ✅ | ❌ (RN uses AccessibilityInfo) | — |
+| Typography scale and font loading | ✅ (`next/font`) | ❌ (RN uses native fonts) | — |
+| CTA gradient restriction (ERP dashboard) | ✅ | ✅ | ✅ |
+
+**Conflict Resolution Hierarchy:** When rules in this document conflict with each other or with other documents, resolve using this precedence order (highest to lowest):
+1. **Security & Privacy** — authentication, authorization, PII handling
+2. **Legal / Compliance** — WCAG 2.2 AA, data protection requirements
+3. **Accessibility** — WCAG, keyboard navigation, screen-reader support
+4. **Platform Conventions** — browser/OS expected behavior
+5. **Product Requirements** — documented business feature needs
+6. **Architecture Rules** — isolation, naming, state management
+7. **Visual Preferences** — colors, spacing, micro-animations
+
+Deviations from this hierarchy MUST be documented in the affected module's `[moduleName]_features.md`.
+
+---
+
 This document defines the application's global visual language, semantic theme tokens, interaction patterns, accessibility visual rules, responsive visual rules, and zero-business UI conventions.
 
 This document is NOT intended to be copied wholesale into every feature-module prompt.
@@ -177,6 +206,26 @@ Tailwind semantic token mapping (e.g. `@theme inline`)
       ↓
 ```
 Module JSX uses semantic Tailwind classes
+
+### Token Canonical Source & CI Validation
+
+The canonical machine-readable token source is `globals.css`. All tokens MUST flow through this exact chain:
+
+```
+globals.css (:root / .dark blocks)
+  → tailwind.config.ts (@theme inline / extend.colors)
+  → JSX semantic Tailwind classes (e.g. bg-card, text-primary)
+```
+
+**Token Drift Prevention (CI Required):**
+CI MUST fail when any of the following drift conditions are detected:
+- A Tailwind class references a CSS variable not defined in `globals.css`.
+- A token exists in `globals.css` but is missing from the `tailwind.config.ts` mapping table.
+- A token has a light-mode value but no corresponding dark-mode override in `.dark {}`.
+- Any JSX file contains `bg-[var(--*)]`, `text-[var(--*)]`, or raw hex colors (enforced by ESLint `tailwindcss/no-arbitrary-value`).
+- A deprecated token name is used anywhere in the codebase.
+
+**Validation tooling:** Add a token-sync check to the pre-commit hook and CI pipeline that mechanically verifies the `globals.css` → `tailwind.config.ts` mapping is complete and in-sync.
 
 **Examples of proper JSX styling:**
 - `bg-page`, `bg-card`, `bg-header`, `bg-primary`, `bg-overlay`
@@ -540,6 +589,34 @@ Destructive and irreversible actions require an appropriate confirmation UI acco
 | Tablet 768–1279px | Sidebar collapses to icon-only (60px). Tables scroll horizontally. |
 | Mobile <768px | Sidebar hidden, accessible via hamburger menu drawer. Tables become card-stacks. Forms single-column. KPI cards use horizontal scroll or 2-col grid. Charts use reduced height & simplified legend. <br><br>**Narrow Viewport Rule:** The mobile layout MUST remain usable at narrow viewport widths including approximately 320px CSS width. No unintended horizontal overflow is permitted unless the component's documented interaction pattern explicitly requires horizontal scrolling. |
 
+### Fluid Layout Requirements (Between Breakpoints)
+
+Fixed-breakpoint-only specifications fail at intermediate viewport sizes. The following **fluid layout rules** apply across the full viewport range:
+
+- **Flexible grids:** Use CSS Grid or Flexbox with `auto-fill` / `auto-fit` and `minmax()` values so columns reflow naturally, not only at exact breakpoints.
+- **min/max widths:** All column and container components MUST define `min-width` and `max-width` where content could overflow or collapse at intermediate widths.
+- **Wrapping rules:** Flex containers holding buttons, filter bars, or form groups MUST use `flex-wrap` or `flex-col sm:flex-row` to prevent elements from bleeding off screen at non-breakpoint widths.
+- **Horizontal scroll prevention:** No unintended horizontal scroll is permitted at ANY viewport width (including 375px, 414px, 480px, 640px intermediate widths). Acceptable exception: documented horizontal-scroll data tables with `overflow-x-auto` and `min-width` applied.
+- **Zoom compatibility:** All layouts MUST remain fully functional at 200% browser zoom without horizontal overflow or overlapping content.
+- **Text scaling:** Layouts MUST accommodate browser font-size scaling (user-set base font up to 200%) — use `rem`-relative units where practical.
+
+### Responsive Testing Requirements
+
+Before a feature is considered complete, it MUST be verified at all of these conditions:
+
+| Test | Width / Condition | Pass Criteria |
+|---|---|---|
+| Narrow mobile | 320px | No horizontal overflow, all actions reachable |
+| Standard mobile | 375px | Card layouts readable, tables use card-stack |
+| Large mobile | 414px | No layout regressions |
+| Intermediate | 600px | Fluid layout holds, no broken wrapping |
+| Tablet | 768px | Sidebar collapses, tables scroll |
+| Large tablet | 1024px | Desktop patterns visible, sidebar icon-only |
+| Desktop | 1280px+ | Full layout, all columns visible |
+| 200% zoom | Any device | No horizontal scroll, no overlapping |
+| Long text | n/a | Localized strings (up to 2× English length) don't break layout |
+| Text scale 150% | Browser zoom | All text readable, no overflow |
+
 ### Mobile Sidebar / Drawer Requirements
 - Focus trap while drawer is open.
 - Escape closes drawer.
@@ -626,9 +703,50 @@ To ensure the application feels like a world-class, premium SaaS, **every develo
 
 To guarantee stability, safety, and compliance in an ERP environment, these rules are mandatory:
 
-1. **Data Overflow Strategy (Truncation + Tooltips):**
-   - **The Problem:** Unpredictably long user inputs (e.g., a 100-character email) will stretch and break responsive table and card layouts.
-   - **The Rule:** Any dynamic text inside a constrained container MUST use Tailwind's `truncate` class. Whenever text is truncated, you MUST wrap it in a Tooltip component so the user can hover to read the full value.
+### WCAG 2.2 AA — Mandatory Compliance Standard
+
+All UI produced for this application MUST meet **WCAG 2.2 AA** at minimum. This is a non-negotiable compliance requirement, not a best-effort guideline. The following are the specific measurable targets:
+
+| Requirement | Standard | Implementation |
+|---|---|---|
+| Text contrast (normal, <18px / <14px bold) | ≥ 4.5:1 | Verified by token pairs in Section 1 |
+| Text contrast (large, ≥18px / ≥14px bold) | ≥ 3:1 | Verified by token pairs in Section 1 |
+| UI component contrast (focus ring, input border) | ≥ 3:1 against adjacent colors | `--focus-ring` and `--border` tokens |
+| Keyboard navigation | All interactive elements reachable via Tab | No mouse-only interactions |
+| Visible focus indicator | Clearly visible on all interactive elements | `focus-visible:ring-2 focus-visible:ring-primary` |
+| Screen-reader labels | All icon-only controls have accessible names | `aria-label`, `aria-labelledby`, or visible text |
+| Error announcements | Form errors announced to assistive tech | `aria-describedby`, `aria-live` where needed |
+| Zoom support | Layout usable at 200% browser zoom | No horizontal scroll at 200% zoom except documented tables |
+| Reduced motion | Non-essential animations suppressed | `motion-safe:` prefix on all animations (Section 29) |
+| Status by color alone | Color is never the only state differentiator | Always pair color with text, icon, or pattern |
+| Touch target minimum | ≥ 44×44px for all interactive targets | `--touch-target-min: 44px` token |
+
+**WCAG 2.2 New Success Criteria (beyond 2.1):**
+- **2.5.3 Target Size (Minimum):** Interactive controls must be at least 24×24px; where smaller, sufficient spacing between targets is required.
+- **3.2.6 Consistent Help:** Help mechanisms (if present) must appear in consistent locations.
+- **2.4.11 Focus Not Obscured:** Keyboard focus indicator must not be entirely hidden by sticky headers or overlays.
+
+> **AI AGENT NOTE:** When generating any interactive component, run this mental checklist: (1) Is it keyboard-reachable? (2) Does it have an accessible label? (3) Does it have a visible focus state? (4) Are errors announced? (5) Does it work at 200% zoom?
+
+1. **Data Overflow Strategy — Content Resilience Policy:**
+   - **The Problem:** Unpredictably long user inputs (e.g., a 100-character email) will stretch and break responsive table and card layouts. Blanket truncation can hide important data, fail on mobile/touch devices, and create inaccessible interactions.
+   - **Apply the following strategy based on content importance:**
+
+   | Content type | Preferred strategy |
+   |---|---|
+   | Non-critical supplemental text (e.g., description preview) | `truncate` with Tooltip |
+   | Critical data visible in a constrained table cell | Responsive wrapping or multi-line `line-clamp-N` |
+   | Long-form content (notes, addresses) | Expandable disclosure (`Show more / Show less`) |
+   | Full values needed for user action (e.g., email to copy) | Provide access via detail view or full-value field |
+
+   - **Truncation rules when used:**
+     - Only truncate where loss of visible content is acceptable for the use case.
+     - `truncate` on a table column is acceptable for low-criticality preview text; never acceptable for the primary identifier or an actionable value.
+   - **Tooltip rules when used:**
+     - Tooltips MUST be keyboard-accessible (visible on focus, not only on hover).
+     - Tooltips MUST be announced by screen readers (use `aria-describedby` or accessible tooltip primitives).
+     - Tooltips MUST NOT be the only way to access critical text on touch devices (touch has no hover).
+     - A Tooltip is appropriate only when the truncated content is supplemental; for critical content, use a disclosure or detail view instead.
 
 2. **Irreversible Action Safeguards ("Type-to-Confirm"):**
    - **The Problem:** Standard confirmation modals are too easy to accidentally click through for catastrophic actions (like "Delete Entire Branch" or "Purge Financial Records").
@@ -642,6 +760,8 @@ To guarantee stability, safety, and compliance in an ERP environment, these rule
 4. **Keyboard Navigation and Screen Reader Requirements:**
    - All interactive UI must be usable using keyboard only.
    - Use correct ARIA labels for icon-only buttons (e.g., `<button aria-label="Delete">🗑️</button>`).
+   - Logical Tab order must follow visual reading order.
+   - Focus must be managed explicitly when modals/drawers open and close.
 5. **Mobile & Touch Guidelines:**
    - On touch-only devices, hover must never be required for functionality.
    - Hover-only information must have a touch/focus alternative.
@@ -910,6 +1030,43 @@ Theme tokens required:
 
 ---
 
+## 32. LOCALIZATION & CONTENT DESIGN CONSTRAINTS
+
+Hardcoded English copy and fixed-width labels cause layout failures and expensive rework when localization is introduced. All UI design decisions MUST account for localization from the start.
+
+### String Externalization Rule
+All user-facing strings — button labels, column headers, table empty-state messages, status labels, error messages, toast copy, placeholder text, validation messages, and aria-labels — MUST be externalized via the approved i18n layer (`next-intl`). No hardcoded English strings in JSX, except:
+- Debug-only developer messages (never shown to end users)
+- Backend `message` strings rendered directly as-is per Rule 14 of the Architecture doc
+
+### Layout Design for Long Translated Strings
+
+English is typically the shortest language. Designs MUST accommodate translated text that can be **40–100% longer** than the English source. Specific requirements:
+
+| Component | Design Constraint |
+|---|---|
+| Buttons | Must use `min-width`, not fixed width. Text must wrap or button must grow. |
+| Table headers | Must support truncation with tooltip for long translations. |
+| Navigation labels | Sidebar nav items must accommodate up to 20 chars. |
+| Status badges | Badge `padding` must be flexible — not pixel-locked. |
+| KPI card labels | Must use `line-clamp` or flexible height for 2-line labels. |
+| Form labels | Must allow label text to wrap — never crop form labels. |
+| Toast messages | Max-width container, word-wrap enabled — backend messages render as-is. |
+
+### Locale-Aware Formatting
+- **Dates:** Always format via `date-fns` or `dayjs` with locale parameter — never hardcode `DD/MM/YYYY`.
+- **Numbers:** Use `Intl.NumberFormat` with the app locale — Indian numbering system for INR (`₹1,23,456.00`).
+- **Currency:** Use `[module]FormatCurrency()` utility per Architecture Rule 80.
+- **Pluralization:** Use `next-intl` plural rules — never hardcode `"1 member"` / `"2 members"` logic in JSX.
+
+### Right-to-Left Readiness
+Although RTL is not the current primary requirement, designs MUST NOT use hardcoded `margin-left`, `padding-left`, `text-align: left`, or `float: left` in reusable components. Use logical CSS properties (`margin-inline-start`, `padding-inline-start`) or Tailwind logical variants (`ms-*`, `ps-*`) in shared primitives.
+
+### Localization File Location
+Per Architecture Rule 18: locale files MUST be co-located inside the feature module at `[moduleName]_locales/[moduleName]_{lang}.json`. Never create a central `src/messages/` directory.
+
+---
+
 ## MOTION TOKEN SPECIFICATION (GAP-7 Fix — Values Now Defined)
 
 Motion duration tokens were previously named but never assigned values. They are now fully specified:
@@ -1031,4 +1188,81 @@ Example:
 
 ---
 
-*END OF GLOBAL DESIGN SYSTEM — Feature modules reference this system through their theme contract; the complete document is not required as module repair context.*
+*END OF GLOBAL DESIGN SYSTEM — Feature modules reference this system through their theme contract; the complete document is not required as module repair context.*
+
+---
+
+## DEFINITION OF DONE — Web UI/UX Release Checklist
+
+A feature screen or component is NOT considered release-ready until ALL applicable items below are checked. This checklist is the final acceptance gate for AI-generated UI work.
+
+### Functional Completeness
+- [ ] All documented user flows work end-to-end (no placeholder `onClick` handlers)
+- [ ] All form validations work client-side and display server errors correctly
+- [ ] All mutations show correct success/error feedback via toast
+- [ ] All API-driven data renders from real MSW fixture or backend response
+
+### State Coverage (Section 24 — Async UI State System)
+- [ ] **Loading state:** Layout-matching skeleton implemented (not a generic spinner)
+- [ ] **Empty state:** Dedicated `[Module]EmptyState.tsx` with icon, message, and contextual CTA
+- [ ] **Error state:** Non-technical error message + Retry button
+- [ ] **Permission-denied state:** Clear restriction message + next-step guidance
+- [ ] **Offline state:** Non-blocking indicator (if feature declares offline support)
+- [ ] **Partial-data state:** UI handles nullable fields gracefully via `displayValue()`
+
+### Accessibility (WCAG 2.2 AA — Section 13)
+- [ ] All interactive elements keyboard-accessible (Tab navigation verified)
+- [ ] All icon-only buttons have `aria-label`
+- [ ] All form inputs have programmatic `<label>` association
+- [ ] All error messages connected via `aria-describedby`
+- [ ] Focus restored to trigger after modal/drawer close
+- [ ] All animations guarded with `motion-safe:` prefix
+- [ ] Color is never the sole state differentiator (text/icon pairing exists)
+- [ ] Layout verified at 200% browser zoom — no horizontal scroll or overlap
+
+### Responsive & Device Testing (Section 8)
+- [ ] Tested at 320px — no horizontal overflow
+- [ ] Tested at 768px (tablet) — sidebar collapses, tables scroll
+- [ ] Tested at 1280px+ (desktop) — full layout correct
+- [ ] Long translated strings (simulate 2× text length) don't break layouts
+- [ ] All flex containers use `flex-wrap` or `flex-col sm:flex-row` for small screens
+
+### Design System Compliance
+- [ ] No hardcoded hex, RGB, or raw Tailwind colors in JSX
+- [ ] No opacity modifiers on semantic backgrounds (`bg-success/10` forbidden)
+- [ ] All semantic backgrounds paired with correct text-on-* token
+- [ ] Z-index scale respected (Section 12)
+- [ ] `motion-safe:` prefix on all transitions and animations (Section 29)
+
+### Security & Permissions
+- [ ] Frontend permission checks control UI visibility only (not authorization enforcement)
+- [ ] Server-side authorization enforced for every protected operation
+- [ ] Sensitive data masked in list views via `maskSensitiveData()` (Rule 43)
+- [ ] No tokens, secrets, or PII in error logs or analytics
+
+### Localization (Section 32)
+- [ ] No hardcoded English strings in JSX (all via `t('key')`)
+- [ ] Button/label/header containers accommodate 2× text length without overflow
+- [ ] Dates/numbers/currency use locale-aware formatters
+
+### API Integration
+- [ ] All displayed fields have a documented API source in `[moduleName]_features.md`
+- [ ] MSW fixture covers all rendered UI fields (Rule 75D)
+- [ ] No component-level hardcoded business fallback data
+
+### Tests
+- [ ] Unit/component tests cover loading, empty, error, and success states
+- [ ] Regression test exists for any fixed bug
+- [ ] E2E test covers critical user flows (login, CRUD, destructive actions)
+
+### Documentation & Observability
+- [ ] `[moduleName]_features.md` updated if user flows, API, permissions, or state changed
+- [ ] `[moduleName]_theme_contract.md` lists all consumed tokens
+- [ ] Error monitoring wired for critical flows (Rule 15E)
+- [ ] Web vitals within budget: LCP < 2.5s, CLS < 0.1, INP < 200ms
+
+### Performance
+- [ ] Route JS bundle < 200KB (gzipped) for new routes
+- [ ] Images use `next/image` with explicit dimensions
+- [ ] Heavy components use `next/dynamic` (code-split)
+- [ ] Search/filter inputs debounced ≥ 300ms

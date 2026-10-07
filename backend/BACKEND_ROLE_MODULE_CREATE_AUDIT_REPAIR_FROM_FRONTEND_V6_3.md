@@ -7,6 +7,18 @@
 > ⚡ **ARCHITECTURE DOCUMENT IS FINAL AUTHORITY**
 > If ANY rule, example, checklist item, or wording inside this prompt (V6.3) conflicts with the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, **the architecture document wins — always, without exception**. This prompt is an execution guide, not a rule definition source. Record the conflict and follow the architecture document.
 
+### AUTHORITY MODEL
+
+1. System and execution-environment constraints always apply and cannot be overridden by any document.
+2. The supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is authoritative for architecture, implementation, security, naming, dependency, testing, and design rules.
+3. This V6.3 prompt is authoritative for audit process, evidence reporting, frontend-contract extraction, delivery structure, and scope-control procedures — unless it directly conflicts with the architecture document.
+4. Repository-local conventions apply when they do not conflict with the architecture document or this prompt.
+5. In case of conflict between any two sources, do NOT silently choose one. Record:
+   - conflicting texts (exact);
+   - selected authority and reason;
+   - implementation decision;
+   - affected artifacts.
+
 ---
 
 
@@ -24,8 +36,67 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
 **What AI does:**
 1. Deeply read and analyze the entire frontend ZIP — every route, page, API call, form field, dropdown, filter, KPI, table column, permission check, and data type.
-2. Extract every single backend requirement the frontend depends on.
+2. Extract every backend-facing requirement evidenced by the frontend.
+
+   For each requirement, record:
+   - frontend source file and exact location;
+   - evidence type;
+   - endpoint, event, or data dependency;
+   - required request and response fields;
+   - authentication, authorization, tenant, pagination, filtering, sorting, and error expectations;
+   - confidence classification.
+
+   Use one of:
+
+   ```text
+   EXPLICIT_FRONTEND_CONTRACT
+   STRONGLY_INFERRED_FRONTEND_REQUIREMENT
+   POSSIBLE_FRONTEND_REQUIREMENT
+   CLIENT_ONLY_OR_STATIC_BEHAVIOR
+   UNVERIFIABLE_FROM_FRONTEND
+   ```
+
+   Do NOT implement `POSSIBLE_FRONTEND_REQUIREMENT` items as mandatory backend behavior without supporting evidence.
+   Do NOT treat static dropdown options, locally-mocked KPIs, computed table columns, or obsolete dead-code endpoints as mandatory backend requirements unless corroborated by actual network calls or backend API client evidence.
+
 3. Create the complete backend role module from SCRATCH — every controller, service, repository, DTO, entity, migration, seed, test, and documentation file — strictly following every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+
+   **MODE A CREATION SCOPE LIMIT**
+
+   "Complete backend role module" means complete **within the supplied writable repository/module scope**.
+
+   The AI MUST NOT invent or claim to have implemented shared application infrastructure that is absent from the supplied inputs, including:
+   - authentication bootstrap;
+   - global database initialization;
+   - global exception handling;
+   - shared observability, logging, or metrics;
+   - CI/CD pipeline;
+   - secrets management;
+   - deployment infrastructure;
+   - shared tenant context;
+   - global middleware not part of this module.
+
+   For every required dependency outside the supplied writable scope, create an explicit integration requirement record using one of:
+
+   ```text
+   SUPPLIED_AND_VERIFIED
+   SUPPLIED_BUT_MISMATCHED
+   SUPPLIED_BUT_INCOMPLETE
+   OUTSIDE_SUPPLIED_SCOPE
+   NOT_VERIFIED
+   BLOCKED_BY_SUPPLIED_SCOPE
+   ```
+
+   **FRONTEND CONTRACT BOUNDARY**
+
+   Frontend-derived requirements are authoritative only when they do not conflict with the supplied backend architecture, security requirements, data-integrity rules, privacy rules, or applicable scope limits.
+
+   If a frontend requirement conflicts with an authoritative backend rule:
+   1. implement the compliant backend behavior;
+   2. record the exact conflict;
+   3. classify the frontend expectation as `FRONTEND_CHANGE_REQUIRED` when the frontend must change;
+   4. do NOT weaken backend security or architecture to match the frontend.
+
 4. Double-verify: re-read the frontend requirements and cross-check against what was just created. Nothing can be missing.
 5. Deliver a **versioned ZIP**: `backend-{role}-v1.zip`
 6. Include `INTEGRATION_GUIDE.md` inside the ZIP.
@@ -94,6 +165,16 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
 6. Deliver a **versioned fix ZIP**: `backend-{role}-v{N}-fix.zip` (e.g., `backend-superadmin-v2-fix.zip`)
 7. Include `INTEGRATION_GUIDE.md` inside the ZIP.
 
+   **FRONTEND CONTRACT BOUNDARY (also applies in MODE B)**
+
+   Frontend-derived requirements are authoritative only when they do not conflict with the supplied backend architecture, security requirements, data-integrity rules, privacy rules, or applicable scope limits.
+
+   If a frontend requirement conflicts with an authoritative backend rule:
+   1. implement the compliant backend behavior;
+   2. record the exact conflict;
+   3. classify the frontend expectation as `FRONTEND_CHANGE_REQUIRED` when the frontend must change;
+   4. do NOT weaken backend security or architecture to match the frontend.
+
 ---
 
 ## VERSIONING RULES
@@ -105,7 +186,19 @@ Second fix after v2:     backend-{role}-v3-fix.zip
 ... and so on
 ```
 
-The AI MUST try so hard in its first pass (v1 for creation, v2_fix for first audit) that the user never needs to come back for a second fix. The AI must treat every delivery as if it is the last chance to get it right.
+### VERSION NUMBER RULE
+
+For MODE A: use `v1` unless the supplied repository contains an explicit release/version registry requiring a different starting value.
+
+For MODE B: derive `{N}` from the highest existing `backend-{role}-v{N}-fix` archive or release record supplied in scope, then increment by 1.
+
+If no prior version evidence exists in the supplied inputs:
+- do NOT assign `v2` as a default — `v2` implicitly claims a prior `v1` release which may not exist;
+- use `v1` and record: `VERSION_BASELINE_NOT_SUPPLIED`.
+
+Never invent a version number. If version evidence is ambiguous, record the ambiguity and choose the conservative lower bound.
+
+The AI MUST try so hard in its first pass (v1 for creation, first increment for first audit) that the user never needs to come back for a second fix. The AI must treat every delivery as if it is the last chance to get it right.
 
 ---
 
@@ -279,6 +372,22 @@ The frontend is read-only evidence for backend requirement discovery.
 > - **Frontend ZIP given + Backend ZIP given** → **MODE B (AUDIT+REPAIR)** — AI audits the existing backend, fixes all actionable backend issues within the supplied writable scope, documents any genuinely required frontend changes, and delivers `backend-{role}-v{N}-fix.zip`.
 >
 > **The frontend ZIP is ALWAYS required in both modes** — it is the source from which backend requirements are discovered.
+
+### MODE SELECTION RULE (DETERMINISTIC)
+
+Select **MODE A** only when no existing backend source code for the requested role/domain is supplied.
+
+Select **MODE B** when any existing backend source code, backend module, backend feature, API implementation, migration, or backend test relevant to the requested role/domain is supplied.
+
+If an existing backend ZIP is supplied but does not contain a relevant backend implementation:
+
+```text
+MODE_SELECTION_AMBIGUITY
+```
+
+Then proceed in MODE B only for audit evidence purposes. Treat the missing relevant backend implementation as a finding. Create only artifacts within the writable supplied scope. Do NOT silently switch to MODE A and build from scratch against an existing partially-supplied backend.
+
+Do NOT silently switch between modes after Stage 1 begins. If mode selection changes because new evidence is discovered during execution, record the reason in the audit ledger before proceeding.
 
 ---
 
@@ -644,6 +753,29 @@ VIOLATION OF THIS RULE IS AN AUDIT FAILURE.
 
 If your repair plan touches any frontend file for any reason, the audit output is invalid and must be regenerated.
 
+### FRONTEND_CHANGE_REQUIRED.md FORMAT
+
+For each required frontend change, `FRONTEND_CHANGE_REQUIRED.md` MUST include a separate structured entry containing ALL of the following:
+
+```text
+## Change [ID] — [brief title]
+
+ID:                        [FCR-001, FCR-002, ...]
+Frontend file:             [exact path]
+Exact location:            [exact component/hook/schema/type name and line if known]
+Current frontend behavior: [what the frontend currently does]
+Required backend-compliant behavior: [what the backend requires instead]
+Architecture/security rule: [exact rule causing the conflict]
+Required frontend change:  [exactly what must change in the frontend]
+API contract impact:       [which endpoints, request/response fields are affected]
+UI/UX impact:              [visible user-facing change if any]
+Migration/compatibility:   [any data migration or backward-compatibility concern]
+Blocking severity:         [P0/P1/P2/P3]
+Can backend proceed without this change: [YES — backend is deployed but feature is broken / NO — backend cannot be correctly implemented without frontend alignment]
+```
+
+A `FRONTEND_CHANGE_REQUIRED.md` that omits any of these fields for any entry is incomplete and must be regenerated.
+
 ---
 
 # 3. PRIMARY QUESTION (BOTH MODES)
@@ -665,6 +797,31 @@ Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND
 ### C. RUNTIME VERIFICATION
 
 What was actually executed and verified at runtime?
+
+**RUNTIME VERIFICATION HONESTY RULE**
+
+The AI MUST distinguish between static inspection, compilation, unit testing, integration testing, E2E testing, and manual/runtime execution. Never use the unqualified word "verified" without specifying which verification level was achieved.
+
+Use only the following statuses:
+
+```text
+STATICALLY_INSPECTED
+COMPILED
+LINTED
+UNIT_TESTED
+INTEGRATION_TESTED
+E2E_TESTED
+RUNTIME_EXECUTED
+NOT_EXECUTED
+BLOCKED_BY_ENVIRONMENT
+BLOCKED_BY_MISSING_DEPENDENCY
+```
+
+The AI MUST NOT claim that behavior was runtime-verified unless the relevant command or executable test was actually run and its result was available in the current session.
+
+Generated test files do NOT equal executed tests.
+Passing compilation does NOT equal runtime verification.
+Static inspection of a test file does NOT equal test execution.
 
 ### D. SCOPE / EVIDENCE LIMITATION
 
@@ -725,6 +882,30 @@ Typical exclusions may include:
 
 Every exclusion MUST be recorded.
 
+### RELEVANT AUTHORED ARTIFACT DEFINITION
+
+Inspect all source-controlled artifacts that can affect:
+- API behavior;
+- authorization;
+- authentication;
+- tenant isolation;
+- validation;
+- persistence;
+- migrations;
+- asynchronous processing;
+- caching;
+- events;
+- observability;
+- configuration;
+- test behavior;
+- deployment/runtime behavior;
+- frontend-backend contracts;
+- documentation.
+
+This includes source code, tests, migrations, seeds, configuration, manifests, lockfiles, scripts, CI/CD workflows, Docker/Kubernetes artifacts, API schemas, environment templates, and documentation.
+
+Do NOT inspect binary dependencies, build output, vendored packages, generated coverage files, or minified bundles unless they are the only supplied evidence of required behavior. Record such exclusions explicitly.
+
 ### 4.1A — CONTEXT-LIMIT CHUNKING STRATEGY
 
 > ⚠️ LARGE REPOSITORY REALITY CHECK
@@ -770,6 +951,37 @@ When evidence is unavailable, say:
 or, when the missing evidence is explicitly outside the supplied backend scope:
 
 `BLOCKED_BY_SUPPLIED_SCOPE`
+
+### CAPABILITY-AWARE EXECUTION RULE
+
+Before claiming completion of any action, distinguish between:
+- **inspected** — the file or artifact was read;
+- **generated** — new code or content was written;
+- **modified** — existing code was changed;
+- **executed** — a command was actually run in the current session;
+- **packaged** — files were assembled into an archive;
+- **delivered** — the output was provided to the user.
+
+Do NOT claim file modification, ZIP creation, test execution, browser automation, database migration, deployment, or runtime verification unless the environment provided the required capability AND the action actually occurred in the current session.
+
+### NO-INVENTED-INFRASTRUCTURE RULE
+
+Do NOT infer the existence, configuration, registration, runtime availability, or correctness of shared services from imports, naming conventions, examples, or frontend expectations.
+
+This applies specifically to:
+- authentication providers and JWT configuration;
+- message queues and worker registration;
+- cache services (Redis configuration, connection pools);
+- tenant context middleware;
+- logging, metrics, tracing infrastructure;
+- file storage services;
+- email/notification providers;
+- feature flag services;
+- CI/CD pipeline configuration;
+- migration tooling and runners;
+- cloud resource configuration.
+
+If any of the above is not supplied and verifiable from the supplied inputs, classify the dependency as `NOT_VERIFIED` or `OUTSIDE_SUPPLIED_SCOPE`. Do NOT generate implementation code that claims these services are wired and functional.
 
 ---
 
@@ -866,6 +1078,22 @@ AUDIT IMPACT:
 Do not change the requirement baseline silently.
 
 Architecture-document conflicts MUST also be reported rather than silently resolved.
+
+---
+
+## 5.5 API and Database Compatibility
+
+**API AND DATABASE COMPATIBILITY RULE**
+
+For every repaired or created API contract, migration, event, and asynchronous job:
+- identify compatibility impact;
+- identify breaking changes;
+- identify rollback implications;
+- identify required data backfill;
+- identify frontend coordination requirements;
+- document versioning or deprecation requirements where applicable.
+
+Do NOT introduce destructive schema changes without an explicit migration and rollback assessment.
 
 ---
 
@@ -1906,6 +2134,23 @@ The AI MUST prefer re-verification over assumption.
 
 A work unit MUST represent one coherent dependency-bounded backend task.
 
+### BOUNDED WORK UNIT DEFINITION
+
+A work unit is the smallest independently reviewable change set that delivers one feature, use case, migration, integration adapter, or testable repair objective.
+
+Each work unit MUST include:
+- **Objective:** the specific feature or repair goal;
+- **Affected files:** exact list;
+- **Frontend requirement IDs addressed:** from the frozen Stage 1 baseline;
+- **Architecture rule IDs addressed:** from the supplied architecture document;
+- **Implementation summary:** what was created or changed;
+- **Validation performed:** which verification level was achieved (use RUNTIME VERIFICATION taxonomy);
+- **Test status:** GENERATED_NOT_EXECUTED / EXECUTED_AND_PASSED / EXECUTED_AND_FAILED / BLOCKED_BY_ENVIRONMENT;
+- **Unresolved dependencies:** anything outside writable scope that remains unresolved;
+- **Rollback / risk notes:** any breaking change, migration risk, or consumer-impact concern.
+
+A work unit MUST NOT combine unrelated business features unless a shared-infrastructure exception is documented and the combined scope does not exceed a single independently reviewable unit.
+
 Preferred boundaries include:
 
 - one frontend-required API contract family;
@@ -2762,9 +3007,49 @@ After all creation units are complete:
 2. perform complete final re-audit;
 3. repair remaining issues;
 4. generate final documentation;
-5. generate comprehensive API E2E and Selenium deliverables (MANDATORY);
+5. generate API E2E and UI automation deliverables (MANDATORY — see API E2E AND UI AUTOMATION DELIVERABLE RULE below);
 6. generate `RE_AUDIT_CHECKLIST_RESULT.md`;
-7. only then create `backend-{role}-v1.zip`.
+7. only then create `backend-{role}-v1.zip` — see PACKAGE DELIVERY RULE below.
+
+### API E2E AND UI AUTOMATION DELIVERABLE RULE
+
+Generate API E2E coverage for every implemented backend endpoint or externally consumable backend workflow, including:
+- successful behavior;
+- authorization failure;
+- validation failure;
+- tenant-isolation behavior where applicable;
+- pagination/filter/sort behavior where applicable;
+- idempotency and concurrency behavior where applicable;
+- error-contract behavior.
+
+Generate UI automation (Selenium/Playwright/Cypress) deliverables only for frontend flows that:
+- are testable from the supplied frontend source;
+- exercise backend integration;
+- are not pure client-side static behavior.
+
+If Selenium is not compatible with the supplied project tooling (e.g., SPA framework better suited to Playwright/Cypress), record the incompatibility and use the architecture-approved UI automation framework if one is specified in the backend architecture document.
+
+For every generated test, clearly distinguish:
+
+```text
+GENERATED_NOT_EXECUTED
+EXECUTED_AND_PASSED
+EXECUTED_AND_FAILED
+BLOCKED_BY_ENVIRONMENT
+```
+
+Never state a test "passes" unless it was actually executed and produced a passing result in the current session.
+
+### PACKAGE DELIVERY RULE
+
+When archive creation and file delivery are available in the current environment, package the final deliverables as: `backend-{role}-v1.zip`.
+
+When archive creation is unavailable, provide:
+- the complete intended package manifest (all files and their paths);
+- all generated file contents or patches;
+- a clear explicit statement that the archive itself was NOT produced in the current environment.
+
+Never claim a ZIP was created, attached, or validated unless that actually occurred.
 
 ## 6.11 Mode B — AUDIT + REPAIR
 
@@ -2790,6 +3075,25 @@ STAGE 3:
 
 Repair every actionable in-scope issue through bounded work units.
 
+**ACTIONABLE IN-SCOPE REPAIR RULE**
+
+A finding is actionable in scope ONLY when ALL of the following are true:
+- the required artifact is supplied in the writable scope;
+- the artifact is within the allowed writable boundary;
+- the repair does not require undisclosed credentials, external access, or changes to excluded modules;
+- the repair can be implemented without violating architecture boundaries.
+
+If ANY condition is not met, do NOT simulate a repair. Record the finding as one of:
+
+```text
+OUTSIDE_SUPPLIED_SCOPE
+BLOCKED_BY_ENVIRONMENT
+FRONTEND_CHANGE_REQUIRED
+EXTERNAL_DEPENDENCY_REQUIRED
+```
+
+Do NOT write placeholder or stub code to simulate a repair when the real repair is blocked. A stub that pretends to implement a capability is a false repair.
+
 If frontend modification is genuinely required:
 
 ```text
@@ -2807,9 +3111,11 @@ After repairs:
 1. perform complete final re-audit;
 2. verify every applicable rule;
 3. verify frontend-derived requirements;
-4. generate comprehensive API E2E and Selenium deliverables (MANDATORY);
+4. generate API E2E and UI automation deliverables (MANDATORY — see API E2E AND UI AUTOMATION DELIVERABLE RULE in Section 6.10);
 5. generate final documentation;
-6. only then package `backend-{role}-v{N}-fix.zip`.
+6. only then package `backend-{role}-v{N}-fix.zip` — see PACKAGE DELIVERY RULE in Section 6.10.
+
+When archive creation is unavailable for MODE B, provide the complete intended package manifest, all generated file contents or patches, and a clear statement that the archive was NOT produced in the current environment.
 
 ## 6.12 Final State
 
@@ -2830,6 +3136,26 @@ FINAL ZIP
 Checkpointing changes HOW work is executed.
 
 It does NOT change WHAT must be verified.
+
+---
+
+## DOCUMENTATION UPDATE POLICY
+
+Update existing documentation when it is supplied, owned by the affected backend scope, and becomes inaccurate because of the change.
+
+Create new documentation only when required by the architecture document or this prompt.
+
+For each documentation artifact, record:
+- **Purpose:** what the document describes;
+- **Ownership:** which module or team owns it;
+- **Source-of-truth relationship:** whether it describes implemented behavior or intended behavior;
+- **Implementation status:** what is implemented vs documented;
+- **Dependency status:** which external modules or services are referenced;
+- **API-contract status:** which contracts are documented vs verified.
+
+Do NOT state that a dependency, endpoint, permission, job, event, or runtime behavior exists unless supported by supplied code or verified execution evidence.
+
+Do NOT generate documentation for requirements that are `BLOCKED_BY_SUPPLIED_SCOPE` or `NOT_VERIFIED` without explicitly marking the documentation as UNVERIFIED.
 
 ---
 
@@ -2972,6 +3298,40 @@ A complete freeze requires field-level agreement on:
 If sources disagree, use the existing SOURCE CONFLICT format. Do not silently choose a preferred interpretation.
 
 Runtime execution is not required to establish the static contract freeze. Static contract evidence and runtime evidence MUST remain separate.
+
+### EXTENDED CONTRACT CAPTURE TEMPLATE (MANDATORY FOR EVERY FRONTEND-DERIVED BACKEND CONTRACT)
+
+For each frontend-derived backend contract, capture all of the following. Mark each field as found or `NOT_EVIDENCED`:
+
+- **Route or UI flow:** which page/route/modal triggers this backend call;
+- **API method and path:** HTTP verb and URL pattern;
+- **Request body:** fields, types, required vs optional, nested structure;
+- **Path parameters:** names and types;
+- **Query parameters:** names, types, filtering/sorting/pagination semantics;
+- **Headers:** authentication, tenant, locale, or custom headers;
+- **Response schema:** field names, types, nullable, optional, default values;
+- **Derived and computed fields:** fields calculated server-side (not stored directly);
+- **Pagination semantics:** page-based vs cursor-based, metadata fields (`total`, `page`, `limit`, `hasNext`);
+- **Filtering semantics:** which filters map to backend query parameters;
+- **Sorting semantics:** sortable fields, direction, default sort;
+- **Search semantics:** full-text, prefix, fuzzy, exact;
+- **Loading state:** what the frontend shows while awaiting a response;
+- **Empty state:** what the frontend renders when the response is empty;
+- **Error states:** which HTTP error codes the frontend handles and what it displays;
+- **Retry behavior:** does the frontend retry on failure, and if so under what conditions;
+- **Success state:** what the frontend renders or does after a successful mutation;
+- **Duplicate submission prevention:** does the frontend debounce, disable buttons, or rely on backend idempotency;
+- **Race-condition behavior:** does the frontend cancel in-flight requests on re-render;
+- **Permissions and role assumptions:** which roles can access this endpoint from the frontend;
+- **Tenant and organization context:** how tenant/org ID is supplied (header, JWT claim, body);
+- **Validation rules:** field-level constraints evidenced from Zod schemas or form validation;
+- **File handling:** upload method (multipart, base64), size limits, allowed types;
+- **Date/time/timezone/locale assumptions:** UTC vs local, locale-specific formatting;
+- **Currency and number formatting assumptions:** precision, rounding, locale;
+- **Idempotency expectations:** is the operation safe to retry without duplicate side effects;
+- **Event or realtime behavior:** WebSocket events, SSE streams, polling intervals;
+- **Evidence source:** exact file path and symbol;
+- **Confidence level:** `EXPLICIT_FRONTEND_CONTRACT` / `STRONGLY_INFERRED_FRONTEND_REQUIREMENT` / `POSSIBLE_FRONTEND_REQUIREMENT` / `CLIENT_ONLY_OR_STATIC_BEHAVIOR` / `UNVERIFIABLE_FROM_FRONTEND`.
 
 ---
 
@@ -8124,6 +8484,29 @@ Examples:
 
 Severity is based on actual impact.
 
+### FINDING SEVERITY AND RELEASE GATE
+
+A finding is **release-blocking** when it is P0 (CRITICAL) or P1 (HIGH) and affects any of:
+- security;
+- authorization;
+- tenant isolation;
+- data integrity;
+- API contract correctness;
+- required frontend functionality;
+- required architecture compliance;
+- migration safety;
+- production startup or runtime correctness.
+
+The final package MUST be marked **READY** only when no unresolved release-blocking findings remain within writable scope.
+
+If a release-blocking issue is outside writable scope, mark the overall readiness as:
+
+```text
+NOT_READY_DUE_TO_EXTERNAL_BLOCKER
+```
+
+P2 and P3 findings do NOT block packaging but MUST appear in the final verdict with explicit acknowledgment.
+
 ---
 
 # 63. EXACT ISSUE FORMAT
@@ -8565,26 +8948,39 @@ The following alone NEVER establish completeness:
 
 # 79. FINAL VERDICT
 
-The final verdict MUST separately report:
+The final verdict MUST separately report all of the following. Never collapse multiple dimensions into one.
 
 ```text
+COMPLETENESS & QUALITY METRICS:
+- Requirements Fulfilled:        [X%] (Total: N, Met: N, Blocked: N)
+- Architecture Compliance Score: [X%] (Total Rules Checked: N, Passed: N)
+- Code Test Coverage:            [X% / NOT_EXECUTED]
+- Endpoints Audited/Created:     [N/N (X%)]
+
 FRONTEND-REQUIRED BACKEND COMPLETENESS:
 [COMPLETE / PARTIAL / INCOMPLETE / NOT VERIFIED / BLOCKED_PENDING_FRONTEND_CHANGE]
 
 BACKEND ARCHITECTURE COMPLIANCE:
 [COMPLIANT / PARTIALLY COMPLIANT / NON-COMPLIANT / NOT VERIFIED]
 
-RUNTIME VERIFICATION:
-[VERIFIED / PARTIALLY VERIFIED / NOT VERIFIED / BLOCKED]
+RUNTIME VERIFICATION STATUS:
+[use RUNTIME VERIFICATION taxonomy: STATICALLY_INSPECTED / COMPILED / UNIT_TESTED /
+INTEGRATION_TESTED / E2E_TESTED / RUNTIME_EXECUTED / NOT_EXECUTED / BLOCKED_BY_ENVIRONMENT]
 
-SCOPE:
-[COMPLETE / LIMITED]
+SCOPE AND EVIDENCE LIMITATIONS:
+[what could not be verified; exact list of BLOCKED_BY_SUPPLIED_SCOPE and NOT_VERIFIED items]
 
-CRITICAL BLOCKERS:
+CRITICAL BLOCKERS (P0):
 [count + IDs]
 
-HIGH PRIORITY ISSUES:
+HIGH PRIORITY ISSUES (P1):
 [count + IDs]
+
+MEDIUM ISSUES (P2):
+[count + IDs — non-blocking; must be acknowledged]
+
+LOW ISSUES (P3):
+[count + IDs — non-blocking; must be acknowledged]
 
 UNVERIFIED REQUIREMENTS:
 [count]
@@ -8595,6 +8991,12 @@ BLOCKED_BY_SUPPLIED_SCOPE ITEMS:
 FRONTEND CHANGE REQUIRED:
 [YES / NO]
 
+REPAIRS COMPLETED (MODE B only):
+[count of in-scope issues repaired + brief list]
+
+REQUIRED EXTERNAL ACTIONS:
+[YES / NO — see INTEGRATION_GUIDE.md for detailed list of actions required by human/other teams]
+
 FRONTEND-DERIVED BACKEND REQUIREMENTS:
 [discovered / verified]
 
@@ -8604,9 +9006,23 @@ BACKEND ENDPOINTS:
 BACKEND RULES:
 [discovered / audited / passed / failed / not verified]
 
+PACKAGE / DELIVERY STATUS:
+[PACKAGED_AND_DELIVERED / MANIFEST_ONLY_ARCHIVE_NOT_PRODUCED / NOT_DELIVERED — with reason]
+
 OVERALL READINESS:
-[READY / NOT READY / READY ONLY AFTER SPECIFIED REPAIRS / BACKEND_READY_PENDING_FRONTEND_CHANGE]
+[READY /
+ READY_WITH_NON_BLOCKING_LIMITATIONS /
+ NOT_READY_DUE_TO_IN_SCOPE_FINDINGS /
+ NOT_READY_DUE_TO_EXTERNAL_BLOCKER /
+ BACKEND_READY_PENDING_FRONTEND_CHANGE]
 ```
+
+> **Readiness status definitions:**
+> - `READY` — no unresolved release-blocking findings within writable scope; all mandatory artifacts delivered.
+> - `READY_WITH_NON_BLOCKING_LIMITATIONS` — no P0/P1 findings; only P2/P3 or acknowledged scope limitations remain.
+> - `NOT_READY_DUE_TO_IN_SCOPE_FINDINGS` — one or more release-blocking findings within writable scope remain unresolved.
+> - `NOT_READY_DUE_TO_EXTERNAL_BLOCKER` — all in-scope work is complete, but a release-blocking finding is outside writable scope.
+> - `BACKEND_READY_PENDING_FRONTEND_CHANGE` — backend is correct as far as possible, but requires documented frontend changes for end-to-end integration.
 
 ### FRONTEND_CHANGE_REQUIRED Status Definition
 

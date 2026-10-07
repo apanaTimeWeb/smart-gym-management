@@ -217,17 +217,19 @@ Commit / Revision Metadata
 Default authority order:
 
 ```text
-1. Explicit current task requirements
-2. Supplied architecture/development rules
-3. Supplied UI/UX/design rules
-4. Supplied feature/API/domain requirements
-5. Actual implementation (code is evidence — it cannot lie)
-6. Existing module documentation (claims to verify AGAINST the code)
-7. Tests / mocks / fixtures
-8. Optional guidance
+1. Legal / security / compliance requirements (non-negotiable; override all other sources)
+2. Explicit current task requirements
+3. Supplied API contracts / OpenAPI / domain specifications
+4. Supplied architecture / development rules
+5. Supplied UI/UX / design rules
+6. Supplied feature / product requirement documents
+7. Actual implementation (code is evidence — it cannot lie)
+8. Existing module documentation (claims to verify AGAINST the code)
+9. Tests / mocks / fixtures
+10. Optional guidance / examples (illustrative only)
 ```
 
-> **⚠️ AUDITOR-SPECIFIC NOTE on items 5 and 6:**
+> **⚠️ AUDITOR-SPECIFIC NOTE on items 7 and 8:**
 > For a forensic auditor, the ACTUAL IMPLEMENTATION is the ground truth of current behavior.
 > Documentation makes CLAIMS about the implementation.
 > The auditor's job is to verify whether those claims are TRUE by inspecting the code.
@@ -244,6 +246,33 @@ Do NOT use generic engineering preference or general web knowledge as a substitu
 If external documentation is explicitly supplied as part of scope, it may be inspected.
 
 If no authoritative supplied rule exists for a concern, do not manufacture one.
+
+### EVIDENCE CONFIDENCE MODEL (MANDATORY)
+
+Every finding MUST include an evidence-confidence classification:
+
+```text
+DIRECTLY_VERIFIED          — Evidence directly read from the specific file/lines via tool call;
+                             exact file path and line range are cited
+PARTIALLY_VERIFIED         — Evidence exists but does not fully cover all sub-requirements;
+                             the gap is explicitly described
+INFERRED_FROM_SOURCE       — Conclusion drawn from adjacent/related evidence rather than direct
+                             inspection; the inference basis is documented
+NOT_VERIFIED               — Insufficient evidence to establish presence or absence; reason stated
+BLOCKED_BY_SUPPLIED_SCOPE  — Required evidence is outside the supplied scope; boundary stated
+```
+
+Every finding MUST include:
+- **File / path reference** (exact, not inferred)
+- **Line reference** where available and applicable
+- **Rule / contract reference** (using full source identity from Section 18)
+- **Verification method** (STATIC / TEST / LINT / BUILD / RUNTIME / DOCUMENTATION)
+- **Evidence confidence** (one of the five classifications above)
+
+A finding MUST NOT use `DIRECTLY_VERIFIED` unless the exact file and lines were read via a real tool call in the current session.
+
+If two sources conflict, use `SOURCE_CONFLICT` and do NOT silently select one.
+If frontend implementation conflicts with a supplied API contract, use `CONTRACT_CONFLICT` and do NOT treat the frontend as authoritative.
 
 ---
 
@@ -651,9 +680,52 @@ Never call external source material authoritative unless explicitly supplied or 
 
 ---
 
+# 12A. AUDIT CAPABILITY DECLARATION (MANDATORY — PRODUCE BEFORE ANY FINDINGS)
+
+Before producing any findings, the auditor MUST produce a capability declaration at the top of the report. This declaration separates source inspection from executed verification and prevents false PASS results from being reported for checks that were not actually executed.
+
+```text
+AUDIT CAPABILITY DECLARATION
+============================
+Source file access:              [FULL / PARTIAL — describe limitation / NONE]
+Repository metadata access:      [YES / NO]
+Dependency installation:         [YES / NO]
+Command execution:               [YES / NO]
+Build tools (tsc / next build):  [YES / NO]
+Test runner (Vitest / Jest):     [YES / NO]
+Lint runner (ESLint):            [YES / NO]
+Browser / device automation:     [YES / NO]
+Network / runtime services:      [YES / NO]
+Environment secrets:             [YES / NO]
+Runtime logs:                    [YES / NO]
+
+Verification modes available:
+- Static source inspection:      [YES / NO]
+- Typecheck (tsc):               [YES / NO]
+- Lint:                          [YES / NO]
+- Unit / component tests:        [YES / NO]
+- Integration tests:             [YES / NO]
+- E2E / browser tests:           [YES / NO]
+- Production build:              [YES / NO]
+- Runtime API testing:           [YES / NO]
+```
+
+**Rules for the Capability Declaration:**
+
+- A `PASS` verdict on any rule MUST NOT be claimed if the capability required to verify it was unavailable.
+- If runtime verification was not performed, every runtime-dependent rule MUST be marked `NOT_VERIFIED` — not PASS.
+- If build was not executed, build-dependent rules MUST be marked `NOT_VERIFIED`.
+- If E2E was not run, E2E-dependent rules MUST be marked `NOT_VERIFIED`.
+- The declaration MUST NOT be invented — if a capability is uncertain, mark it `UNKNOWN` and treat it as unavailable.
+- The declaration MUST remain visible in the final report and MUST NOT be removed when summarizing results.
+
+---
+
+
+
 # 13. ZERO SAMPLING — COMPLETE RELEVANT FILE COVERAGE
 
-Inspect every relevant authored file that belongs to the target.
+The objective is comprehensive, measurable coverage of every relevant authored file in the audit target.
 
 Do NOT inspect only:
 
@@ -721,6 +793,43 @@ IMPACT:
 Never silently skip a file.
 
 If source completeness is uncertain, record the limitation in the coverage ledger.
+
+### MEASURABLE SCOPE INVENTORY (MANDATORY)
+
+Before the audit begins, produce a concrete inventory. "Zero sampling" is an objective, not a guarantee — large repos, generated code, inaccessible environments, or dynamic imports may make literal 100% coverage unachievable. The inventory makes coverage truthful:
+
+```text
+AUDIT SCOPE INVENTORY
+=====================
+Routes / pages discovered:       N
+Component files discovered:       N
+API client files discovered:      N
+Store / state files discovered:   N
+Test files discovered:            N
+MSW / mock handler files:         N
+Configuration files:              N
+Documentation files:              N
+Rule sections in supplied docs:   N
+
+Routes inspected:                 N / N  (X%)
+Components inspected:             N / N  (X%)
+API clients inspected:            N / N  (X%)
+Stores inspected:                 N / N  (X%)
+Test files inspected:             N / N  (X%)
+Mock handlers inspected:          N / N  (X%)
+Rule sections covered:            N / N  (X%)
+
+Overall file coverage:            X%
+
+Items excluded or NOT VERIFIED (exact list):
+- [path / item] — reason
+- ...
+```
+
+**Coverage integrity gate:**
+- If inspected coverage falls below 80% of discovered items: report `PARTIAL_AUDIT — COVERAGE_INSUFFICIENT`
+- Do NOT claim `ZERO SAMPLING`, `COMPLETE FILE COVERAGE`, or `EXHAUSTIVE AUDIT` unless the skipped-files ledger is empty and coverage can be proven
+- Label all uninspected items explicitly as `NOT_VERIFIED`
 
 ---
 
@@ -2669,17 +2778,34 @@ Agar AUDIT TARGET `BACKEND` hai, aur supplied scope me Frontend files (UI, Actio
 STAGE 1: Pehle Frontend ko reverse-engineer karo.
 - Extract exact UI requirements, form validations, aur API network payloads.
 - Identify dropdowns, lookup values, and search/filter/pagination contracts.
-- Is extracted Frontend-baseline ko apna "Source of Truth" banao.
+- Is extracted data ko **observed consumer-contract evidence** treat karo — NOT as authoritative backend specification.
 
-STAGE 2: Ab is frontend baseline (contract) ke against backend ko audit karo. Check karo ki backend exactly un requirements ko meet kar raha hai ya nahi.
+> **CRITICAL — Frontend is NOT the backend source of truth:**
+> A frontend implementation can be outdated, incomplete, or incorrect.
+> Approved API contracts, product requirement documents, and backend/domain specifications take precedence over frontend behavior.
+> If the frontend's observed behavior conflicts with a supplied API contract or product spec, report:
+> ```text
+> CONTRACT_CONFLICT
+> SOURCE A: [supplied API contract / product spec — exact location]
+> SOURCE B: [frontend observed behavior — exact file and symbol]
+> CONFLICT: [precise incompatibility]
+> STATUS: CONTRACT_CONFLICT — HUMAN_ARCHITECTURAL_DECISION_REQUIRED
+> ```
+> Do NOT treat the frontend implementation as the authoritative definition of what the backend must do.
+
+STAGE 2: Ab is frontend-observed contract evidence ke against backend ko audit karo. Where frontend evidence and supplied contracts agree, use both as corroborating evidence. Where they conflict, report `CONTRACT_CONFLICT` and do not auto-resolve.
 
 **IF FRONTEND FILES ARE NOT SUPPLIED (Pure Backend audit from specs/API docs only):**
 
 STAGE 1: Extract requirements from supplied API specs, feature documents, or domain contracts.
 - Use supplied Swagger/OpenAPI, Postman collections, feature requirement documents, or architecture docs as the baseline.
-- If no such documents exist, derive the expected API shape from backend architecture rules.
+- If no such documents exist: **do NOT derive business endpoints, payloads, fields, permissions, or workflow semantics from generic architecture rules.** Architecture rules define structural patterns — they cannot reliably define business contract specifics.
 
-STAGE 2: Audit the backend against this derived baseline. Mark all unverifiable contract requirements as `BLOCKED_BY_SUPPLIED_SCOPE` if no frontend or API spec was supplied.
+STAGE 2: When no product, API, frontend, or domain contract is supplied:
+- Audit only structural backend compliance (naming, layering, dependency rules, test coverage, configuration).
+- Mark all API/product behavior requirements as `BLOCKED_BY_SUPPLIED_SCOPE`.
+- Do NOT invent expected endpoints, request fields, response shapes, or permission matrices.
+- Record explicitly: `API_CONTRACT_NOT_SUPPLIED — business behavior audit deferred`
 
 ---
 
