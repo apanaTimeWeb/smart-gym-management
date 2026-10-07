@@ -4,6 +4,17 @@
 
 ---
 
+## CANONICAL NON-NEGOTIABLE INVARIANTS
+
+Every AI agent executing this prompt MUST strictly obey these invariants at all times. They supersede any other instruction.
+
+1. **DO NOT GUESS:** If a requirement, parameter, or type is missing or ambiguous, you must rely on explicit documented rules or mark it `NOT_VERIFIED`. Do not invent a solution.
+2. **DO NOT FABRICATE:** Never invent fake file paths, fake line numbers, fake mock data, fake test results, or fake architecture compliance.
+3. **DO NOT MODIFY SCOPE:** You must only repair or create what is strictly within the supplied writable scope. Never invent missing sibling modules or global infrastructure.
+4. **DO NOT SUMMARIZE BATCHES:** If auditing multiple files or modules, never merge them into a single shallow summary to "save time." 100% depth on 20% of the scope is ALWAYS better than 20% depth on 100% of the scope.
+
+---
+
 > ⚡ **ARCHITECTURE DOCUMENT IS FINAL AUTHORITY**
 > If ANY rule, example, checklist item, or wording inside this prompt (V6.3) conflicts with the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, **the architecture document wins — always, without exception**. This prompt is an execution guide, not a rule definition source. Record the conflict and follow the architecture document.
 
@@ -109,7 +120,18 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 
    **FRONTEND CONTRACT BOUNDARY**
 
-   Frontend-derived requirements are authoritative only when they do not conflict with the supplied backend architecture, security requirements, data-integrity rules, privacy rules, or applicable scope limits.
+   Frontend-derived requirements are authoritative only for:
+   - User intent and workflows
+   - UI navigation and state
+   - Loading/error display logic
+   - Requested API actions and payload shapes
+
+   The Frontend is NEVER authoritative for:
+   - Authorization and Role-Based Access Control (RBAC)
+   - Tenant isolation and multi-tenancy enforcement
+   - Security, privacy, and data-integrity rules
+   - Database schema and persistence design
+   - Audit logging and backend observability
 
    If a frontend requirement conflicts with an authoritative backend rule:
    1. implement the compliant backend behavior;
@@ -187,7 +209,18 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
 
    **FRONTEND CONTRACT BOUNDARY (also applies in MODE B)**
 
-   Frontend-derived requirements are authoritative only when they do not conflict with the supplied backend architecture, security requirements, data-integrity rules, privacy rules, or applicable scope limits.
+   Frontend-derived requirements are authoritative only for:
+   - User intent and workflows
+   - UI navigation and state
+   - Loading/error display logic
+   - Requested API actions and payload shapes
+
+   The Frontend is NEVER authoritative for:
+   - Authorization and Role-Based Access Control (RBAC)
+   - Tenant isolation and multi-tenancy enforcement
+   - Security, privacy, and data-integrity rules
+   - Database schema and persistence design
+   - Audit logging and backend observability
 
    If a frontend requirement conflicts with an authoritative backend rule:
    1. implement the compliant backend behavior;
@@ -3531,6 +3564,15 @@ Before any backend file may be opened, verify ALL of the following:
 
 If ANY box is unchecked: DO NOT open any backend file. Complete Stage 1 first.
 ```
+
+### STOP-AND-ESCALATE CONDITIONS (MANDATORY P1 SAFEGUARD)
+
+Implementation or repair MUST STOP and escalate to `BLOCKED` if ANY of the following critical context gaps occur:
+1. **Tenant Ambiguity:** The frontend implies multi-tenancy but the tenant ID source (JWT, URL, header) is completely undocumented.
+2. **Auth Ambiguity:** A sensitive route exists but role/permission requirements cannot be derived from any source.
+3. **Destructive Ambiguity:** A `DESTRUCTIVE` or high-value mutation (e.g., charge card, delete user) lacks clear idempotency or confirmation rules.
+
+Do NOT guess security or tenant boundaries. Mark the requirement as `BLOCKED` and list the exact missing context in the final verdict.
 
 > **CRITICAL (Section 4.1A):** Frontend reading and backend repair MUST NOT occur in the same bounded work unit. Mixing them causes context pollution and hallucination. The freeze gate enforces this boundary.
 
