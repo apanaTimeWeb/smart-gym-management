@@ -59,20 +59,17 @@
     "TEXT_DELETE_EXERCISE_CONFIRM_MESSAGE": "Are you sure you want to delete exercise \"{value}\"?",
     "TEXT_DELETE_WORKOUT_CONFIRM_MESSAGE": "Are you sure you want to delete workout plan \"{value}\"?",
     "TEXT_EDIT_WORKOUT_PLAN": "Edit workout plan {value}",
-    "TEXT_DELETE_WORKOUT_PLAN": "Delete workout plan {value}"
-  },
-  "COPY_EDIT_EXERCISE": "Edit Exercise",
-  "COPY_ADD_EXERCISE": "Add Exercise",
-  "COPY_SAVING": "Saving…",
-  "COPY_UPDATE": "Update",
-  "COPY_SAVE": "Save",
-  "COPY_N": "N/A",
-  "COPY_VIEW_WORKOUT_PLANS": "View Workout Plans",
-  "COPY_VIEW_ASSIGNED_PLANS": "View Assigned Plans",
-  "COPY_EXERCISE_LIBRARY": "Exercise Library",
-  "COPY_EDIT_WORKOUT_PLAN": "Edit Workout Plan",
-  "COPY_ADD_WORKOUT_PLAN": "Add Workout Plan",
-  "MANAGER_WORKOUT.COPY_DAYS": "Days",
-  "MANAGER_WORKOUT.COPY_EXERCISES_1": "Exercises",
-  "MANAGER_WORKOUT.COPY_DURATION": "Duration"
+    "TEXT_DELETE_WORKOUT_PLAN": "Delete workout plan {value}",
+    "COPY_EDIT_EXERCISE": "Edit Exercise",
+    "COPY_ADD_EXERCISE": "Add Exercise",
+    "COPY_SAVING": "Saving…",
+    "COPY_UPDATE": "Update",
+    "COPY_SAVE": "Save",
+    "COPY_N": "N/A",
+    "COPY_VIEW_WORKOUT_PLANS": "View Workout Plans",
+    "COPY_VIEW_ASSIGNED_PLANS": "View Assigned Plans",
+    "COPY_EXERCISE_LIBRARY": "Exercise Library",
+    "COPY_EDIT_WORKOUT_PLAN": "Edit Workout Plan",
+    "COPY_ADD_WORKOUT_PLAN": "Add Workout Plan"
+  }
 }

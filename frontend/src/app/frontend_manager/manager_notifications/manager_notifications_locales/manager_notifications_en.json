@@ -25,9 +25,9 @@
     "DELETE_NOTIFICATION_MESSAGE": "Delete this notification? This action cannot be undone.",
     "DELETE": "Delete",
     "KEEP_NOTIFICATION": "Keep Notification",
-    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again."
-  },
-  "COPY_ALL_TYPES": "All Types",
-  "COPY_ALL_PRIORITY": "All Priority",
-  "COPY_ALL_STATUS": "All Status"
+    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
+    "COPY_ALL_TYPES": "All Types",
+    "COPY_ALL_PRIORITY": "All Priority",
+    "COPY_ALL_STATUS": "All Status"
+  }
 }

@@ -36,7 +36,7 @@
     "CONFIRM_REWARD": "Claim Reward",
     "KEEP": "Keep",
     "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
-    "TEXT_KPI_ACTION_NEEDED": "Action Needed"
-  },
-  "COPY_SAVE_REFERRAL": "Save Referral"
+    "TEXT_KPI_ACTION_NEEDED": "Action Needed",
+    "COPY_SAVE_REFERRAL": "Save Referral"
+  }
 }

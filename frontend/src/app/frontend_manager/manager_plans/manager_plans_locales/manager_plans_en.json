@@ -84,12 +84,10 @@
     "CONFIRM_DELETE_PLAN_TITLE": "Delete plan?",
     "CONFIRM_DELETE_PLAN_MESSAGE": "This will permanently delete the selected plan.",
     "CONFIRM_DELETE_PLAN": "Delete",
-    "PLAN_DELETED": "Plan deleted"
-  },
-  "COPY_ACTIVATING": "Activating…",
-  "MANAGER_PLANS.CONFIRM_MEMBERSHIP_ACTIVATE": "Activate Membership",
-  "COPY_RENEWING": "Renewing…",
-  "COPY_SUBMIT_RENEWAL": "Submit Renewal",
-  "COPY_APPLYING": "Applying…",
-  "MANAGER_PLANS.CONFIRM_MEMBERSHIP_FREEZE": "Apply Freeze"
+    "PLAN_DELETED": "Plan deleted",
+    "COPY_ACTIVATING": "Activating…",
+    "COPY_RENEWING": "Renewing…",
+    "COPY_SUBMIT_RENEWAL": "Submit Renewal",
+    "COPY_APPLYING": "Applying…"
+  }
 }

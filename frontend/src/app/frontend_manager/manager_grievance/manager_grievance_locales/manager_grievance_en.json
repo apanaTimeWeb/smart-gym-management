@@ -32,10 +32,9 @@
     "TEXT_404_RETURN": "Back to Grievances",
     "COPY_LOG_COMPLAINT": "Log Complaint",
     "TEXT_LOADING": "Loading grievances",
-    "COPY_MANAGE_RESOLVE_MEMBER_COMPLAINTS_LOCALLY": "Manage and resolve member complaints locally"
-  },
-  "COPY_LOGGING": "Logging…",
-  "MANAGER_GRIEVANCE.COPY_LOG_COMPLAINT": "Log Complaint",
-  "COPY_SUBMITTING": "Submitting…",
-  "COPY_SUBMIT_RESOLUTION": "Submit Resolution"
+    "COPY_MANAGE_RESOLVE_MEMBER_COMPLAINTS_LOCALLY": "Manage and resolve member complaints locally",
+    "COPY_LOGGING": "Logging…",
+    "COPY_SUBMITTING": "Submitting…",
+    "COPY_SUBMIT_RESOLUTION": "Submit Resolution"
+  }
 }

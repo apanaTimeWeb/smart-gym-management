@@ -29,10 +29,9 @@
     "TEXT_404_RETURN": "Back to Maintenance",
     "COPY_LOG_ISSUE": "Log Issue",
     "TEXT_LOADING": "Loading maintenance issues",
-    "COPY_TRACK_EQUIPMENT_REPAIRS_FACILITY_ISSUES": "Track equipment repairs and facility issues"
-  },
-  "COPY_LOGGING": "Logging…",
-  "MANAGER_MAINTENANCE.COPY_LOG_ISSUE": "Log Issue",
-  "COPY_RESOLVING": "Resolving…",
-  "COPY_MARK_AS_RESOLVED": "Mark as Resolved"
+    "COPY_TRACK_EQUIPMENT_REPAIRS_FACILITY_ISSUES": "Track equipment repairs and facility issues",
+    "COPY_LOGGING": "Logging…",
+    "COPY_RESOLVING": "Resolving…",
+    "COPY_MARK_AS_RESOLVED": "Mark as Resolved"
+  }
 }

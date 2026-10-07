@@ -64,10 +64,10 @@
     "TEXT_LOW_STOCK": "{value} low stock",
     "TEXT_ALL_STOCKED": "All stocked",
     "TEXT_TOTAL_INQUIRIES": "{value} total",
-    "TEXT_SERIES_NEW_MEMBERS": "New Members"
-  },
-  "COPY_NO_EXPIRING_MEMBERSHIPS": "No expiring memberships 🎉",
-  "COPY_NO_PENDING_PAYMENTS": "No pending payments 🎉",
-  "COPY_NO_MEMBERS_YET_ADD_FIRST_MEMBER": "No members yet. Add your first member!",
-  "COPY_REVENUE": "Revenue"
+    "TEXT_SERIES_NEW_MEMBERS": "New Members",
+    "COPY_NO_EXPIRING_MEMBERSHIPS": "No expiring memberships 🎉",
+    "COPY_NO_PENDING_PAYMENTS": "No pending payments 🎉",
+    "COPY_NO_MEMBERS_YET_ADD_FIRST_MEMBER": "No members yet. Add your first member!",
+    "COPY_REVENUE": "Revenue"
+  }
 }

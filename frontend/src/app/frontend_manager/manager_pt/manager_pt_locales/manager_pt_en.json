@@ -60,12 +60,12 @@
     "TEXT_KPI_ACTIVE_PT_MEMBERS": "Active PT Members{suffix}",
     "TEXT_KPI_SESSIONS_TODAY": "Sessions Today{suffix}",
     "TEXT_KPI_EXPIRING_PACKAGES": "Expiring Packages{suffix}",
-    "TEXT_KPI_MONTHLY_PT_REVENUE": "Monthly PT Revenue{suffix}"
-  },
-  "COPY_COMPLETED": "Completed",
-  "COPY_MARK_SESSION": "Mark Session",
-  "TEXT_TAB_DASHBOARD": "PT Dashboard",
-  "TEXT_TAB_ASSIGNMENTS": "Active Assignments",
-  "TEXT_TAB_WORKLOAD": "Trainer Workload",
-  "TEXT_TAB_PACKAGES": "PT Packages"
+    "TEXT_KPI_MONTHLY_PT_REVENUE": "Monthly PT Revenue{suffix}",
+    "COPY_COMPLETED": "Completed",
+    "COPY_MARK_SESSION": "Mark Session",
+    "TEXT_TAB_DASHBOARD": "PT Dashboard",
+    "TEXT_TAB_ASSIGNMENTS": "Active Assignments",
+    "TEXT_TAB_WORKLOAD": "Trainer Workload",
+    "TEXT_TAB_PACKAGES": "PT Packages"
+  }
 }

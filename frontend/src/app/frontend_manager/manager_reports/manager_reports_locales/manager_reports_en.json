@@ -1,17 +1,19 @@
 {
-  "COPY_PRESENT": "Present",
-  "COPY_ABSENT": "Absent",
-  "COPY_REVENUE": "Revenue",
-  "COPY_EXPENSES": "Expenses",
-  "COPY_PROFIT": "Profit",
-  "COPY_DATE": "Date",
-  "COPY_RATE": "Rate",
-  "COPY_CATEGORY": "Category",
-  "COPY_AMOUNT": "Amount",
-  "COPY_SHARE": "Share",
-  "COPY_MONTH": "Month",
-  "MANAGER_REPORTS.TEXT_SERIES_NEW_MEMBERS": "New Members",
-  "COPY_LOST": "Lost",
-  "COPY_ACTIVE": "Active",
-  "COPY_NET_PROFIT": "Net Profit"
+  "MANAGER_REPORTS": {
+    "COPY_PRESENT": "Present",
+    "COPY_ABSENT": "Absent",
+    "COPY_REVENUE": "Revenue",
+    "COPY_EXPENSES": "Expenses",
+    "COPY_PROFIT": "Profit",
+    "COPY_DATE": "Date",
+    "COPY_RATE": "Rate",
+    "COPY_CATEGORY": "Category",
+    "COPY_AMOUNT": "Amount",
+    "COPY_SHARE": "Share",
+    "COPY_MONTH": "Month",
+    "TEXT_SERIES_NEW_MEMBERS": "New Members",
+    "COPY_LOST": "Lost",
+    "COPY_ACTIVE": "Active",
+    "COPY_NET_PROFIT": "Net Profit"
+  }
 }

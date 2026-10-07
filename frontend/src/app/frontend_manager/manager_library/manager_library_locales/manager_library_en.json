@@ -71,14 +71,13 @@
     "DELETE_EXERCISE_TITLE": "Delete Exercise",
     "DELETE_EXERCISE_MESSAGE": "This action permanently removes the exercise from the Manager Library.",
     "DELETE": "Delete",
-    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again."
-  },
-  "COPY_EDIT_DIET_PLAN": "Edit Diet Plan",
-  "COPY_ADD_DIET_PLAN": "Add Diet Plan",
-  "COPY_SAVING": "Saving…",
-  "COPY_UPDATE": "Update",
-  "MANAGER_LIBRARY.COPY_ADD_1": "Add",
-  "COPY_EDIT_EXERCISE": "Edit Exercise",
-  "COPY_ADD_EXERCISE": "Add Exercise",
-  "COPY_UPDATE_EXERCISE": "Update Exercise"
+    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
+    "COPY_EDIT_DIET_PLAN": "Edit Diet Plan",
+    "COPY_ADD_DIET_PLAN": "Add Diet Plan",
+    "COPY_SAVING": "Saving…",
+    "COPY_UPDATE": "Update",
+    "COPY_EDIT_EXERCISE": "Edit Exercise",
+    "COPY_ADD_EXERCISE": "Add Exercise",
+    "COPY_UPDATE_EXERCISE": "Update Exercise"
+  }
 }

@@ -103,20 +103,18 @@
     "TEXT_SEND_WINBACK_MESSAGE": "Send win-back message to {value}",
     "TEXT_TYPE_MESSAGE": "Type your {value} message...",
     "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
-    "TEXT_BULK_MESSAGE_DIALOG_LABEL": "Bulk message dialog"
-  },
-  "COPY_SENDING_3": "Sending...",
-  "COPY_SEND_WIN_BACK": "Send Win-Back",
-  "COPY_SAVE_CHANGES": "Save Changes",
-  "COPY_CLOSE_QUEUE": "Close Queue",
-  "COPY_LOADING_RECIPIENTS": "Loading recipients...",
-  "COPY_SEND_CAMPAIGN": "Send Campaign",
-  "COPY_ALL_CHANNELS": "All Channels",
-  "MANAGER_COMMUNICATIONS.COPY_WHATSAPP_1": "WhatsApp",
-  "MANAGER_COMMUNICATIONS.COPY_EMAIL_2": "Email",
-  "COPY_LOADING": "Loading...",
-  "COMMUNICATIONS": {
-    "TEXT_RECIPIENT_SINGULAR": "{count} recipient",
-    "TEXT_RECIPIENT_PLURAL": "{count} recipients"
+    "TEXT_BULK_MESSAGE_DIALOG_LABEL": "Bulk message dialog",
+    "COPY_SENDING_3": "Sending...",
+    "COPY_SEND_WIN_BACK": "Send Win-Back",
+    "COPY_SAVE_CHANGES": "Save Changes",
+    "COPY_CLOSE_QUEUE": "Close Queue",
+    "COPY_LOADING_RECIPIENTS": "Loading recipients...",
+    "COPY_SEND_CAMPAIGN": "Send Campaign",
+    "COPY_ALL_CHANNELS": "All Channels",
+    "COPY_LOADING": "Loading...",
+    "COMMUNICATIONS": {
+      "TEXT_RECIPIENT_SINGULAR": "{count} recipient",
+      "TEXT_RECIPIENT_PLURAL": "{count} recipients"
+    }
   }
 }

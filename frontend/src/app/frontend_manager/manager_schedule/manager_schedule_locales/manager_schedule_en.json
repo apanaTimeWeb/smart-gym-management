@@ -39,11 +39,10 @@
     "TEXT_KPI_SHIFTS_WEEK": "Shifts This Week",
     "TEXT_REMOVE_SHIFT_MESSAGE": "Remove {day} shift for {value}? This cannot be undone.",
     "TEXT_ADD_SHIFT_FOR_TRAINER": "Add shift for {trainer} on {day}",
-    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again."
-  },
-  "COPY_EDIT_SHIFT_2": "Edit Shift",
-  "MANAGER_SCHEDULE.COPY_ADD_SHIFT": "Add Shift",
-  "COPY_SAVE_CHANGES": "Save Changes",
-  "COPY_ACTIVE": "Active",
-  "COPY_INACTIVE": "Inactive"
+    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
+    "COPY_EDIT_SHIFT_2": "Edit Shift",
+    "COPY_SAVE_CHANGES": "Save Changes",
+    "COPY_ACTIVE": "Active",
+    "COPY_INACTIVE": "Inactive"
+  }
 }

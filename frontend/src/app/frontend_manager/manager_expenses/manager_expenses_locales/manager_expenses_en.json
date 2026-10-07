@@ -60,15 +60,12 @@
     "CONFIRM_EXPENSE_SAVE": "Save Expense",
     "KEEP_EDITING": "Keep Editing",
     "TEXT_MARK_EXPENSE_PAID_MESSAGE": "Mark expense \"{value}\" as paid?",
-    "TEXT_DELETE_EXPENSE_CONFIRM_MESSAGE": "Delete expense \"{value}\"?"
-  },
-  "COPY_N": "N/A",
-  "MANAGER_EXPENSES.COPY_AMOUNT": "Amount",
-  "MANAGER_EXPENSES.COPY_ADD_EXPENSE": "Add Expense",
-  "COPY_VIEW_EXPENSES": "View Expenses",
-  "COPY_EXPENSE_REPORT": "Expense Report",
-  "COPY_EDIT_EXPENSE": "Edit Expense",
-  "COPY_UPDATE": "Update",
-  "MANAGER_EXPENSES.CONFIRM_EXPENSE_SAVE": "Save Expense",
-  "COPY_ALL": "All"
+    "TEXT_DELETE_EXPENSE_CONFIRM_MESSAGE": "Delete expense \"{value}\"?",
+    "COPY_N": "N/A",
+    "COPY_VIEW_EXPENSES": "View Expenses",
+    "COPY_EXPENSE_REPORT": "Expense Report",
+    "COPY_EDIT_EXPENSE": "Edit Expense",
+    "COPY_UPDATE": "Update",
+    "COPY_ALL": "All"
+  }
 }

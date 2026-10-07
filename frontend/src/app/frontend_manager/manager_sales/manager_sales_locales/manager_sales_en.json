@@ -36,13 +36,12 @@
     "TEXT_SERIES_MEMBERSHIPS": "Memberships",
     "TEXT_SERIES_STORE_POS": "Store POS",
     "TEXT_SERIES_NEW_MEMBERS": "New Members",
-    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again."
-  },
-  "COPY_EXPIRED": "Expired",
-  "MANAGER_SALES.COPY_PLAN": "Plan",
-  "COPY_TOTAL_RECEIVABLE": "Total Receivable",
-  "COPY_AMOUNT_RECEIVED": "Amount Received",
-  "COPY_REMAINING": "Remaining",
-  "COPY_REFUND": "Refund",
-  "COPY_STANDARD": "Standard"
+    "TEXT_GENERIC_ERROR": "Unable to complete the request. Please try again.",
+    "COPY_EXPIRED": "Expired",
+    "COPY_TOTAL_RECEIVABLE": "Total Receivable",
+    "COPY_AMOUNT_RECEIVED": "Amount Received",
+    "COPY_REMAINING": "Remaining",
+    "COPY_REFUND": "Refund",
+    "COPY_STANDARD": "Standard"
+  }
 }

@@ -16,11 +16,11 @@
     "COPY_UPDATE_PASSWORD": "Update Password",
     "TEXT_404_TITLE": "Resource Not Found",
     "TEXT_404_DESCRIPTION": "The requested resource could not be found. It may have been removed or you might not have permission to access it.",
-    "TEXT_404_RETURN": "Return to Dashboard"
-  },
-  "COPY_CURRENT_PASSWORD": "Current Password",
-  "COPY_NEW_PASSWORD": "New Password",
-  "COPY_CONFIRM_NEW_PASSWORD": "Confirm New Password",
-  "COPY_HIDE_PASSWORD": "Hide password",
-  "COPY_SHOW_PASSWORD": "Show password"
+    "TEXT_404_RETURN": "Return to Dashboard",
+    "COPY_CURRENT_PASSWORD": "Current Password",
+    "COPY_NEW_PASSWORD": "New Password",
+    "COPY_CONFIRM_NEW_PASSWORD": "Confirm New Password",
+    "COPY_HIDE_PASSWORD": "Hide password",
+    "COPY_SHOW_PASSWORD": "Show password"
+  }
 }

@@ -50,12 +50,9 @@
     "TEXT_NOTES": "Notes",
     "TEXT_CANCEL": "Cancel",
     "TEXT_SAVE_PAYMENT": "Save payment",
-    "TEXT_UPI": "UPI"
-  },
-  "COPY_PAYMENTS": "Payments",
-  "COPY_SUMMARY": "Summary",
-  "MANAGER_FINANCE.COPY_CASH": "Cash",
-  "MANAGER_FINANCE.COPY_CARD": "Card",
-  "MANAGER_FINANCE.COPY_NETBANKING": "NetBanking",
-  "COPY_REVENUE": "Revenue"
+    "TEXT_UPI": "UPI",
+    "COPY_PAYMENTS": "Payments",
+    "COPY_SUMMARY": "Summary",
+    "COPY_REVENUE": "Revenue"
+  }
 }
