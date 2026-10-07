@@ -9,6 +9,63 @@ Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the pr
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
 
+## GLOBAL AUTHORITATIVE PRECEDENCE ORDER
+
+When multiple supplied sources conflict, resolve them in the following order:
+
+1. Security, privacy, authorization, tenant isolation, legal/compliance, and data-integrity requirements
+2. Explicit architecture and framework rules
+3. Explicit API/domain contracts
+4. Repository conventions within the supplied writable scope
+5. Frontend API-client/network behavior
+6. Frontend schemas, hooks, tests, mocks, fixtures, and static UI behavior
+7. AI inference or general framework conventions
+
+If a conflict remains unresolved at the same precedence level:
+- Do NOT guess
+- Do NOT silently choose
+- Record `AUTHORITATIVE_CONFLICT`
+- Record both sources
+- Record impact
+- Record required owner decision
+
+---
+
+## CRITICAL STRUCTURE GATE (NON-NEGOTIABLE)
+
+Before generating, auditing, or repairing ANY backend role module, verify ALL of the following:
+
+```text
+[ ] backend-{role}/ exists
+[ ] {role}-core/ exists inside backend-{role}/
+[ ] {role}-modules/ exists inside backend-{role}/
+[ ] ALL business feature modules exist ONLY inside {role}-modules/
+[ ] No feature module exists directly under backend-{role}/
+```
+
+**✅ COMPLIANT structure:**
+
+```text
+backend-admin/
+├── admin-core/
+└── admin-modules/
+    ├── admin-auth/
+    └── admin-members/
+```
+
+**❌ NON-COMPLIANT structure (ARCHITECTURE FAILURE):**
+
+```text
+backend-admin/
+├── admin-core/
+├── admin-auth/      ← WRONG: must be inside admin-modules/
+└── admin-members/   ← WRONG: must be inside admin-modules/
+```
+
+> **Failing ANY item above = ARCHITECTURE FAILURE.**
+> AI agents MUST verify this gate BEFORE evaluating any deeper architecture rule.
+> This check takes priority over all other structural evaluations.
+
 ---
 
 ## CANONICAL RULE INDEX
@@ -39,6 +96,29 @@ Every AI agent MUST consult this index before beginning any audit or implementat
 ---
 
 
+
+## TERMINOLOGY — WET DEVELOPMENT
+
+WET development means deliberate explicitness and traceability.
+
+WET development does NOT mean uncontrolled duplication.
+
+Allowed:
+- Explicit module contracts
+- Visible authorization logic
+- Feature-local tests
+- Explicit integration boundaries
+- Clear mapping layers
+
+Forbidden duplication:
+- Duplicated security logic
+- Duplicated tenant filters
+- Duplicated infrastructure bootstrap
+- Duplicated validation rules without a shared source of truth
+- Divergent API response envelopes
+- Duplicated domain constants
+
+---
 
 ## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
 
@@ -132,6 +212,32 @@ Because the project contains a 1-to-1 mapping of frontend and backend roles, the
 - **Why?** If an AI is told to "fix the manager billing bug" and the context contains `src/manager/billing/`, it may hallucinate and write frontend React code inside a backend NestJS file. By strictly enforcing `src/backend-manager/manager-modules/manager-billing/` and `backend-e2e/backend-manager-e2e/`, there is zero ambiguity for the AI or the human developer.
 
 When fixing a bug in `backend-superadmin/superadmin-modules/superadmin-billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+
+## QUICK NAMING REFERENCE (AI PRE-CREATION CHECK)
+
+**ROOT MODULE**
+`admin-members/`
+
+**SUB-FOLDER**
+`members-services/`
+`members-controllers/`
+`members-dto/`
+`... etc.`
+
+**FILES**
+`admin-members-registration.service.ts`
+`admin-members-query.controller.ts`
+`admin-members-create.dto.ts`
+`... etc.`
+
+**RULE:**
+Folders use:
+`{module}-{artifact}`
+
+Files use:
+`{role}-{module}-{description}`
+
+Never invert these rules.
 
 ### 0F. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
 

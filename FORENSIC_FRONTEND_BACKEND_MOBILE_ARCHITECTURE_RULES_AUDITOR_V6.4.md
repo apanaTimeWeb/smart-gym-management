@@ -214,20 +214,25 @@ Repository Metadata
 Commit / Revision Metadata
 ```
 
-Default authority order:
+## GLOBAL AUTHORITATIVE PRECEDENCE ORDER
 
-```text
-1. Legal / security / compliance requirements (non-negotiable; override all other sources)
-2. Explicit current task requirements
-3. Supplied API contracts / OpenAPI / domain specifications
-4. Supplied architecture / development rules
-5. Supplied UI/UX / design rules
-6. Supplied feature / product requirement documents
-7. Actual implementation (code is evidence — it cannot lie)
-8. Existing module documentation (claims to verify AGAINST the code)
-9. Tests / mocks / fixtures
-10. Optional guidance / examples (illustrative only)
-```
+When multiple supplied sources conflict, resolve them in the following order:
+
+1. Security, privacy, authorization, tenant isolation, legal/compliance, and data-integrity requirements
+2. Explicit architecture and framework rules
+3. Explicit API/domain contracts
+4. Repository conventions within the supplied writable scope
+5. Frontend API-client/network behavior
+6. Frontend schemas, hooks, tests, mocks, fixtures, and static UI behavior
+7. AI inference or general framework conventions
+
+If a conflict remains unresolved at the same precedence level:
+- Do NOT guess
+- Do NOT silently choose
+- Record `AUTHORITATIVE_CONFLICT`
+- Record both sources
+- Record impact
+- Record required owner decision
 
 > **⚠️ AUDITOR-SPECIFIC NOTE on items 7 and 8:**
 > For a forensic auditor, the ACTUAL IMPLEMENTATION is the ground truth of current behavior.
@@ -246,6 +251,28 @@ Do NOT use generic engineering preference or general web knowledge as a substitu
 If external documentation is explicitly supplied as part of scope, it may be inspected.
 
 If no authoritative supplied rule exists for a concern, do not manufacture one.
+
+## VERIFICATION EVIDENCE STANDARD
+
+Every verification claim MUST identify its evidence class.
+
+Allowed evidence classes:
+- `STATIC_SOURCE_EVIDENCE`
+- `CONFIGURATION_EVIDENCE`
+- `MIGRATION_EVIDENCE`
+- `TEST_SOURCE_EVIDENCE`
+- `TEST_EXECUTION_EVIDENCE`
+- `BUILD_EVIDENCE`
+- `TYPECHECK_EVIDENCE`
+- `RUNTIME_EVIDENCE`
+- `LOG_OR_TRACE_EVIDENCE`
+- `UNVERIFIED`
+
+**Rules:**
+- Source code presence does NOT equal runtime verification.
+- A test file does NOT equal executed test evidence.
+- A build artifact does NOT equal runtime evidence.
+- Runtime claims require runtime evidence.
 
 ### EVIDENCE CONFIDENCE MODEL (MANDATORY)
 

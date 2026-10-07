@@ -19,28 +19,25 @@
    - implementation decision;
    - affected artifacts.
 
-### REQUIREMENT PRIORITY MATRIX
+## GLOBAL AUTHORITATIVE PRECEDENCE ORDER
 
-When requirements conflict, apply the following priority order:
+When multiple supplied sources conflict, resolve them in the following order:
 
-| Priority | Source |
-|---|---|
-| 1 | System and execution-environment constraints |
-| 2 | Security, privacy, legal, and data-integrity requirements in the authoritative architecture document |
-| 3 | Explicit architecture, implementation, testing, naming, and dependency rules in the authoritative architecture document |
-| 4 | Explicit user-provided scope and delivery requirements |
-| 5 | Supplied frontend behavior and frontend API contracts |
-| 6 | Supplied backend implementation and repository-local conventions |
-| 7 | External E2E/Selenium tests, mocks, fixtures, and examples |
-| 8 | AI inference |
+1. Security, privacy, authorization, tenant isolation, legal/compliance, and data-integrity requirements
+2. Explicit architecture and framework rules
+3. Explicit API/domain contracts
+4. Repository conventions within the supplied writable scope
+5. Frontend API-client/network behavior
+6. Frontend schemas, hooks, tests, mocks, fixtures, and static UI behavior
+7. AI inference or general framework conventions
 
-For every conflict, create a conflict record containing:
-- Requirement source and file path
-- Exact conflicting text or evidence
-- Selected authority
-- Reason for the decision
-- Required backend behavior
-- Whether a frontend change, external dependency, or scope expansion is required
+If a conflict remains unresolved at the same precedence level:
+- Do NOT guess
+- Do NOT silently choose
+- Record `AUTHORITATIVE_CONFLICT`
+- Record both sources
+- Record impact
+- Record required owner decision
 
 ---
 
@@ -3481,8 +3478,30 @@ For every discovered frontend requirement, record ALL of the following fields. A
 | Confidence classification | EXPLICIT_FRONTEND_CONTRACT / STRONGLY_INFERRED / POSSIBLE / CLIENT_ONLY / UNVERIFIABLE |
 | Resolution status | IMPLEMENTED / PENDING / BLOCKED / NOT_APPLICABLE |
 
+## REQUIREMENT TRACEABILITY MATRIX (MANDATORY)
 
+Every frontend-derived backend requirement MUST be tracked.
 
+Required columns:
+- Requirement ID
+- Source Evidence
+- Confidence
+- Backend Capability
+- API Contract
+- Persistence Impact
+- Security/Tenant Impact
+- Test Evidence
+- Status
+
+Allowed Status Values:
+- `IMPLEMENTED_AND_VERIFIED`
+- `IMPLEMENTED_NOT_VERIFIED`
+- `PARTIALLY_IMPLEMENTED`
+- `NOT_IMPLEMENTED`
+- `OUT_OF_SCOPE`
+- `BLOCKED`
+- `FRONTEND_CHANGE_REQUIRED`
+- `NOT_A_BACKEND_REQUIREMENT`
 ### STAGE 1 SCOPE BOUNDARY CLARIFICATION (GAP-4 Fix)
 
 The following MUST be completed and FROZEN before ANY backend file is opened, read, or analyzed:
