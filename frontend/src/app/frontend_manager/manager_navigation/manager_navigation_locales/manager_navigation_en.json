@@ -76,6 +76,10 @@
     "TEXT_CONFIRM": "Confirm",
     "TEXT_SELECT_AN_OPTION": "Select an option",
     "UNSAVED_CHANGES_MESSAGE": "You have unsaved changes. Are you sure you want to leave?",
-    "UNSAVED_CHANGES_TITLE": "Unsaved Changes"
+    "UNSAVED_CHANGES_TITLE": "Unsaved Changes",
+    "COPY_GYMSMART_MANAGER": "GymSmart Manager",
+    "BREADCRUMB_LABEL": "Breadcrumb Navigation",
+    "COPY_TO": "to",
+    "TEXT_GO_TO_PAGE": "Go to page"
   }
 }
