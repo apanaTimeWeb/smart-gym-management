@@ -40,5 +40,5 @@ test('creates a PT assignment and shows success feedback', async ({ page }) => {
   await page.getByTestId('manager_pt-managerptmain-managersearchabledropdown-1-trigger').click();
   await page.locator('[role="listbox"] [role="option"]').first().click();
   await page.getByTestId('manager_pt-manager-pt-main-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
 });

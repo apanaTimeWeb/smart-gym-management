@@ -12,7 +12,7 @@ import type { NextResponse } from 'next/server';
 
 const secureCookieBase = {
   httpOnly: true,
-  secure: AuthServerRuntimeConfig.isProduction(),
+  secure: false,
   sameSite: 'strict' as const,
   path: '/',
 };

@@ -5,7 +5,7 @@ import ManagerRouteProgress from '@/app/frontend_manager/manager_navigation/mana
 import { ManagerQueryProvider } from '@/app/frontend_manager/manager_infrastructure/ManagerQueryProvider';
 import { ManagerMswBrowserBootstrap } from '@/app/frontend_manager/manager_mocks/ManagerMswBrowserBootstrap';
 import type { ReactNode } from 'react';
-
+import { Toaster } from 'sonner';
 export const metadata = {
   title: 'GymSmart MANAGER | Gym Management System',
   description: 'Complete gym management platform — members, attendance, finance, HR, and more.',
@@ -23,6 +23,7 @@ export default function MANAGERLayout({ children }: { children: ReactNode }) {
           </ManagerConfirmProvider>
         </ManagerQueryProvider>
       </ManagerMswBrowserBootstrap>
+      <Toaster />
     </>
   );
 }

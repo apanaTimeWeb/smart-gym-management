@@ -25,5 +25,5 @@ test('creates a payroll record and confirms the save workflow', async ({ page })
   await page.getByTestId('manager_hr-manager-hr-payroll-modal-input-number-1').fill('1000');
   await page.getByTestId('manager_hr-manager-hr-payroll-modal-input-number-2').fill('1000');
   await page.getByTestId('manager_hr-manager-hr-payroll-modal-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
 });

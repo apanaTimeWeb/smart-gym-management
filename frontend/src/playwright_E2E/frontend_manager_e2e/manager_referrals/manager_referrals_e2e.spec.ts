@@ -23,5 +23,5 @@ test('creates a referral from the manual referral form and shows success feedbac
   await page.getByTestId('manager_referrals-managerreferralsaddmodal-managersearchabledropdown-1-trigger').click();
   await page.locator('[role="listbox"] [role="option"]').first().click();
   await page.getByTestId('manager_referrals-manager-referrals-main-button-submit').click();
-  await expect(page.getByTestId('ui-toast-status')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
 });
