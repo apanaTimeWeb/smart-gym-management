@@ -19,6 +19,29 @@
    - implementation decision;
    - affected artifacts.
 
+### REQUIREMENT PRIORITY MATRIX
+
+When requirements conflict, apply the following priority order:
+
+| Priority | Source |
+|---|---|
+| 1 | System and execution-environment constraints |
+| 2 | Security, privacy, legal, and data-integrity requirements in the authoritative architecture document |
+| 3 | Explicit architecture, implementation, testing, naming, and dependency rules in the authoritative architecture document |
+| 4 | Explicit user-provided scope and delivery requirements |
+| 5 | Supplied frontend behavior and frontend API contracts |
+| 6 | Supplied backend implementation and repository-local conventions |
+| 7 | External E2E/Selenium tests, mocks, fixtures, and examples |
+| 8 | AI inference |
+
+For every conflict, create a conflict record containing:
+- Requirement source and file path
+- Exact conflicting text or evidence
+- Selected authority
+- Reason for the decision
+- Required backend behavior
+- Whether a frontend change, external dependency, or scope expansion is required
+
 ---
 
 
@@ -682,6 +705,21 @@ For every frontend/backend mismatch or missing capability:
 4. The AI MUST NOT invent a fake backend workaround merely to avoid a frontend change.
 5. The AI MUST evaluate whether the mismatch is genuinely backend-resolvable before declaring a frontend change necessary.
 
+### NO SPECULATIVE COMPATIBILITY LAYER RULE
+
+Do NOT introduce undocumented compatibility endpoints, duplicate routes, alternate response envelopes, permissive DTO fields, hidden aliases, or legacy fallbacks solely to satisfy an uncertain frontend expectation.
+
+A compatibility layer may be added ONLY when ALL of the following are true:
+- it is explicitly allowed by the architecture document;
+- its intended lifecycle and ownership are documented;
+- it does NOT weaken authorization, validation, tenant isolation, observability, or data integrity;
+- it includes tests covering its behavior, authorization failure, and deprecation path;
+- its deprecation timeline or long-term support decision is explicitly recorded in `INTEGRATION_GUIDE.md`.
+
+If a compatibility layer cannot meet all these conditions: declare `FRONTEND_CHANGE_REQUIRED` instead.
+
+
+
 ### When backend-only resolution is genuinely impossible
 
 If the requirement cannot be correctly satisfied without modifying frontend source, the AI MUST create a final-delivery file:
@@ -822,6 +860,28 @@ The AI MUST NOT claim that behavior was runtime-verified unless the relevant com
 Generated test files do NOT equal executed tests.
 Passing compilation does NOT equal runtime verification.
 Static inspection of a test file does NOT equal test execution.
+
+### TEST EXECUTION DECISION RULE
+
+For every required test category, record separately:
+
+| Field | Value |
+|---|---|
+| Test required by | Architecture rule / frontend behavior / security requirement |
+| Test artifact generated | YES / NO |
+| Static review completed | YES / NO |
+| Runtime execution attempted | YES / NO |
+| Runtime result | PASSED / FAILED / BLOCKED / N/A |
+| Environment limitation | Describe if execution was not possible |
+| Remaining risk | What remains unverified |
+
+**Status definitions:**
+- A required test is **DELIVERED** when the test artifact is complete and included in the package.
+- A required test is **VERIFIED** only when it has been executed successfully in the current environment.
+- Do NOT mark a requirement fully proven solely because a test file exists.
+- When environment prevents execution: mark `DELIVERED_NOT_EXECUTED` and describe the remaining risk explicitly.
+
+
 
 ### D. SCOPE / EVIDENCE LIMITATION
 
@@ -1094,6 +1154,36 @@ For every repaired or created API contract, migration, event, and asynchronous j
 - document versioning or deprecation requirements where applicable.
 
 Do NOT introduce destructive schema changes without an explicit migration and rollback assessment.
+
+### DATABASE MIGRATION SAFETY RULE
+
+For every schema-affecting repair or creation, complete ALL steps:
+
+1. **Change classification** — Determine whether the change is:
+   - `ADDITIVE` (new table, column with default/nullable)
+   - `DESTRUCTIVE` (drop column, drop table, rename column)
+   - `DATA_TRANSFORMING` (change column type, merge columns)
+   - `PERFORMANCE_SENSITIVE` (new index on large table, foreign key on existing data)
+
+2. **Rollback plan** — Do NOT generate destructive migration steps without an explicit rollback and data-preservation plan. State rollback behavior for every step.
+
+3. **Non-null field safety** — For non-null fields on existing tables, define a safe backfill or staged rollout strategy. Never add a NOT NULL constraint without a default or migration-time data fill.
+
+4. **Constraint compatibility** — For new unique constraints or foreign keys, verify existing-data compatibility where data access is available; otherwise record: `DATA_COMPATIBILITY_NOT_VERIFIED`.
+
+5. **Required indexes** — Include indexes for:
+   - new foreign key columns;
+   - high-cardinality filter fields;
+   - tenant scoping columns (`gymId`, `branchId`);
+   - pagination and ordering columns;
+   - uniqueness guarantee columns.
+
+6. **Migration record** — For each migration, document:
+   - migration dependencies (order of execution);
+   - lock-risk concern (table size, downtime);
+   - rollback command or procedure;
+   - deployment ordering (before or after code deployment);
+   - data backfill command if required.
 
 ---
 
@@ -3051,7 +3141,31 @@ When archive creation is unavailable, provide:
 
 Never claim a ZIP was created, attached, or validated unless that actually occurred.
 
-## 6.11 Mode B — AUDIT + REPAIR
+### FINAL DELIVERABLE MANIFEST
+
+Every final delivery MUST include the following, where applicable. Missing any mandatory item = incomplete delivery.
+
+| # | Artifact | Mode A | Mode B | Condition |
+|---|---|---|---|---|
+| 1 | Updated or created backend source files | MANDATORY | MANDATORY | Always |
+| 2 | Database migrations and rollback scripts | MANDATORY if schema changes | MANDATORY if schema changes | When schema is modified |
+| 3 | Unit, integration, and API E2E tests | MANDATORY | MANDATORY | Always |
+| 4 | UI automation tests (Selenium/Playwright) | MANDATORY | MANDATORY | When frontend flows are testable |
+| 5 | `INTEGRATION_GUIDE.md` | MANDATORY | MANDATORY | Always |
+| 6 | `stage-1-frontend-requirements.md` | MANDATORY | MANDATORY | Always |
+| 7 | `stage-2-backend-audit.md` | — | MANDATORY | Mode B only |
+| 8 | `stage-3-final-verdict.md` | MANDATORY | MANDATORY | Always |
+| 9 | `architecture-rule-enforcement-matrix.md` | MANDATORY | MANDATORY | Always |
+| 10 | `RE_AUDIT_CHECKLIST_RESULT.md` | MANDATORY | MANDATORY | Always |
+| 11 | `FRONTEND_CHANGE_REQUIRED.md` | Conditional | Conditional | ONLY when frontend must change |
+| 12 | `BLOCKED_BY_SUPPLIED_SCOPE.md` | Conditional | Conditional | ONLY when out-of-scope blockers exist |
+| 13 | `external-dependency-requirements.md` | Conditional | Conditional | ONLY when external deps are required |
+| 14 | Complete file manifest (paths, modification status, purpose) | MANDATORY | MANDATORY | Always |
+| 15 | Versioned archive or, if archiving unavailable, manifest + all patches | MANDATORY | MANDATORY | Always |
+
+If any mandatory artifact is absent, state the reason explicitly in the final verdict. Do NOT silently omit any mandatory item.
+
+
 
 STAGE 1:
 
@@ -3344,6 +3458,30 @@ Determine everything the backend is required to provide.
 Do NOT audit backend implementation yet.
 
 Do NOT turn this into a frontend quality review.
+
+### FRONTEND REQUIREMENT EXTRACTION MATRIX
+
+For every discovered frontend requirement, record ALL of the following fields. A requirement entry missing any field is incomplete:
+
+| Field | Description |
+|---|---|
+| Requirement ID | Unique identifier (e.g., FE-REQ-001) |
+| Frontend source file path | Exact file path |
+| Evidence location | Route, component, hook, API client, schema, test, mock, fixture, type, or documentation |
+| User role and permission context | Which roles trigger this requirement |
+| User action or screen state | What the user does or what state triggers the call |
+| Expected API method and path | HTTP verb + URL pattern |
+| Request payload, query parameters, headers | All request inputs |
+| Expected success response shape | Field names, types, nullable, optional |
+| Expected error states and status codes | All HTTP error codes the frontend handles |
+| Pagination / sorting / filtering / search / export / upload / download / realtime | All applicable behaviors |
+| Loading, empty, auth-denied, and failure states | All frontend display states |
+| Backend capability required | What the backend must implement |
+| Architecture-rule applicability | Which architecture rules govern this endpoint |
+| Confidence classification | EXPLICIT_FRONTEND_CONTRACT / STRONGLY_INFERRED / POSSIBLE / CLIENT_ONLY / UNVERIFIABLE |
+| Resolution status | IMPLEMENTED / PENDING / BLOCKED / NOT_APPLICABLE |
+
+
 
 ### STAGE 1 SCOPE BOUNDARY CLARIFICATION (GAP-4 Fix)
 

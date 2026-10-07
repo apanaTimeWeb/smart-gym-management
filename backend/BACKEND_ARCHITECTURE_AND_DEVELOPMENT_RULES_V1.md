@@ -9,6 +9,37 @@ Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the pr
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
 
+---
+
+## CANONICAL RULE INDEX
+
+Every AI agent MUST consult this index before beginning any audit or implementation. Every rule listed here is MANDATORY unless marked as conditional with explicit applicability criteria.
+
+| Rule ID | Rule Name | Category | Applies To | Mandatory Evidence |
+|---|---|---|---|---|
+| 0A | Hierarchical Module Boundary | Structure | All backend modules | Folder tree, import graph, module registration |
+| 0B | Hard Feature Write Boundary | Structure | All backend repairs | Affected file list, sibling-module non-touch confirmation |
+| 0C | Change Scope Failure Condition | Structure | All backend repairs | Sibling module change audit |
+| 0D | Backend Namespace Prefixing | Naming | Backend role/domain folders | Folder paths and package/module names |
+| 0E | Modular Monolith (not Microservice) | Structure | Isolated feature modules | No `.forRoot()` / global DB init in feature |
+| 0F | Anti-Double-Prefixing | Naming | Backend feature sub-folders | Folder tree and imports |
+| 0G | Multi-Tenancy Contract | Security | All data endpoints | JWT extraction, tenant filter in every query, response DTO |
+| 0G-A | Approved NPM Package Registry | Dependencies | All NestJS modules | Package.json, no unapproved packages |
+| 0G-B | Seed File Specification | Database | All seed files | Seed file naming, idempotency, transaction |
+| 0G-C | Redis Responsibility Decision Table | Infrastructure | All Redis usage | Redis mechanism matches scenario table |
+| 0G-D | Strict Sub-Folder Placement | Naming | All feature modules | No implementation files in module root |
+| 0H | Canonical Naming Single Source of Truth | Naming | All files and folders | Naming matches Rule 0H table |
+| 2 | Descriptive AI-Contextual Filenames | Naming | All backend files | Files begin with role+module prefix |
+| 82A | Complete UI Data Contract | API Contract | UI-backed endpoints | Response DTO, serializer, frontend contract test |
+| 116 | OpenAPI Documentation | API Documentation | REST endpoints | Controller annotations / spec output |
+| 117 | RAG Format Support | Query/API | Applicable query endpoints | `?format=rag` behavior and tests |
+
+> **AI NOTE:** If a rule is not in this index but exists later in the document, it is still mandatory. This index is a navigation aid, not an exhaustive constraint list. Always read the full document.
+
+---
+
+
+
 ## PROJECT STACK BASELINE — NORMATIVE PROJECT DECISION
 
 This project uses a fixed production stack. AI agents MUST NOT invent, substitute, or introduce alternative infrastructure when implementing or repairing backend code.
@@ -161,7 +192,37 @@ When an AI is provided with a single feature module or domain folder in isolatio
 
 ---
 
-## FRAMEWORK APPLICABILITY GATE \u2014 MANDATORY
+## CANONICAL COMPLIANCE STATUS VOCABULARY
+
+Only the following statuses may be used in audit reports, enforcement matrices, and findings. Unlisted statuses (e.g., "blocked", "missing", "unverified", "outside scope") are FORBIDDEN — use the canonical equivalents below.
+
+| Status | Meaning |
+|---|---|
+| `COMPLIANT` | Rule verified with sufficient evidence |
+| `NON_COMPLIANT` | Rule violated with evidence |
+| `PARTIALLY_COMPLIANT` | Rule partially satisfied; gap documented |
+| `NOT_APPLICABLE` | Rule does not apply; justification and source evidence provided |
+| `SUPPLIED_AND_VERIFIED` | Dependency supplied and confirmed correct |
+| `SUPPLIED_BUT_MISMATCHED` | Dependency supplied but does not match requirement |
+| `SUPPLIED_BUT_INCOMPLETE` | Dependency supplied but missing required parts |
+| `OUTSIDE_SUPPLIED_SCOPE` | Dependency exists but is not in the supplied input |
+| `BLOCKED_BY_SUPPLIED_SCOPE` | Cannot verify because required evidence is outside supplied scope |
+| `BLOCKED_BY_ENVIRONMENT` | Cannot verify because the execution environment lacks the capability |
+| `EXTERNAL_DEPENDENCY_REQUIRED` | Requires an external system or team action before resolution |
+| `FRONTEND_CHANGE_REQUIRED` | Backend is correct; frontend must change to align |
+| `NOT_VERIFIED` | Insufficient evidence to establish presence or absence |
+| `STACK_CONFLICT` | Supplied code uses a technology not approved by this architecture document |
+| `FRAMEWORK_NOT_VERIFIED` | Active framework cannot be determined from supplied evidence |
+| `DATA_COMPATIBILITY_NOT_VERIFIED` | Existing data compatibility for a schema change cannot be verified |
+
+Every status MUST include:
+- **Evidence:** what was read or executed to determine this status
+- **Affected artifact(s):** which files, endpoints, or rules are affected
+- **Remediation path** or reason no remediation was performed
+
+---
+
+## FRAMEWORK APPLICABILITY GATE — MANDATORY
 
 Before implementing or auditing code, the AI MUST determine the active backend
 framework from the supplied project/repository evidence.
@@ -2923,4 +2984,88 @@ While the ledger is the absolute source of truth and balances must never be muta
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 
 * **Why:** This provides a strong accounting control and makes unbalanced journals detectable/preventable when enforced transactionally, providing a perfect, tamper-proof audit trail for accounting.
+
+---
+
+## MINIMUM EVIDENCE STANDARD BY RULE CATEGORY
+
+A rule CANNOT be marked `COMPLIANT` without the minimum evidence required for its category. AI agents MUST satisfy all evidence requirements before assigning COMPLIANT status.
+
+| Rule Category | Minimum Required Evidence |
+|---|---|
+| **Structural rule** | Folder/module tree, import graph, module registration/wiring evidence |
+| **API contract rule** | Route, request DTO, response DTO, serializer, error contract, tests |
+| **Authorization rule** | Authentication guard, authorization policy/decorator, tenant/resource scope, negative-access tests |
+| **Database rule** | Entity/schema file, migration file, constraints, indexes, repository/query evidence |
+| **Async/event rule** | Transaction ordering, outbox/event persistence where required, consumer/job evidence, retry/idempotency tests |
+| **Cache rule** | Cache key format, invalidation ordering, tenant isolation, tests |
+| **Documentation rule** | Required document at correct location, content current and accurate |
+| **Deployment/config rule** | Supplied configuration file, registration, and environment variable evidence |
+| **Multi-tenancy rule** | gymId/branchId from JWT (never body), tenant filter in every query, cross-tenant negative tests |
+| **Naming rule** | Actual file paths and class names verified against naming table |
+| **Seed rule** | Seed file exists, idempotency confirmed, wrapped in transaction |
+
+---
+
+## RULE APPLICABILITY CRITERIA TEMPLATE
+
+For conditional rules (WebSockets, RAG output, caching, idempotency, UI automation, multi-tenancy sub-cases), every rule section must define:
+
+```text
+### Applicability
+
+This rule applies when one or more of the following conditions are true:
+- [condition list]
+
+This rule does NOT apply when:
+- [exclusion conditions]
+
+Required evidence when applicable:
+- [evidence list]
+
+Required record when NOT applicable:
+NOT_APPLICABLE — [justification] — [source evidence supporting non-applicability]
+```
+
+An AI MUST NOT skip a conditional rule without recording `NOT_APPLICABLE` with justification.
+
+---
+
+## ARCHITECTURE DOCUMENT VERSIONING AND CHANGE CONTROL
+
+Every rule addition, removal, or semantic change to this document MUST include:
+
+| Field | Required |
+|---|---|
+| Document version | YES |
+| Date of change | YES |
+| Affected rule IDs | YES |
+| Migration impact | YES — does this require retroactive re-audit of existing modules? |
+| Compatibility expectations | YES — does existing passing code remain compliant? |
+
+**Rule numbering policy:**
+- Renumbering a rule MUST preserve an alias to the previous rule ID.
+- New mandatory rules MUST state their enforcement scope:
+  - `PROSPECTIVE_ONLY` — applies to new modules only
+  - `NEW_MODULES_AND_NEXT_AUDIT` — applies to new modules now, existing modules at next audit
+  - `IMMEDIATE_ALL_MODULES` — applies immediately and retroactively to all modules
+
+---
+
+## UNAVAILABLE INFRASTRUCTURE COMPLIANCE RULE
+
+A feature module MUST NOT claim compliance with an architecture rule that depends on absent shared infrastructure.
+
+When a rule depends on global infrastructure outside the supplied scope:
+1. Verify the integration point if available in the supplied inputs.
+2. Otherwise mark the dependency using the CANONICAL COMPLIANCE STATUS VOCABULARY:
+   - `NOT_VERIFIED` — if existence is unknown
+   - `OUTSIDE_SUPPLIED_SCOPE` — if known to exist but not supplied
+   - `BLOCKED_BY_SUPPLIED_SCOPE` — if compliance cannot be determined without it
+3. Document the exact required interface, registration point, configuration key, and ownership.
+4. Do NOT create mock global infrastructure merely to satisfy the rule.
+
+A feature module CANNOT be declared `COMPLIANT` for a rule if a mandatory global dependency for that rule remains `NOT_VERIFIED` or `BLOCKED_BY_SUPPLIED_SCOPE`. The module's overall readiness MUST reflect this as `NOT_READY_DUE_TO_EXTERNAL_BLOCKER`.
+
+
 
