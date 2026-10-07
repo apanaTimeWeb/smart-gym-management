@@ -6,8 +6,14 @@ import { format, parseISO } from 'date-fns';
  * @dependencies Only local module configuration and approved framework primitives.
  * @edge-case Preserves loading, empty, error, disabled, retry, and cancellation behavior defined by the owning module contract; does not introduce cross-feature business ownership.
  */
-export const formatTime = (d?: string) => 
- d ? new Date(d).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '—';
+export const formatTime = (d?: string) => {
+  if (!d) return '—';
+  let dateObj = new Date(d);
+  if (isNaN(dateObj.getTime()) && /^\d{1,2}:\d{2}(:\d{2})?$/.test(d)) {
+    dateObj = new Date(`1970-01-01T${d.padStart(5, '0')}:00Z`);
+  }
+  return isNaN(dateObj.getTime()) ? d : dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+};
 
 export const ATTENDANCE_TABLE_HEADERS = [
   'Name', 'Type', 'Status', 'Date', 'Check In', 'Check Out', 'Duration', 'Method', 'Actions'
