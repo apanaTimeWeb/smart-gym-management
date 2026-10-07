@@ -58,8 +58,8 @@ export default function ManagerLayout({ children }: { children: ReactNode }) {
         />
         <ManagerSidebar data-testid="manager_navigation-managerlayout-managersidebar-2" isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
         <ManagerCommandPalette data-testid="manager_navigation-managerlayout-managercommandpalette-3" requestedOpen={isCommandPaletteRequested} onRequestedOpenHandled={() => setIsCommandPaletteRequested(false)} />
-        <main className={`min-h-screen overflow-y-auto pt-16 motion-safe:transition-all motion-safe:duration-slow ${isCollapsed ? 'lg:ml-15' : 'lg:ml-60'}`}>
-          <div className="px-4 py-4 lg:px-6">
+        <main className={`min-h-screen pt-16 motion-safe:transition-all motion-safe:duration-slow ml-0 ${isCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+          <div className="px-4 py-4 md:px-6">
             <ManagerBreadcrumb />
             {children}
           </div>

@@ -35,7 +35,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 // EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const handleToggle = () => {
-      if (window.innerWidth < 1024) {
+      if (window.innerWidth < 768) {
         setIsMobileOpen((open) => {
           if (!open) previousMobileFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
           return !open;
@@ -111,16 +111,22 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
       {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div data-testid="manager_navigation-layout-backdrop-mobile-sidebar"
-          className="fixed inset-x-0 top-16 bottom-0 bg-overlay-backdrop backdrop-blur-sm z-40 lg:hidden motion-safe:transition-all motion-safe:duration-base ease-in-out"
+          className="fixed inset-0 bg-overlay backdrop-blur-sm z-40 md:hidden motion-safe:transition-opacity motion-safe:duration-base"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      <aside ref={asideRef} aria-label={t("COPY_MANAGER_NAVIGATION")} className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-40 lg:z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
-        isCollapsed ? 'lg:w-15' : 'lg:w-60'
-      } ${
-        isMobileOpen ? 'w-64 motion-safe:translate-x-0 motion-reduce:translate-x-0' : 'w-64 motion-safe:-translate-x-full motion-reduce:-translate-x-full lg:motion-safe:translate-x-0 lg:motion-reduce:translate-x-0'
-      }`}>
+      <aside ref={asideRef} aria-label={t("COPY_MANAGER_NAVIGATION")} className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow w-64 ${
+        isCollapsed ? 'md:w-16' : 'md:w-64'
+      } ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        
+        {isMobileOpen && (
+          <div className="flex items-center justify-end border-b border-border px-4 py-2 md:hidden">
+            <button type="button" onClick={() => setIsMobileOpen(false)} aria-label={t('COPY_SEARCH_MENU_1')} className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" data-testid="manager-sidebar-close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        )}
 
         {/* Logo & Toggle */}
         <div className="flex items-center justify-center px-4 py-5 border-b border-border shrink-0">
@@ -137,7 +143,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
         {/* Search Box */}
         {(!isCollapsed || isMobileOpen) && (
-          <div className="px-4 py-3 border-b border-border shrink-0">
+          <div className={`px-4 py-3 ${isMobileOpen ? 'block' : 'hidden md:block'} border-b border-border shrink-0`}>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search size={18} strokeWidth={2} className="text-secondary" />
@@ -155,7 +161,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
         )}
         
         {isCollapsed && !isMobileOpen && (
-          <div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
+          <div className="hidden xl:flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
             <button className={ ["focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page", "p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base ease-in-out motion-safe:active:scale-95 hover:brightness-110"].filter((value) => Boolean(value)).join(' ') } data-testid="manager_navigation-layout-button-close"
               onClick={() => setIsCollapsed(false)}
               aria-label={t("COPY_SEARCH_MENU_1")}
@@ -174,7 +180,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
             filteredNavGroups.map((group, mapIndex) => (
               <div key={group.groupKey}>
                 {(!isCollapsed || isMobileOpen) && (
-                  <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
+                  <p className={`${isMobileOpen ? 'block' : 'hidden md:block'} text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider`}>
                     {group.translatedGroup}
                   </p>
                 )}
@@ -183,6 +189,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                     const active = pathname === item.href || ((item.href as string) !== '/' && pathname.startsWith(item.href));
                     const Icon = item.icon;
                     const showLabel = !isCollapsed || isMobileOpen;
+                    const labelVisibilityClass = isMobileOpen ? 'inline' : (!isCollapsed ? 'hidden md:inline' : 'hidden');
 
                     return (
                       <Link data-testid={`manager_navigation-sidebar-link-${item.href.replace(/\W+/g, "-").replace(/^-|-$/g, "")}`}
@@ -193,12 +200,12 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-card'
-                            : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-focus shadow-none'
+                            : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent shadow-none'
                         } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
                       >
                         <Icon size={18} className={[active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-all', "motion-safe:duration-base ease-in-out"].filter(Boolean).join(' ')} />
-                        {showLabel && <span className="text-sm whitespace-nowrap">{item.translatedLabel}</span>}
+                        {showLabel && <span className={`text-sm whitespace-nowrap ${labelVisibilityClass}`}>{item.translatedLabel}</span>}
                       </Link>
                     );
                   })}
@@ -209,12 +216,12 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
         </nav>
 
         {/* User */}
-        <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
+        <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${isMobileOpen ? 'gap-3' : (!isCollapsed ? 'justify-center md:justify-start md:gap-3' : 'justify-center')}`}>
           <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-on-primary text-sm font-bold border border-border bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'M') : 'M'}
           </div>
           {(!isCollapsed || isMobileOpen) && (
-            <div className="whitespace-nowrap overflow-hidden flex-1">
+            <div className={`${isMobileOpen ? 'block' : 'hidden md:block'} whitespace-nowrap overflow-hidden flex-1`}>
               <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || t("TEXT_MANAGER_USER")) : t("TEXT_MANAGER_USER")}</div>
               <div className="text-secondary text-xs truncate">{mounted ? (user?.role || t("TEXT_GYM_MANAGER")) : t("TEXT_GYM_MANAGER")}</div>
             </div>

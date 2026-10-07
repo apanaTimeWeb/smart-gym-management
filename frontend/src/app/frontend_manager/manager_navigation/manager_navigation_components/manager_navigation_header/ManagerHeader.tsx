@@ -41,18 +41,18 @@ export default function ManagerHeader({ title, subtitle, action, onOpenCommandPa
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-20 h-16 bg-header-translucent backdrop-blur-md border-b border-border px-4 lg:px-6 flex items-center justify-between">
-      <div className="flex flex-wrap items-center gap-4 flex-1">
+    <header className="fixed inset-x-0 top-0 z-20 h-16 bg-header-translucent backdrop-blur-md border-b border-border px-4 md:px-6 flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center gap-4 flex-1 min-w-0">
         <button data-testid="manager_navigation-header-button-sidebar-toggle"
           aria-label={t("COPY_TOGGLE_SIDEBAR")}
-          className="min-h-11 min-w-11 p-2 -ml-3 text-secondary hover:text-primary motion-safe:transition-all bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page motion-safe:duration-base ease-in-out motion-safe:active:scale-95 hover:brightness-110"
+          className="min-h-11 min-w-11 inline-flex items-center justify-center p-2 text-secondary hover:text-primary motion-safe:transition-all bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page motion-safe:duration-base ease-in-out motion-safe:active:scale-95 hover:brightness-110"
           onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
         >
           <Menu size={18} strokeWidth={2}/>
         </button>
-        <div>
-          <h1 className="text-page-title font-bold text-primary">{title}</h1>
-          {subtitle && <p className="text-sm text-secondary mt-0.5">{subtitle}</p>}
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-primary truncate">{title}</h1>
+          {subtitle && <p className="text-sm text-secondary truncate mt-0.5">{subtitle}</p>}
         </div>
         <button
           type="button"
