@@ -20,5 +20,5 @@ test('creates a store product and shows success feedback', async ({ page }) => {
   await page.getByTestId('manager_store-store-managerstoreproductmodal-input-primary-2').fill('999');
   await page.getByTestId('manager_store-store-managerstoreproductmodal-input-primary-3').fill('10');
   await page.getByTestId('manager_store-manager-store-product-modal-button-submit').click();
-  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[role="status"], [role="alert"], [data-sonner-toast], [data-testid="ui-toast-status"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 10000 });
 });

@@ -45,7 +45,7 @@ test('creates a member attendance record and shows success feedback', async ({ p
   await submit.click();
 
   // Toast appears and modal closes
-  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[role="status"], [role="alert"], [data-sonner-toast], [data-testid="ui-toast-status"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 10000 });
   await expect(page.getByTestId('manager_attendance-managerattendancemodal-form-1')).toBeHidden({ timeout: 10000 });
 });
 

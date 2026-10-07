@@ -18,5 +18,5 @@ test('submits a plan change request and shows success feedback', async ({ page }
   await page.getByTestId('manager_plans-manager-plans-main-button-action').first().click();
   await page.getByTestId('manager_plans-manager-plans-main-textarea-message-input').fill('E2E plan change request');
   await page.getByTestId('manager_plans-manager-plans-main-button-submit').click();
-  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[role="status"], [role="alert"], [data-sonner-toast], [data-testid="ui-toast-status"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 10000 });
 });

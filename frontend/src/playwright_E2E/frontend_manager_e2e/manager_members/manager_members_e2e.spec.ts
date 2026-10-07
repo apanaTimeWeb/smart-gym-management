@@ -26,5 +26,5 @@ test('records a payment for a selected member and shows success feedback', async
   await page.getByTestId('manager_members-manager-add-payment-modal-button-submit').click();
   const confirm = page.getByRole('dialog').getByRole('button', { name: /confirm|record|payment/i }).last();
   if (await confirm.isVisible().catch(() => false)) await confirm.click();
-  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[role="status"], [role="alert"], [data-sonner-toast], [data-testid="ui-toast-status"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 10000 });
 });

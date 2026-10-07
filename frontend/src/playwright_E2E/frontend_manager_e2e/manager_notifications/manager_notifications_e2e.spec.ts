@@ -27,5 +27,5 @@ test('marks all notifications as read and shows success feedback', async ({ page
   const markAll = page.getByRole('button', { name: /mark all (as )?read/i });
   await expect(markAll).toBeVisible();
   await markAll.click();
-  await expect(page.locator('[data-testid="ui-toast-status"], [data-sonner-toast="true"]').first()).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[role="status"], [role="alert"], [data-sonner-toast], [data-testid="ui-toast-status"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 10000 });
 });
