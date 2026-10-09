@@ -5,6 +5,13 @@ const ROUTE = '/trainer/dashboard';
 const FEATURE_MARKER = '[data-testid="trainer_dashboard-dashboard-main_date_range"]';
 
 test.describe('trainer_dashboard route', () => {
+      test.beforeEach(async ({ page }) => {
+    await page.goto(`${BASE_URL}/frontend_auth/auth/login`);
+    await page.getByTestId('auth_login-demo-trainer').click();
+    await page.waitForURL('**/trainer_dashboard');
+    await expect(page.locator('[data-testid="trainer_dashboard-dashboard-main_date_range"]').first()).toBeVisible({ timeout: 15000 });
+  });
+
   test('loads the route without a server error', async ({ page }) => {
     const response = await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: 'domcontentloaded' });
     expect(response, 'navigation must produce an HTTP response').not.toBeNull();
