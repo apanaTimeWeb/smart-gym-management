@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000';
 const ROUTE = '/trainer/progress-tracking';
-const FEATURE_MARKER = '[data-testid="trainer_progress_tracking-progress_tracking_progress_tracking_main_add"]';
+const FEATURE_MARKER = '[data-testid="trainer_progress_tracking-progress-tracking_progress_tracking_main_add"]';
 
 test.describe('trainer_progress_tracking route', () => {
       test.beforeEach(async ({ page }) => {
