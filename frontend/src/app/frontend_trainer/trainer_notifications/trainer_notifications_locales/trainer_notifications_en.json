@@ -1,0 +1,27 @@
+{
+  "TRAINER_NOTIFICATIONS": {
+    "TEXT_MARK_AS_READ": "Mark as read",
+    "TEXT_MARK_NOTIFICATION_AS_READ": "Mark notification as read",
+    "TEXT_YOU_ARE_ALL_CAUGHT_UP_NEW_ALERTS_AND_MES_4DB50A48": "You are all caught up! New alerts and messages will appear here.",
+    "TEXT_NO_NOTIFICATIONS": "No notifications",
+    "TEXT_MARK_ALL_AS_READ": "Mark all as read",
+    "TEXT_LOADING_NOTIFICATIONS": "Loading notifications...",
+    "TEXT_RECENT_ACTIVITY": "Recent Activity",
+    "TEXT_ALL_CAUGHT_UP": "All caught up",
+    "TEXT_FAILED_TO_LOAD_NOTIFICATIONS_PLEASE_REFRESH": "Failed to load notifications. Please refresh.",
+    "TEXT_S": "s",
+    "TEXT_LOADING": "Loading...",
+    "TEXT_OFFLINE_CONNECTION": "Connection unavailable. Some notification updates may be delayed.",
+    "TEXT_PAGE_NOT_FOUND": "Page Not Found",
+    "TEXT_PAGE_NOT_FOUND_DESCRIPTION": "We couldn't find the page you're looking for within the notifications module. It might have been removed, renamed, or temporarily unavailable.",
+    "TEXT_RETURN_TO_DASHBOARD": "Return to Dashboard",
+    "TEXT_UNREAD_COUNT_ONE": "{count} unread notification",
+    "TEXT_UNREAD_COUNT_MANY": "{count} unread notifications",
+    "TEXT_MARKING_ALL_AS_READ": "Marking all as read...",
+    "TEXT_LOAD_MORE": "Load More",
+    "TEXT_RETRY": "Retry",
+    "TEXT_RETRYING": "Retrying...",
+    "TEXT_PAGE_TITLE": "Notifications | Trainer — GymSmart",
+    "TEXT_PAGE_DESCRIPTION": "View and manage your gym notifications."
+  }
+}

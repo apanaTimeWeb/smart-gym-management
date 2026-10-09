@@ -1,0 +1,57 @@
+
+import { env } from '@/config/env';
+
+import { http, HttpResponse, delay } from 'msw';
+
+import { TRAINER_ATTENDANCE_HTTP_STATUS_CODES } from '@/app/frontend_trainer/trainer_attendance/trainer_attendance_constants/TrainerAttendanceHttpStatusCodes';
+
+import { TRAINER_ATTENDANCE_MOCK_RECORDS, TRAINER_ATTENDANCE_MOCK_MEMBERS } from '@/app/frontend_trainer/trainer_attendance/trainer_attendance_mocks/trainer_attendance_fixtures/TrainerAttendanceMockData';
+
+import { TrainerAttendanceCreateDtoSchema } from '@/app/frontend_trainer/trainer_attendance/trainer_attendance_schemas/TrainerAttendanceDomainSchemas';
+
+import { TRAINER_ATTENDANCE_URLS } from '@/app/frontend_trainer/trainer_attendance/trainer_attendance_url_config';
+
+;
+
+const BASE = env.NEXT_PUBLIC_API_URL;
+const MOCK_DELAY_MS = 400; const MOCK_SHORT_DELAY_MS = 200; const MOCK_FAST_DELAY_MS = 250;
+let attendanceDB = [...TRAINER_ATTENDANCE_MOCK_RECORDS];
+const todayIsoDate = () => new Date().toISOString().slice(0, 10);
+export const TrainerAttendanceMockHandlers = [
+  http.get(`${BASE}${TRAINER_ATTENDANCE_URLS.API.BASE}`, async ({ request }) => {
+    await delay(MOCK_FAST_DELAY_MS); const url = new URL(request.url); const type = url.searchParams.get('type'); const staffId = url.searchParams.get('staffId'); const search = url.searchParams.get('search')?.toLowerCase() || ''; const date = url.searchParams.get('date'); const page = Number(url.searchParams.get('page') || '1'); const limit = Number(url.searchParams.get('limit') || '10');
+    let filtered = [...attendanceDB];
+    if (type) filtered = filtered.filter(r => r.type === type);
+    if (staffId) filtered = filtered.filter(r => r.staffId === staffId || r.staff?.id === staffId);
+    if (search) filtered = filtered.filter(r => r.member?.name?.toLowerCase().includes(search) || r.staff?.name?.toLowerCase().includes(search));
+    if (date && date !== 'ALL_TIME') { const today = new Date(); filtered = filtered.filter(r => { const d = new Date(r.date); if (date === 'TODAY') return d.toDateString() === today.toDateString(); if (date === 'YESTERDAY') { const y = new Date(today); y.setDate(y.getDate()-1); return d.toDateString() === y.toDateString(); } if (date === 'LAST_7_DAYS') { const cutoff = new Date(today); cutoff.setDate(cutoff.getDate()-7); return d >= cutoff && d <= today; } if (date === 'THIS_MONTH') return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear(); return true; }); }
+    const sortBy = url.searchParams.get('sortBy') || 'date'; const sortDirection = url.searchParams.get('sortDirection') === 'asc' ? 1 : -1;
+    filtered.sort((a, b) => {
+      const getValue = (record: typeof filtered[number]) => sortBy === 'name' ? (record.member?.name ?? record.staff?.name ?? '') : sortBy === 'durationMinutes' ? (record.durationMinutes ?? -1) : (record[sortBy as keyof typeof record] ?? '');
+      const left = getValue(a); const right = getValue(b);
+      if (typeof left === 'number' && typeof right === 'number') return (left - right) * sortDirection;
+      return String(left).localeCompare(String(right)) * sortDirection;
+    });
+    const start = (page-1)*limit; const totalPages = Math.ceil(filtered.length / limit) || 1;
+    return HttpResponse.json({ success: true, message: 'Attendance records fetched successfully', data: { attendance: filtered.slice(start,start+limit), total: filtered.length, page, limit }, meta: { total: filtered.length, page, limit, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 } });
+  }),
+  http.get(`${BASE}${TRAINER_ATTENDANCE_URLS.API.STATS}`, async () => { await delay(MOCK_SHORT_DELAY_MS); const todaysRecords = attendanceDB.filter((record) => record.date === todayIsoDate()); const data = { totalCheckIns: todaysRecords.length, memberCheckIns: todaysRecords.filter((record) => record.type === 'MEMBER').length, staffCheckIns: todaysRecords.filter((record) => record.type === 'STAFF').length }; return HttpResponse.json({ success: true, message: 'Attendance stats fetched successfully', data }); }),
+  http.get(`${BASE}${TRAINER_ATTENDANCE_URLS.API.MEMBERS_BASIC}`, async () => { await delay(MOCK_SHORT_DELAY_MS); return HttpResponse.json({ success: true, message: 'Attendance members fetched successfully', data: TRAINER_ATTENDANCE_MOCK_MEMBERS }); }),
+  http.post(`${BASE}${TRAINER_ATTENDANCE_URLS.API.BASE}`, async ({ request }) => {
+    await delay(MOCK_DELAY_MS); const parsedBody = TrainerAttendanceCreateDtoSchema.safeParse(await request.json()); if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid attendance payload.', data: null }, { status: TRAINER_ATTENDANCE_HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY }); const body = parsedBody.data;
+    if (body.isSelfCheckIn) {
+      const staffId = body.staffId; const open = attendanceDB.find(r => r.staffId === staffId && r.type === 'STAFF' && !r.checkOut);
+      if (open) return HttpResponse.json({ success: false, message: 'You are already checked in.', data: null }, { status: TRAINER_ATTENDANCE_HTTP_STATUS_CODES.CONFLICT });
+      const staff = { id: staffId, name: 'Trainer Demo' };
+      const record = { id: `att-${Date.now()}`, type: 'STAFF' as const, date: todayIsoDate(), checkIn: new Date().toISOString(), staffId, staff, checkInMethod: 'Self' as const };
+      attendanceDB = [record, ...attendanceDB];
+      return HttpResponse.json({ success: true, message: 'Check-in recorded.', data: null });
+    }
+    const record = { id: `att-${Date.now()}`, type: body.type, date: body.date, checkIn: body.checkIn, checkOut: body.checkOut, notes: body.notes, memberId: body.memberId, staffId: body.staffId, member: body.memberId ? TRAINER_ATTENDANCE_MOCK_MEMBERS.find(m => m.id === body.memberId) : undefined, checkInMethod: 'Manual' as const };
+    attendanceDB = [record, ...attendanceDB]; return HttpResponse.json({ success: true, message: 'Attendance record created successfully', data: record });
+  }),
+  http.patch(`${BASE}${TRAINER_ATTENDANCE_URLS.API.CHECKOUT(':staffId')}`, async ({ params, request }) => {
+    await delay(MOCK_FAST_DELAY_MS); const index = attendanceDB.findIndex(r => r.staffId === params.staffId && r.type === 'STAFF' && !r.checkOut); if (index === -1) return HttpResponse.json({ success: false, message: 'No open attendance found.', data: null }, { status: TRAINER_ATTENDANCE_HTTP_STATUS_CODES.NOT_FOUND }); const body = await request.json() as { checkOutTime?: unknown }; const checkOut = typeof body.checkOutTime === 'string' ? body.checkOutTime : new Date().toISOString(); attendanceDB[index] = { ...attendanceDB[index]!, checkOut }; return HttpResponse.json({ success: true, message: 'Check-out recorded.', data: null });
+  }),
+];
+

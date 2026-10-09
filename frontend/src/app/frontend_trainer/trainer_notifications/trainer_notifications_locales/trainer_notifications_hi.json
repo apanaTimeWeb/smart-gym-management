@@ -1,0 +1,27 @@
+{
+  "TRAINER_NOTIFICATIONS": {
+    "TEXT_MARK_AS_READ": "पढ़ा हुआ चिह्नित करें",
+    "TEXT_MARK_NOTIFICATION_AS_READ": "सूचना को पढ़ा हुआ चिह्नित करें",
+    "TEXT_YOU_ARE_ALL_CAUGHT_UP_NEW_ALERTS_AND_MES_4DB50A48": "आप सभी अपडेट देख चुके हैं! नई सूचनाएँ और संदेश यहाँ दिखाई देंगे।",
+    "TEXT_NO_NOTIFICATIONS": "कोई सूचनाएँ नहीं",
+    "TEXT_MARK_ALL_AS_READ": "सभी को पढ़ा हुआ चिह्नित करें",
+    "TEXT_LOADING_NOTIFICATIONS": "सूचनाएँ लोड हो रही हैं...",
+    "TEXT_RECENT_ACTIVITY": "हाल की गतिविधि",
+    "TEXT_ALL_CAUGHT_UP": "सब कुछ देखा जा चुका है",
+    "TEXT_FAILED_TO_LOAD_NOTIFICATIONS_PLEASE_REFRESH": "सूचनाएँ लोड नहीं हो सकीं। कृपया रीफ़्रेश करें।",
+    "TEXT_LOADING": "लोड हो रहा है...",
+    "TEXT_OFFLINE_CONNECTION": "कनेक्शन उपलब्ध नहीं है। कुछ सूचना अपडेट देर से मिल सकते हैं।",
+    "TEXT_PAGE_NOT_FOUND": "पेज नहीं मिला",
+    "TEXT_PAGE_NOT_FOUND_DESCRIPTION": "आप जिस पेज को ढूंढ रहे हैं, वह इस मॉड्यूल में नहीं मिला। इसे हटाया, बदला या अस्थायी रूप से अनुपलब्ध किया गया हो सकता है।",
+    "TEXT_RETURN_TO_DASHBOARD": "डैशबोर्ड पर वापस जाएँ",
+    "TEXT_UNREAD_COUNT_ONE": "{count} अपठित सूचना",
+    "TEXT_UNREAD_COUNT_MANY": "{count} अपठित सूचनाएँ",
+    "TEXT_MARKING_ALL_AS_READ": "सभी को पढ़ा हुआ चिह्नित किया जा रहा है...",
+    "TEXT_LOAD_MORE": "और लोड करें",
+    "TEXT_RETRY": "पुनः प्रयास करें",
+    "TEXT_RETRYING": "पुनः प्रयास हो रहा है...",
+    "TEXT_S": "S",
+    "TEXT_PAGE_TITLE": "सूचनाएँ",
+    "TEXT_PAGE_DESCRIPTION": "जिम की सूचनाएँ देखें और प्रबंधित करें।"
+  }
+}
