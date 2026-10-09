@@ -39,10 +39,10 @@ export default function TrainerWorkoutPlanCard({
 }: TrainerWorkoutPlanCardProps) {
   const locale = useLocale();
   const t = useTranslations('TRAINER_WORKOUT');
-  const tags = Array.isArray(plan.tags)
+  const tags: string[] = Array.isArray(plan.tags)
     ? plan.tags
-    : typeof plan.tags === 'string'
-      ? plan.tags.split(',').filter(Boolean)
+    : typeof (plan.tags as any) === 'string'
+      ? (plan.tags as any).split(',').filter(Boolean)
       : [];
 
   return (
@@ -57,7 +57,7 @@ export default function TrainerWorkoutPlanCard({
       </div>
 
       <div className="flex items-start justify-between gap-2 mb-3">
-        <TrainerInfrastructureTooltip content={TrainerWorkoutDisplayValue(plan.name)}><h3 className="font-semibold text-primary truncate min-w-0">{TrainerWorkoutDisplayValue(plan.name)}</h3></TrainerInfrastructureTooltip>
+        <TrainerInfrastructureTooltip content={String(TrainerWorkoutDisplayValue(plan.name))}><h3 className="font-semibold text-primary truncate min-w-0">{TrainerWorkoutDisplayValue(plan.name)}</h3></TrainerInfrastructureTooltip>
         <div className="flex gap-1 shrink-0">
           <button
             type="button"
@@ -116,3 +116,4 @@ export default function TrainerWorkoutPlanCard({
     </article>
   );
 }
+

@@ -131,7 +131,7 @@ export default function TrainerScheduleRequestLeaveModal() {
                 <option key={opt.value} value={opt.value} data-testid={`trainer_schedule-request-leave_modal_leave_type_option${opt.value}`}>{t(opt.labelKey)}</option>
               ))}
             </select>
-            {errors.leaveType && <p id="trainer-leave-type-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-101"}>{t(errors.leaveType.message)}</p>}
+            {errors.leaveType && <p id="trainer-leave-type-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-101"}>{t(errors.leaveType?.message || '')}</p>}
           </div>
 
           <div>
@@ -144,7 +144,7 @@ export default function TrainerScheduleRequestLeaveModal() {
               {...register('startDate')}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-1 motion-safe:transition-all ${errors.startDate ? 'border-border focus-visible:border-border focus-visible:ring-primary' : 'border-border focus-visible:border-focus focus-visible:ring-primary'}`}
              data-testid="trainer_schedule-trainerschedulerequestleavemodal-input_5"/>
-            {errors.startDate && <p id="trainer-leave-start-date-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-114"}>{t(errors.startDate.message)}</p>}
+            {errors.startDate && <p id="trainer-leave-start-date-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-114"}>{t(errors.startDate?.message || '')}</p>}
           </div>
           
           <div>
@@ -157,7 +157,7 @@ export default function TrainerScheduleRequestLeaveModal() {
               {...register('endDate')}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-1 motion-safe:transition-all ${errors.endDate ? 'border-border focus-visible:border-border focus-visible:ring-primary' : 'border-border focus-visible:border-focus focus-visible:ring-primary'}`}
              data-testid="trainer_schedule-trainerschedulerequestleavemodal-input_6"/>
-            {errors.endDate && <p id="trainer-leave-end-date-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-127"}>{t(errors.endDate.message)}</p>}
+            {errors.endDate && <p id="trainer-leave-end-date-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-127"}>{t(errors.endDate?.message || '')}</p>}
           </div>
 
           <div>
@@ -171,7 +171,7 @@ export default function TrainerScheduleRequestLeaveModal() {
               placeholder={t("TEXT_E_G_MEDICAL_REASONS_FAMILY_FUNCTION")}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-1 motion-safe:transition-all resize-none ${errors.reason ? 'border-border focus-visible:border-border focus-visible:ring-primary' : 'border-border focus-visible:border-focus focus-visible:ring-primary'}`}
              data-testid="trainer_schedule-trainerschedulerequestleavemodal-textarea_7"/>
-            {errors.reason && <p id="trainer-leave-reason-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-141"}>{t(errors.reason.message)}</p>}
+            {errors.reason && <p id="trainer-leave-reason-error" className="text-danger text-xs mt-1" data-testid={"trainer_schedule-request-leave-modal-error-state-141"}>{t(errors.reason?.message || '')}</p>}
           </div>
         </form>
 
@@ -196,3 +196,4 @@ export default function TrainerScheduleRequestLeaveModal() {
     </>
   );
 }
+

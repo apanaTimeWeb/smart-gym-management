@@ -151,7 +151,7 @@ export default function TrainerWorkoutModal() {
               className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                 errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
               } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutmodal-input_3"/>
-            {errors.name && <p id="trainer-workout-name-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_121_1"}>{t(errors.name.message)}</p>}
+            {errors.name && <p id="trainer-workout-name-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_121_1"}>{t(errors.name?.message || '')}</p>}
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
@@ -183,7 +183,7 @@ export default function TrainerWorkoutModal() {
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.days ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutmodal-input_5"/>
-              {errors.days && <p id="trainer-workout-days-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_151_2"}>{t(errors.days.message)}</p>}
+              {errors.days && <p id="trainer-workout-days-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_151_2"}>{t(errors.days?.message || '')}</p>}
             </div>
           </div>
           
@@ -198,7 +198,7 @@ export default function TrainerWorkoutModal() {
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.focus ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutmodal-input_6"/>
-              {errors.focus && <p id="trainer-workout-focus-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_165_3"}>{t(errors.focus.message)}</p>}
+              {errors.focus && <p id="trainer-workout-focus-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_165_3"}>{t(errors.focus?.message || '')}</p>}
             </div>
             <div>
               <label htmlFor="trainer-workout-duration" className="block text-sm font-medium text-secondary mb-1 ">{t("TEXT_DURATION")}</label>
@@ -210,7 +210,7 @@ export default function TrainerWorkoutModal() {
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.duration ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutmodal-input_7"/>
-              {errors.duration && <p id="trainer-workout-duration-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_176_4"}>{t(errors.duration.message)}</p>}
+              {errors.duration && <p id="trainer-workout-duration-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-modal-error_state_176_4"}>{t(errors.duration?.message || '')}</p>}
             </div>
           </div>
           
@@ -285,4 +285,5 @@ export default function TrainerWorkoutModal() {
     </div>
   );
 }
+
 

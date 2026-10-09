@@ -79,13 +79,13 @@ export default function TrainerDashboardGoalTrendChart() {
         series={[{ name: t('TEXT_GOAL_COMPLETION'), data: values }]}
         options={{
           chart: { toolbar: { show: false }, background: 'transparent', animations: { enabled: !prefersReducedMotion, speed: 300 } },
-          theme: { mode: isDark ? t("TEXT_DARK") : t("TEXT_LIGHT") },
+          theme: { mode: isDark ? 'dark' : 'light' },
           stroke: { curve: 'smooth', width: 3 },
           colors: ['var(--chart-primary)'],
           grid: { borderColor: 'var(--chart-grid)' },
           xaxis: { categories: trend.map((point) => point.month), labels: { style: { colors: ['var(--text-secondary)'] } } },
           yaxis: { min: 0, max: 100, labels: { style: { colors: ['var(--text-secondary)'] } } },
-          tooltip: { theme: isDark ? t("TEXT_DARK") : t("TEXT_LIGHT"), y: { formatter: (value: number) => `${value}%` } },
+          tooltip: { theme: isDark ? 'dark' : 'light', y: { formatter: (value: number) => `${value}%` } },
         }}
       />
     </div>

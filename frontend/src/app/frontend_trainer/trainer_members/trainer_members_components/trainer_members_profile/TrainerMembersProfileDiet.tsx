@@ -85,12 +85,12 @@ export default function TrainerMembersProfileDiet() {
     const text = [
       t('TEXT_WHATSAPP_DIET_HEADER', { name: selectedMember.name.toUpperCase() }),
       t('TEXT_WHATSAPP_DIET_PLAN', { plan: diet.name }),
-      t('TEXT_WHATSAPP_DIET_GOAL', { goal: TrainerMembersDisplayValue(diet.goal) }),
-      t('TEXT_WHATSAPP_DIET_CALORIES', { calories: TrainerMembersDisplayValue(diet.calories) }),
+      t('TEXT_WHATSAPP_DIET_GOAL', { goal: String(TrainerMembersDisplayValue(diet.goal)) }),
+      t('TEXT_WHATSAPP_DIET_CALORIES', { calories: String(TrainerMembersDisplayValue(diet.calories)) }),
       t('TEXT_WHATSAPP_DIET_MACROS', {
-        protein: TrainerMembersDisplayValue(diet.protein),
-        carbs: TrainerMembersDisplayValue(diet.carbs),
-        fats: TrainerMembersDisplayValue(diet.fats),
+        protein: String(TrainerMembersDisplayValue(diet.protein)),
+        carbs: String(TrainerMembersDisplayValue(diet.carbs)),
+        fats: String(TrainerMembersDisplayValue(diet.fats)),
       }),
       '',
       t('TEXT_WHATSAPP_MEAL_SCHEDULE'),
@@ -159,7 +159,7 @@ export default function TrainerMembersProfileDiet() {
                   onClick={handleAssign}
                   disabled={!selectedDietId || saving}
                   className="min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-40 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2 motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95" data-testid="trainer_members-trainermembersprofilediet-button_6">
-                  {saving ? <><Loader2 size={18} strokeWidth={2} motion-safe:animate-spin aria-hidden="true" />{t("TEXT_ASSIGNING_B89E1D")}</> : <><Check size={18} strokeWidth={2} />{t("TEXT_CONFIRM_ASSIGNMENT")}</>}
+                  {saving ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" aria-hidden="true" />{t("TEXT_ASSIGNING_B89E1D")}</> : <><Check size={18} strokeWidth={2} />{t("TEXT_CONFIRM_ASSIGNMENT")}</>}
                 </button>
               </div>
             </div>

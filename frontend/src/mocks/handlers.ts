@@ -31,17 +31,17 @@ import { AuthMockHandlers } from '@/app/frontend_auth/auth/auth_mocks/auth_mock_
 import { landingHandlers } from '@/app/frontend_public/landing/landing_mocks/PublicLandingMockHandlers';
 import { managerHandlers } from '@/app/frontend_manager/manager_mocks/ManagerMockHandlers';
 
-import { trainerAttendanceHandlers } from '@/app/trainer/attendance/attendance_mocks/handlers/TrainerAttendanceMockHandlers';
-import { trainerDashboardHandlers } from '@/app/trainer/dashboard/dashboard_mocks/handlers/TrainerDashboardMockHandlers';
-import { trainerEarningsHandlers } from '@/app/trainer/earnings/earnings_mocks/handlers/TrainerEarningsMockHandlers';
-import { trainerMembersHandlers } from '@/app/trainer/members/members_mocks/handlers/TrainerMembersMockHandlers';
-import { trainerProgressHandlers } from '@/app/trainer/progress-tracking/progress-tracking_mocks/handlers/TrainerProgressMockHandlers';
-import { trainerScheduleHandlers } from '@/app/trainer/schedule/schedule_mocks/handlers/TrainerScheduleMockHandlers';
-import { trainerSessionsHandlers } from '@/app/trainer/sessions/sessions_mocks/handlers/TrainerSessionsMockHandlers';
-import { trainerWorkoutMockHandlers } from '@/app/trainer/workout/workout_mocks/handlers/TrainerWorkoutMockHandlers';
-import { trainerLibraryHandlers } from '@/app/trainer/library/library_mocks/handlers/TrainerLibraryMockHandlers';
-import { trainerProfileHandlers } from '@/app/trainer/profile/profile_mocks/handlers/TrainerProfileMockHandlers';
-import { trainerNotificationsHandlers } from '@/app/trainer/notifications/notifications_mocks/handlers/TrainerNotificationsMockHandlers';
+import { TrainerAttendanceMockHandlers } from '@/app/frontend_trainer/trainer_attendance/trainer_attendance_mocks/trainer_attendance_handlers/TrainerAttendanceMockHandlers';
+import { TrainerDashboardMockHandlers } from '@/app/frontend_trainer/trainer_dashboard/trainer_dashboard_mocks/trainer_dashboard_handlers/TrainerDashboardMockHandlers';
+import { TrainerEarningsMockHandlers } from '@/app/frontend_trainer/trainer_earnings/trainer_earnings_mocks/trainer_earnings_handlers/TrainerEarningsMockHandlers';
+import { TrainerMembersMockHandlers } from '@/app/frontend_trainer/trainer_members/trainer_members_mocks/trainer_members_handlers/TrainerMembersMockHandlers';
+import { TrainerProgressTrackingMockHandlers } from '@/app/frontend_trainer/trainer_progress_tracking/trainer_progress_tracking_mocks/trainer_progress_tracking_handlers/TrainerProgressTrackingMockHandlers';
+import { TrainerScheduleMockHandlers } from '@/app/frontend_trainer/trainer_schedule/trainer_schedule_mocks/trainer_schedule_handlers/TrainerScheduleMockHandlers';
+import { TrainerSessionsMockHandlers } from '@/app/frontend_trainer/trainer_sessions/trainer_sessions_mocks/trainer_sessions_handlers/TrainerSessionsMockHandlers';
+import { TrainerWorkoutMockHandlers } from '@/app/frontend_trainer/trainer_workout/trainer_workout_mocks/trainer_workout_handlers/TrainerWorkoutMockHandlers';
+import { TrainerLibraryMockHandlers } from '@/app/frontend_trainer/trainer_library/trainer_library_mocks/trainer_library_handlers/TrainerLibraryMockHandlers';
+import { TrainerProfileMockHandlers } from '@/app/frontend_trainer/trainer_profile/trainer_profile_mocks/trainer_profile_handlers/TrainerProfileMockHandlers';
+import { TrainerNotificationsMockHandlers } from '@/app/frontend_trainer/trainer_notifications/trainer_notifications_mocks/trainer_notifications_handlers/TrainerNotificationsMockHandlers';
 
 export const handlers = [
   ...superadminBroadcastsHandlers,
@@ -77,15 +77,15 @@ export const handlers = [
   ...superadminFeaturesHandlers,
   ...superadminAffiliatesHandlers,
   ...superadminAnalyticsHandlers,
-  ...trainerAttendanceHandlers,
-  ...trainerDashboardHandlers,
-  ...trainerEarningsHandlers,
-  ...trainerMembersHandlers,
-  ...trainerProgressHandlers,
-  ...trainerScheduleHandlers,
-  ...trainerSessionsHandlers,
-  ...trainerWorkoutMockHandlers,
-  ...trainerLibraryHandlers,
-  ...trainerProfileHandlers,
-  ...trainerNotificationsHandlers,
+  ...TrainerAttendanceMockHandlers,
+  ...TrainerDashboardMockHandlers,
+  ...TrainerEarningsMockHandlers,
+  ...TrainerMembersMockHandlers,
+  ...TrainerProgressTrackingMockHandlers,
+  ...TrainerScheduleMockHandlers,
+  ...TrainerSessionsMockHandlers,
+  ...TrainerWorkoutMockHandlers,
+  ...TrainerLibraryMockHandlers,
+  ...TrainerProfileMockHandlers,
+  ...TrainerNotificationsMockHandlers,
 ];

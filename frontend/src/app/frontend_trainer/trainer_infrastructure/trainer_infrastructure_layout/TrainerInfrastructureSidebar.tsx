@@ -56,11 +56,11 @@ export default function TrainerInfrastructureSidebar({ isCollapsed, setIsCollaps
   useEffect(() => {
     const handleToggle = () => {
       if (window.innerWidth < 768) setIsMobileOpen((current) => !current);
-      else setIsCollapsed((current) => !current);
+      else setIsCollapsed(!isCollapsed);
     };
     window.addEventListener('toggle-sidebar', handleToggle);
     return () => window.removeEventListener('toggle-sidebar', handleToggle);
-  }, [setIsCollapsed]);
+  }, [setIsCollapsed, isCollapsed]);
 
 // Effect contract: initialize browser-only navigation state after hydration and keep shell listeners synchronized with viewport/navigation changes.
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function TrainerInfrastructureSidebar({ isCollapsed, setIsCollaps
               {(!isCollapsed || isMobileOpen) && <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">{t(group.groupKey)}</p>}
               <div className="space-y-1">
                 {group.items.map((item) => {
-                  const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                  const active = pathname === item.href || ((item.href as string) !== '/' && pathname.startsWith(item.href));
                   const showLabel = !isCollapsed || isMobileOpen;
                   const Icon = item.icon;
                   return (

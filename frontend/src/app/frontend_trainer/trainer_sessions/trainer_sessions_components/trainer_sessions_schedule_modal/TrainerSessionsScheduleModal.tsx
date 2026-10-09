@@ -86,7 +86,7 @@ export default function TrainerSessionsScheduleModal({
               placeholder={t("TEXT_CHOOSE_TYPE")}
               ariaLabel={t("TEXT_SESSION_TYPE")}
              testId="trainer-sessions-schedule-modal-choose-type"/>
-            {errors.type && <p id="trainer-session-type-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_60_1"}>{t(errors.type.message)}</p>}
+            {errors.type && <p id="trainer-session-type-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_60_1"}>{t(errors.type?.message || '')}</p>}
           </div>
           <div>
             <label className="block text-sm font-semibold text-secondary mb-1 ">{t("TEXT_SELECT_MEMBER_OPTIONAL_FOR_GROUP")}</label>
@@ -99,7 +99,7 @@ export default function TrainerSessionsScheduleModal({
              ariaInvalid={Boolean(errors.memberId)}
              ariaDescribedBy={errors.memberId ? "trainer-session-member-error" : undefined}
              testId="trainer-sessions-schedule-modal-choose-member"/>
-            {errors.memberId && <p id="trainer-session-member-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_71_2"}>{t(errors.memberId.message)}</p>}
+            {errors.memberId && <p id="trainer-session-member-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_71_2"}>{t(errors.memberId?.message || '')}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4 ">
             <div>
@@ -111,7 +111,7 @@ export default function TrainerSessionsScheduleModal({
                 aria-invalid={Boolean(errors.date)}
                 aria-describedby={errors.date ? "trainer-session-date-error" : undefined}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95" data-testid="trainer_sessions-trainersessionsschedulemodal-input_5"/>
-              {errors.date && <p id="trainer-session-date-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_81_3"}>{t(errors.date.message)}</p>}
+              {errors.date && <p id="trainer-session-date-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_81_3"}>{t(errors.date?.message || '')}</p>}
             </div>
             <div>
               <label htmlFor="trainer-sessions-schedule-time" className="block text-sm font-semibold text-secondary mb-1 ">{t("TEXT_TIME")}</label>
@@ -122,7 +122,7 @@ export default function TrainerSessionsScheduleModal({
                 aria-invalid={Boolean(errors.time)}
                 aria-describedby={errors.time ? "trainer-session-time-error" : undefined}
                 className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95" data-testid="trainer_sessions-trainersessionsschedulemodal-input_6"/>
-              {errors.time && <p id="trainer-session-time-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_90_4"}>{t(errors.time.message)}</p>}
+              {errors.time && <p id="trainer-session-time-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_90_4"}>{t(errors.time?.message || '')}</p>}
             </div>
           </div>
           <div>
@@ -136,7 +136,7 @@ export default function TrainerSessionsScheduleModal({
              ariaInvalid={Boolean(errors.duration)}
              ariaDescribedBy={errors.duration ? "trainer-session-duration-error" : undefined}
              testId="trainer-sessions-schedule-modal-duration"/>
-            {errors.duration && <p id="trainer-session-duration-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_102_5"}>{t(errors.duration.message)}</p>}
+            {errors.duration && <p id="trainer-session-duration-error" role="alert" className="text-xs text-danger mt-1 " data-testid={"trainer_sessions-schedule_modal-error_state_102_5"}>{t(errors.duration?.message || '')}</p>}
           </div>
           <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4 ">
             <button
@@ -156,3 +156,4 @@ export default function TrainerSessionsScheduleModal({
     </div>
   );
 }
+

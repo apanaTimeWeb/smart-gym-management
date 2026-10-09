@@ -42,9 +42,9 @@ export const TrainerAttendanceMockHandlers = [
     if (body.isSelfCheckIn) {
       const staffId = body.staffId; const open = attendanceDB.find(r => r.staffId === staffId && r.type === 'STAFF' && !r.checkOut);
       if (open) return HttpResponse.json({ success: false, message: 'You are already checked in.', data: null }, { status: TRAINER_ATTENDANCE_HTTP_STATUS_CODES.CONFLICT });
-      const staff = { id: staffId, name: 'Trainer Demo' };
+      const staff = { id: staffId ?? 'trainer_1', name: 'Trainer Demo' };
       const record = { id: `att-${Date.now()}`, type: 'STAFF' as const, date: todayIsoDate(), checkIn: new Date().toISOString(), staffId, staff, checkInMethod: 'Self' as const };
-      attendanceDB = [record, ...attendanceDB];
+      attendanceDB = [record as typeof attendanceDB[0], ...attendanceDB];
       return HttpResponse.json({ success: true, message: 'Check-in recorded.', data: null });
     }
     const record = { id: `att-${Date.now()}`, type: body.type, date: body.date, checkIn: body.checkIn, checkOut: body.checkOut, notes: body.notes, memberId: body.memberId, staffId: body.staffId, member: body.memberId ? TRAINER_ATTENDANCE_MOCK_MEMBERS.find(m => m.id === body.memberId) : undefined, checkInMethod: 'Manual' as const };

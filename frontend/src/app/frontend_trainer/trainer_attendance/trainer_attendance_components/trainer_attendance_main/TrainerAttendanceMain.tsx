@@ -104,7 +104,7 @@ export default function TrainerAttendanceMain() {
               <p className="text-sm font-semibold text-danger" data-testid="trainer_attendance-main-error_state">{t('TEXT_UNABLE_TO_LOAD_ATTENDANCE_RECORDS')}</p>
               <p className="text-sm text-secondary mt-1">{t('TEXT_USE_REFRESH_TO_RETRY_THIS_SECTION')}</p>
               <button type="button" onClick={handleRefresh} disabled={isRefreshing} className="min-h-11 mt-4 min-w-28 px-4 py-2 bg-primary text-on-primary rounded-lg font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95" data-testid="trainer_attendance-trainerattendancemain-button_2">
-                {isRefreshing ? <><Loader2 size={18} strokeWidth={2} motion-safe:animate-spin aria-hidden="true" />{t('TEXT_REFRESHING')}</> : <><RefreshCw size={18} strokeWidth={2} aria-hidden="true" />{t('TEXT_REFRESH')}</>}
+                {isRefreshing ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" aria-hidden="true" />{t('TEXT_REFRESHING')}</> : <><RefreshCw size={18} strokeWidth={2} aria-hidden="true" />{t('TEXT_REFRESH')}</>}
               </button>
             </div>
           ) : (

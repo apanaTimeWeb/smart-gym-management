@@ -134,7 +134,7 @@ export default function TrainerWorkoutExerciseModal() {
               className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                 errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
               } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutexercisemodal-input_3"/>
-            {errors.name && <p id="trainer-workout-exercise-name-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-exercise_modal-error_state_109_1"}>{t(errors.name.message)}</p>}
+            {errors.name && <p id="trainer-workout-exercise-name-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-exercise_modal-error_state_109_1"}>{t(errors.name?.message || '')}</p>}
           </div>
           <div>
             <label htmlFor="trainer-workout-exercise-muscle" className="block text-sm font-medium text-secondary mb-1 ">{t("TEXT_PRIMARY_MUSCLE")}</label>
@@ -146,7 +146,7 @@ export default function TrainerWorkoutExerciseModal() {
               className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                 errors.muscle ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
               } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_workout-trainerworkoutexercisemodal-input_4"/>
-            {errors.muscle && <p id="trainer-workout-exercise-muscle-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-exercise_modal-error_state_121_2"}>{t(errors.muscle.message)}</p>}
+            {errors.muscle && <p id="trainer-workout-exercise-muscle-error" role="alert" className="text-danger text-xs mt-1 " data-testid={"trainer_workout-exercise_modal-error_state_121_2"}>{t(errors.muscle?.message || '')}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4 ">
             <div>
@@ -215,4 +215,5 @@ export default function TrainerWorkoutExerciseModal() {
     </div>
   );
 }
+
 

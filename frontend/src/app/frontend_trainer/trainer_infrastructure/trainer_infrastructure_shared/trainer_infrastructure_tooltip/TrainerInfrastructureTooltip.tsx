@@ -100,8 +100,7 @@ export default function TrainerInfrastructureTooltip({ content, children, testId
       onBlur: (event) => { existingOnBlur?.(event); scheduleClose('focus'); },
       onClick: (event) => { existingOnClick?.(event); setIsPinned((current) => !current); },
       onKeyDown: (event) => { existingOnKeyDown?.(event); dismissWithEscape(event); },
-      children: <>{element.props.children}{tooltip}</>,
-    });
+    }, <>{(element.props as any).children}{tooltip}</>);
   }
 
   return (

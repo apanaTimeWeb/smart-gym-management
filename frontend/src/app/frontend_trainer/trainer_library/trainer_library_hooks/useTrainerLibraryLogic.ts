@@ -46,13 +46,13 @@ export function useTrainerLibraryLogic(): TrainerLibraryLogicReturn {
   const [search, setLocalSearch] = useState(searchParams.get('search') ?? '');
   const debouncedSearch = useTrainerInfrastructureDebounce(search, 300);
   const requestedGoal = searchParams.get('goal');
-  const filterGoal: TrainerLibraryFilterGoal = requestedGoal && TRAINER_LIBRARY_FILTER_GOALS.includes(requestedGoal as TrainerLibraryFilterGoal)
+  const filterGoal: TrainerLibraryFilterGoal | 'All' = requestedGoal && TRAINER_LIBRARY_FILTER_GOALS.some(g => g.value === requestedGoal)
     ? requestedGoal as TrainerLibraryFilterGoal
     : 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
   const query = useQuery({
-    queryKey: TRAINER_LIBRARY_QUERY_KEYS.dietPlans({ search: debouncedSearch, goal: filterGoal, page: currentPage }),
+    queryKey: TRAINER_LIBRARY_QUERY_KEYS.dietPlans({ search: debouncedSearch, goal: filterGoal === 'All' ? undefined : filterGoal, page: currentPage }),
     queryFn: async () => {
       const params: Record<string,string> = { page: String(currentPage), limit: '10' };
       if (debouncedSearch) params.search = debouncedSearch;
@@ -80,7 +80,7 @@ export function useTrainerLibraryLogic(): TrainerLibraryLogicReturn {
     if (key !== 'page') params.set('page', '1');
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
-  const setFilterGoal = useCallback((value: TrainerLibraryFilterGoal) => setUrlParam('goal', value), [setUrlParam]);
+  const setFilterGoal = useCallback((value: TrainerLibraryFilterGoal | 'All') => setUrlParam('goal', value), [setUrlParam]);
   const setCurrentPage = useCallback((page: number) => setUrlParam('page', String(page)), [setUrlParam]);
   const loadAll = useCallback(async () => { await query.refetch(); }, [query]);
   const dietLogic = useTrainerLibraryDiet();

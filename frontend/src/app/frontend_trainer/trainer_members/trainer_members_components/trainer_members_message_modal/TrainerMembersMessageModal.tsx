@@ -187,7 +187,7 @@ export default function TrainerMembersMessageModal({
               <TrainerInfrastructureTooltip content={recipient.name}><p className="text-sm font-semibold text-primary truncate ">{recipient.name}</p></TrainerInfrastructureTooltip>
               <div className="flex items-center gap-1 mt-0.5 ">
                 {type === 'whatsapp' ? <Phone size={18} className="text-secondary " aria-hidden="true"  strokeWidth={2}/> : <AtSign size={18} className="text-secondary " aria-hidden="true"  strokeWidth={2}/>}
-                <TrainerInfrastructureTooltip content={TrainerMembersDisplayValue(contactInfo)}><p className="text-xs text-secondary truncate ">{TrainerMembersDisplayValue(contactInfo)}</p></TrainerInfrastructureTooltip>
+                <TrainerInfrastructureTooltip content={String(TrainerMembersDisplayValue(contactInfo))}><p className="text-xs text-secondary truncate ">{TrainerMembersDisplayValue(contactInfo)}</p></TrainerInfrastructureTooltip>
               </div>
             </div>
           </div>
@@ -216,3 +216,4 @@ export default function TrainerMembersMessageModal({
     </div>
   );
 }
+

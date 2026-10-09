@@ -61,13 +61,13 @@ export default function TrainerInfrastructureCommandPalette() {
       const isTyping = target?.matches('input, textarea, select, [contenteditable="true"]') ?? false;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
-        triggerRef.current = document.activeElement;
+        triggerRef.current = document.activeElement as HTMLElement | null;
         setMode('search');
         return;
       }
       if ((event.key === '?' || (event.shiftKey && event.key === '/')) && !isTyping) {
         event.preventDefault();
-        triggerRef.current = document.activeElement;
+        triggerRef.current = document.activeElement as HTMLElement | null;
         setMode('help');
         return;
       }

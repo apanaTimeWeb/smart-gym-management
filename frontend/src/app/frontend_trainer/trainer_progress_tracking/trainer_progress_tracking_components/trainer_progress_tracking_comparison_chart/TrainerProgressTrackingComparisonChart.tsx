@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import dynamic from 'next/dynamic';
+import type { ApexOptions } from 'apexcharts';
 
 import { TRAINER_PROGRESS_TRACKING_COMPARISON_METRICS } from '@/app/frontend_trainer/trainer_progress_tracking/trainer_progress_tracking_constants/TrainerProgressTrackingConstants';
 
@@ -57,9 +58,9 @@ export default function TrainerProgressTrackingComparisonChart({ snapshots, acti
     color: chartColors[i % chartColors.length],
   }));
 
-  const options = {
+  const options: ApexOptions = {
     chart: {
-      type: 'bar',
+      type: 'bar' as const,
       background: 'transparent',
       toolbar: { show: false },
       animations: { enabled: false },

@@ -95,9 +95,9 @@ export default function TrainerMembersProfileWorkout() {
 
     const text = [
       t('TEXT_WHATSAPP_WORKOUT_HEADER', { name: selectedMember.name.toUpperCase() }),
-      t('TEXT_WHATSAPP_WORKOUT_PLAN', { plan: workout.name, level: TrainerMembersDisplayValue(workout.level) }),
-      t('TEXT_WHATSAPP_WORKOUT_DURATION', { duration: TrainerMembersDisplayValue(workout.duration) }),
-      t('TEXT_WHATSAPP_WORKOUT_FOCUS', { focus: TrainerMembersDisplayValue(workout.focus) }),
+      t('TEXT_WHATSAPP_WORKOUT_PLAN', { plan: workout.name, level: String(TrainerMembersDisplayValue(workout.level)) }),
+      t('TEXT_WHATSAPP_WORKOUT_DURATION', { duration: String(TrainerMembersDisplayValue(workout.duration)) }),
+      t('TEXT_WHATSAPP_WORKOUT_FOCUS', { focus: String(TrainerMembersDisplayValue(workout.focus)) }),
       '',
       exerciseLines,
     ].join('\n');
@@ -164,7 +164,7 @@ export default function TrainerMembersProfileWorkout() {
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId || saving}
                   className="min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-40 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2 motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95" data-testid="trainer_members-trainermembersprofileworkout-button_6">
-                  {saving ? <><Loader2 size={18} strokeWidth={2} motion-safe:animate-spin aria-hidden="true" />{t("TEXT_ASSIGNING_B89E1D")}</> : <><Check size={18} strokeWidth={2} />{t("TEXT_CONFIRM_ASSIGNMENT")}</>}
+                  {saving ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" aria-hidden="true" />{t("TEXT_ASSIGNING_B89E1D")}</> : <><Check size={18} strokeWidth={2} />{t("TEXT_CONFIRM_ASSIGNMENT")}</>}
                 </button>
               </div>
             </div>

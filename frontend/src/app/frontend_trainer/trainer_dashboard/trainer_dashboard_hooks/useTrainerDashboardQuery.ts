@@ -10,7 +10,7 @@ import { TrainerDashboardApi } from '@/app/frontend_trainer/trainer_dashboard/tr
 import { TRAINER_DASHBOARD_QUERY_KEYS } from '@/app/frontend_trainer/trainer_dashboard/trainer_dashboard_constants/TrainerDashboardQueryKeys';
 
 import { TRAINER_DASHBOARD_URLS } from '@/app/frontend_trainer/trainer_dashboard/trainer_dashboard_url_config';
-
+import type { TrainerDashboardDateRange } from '@/app/frontend_trainer/trainer_dashboard/trainer_dashboard_types/TrainerDashboardDateRangeTypes';
 
 
 
@@ -29,7 +29,7 @@ import { TRAINER_DASHBOARD_URLS } from '@/app/frontend_trainer/trainer_dashboard
  */
 export function useTrainerDashboardQuery() {
   const searchParams = useSearchParams();
-  const range = searchParams.get('range') ?? 'this_month';
+  const range = (searchParams.get('range') ?? 'this_month') as TrainerDashboardDateRange;
   const startDate = searchParams.get('startDate') ?? '';
   const endDate = searchParams.get('endDate') ?? '';
 

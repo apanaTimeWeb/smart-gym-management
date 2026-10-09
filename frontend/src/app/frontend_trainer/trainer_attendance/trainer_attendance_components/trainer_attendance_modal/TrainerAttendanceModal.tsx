@@ -128,7 +128,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
               </label>
             ))}
           </div>
-          {errors.type && <p id="trainer-attendance-type-error" className="text-danger text-xs mt-1 " role="alert" data-testid="trainer_attendance-modal-type-error">{t(errors.type.message)}</p>}
+          {errors.type && <p id="trainer-attendance-type-error" className="text-danger text-xs mt-1 " role="alert" data-testid="trainer_attendance-modal-type-error">{t(errors.type.message || '')}</p>}
 
           {/* Member dropdown */}
           {watchType === TRAINER_ATTENDANCE_RECORD_TYPE.MEMBER && (
@@ -150,7 +150,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 )}
               />
               {errors.memberId && watchType === TRAINER_ATTENDANCE_RECORD_TYPE.MEMBER && (
-                <p id="trainer-attendance-member-error" className="text-danger text-xs mt-1 " role="alert" data-testid="trainer_attendance-modal-form_error_state">{t(errors.memberId.message)}</p>
+                <p id="trainer-attendance-member-error" className="text-danger text-xs mt-1 " role="alert" data-testid="trainer_attendance-modal-form_error_state">{t(errors.memberId?.message || '')}</p>
               )}
             </div>
           )}
@@ -168,7 +168,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_attendance-trainerattendancemodal-input_5"/>
-              {errors.date && <p id="trainer-attendance-date-error" className="text-danger text-xs mt-1 " data-testid={"trainer_attendance-modal-error-state-134"}>{t(errors.date.message)}</p>}
+              {errors.date && <p id="trainer-attendance-date-error" className="text-danger text-xs mt-1 " data-testid={"trainer_attendance-modal-error-state-134"}>{t(errors.date?.message || '')}</p>}
             </div>
             <div>
               <label htmlFor="attendance-check-in" className="block text-sm font-medium text-secondary mb-1 ">{t("TEXT_CHECK_IN_TIME")}</label>
@@ -181,7 +181,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary  motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95`} data-testid="trainer_attendance-trainerattendancemodal-input_6"/>
-              {errors.checkIn && <p id="attendance-check-in-error" className="text-danger text-xs mt-1 " data-testid={"trainer_attendance-modal-error-state-147"}>{t(errors.checkIn.message)}</p>}
+              {errors.checkIn && <p id="attendance-check-in-error" className="text-danger text-xs mt-1 " data-testid={"trainer_attendance-modal-error-state-147"}>{t(errors.checkIn?.message || '')}</p>}
             </div>
             <div>
               <label htmlFor="attendance-check-out" className="block text-sm font-medium text-secondary mb-1 ">{t("TEXT_CHECK_OUT_TIME")}</label>
@@ -222,3 +222,4 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
     </div>
   );
 }
+

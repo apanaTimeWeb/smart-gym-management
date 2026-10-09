@@ -18,7 +18,10 @@ export function useTrainerMembersQuery(params: TrainerMembersQueryParams) {
   return useQuery({
     queryKey: TRAINER_MEMBERS_QUERY_KEYS.list(params),
     queryFn: async () => {
-      const response = await TrainerMembersApi.fetchMembers(params);
+      const stringParams = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
+      );
+      const response = await TrainerMembersApi.fetchMembers(stringParams);
       if (!response.success) throw new Error(response.message);
       return response.data;
     },

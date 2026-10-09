@@ -57,14 +57,14 @@ export default function TrainerMembersKPIs() {
 
   return (
     <div className="grid grid-cols-2 gap-4 mb-6 lg:grid-cols-4" role="group" aria-label={t('TEXT_MEMBER_STATUS_FILTERS')}>
-      {cards.map(({ key, filterValue, label, value, icon: Icon, color, bg }) => {
+      {cards.map(({ key, filterValue, labelKey, value, icon: Icon, color, bg }) => {
         const isActive = statusFilter === filterValue;
         return (
           <button
             key={key}
             type="button"
             aria-pressed={isActive}
-            aria-label={t('TEXT_FILTER_MEMBERS_BY_STATUS', { status: label })}
+            aria-label={t('TEXT_FILTER_MEMBERS_BY_STATUS', { status: t(labelKey as any) })}
             onClick={() => setStatusFilter(filterValue)}
             data-testid={`trainer_members-kpi-${key}-filter`}
             className={`text-start bg-card rounded-xl p-4 border shadow-card motion-safe:transition-all motion-safe:duration-base motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isActive ? 'border-primary ring-2 ring-primary' : 'border-border'}`}
@@ -72,7 +72,7 @@ export default function TrainerMembersKPIs() {
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bg} ${color} mb-3`}>
               <Icon size={18} strokeWidth={2} aria-hidden="true" />
             </div>
-            <p className="text-xs font-medium text-secondary uppercase line-clamp-2">{label}</p>
+            <p className="text-xs font-medium text-secondary uppercase line-clamp-2">{t(labelKey as any)}</p>
             <p className="text-kpi font-bold text-primary mt-1">{value}</p>
           </button>
         );
