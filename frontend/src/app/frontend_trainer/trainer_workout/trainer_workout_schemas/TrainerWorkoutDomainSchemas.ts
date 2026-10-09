@@ -15,7 +15,7 @@ export const TrainerWorkoutWorkoutSchema = z.object({
   name: z.string().min(2, 'ERR_NAME_REQUIRED'),
   level: z.string(),
   days: z.coerce.number().int().min(1, 'ERR_POSITIVE_NUMBER').max(7, 'ERR_MAX_DAYS_PER_WEEK'),
-  exercises: z.coerce.number().min(1, 'ERR_POSITIVE_NUMBER'),
+  exercises: z.coerce.number().min(0, 'ERR_POSITIVE_NUMBER'),
   focus: z.string().min(2, 'ERR_FOCUS_REQUIRED'),
   duration: z.string().min(2, 'ERR_DURATION_REQUIRED'),
   tags: z.array(z.string()).or(z.string().transform(s => s.split(',').map(t => t.trim()).filter(Boolean))),
