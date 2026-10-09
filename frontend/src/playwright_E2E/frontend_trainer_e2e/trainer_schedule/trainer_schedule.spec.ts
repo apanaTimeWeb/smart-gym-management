@@ -1,0 +1,30 @@
+import { expect, test } from '@playwright/test';
+
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000';
+const ROUTE = '/trainer/schedule';
+const FEATURE_MARKER = '[data-testid="trainer_schedule-main-weekly_availability"]';
+
+test.describe('trainer_schedule route', () => {
+  test('loads the route without a server error', async ({ page }) => {
+    const response = await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: 'domcontentloaded' });
+    expect(response, 'navigation must produce an HTTP response').not.toBeNull();
+    expect(response!.status(), 'feature route must not resolve to a missing/unauthorized/forbidden/server-error response').toBe(200);
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.locator('body')).not.toContainText(/Application error|Internal Server Error/i);
+  });
+
+  test('renders the feature-owned UI marker', async ({ page }) => {
+    await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator(FEATURE_MARKER).first()).toBeVisible();
+  });
+
+  test('opens the documented leave-request form', async ({ page }) => {
+    await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: 'domcontentloaded' });
+    await page.locator('[data-testid="trainer_schedule-main-leave_requests"]').click();
+    const add = page.locator('[data-testid="trainer_schedule-schedule-leave_requests_request_leave"]');
+    await expect(add).toBeVisible();
+    await add.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await expect(page.locator('[data-testid="trainer_schedule-trainerschedulerequestleavemodal-form_3"]')).toBeVisible();
+  });
+});
