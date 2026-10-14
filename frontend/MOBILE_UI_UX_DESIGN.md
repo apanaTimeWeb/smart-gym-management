@@ -1,5 +1,35 @@
 # React Native Global Design System — Token Source
 
+> ⛔⛔⛔ **AI AGENT — MANDATORY DESIGN ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
+>
+> **VIOLATION OF ANY RULE IN THIS DOCUMENT = DESIGN & UI FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+>
+> This document is the **absolute normative visual authority** and **AI-readable token catalogue** for all React Native mobile styling in this project. Every token and design rule is MANDATORY unless the rule itself defines an explicit design exception with `// design-exception: <reason>`. The following words in this document carry their STRICTEST possible meaning:
+>
+> | Word | Meaning |
+> |------|---------|
+> | **MUST** | Absolute requirement — no exception, no omission, no interpretation |
+> | **MUST NOT** | Absolute prohibition — no exception under any circumstance |
+> | **FORBIDDEN** | Same as MUST NOT — harder emphasis |
+> | **REQUIRED** | Same as MUST — mandatory deliverable |
+> | **encouraged** / **preferred** | Still a **default requirement** — deviations require explicit documented justification |
+> | **Optional** | Only optional when the feature **genuinely has no such visual artifact** |
+> | **except** / **unless** | Only a valid escape when ALL stated conditions for the exception are explicitly met and documented |
+>
+> ⛔ **BEFORE WRITING ANY STYLED COMPONENT, SCREEN, OR THEME CODE, CONFIRM:**
+> ```text
+> [ ] Read complete MOBILE_UI_UX_DESIGN.md (all 22 sections)
+> [ ] Zero hardcoded hex, RGB, dp numbers, or arbitrary sizing (100% tokens from theme module)
+> [ ] Platform touch targets verified: minimum 44pt (iOS) / 48dp (Android)
+> [ ] Dynamic Type / font scaling verified without clipping text
+> [ ] Safe area handling verified via useSafeAreaInsets / SafeAreaView
+> [ ] Accessibility props wired: accessibilityLabel, accessibilityRole, accessibilityState
+> [ ] Reduced motion support implemented via AccessibilityInfo.isReduceMotionEnabled()
+> [ ] Haptic feedback integrated for interactive state changes
+> [ ] Section 22 DEFINITION OF DONE loaded into context
+> ```
+> **Failure to complete the above = entire output is discarded.**
+
 Spacing / radius / icon / touch-target values → dp-equivalent React Native layout units.
 Typography → React Native text scale / fontSize.
 Animation durations → milliseconds.
@@ -568,7 +598,7 @@ This script runs on every PR and blocks merge on failure.
 
 To ensure the application feels like a world-class, premium native app, **every developer and AI agent MUST adhere to these interaction details:**
 
-1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states should scale down slightly (`press-scale = 0.96`). Bottom sheets must slide in smoothly. **Reduced-Motion Compliance:** Always respect the OS-level reduced-motion preference as strictly outlined in Section 7. Remove non-essential motion and never use animation as the sole indicator of a state change.
+1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states MUST scale down slightly (`press-scale = 0.96`). Bottom sheets MUST slide in smoothly. **Reduced-Motion Compliance:** Always respect the OS-level reduced-motion preference as strictly outlined in Section 7. Remove non-essential motion and never use animation as the sole indicator of a state change.
 2. **Haptic Feedback:** Pair visual feedback with tactile feedback.
    - **Light Impact:** Minor UI changes (switches, dropdown toggles, pulling to refresh).
    - **Success Notification:** Completing a wizard, saving a form, processing payment.
@@ -625,69 +655,60 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 
 ---
 
-## DEFINITION OF DONE — Mobile UI/UX Release Checklist
+## 22. DEFINITION OF DONE — Mobile UI/UX Release Checklist
 
-A feature screen or component is NOT considered release-ready until ALL applicable items below are checked.
+> ⛔ **HARD STOP — ALL ITEMS BELOW ARE MANDATORY INVARIANTS FOR PRODUCTION RELEASE.**
+> **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure.**
+> **If ANY box fails: STATUS = `BLOCKED_RELEASE`. Do NOT proceed or deliver code.**
 
-### Functional Completeness
-- [ ] All documented user flows work end-to-end
-- [ ] All form validations and error states trigger correctly
-- [ ] All API-driven data renders from real fixture or backend response
-- [ ] All mutations show correct success/error feedback
+### 1. Functional Completeness Gate
+- [ ] **End-to-End User Flows:** All documented user flows work end-to-end with verified navigation transitions. — *STOP if broken navigation or orphaned screen.*
+- [ ] **Validation & Error States:** All form validations and error states trigger correctly with field-level feedback. — *STOP if generic error toast replaces field errors.*
+- [ ] **Authoritative Data Rendering:** All API-driven data renders from real fixture or backend response. — *STOP if hardcoded mock data remains in production paths.*
+- [ ] **Mutation Feedback:** All mutations show correct success/error feedback via non-blocking toasts/alerts. — *STOP if mutation completes without visual feedback.*
 
-### State Coverage (Section 13 — Async / Content UI States)
-- [ ] **Loading / skeleton:** Mimics exact layout of real content (never full-screen spinner)
-- [ ] **Empty state:** `[Feature]EmptyState` with icon, message, and CTA where applicable
-- [ ] **Error state:** `[Feature]ErrorFallback` with retry button and non-technical message
-- [ ] **Permission denied:** `[Feature]PermissionDenied` with clear explanation
-- [ ] **Offline:** Non-blocking banner (if feature declares offline support)
+### 2. State Coverage Gate (Section 13)
+- [ ] **Loading / Skeleton State:** Mimics exact layout of real content (`[Feature]Skeleton.tsx`); never a full-screen spinner. — *STOP if full-screen spinner used.*
+- [ ] **Empty State:** `[Feature]EmptyState.tsx` rendered with icon, message, and CTA where applicable. — *STOP if blank screen shown on empty list.*
+- [ ] **Error State:** `[Feature]ErrorFallback.tsx` rendered with retry button and user-friendly message. — *STOP if raw JavaScript exception shown to user.*
+- [ ] **Permission Denied State:** `[Feature]PermissionDenied.tsx` rendered with clear rationale and settings deep link. — *STOP if feature silently fails when permission denied.*
+- [ ] **Offline State:** Non-blocking banner displayed if feature declares offline support. — *STOP if app crashes or locks up when offline.*
 
-### Accessibility (Section 1C)
-- [ ] All interactive elements have meaningful `accessibilityLabel`
-- [ ] `accessibilityRole` set correctly on all interactive controls
-- [ ] `accessibilityState` reflects current state (disabled, selected, busy)
-- [ ] Logical traversal order matches visual reading order
-- [ ] All touch targets ≥ 44pt (iOS) / 48dp (Android)
-- [ ] `hitSlop` applied where visual size is smaller than minimum touch target
-- [ ] Dynamic Type tested at largest accessibility size (both platforms)
-- [ ] Reduced-motion behavior verified (non-animated equivalents work)
-- [ ] Error/success states announced via `accessibilityLiveRegion`
-- [ ] Color is never the sole state differentiator (text/icon pairing)
+### 3. Accessibility Gate (Section 1C)
+- [ ] **Interactive Labels:** All interactive elements have meaningful `accessibilityLabel` strings. — *STOP if icon-only button lacks accessibility label.*
+- [ ] **Accessibility Roles:** `accessibilityRole` set correctly on all interactive controls (button, header, link, search). — *STOP if generic view used for interactive element.*
+- [ ] **Accessibility States:** `accessibilityState` reflects current state (disabled, selected, busy, checked). — *STOP if disabled button fails to declare disabled state.*
+- [ ] **Reading Order:** Logical traversal order matches visual reading order across all screen sizes. — *STOP if screen reader navigates elements out of logical order.*
+- [ ] **Touch Target Ceilings:** All touch targets ≥ 44pt (iOS) / 48dp (Android); `hitSlop` applied where visual size is smaller. — *STOP if interactive target < 44pt/48dp.*
+- [ ] **Dynamic Type Scaling:** Dynamic Type tested at largest accessibility size without text truncation. — *STOP if text clips or overflows container.*
+- [ ] **Reduced Motion:** Reduced-motion behavior verified; non-animated transitions work when enabled. — *STOP if animation triggers despite reduced-motion preference.*
+- [ ] **Live Regions:** Error/success states announced via `accessibilityLiveRegion`. — *STOP if critical alert omitted from screen reader.*
+- [ ] **Non-Color State Differentiation:** Color is never the sole state differentiator; paired with text or icon. — *STOP if state distinguished only by red/green color.*
 
-### Design System Compliance
-- [ ] No raw hex/RGB/arbitrary values in any component (Section 1 — Global Token Rule)
-- [ ] All runtime-derived exceptions documented with `// design-exception: <reason>`
-- [ ] Typography uses token values from Section 3 (exact numeric `fontSize`, `lineHeight`, etc.)
-- [ ] All animations use motion token durations from Section 7
-- [ ] Reduced-motion guards applied to all non-essential animations (Section 7)
-- [ ] Touch targets meet Section 6 minimums
-- [ ] Z-index uses named tokens from Section 15
+### 4. Design System Compliance Gate
+- [ ] **Zero Magic Values:** No raw hex/RGB/arbitrary values in any component (Section 1 — Global Token Rule). — *STOP if raw color string or arbitrary number in StyleSheet.*
+- [ ] **Documented Exceptions:** All runtime-derived exceptions documented with `// design-exception: <reason>`. — *STOP if undocumented raw value found.*
+- [ ] **Typography Tokens:** Typography uses token values from Section 3 (exact numeric `fontSize`, `lineHeight`). — *STOP if ad-hoc font size declared.*
+- [ ] **Motion Tokens:** All animations use motion token durations from Section 7. — *STOP if hardcoded millisecond duration used.*
+- [ ] **Named Z-Index:** Z-index uses named tokens from Section 15. — *STOP if arbitrary zIndex value used.*
 
-### Platform Conventions (Section 21)
-- [ ] Back navigation works correctly on both iOS (swipe) and Android (hardware back)
-- [ ] Safe area insets handled at screen root via `SafeAreaView`
-- [ ] Status bar style set per-screen
-- [ ] Platform-native date/time pickers used
-- [ ] Haptic feedback paired with significant state changes
-- [ ] Permission prompts requested at time of use with in-app explanation
+### 5. Platform Conventions Gate (Section 21)
+- [ ] **Back Navigation:** Back navigation works correctly on both iOS (native swipe) and Android (hardware back). — *STOP if Android back button exits app unexpectedly.*
+- [ ] **Safe Area Handling:** Safe area insets handled at screen root via `SafeAreaView` / `useSafeAreaInsets()`. — *STOP if content clips notch, dynamic island, or home bar.*
+- [ ] **Status Bar Styling:** Status bar style set per-screen (light/dark content) matching background contrast. — *STOP if white status icons on white background.*
+- [ ] **Native Pickers & Sheets:** Platform-native date/time pickers and bottom sheets (`@gorhom/bottom-sheet`) used. — *STOP if custom web select dropdown used.*
+- [ ] **Haptic Feedback:** Haptic feedback paired with significant state changes (switches, submissions, deletes). — *STOP if major action lacks haptic tactile response.*
+- [ ] **Just-In-Time Permissions:** Permission prompts requested at time of use with clear in-app rationale. — *STOP if permission requested on app launch.*
 
-### Security & Permissions
-- [ ] Sensitive data masked per Section 16 rules
-- [ ] No PII in error monitoring payloads
-- [ ] Frontend permission checks are UX controls only — server-side auth enforced for all protected operations
+### 6. Security & Token Sync Gate
+- [ ] **Sensitive Data Masking:** Sensitive data masked per Section 16 rules in all list and card views. — *STOP if unmasked PII displayed.*
+- [ ] **Zero PII in Telemetry:** No PII in error monitoring or analytics payloads. — *STOP if user emails or tokens logged.*
+- [ ] **Server-Enforced Auth:** Frontend permission checks are UX controls only; server auth enforced for all endpoints. — *STOP if frontend assumes bypass.*
+- [ ] **Token Sync CI Check:** Token-sync CI script passes (no unknown tokens, no missing dark/light pairs). — *STOP if orphan token found.*
+- [ ] **WCAG AA Contrast:** All semantic text/background pairs pass WCAG AA contrast check (4.5:1 minimum). — *STOP if contrast ratio fails WCAG AA.*
 
-### Token Sync & CI
-- [ ] Token-sync CI script passes (no unknown tokens, no missing dark/light pairs)
-- [ ] All semantic text/background pairs pass WCAG AA contrast check
-- [ ] All interactive controls pass minimum touch-target size check
-
-### Tests
-- [ ] Unit tests for all business logic in hooks and utilities
-- [ ] Reduced-motion behavior tested programmatically
-- [ ] Accessibility props verified in component tests
-- [ ] E2E tests for critical flows (login, CRUD, permissions)
-
-### Documentation
-- [ ] `[featureName]_theme_contract.md` lists all consumed tokens
-- [ ] `[featureName]_features.md` updated for any flow, API, or permission change
-- [ ] Runtime exceptions documented with `// design-exception:` comments
+### 7. Documentation & Testing Gate
+- [ ] **Theme Contract Artifact:** `[featureName]_theme_contract.md` lists all consumed tokens. — *STOP if theme contract missing or empty.*
+- [ ] **Feature Spec Sync:** `[featureName]_features.md` updated for any flow, API, or permission change. — *STOP if features doc out of sync.*
+- [ ] **Behavioral Tests:** Component and hook tests verify real user actions (tap -> submit -> visible state update). — *STOP if tests only check shallow renders.*
+- [ ] **Maestro E2E Flows:** E2E tests verify critical mobile flows (login, CRUD, permissions). — *STOP if critical user journey lacks E2E coverage.*

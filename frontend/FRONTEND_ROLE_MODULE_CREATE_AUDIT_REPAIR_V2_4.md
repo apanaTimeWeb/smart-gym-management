@@ -48,6 +48,7 @@
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and the user explicitly approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist passes clean.**
 > ⛔ **You MUST NOT skip creating `[module_name]_changelog_vN.md`, `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/`. They are mandatory deliverables, not suggestions.**
+> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly, noting runtime execution as `DEFERRED_TO_DEPLOYMENT`.
 
 ---
 
@@ -63,6 +64,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 4. **DO NOT SUMMARIZE BATCHES:** If auditing multiple pages or components, never merge them into a single shallow summary to "save time." 100% depth on 20% of the scope is ALWAYS better than 20% depth on 100% of the scope. **VIOLATION = audit depth failure = must re-audit.**
 5. **FUNCTIONAL CLOSURE MANDATE:** Every interactive control (button, link, dropdown, form, filter, tab, modal, pagination) MUST do something real. Visible controls that do nothing or log to console without user feedback are SEVERE defects. **VIOLATION = rejected UI.**
 6. **MUTABLE MOCK STATE MANDATE:** When backend is absent, mocks MUST simulate real mutable state (create actually adds to list, edit updates list, delete removes from list). Static read-only mocks violate the functional closure requirement. **VIOLATION = incomplete repair.**
+7. **NO PLACEHOLDER CODE OR TRUNCATION:** Every generated or repaired component, hook, or screen MUST be 100% complete and fully implemented. Writing placeholder comments such as `// ... rest of code remains the same ...`, `// ... existing methods ...`, or `// TODO` inside deliverables is STRICTLY FORBIDDEN. Deliverables must be drop-in ready with zero ellipsis. **VIOLATION = broken build = immediate task failure.**
 
 ---
 
@@ -2163,7 +2165,7 @@ Important distinction:
 
 MSW/mock layer may contain fake backend data.
 
-Production UI code should not silently invent fake business records.
+Production UI code MUST NOT silently invent fake business records. Consequence of violation: Silent data corruption, fabricated states, and unverified production regressions.
 
 ### WORKING MOCK / HARD-CODED DEMO REQUIREMENT
 
@@ -2301,7 +2303,7 @@ For every missing test provide:
 
 For every important interactive feature, tests must prove behavior, not merely rendering.
 
-A meaningful interaction test should prove:
+A meaningful interaction test MUST prove (Violation = REJECTED TEST / NON_COMPLIANT):
 
 User Action
 → UI Event
@@ -2373,7 +2375,7 @@ For non-critical controls, deterministic manual verification is acceptable when 
 
 Prefer user-observable behavior over implementation-detail assertions.
 
-A test should normally prove:
+A test MUST prove (Violation = REJECTED TEST / NON_COMPLIANT):
 
 User action
 → observable UI/state/navigation result
@@ -3210,7 +3212,7 @@ NOT APPLICABLE
 | ID | Priority | Area | Route/Feature | Issue | Evidence | File(s) | Current Flow | Required Flow | What Must Change | Verification | Repair Status | Verification Status |
 | -- | -------- | ---- | ------------ | ----- | -------- | ------- | ------------ | ------------- | ----------------- | ------------ | ------------- | ------------------- |
 
-Initial status should always be:
+Initial status MUST always be:
 
 `NOT STARTED`
 
@@ -6167,24 +6169,91 @@ Before final delivery, the AI MUST literally verify:
 [ ] Web Rule 15C checked
 [ ] Web Rule 15D checked
 [ ] Web Rule 15E checked
-[ ] Web Rules 16–30 checked
-[ ] Web Rules 31–40 checked
-[ ] Web Rules 41–55 checked
-[ ] Web Rules 56–61 checked
-[ ] Web Rules 62–74 checked
-[ ] Web Rule 75 checked
-[ ] Web Rules 75A–75D checked
-[ ] Web Rules 76–84 checked
-[ ] Web Rule 22 — data-testid on all interactive elements and status indicators checked
-[ ] Web Rule 23 — JSDoc on every custom hook, complex component and Zustand store checked
-[ ] Extended Rule 14 checked
-[ ] Extended Rule 15 checked
-[ ] Extended Rule 16 checked
-[ ] Extended Rule 17 checked
-[ ] Extended Rule 18 checked
-[ ] Extended Rule 19 checked
-[ ] Extended Rule 20 checked
-[ ] Extended Rule 21 checked
+[ ] Web Rule 16 — Robust Forms & Field-Level Validation checked
+[ ] Web Rule 17 — Centralized Error Interception checked
+[ ] Web Rule 18 — Enterprise Accessibility (WCAG 2.2 AA) checked
+[ ] Web Rule 19 — Clickable Table Rows with Detail Navigation checked
+[ ] Web Rule 20 — Keyboard-Equivalent Row Navigation checked
+[ ] Web Rule 21 — Searchable Dropdowns for Large Datasets checked
+[ ] Web Rule 22 — AI-Testable UI (Accessible Selectors First, data-testid for Ambiguous Cases) checked
+[ ] Web Rule 23 — Component-Level AI Docstrings (JSDoc) checked
+[ ] Web Rule 24 — Date/Time Formatting & UTC Display checked
+[ ] Web Rule 25 — RBAC UI Hiding vs Authoritative Backend Auth checked
+[ ] Web Rule 26 — Skeleton Loading States checked
+[ ] Web Rule 27 — Strict TypeScript — Zero any Ban checked
+[ ] Web Rule 28 — Icon-Driven Table Actions checked
+[ ] Web Rule 29 — Multi-Medium Radio Selection checked
+[ ] Web Rule 30 — Table Controls (Pagination, Sorting, Filtering) checked
+[ ] Web Rule 31 — Modular API Clients (No Monolithic API Blob) checked
+[ ] Web Rule 32 — Zero Barrel Files Ban checked
+[ ] Web Rule 33 — Next.js Image Optimization checked
+[ ] Web Rule 34 — Environment Segregation & Secret Leaks Prohibition checked
+[ ] Web Rule 35 — Magic-Value Policy & Named Constants checked
+[ ] Web Rule 36 — Arbitrary Tailwind Prohibition & Theme Token Safety checked
+[ ] Web Rule 37 — Exhaustive JSDoc on Public Interfaces checked
+[ ] Web Rule 38 — Component Responsibility Comments checked
+[ ] Web Rule 39 — Data-Flow Architecture Comments checked
+[ ] Web Rule 40 — Module Forbidden-Pattern File (_forbidden.md) checked
+[ ] Web Rule 41 — URL State Synchronization (Filter, Search, Pagination) checked
+[ ] Web Rule 42 — TanStack Query Native Status vs Prohibited Parallel Async Enum checked
+[ ] Web Rule 43 — Sensitive-Data & PII Masking checked
+[ ] Web Rule 44 — Centralized Logging — Zero console.log checked
+[ ] Web Rule 45 — Co-located Tests (_tests/) checked
+[ ] Web Rule 46 — Unsaved-Changes Warning Guard checked
+[ ] Web Rule 47 — Copy-to-Clipboard Security & Feedback checked
+[ ] Web Rule 48 — Per-Entity Empty State ([Module]EmptyState.tsx) checked
+[ ] Web Rule 49 — Import Ordering Convention checked
+[ ] Web Rule 50 — Explicit Props — Ban on Blind Prop Spreading checked
+[ ] Web Rule 51 — Conditional Rendering Complexity Ceilings checked
+[ ] Web Rule 52 — Event Handler Naming Conventions checked
+[ ] Web Rule 53 — useEffect Dependency Array Comments checked
+[ ] Web Rule 54 — Global Shared Components Scope (src/components/ui/ dumb primitives only) checked
+[ ] Web Rule 55 — Stable List Keys (Never Array Index) checked
+[ ] Web Rule 56 — next/font & Zero Google Fonts CDN checked
+[ ] Web Rule 57 — Strict TypeScript (strict: true, Zero @ts-ignore) checked
+[ ] Web Rule 58 — Storage Abstraction & Versioned LocalStorage Keys checked
+[ ] Web Rule 59 — Canonical ApiResponse<T> Contract checked
+[ ] Web Rule 60 — Centralized Unauthenticated 401/403 Redirect Handling checked
+[ ] Web Rule 61 — Mechanical Tooling Enforcement (ESLint, Prettier, Husky) checked
+[ ] Web Rule 62 — Approved Dependency Guardrail (package.json check) checked
+[ ] Web Rule 63 — Zero Cross-Module Business Imports checked
+[ ] Web Rule 64 — Mobile-First Responsive Breakpoints (375px, 768px, 1280px+) checked
+[ ] Web Rule 65 — Hardened Numeric Inputs checked
+[ ] Web Rule 66 — Optimistic Mutation Reconciliation with Server checked
+[ ] Web Rule 67 — Explicit API Parameter Propagation checked
+[ ] Web Rule 68 — Table Header/Cell/ColSpan Alignment checked
+[ ] Web Rule 69 — Social-Brand Tokens checked
+[ ] Web Rule 70 — Interactive KPI Cards checked
+[ ] Web Rule 71 — Destructive Action Double Verification Modal checked
+[ ] Web Rule 72 — API Function Verb Contract (fetch/create/update/delete) checked
+[ ] Web Rule 73 — Explicit import type checked
+[ ] Web Rule 74 — Security Scanning in CI / Source Maps Disabled checked
+[ ] Web Rule 75 — Module-Owned MSW & Mock Architecture checked
+[ ] Web Rule 75A — Global MSW Bootstrap Framework Plumbing Only checked
+[ ] Web Rule 75B — Feature Mocks strictly inside Module Folder checked
+[ ] Web Rule 75C — Global Infrastructure Qualification Criteria checked
+[ ] Web Rule 75D — MSW Fixture Completeness across ALL UI fields, columns, filters, KPIs checked
+[ ] Web Rule 76 — CODEOWNERS Human Review Requirements checked
+[ ] Web Rule 77 — CI/CD Merge Policy & Branch Protection checked
+[ ] Web Rule 78 — En-Dash Nullable Display Fallback (displayValue()) checked
+[ ] Web Rule 79 — Unsaved-Changes Guard (Browser Exit + Next.js Router) checked
+[ ] Web Rule 80 — Multi-Currency Monetary Contract (Minor Units / Integer Formatter) checked
+[ ] Web Rule 81 — Button Loading-Width Stability checked
+[ ] Web Rule 82 — Toast Deduplication checked
+[ ] Web Rule 83 — Idempotency Key Generation & Retry Reuse checked
+[ ] Web Rule 84 — Exact Filesystem/Import Case Sensitivity checked
+[ ] Extended Rule 14 — All Mutating API Clients (Idempotency-Key header injection) checked
+[ ] Extended Rule 15 — WebSocket Centralization (WebSocketContext/SocketProvider) checked
+[ ] Extended Rule 16 — Role-Based Field Masking & Optional Types checked
+[ ] Extended Rule 17 — Strict TanStack Query Cache Invalidation checked
+[ ] Extended Rule 18 — Module-Co-located i18n & Active Languages (_locales/) checked
+[ ] Extended Rule 19 — Centralized Dynamic Feature Flags checked
+[ ] Extended Rule 20 — Multi-Currency Monetary Contract & Subunit Formatting checked
+[ ] Extended Rule 21 — Tenant Data Export & Async Offboarding UX checked
+[ ] Extended Rule 22 — AI-Testable UI (Accessible Selectors First) checked
+[ ] Extended Rule 23 — Component-Level AI Docstrings (JSDoc) checked
+[ ] FRONTEND DELIVERY FREEZE GATE — All 14 Gates Verified checked
+[ ] DEFINITION OF DONE — All 8 Invariant Gates Verified checked
 [ ] Design §1 checked
 [ ] Design §1A checked
 [ ] Design §1B checked
@@ -6244,6 +6313,8 @@ Before final delivery, the AI MUST literally verify:
 ```
 
 The audit MUST stop and report `INCOMPLETE AUDIT` if any required checklist item is not completed.
+Every single item MUST be evaluated individually as [PASS / FAIL / NOT_APPLICABLE] with concrete line-number and file evidence in `RE_AUDIT_CHECKLIST_RESULT.md`.
+Bundling multiple rules into a single check, skipping individual rule evaluation, or delivering without `RE_AUDIT_CHECKLIST_RESULT.md` = FRAUDULENT AUDIT & IMMEDIATE DELIVERY FAILURE.
 
 ---
 
@@ -8447,7 +8518,7 @@ Do NOT reproduce in chat:
 
 Those belong inside the final ZIP.
 
-Final chat output should contain only:
+Final chat output MUST contain only:
 
 1. final status;
 2. final ZIP link;

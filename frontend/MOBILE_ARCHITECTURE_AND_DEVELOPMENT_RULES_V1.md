@@ -1,5 +1,58 @@
 # React Native Mobile Development Instructions — Enterprise / Industry Scale
 
+> ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
+>
+> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+>
+> This document is the **absolute normative authority** for all React Native mobile code in this project. Every rule is MANDATORY unless the rule itself defines a named `NOT_APPLICABLE` condition with explicit evidence. The following words in this document carry their STRICTEST possible meaning:
+>
+> | Word | Meaning |
+> |------|---------|
+> | **MUST** | Absolute requirement — no exception, no omission, no interpretation |
+> | **MUST NOT** | Absolute prohibition — no exception under any circumstance |
+> | **FORBIDDEN** | Same as MUST NOT — harder emphasis |
+> | **REQUIRED** | Same as MUST — mandatory deliverable |
+> | **encouraged** / **preferred** | Still a **default requirement** — deviations require explicit documented justification |
+> | **Optional** (sub-folders) | Only optional when the feature **genuinely has no such artifact** — omitting when the artifact exists = VIOLATION |
+> | **except** / **unless** | Only a valid escape when ALL stated conditions for the exception are explicitly met and documented |
+>
+> **RULES APPLY TO THE ENTIRE DOCUMENT.** An AI that reads only the first half of this document and produces output is producing INCOMPLETE and INVALID output. Every rule from Rule 0A through Rule 67, the MOBILE DELIVERY FREEZE GATE, and the DEFINITION OF DONE is mandatory.
+>
+> ⛔ **BEFORE WRITING ANY CODE OR AUDIT FINDING, CONFIRM:**
+> ```text
+> [ ] Read complete MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all 67+ rules)
+> [ ] Confirmed TECHNOLOGY BASELINE — React Native Bare-Metal (New Architecture / Fabric + TurboModules)
+> [ ] CRITICAL MOBILE STRUCTURE GATE passed — folder tree verified before any deeper rule
+> [ ] Canonical feature structure confirmed (features/frontend_{role}/{module}/)
+> [ ] File size ceilings verified (Screen 80 lines, Component 200 lines, Hooks/API 150 lines, Store 180 lines, Util 120 lines)
+> [ ] MOBILE DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
+> ```
+> **Failure to complete the above = entire output is discarded.**
+
+## CRITICAL MOBILE STRUCTURE GATE (NON-NEGOTIABLE)
+
+> ⛔ **HARD STOP — DO NOT PROCEED PAST THIS GATE UNTIL ALL ITEMS BELOW ARE VERIFIED.**
+> **Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` and STOP. Do NOT generate or repair any code until structure is compliant.**
+
+Before generating, auditing, or repairing ANY mobile feature module, verify ALL of the following:
+
+| Verification Item | Requirement | Consequence of Failure |
+|---|---|---|
+| **Role Container** | Must be `features/frontend_{role}/` (e.g., `features/frontend_admin/`) | **STOP.** Unprefixed role container = ARCHITECTURE VIOLATION. |
+| **Canonical Feature Module** | Must be `{module}/` inside role container (e.g., `features/frontend_admin/members/`) | **STOP.** Unowned or flat placement = IMMEDIATE NON_COMPLIANT. |
+| **Thin Screen Composition** | Screens in `screens/` MUST only compose components; hard maximum **80 lines**; ZERO business logic, state calculations, or direct API calls. | **STOP.** Heavy screen = ARCHITECTURE VIOLATION. Extract to components & custom hooks. |
+| **Prefixed Component Files** | Components in `components/` MUST use PascalCase with feature prefix (e.g., `MembersMemberCard.tsx`). Max **200 lines**. | **STOP.** Unprefixed component = NON_COMPLIANT. |
+| **Feature Custom Hooks** | Hooks in `hooks/` MUST use camelCase with `use` + feature name (e.g., `useMembers.ts`, `useMembersFilters.ts`). Max **150 lines**. | **STOP.** Generic hook name = NON_COMPLIANT. |
+| **Central Hardware Secure Storage** | Auth tokens, refresh tokens, biometric keys MUST use iOS Keychain / Android Keystore via `react-native-keychain`. NEVER `AsyncStorage`. | **STOP.** Tokens in AsyncStorage = CRITICAL SECURITY AUDIT FAILURE. |
+| **Module Documentation Trio** | Every feature MUST contain `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md`. | **STOP.** Missing doc artifact = INCOMPLETE MODULE. Must generate before code completion. |
+| **Centralized URL Config** | `config/[featureName].url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | **STOP.** Missing URL config = HARDCODED ROUTE RISK. |
+| **Query Key Registry** | `api/[featureName].query_keys.ts` or `config/[featureName].query_keys.ts` MUST exist and namespace all TanStack Query keys with resource identity. | **STOP.** Missing query key factory = CACHE INCONSISTENCY RISK. |
+| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | **STOP.** Sibling import = VIOLATION OF RULE 28. |
+
+> ⛔ **Skipping this gate invalidates all downstream compliance results.**
+
+---
+
 This document defines the canonical architecture and development rules for a React Native bare-metal application. React Native is the normative implementation target for this project. Use React Native New Architecture (Fabric + TurboModules). No alternative framework is part of the normative implementation rules. React Native bare-metal is the only supported implementation target.
 
 ## Rule 0A — Feature Module Is the AI Repair Boundary
@@ -96,18 +149,20 @@ tests, and the context file — lives inside that single folder. Zero need to op
 - Screens/route entry points are THIN — they compose feature components only.
   No business logic, no direct API calls, no non-trivial state inside a screen file.
 
-### File Size Ceilings (AI Context Limits)
+### File Size Ceilings (Hard Ceilings — Zero Exceptions)
 
-| File type | Maximum lines |
-|---|---|
-| Screen / Page entry point | **80 lines** |
-| Component / Widget | **200 lines** |
-| Custom Hook / Controller / Notifier | **150 lines** |
-| Validation Schema / Validator class | **150 lines** |
-| API service file | **150 lines** |
-| State store / Provider | **180 lines** |
-| Type / Model file | **150 lines** |
-| Utility / Formatter file | **120 lines** |
+Any file exceeding its ceiling triggers an immediate `FILE_SIZE_VIOLATION` gate stop. Decompose immediately into focused sub-components or sub-hooks within the same feature folder. Never bypass this rule with artificial line wrapping or minification.
+
+| File Type | Maximum Lines | Action When Exceeded | Consequence of Violation |
+|---|---|---|---|
+| Screen / Route entry point (`*Screen.tsx`) | **80 lines** | Extract widgets, layout wrappers, and query calls into feature sub-components and custom hooks | **HARD STOP** — PR/Task Blocked |
+| Feature Component / Widget | **200 lines** | Extract sub-components (e.g., `MembersHeader`, `MembersCard`, `MembersList`) | **HARD STOP** — PR/Task Blocked |
+| Custom Hook / Service Hook / Controller | **150 lines** | Split query, mutation, and local UI state into focused single-responsibility hooks | **HARD STOP** — PR/Task Blocked |
+| Validation Schema / Validator class | **150 lines** | Split form schemas by sub-step or domain entity (e.g., `memberBaseSchema`, `memberBillingSchema`) | **HARD STOP** — PR/Task Blocked |
+| API service file (`.api.ts`) | **150 lines** | Separate queries from mutations or split by sub-resource endpoint | **HARD STOP** — PR/Task Blocked |
+| State Store / Context Provider / Notifier | **180 lines** | Decompose giant slices into atomic domain slices; use selector hooks | **HARD STOP** — PR/Task Blocked |
+| Type / Model file (`.types.ts`) | **150 lines** | Split entity models, request payload types, and UI state types | **HARD STOP** — PR/Task Blocked |
+| Utility / Formatter file | **120 lines** | Extract pure formatting functions into single-purpose utility modules | **HARD STOP** — PR/Task Blocked |
 
 If a file exceeds its ceiling: split by **feature responsibility**, not randomly by line count.
 Never create dumping folders named `helpers/`, `common/`, or `misc/`.
@@ -2448,7 +2503,7 @@ export function formatCurrency(
 Data exports take minutes to process. Mobile operating systems are not designed to easily download and extract massive ZIP files of business CSVs. Therefore, the mobile app MUST handle the export trigger strictly as an asynchronous background request that emails the file to the user.
 
 ### UI Placement
-The export functionality must live in a dedicated section: **Admin Settings -> Data Export & Offboarding**. 
+The export functionality MUST live in a dedicated section: **Admin Settings -> Data Export & Offboarding**. 
 - **Role Constraint:** This UI MUST only be available in the **Superadmin** (or top-level Gym Admin) mobile dashboard. Never add export buttons to manager, trainer, or member interfaces.
 
 ### Interaction Flow
@@ -2457,7 +2512,7 @@ The export functionality must live in a dedicated section: **Admin Settings -> D
    Canonical project pattern: `POST /api/v1/superadmin/export-data`
 3. **Feedback:** Do NOT show a continuous loading spinner. Since the API returns `202 Accepted` immediately, show a success toast/alert: 
    *"Export started. A secure download link will be sent to your email within a few minutes."*
-4. **Format Expectation:** The UI should inform the user that their data will be sent via email as a ZIP file containing Excel (CSV) files, which are best viewed on a computer.
+4. **Format Expectation:** The UI MUST explicitly inform the user that their data will be sent via email as a ZIP file containing Excel (CSV) files, which are best viewed on a computer.
 5. **Real-time Completion Feedback:** The mobile dashboard MUST listen for a WebSocket event (e.g., `export.completed`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
 
 > **AI AGENT NOTE:** Never attempt to download, parse, or open the `.zip` file directly within the mobile app's file system or using a Webview. The mobile app's ONLY responsibility is to hit the export endpoint and display a confirmation message indicating that an email is on the way.
@@ -2820,3 +2875,82 @@ Checkpointing MUST NOT become permission to:
 - skip functional closure verification.
 
 The final result MUST still satisfy the complete applicable mobile architecture rules (Rules 0A–66) and the supplied `MOBILE_UI_UX_DESIGN.md`.
+
+---
+
+## MOBILE DELIVERY FREEZE GATE
+
+> ⛔ **HARD STOP — DO NOT DELIVER OR PACKAGE ZIP UNTIL ALL 14 GATES BELOW PASS WITH PROOF.**
+> **Failing or skipping ANY single gate = BLOCKED_DELIVERY. Record `NON_COMPLIANT` and REPAIR immediately.**
+> **An AI MUST NOT deliver a ZIP with unresolved items under any circumstance.**
+
+| Gate # | Gate Description | Verification Directive | Consequence of Failure |
+|---|---|---|---|
+| **Gate 1** | No Critical Findings Open | Verify zero broken mobile user flows, wrong resource identity, or data integrity issues | **STOP.** Broken flow = REJECTED DELIVERY |
+| **Gate 2** | No Major Architecture Violations | Verify state ownership, zero cross-feature imports via Rule 28, strict feature naming | **STOP.** Sibling import = REJECTED DELIVERY |
+| **Gate 3** | Design Token Mapping Verified | Theme module mapping verified — all semantic tokens produce valid StyleSheet values; zero raw colors or hardcoded dp | **STOP.** Unstyled or broken component in dark/light mode |
+| **Gate 4** | Zero Hardcoded Colors or Insets | Grep for hex `#`, `rgb(`, raw sizes without `// design-exception: <reason>` | **STOP.** Hardcoded style = REJECTED DELIVERY |
+| **Gate 5** | Hardware-Backed Secure Storage Only | Verify auth tokens, refresh tokens, and biometric keys use `react-native-keychain` / Keystore. Zero tokens in `AsyncStorage` | **STOP.** Insecure storage = CRITICAL SECURITY VULNERABILITY |
+| **Gate 6** | Centralized URL Config Present | `config/[featureName].url_config.ts` present, exports all routes/APIs with real paths (zero placeholders) | **STOP.** Missing config = REJECTED DELIVERY |
+| **Gate 7** | Feature Map Non-Generic | `[featureName]_features.md` complete with all 18 mandatory sections (no TBDs or boilerplate) | **STOP.** Generic doc = INCOMPLETE MODULE |
+| **Gate 8** | TanStack Query & Hook Architecture | Query keys registered in `[featureName].query_keys.ts` with resource identity; screens NOT calling `useMutation` directly; `onSuccess` invalidation via `.mutateAsync().then()` | **STOP.** Broken server state / crash |
+| **Gate 9** | Form Architecture Compliance | React Hook Form + Zod validator class/schema; zero Yup/Joi; controlled inputs | **STOP.** Broken form validation |
+| **Gate 10** | Screen Thinness Ceilings Enforced | All screens in `screens/` ≤ **80 lines**; composition only; zero business logic or direct API calls | **STOP.** Monolithic screen = ARCHITECTURE FAILURE |
+| **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target feature files changed (`features/frontend_{role}/{module}/**`) | **STOP.** Scope leak = REJECTED DELIVERY |
+| **Gate 12** | Multi-Tenancy Enforced | Verify `x-tenant-id` derived from trusted session context, never from route params or client payload | **STOP.** Cross-tenant data vulnerability |
+| **Gate 13** | Complete Async States | Verify loading skeletons (`[Feature]Skeleton.tsx`), empty states (`[Feature]EmptyState.tsx`), and error fallbacks implemented | **STOP.** Blank screen on async fetch |
+| **Gate 14** | Changelog & Re-Audit Included | `[featureName]_changelog_vN.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Maestro E2E test suite present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
+
+> ⛔ **If ANY box fails: STATUS = `BLOCKED_DELIVERY`. Do NOT package or deliver the ZIP.**
+
+---
+
+## DEFINITION OF DONE — Mobile Architecture Release Checklist
+
+> ⛔ **HARD STOP — ALL ITEMS BELOW ARE MANDATORY INVARIANTS FOR PRODUCTION RELEASE.**
+> **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure.**
+
+### 1. Architecture & Isolation Gate
+- [ ] **AI Portability:** Feature folder alone provides complete context for understanding, mocking, testing, and repairing the feature. — *STOP if sibling business files are required.*
+- [ ] **Zero Cross-Feature Imports:** Zero imports from sibling feature modules (Rule 28). — *STOP if `import ... from '../sibling'` found.*
+- [ ] **Screen Thinness:** All screen files in `screens/` ≤ 80 lines; compose components only; zero business logic. — *STOP if screen exceeds 80 lines.*
+- [ ] **Feature Documentation Trio:** `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md` present and populated. — *STOP if any documentation artifact is missing.*
+- [ ] **URL Config Centralization:** `config/[featureName].url_config.ts` present and consumed by all API call sites. — *STOP if raw endpoint strings exist in code.*
+
+### 2. State & Data Contract Gate
+- [ ] **Server State via TanStack Query:** Server data managed through TanStack Query; query keys registered in `[featureName].query_keys.ts`. — *STOP if API data duplicated in Zustand.*
+- [ ] **Client UI State via Feature-Scoped Store:** Module-scoped Zustand store for shared client UI state; hard ceiling 180 lines. — *STOP if single global store used.*
+- [ ] **Pessimistic UI Updates:** Destructive and financial mutations wait for authoritative server response before updating UI (Rule 32). — *STOP if premature optimistic update.*
+- [ ] **MSW / Mock Completeness (Rule 7A):** MSW handlers and fixtures cover 100% of UI fields, card fields, KPI metrics, chart series, and filters. — *STOP if empty card fields.*
+
+### 3. Security & Safety Gate
+- [ ] **Hardware Secure Storage:** Auth tokens and sensitive credentials stored in iOS Keychain / Android Keystore via `react-native-keychain`. — *STOP if tokens in AsyncStorage.*
+- [ ] **Double Verification (Rule 31):** Delete, terminate, suspend, or financial triggers require confirmation bottom sheet (`useConfirmSheet`). — *STOP if single-tap delete exists.*
+- [ ] **PII & Financial Masking (Rule 30):** Phone numbers, national IDs, and account numbers masked in list/card views via `maskSensitiveData()`. — *STOP if raw PII in list.*
+- [ ] **Mutational Idempotency (Rule 53):** All mutating API calls (POST/PATCH/PUT/DELETE) require `idempotencyKey` and inject `Idempotency-Key` header. — *STOP if missing idempotency key.*
+
+### 4. Error Handling & Feedback Gate
+- [ ] **Backend-Driven Messages:** User-facing success and error messages display `response.message`. Localized fallback strings used for network failures. — *STOP if raw JS error shown.*
+- [ ] **Structured Validation Mapping (Rule 48):** 400 validation error dictionaries mapped directly to form fields via `handleValidationErrors()`. — *STOP if generic error toast replaces field errors.*
+- [ ] **Toast Deduplication (Rule 40):** Stable `toastId` passed to all emitted toasts. Identical error notifications do not stack. — *STOP if duplicate toasts flood screen.*
+
+### 5. Testing & Verification Gate
+- [ ] **Behavioral Testing Proof (Rule 17):** Unit/component tests verify real user actions (tap -> submit -> visible state update). Element existence checks alone are REJECTED. — *STOP if tests are superficial.*
+- [ ] **Coverage Standards:** Custom hooks tested at ≥80% branch coverage; utilities tested at ≥90% branch coverage. — *STOP if coverage below threshold.*
+- [ ] **Maestro E2E Tests:** Critical mobile CRUD and auth flows covered in YAML-based Maestro test suite (`mobile_e2e/`). — *STOP if E2E missing for critical flows.*
+
+### 6. Performance & UX Gate
+- [ ] **Virtualized Lists (Rule 8):** Any list rendering >20 items uses `FlatList` or `@shopify/flash-list` with `React.memo` item renderers. Never `ScrollView` wrapping `.map()`. — *STOP if mapped ScrollView used.*
+- [ ] **Search & Filter Debounce:** Search inputs debounced ≥300ms before triggering API/query calls. — *STOP if API flooded on every keystroke.*
+- [ ] **Button Loading Stability (Rule 39):** Submit buttons have explicit `minWidth` to prevent layout shift during loading state. — *STOP if button shrinks on submit.*
+
+### 7. Native Platform Conventions Gate
+- [ ] **Navigation Conventions:** Native stack swipe-back on iOS and Android hardware back button handler wired correctly. — *STOP if Android back button breaks.*
+- [ ] **Safe Area Insets:** Screen roots use `<SafeAreaView>` from `react-native-safe-area-context` or `useSafeAreaInsets()`. Zero hardcoded padding offsets. — *STOP if content clips notch.*
+- [ ] **Native Pickers & Bottom Sheets:** Platform-native date/time pickers and `@gorhom/bottom-sheet` used for contextual selection. — *STOP if custom web dropdown used.*
+- [ ] **Haptic Feedback (Rule 11):** Haptic feedback paired with switches, form completions, and destructive actions. — *STOP if significant action lacks haptic.*
+
+### 8. Localization Gate
+- [ ] **Zero Hardcoded Strings (Rule 61):** All user-facing text uses `t('namespace.KEY')`. Backend `response.message` displayed directly. — *STOP if hardcoded English string in JSX.*
+- [ ] **Locale-Aware Currency (Rule 37, 63):** Currency formatted via feature-local `formatCurrency()` using integer minor units. Division in JSX forbidden. — *STOP if raw minor units rendered.*
+- [ ] **En-Dash Nullable Fallback (Rule 38):** All nullable/optional fields rendered via `displayValue()`. Zero blank cells or raw "N/A". — *STOP if raw null renders blank.*

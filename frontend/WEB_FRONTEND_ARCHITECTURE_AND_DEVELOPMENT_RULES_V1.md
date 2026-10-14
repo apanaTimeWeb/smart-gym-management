@@ -1,3 +1,56 @@
+# Enterprise-Grade, AI-Friendly Web Frontend Architecture Guidelines
+
+> ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
+>
+> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+>
+> This document is the **absolute normative authority** for all web frontend code in this project. Every rule is MANDATORY unless the rule itself defines a named `NOT_APPLICABLE` condition with explicit evidence. The following words in this document carry their STRICTEST possible meaning:
+>
+> | Word | Meaning |
+> |------|---------|
+> | **MUST** | Absolute requirement — no exception, no omission, no interpretation |
+> | **MUST NOT** | Absolute prohibition — no exception under any circumstance |
+> | **FORBIDDEN** | Same as MUST NOT — harder emphasis |
+> | **REQUIRED** | Same as MUST — mandatory deliverable |
+> | **encouraged** / **preferred** | Still a **default requirement** — deviations require explicit documented justification |
+> | **Optional** (sub-folders) | Only optional when the module **genuinely has no such artifact** — omitting when the artifact exists = VIOLATION |
+> | **except** / **unless** | Only a valid escape when ALL stated conditions for the exception are explicitly met and documented |
+>
+> **RULES APPLY TO THE ENTIRE DOCUMENT.** An AI that reads only the first half of this document and produces output is producing INCOMPLETE and INVALID output. Every rule from Rule 1 through Rule 84, Extended Rules 14–23, the FRONTEND DELIVERY FREEZE GATE, and the DEFINITION OF DONE is mandatory. The FRONTEND DELIVERY FREEZE GATE applies to every audit finding and deliverable.
+>
+> ⛔ **BEFORE WRITING ANY CODE OR AUDIT FINDING, CONFIRM:**
+> ```text
+> [ ] Read complete WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all 84+ rules + extended rules)
+> [ ] Confirmed TECHNOLOGY BASELINE — Next.js App Router, Tailwind v4, TanStack Query v5, Zustand, RHF v7, Zod
+> [ ] CRITICAL FRONTEND STRUCTURE GATE passed — folder tree verified before any deeper rule
+> [ ] Canonical module folder structure confirmed (src/app/frontend_{role}/{role}_{module}/)
+> [ ] ROOT QUARANTINE verified — only permitted files in feature root
+> [ ] FRONTEND DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
+> ```
+> **Failure to complete the above = entire output is discarded.**
+
+## CRITICAL FRONTEND STRUCTURE GATE (NON-NEGOTIABLE)
+
+> ⛔ **HARD STOP — DO NOT PROCEED PAST THIS GATE UNTIL ALL ITEMS BELOW ARE VERIFIED.**
+> **Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` and STOP. Do NOT generate or repair any code until structure is compliant.**
+
+Before generating, auditing, or repairing ANY frontend role module, verify ALL of the following:
+
+| Verification Item | Requirement | Consequence of Failure |
+|---|---|---|
+| **Role Container** | Must be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`) | **STOP.** Unprefixed role container = ARCHITECTURE VIOLATION. |
+| **Canonical Feature Module** | Must be `{role}_{module}/` inside role container (e.g., `admin_members/`) | **STOP.** Generic name (`members/`) = IMMEDIATE NON_COMPLIANT. |
+| **No Duplicate Route Tree** | Exactly ONE canonical directory represents the feature. No parallel route tree. | **STOP.** Sibling duplicate (e.g. `dashboard/` + `admin_dashboard/`) = INCOMPLETE AUDIT. |
+| **Root Quarantine** | ONLY `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, `_features.md`, `_forbidden.md`, `_theme_contract.md` allowed in feature root. | **STOP.** Any other `.ts`/`.tsx` file in root = NON_COMPLIANT. Move to prefixed subfolder. |
+| **Prefixed Sub-Folders** | ALL sub-folders must use single prefix: `[moduleName]_components/`, `[moduleName]_hooks/`, `[moduleName]_api/`, `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_store/`, `[moduleName]_utils/`, `[moduleName]_locales/`, `[moduleName]_mocks/`, `[moduleName]_tests/`. | **STOP.** Generic folder (`components/`, `api/`) or double-prefix = NON_COMPLIANT. |
+| **No Barrel Files** | NO `index.ts` or re-export facades. All imports must be direct absolute paths (`@/...`). | **STOP.** Barrel file = CIRCULAR DEPENDENCY RISK. Remove immediately. |
+| **Module Documentation Trio** | Every module MUST contain `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md`. | **STOP.** Missing doc artifact = INCOMPLETE MODULE. Must generate before code completion. |
+| **Centralized URL Config** | `[moduleName]_url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | **STOP.** Missing URL config = HARDCODED ROUTE RISK. |
+
+> ⛔ **Skipping this gate invalidates all downstream compliance results.**
+
+---
+
 Currently, no one writes code manually; AI writes it. Because of this, my primary goal is extreme isolation. **Primary isolation goal:** Prefer single-file repair when the dependency graph allows it. The guaranteed isolation boundary is the owning module. An AI MUST NOT require unrelated business modules for a module-local repair. However, the folder architecture must remain highly organized and visually logical so that human developers can easily navigate it without getting lost in a flat directory of 50+ files.
 
 ---
@@ -74,26 +127,32 @@ Break down all large or mixed files. Every **React component file** MUST contain
 **IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name exactly once (e.g., use `[moduleName]_components/`, `[moduleName]_store/`, `[moduleName]_api/` instead of generic names like `components/`). Do NOT double-prefix folders (e.g., if the module is `superadmin_analytics`, the folder MUST be `superadmin_analytics_components/`, NOT `superadmin_analytics_analytics_components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/[role]_[module]_table/`).
 **File Size Ceiling:** React Component: hard maximum 300 lines. If a component's JSX grows beyond that, extract sub-sections into their own child component files inside the same feature folder to force real component-level granularity.
 
-### Extended File Size Ceilings
+### Extended File Size Ceilings (Hard Ceilings — Zero Exceptions)
 
-The component size limit alone is insufficient. AI agents also lose context in large hooks, stores, schemas, and utility files.
+> ⛔ **HARD CEILING: Exceeding ANY line count below = IMMEDIATE ARCHITECTURE FAILURE (`NON_COMPLIANT`).**
+> **Do NOT mark PASS. Split the file immediately using the procedure below.**
 
-- React Component (`.tsx`): maximum 300 lines
-- Custom Hook (`use*.ts`): maximum 150 lines
-- Utility / formatter file: maximum 120 lines
-- Zustand Store (`use*Store.ts`): maximum 180 lines
-- Zod Schema / type file (`*Schema.ts`, `*Types.ts`): maximum 200 lines
-- API service file (`*Api.ts`): maximum 200 lines
+| File Type | Max Lines | Action When Exceeded | Consequence of Violation |
+|---|---|---|---|
+| React Component (`.tsx`) | **300 lines** | Extract sub-sections into child components in `[moduleName]_components/` | Context dilution, re-render cascades, untestable monolithic JSX |
+| Custom Hook (`use*.ts`) | **150 lines** | Split into sub-hooks by concern (e.g. `useTableFilters`, `useTableSort`) | Mixed state/effect spaghetti, broken memoization |
+| Utility / Formatter file | **120 lines** | Split into domain-specific formatters inside `[moduleName]_utils/` | Unfocused utility soup, untraceable side-effects |
+| Zustand Store (`use*Store.ts`) | **180 lines** | Split slices into sub-slice creators or separate module-scoped stores | Giant monolithic stores, unnecessary re-renders |
+| Zod Schema / Type file | **200 lines** | Split into separate DTO / entity schema files inside `[moduleName]_schemas/` | Type inference slowdowns, circular type dependencies |
+| API Service file (`*Api.ts`) | **200 lines** | Split by entity operation (e.g. `*CrudApi.ts`, `*ExportApi.ts`, `*PaymentApi.ts`) | Giant monolithic API blobs, violation of Rule 31 |
 
 ### Child Component Size Rule
 If a component contains more than **3 major visual sections**, it MUST be split.
 - ✅ **GOOD:** `AdminMembersMain` split into `AdminMembersHeader`, `AdminMembersFilters`, `AdminMembersKpis`, `AdminMembersTable` (separate components).
 - ❌ **BAD:** A 250-line monster file containing the entire page layout.
 
+### File Ceiling Splitting Procedure (Mandatory)
 If a file exceeds its limit:
-- Split by feature responsibility, not randomly by line count.
-- Do not create generic dumping folders such as `helpers/`, `common/`, or `misc/`.
-- Keep extracted files inside the same feature folder wherever possible.
+1. Split by **feature responsibility**, not randomly by line count.
+2. Do NOT create generic dumping folders such as `helpers/`, `common/`, or `misc/`.
+3. Keep extracted files strictly inside the same feature module sub-folder.
+4. Update co-located tests and documentation maps in the same change.
+
 Next.js App Router uses Server Components by default, so you MUST explicitly include `"use client";` at the top of any file that uses hooks (`useState`, `useEffect`) or event listeners.
 
 ## 1A. Complete Module Self-Containment Contract
@@ -125,7 +184,7 @@ Nothing that is specific to a module's business behavior may be moved into a gen
 
 The purpose of this rule is AI context isolation:
 
-If an AI agent is asked to fix a bug inside one module, the preferred context should be the module folder itself. The module should contain the code, tests, mock behavior, and documentation required to understand and safely modify that module.
+If an AI agent is asked to fix a bug inside one module, the primary required context MUST be the module folder itself. The module MUST contain the code, tests, mock behavior, and documentation required to understand and safely modify that module.
 
 ### Application Infrastructure Boundary
 
@@ -178,10 +237,12 @@ Do NOT create a global business layer merely to avoid duplication.
 
 If two features contain similar business behavior, duplication is allowed and is preferred when duplication improves AI isolation and feature portability.
 
-> **CRITICAL WARNING TO AI AGENTS:** 
-> Do NOT attempt to "DRY up" business components by moving them to global folders like `src/components/ui/`. 
-> Components like "Date Filters", "Business Dropdowns", or "Status Badges" that contain domain-specific data/constants (e.g. "Last 3 Months", "Active") MUST be duplicated per feature, NEVER globalized. 
+> ⛔ **ABSOLUTE PROHIBITION — AI AGENTS (CRITICAL ISOLATION INVARIANT):** 
+> **NEVER attempt to "DRY up" business components by moving them to global folders like `src/components/ui/` or `src/shared/`.** 
+> **Components like "Date Filters", "Business Dropdowns", "Status Badges", or formatters that contain domain-specific data/constants (e.g. "Last 3 Months", "Active") MUST be duplicated per feature, NEVER globalized.** 
 > `src/components/ui/` is strictly for dumb, zero-business primitives (like raw Buttons, Inputs, Dialogs).
+> **Consequence of violation:** AI modifying a shared business component to fix Module A will silently break Module B, triggering cross-module regression cascades and defeating bundle tree-shaking.
+> **Finding ANY business logic inside `src/components/ui/` or global folders = IMMEDIATE NON_COMPLIANT AUDIT FAILURE.**
 
 ---
 
@@ -355,31 +416,55 @@ Do not package or deliver the ZIP.
 
 Every feature module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that feature.
 
-Where applicable, the feature module MUST contain:
+The canonical feature module structure MUST contain:
 
 ```text
 [moduleName]/
+├── page.tsx / layout.tsx / loading.tsx / error.tsx / not-found.tsx
+├── [moduleName]_url_config.ts
+├── [moduleName]_features.md
+├── [moduleName]_forbidden.md
+├── [moduleName]_theme_contract.md
 ├── [moduleName]_components/
 ├── [moduleName]_hooks/
-├── [moduleName]_store/
 ├── [moduleName]_api/
 ├── [moduleName]_types/
 ├── [moduleName]_schemas/
 ├── [moduleName]_constants/
+├── [moduleName]_store/
 ├── [moduleName]_utils/
+├── [moduleName]_locales/
 ├── [moduleName]_mocks/
-├── [moduleName]_tests/
-├── [moduleName]_features.md
-├── [moduleName]_forbidden.md
-├── [moduleName]_theme_contract.md
-└── [moduleName]_url_config.ts
+│   ├── fixtures/
+│   └── handlers/
+└── [moduleName]_tests/
 ```
 
-Only folders that are actually required by the feature need to exist.
+### Mandatory vs Conditionally Required Artifacts (GAP-FIX)
 
-The important requirement is ownership, not the creation of empty folders.
+> ⛔ **NO OMISSION OF REQUIRED ARTIFACTS:**
+> AI agents MUST NOT use "only required folders need to exist" as an excuse to omit tests, mocks, schemas, or documentation.
+> The classification below is NON-NEGOTIABLE:
 
-Anything containing business behavior specific to the feature MUST live inside that feature module.
+| Artifact | Requirement Level | Mandatory Trigger Condition | Consequence of Omission |
+|---|---|---|---|
+| `[moduleName]_features.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks architectural map |
+| `[moduleName]_forbidden.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks safety boundaries |
+| `[moduleName]_theme_contract.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Visual portability contract unverified |
+| `[moduleName]_url_config.ts` | **MANDATORY FOR ALL MODULES** | Every module with routes or API calls | `NON_COMPLIANT` — URL centralization contract broken |
+| `[moduleName]_components/` | **MANDATORY FOR ALL MODULES** | Every feature module with UI | `NON_COMPLIANT` — Missing view layer |
+| `[moduleName]_hooks/` | **MANDATORY FOR ALL MODULES** | Any component with logic/state | `NON_COMPLIANT` — Logic coupled to view |
+| `[moduleName]_api/` | **MANDATORY FOR ALL MODULES** | Any API call | `NON_COMPLIANT` — API centralization broken |
+| `[moduleName]_types/` | **MANDATORY FOR ALL MODULES** | Every feature module | `NON_COMPLIANT` — Type isolation contract broken |
+| `[moduleName]_schemas/` | **MANDATORY FOR ALL MODULES** | Every module with forms/API responses | `NON_COMPLIANT` — Runtime validation missing |
+| `[moduleName]_constants/` | **Conditionally Required** | MUST exist when module has static enums/options | `NON_COMPLIANT` if magic values are inlined |
+| `[moduleName]_store/` | **Conditionally Required** | MUST exist when module has shared client state | `NON_COMPLIANT` if client state is stored in global or component state |
+| `[moduleName]_utils/` | **Conditionally Required** | MUST exist when module has formatters/helpers | `NON_COMPLIANT` if helpers are placed in global `src/lib/` |
+| `[moduleName]_locales/` | **MANDATORY FOR ALL MODULES** | Every feature module (`_en.json` + active languages) | `NON_COMPLIANT` — Hardcoded strings in JSX |
+| `[moduleName]_mocks/` | **MANDATORY FOR ALL MODULES** | Every feature module (fixtures + MSW handlers) | `NON_COMPLIANT` — Untestable/unmocked module |
+| `[moduleName]_tests/` | **MANDATORY FOR ALL MODULES** | Every feature module (co-located RTL/Vitest) | `NON_COMPLIANT` — Zero test verification |
+
+Anything containing business behavior specific to the feature MUST live inside that feature module. Creating empty folders when no artifacts exist is not required, but **omitting a folder when the artifact or trigger condition exists is an ARCHITECTURAL VIOLATION.**
 
 ---
 
@@ -505,11 +590,11 @@ unless the feature documentation explicitly identifies an unavoidable applicatio
 
 ### PORTABILITY TO OTHER PROJECTS
 
-Feature modules SHOULD be designed so that they can be copied into another compatible frontend application with minimal integration work.
+Feature modules MUST be designed so that they can be copied into another compatible frontend application with minimal integration work.
 
 A copied feature MUST NOT depend on hidden business files from its previous application.
 
-After copying, only application-specific integration work should normally be necessary, such as:
+After copying, only application-specific integration work MUST be necessary, such as:
 
 * route registration
 * application configuration
@@ -771,8 +856,9 @@ Every dependency chain MUST remain acyclic. AI accidentally creates loops, and t
 
 6. **Separation of Logic and UI (Custom Hooks for Extreme Isolation)**: 
 Do not mix complex React logic (`useEffect`, multi-step state calculations, data transformations) with JSX markup.
-Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentName].ts`). The actual `.tsx` file should act purely as a "View" layer that consumes the hook.
+Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentName].ts`). The actual `.tsx` file MUST act purely as a "View" layer that consumes the hook.
 *Why?* If there is a bug in the calculation logic, you feed the AI only the `use...` file. It fixes the logic with zero risk of accidentally deleting a `<div>` or altering the UI structure.
+*Consequence of violation:* Mixing business/API/state calculations directly inside JSX markup destroys isolation, triggers unnecessary re-renders, makes headless unit testing impossible, and causes regression bugs during logic repairs. Finding business calculations or direct API calls in JSX = `NON_COMPLIANT`.
 
 ### Main Component Ownership Rule
 Every feature module MUST contain exactly one `[ModuleName]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
@@ -964,14 +1050,16 @@ Error fallback hierarchy:
 2. Module-level boundary
 3. Route-level `error.tsx`
 4. Global application boundary
-- **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
+- **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It MUST be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
 Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/frontend_superadmin/superadmin_gyms/superadmin_gyms_context/SuperadminGymsContext`).
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
+*Consequence of violation:* Relative imports break module extraction and portability, produce fragile import chains that fail during refactoring, and bypass ESLint boundary protection. Finding ANY relative import (`../` or `./`) outside of Next.js routing convention = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
 Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
+*Consequence of violation:* Hardcoded URLs create silent 404s upon routing refactors, break multi-tenant reverse proxy mappings, and make centralized URL auditing impossible. Finding raw endpoint strings in components or hooks = `NON_COMPLIANT`.
 
 ### CANONICAL `[moduleName]_url_config.ts` TEMPLATE (GAP-18 Fix)
 
@@ -1022,9 +1110,7 @@ DO NOT place facade files or entry-point files in the root of the feature module
 
 **THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
 
-For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder should ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). This keeps the root directory entirely clean.
-
-
+For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder MUST ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). Any other file placed in root = ARCHITECTURAL VIOLATION = REJECTED MODULE.
 
 #### NO API FACADES (NO BARREL FILES)
 Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
@@ -1034,9 +1120,9 @@ Internally, the module MUST organize implementation into specific files when req
 - `AdminMembersExportApi.ts`
 - `AdminMembersPaymentApi.ts`
 
-
 12. **No Hardcoded HTTP Status Codes**: 
 Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API routes, proxies, or fetch wrappers. Always use standard enums/constants from libraries like `http-status-codes` (e.g., `StatusCodes.UNAUTHORIZED`). This improves code readability and prevents silly typos in status codes.
+*Consequence of violation:* Numeric status codes like `401` or `500` obscure intent, introduce magic number errors, and break linting. Finding raw status numbers in logic = `NON_COMPLIANT`. Use `StatusCodes` from `http-status-codes` or framework HTTP status enum.
 
 ## AI Context Isolation Contract
 
@@ -2039,6 +2125,7 @@ UI/form layers may use typed date values appropriate to the component; serializa
 - Client-side permission checks MUST be driven by documented, server-provided role claims or capability data (e.g., from the session/auth token). They MUST NOT be computed from client-only state.
 - Backend authorization MUST NOT be assumed based on whether a UI button is visible or hidden.
 - Every module's `[moduleName]_features.md` MUST document which role can see/do what AND explicitly state "server-side authorization enforced at `[endpoint]`".
+- *Consequence of violation:* Critical authorization bypass. If UI hiding is treated as security, any user can invoke sensitive endpoints (DELETE, PATCH) directly via HTTP clients. Features lacking explicit server-side auth verification in `_features.md` = `NON_COMPLIANT`.
 
 ```typescript
 // ✅ CORRECT — UI control only; server enforces authorization independently
@@ -2061,6 +2148,7 @@ When fetching complex layout data or lists, implement **Skeleton Loaders** (usin
 
 27. **Strict TypeScript (No `any` Rule)**:
 The use of the `any` type is strictly forbidden. If a payload is unknown, use the `unknown` type and assert/validate safely via Zod. (Mechanically enforced via ESLint, see Rule 61).
+*Consequence of violation:* Complete breakdown of TypeScript type soundness, undetected runtime crashes in production, broken refactoring, and AI hallucination cascades. Finding `any` in committed code = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
 28. **Icon-Driven Action Columns**:
 Whenever displaying action buttons in data tables/lists, prioritize using semantic icons (e.g., from `lucide-react`) instead of bulky text labels. Include descriptive tooltips and `aria-label`s.
@@ -2073,10 +2161,12 @@ Every **user-browsable data table** MUST implement applicable pagination, sortin
 
 31. **Modularized API Clients (No Centralized API Blob)**:
 Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
+*Consequence of violation:* Giant monolithic API blobs couple independent features, balloon AI context windows, and create cross-module regression cascades. Finding centralized API blobs = `NON_COMPLIANT`.
 
 32. **The "No Barrel File" Rule — With Controlled Public-API Exception:**
 
 **Default rule:** Strictly avoid using `index.ts`, `index.js`, or any other barrel/facade files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies and maintain clean tree-shaking. You MUST NOT create files like `*Export.ts` or `*Facade.ts` to consolidate exports. Direct absolute imports (`@/`) are mandatory for every file.
+*Consequence of violation:* Barrel files cause circular dependency deadlocks, disable tree-shaking, and inflate JavaScript bundle sizes by up to 400%. Finding unauthorized barrel files (`index.ts`, `*Export.ts`, `*Facade.ts`) = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
 **Controlled exception — Curated public module entry points:**
 A single curated `[moduleName]_public_api.ts` entry-point file is permitted ONLY when ALL of the following conditions are true:
@@ -2107,6 +2197,7 @@ Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit do
 
 34. **Environment Variable Segregation & Security**:
 Strictly segregate public and private environment variables. Prefix public variables with `NEXT_PUBLIC_`. Never leak secret keys.
+*Consequence of violation:* Exposing sensitive API secrets, database credentials, or private keys to client browsers via `NEXT_PUBLIC_` or unvalidated `process.env`. Finding secrets in client-side code = CRITICAL SECURITY DEFECT (`NON_COMPLIANT`).
 
 35. **Strict Prohibition of Magic Strings & Numbers**:
 Never use raw strings or numbers directly in logic/UI. All magic values must be defined as TypeScript `enums` or `const` objects. (Mechanically enforced via ESLint, see Rule 61).
@@ -2156,7 +2247,7 @@ In every Zustand store and custom hook, document the data flow direction at the 
 40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
 Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module.
 
-Every module's `[moduleName]_forbidden.md` SHOULD explicitly document:
+Every module's `[moduleName]_forbidden.md` MUST explicitly document:
 
 - Do not place feature mock data outside this module.
 - Do not create duplicate global mock handlers for this module.
@@ -2164,6 +2255,7 @@ Every module's `[moduleName]_forbidden.md` SHOULD explicitly document:
 - Do not add component-level fake business fallbacks.
 - Do not bypass the module API client by reading fixtures directly.
 - Do not modify global MSW bootstrap for a module-local feature change unless registration is actually required.
+*Consequence of violation:* Without explicit module-level forbidden patterns, future AI sessions re-introduce previously eradicated antipatterns (like barrel files, relative imports, and fake UI fallbacks). Missing or generic `[moduleName]_forbidden.md` = `NON_COMPLIANT`.
 
 41. **URL as State for Shareable Views**:
 Any filterable, searchable, or paginated list page MUST sync its state to the URL as query parameters using `useSearchParams` / `useRouter`.
@@ -2193,6 +2285,7 @@ The term "sensitive data" is too broad to implement consistently. Use this class
 - **Analytics exclusion:** PII and Financial data MUST be excluded from any analytics event payload.
 
 **Feature module responsibility:** Each module's `[moduleName]_features.md` MUST list every data field it renders and its classification from the table above.
+*Consequence of violation:* Unmasked PII or financial data in UI lists or telemetry payloads violates data protection laws (GDPR/DPDP) and exposes customer confidential information. Failing to classify and mask PII fields = SEVERE SECURITY DEFECT (`NON_COMPLIANT`).
 
 44. **No `console.log` in Production**:
 All `console.log` calls are strictly forbidden in committed code. Use a centralized logger utility (`src/lib/logger.ts`). (Mechanically enforced via ESLint, see Rule 61).
@@ -2310,11 +2403,13 @@ You MUST physically block these using the following exact mechanical ESLint/tool
   ```
   unless the import is explicitly classified as approved application infrastructure.
 
-  Mechanical tooling SHOULD use:
+  Mechanical tooling MUST use:
   * `eslint-plugin-boundaries`
   * `no-restricted-imports`
   * TypeScript path aliases where useful
   * repository-level architecture validation where necessary
+
+  *Consequence of violation:* Bypassing mechanical tooling gates leads to silent code decay, arbitrary styling regressions, and un-typed runtime failures. Any PR or generated code that disables, bypasses, or ignores tooling gates = `NON_COMPLIANT`.
 
   The architectural rule is:
   ```text
@@ -2440,10 +2535,20 @@ Every pull request must run:
 No PR may merge if a required gate fails.
 
 62. **Dependency-Addition Guardrail**:
-AI agents frequently install redundant packages. **An AI cannot add a new dependency without checking `package.json` first.** Before adding a new library, you must explicitly flag why an existing approved library (e.g., React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react, react-apexcharts (canonical chart library — see global_design_system.md §10; Recharts and Chart.js are forbidden)) does not suffice for the task.
+
+> ⛔ **STOP BEFORE ANY `npm install` COMMAND.**
+> **An AI agent MUST NOT add any new dependency without explicit human approval.**
+> **Checking `package.json` first is MANDATORY.**
+>
+> 1. Check `package.json` to verify if an approved library already satisfies the requirement (e.g. React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react, react-apexcharts).
+> 2. Recharts and Chart.js are **FORBIDDEN** (see `global_design_system.md` §10).
+> 3. Introducing a package NOT in the approved registry requires: (a) explicit written developer approval, (b) documentation in `_features.md`.
+>
+> *Consequence of violation:* Unapproved dependencies introduce duplicate bundles, security vulnerabilities, breaking changes, and licensing risks. Any unauthorized `npm install` = IMMEDIATE TASK REJECTION.
 
 63. **Zero Cross-Module Imports & Controlled Infrastructure Dependencies**:
 - **Zero Cross-Module Business Imports:** Module A (e.g., `billing`) is explicitly FORBIDDEN from importing business logic from Module B (e.g., `attendance`) — no business components, hooks, stores, schemas, types, constants, API services, or business utilities. This MUST be mechanically enforced using ESLint (`no-restricted-imports` or `eslint-plugin-boundaries`).
+- *Consequence of violation:* Cross-module business imports destroy the AI repair boundary. A fix in Module A alters shared business files that silently break Module B, triggering cross-module regression cascades. Finding ANY cross-module business import = IMMEDIATE ARCHITECTURE FAILURE (`NON_COMPLIANT`).
 - **Controlled Infrastructure Dependencies:** A feature/module MAY depend on approved application infrastructure that is intentionally global and contains no feature-specific business logic, including:
   - `src/components/ui/` — dumb reusable UI primitives
   - `src/lib/api.ts` — canonical network/API infrastructure
@@ -2498,7 +2603,8 @@ You MUST ensure that the length of the headers array (e.g., `TABLE_HEADERS`) EXA
 Never use undefined CSS variables (e.g., `var(--members-whatsapp)`) for standard social action buttons. Map social brand colors to design tokens in `tailwind.config.ts` (e.g., `bg-social-whatsapp`). Relying on undefined variables will cause the buttons to become transparent with white text, making them completely invisible in Light Mode.
 
 70. **Interactive KPI Cards as Filters**:
-KPI cards MUST function as filters when the KPI represents a meaningful filterable subset of the adjacent table. Informational KPIs MAY remain non-interactive. When functioning as interactive filters, clicking a KPI card should filter the table below to show only the relevant rows. Include a visual indicator (e.g., a primary colored border or ring) to show which KPI filter is currently active, and always ensure there is a clear way to reset the filter (such as a "Total" card or toggling off).
+KPI cards MUST function as filters when the KPI represents a meaningful filterable subset of the adjacent table. Informational KPIs MAY remain non-interactive. When functioning as interactive filters, clicking a KPI card MUST filter the table below to show only the relevant rows. Include a visual indicator (e.g., a primary colored border or ring) to show which KPI filter is currently active, and always ensure there is a clear way to reset the filter (such as a "Total" card or toggling off).
+*Consequence of violation:* Interactive KPI cards that do not filter the adjacent table are dead controls, violating the Functional Closure Mandate. Record `NON_COMPLIANT`.
 
 71. **Double Verification for Critical Actions (Destructive/Financial)**:
 Whenever presenting an action button that triggers a destructive or critical financial mutation (e.g., deleting a record, suspending a user, or marking an invoice/payroll as paid), you MUST implement a double verification confirmation dialog. Never execute these actions instantly on a single click. Utilize a global `useConfirm` hook or a similar custom modal to explicitly ask the user (e.g., "Are you sure you want to mark this as paid?").
@@ -2897,6 +3003,7 @@ Before declaring a frontend feature complete, the AI MUST verify:
 12. The feature works using the same API access path that will be used with the real backend.
 
 A feature MUST NOT be marked complete merely because TypeScript compiles or the page visually renders.
+*Consequence of violation:* Incomplete or minimal MSW fixtures cause table columns, KPIs, and charts to render blank, `undefined`, or with fake hardcoded business fallbacks, producing invalid test results and false compliance. Incomplete MSW coverage = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
 ### Completion Standard
 
@@ -2959,7 +3066,7 @@ Branch protection requirements:
 78. **The "En-Dash" Rule for Empty Data (Visual Integrity)**:
 Never render completely blank table cells or profile field values when an API returns `null`, `undefined`, or an empty string for optional fields. Always use a meaningful fallback so the user explicitly knows the value is intentionally absent — not a rendering failure or a loading bug.
 - **Standard fallback:** Use an en-dash (`—`) for table cells and detail views: `{displayValue(data.optionalField)}`
-- **Numeric fields:** Use `0` or `—` depending on whether zero is a valid meaningful value (e.g., `totalSessions` should show `0`, but `assignedTrainer` should show `—`).
+- **Numeric fields:** MUST use `0` or `—` depending on whether zero is a valid meaningful value (e.g., `totalSessions` MUST show `0`, but `assignedTrainer` MUST show `—`).
 - **Why:** A blank cell is visually indistinguishable from a broken render or a missing API field. An en-dash is an explicit, intentional signal to the user that the data does not exist. This is especially critical in financial tables, member profiles, and audit logs where a blank value could be misread as a data integrity issue.
 - ❌ **BAD:** `<td>{member.trainerName}</td>` — renders nothing if `null`
 - ✅ **GOOD:** `<td>{displayValue(member.trainerName)}</td>` — renders `—` explicitly
@@ -2976,6 +3083,7 @@ Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to pr
 - **Reset condition:** The guard must be deactivated immediately after a successful form submission or an explicit "Discard Changes" action.
 - ❌ **BAD:** User fills a 3-step Add Member wizard, accidentally clicks a sidebar link, and loses all entered data with no warning.
 - ✅ **GOOD:** `useUnsavedChangesGuard(formState.isDirty)` intercepts the navigation and shows a confirm dialog before the route changes.
+- *Consequence of violation:* Accidental route changes discard unsaved form inputs, frustrating users and causing data loss. Missing `useUnsavedChangesGuard` on complex forms = `NON_COMPLIANT`.
 
 80. **Currency & Number Formatting Standardization**:
 Never manually concatenate currency symbols, format numbers with raw `.toFixed()`, or build locale strings directly inside JSX or component logic. All financial values and large numeric metrics MUST be piped through a centralized formatting utility.
@@ -2987,6 +3095,7 @@ Never manually concatenate currency symbols, format numbers with raw `.toFixed()
 - ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>` — `payment.amount` is in paise; this displays 100× too large.
 - ✅ **GOOD:** `<td>{adminBillingFormatCurrency(payment.amount, 'INR', locale)}</td>`
 - **ESLint enforcement:** Add a custom ESLint rule or `no-restricted-syntax` pattern to flag direct `.toFixed()` calls and currency symbol string concatenation in `.tsx` files.
+- *Consequence of violation:* Displaying minor units directly or using raw `.toFixed()` results in 100× pricing display errors (e.g. ₹9999 instead of ₹99.99), breaking financial trust and localization. Formatting currency outside the module formatter = `NON_COMPLIANT`.
 
 81. **Button Loading Width Stability (No Layout Shifts)**:
 Buttons that enter a loading state MUST maintain their exact original width. When a button's text label is replaced by a `Loader2` spinner (as mandated by Rule 26), the button must not shrink or collapse, as this causes a jarring layout shift that breaks the visual rhythm of forms and toolbars.
@@ -3011,9 +3120,7 @@ Global toast notifications MUST be deduplicated. If a specific toast (identified
 - `entityId` must be the actual stable entity/resource identifier when one exists; never use a literal placeholder or message-only ID when distinct entities can legitimately emit the same message.
 - **Success toasts:** Apply the same deduplication for success toasts on rapid repeated actions (e.g., toggling a status on/off quickly).
 - **Never deduplicate:** Do NOT deduplicate toasts for genuinely distinct events (e.g., two different members being deleted in sequence). Deduplication applies only to identical messages triggered by the same repeated action.
-- **ESLint note:** All raw `toast()` calls outside of `src/lib/api.ts` or the approved toast utility wrapper should be flagged for review to ensure the `id` field is always passed.
-
-
+- **ESLint note:** All raw `toast()` calls outside of `src/lib/api.ts` or the approved toast utility wrapper MUST be flagged for review to ensure the `id` field is always passed.
 
 83. **Idempotency-Key Lifecycle & Retry Behavior**:
 Rule 14 establishes that applicable mutation API clients require an Idempotency-Key. This rule defines the key lifecycle and retry behavior:
@@ -3024,6 +3131,7 @@ Rule 14 establishes that applicable mutation API clients require an Idempotency-
 - never generate a fresh key for a retry.
 - **Implementation:** Generate the key in the confirm handler, store it (e.g., in a `useRef`), and reuse it on all retries until the mutation succeeds or is explicitly abandoned.
 - ❌ **BAD:** Generating `crypto.randomUUID()` on every retry attempt.
+- *Consequence of violation:* Generating a new idempotency key on mutation retries defeats double-spend/double-action protection on the backend, creating duplicate charges or duplicate database records. Re-generating key on retry = SEVERE DATA INTEGRITY DEFECT (`NON_COMPLIANT`).
 
 This rule is the authoritative web frontend rule for Idempotency-Key generation and retry lifecycle.
 
@@ -3243,7 +3351,7 @@ When a planned language becomes officially active, every affected module MUST ad
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
-* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features should be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
+* **Implementation:** Application feature flags must be fetched dynamically from the backend at initialization and stored in Context or Zustand. Features MUST be toggled via a dedicated custom hook (`useFeatureFlag('ENABLE_NEW_BILLING')`). This allows flags to be changed per-tenant or per-user dynamically without needing a frontend deployment.
 
 
 ## Rule 20 — Multi-Currency Monetary Amounts
@@ -3318,7 +3426,7 @@ The export functionality must live in a dedicated, clearly visible section: **Ad
    Canonical project pattern: `POST /api/v1/superadmin/export-data`
 3. **Feedback:** Do NOT show a continuous loading spinner waiting for a file download. Since the API returns `202 Accepted` immediately, show a success toast or alert: 
    *"Export started. You will receive an email with a secure download link within a few minutes."*
-4. **Format Expectation:** The UI should explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
+4. **Format Expectation:** The UI MUST explicitly inform the user that their data will be provided as a ZIP file containing easy-to-read Excel (CSV) files.
 5. **Real-time Completion Feedback:** The dashboard MUST listen for a WebSocket event (e.g., `EXPORT.DATA.COMPLETED`) or poll a status endpoint. When received, update the UI to confirm: *"Your data export is ready and the email has been sent."*
 
 > **AI AGENT NOTE:** Do not implement a file download stream or blob parsing for the `/export-data` endpoint. The frontend's only responsibility is to trigger the request and show an async confirmation message.
@@ -3660,92 +3768,86 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 
 ## FRONTEND DELIVERY FREEZE GATE (GAP-20 Fix)
 
-Before delivering any frontend module ZIP, the AI MUST run this gate. If ANY item fails, the ZIP MUST NOT be delivered — it must be repaired first.
+> ⛔ **HARD STOP — DO NOT DELIVER OR PACKAGE ZIP UNTIL ALL 14 GATES BELOW PASS WITH PROOF.**
+> **Failing or skipping ANY single gate = BLOCKED_DELIVERY. Record `NON_COMPLIANT` and REPAIR immediately.**
+> **An AI MUST NOT deliver a ZIP with unresolved items under any circumstance.**
 
-```text
-FRONTEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
+| Gate # | Gate Description | Verification Directive | Consequence of Failure |
+|---|---|---|---|
+| **Gate 1** | No Critical Findings Open | Verify zero broken user flows, wrong resource identity, or data integrity issues | **STOP.** Broken flow = REJECTED DELIVERY |
+| **Gate 2** | No Major Architecture Violations | Verify state ownership, zero cross-module imports, strict naming rules | **STOP.** Sibling import = REJECTED DELIVERY |
+| **Gate 3** | CSS Token Mapping Verified | `globals.css` / `@theme inline` mapping verified — all semantic tokens produce valid Tailwind classes | **STOP.** Broken styles in light/dark mode |
+| **Gate 4** | Zero Hardcoded Colors | Grep JSX for hex `#`, `rgb(`, raw Tailwind colors (`bg-red-500`), or arbitrary CSS var brackets | **STOP.** Hardcoded color = REJECTED DELIVERY |
+| **Gate 5** | Zero Forbidden Opacity Modifiers | Grep JSX for `bg-success/10`, `bg-danger/5`, etc. Only semantic background tokens permitted | **STOP.** Contrast/theme violation |
+| **Gate 6** | Centralized URL Config Present | `[moduleName]_url_config.ts` present, exports all routes/APIs with real paths (zero placeholders) | **STOP.** Missing config = REJECTED DELIVERY |
+| **Gate 7** | Feature Map Non-Generic | `[moduleName]_features.md` complete with real endpoints, flows, and component tree (no TBDs) | **STOP.** Generic doc = INCOMPLETE MODULE |
+| **Gate 8** | TanStack Query v5 Compliance | Verify `isPending` used (no `isLoading`), no deprecated callbacks in `useQuery` | **STOP.** Broken server state / crash |
+| **Gate 9** | React Hook Form v7 Compliance | Verify `zodResolver` used, schemas co-located, zero Yup/Joi resolvers | **STOP.** Broken form validation |
+| **Gate 10** | Zero Barrel Files | Verify zero `index.ts`, `*Export.ts`, or re-export facades across entire module | **STOP.** Circular dependency risk |
+| **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target module files changed (or approved infrastructure) | **STOP.** Scope leak = REJECTED DELIVERY |
+| **Gate 12** | Multi-Tenancy Enforced | Verify `gymId`/`branchId` extracted from auth/session context, never from client body | **STOP.** Cross-tenant data vulnerability |
+| **Gate 13** | Complete Async States | Verify loading skeletons, empty states (`[Module]EmptyState.tsx`), and error states implemented | **STOP.** Blank screen on async fetch |
+| **Gate 14** | Changelog & Re-Audit Included | `[module_name]_changelog_vN.md` and `RE_AUDIT_CHECKLIST_RESULT.md` present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
-[ ] 1. No CRITICAL findings remain open (broken user flow, wrong resource identity, data integrity issue)
-[ ] 2. No MAJOR architecture violations remain (wrong state ownership, forbidden cross-module imports, naming violations)
-[ ] 3. globals.css / tailwind.config.ts token mapping verified — all semantic tokens produce working Tailwind classes
-[ ] 4. No hardcoded colors, hex values, or arbitrary CSS var brackets in ANY JSX file
-[ ] 5. No forbidden opacity modifiers (bg-success/10, bg-danger/5) in ANY JSX file
-[ ] 6. All `[moduleName]_url_config.ts` files present and contain real endpoint values (not placeholders)
-[ ] 7. All `[moduleName]_features.md` files are non-generic (no "TBD", "Core UI", "Do not bypass API interceptors" filler)
-[ ] 8. TanStack Query v5 APIs used (no mutation.isLoading, no onSuccess/onError in useQuery)
-[ ] 9. React Hook Form v7 APIs used (zodResolver, no Yup/Joi resolvers)
-[ ] 10. No barrel files (no index.ts re-exports) in any module
-[ ] 11. Changed-file list produced — only files within the target module are changed (or approved infrastructure exceptions documented)
-[ ] 12. Multi-tenancy is enforced if applicable — gymId/branchId come from auth context, not client input
-[ ] 13. All loading/empty/error states implemented (no blank screens, no generic spinners for full-page loads)
-[ ] 14. CHANGELOG inside ZIP is specific and accurate (maps each fix to the original audit finding)
-
-If ANY box is unchecked: STATUS = BLOCKED_DELIVERY — do not deliver the ZIP.
-```
+> ⛔ **If ANY box fails: STATUS = `BLOCKED_DELIVERY`. Do NOT package or deliver the ZIP.**
 
 ---
 
 ## DEFINITION OF DONE — Web Architecture Release Checklist
 
-This checklist extends the `FRONTEND DELIVERY FREEZE GATE` with additional release-quality criteria. A feature module is NOT considered production-ready until ALL applicable items pass.
+> ⛔ **HARD STOP — ALL ITEMS BELOW ARE MANDATORY INVARIANTS FOR PRODUCTION RELEASE.**
+> **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure.**
 
-### Architecture & Isolation
-- [ ] Module is AI-portable: feature folder alone is sufficient context for repair (Rule AI Portability)
-- [ ] Zero imports from sibling business modules (Rule 63, verified by ESLint boundaries)
-- [ ] No role-wide business buckets created (Rule 1 — no `superadmin_components/` etc.)
-- [ ] All module files in correct prefixed sub-folders (ROOT QUARANTINE rule)
-- [ ] `[moduleName]_features.md` non-generic with real endpoints, flows, and edge cases
-- [ ] `[moduleName]_forbidden.md` present and specific to this module
-- [ ] `[moduleName]_theme_contract.md` lists all consumed design tokens
-- [ ] `[moduleName]_url_config.ts` present with all endpoints (no hardcoded URLs)
+### 1. Architecture & Isolation Gate
+- [ ] **AI Portability:** Feature folder alone provides complete context for understanding, mocking, testing, and repairing the feature. — *STOP if sibling business files are required.*
+- [ ] **Zero Cross-Module Business Imports:** Zero imports from sibling feature modules. (Verified by ESLint boundaries). — *STOP if `import ... from '../sibling'` found.*
+- [ ] **No Role-Wide Business Buckets:** No generic `superadmin_components/`, `admin_hooks/`, etc., containing feature business logic. — *STOP if unowned bucket exists.*
+- [ ] **Root Quarantine Compliant:** ONLY routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`), `[moduleName]_url_config.ts`, and the documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`) exist at feature root. All other files (.ts, .tsx) are in prefixed subfolders. — *STOP if any other code file is at root.*
+- [ ] **Feature Map Freshness:** `[moduleName]_features.md` contains real endpoints, data requirements table, component tree, and permissions without placeholder text. — *STOP if generic or outdated.*
+- [ ] **Forbidden Patterns Enforced:** `[moduleName]_forbidden.md` present and specific to this module. — *STOP if missing.*
+- [ ] **Theme Contract Verified:** `[moduleName]_theme_contract.md` lists all consumed design tokens. — *STOP if missing.*
+- [ ] **URL Centralization Verified:** `[moduleName]_url_config.ts` present and consumed by all API and navigation call sites. — *STOP if raw URL in JSX/hooks.*
 
-### State & Data
-- [ ] Server state via TanStack Query v5 (no `isLoading`, uses `isPending`)
-- [ ] Client UI state via module-scoped Zustand store
-- [ ] No API response data stored in Zustand as primary source
-- [ ] Query keys namespaced by module (Rule 8 — Query Key Registry)
-- [ ] All mutations invalidate/reconcile TanStack Query cache with backend response
-- [ ] MSW handlers and fixtures complete (Rule 75D — UI Data Requirements matrix filled)
-- [ ] All nullable fields handled via `displayValue()` (Rule 78)
+### 2. State & Data Contract Gate
+- [ ] **Server State via TanStack Query v5:** Uses `isPending`, namespaced query keys (Rule 8), no deprecated v4 APIs. — *STOP if `isLoading` on mutation.*
+- [ ] **Client UI State via Module Zustand Store:** Module-scoped Zustand store for shared client UI state; zero API response data stored in Zustand as primary source. — *STOP if cache duplicated in store.*
+- [ ] **Optimistic Mutation Reconciliation:** All mutations invalidate queries or reconcile Query cache with authoritative `res.data`. — *STOP if optimistic data retained permanently.*
+- [ ] **MSW Fixture Completeness (Rule 75D):** MSW fixtures and handlers cover every UI field, table column, KPI, chart series, and filter. — *STOP if minimal mock causes empty table columns.*
+- [ ] **En-Dash Nullable Display (Rule 78):** All nullable/optional fields rendered via `displayValue()`. Zero blank table cells. — *STOP if raw null renders blank.*
 
-### Security
-- [ ] Frontend permission checks are UX controls only — server-side auth enforced for ALL protected endpoints (Rule 25)
-- [ ] No tokens, passwords, or PII in `NEXT_PUBLIC_*` env vars (Rule 34)
-- [ ] Sensitive data classified and masked per Rule 43 data-classification table
-- [ ] No PII in error monitoring payloads (Rule 15E + Rule 43)
-- [ ] Destructive actions use `useConfirm()` or Type-to-Confirm modal (Rule 71)
-- [ ] Source maps disabled in production build (Rule 74 Gate 4)
-- [ ] Authorization regression test exists for each protected operation (Rule 74 Gate 8)
+### 3. Security & Safety Gate
+- [ ] **Server-Side Authorization Invariant (Rule 25):** Frontend permission checks control UI visibility only. Every protected operation verified to enforce server-side auth. — *STOP if security relies on button hiding.*
+- [ ] **Zero Secret Leaks (Rule 34):** No tokens, passwords, database credentials, or secret keys in `NEXT_PUBLIC_*` or client code. — *STOP if secret committed.*
+- [ ] **PII & Financial Masking (Rule 43):** Phone numbers, national IDs, and account numbers masked in list views via `maskSensitiveData()`. Excluded from error telemetry and analytics. — *STOP if raw PII in list.*
+- [ ] **Destructive Action Double Verification (Rule 71):** Delete, terminate, suspend, or financial triggers require confirmation modal (`useConfirm`). Single-click execution forbidden. — *STOP if single-click delete exists.*
+- [ ] **Source Maps Disabled in Production (Rule 74 Gate 4):** `productionBrowserSourceMaps: false` configured. — *STOP if source maps public.*
+- [ ] **Unsaved Changes Guard (Rule 79):** `useUnsavedChangesGuard` active on all complex forms and multi-step wizards. Intercepts both `beforeunload` and router navigation. — *STOP if route change loses form data.*
 
-### Error Handling
-- [ ] Backend domain errors use `res.message` from API envelope
-- [ ] Network / offline / timeout failures use frontend-localized fallback strings (Rule 14)
-- [ ] No `dangerouslySetInnerHTML` on backend message content (Rule 14)
-- [ ] No raw JS `error.message` or stack traces shown to users
-- [ ] Error boundary present for every independently fetched section (Rule 9)
+### 4. Error Handling & Feedback Gate
+- [ ] **Layered Error Policy (Rule 14):** Backend domain errors display `res.message`. Network/timeout failures use localized fallback strings. — *STOP if raw JS stack trace shown.*
+- [ ] **No `dangerouslySetInnerHTML` on Error Content:** Raw HTML injection on backend error strings strictly forbidden. — *STOP if XSS vector exists.*
+- [ ] **Section Error Boundaries (Rule 9):** Error boundary wraps every independently fetched UI section. Section failure does not crash the page. — *STOP if unhandled section crash.*
+- [ ] **Toast Deduplication (Rule 82):** Stable `toastId` passed to all emitted toasts. Identical error notifications do not stack. — *STOP if duplicate toasts flood screen.*
 
-### Testing
-- [ ] Unit/component tests: loading, empty, error, success states covered
-- [ ] All custom hooks tested at 80% branch coverage
-- [ ] All utilities tested at 90% branch coverage
-- [ ] E2E tests: login, CRUD, destructive action, permission-denied flows covered
-- [ ] Regression test added for any resolved bug
-- [ ] No placeholder assertions (`expect(true).toBe(true)`)
+### 5. Testing & Verification Gate
+- [ ] **Interaction Testing (Behavioral Proof):** Unit/component tests verify real user actions (click -> submit -> visible state update). Button existence checks alone are REJECTED. — *STOP if tests are superficial.*
+- [ ] **Coverage Standards:** Custom hooks tested at ≥80% branch coverage; utilities tested at ≥90% branch coverage. — *STOP if coverage below threshold.*
+- [ ] **Isolated Playwright E2E:** Critical flows covered in mirrored `playwright_E2E/frontend_{role}_e2e/{role}_{module}/` directory. — *STOP if E2E missing for critical CRUD.*
+- [ ] **Zero Fake Test Assertions:** Zero `expect(true).toBe(true)` or tautological assertions. — *STOP if fake test found.*
 
-### Performance
-- [ ] Route JS bundle < 200 KB gzipped
-- [ ] LCP < 2.5s, INP < 200ms, CLS < 0.1 (Lighthouse CI or Web Vitals)
-- [ ] Heavy components use `next/dynamic` (code-split)
-- [ ] Search/filter inputs debounced ≥ 300ms
-- [ ] `next/image` used for all content images
+### 6. Performance & UX Gate
+- [ ] **Bundle Budget:** Route JS bundle < 200 KB gzipped. Heavy components code-split via `next/dynamic`. — *STOP if bundle exceeds budget.*
+- [ ] **Button Loading Stability (Rule 81):** Buttons maintain exact width during loading states. No layout shift on spinner activation. — *STOP if button shrinks on submit.*
+- [ ] **Image Optimization (Rule 33):** All images use `next/image` with explicit dimensions. Zero unapproved `<img>` tags. — *STOP if raw img used.*
+- [ ] **Search & Filter Debounce:** Search inputs debounced ≥300ms before triggering API/query calls. — *STOP if API flooded on every keystroke.*
 
-### Localization
-- [ ] No hardcoded English strings in JSX (all via `t('key')` from `next-intl`)
-- [ ] Locale files at `[moduleName]_locales/[moduleName]_en.json`
-- [ ] UI containers accommodate translated strings up to 2× English length
-- [ ] Dates/numbers/currency use locale-aware formatters (Rule 24, Rule 80)
+### 7. Localization Gate
+- [ ] **Zero Hardcoded Strings in JSX (Rule 18):** All user-facing text uses `t('KEY')` via `next-intl`. — *STOP if hardcoded English string in JSX.*
+- [ ] **Module-Co-located Locales:** `[moduleName]_locales/[moduleName]_en.json` and all active language files generated inside module. — *STOP if centralized messages folder used.*
+- [ ] **Locale-Aware Currency & Numbers (Rule 80):** Currency formatted via module-local `[module]FormatCurrency()`. Minor units correctly divided by subunit divisor. — *STOP if raw minor units rendered.*
+- [ ] **Container Translation Expansion:** UI containers accommodate translated text up to 2× English length without truncation or overflow. — *STOP if layout breaks on long text.*
 
-### Observability
-- [ ] Error monitoring wired for critical flows with route + module + digest (Rule 15E)
-- [ ] Web vitals tracking configured in production
-- [ ] Failed API call rate trackable by endpoint
+### 8. Observability & CI Gate
+- [ ] **Centralized Logger (Rule 44):** Zero `console.log` in committed code. All diagnostics use `src/lib/logger.ts`. — *STOP if console.log committed.*
+- [ ] **Tooling Gates Active (Rule 61):** ESLint boundaries, `@typescript-eslint/no-explicit-any`, Prettier, and `tsc --noEmit` passing. — *STOP if lint or type check fails.*
+- [ ] **Case Sensitivity Verified (Rule 84):** All file names and import paths verified for exact case matching (Linux/CI safety). — *STOP if case mismatch exists.*

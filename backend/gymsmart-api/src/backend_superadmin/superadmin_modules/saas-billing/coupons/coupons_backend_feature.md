@@ -64,7 +64,7 @@ This module owns the backend capability boundary for the superadmin_modules/saas
 - Idempotency Keys: `/superadmin/saas-billing/coupons`, `/superadmin/saas-billing/coupons/:id`, `/superadmin/saas-billing/coupons/:id/restore`, `/superadmin/saas-billing/coupons/:id/status`
 
 ## Business Flow / Key Sequences
-**Standard mutation:** Controller -> DTO validation -> micro-service -> named repository mutation -> mapper -> ResponseInterceptor.
+**Standard mutation:** Controller -> DTO validation -> domain service -> named repository mutation -> mapper -> ResponseInterceptor.
 
 ## File Responsibility Map
 - `coupons-query.controller.ts` — GET transport only; MUST NOT mutate persistence.

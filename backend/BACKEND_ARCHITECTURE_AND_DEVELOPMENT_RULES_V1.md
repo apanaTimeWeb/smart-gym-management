@@ -36,7 +36,7 @@ Currently, human developers act as orchestrators, while AI (LLMs) writes the cod
 
 Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the primary AI context MUST be restricted to the owning feature module. The preferred code repair is a single file, but multi-file repairs within the feature's dependency graph are allowed when genuinely required. The default writable scope is the owning feature module only.
 
-**Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
+**Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, an internal sub-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
 
 ## GLOBAL AUTHORITATIVE PRECEDENCE ORDER
 
@@ -834,7 +834,7 @@ Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace R
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
 *Solution:* **Orchestrator Pattern with UnitOfWork Abstraction.** 
-Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a transaction, call the micro-services passing a `TransactionContext` or `UnitOfWork` abstraction, and commit/rollback. The micro-services themselves must remain pure and decoupled from the raw ORM transaction object. Direct passing of an ORM-specific `tx` object leaks the ORM abstraction into the business service layer.
+Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a transaction, call the sub-services passing a `TransactionContext` or `UnitOfWork` abstraction, and commit/rollback. The sub-services themselves must remain pure and decoupled from the raw ORM transaction object. Direct passing of an ORM-specific `tx` object leaks the ORM abstraction into the business service layer.
 
 ```text
 Orchestrator
@@ -868,7 +868,7 @@ All Orchestrators MUST use the following naming pattern — no exceptions:
 
 The exported class MUST follow PascalCase matching the filename: `admin-billing-orchestrator.service.ts` → `class AdminBillingOrchestratorService`.
 
-Orchestrators MUST live inside the module's `{module}-services/` sub-folder alongside other micro-services.
+Orchestrators MUST live inside the module's `{module}-services/` sub-folder alongside other sub-services.
 
 ### Feature Module File Rule
 
@@ -949,7 +949,7 @@ Never put tests in a global `tests/` or `pytest-tests/` directory separate from 
 
 ## 13. Environment & Configuration Management
 * **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django). The configuration service MUST validate all environment variables at application startup using a strict schema (e.g., Zod or `class-validator`). The app must throw a fatal error and refuse to boot if any required environment variable is missing or incorrectly typed.
-* **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
+* **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across dozens of different services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino / Python structured logging & OpenTelemetry)
 * **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The approved loggers per framework are:
@@ -1120,7 +1120,7 @@ should an AI NEVER do in this module?]
 
 ## File Responsibility Map
 [REQUIRED: One line per file stating its single responsibility and what it must NOT do.]
-- `admin-billing-orchestrator.service.ts` — Opens transactions, calls micro-services. MUST NOT contain business logic.
+- `admin-billing-orchestrator.service.ts` — Opens transactions, calls domain sub-services. MUST NOT contain business logic.
 - `admin-billing-wallet.repository.ts` — Raw DB queries for wallet table only. MUST NOT call other repositories.
 - `admin-billing-plan-purchase.service.ts` — Plan purchase business logic only. MUST NOT touch wallet directly.
 
@@ -1770,7 +1770,7 @@ Backend implementation (services, repositories, DB queries)
 | File Type | Maximum Lines | Action if Exceeded |
 |---|---|---|
 | Controller (`*.controller.ts`) | **200 lines** | Split into query + command controllers (Rule 48) |
-| Service (`*.service.ts`) | **300 lines** | Extract micro-services + Orchestrator (Rule 8, Rule 87) |
+| Service (`*.service.ts`) | **300 lines** | Extract granular sub-services + Orchestrator within module (Rule 8, Rule 87) |
 | Repository (`*.repository.ts`) | **200 lines** | Split by concern: read/write/search/analytics (Rule 7) |
 | Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** | Split into multiple focused DTOs |
 | Module Config (`*.module.ts`) | **100 lines** | Review imports — barrel file may have crept in (Rule 84) |
@@ -2149,7 +2149,7 @@ This rule MUST remain consistent with Rule 99.
 ---
 
 ## 87. Single Responsibility at Method Level (The 20-Line Rule)
-* **The Rule:** Just as the frontend mandates hook separation to split logic from UI, the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate micro-services.
+* **The Rule:** Just as the frontend mandates hook separation to split logic from UI, the backend mandates that **every service method must do exactly ONE thing**. If a method is doing more than one distinct business operation, it must be split into private helper methods or separate sub-services.
 * **The 20-Line Soft Ceiling:** A service method body (excluding method documentation) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.

@@ -46,6 +46,7 @@
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and user approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the 112-item Anti-Skipping Checklist passes clean.**
 > ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Selenium test files. They are mandatory deliverables, not suggestions.**
+> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live backend/runtime is absent. State the Static Compliance Rating directly, noting runtime execution as `DEFERRED_TO_DEPLOYMENT`.
 
 ---
 
@@ -59,6 +60,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 2. **DO NOT FABRICATE:** Never invent fake file paths, fake line numbers, fake mock data, fake test results, or fake architecture compliance. **VIOLATION = entire output is invalid.**
 3. **DO NOT MODIFY SCOPE:** You must only repair or create what is strictly within the supplied writable scope. Never invent missing sibling modules or global infrastructure. **VIOLATION = scope expansion = task failure.**
 4. **DO NOT SUMMARIZE BATCHES:** If auditing multiple files or modules, never merge them into a single shallow summary to "save time." 100% depth on 20% of the scope is ALWAYS better than 20% depth on 100% of the scope. **VIOLATION = audit depth failure = must re-audit affected modules.**
+5. **NO PLACEHOLDER CODE OR TRUNCATION:** Every generated or repaired file MUST be 100% complete and fully implemented. Writing placeholder comments such as `// ... rest of code unchanged ...`, `// ... existing imports ...`, or `// TODO` inside deliverables is STRICTLY FORBIDDEN. Deliverables must be drop-in ready with zero ellipsis. **VIOLATION = broken build = immediate task failure.**
 
 > ⛔ **EXECUTION ORDER INVARIANT (NON-NEGOTIABLE — READ BEFORE ANYTHING ELSE)**
 > The following sequence is ABSOLUTE and cannot be reordered under any circumstance:
@@ -8085,7 +8087,7 @@ serializers.py for validation/data formatting
 For NestJS verify the primary mappings:
 
 ```text
-Controller → micro-service/service
+Controller → sub-service/service
 DTO → validation
 CQRS or separated query/command services
 Repository → ORM/data access

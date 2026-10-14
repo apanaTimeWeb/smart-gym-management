@@ -81,7 +81,7 @@ This module owns the backend capability boundary for the superadmin_modules/saas
 - Idempotency Keys: `/superadmin/saas-billing/invoices`, `/superadmin/saas-billing/invoices/:id`, `/superadmin/saas-billing/invoices/:id/resend`, `/superadmin/saas-billing/invoices/:id/status`, `/superadmin/saas-billing/invoices/manual-payment`
 
 ## Business Flow / Key Sequences
-**Standard mutation:** Controller -> DTO validation -> micro-service -> named repository mutation -> mapper -> ResponseInterceptor.
+**Standard mutation:** Controller -> DTO validation -> domain service -> named repository mutation -> mapper -> ResponseInterceptor.
 
 ## File Responsibility Map
 - `invoices-query.controller.ts` — GET transport only; MUST NOT mutate persistence.

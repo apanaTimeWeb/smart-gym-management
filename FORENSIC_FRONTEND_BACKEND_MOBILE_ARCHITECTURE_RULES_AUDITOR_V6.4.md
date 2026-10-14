@@ -41,6 +41,16 @@
 > ⛔ **You MUST NOT skip the Chunk Map (Section 13A Step 3) even if the repo looks small.**
 > ⛔ **You MUST NOT begin code inspection until the user replies "Begin Batch 1".**
 > ⛔ **You are a READ-ONLY audit agent. You MUST NOT edit, create, rename, or delete any file. Violation = output is INVALID.**
+>
+> ### MANDATORY AUDIT MODAL WORD-MEANING TABLE
+> | Word | Meaning in this Audit |
+> |------|-----------------------|
+> | **MUST** | Absolute requirement — no exception, no omission. Must be verified with concrete code/line evidence. |
+> | **MUST NOT** / **FORBIDDEN** | Absolute prohibition — presence in inspected code is an immediate FAIL. |
+> | **REQUIRED** | Mandatory audit deliverable or inspection step. |
+> | **encouraged** / **preferred** | In architecture docs, this is still a **default requirement** — code deviating without explicit documented justification MUST be flagged as non-compliant. |
+> | **Optional** (sub-folders) | In architecture docs, only optional if the module **genuinely has no such artifact** — omitting when the artifact exists = FAIL. |
+> | **except** / **unless** | Only a valid escape when ALL stated conditions are explicitly met and cited in evidence. |
 
 ---
 
@@ -57,6 +67,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 5. **DO NOT REPAIR CODE:** You MUST NOT edit, create, refactor, or improve any source code, test, mock, migration, or configuration file during the audit. **VIOLATION = output is completely invalid and must be regenerated from scratch.**
 6. **DO NOT SKIP PASS GATE ITEMS 11-14:** Before marking ANY rule PASS, you MUST explicitly confirm all 14 items in Section 20. Skipping items 11-14 is the leading cause of fabricated PASS results. **VIOLATION = PASS is treated as NOT_VERIFIED.**
 7. **DO NOT SKIP SECTION 85 VERIFICATION LEDGER:** This is MANDATORY before publishing the final report. **VIOLATION = report is not forensically valid.**
+8. **DO NOT SKIP WEB ARCHITECTURE INVARIANTS (SECTION 39):** When auditing Web Frontend (Next.js App Router), you MUST explicitly audit all 14 Web Architecture Invariants (Canonical Module Hierarchy, Root Quarantine, Barrel Ban, Zero Business Logic in `src/components/ui/`, TanStack Query v5 `isPending`, RHF v7 + Zod, Idempotency-Key on mutations, MSW Rule 75D complete data contract parity, Multi-currency integer minor units, En-dash `displayValue()` fallback, Unsaved-changes guard, Co-located `_locales/`, and Documentation Trio). Skipping these or treating them as generic UI checks = AUDIT FAILURE.
 
 ---
 
@@ -823,6 +834,12 @@ Verification modes available:
 - If E2E was not run, E2E-dependent rules MUST be marked `NOT_VERIFIED`.
 - The declaration MUST NOT be invented — if a capability is uncertain, mark it `UNKNOWN` and treat it as unavailable.
 - The declaration MUST remain visible in the final report and MUST NOT be removed when summarizing results.
+- **Offline / Static Environment Scoring Directive:** When runtime capabilities (Browser automation, live runtime services, live DB) are declared `NO`, the auditor MUST evaluate ratings and scores strictly based on **Static Code & Architecture Compliance** (type safety, schemas, contracts, structural ceilings, patterns, and logic correctness).
+- The auditor **MUST NOT penalize, artificially deduct points, or refuse to rate** simply because live runtime execution was impossible in the current offline/static environment.
+- The auditor MUST separate evaluation into:
+  1. **Static Architecture & Code Compliance Rating (1 to 10):** Measures actual code quality, contract fulfillment, and rule adherence.
+  2. **Runtime Verification Status:** Clearly marked as `DEFERRED_TO_LIVE_DEPLOYMENT (Offline audit)`.
+- When asked by the user to rate progress or compliance (e.g., "Rate from 1 to 10"), the AI **MUST NOT complain or repeatedly excuse itself** with "I don't have a runtime environment". It MUST state the Static Compliance Rating directly and concisely.
 
 ---
 
@@ -1580,7 +1597,7 @@ just because a complete audit would be easier if the missing evidence existed.
 
 # 23. EVIDENCE PROVENANCE
 
-Every meaningful evidence result should have provenance where available.
+Every meaningful evidence result MUST have provenance where available. Uncited evidence or vague references = AUDIT EVIDENCE FAILURE.
 
 Capture:
 
@@ -1866,7 +1883,8 @@ Do not hardcode project-specific limits into this audit prompt.
 > | Hook/Controller | 150 lines | 150 lines |
 > | API service file | 200 lines | 150 lines |
 > | Schema/Validator | 200 lines | 150 lines |
-> | Store/Provider | — | 180 lines |
+> | Store/Provider | **180 lines** | 180 lines |
+> | Utility / Formatter | **120 lines** | 120 lines |
 
 Check where applicable:
 
@@ -1916,6 +1934,10 @@ The auditor MUST strictly verify the Canonical Naming Rules based on the supplie
 5. Locale files MUST be named `[moduleName]_{lang}.json` and live in `[moduleName]_locales/`.
 6. URL Config files MUST export a `MODULE_URLS` object with UPPER_SNAKE_CASE keys.
 7. Feature files (`_features.md`) MUST NOT contain generic boilerplate; they must contain all 18 mandatory sections (Purpose, Dependency Manifest, Feature Lifecycle Contract, Screens & Entry Points, Folder Structure, User Flows & Interactions, Data & State Architecture, API Contract, Approved External Dependencies, Permissions Used, Platform-Specific Notes, Offline Behavior, Loading/Empty/Error States, Background Tasks, Edge Cases and AI Warnings, Component Responsibility Map, Rule Compliance Checklist, Known Issues / Tech Debt).
+7A. Role Container Hierarchy: Container MUST be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`), NOT unprefixed `src/app/admin/`. Module must be `{role}_{module}/`.
+7B. Root Quarantine Rule: Strictly ONLY Next.js routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`), `[moduleName]_url_config.ts`, and the documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`) are permitted at the feature root. All other `.ts`/`.tsx` files MUST live in a prefixed subfolder.
+7C. Mandatory Documentation Trio: Every module MUST contain all THREE: `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md`. Missing any file = INCOMPLETE MODULE.
+7D. Zero Barrel Files Ban: NO `index.ts` or re-export facades across the entire module. All imports must be direct absolute paths (`@/...`).
 
 **If MOBILE FRONTEND (React Native) is in scope:**
 8. Child folders use flat naming inside feature folder (e.g., `components/`, `hooks/`, `screens/`, `api/`, `config/`, `state/`, `types/`, `schemas/`, `tests/`).
@@ -2445,15 +2467,77 @@ If only ONE stack is supplied, skip this section entirely and mark it `BLOCKED_B
 
 # 39. FRONTEND FRAMEWORK BOUNDARY AUDIT (WEB)
 
-If the target is Web (e.g., Next.js), inspect where applicable:
+If the target is Web (Next.js App Router / React / TypeScript / Tailwind CSS), inspect ALL of the following where applicable:
 
-- server/client component boundary
-- browser-only API usage vs server availability
-- client-only hooks
-- event listener ownership
-- hydration risks
-- server-side vs client-side data responsibility
-- inappropriate `use client` or missing `use client`
+### 1. Canonical Module Hierarchy & Root Quarantine (Rule 1, 1B, 1C, 1D)
+- **Role Container:** MUST be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`), NOT unprefixed `src/app/admin/`. Unprefixed container = IMMEDIATE ARCHITECTURE VIOLATION.
+- **Canonical Feature Module:** MUST be `{role}_{module}/` inside role container (e.g., `admin_members/`). Generic name (`members/`) = NON_COMPLIANT.
+- **No Duplicate Route Tree:** Exactly ONE canonical directory represents the feature. No parallel or sibling route tree (e.g., `dashboard/` + `admin_dashboard/`).
+- **Root Quarantine Invariant:** ONLY Next.js routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`), `[moduleName]_url_config.ts`, and the documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`) are permitted at the feature root. ANY other `.ts`/`.tsx` file in feature root = IMMEDIATE NON_COMPLIANT.
+- **Prefixed Sub-Folders:** ALL sub-folders must use single module prefix: `[moduleName]_components/`, `[moduleName]_hooks/`, `[moduleName]_api/`, `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_store/`, `[moduleName]_utils/`, `[moduleName]_locales/`, `[moduleName]_mocks/`, `[moduleName]_tests/`. No double prefixing.
+
+### 2. Zero Barrel Files Ban (Rule 32)
+- Zero `index.ts` files or re-export facades across the entire module.
+- All imports MUST be direct absolute paths: `import { ... } from '@/app/frontend_{role}/{role}_{module}/...'`. Barrel file = CIRCULAR DEPENDENCY RISK = FAIL.
+
+### 3. Absolute Module Isolation & UI Primitive Scope (Rule 1A, Rule 54)
+- **Zero Business Logic in `src/components/ui/` or `src/shared/`:** `src/components/ui/` is strictly for dumb, zero-business primitives (raw Buttons, Inputs, Dialogs).
+- Domain-specific dropdowns, status badges, formatters, and filters containing business constants (e.g., "Active", "Last 3 Months") MUST be duplicated/co-located per module, NEVER globalized. Finding business logic in `src/components/ui/` = IMMEDIATE NON_COMPLIANT AUDIT FAILURE.
+- **Zero Cross-Module Business Imports (Rule 63):** A feature module MUST NOT import business components, hooks, stores, or APIs from sibling feature modules.
+
+### 4. Server vs. Client Boundary & Next.js App Router (Rule 8, Rule 9)
+- Server Components by default; `"use client";` placed strictly at the top of files that use React hooks (`useState`, `useEffect`) or DOM event listeners.
+- No browser-only APIs (`window`, `localStorage`, `document`) accessed during Server Component rendering or outside client-side guards.
+- Typed Error Boundaries: Every independently fetched section wrapped with `error.tsx` or section error boundary so section failure does not crash the page.
+
+### 5. Server State via TanStack Query v5 (Rule 15C, Rule 42, Rule 66, Extended Rule 17)
+- TanStack Query **v5** compliance: Mutations MUST use `isPending`, NEVER deprecated `isLoading`.
+- Query key namespaces: Query keys must follow the resource identity hierarchy: `['[role]_[module]', 'detail', id]`.
+- Cache Invalidation: Every mutation hook MUST implement `onSuccess` calling `queryClient.invalidateQueries(...)` to prevent stale data.
+- Server data (API responses) MUST NOT be duplicated into Zustand stores as a secondary cache.
+
+### 6. Client UI State via Module-Scoped Zustand (Rule 5)
+- Shared client UI state MUST use feature-scoped Zustand stores (`[moduleName]_store/`).
+- No giant monolithic global store.
+- Zustand store hard ceiling: **180 lines**.
+
+### 7. Form Architecture (Rule 15B, Rule 16)
+- React Hook Form **v7** + Zod + `@hookform/resolvers/zod`.
+- No Yup, no Joi, no uncontrolled inputs.
+- Zod schemas co-located in `[moduleName]_schemas/`.
+
+### 8. Mutational Idempotency Contract (Rule 83, Extended Rule 14)
+- EVERY mutating API client function (POST, PATCH, PUT, DELETE) MUST require an `idempotencyKey: string` parameter.
+- MUST inject `{'Idempotency-Key': idempotencyKey}` into HTTP headers.
+- Keys generated once per user intent and reused on retries.
+
+### 9. MSW Fixture & Mock Completeness (Rule 75, 75A-75D)
+- Module-owned mocks in `[moduleName]_mocks/` (fixtures and handlers).
+- Rule 75D UI Data Contract Parity: MSW handlers and fixtures must cover 100% of UI data dependencies: every table column, row field, KPI card, chart series, dropdown option, filter, search, sort, pagination, empty state, and error state. Minimal mocks or hardcoded JSX fallbacks = IMMEDIATE FAIL.
+
+### 10. Multi-Currency Monetary Contract (Rule 80, Extended Rule 20)
+- Backend sends monetary amounts as **integers in smallest units** (cents/paise).
+- Display MUST go through module-local `[module]FormatCurrency()` utility using `Intl.NumberFormat` and active locale.
+- Strict ban on raw `/ 100` inline in JSX and hardcoded currency symbols (`₹`, `$`, `€`).
+
+### 11. En-Dash Nullable Display Fallback (Rule 78)
+- All nullable or optional fields rendered via `displayValue()` showing en-dash (`—`).
+- Zero blank table cells or empty data values.
+
+### 12. Complex-Form Unsaved Changes Guard (Rule 79)
+- `useUnsavedChangesGuard` active on all multi-step wizards and complex forms.
+- Intercepts both browser tab close (`beforeunload`) AND Next.js client-side router navigation.
+
+### 13. Module-Co-located Internationalization (i18n) (Rule 18, Extended Rule 18)
+- Feature owns `[moduleName]_locales/` folder with `[moduleName]_en.json` (base) AND all active target language files (e.g. `[moduleName]_hi.json`).
+- Zero hardcoded English strings in JSX; all user-facing text uses `t('KEY')` via `next-intl`.
+- No central `src/messages/` dumping directory.
+
+### 14. Mandatory Module Documentation Trio & Centralized URL Config (Rule 11, Rule 13, Rule 40)
+- `[moduleName]_features.md` with all 18 mandatory sections (no generic boilerplate or TBDs).
+- `[moduleName]_forbidden.md` detailing module-specific anti-patterns.
+- `[moduleName]_theme_contract.md` listing all consumed semantic design tokens.
+- `[moduleName]_url_config.ts` exporting all routes and API endpoints as `as const`.
 
 ---
 
@@ -3349,7 +3433,7 @@ Never inherit old verdicts without current evidence.
 
 # 55. STATIC VS EXECUTED EVIDENCE
 
-Every meaningful conclusion should identify evidence type:
+Every meaningful conclusion MUST identify evidence type:
 
 ```text
 STATIC
@@ -3813,7 +3897,7 @@ WHY IT SHOULD BE PRESERVED
 EVIDENCE TYPE
 ```
 
-Preserve evidence should include:
+Preserve evidence MUST include:
 
 - correct ownership
 - correct source-of-truth
@@ -3940,7 +4024,7 @@ resource identity
 existing valid test contracts
 ```
 
-Each invariant should have evidence.
+Each invariant MUST have concrete line and file evidence.
 
 Do not invent invariants.
 
@@ -4823,6 +4907,21 @@ The audit is complete only when ALL of the following are true:
 [ ] Responsive checked when applicable
 [ ] Visual evidence types separated
 [ ] Accessibility checked when applicable
+[ ] Web Frontend-specific checks applied when stack is Next.js / Web
+[ ] — Web: Canonical Module Hierarchy checked (src/app/frontend_{role}/{role}_{module}/)
+[ ] — Web: Root Quarantine checked (only page/layout/docs/url_config at feature root)
+[ ] — Web: Zero Barrel Files checked (no index.ts, direct absolute imports @/...)
+[ ] — Web: Zero Business Logic in src/components/ui/ checked (dumb primitives only)
+[ ] — Web: TanStack Query v5 Compliance checked (isPending, not isLoading on mutations)
+[ ] — Web: React Hook Form v7 + Zod resolver checked (zero Yup/Joi)
+[ ] — Web: Idempotency-Key Header checked on all mutating API calls (POST/PATCH/PUT/DELETE)
+[ ] — Web: MSW Rule 75D Completeness checked (100% UI Data Contract parity for all columns/KPIs)
+[ ] — Web: Multi-Currency Minor Unit Contract checked (integer subunit formatting, no raw /100 in JSX)
+[ ] — Web: En-Dash Nullable Fallback checked (displayValue() used, zero blank cells)
+[ ] — Web: Unsaved Changes Guard checked on complex forms (browser exit + router navigation)
+[ ] — Web: Module-Co-located Locales checked (en + active languages in _locales/)
+[ ] — Web: Documentation Trio checked (_features.md, _forbidden.md, _theme_contract.md)
+[ ] — Web: Centralized URL Config checked (_url_config.ts exports all routes as const)
 [ ] Backend architecture checked when applicable
 [ ] — Modular Monolith Isolation Check done (no .forRoot() in feature modules)
 [ ] — Orchestrator-owns-transactions check done
