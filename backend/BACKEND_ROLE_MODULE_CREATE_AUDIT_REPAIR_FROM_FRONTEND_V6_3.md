@@ -13,6 +13,18 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 3. **DO NOT MODIFY SCOPE:** You must only repair or create what is strictly within the supplied writable scope. Never invent missing sibling modules or global infrastructure.
 4. **DO NOT SUMMARIZE BATCHES:** If auditing multiple files or modules, never merge them into a single shallow summary to "save time." 100% depth on 20% of the scope is ALWAYS better than 20% depth on 100% of the scope.
 
+> ⛔ **EXECUTION ORDER INVARIANT (NON-NEGOTIABLE — READ BEFORE ANYTHING ELSE)**
+> The following sequence is ABSOLUTE and cannot be reordered under any circumstance:
+> 1. PROJECT STACK GATE (Section 6A) → must pass before Stage 1 begins
+> 2. STAGE 1 FREEZE GATE → ALL frontend requirements frozen + `baseline_frozen: true` persisted → ONLY THEN open any backend file
+> 3. STAGE 2 audit → ONLY THEN begin Stage 3 repairs
+> 4. RBG PLAN published + user approves → ONLY THEN execute any fix
+> 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
+> 6. 112-item Anti-Skipping Checklist re-run clean → ONLY THEN package ZIP
+> 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` + `CHANGELOG` inside ZIP → ONLY THEN deliver
+>
+> **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
+
 ---
 
 > ⚡ **ARCHITECTURE DOCUMENT IS FINAL AUTHORITY**
@@ -683,6 +695,7 @@ DO determine whether the button requires a real backend mutation and whether tha
 # 2A. ABSOLUTE FRONTEND WRITE PROHIBITION — NON-NEGOTIABLE
 
 > ⛔ THIS IS THE MOST IMPORTANT SCOPE RULE IN THIS ENTIRE PROMPT. READ IT CAREFULLY.
+> ⛔ **VIOLATION CONSEQUENCE: If any frontend file is modified for any reason, the entire output is INVALID and must be regenerated from scratch. There are zero exceptions.**
 
 You MUST NOT write, edit, create, delete, rename, refactor, or repair ANY file inside the supplied frontend ZIP or frontend source directory under ANY circumstance.
 
@@ -866,9 +879,11 @@ Does the backend conform to every rule in the supplied `BACKEND_ARCHITECTURE_AND
 
 What was actually executed and verified at runtime?
 
-**RUNTIME VERIFICATION HONESTY RULE**
+**RUNTIME VERIFICATION HONESTY RULE — MANDATORY EVIDENCE TAGGING**
 
 The AI MUST distinguish between static inspection, compilation, unit testing, integration testing, E2E testing, and manual/runtime execution. Never use the unqualified word "verified" without specifying which verification level was achieved.
+
+> ⛔ **Every single PASS verdict MUST be tagged with one of: `STATICALLY_INSPECTED` / `COMPILED` / `LINTED` / `UNIT_TESTED` / `INTEGRATION_TESTED` / `E2E_TESTED` / `RUNTIME_EXECUTED`. An untagged PASS is treated as `NOT_VERIFIED`. Claiming runtime verification from static inspection alone = fabricated PASS = audit failure.**
 
 Use only the following statuses:
 
@@ -3344,6 +3359,8 @@ Reply "Begin RBG 1" to start controlled repair execution.
 Or reply "Adjust" to change the grouping.
 ```
 
+> ⛔ **HARD STOP: Do NOT execute a single fix until the user explicitly replies "Begin RBG 1" or "Approved". Starting repairs before user approval = skipped gate = invalid output.**
+
 Do NOT start any repair until the user approves the RBG Plan.
 
 ## RBG EXECUTION RULES
@@ -3419,6 +3436,17 @@ Add to the existing `progress.json` structure:
 ---
 
 ## 6.12 Final State
+
+> ⛔ **DELIVERY FREEZE GATE — The ZIP MUST NOT be created or delivered until ALL of the following are confirmed:**
+> - [ ] 112-item Anti-Skipping Checklist re-run on repaired code → clean
+> - [ ] `RE_AUDIT_CHECKLIST_RESULT.md` generated and included in ZIP
+> - [ ] `INTEGRATION_GUIDE.md` included in ZIP
+> - [ ] `stage-1-frontend-requirements.md` included in ZIP
+> - [ ] `[module_name]_changelog_vN.md` included in ZIP (mandatory — lists every file changed, every issue fixed, every rule verified)
+> - [ ] `stage-3-final-verdict.md` included in ZIP
+> - [ ] `architecture-rule-enforcement-matrix.md` included in ZIP
+> - [ ] Complete file manifest included in ZIP
+> **Delivering a ZIP missing any mandatory artifact = incomplete delivery. Add the missing artifact before delivering.**
 
 ```text
 ALL WORK UNITS COMPLETE
@@ -3704,6 +3732,8 @@ The following MUST be completed and FROZEN before ANY backend file is opened, re
 
 ### STAGE 1 FREEZE GATE (GAP-4 Fix)
 
+> ⛔ **HARD STOP — This gate is a mandatory checkpoint. Do NOT proceed past this point until every box below is checked. Opening a backend file before this gate is cleared = context pollution = hallucinated output = restart required.**
+
 ```text
 ⛔ STAGE 1 FREEZE GATE
 
@@ -3720,6 +3750,7 @@ Before any backend file may be opened, verify ALL of the following:
     (not mixed in the same bounded unit — per Section 4.1A chunking rules)
 
 If ANY box is unchecked: DO NOT open any backend file. Complete Stage 1 first.
+VIOLATING THIS GATE = INVALID EXECUTION. Restart Stage 1.
 ```
 
 ### STOP-AND-ESCALATE CONDITIONS (MANDATORY P1 SAFEGUARD)

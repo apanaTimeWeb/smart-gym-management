@@ -1,5 +1,17 @@
 VERSION 2.4 FINAL — FRONTEND (WEB/MOBILE) / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION
 
+> ⛔ **EXECUTION ORDER INVARIANT (NON-NEGOTIABLE — READ BEFORE ANYTHING ELSE)**
+> The following sequence is ABSOLUTE and cannot be reordered under any circumstance:
+> 1. Read ALL supplied documents completely before touching any code
+> 2. STAGE 1: Freeze full requirement baseline + `baseline_frozen: true` persisted → ONLY THEN open any implementation file
+> 3. STAGE 2: Complete full audit → ONLY THEN begin Stage 3 repairs
+> 4. RBG PLAN published + user explicitly approves → ONLY THEN execute any fix
+> 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
+> 6. Anti-Skipping Checklist (Section 43P) re-run clean on repaired code → ONLY THEN package ZIP
+> 7. `[module_name]_changelog_vN.md` + `INTEGRATION_GUIDE.md` + `playwright_E2E` inside ZIP → ONLY THEN deliver
+>
+> **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
+
 ---
 
 # 0. WHAT THIS PROMPT DOES
@@ -3262,6 +3274,8 @@ RBG GROUPING RATIONALE:
 Reply "Begin RBG 1" to start controlled repair execution.
 Or reply "Adjust" to change the grouping.
 ```
+
+> ⛔ **HARD STOP: Do NOT execute a single fix until the user explicitly replies "Begin RBG 1" or "Approved". Starting repairs before user approval = skipped gate = invalid output.**
 
 Do NOT start any repair until the user approves the RBG Plan.
 
