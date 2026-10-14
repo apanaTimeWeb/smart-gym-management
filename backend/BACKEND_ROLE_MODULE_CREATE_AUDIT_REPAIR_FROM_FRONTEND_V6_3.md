@@ -3261,6 +3261,163 @@ After repairs:
 
 When archive creation is unavailable for MODE B, provide the complete intended package manifest, all generated file contents or patches, and a clear statement that the archive was NOT produced in the current environment.
 
+## 6.11A REPAIR BATCH GROUP (RBG) SYSTEM — MANDATORY FOR MODE B STAGE 3
+
+## THE PROBLEM THIS SOLVES
+
+After a full audit, the repair phase MUST NOT apply fixes randomly from any batch.
+Random repair causes:
+- partial fixes that break dependent backend flows;
+- context loss mid-repair;
+- incomplete API contracts;
+- wasted turns;
+- the AI never finishing.
+
+## REPAIR BATCH GROUP DEFINITION
+
+After the full audit is complete and all findings are recorded, the AI MUST group all repair work into **Repair Batch Groups (RBGs)** before executing a single fix.
+
+A Repair Batch Group is a set of 3–4 audit batches whose findings are repaired together in one controlled execution turn.
+
+## RBG SIZING RULE
+
+```text
+IF total audit batches ≤ 6
+  → Group into RBGs of 3 batches each
+
+IF total audit batches 7–12
+  → Group into RBGs of 3–4 batches each
+
+IF total audit batches > 12
+  → Group into RBGs of 4 batches each
+
+MAXIMUM ABSOLUTE CEILING: No single RBG may contain findings from more than 4 audit batches.
+MINIMUM: No single RBG may contain fewer than 2 audit batches unless it is the final RBG.
+```
+
+## RBG PRIORITY ORDER
+
+RBGs MUST be ordered by repair dependency, not by batch number:
+
+```text
+RBG 1 — P0 Critical fixes (security, auth, tenant isolation, broken contracts, missing endpoints)
+RBG 2 — P1 High fixes (DTO/validation, service logic, repository queries, migrations)
+RBG 3 — P2 Medium fixes (architecture rules, naming, documentation, tests)
+RBG 4 — P3 Low fixes (comments, minor naming, tooling)
+RBG N — Final re-audit + packaging
+```
+
+If a P0 fix from Batch 7 and a P0 fix from Batch 2 are related (e.g., same entity/migration), they MUST be in the same RBG.
+Do NOT split dependent fixes across RBGs.
+
+## RBG PLAN — MANDATORY BEFORE ANY REPAIR BEGINS
+
+Before executing any repair, the AI MUST publish the complete RBG Plan:
+
+```text
+╔══════════════════════════════════════════════════════════╗
+║        BACKEND REPAIR BATCH GROUP PLAN                  ║
+╚══════════════════════════════════════════════════════════╝
+
+TOTAL AUDIT BATCHES:     [N]
+TOTAL FINDINGS:          [N]
+TOTAL RBGs:              [N]
+
+┌─────────────────────────────────────────────────────┐
+│ RBG 1 — Audit Batches [X, Y, Z]                     │
+│ Findings: [N]  │  Severity: P0/P1                   │
+│ Focus: [brief description of what is being fixed]   │
+├─────────────────────────────────────────────────────┤
+│ RBG 2 — Audit Batches [A, B, C]                     │
+│ Findings: [N]  │  Severity: P1/P2                   │
+│ Focus: [brief description]                          │
+├─────────────────────────────────────────────────────┤
+│ RBG 3 — Audit Batches [D, E, F]                     │
+│ Findings: [N]  │  Severity: P2/P3                   │
+│ Focus: [brief description]                          │
+└─────────────────────────────────────────────────────┘
+
+RBG GROUPING RATIONALE:
+[Why these batches are grouped together — dependency order]
+
+Reply "Begin RBG 1" to start controlled repair execution.
+Or reply "Adjust" to change the grouping.
+```
+
+Do NOT start any repair until the user approves the RBG Plan.
+
+## RBG EXECUTION RULES
+
+1. **PRIOR RBG DEPENDENCY PRE-CHECK (MANDATORY for RBG N where N > 1):** Before executing any fix in RBG N, verify that every artifact from previous RBGs that the current RBG depends on is actually in place. If a prior RBG fix is missing or incomplete → repair it BEFORE starting the current RBG and record as `PRIOR_RBG_FIX_INCOMPLETE`. This is a targeted dependency check only — not a full re-audit of all previous RBGs.
+2. Execute ALL findings from the current RBG before moving to the next RBG.
+3. After completing each RBG, checkpoint and display the RBG Completion Dashboard.
+4. Do NOT start the next RBG until the user replies "continue" or "Begin RBG N+1".
+5. Within an RBG, apply fixes in dependency order:
+   - Migrations/entities first → repositories → services → controllers/DTOs → tests → docs.
+6. Never apply a fix from RBG 3 while RBG 1 is still in progress.
+7. Security/auth/tenant fixes MUST always be in RBG 1 regardless of which audit batch found them.
+
+## RBG CHECKPOINT TEMPLATE
+
+After completing each RBG, display:
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║         🔧 BACKEND RBG CHECKPOINT 🔧                        ║
+╠══════════════════════════════════════════════════════════════╣
+║ RBG JUST COMPLETED:  RBG [N] — Audit Batches [X, Y, Z]      ║
+║ FINDINGS FIXED:      [N] fixes applied                       ║
+║ FILES CHANGED:       [N] files                               ║
+║ ISSUES FIXED:        P0:[N] P1:[N] P2:[N] P3:[N]            ║
+║ CUMULATIVE FIXED:    P0:[N] P1:[N] P2:[N] P3:[N]            ║
+╠══════════════════════════════════════════════════════════════╣
+║ REMAINING RBGs:                                              ║
+║   RBG [N+1]: Batches [A, B, C] — [N] findings               ║
+║   RBG [N+2]: Batches [D, E, F] — [N] findings               ║
+╠══════════════════════════════════════════════════════════════╣
+║ VERIFICATION STATUS:                                         ║
+║   TypeScript:  [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Lint:        [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Unit Tests:  [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Migrations:  [VERIFIED / NOT_EXECUTED]                     ║
+╠══════════════════════════════════════════════════════════════╣
+║ ACTION REQUIRED:                                             ║
+║ Reply "continue" to proceed to RBG [N+1].                    ║
+║ OR reply "Begin RBG [N+1]" to start the next group.          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+## RBG ANTI-RANDOM-FIX RULE (NON-NEGOTIABLE)
+
+The AI MUST NOT:
+- Pick fixes randomly from any batch;
+- Apply a P3 fix before all P0 fixes in the same RBG are done;
+- Skip to a later RBG because an earlier RBG has a hard fix;
+- Mix findings from different RBGs in the same execution turn;
+- Claim an RBG is complete when any finding in it remains unresolved;
+- Apply a migration fix without also fixing the corresponding entity/DTO in the same RBG.
+
+If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+
+## RBG STATE IN progress.json
+
+Add to the existing `progress.json` structure:
+
+```json
+{
+  "rbg_plan_published": false,
+  "rbg_plan_approved": false,
+  "total_rbgs": 0,
+  "current_rbg": null,
+  "completed_rbgs": [],
+  "remaining_rbgs": [],
+  "rbg_findings_fixed": 0,
+  "rbg_findings_remaining": 0
+}
+```
+
+---
+
 ## 6.12 Final State
 
 ```text

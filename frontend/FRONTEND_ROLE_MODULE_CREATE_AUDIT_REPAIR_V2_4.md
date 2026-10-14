@@ -2513,20 +2513,28 @@ Find existing:
 
 Check whether the documentation reflects reality.
 
-Feature documentation must be evaluated for:
+Feature documentation must be evaluated for ALL 18 mandatory sections:
 
 1. Module Purpose
-2. Directory Structure
-3. Feature Inventory
-4. User Flows
-5. Data and State Architecture
-6. API Contract
-7. UI Data Requirements
-8. Permissions/Security
-9. Loading/Empty/Error States
-10. Edge Cases and AI Warnings
-11. Component Responsibility Map
-12. Rule Compliance Checklist
+2. Dependency Manifest
+3. Feature Lifecycle Contract
+4. Screens & Entry Points
+5. Directory Structure / Folder Structure
+6. User Flows & Interactions
+7. Data and State Architecture
+8. API Contract
+9. Approved External Dependencies
+10. Permissions / Security
+11. Platform-Specific Notes
+12. Offline Behavior
+13. Loading / Empty / Error States
+14. Background Tasks
+15. Edge Cases and AI Warnings
+16. Component Responsibility Map
+17. Rule Compliance Checklist
+18. Known Issues / Tech Debt
+
+**Missing even one section = PARTIAL. All 18 must be present and non-boilerplate.**
 
 Check whether the documentation contains:
 
@@ -3169,6 +3177,159 @@ For each phase explain:
 * prerequisites
 * what must not be touched prematurely
 * completion gate
+
+---
+
+# 38A. REPAIR BATCH GROUP (RBG) SYSTEM — MANDATORY FOR MODE B
+
+## THE PROBLEM THIS SOLVES
+
+After a full audit, the repair phase MUST NOT apply fixes randomly from any batch.
+Random repair causes:
+- partial fixes that break dependent flows;
+- context loss mid-repair;
+- incomplete user flows;
+- wasted turns;
+- the AI never finishing.
+
+## REPAIR BATCH GROUP DEFINITION
+
+After the full audit is complete and all findings are recorded in the Master Findings Table (Section 36), the AI MUST group all repair work into **Repair Batch Groups (RBGs)** before executing a single fix.
+
+A Repair Batch Group is a set of 3–4 audit batches whose findings are repaired together in one controlled execution turn.
+
+## RBG SIZING RULE
+
+```text
+IF total audit batches ≤ 6
+  → Group into RBGs of 3 batches each
+
+IF total audit batches 7–12
+  → Group into RBGs of 3–4 batches each
+
+IF total audit batches > 12
+  → Group into RBGs of 4 batches each
+
+MAXIMUM ABSOLUTE CEILING: No single RBG may contain findings from more than 4 audit batches.
+MINIMUM: No single RBG may contain fewer than 2 audit batches unless it is the final RBG.
+```
+
+## RBG PRIORITY ORDER
+
+RBGs MUST be ordered by repair dependency, not by batch number:
+
+```text
+RBG 1 — P0 Critical fixes (architecture blockers, broken flows, security)
+RBG 2 — P1 High fixes (state/API, forms, tables, functional closure)
+RBG 3 — P2 Medium fixes (design system, loading/error states, tests)
+RBG 4 — P3 Low fixes (naming, docs, comments, tooling)
+RBG N — Final re-audit + packaging
+```
+
+If a P0 fix from Batch 7 and a P0 fix from Batch 2 are related, they MUST be in the same RBG.
+Do NOT split dependent fixes across RBGs.
+
+## RBG PLAN — MANDATORY BEFORE ANY REPAIR BEGINS
+
+Before executing any repair, the AI MUST publish the complete RBG Plan:
+
+```text
+╔══════════════════════════════════════════════════════════╗
+║           REPAIR BATCH GROUP PLAN                        ║
+╚══════════════════════════════════════════════════════════╝
+
+TOTAL AUDIT BATCHES:     [N]
+TOTAL FINDINGS:          [N]
+TOTAL RBGs:              [N]
+
+┌─────────────────────────────────────────────────────┐
+│ RBG 1 — Audit Batches [X, Y, Z]                     │
+│ Findings: [N]  │  Severity: P0/P1                   │
+│ Focus: [brief description of what is being fixed]   │
+├─────────────────────────────────────────────────────┤
+│ RBG 2 — Audit Batches [A, B, C]                     │
+│ Findings: [N]  │  Severity: P1/P2                   │
+│ Focus: [brief description]                          │
+├─────────────────────────────────────────────────────┤
+│ RBG 3 — Audit Batches [D, E, F]                     │
+│ Findings: [N]  │  Severity: P2/P3                   │
+│ Focus: [brief description]                          │
+└─────────────────────────────────────────────────────┘
+
+RBG GROUPING RATIONALE:
+[Why these batches are grouped together — dependency order]
+
+Reply "Begin RBG 1" to start controlled repair execution.
+Or reply "Adjust" to change the grouping.
+```
+
+Do NOT start any repair until the user approves the RBG Plan.
+
+## RBG EXECUTION RULES
+
+1. **PRIOR RBG DEPENDENCY PRE-CHECK (MANDATORY for RBG N where N > 1):** Before executing any fix in RBG N, verify that every artifact from previous RBGs that the current RBG depends on is actually in place. If a prior RBG fix is missing or incomplete → repair it BEFORE starting the current RBG and record as `PRIOR_RBG_FIX_INCOMPLETE`. This is a targeted dependency check only — not a full re-audit of all previous RBGs.
+2. Execute ALL findings from the current RBG before moving to the next RBG.
+3. After completing each RBG, checkpoint and display the RBG Completion Dashboard.
+4. Do NOT start the next RBG until the user replies "continue" or "Begin RBG N+1".
+5. Within an RBG, apply fixes in dependency order (architecture → state → UI → tests → docs).
+6. Never apply a fix from RBG 3 while RBG 1 is still in progress.
+
+## RBG CHECKPOINT TEMPLATE
+
+After completing each RBG, display:
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║              🔧 RBG CHECKPOINT 🔧                            ║
+╠══════════════════════════════════════════════════════════════╣
+║ RBG JUST COMPLETED:  RBG [N] — Audit Batches [X, Y, Z]      ║
+║ FINDINGS FIXED:      [N] fixes applied                       ║
+║ FILES CHANGED:       [N] files                               ║
+║ ISSUES FIXED:        P0:[N] P1:[N] P2:[N] P3:[N]            ║
+║ CUMULATIVE FIXED:    P0:[N] P1:[N] P2:[N] P3:[N]            ║
+╠══════════════════════════════════════════════════════════════╣
+║ REMAINING RBGs:                                              ║
+║   RBG [N+1]: Batches [A, B, C] — [N] findings               ║
+║   RBG [N+2]: Batches [D, E, F] — [N] findings               ║
+╠══════════════════════════════════════════════════════════════╣
+║ VERIFICATION STATUS:                                         ║
+║   TypeScript:  [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Lint:        [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Tests:       [PASS / FAIL / NOT_EXECUTED]                  ║
+╠══════════════════════════════════════════════════════════════╣
+║ ACTION REQUIRED:                                             ║
+║ Reply "continue" to proceed to RBG [N+1].                    ║
+║ OR reply "Begin RBG [N+1]" to start the next group.          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+## RBG ANTI-RANDOM-FIX RULE (NON-NEGOTIABLE)
+
+The AI MUST NOT:
+- Pick fixes randomly from any batch;
+- Apply a P3 fix before all P0 fixes in the same RBG are done;
+- Skip to a later RBG because an earlier RBG has a hard fix;
+- Mix findings from different RBGs in the same execution turn;
+- Claim an RBG is complete when any finding in it remains unresolved.
+
+If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+
+## RBG STATE IN progress.json
+
+Add to the existing `progress.json` structure:
+
+```json
+{
+  "rbg_plan_published": false,
+  "rbg_plan_approved": false,
+  "total_rbgs": 0,
+  "current_rbg": null,
+  "completed_rbgs": [],
+  "remaining_rbgs": [],
+  "rbg_findings_fixed": 0,
+  "rbg_findings_remaining": 0
+}
+```
 
 ---
 

@@ -2489,3 +2489,334 @@ the gesture interaction.
 * **The Problem:** The `_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific controller, hook, or widget.
 * **The Rule:** Every custom hook, complex React Native component, and State Store MUST have an exhaustive docstring block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** ... */ Manages local wizard state for Member Creation. @edge-case Resets to step 1 if the API throws 409 Conflict.`
+
+
+---
+
+## Rule 67 — Bounded Execution, Chunking, and RBG System (MANDATORY FOR ALL MOBILE AUDIT/REPAIR TASKS)
+
+This rule governs HOW mobile audit and repair work is executed. It does NOT reduce or weaken any architecture rule, design rule, test requirement, or documentation requirement.
+
+### 67A — Context-Limit Chunking Strategy
+
+> ⚠️ LARGE REPOSITORY REALITY CHECK
+
+For mobile feature folders where the total file count or token size may exceed a single LLM context window, the following chunking strategy MUST be applied:
+
+**Do NOT abandon zero-sampling.** Instead, process the scope in bounded work units.
+
+Chunking rules:
+
+1. **Feature ZIP first:** Extract and freeze the full requirement baseline (from `_features.md`, API contract, and UI/UX design) before inspecting any implementation files.
+2. **Per-layer chunks:** Process each layer of a feature (screens → hooks → API → state → tests → docs) as a separate bounded work unit. Complete + checkpoint before moving to the next.
+3. **Never mix requirement reading with repair** in the same bounded unit — this causes context pollution and hallucination.
+4. **Checkpoint after every work unit** (see Section 67C). The checkpoint must record which requirements have been satisfied so far.
+5. **Stage 3 re-audit runs in chunks too** — re-audit each previously completed work unit, not the entire scope in one pass.
+6. **If a work unit cannot fit in context:** split it by file type layer (e.g., screens + components in one pass, hooks + API in next pass for the same feature). Never split a single file across passes.
+
+The zero-sampling requirement is NOT weakened. Every authored artifact MUST still be inspected — chunking only controls *when* each artifact is inspected, not *whether*.
+
+---
+
+### 67B — Repair Batch Group (RBG) System (MANDATORY FOR AUDIT+REPAIR MODE)
+
+#### THE PROBLEM THIS SOLVES
+
+After a full audit, the repair phase MUST NOT apply fixes randomly from any batch.
+Random repair causes:
+- partial fixes that break dependent mobile flows;
+- context loss mid-repair;
+- incomplete API contracts;
+- wasted turns;
+- the AI never finishing.
+
+#### REPAIR BATCH GROUP DEFINITION
+
+After the full audit is complete and all findings are recorded, the AI MUST group all repair work into **Repair Batch Groups (RBGs)** before executing a single fix.
+
+A Repair Batch Group is a set of 3–4 audit batches whose findings are repaired together in one controlled execution turn.
+
+#### RBG SIZING RULE
+
+```text
+IF total audit batches ≤ 6
+  → Group into RBGs of 3 batches each
+
+IF total audit batches 7–12
+  → Group into RBGs of 3–4 batches each
+
+IF total audit batches > 12
+  → Group into RBGs of 4 batches each
+
+MAXIMUM ABSOLUTE CEILING: No single RBG may contain findings from more than 4 audit batches.
+MINIMUM: No single RBG may contain fewer than 2 audit batches unless it is the final RBG.
+```
+
+#### RBG PRIORITY ORDER
+
+RBGs MUST be ordered by repair dependency, not by batch number:
+
+```text
+RBG 1 — P0 Critical fixes (architecture blockers, broken flows, security, Rule 0B violations)
+RBG 2 — P1 High fixes (state/API, forms, navigation, functional closure)
+RBG 3 — P2 Medium fixes (design tokens, loading/error states, tests, Rule 24 docs)
+RBG 4 — P3 Low fixes (naming, comments, tooling)
+RBG N — Final re-audit + packaging
+```
+
+If a P0 fix from Batch 7 and a P0 fix from Batch 2 are related (e.g., same entity/mutation), they MUST be in the same RBG.
+Do NOT split dependent fixes across RBGs.
+
+#### RBG PLAN — MANDATORY BEFORE ANY REPAIR BEGINS
+
+Before executing any repair, the AI MUST publish the complete RBG Plan:
+
+```text
+╔══════════════════════════════════════════════════════════╗
+║        MOBILE REPAIR BATCH GROUP PLAN                   ║
+╚══════════════════════════════════════════════════════════╝
+
+TOTAL AUDIT BATCHES:     [N]
+TOTAL FINDINGS:          [N]
+TOTAL RBGs:              [N]
+
+┌─────────────────────────────────────────────────────┐
+│ RBG 1 — Audit Batches [X, Y, Z]                     │
+│ Findings: [N]  │  Severity: P0/P1                   │
+│ Focus: [brief description of what is being fixed]   │
+├─────────────────────────────────────────────────────┤
+│ RBG 2 — Audit Batches [A, B, C]                     │
+│ Findings: [N]  │  Severity: P1/P2                   │
+│ Focus: [brief description]                          │
+├─────────────────────────────────────────────────────┤
+│ RBG 3 — Audit Batches [D, E, F]                     │
+│ Findings: [N]  │  Severity: P2/P3                   │
+│ Focus: [brief description]                          │
+└─────────────────────────────────────────────────────┘
+
+RBG GROUPING RATIONALE:
+[Why these batches are grouped together — dependency order]
+
+Reply "Begin RBG 1" to start controlled repair execution.
+Or reply "Adjust" to change the grouping.
+```
+
+Do NOT start any repair until the user approves the RBG Plan.
+
+#### RBG EXECUTION RULES
+
+1. **PRIOR RBG DEPENDENCY PRE-CHECK (MANDATORY for RBG N where N > 1):** Before executing any fix in RBG N, verify that every artifact from previous RBGs that the current RBG depends on is actually in place. If a prior RBG fix is missing or incomplete → repair it BEFORE starting the current RBG and record as `PRIOR_RBG_FIX_INCOMPLETE`. This is a targeted dependency check only — not a full re-audit of all previous RBGs.
+2. Execute ALL findings from the current RBG before moving to the next RBG.
+3. After completing each RBG, checkpoint and display the RBG Completion Dashboard.
+4. Do NOT start the next RBG until the user replies "continue" or "Begin RBG N+1".
+5. Within an RBG, apply fixes in dependency order (architecture → state → UI → tests → docs).
+6. Never apply a fix from RBG 3 while RBG 1 is still in progress.
+
+#### RBG CHECKPOINT TEMPLATE
+
+After completing each RBG, display:
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║         🔧 MOBILE RBG CHECKPOINT 🔧                         ║
+╠══════════════════════════════════════════════════════════════╣
+║ RBG JUST COMPLETED:  RBG [N] — Audit Batches [X, Y, Z]      ║
+║ FINDINGS FIXED:      [N] fixes applied                       ║
+║ FILES CHANGED:       [N] files                               ║
+║ ISSUES FIXED:        P0:[N] P1:[N] P2:[N] P3:[N]            ║
+║ CUMULATIVE FIXED:    P0:[N] P1:[N] P2:[N] P3:[N]            ║
+╠══════════════════════════════════════════════════════════════╣
+║ REMAINING RBGs:                                              ║
+║   RBG [N+1]: Batches [A, B, C] — [N] findings               ║
+║   RBG [N+2]: Batches [D, E, F] — [N] findings               ║
+╠══════════════════════════════════════════════════════════════╣
+║ VERIFICATION STATUS:                                         ║
+║   TypeScript:  [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Lint:        [PASS / FAIL / NOT_EXECUTED]                  ║
+║   Tests:       [PASS / FAIL / NOT_EXECUTED]                  ║
+╠══════════════════════════════════════════════════════════════╣
+║ ACTION REQUIRED:                                             ║
+║ Reply "continue" to proceed to RBG [N+1].                    ║
+║ OR reply "Begin RBG [N+1]" to start the next group.          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+#### RBG ANTI-RANDOM-FIX RULE (NON-NEGOTIABLE)
+
+The AI MUST NOT:
+- Pick fixes randomly from any batch;
+- Apply a P3 fix before all P0 fixes in the same RBG are done;
+- Skip to a later RBG because an earlier RBG has a hard fix;
+- Mix findings from different RBGs in the same execution turn;
+- Claim an RBG is complete when any finding in it remains unresolved.
+
+If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+
+#### RBG STATE IN progress.json
+
+Add to the existing `progress.json` structure:
+
+```json
+{
+  "rbg_plan_published": false,
+  "rbg_plan_approved": false,
+  "total_rbgs": 0,
+  "current_rbg": null,
+  "completed_rbgs": [],
+  "remaining_rbgs": [],
+  "rbg_findings_fixed": 0,
+  "rbg_findings_remaining": 0
+}
+```
+
+---
+
+### 67C — Mandatory Bounded Execution + Persistent Checkpoint Workflow
+
+Execution MUST be performed through bounded, resumable work units.
+
+This section modifies EXECUTION CONTROL ONLY. It MUST NOT reduce or weaken any mobile architecture rule, design rule, test requirement, or documentation requirement.
+
+Execution flow:
+
+```text
+REQUIREMENT BASELINE
+        ↓
+WORK-UNIT PLAN
+        ↓
+BOUNDED EXECUTION
+        ↓
+LOCAL VERIFICATION
+        ↓
+CHECKPOINT
+        ↓
+SAFE STOP
+        ↓
+USER REPLIES "continue"
+        ↓
+READ CHECKPOINT
+        ↓
+FIRST UNVERIFIED WORK UNIT
+        ↓
+CONTINUE
+        ↓
+...
+        ↓
+FULL FINAL RE-AUDIT
+        ↓
+FINAL CHECKLIST
+        ↓
+FINAL PACKAGING
+        ↓
+FINAL ZIP
+```
+
+#### Execution-State Location
+
+Execution state MUST remain outside the supplied mobile feature source scope.
+
+Use:
+
+```text
+/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/ (Linux/Mac)
+%LOCALAPPDATA%/.ai_execution_state/[SAFE_TASK_ID]/ (Windows)
+```
+
+Required control files:
+
+```text
+progress.json
+work-units.json
+checkpoint-log.md
+```
+
+These files are NOT mobile business artifacts. Do NOT move them into the feature module. Do NOT include them in the final mobile ZIP unless explicitly required.
+
+#### Checkpoint Dashboard (Normal)
+
+After completing and verifying a work unit, persist the checkpoint and display:
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MOBILE CHECKPOINT PROGRESS DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TASK:
+[role / feature]
+
+MODE:
+[CREATE / AUDIT + REPAIR]
+
+CHECKPOINT:
+#[checkpoint_sequence]
+
+━━━━━━━━ EXECUTION ━━━━━━━━
+
+WORK UNITS:
+[completed] / [total]
+Completion: [percentage]%
+
+Current: [WU-ID] — [title]
+Next:    [WU-ID] — [title]
+
+━━━━━━━━ REQUIREMENTS ━━━━━━━━
+
+Verified: [verified] / [total]
+Coverage: [percentage]%
+
+━━━━━━━━ ISSUES ━━━━━━━━
+
+Discovered: [total]
+Fixed:      [completed]
+Remaining:  [remaining]
+
+━━━━━━━━ VERIFICATION ━━━━━━━━
+
+TypeScript:       [status]
+Lint:             [status]
+Tests:            [status]
+Design Tokens:    [status]
+Functional Flows: [status]
+Final Re-Audit:   [status]
+
+━━━━━━━━ DELIVERY STATE ━━━━━━━━
+
+Execution State:
+[IN_PROGRESS / PAUSED_MANUAL_STOP / RECOVERY_REQUIRED / BLOCKED / COMPLETE]
+
+Delivery State:
+[NOT_READY / READY_FOR_FINAL_REAUDIT / READY_FOR_PACKAGING / READY_FOR_DELIVERY]
+
+━━━━━━━━ USER ACTION ━━━━━━━━
+
+Reply `continue` to resume from the first unverified or incomplete work unit.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+#### Resume
+
+When the user replies `continue`, the AI MUST:
+
+1. Read `progress.json`;
+2. Read `work-units.json`;
+3. Validate checkpoint;
+4. Inspect filesystem;
+5. Compare checkpoint against filesystem;
+6. Find first unverified or incomplete work unit;
+7. Reuse already-verified work;
+8. Continue from that point;
+9. Persist the next checkpoint.
+
+Do NOT restart from zero merely because the previous response was interrupted.
+
+#### Audit Completeness Protection
+
+Checkpointing MUST NOT become permission to:
+- sample files;
+- skip architecture rules;
+- skip design token checks;
+- skip test requirements;
+- skip documentation requirements;
+- skip functional closure verification.
+
+The final result MUST still satisfy the complete applicable mobile architecture rules (Rules 0A–66) and the supplied `MOBILE_UI_UX_DESIGN.md`.
