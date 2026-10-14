@@ -1,5 +1,34 @@
 # Enterprise-Grade, AI-Friendly Backend Architecture Guidelines
 
+> ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT HEADER — READ BEFORE ANYTHING ELSE** ⛔⛔⛔
+>
+> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+>
+> This document is the **absolute normative authority** for all backend code in this project. Every rule is MANDATORY unless the rule itself defines a named `NOT_APPLICABLE` condition with explicit evidence. The following words in this document carry their STRICTEST possible meaning:
+>
+> | Word | Meaning |
+> |------|---------|
+> | **MUST** | Absolute requirement — no exception, no omission, no interpretation |
+> | **MUST NOT** | Absolute prohibition — no exception under any circumstance |
+> | **FORBIDDEN** | Same as MUST NOT — harder emphasis |
+> | **REQUIRED** | Same as MUST — mandatory deliverable |
+> | **encouraged** / **preferred** | Still a **default requirement** — deviations require explicit documented justification |
+> | **Optional** (sub-folders) | Only optional when the module **genuinely has no such artifact** — omitting when the artifact exists = VIOLATION |
+> | **except** / **unless** | Only a valid escape when ALL stated conditions for the exception are explicitly met and documented |
+>
+> **RULES APPLY TO THE ENTIRE DOCUMENT.** An AI that reads only the first half of this document and produces output is producing INCOMPLETE and INVALID output. Every rule from Rule 0A through Rule 119 is mandatory. The MINIMUM EVIDENCE STANDARD (near end of document) applies to every audit finding.
+>
+> ⛔ **BEFORE WRITING ANY CODE OR AUDIT FINDING, CONFIRM:**
+> ```
+> [ ] Read complete BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all 100+ rules)
+> [ ] Identified active framework (NestJS or Django) — marked FRAMEWORK_NOT_VERIFIED if unknown
+> [ ] Confirmed PROJECT STACK BASELINE — no unapproved substitutions
+> [ ] CRITICAL STRUCTURE GATE passed — folder tree verified before any deeper rule
+> [ ] CANONICAL RULE INDEX consulted
+> [ ] MINIMUM EVIDENCE STANDARD (bottom of document) loaded into context
+> ```
+> **Failure to complete the above = entire output is discarded.**
+
 ## The Core Philosophy
 This document outlines the strict architectural rules for building the backend using the approved project framework, primarily **NestJS (TypeScript)** or **Django (Python)**, while preserving the same isolation and architectural principles. The primary goal is **Extreme Isolation**.
 
@@ -33,14 +62,19 @@ If a conflict remains unresolved at the same precedence level:
 
 ## CRITICAL STRUCTURE GATE (NON-NEGOTIABLE)
 
-Before generating, auditing, or repairing ANY backend role module, verify ALL of the following:
+> ⛔ **HARD STOP — DO NOT PROCEED PAST THIS GATE UNTIL ALL ITEMS BELOW ARE VERIFIED.**
+> **Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` and STOP. Do NOT generate or repair any code until the structure is corrected.**
+> **Consequence of skipping this gate:** All deeper rule compliance results are meaningless because the containing folder structure is architecturally wrong.
+
+Before generating, auditing, or repairing ANY backend role module, verify ALL of the following. Every item MUST pass — there is no partial pass:
 
 ```text
-[ ] backend-{role}/ exists
-[ ] {role}-core/ exists inside backend-{role}/
-[ ] {role}-modules/ exists inside backend-{role}/
-[ ] ALL business feature modules exist ONLY inside {role}-modules/
-[ ] No feature module exists directly under backend-{role}/
+[ ] backend-{role}/ exists — STOP if missing
+[ ] {role}-core/ exists inside backend-{role}/ — STOP if missing
+[ ] {role}-modules/ exists inside backend-{role}/ — STOP if missing
+[ ] ALL business feature modules exist ONLY inside {role}-modules/ — STOP if any feature is directly under backend-{role}/
+[ ] No feature module exists directly under backend-{role}/ — STOP if violated
+[ ] Every sub-folder inside a feature module follows {module}-{artifact}/ pattern — STOP if unprefixed folders found
 ```
 
 **✅ COMPLIANT structure:**
@@ -53,16 +87,16 @@ backend-admin/
     └── admin-members/
 ```
 
-**❌ NON-COMPLIANT structure (ARCHITECTURE FAILURE):**
+**❌ NON-COMPLIANT structure (ARCHITECTURE FAILURE — STOP IMMEDIATELY):**
 
 ```text
 backend-admin/
 ├── admin-core/
-├── admin-auth/      ← WRONG: must be inside admin-modules/
-└── admin-members/   ← WRONG: must be inside admin-modules/
+├── admin-auth/      ← WRONG: must be inside admin-modules/ — RECORD NON_COMPLIANT
+└── admin-members/   ← WRONG: must be inside admin-modules/ — RECORD NON_COMPLIANT
 ```
 
-> **Failing ANY item above = ARCHITECTURE FAILURE.**
+> **Failing ANY item above = ARCHITECTURE FAILURE. Record it. Stop. Do not proceed.**
 > AI agents MUST verify this gate BEFORE evaluating any deeper architecture rule.
 > This check takes priority over all other structural evaluations.
 
@@ -91,7 +125,12 @@ Every AI agent MUST consult this index before beginning any audit or implementat
 | 116 | OpenAPI Documentation | API Documentation | REST endpoints | Controller annotations / spec output |
 | 117 | RAG Format Support | Query/API | Applicable query endpoints | `?format=rag` behavior and tests |
 
-> **AI NOTE:** If a rule is not in this index but exists later in the document, it is still mandatory. This index is a navigation aid, not an exhaustive constraint list. Always read the full document.
+> ⛔ **AI MANDATORY NOTE — THIS IS NOT OPTIONAL:**
+> **Every rule in this document is mandatory** — whether or not it appears in the index above.
+> This index is a navigation aid only. Unlisted rules are NOT lower priority — they have equal authority.
+> **You MUST read and apply every rule from Rule 0A through Rule 119 and the MINIMUM EVIDENCE STANDARD.**
+> **Stopping after Section 100 or "not having time" to read the full document = incomplete output = task failure.**
+> **Consequence of partial reading:** You will miss Rules 101-119, the MINIMUM EVIDENCE STANDARD, and the RULE APPLICABILITY CRITERIA TEMPLATE — all of which contain mandatory gates that will cause your output to be rejected.
 
 ---
 
@@ -351,7 +390,12 @@ mark `FRAMEWORK_NOT_VERIFIED` rather than guessing.
 
 ## 0G. MULTI-TENANCY CONTRACT — MANDATORY (GAP-23 Fix)
 
-This application is **multi-tenant**. Every feature module across every role MUST enforce tenant isolation at every layer.
+> ⛔ **P0 SECURITY REQUIREMENT — HARD STOP GATE**
+> **Any endpoint that does NOT enforce tenant isolation = P0 Security Failure.**
+> **Do NOT mark any data endpoint PASS until ALL items in the checklist below are verified.**
+> **Consequence of failure:** Cross-tenant data leakage — the most severe failure mode in this architecture. A single missing `gymId` filter can expose all data from every gym to any authenticated user.
+
+This application is **multi-tenant**. Every feature module across every role MUST enforce tenant isolation at every layer. No exceptions exist for this rule.
 
 ### Tenant Identity Contract
 
@@ -360,22 +404,22 @@ This application is **multi-tenant**. Every feature module across every role MUS
 | `gymId` | JWT payload ONLY | Primary tenant identifier (the gym/organization) |
 | `branchId` | JWT payload ONLY | Sub-tenant identifier (the gym branch) |
 
-**CRITICAL RULES:**
-1. `gymId` and `branchId` MUST be extracted from the authenticated JWT payload — NEVER from the request body, URL query string, or client-supplied headers.
-2. Services MUST NOT accept `gymId`/`branchId` as input parameters from controllers — they receive them from the auth context/JWT payload resolved by the auth guard.
-3. Route parameters containing a resource ID (e.g., `/members/:memberId`) MUST be verified against the JWT tenant before returning data.
+**ABSOLUTE RULES — NO EXCEPTIONS:**
+1. `gymId` and `branchId` MUST be extracted from the authenticated JWT payload — NEVER from the request body, URL query string, or client-supplied headers. **Consequence of violation:** Client-controlled tenant ID = complete tenant isolation bypass — any user can forge access to any gym's data.
+2. Services MUST NOT accept `gymId`/`branchId` as input parameters from controllers — they receive them from the auth context/JWT payload resolved by the auth guard. **Consequence of violation:** Business logic becomes responsible for tenant enforcement — a missed parameter causes cross-tenant leakage.
+3. Route parameters containing a resource ID (e.g., `/members/:memberId`) MUST be verified against the JWT tenant before returning data. **Consequence of violation:** Any authenticated user from any tenant can access any resource by guessing its UUID.
 
 ### Repository Tenant Filter Rule (P0 Security Requirement)
 
-Every repository query that retrieves or modifies business data MUST include a tenant filter:
+Every repository query that retrieves or modifies business data MUST include a tenant filter. **NO EXCEPTIONS.** A query without a tenant filter is a critical vulnerability regardless of context:
 
 ```typescript
 // NestJS/TypeORM example
 await this.memberRepo.findOne({
   where: {
     id: memberId,
-    gymId: jwtPayload.gymId,      // MANDATORY — never omit
-    branchId: jwtPayload.branchId, // MANDATORY where applicable
+    gymId: jwtPayload.gymId,      // MANDATORY — never omit — STOP if missing
+    branchId: jwtPayload.branchId, // MANDATORY where applicable — STOP if missing
   }
 });
 ```
@@ -384,31 +428,34 @@ await this.memberRepo.findOne({
 # Django ORM example
 Member.objects.filter(
     id=member_id,
-    gym_id=request.user.gym_id,       # MANDATORY
-    branch_id=request.user.branch_id,  # MANDATORY where applicable
+    gym_id=request.user.gym_id,       # MANDATORY — never omit — STOP if missing
+    branch_id=request.user.branch_id,  # MANDATORY where applicable — STOP if missing
 )
 ```
 
-**Omitting the tenant filter = P0 Security Failure.** Any query that can return or modify data across tenant boundaries is a critical vulnerability.
+**Omitting the tenant filter = P0 Security Failure. Record `NON_COMPLIANT`. Do NOT mark PASS. Do NOT ship.**
 
 ### Response DTO Tenant Safety
 
-- Response DTOs MUST NOT expose `gymId`/`branchId` to the client unless explicitly required by the frontend contract.
-- Response DTOs MUST NOT include internal IDs or relationship references that could leak cross-tenant information.
+- Response DTOs MUST NOT expose `gymId`/`branchId` to the client unless explicitly required by the frontend contract. **Consequence of violation:** Internal tenant structure leakage.
+- Response DTOs MUST NOT include internal IDs or relationship references that could leak cross-tenant information. **Consequence of violation:** Cross-tenant enumeration attacks become possible.
 
-### AI Audit Checklist for Tenant Isolation
+### AI Audit Checklist for Tenant Isolation — HARD STOP GATE
 
-Before marking any data endpoint PASS, verify ALL of the following:
+> ⛔ **STOP. Do NOT mark any data endpoint PASS until every item below is verified. Partial verification = endpoint marked `PARTIALLY_COMPLIANT`, not COMPLIANT.**
+
+Before marking any data endpoint PASS, ALL of the following MUST be verified with evidence:
 
 ```text
-[ ] JWT payload extraction verified at auth guard level (not from body/query)
-[ ] gymId/branchId NEVER accepted from request body params
-[ ] Every findOne/findMany/update/delete query includes tenant filter
-[ ] Response DTOs do not leak cross-tenant identifiers
-[ ] Route param IDs (e.g., :memberId) are validated against JWT tenant
-[ ] Tests verify that Tenant A cannot access Tenant B data
-[ ] Bulk operations (where clauses) include tenant scope
+[ ] JWT payload extraction verified at auth guard level (not from body/query) — STOP if missing
+[ ] gymId/branchId NEVER accepted from request body params — STOP if accepted
+[ ] Every findOne/findMany/update/delete query includes tenant filter — STOP if any query is missing it
+[ ] Response DTOs do not leak cross-tenant identifiers — STOP if they do
+[ ] Route param IDs (e.g., :memberId) are validated against JWT tenant — STOP if not validated
+[ ] Tests verify that Tenant A cannot access Tenant B data — STOP if tests absent
+[ ] Bulk operations (where clauses) include tenant scope — STOP if missing
 ```
+**Any unchecked item = endpoint is `NON_COMPLIANT`. Do not mark it PASS.**
 
 ### 0G-D. STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT CLUTTER)
 
@@ -681,21 +728,26 @@ admin-core/
 
 ### Mandatory Feature Module Structure
 
-Every feature module MUST contain:
-- `{module}-controllers/`
-- `{module}-services/`
-- `{module}-repositories/`
-- `{module}-dto/`
-- `{module}-types/`
-- `{module}-constants/`
-- `{module}-exceptions/`
-- `{module}-domain/`
-- `{module}-mappers/`
+> ⛔ **ALL folders listed as REQUIRED below must exist for every feature module.**
+> **Consequence of missing folders:** AI agents given only the module root will generate files in wrong locations, create barrel-file imports, and break the naming convention — causing cascading violations across Rules 0F, 0H, 2, and 84.
 
-Optional:
-- `{module}-locales/`
-- `{module}-jobs/`
-- `{module}-adapters/`
+Every feature module MUST contain ALL of these sub-folders:
+- `{module}-controllers/` — REQUIRED — STOP if absent
+- `{module}-services/` — REQUIRED — STOP if absent
+- `{module}-repositories/` — REQUIRED — STOP if absent
+- `{module}-dto/` — REQUIRED — STOP if absent
+- `{module}-types/` — REQUIRED — STOP if absent
+- `{module}-constants/` — REQUIRED — STOP if absent
+- `{module}-exceptions/` — REQUIRED — STOP if absent
+- `{module}-domain/` — REQUIRED — STOP if absent (Rule 89 domain/entity separation depends on this)
+- `{module}-mappers/` — REQUIRED — STOP if absent (Rule 89 mapper pattern depends on this)
+
+Conditionally required (MUST exist when the module has the corresponding artifact — absence when the artifact exists = VIOLATION):
+- `{module}-locales/` — REQUIRED when the module has user-facing error/message strings (Rule 107)
+- `{module}-jobs/` — REQUIRED when the module has background jobs (Rule 23, Rule 42)
+- `{module}-adapters/` — REQUIRED when the module calls external services (Rule 8 Edge Case D)
+
+> **An AI creating a module MUST create all REQUIRED folders even if they start empty.** Empty sub-folders with a `.gitkeep` file satisfy the structure requirement. Missing folders violate Rules 0F, 0G-D, and 0H.
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
@@ -731,20 +783,22 @@ Extract complex queries into a dedicated Repository or Query file.
 
 ### Repository Naming Standard (MANDATORY)
 
-To maximize AI repair isolation and minimize blast radius, **concern-based repository splitting is encouraged.**
+> **CONCERN-BASED SPLITTING IS THE DEFAULT REQUIRED PATTERN.**
+> A single monolithic repository is a **last resort for extremely simple modules only** — it MUST be justified in the module's `-backend-feature.md` if used. Undocumented single-repo modules are treated as non-compliant.
+> **Consequence of monolithic repositories:** A 400-line repository cannot be handed to an AI in isolation — token explosion causes hallucination and collateral damage to unrelated query methods.
 
-When a module has complex queries, splitting the repository by concern (read, write, search, analytics) creates smaller context windows for AI agents.
+All modules with more than trivial query complexity MUST split repositories by concern (read, write, search, analytics).
 
-✅ **Allowed Concern-Based Splitting:**
+✅ **Required Concern-Based Splitting (DEFAULT):**
 - `{role}-{module}-read.repository.ts`
 - `{role}-{module}-write.repository.ts`
-- `{role}-{module}-search.repository.ts`
-- `{role}-{module}-analytics.repository.ts`
+- `{role}-{module}-search.repository.ts` (when complex search exists)
+- `{role}-{module}-analytics.repository.ts` (when analytics queries exist)
 
-If a module is extremely simple, a single `{role}-{module}.repository.ts` is permitted.
+A single `{role}-{module}.repository.ts` is ONLY permitted for modules with fewer than 5 total query methods. Any repository exceeding 200 lines MUST be split immediately (see Rule 75 file size ceiling).
 
 **Anti-Fragmentation Rule:**
-While concern-based splitting is encouraged, **method-level over-fragmentation is strictly forbidden.** You cannot create a repository for a single find method.
+Concern-based splitting is the default. However, **method-level over-fragmentation is strictly forbidden.** You cannot create a repository for a single find method.
 
 ❌ **Forbidden Over-Fragmentation:**
 - `member-find-by-id.repository.ts`
@@ -836,10 +890,12 @@ Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type i
 * **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `manager` domain, they MUST get their own independent copies of a shared utility. There is no `manager/shared/` folder.
 * **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
 
-> **CRITICAL WARNING TO AI AGENTS:** 
-> Do NOT attempt to "DRY up" business logic, utilities, or services by moving them to global folders like `src/shared/` or `src/common/`. 
-> Anything containing domain-specific business behavior MUST be duplicated per feature, NEVER globalized. 
-> Only pure infrastructure plumbing (like database connection pools) belongs in global core folders.
+> ⛔ **ABSOLUTE PROHIBITION — AI AGENTS:**
+> **NEVER move business logic, utilities, or services to global folders like `src/shared/` or `src/common/`.**
+> **Consequence of violation:** AI modifying a shared function to fix module A will silently break module B — this is architecturally FORBIDDEN and constitutes scope expansion (Invariant 3 violation).
+> **Anything containing domain-specific business behavior MUST be duplicated per feature, NEVER globalized.**
+> **Finding a `src/shared/` or `src/common/` folder with business logic = immediate `NON_COMPLIANT` — record it, do not touch the file, request owner decision.**
+> Only pure infrastructure plumbing (database connection pools, global interceptors, guards — see infrastructure exception below) belongs in `src/core/` or `src/infrastructure/`.
 * **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), the Feature Flag Service (Rule 108), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
 
 ### Edge Case D: External Service Adapters (Anti-Corruption Layer)
@@ -848,10 +904,16 @@ Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type i
 * **Why?** If Stripe changes their API version, you only give the AI the `admin-stripe-payment.adapter.ts` file. The AI fixes the API call without ever seeing (or risking breaking) your internal checkout logic.
 
 ## 9. Avoid Hardcoded HTTP Status Codes
-Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controllers, exceptions, or responses. 
-* **The Rule:** Always use a framework-provided enum or a status code library (e.g., `HttpStatus` in NestJS, `http-status-codes` in Node, `rest_framework.status` in Django).
-* **Testing Rule:** This applies strictly to E2E and Unit testing as well! In Python `pytest` suites, always use `from http import HTTPStatus` (e.g., `HTTPStatus.OK`, `HTTPStatus.CREATED`) rather than hardcoded integers.
-* **Why?** It improves readability, prevents magic numbers, and reduces the risk of typos (e.g., typing `401` when you meant `403`).
+
+> **MANDATORY — NO EXCEPTIONS.** Hardcoded numeric HTTP status codes are forbidden in ALL files including controllers, exceptions, responses, tests, and seeders.
+> **Consequence of violation:** Typos in status codes (e.g., `401` instead of `403`) cause silent auth/authz failures that are impossible to detect by static analysis and produce misleading error messages in production.
+
+Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controllers, exceptions, or responses.
+* **The Rule:** ALWAYS use the framework-provided enum — no alternatives:
+  - NestJS: `HttpStatus` from `@nestjs/common` (e.g., `HttpStatus.OK`, `HttpStatus.CREATED`)
+  - Django: `rest_framework.status` (e.g., `status.HTTP_200_OK`, `status.HTTP_201_CREATED`)
+* **Testing Rule:** This rule applies to EVERY test file without exception. In Python `pytest` suites, ALWAYS use `from http import HTTPStatus` (e.g., `HTTPStatus.OK`, `HTTPStatus.CREATED`). A raw `assert response.status_code == 200` in a test file = architecture violation.
+* **Audit Evidence Required:** When auditing, flag every occurrence of a raw integer HTTP status code as `NON_COMPLIANT`.
 
 ## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
 *(Applicable to JavaScript/TypeScript Frameworks)*
@@ -1204,18 +1266,23 @@ Example:
 - Django auto-generates the `{NNNN}` prefix — do not invent it.
 - Human-authored migration names must match the snake_case pattern above.
 
-### Migration Audit Checklist
-Before marking any migration PASS:
+### Migration Audit Checklist — HARD STOP GATE
+
+> ⛔ **STOP. Do NOT mark any migration PASS until every item below passes. A single unchecked item = migration is `NON_COMPLIANT`.**
+> **Consequence of skipping:** A missing `down()`, a dropped `NOT NULL` column, or an unregistered migration file can cause irreversible data loss or application crash in production with no rollback path.
+
+Before marking any migration PASS, ALL of the following MUST be verified with evidence:
 ```text
-[ ] File name follows the canonical naming pattern above
-[ ] up() performs ONLY the documented schema change — no business logic
-[ ] down() correctly reverts EVERY operation in up()
-[ ] No column dropped and re-added in the same migration (two-phase rule)
-[ ] No NOT NULL column added to a non-empty table without a DEFAULT value
-[ ] Migration does not touch tables outside its owning feature module
-[ ] NestJS: migration included in migrations array of TypeORM config
-[ ] Django: makemigrations was run and the auto-generated file is committed
+[ ] File name follows the canonical naming pattern above — STOP if pattern violated
+[ ] up() performs ONLY the documented schema change — no business logic — STOP if business logic present
+[ ] down() correctly reverts EVERY operation in up() — STOP if down() is empty or incorrect
+[ ] No column dropped and re-added in the same migration (two-phase rule) — STOP if single-phase destructive change
+[ ] No NOT NULL column added to a non-empty table without a DEFAULT value — STOP if violated (production crash risk)
+[ ] Migration does not touch tables outside its owning feature module — STOP if cross-module tables touched
+[ ] NestJS: migration included in migrations array of TypeORM config — STOP if missing registration
+[ ] Django: makemigrations was run and the auto-generated file is committed — STOP if file not committed
 ```
+**Any unchecked item = migration is `NON_COMPLIANT`. Do NOT mark PASS.**
 
 * **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
 * **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
@@ -1507,15 +1574,22 @@ backend-manager/
 
 ## 44. Centralized API Rate Limit Tiers
 * **The Rule:** Define distinct rate-limit tiers in a centralized `rate-limit.config.ts`. (e.g., Public Auth: 5 req/min, Authenticated Read: 100 req/min, Export: 2 req/min). Never hardcode rate limits inside controllers.
+* **Consequence of violation:** Hardcoded rate limits in controllers cannot be changed without touching every controller file — AI will miss some, causing inconsistent protection. Controllers without rate limits on auth endpoints are vulnerable to brute force (see Rule 54).
+* **Audit evidence required:** `rate-limit.config.ts` must exist; every controller must reference a tier constant from it — never a raw number.
 
 ## 45. Webhook Signature Verification
 * **The Rule:** All inbound webhooks (e.g., Payment gateways) MUST verify the provider's documented cryptographic signature mechanism and implement replay-protection requirements (e.g., timestamp bounds checking) before processing. Do not assume HMAC-SHA256 is universally correct; strictly adhere to the third-party provider's official SDK or webhook documentation.
+* **Consequence of violation:** An unverified webhook endpoint allows ANY actor on the internet to forge payment success/failure events, triggering real financial state changes (e.g., activating subscriptions without payment, triggering refunds). This is equivalent to an unauthenticated financial mutation endpoint.
+* **This module requires human review (Rule 93):** Any code in webhook signature verification paths MUST have CODEOWNERS human approval before merge.
 
 ## 46. Strict Input Sanitization Layer
-* **The Rule:** Beyond validation, inputs must be sanitized. Strip HTML/script tags from free-text fields. Strip leading/trailing whitespaces. Normalize emails (lowercase) and phone numbers to canonical formats before saving.
+* **The Rule:** Beyond validation, inputs MUST be sanitized before saving. This is not optional — unsanitized inputs must be treated as `NON_COMPLIANT`. Strip HTML/script tags from free-text fields. Strip leading/trailing whitespaces. Normalize emails (lowercase) and phone numbers to canonical formats before saving.
+* **Consequence of violation:** Stored XSS — a member's name saved as `<script>alert(1)</script>` will execute in every admin dashboard that renders it, compromising all admin sessions. Unnormalized emails cause duplicate accounts (e.g., `User@Mail.com` vs `user@mail.com` treated as different users).
 
 ## 47. Circuit Breaker Pattern for External Services
-* **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with a `503` to prevent thread pool exhaustion, triggering a defined fallback queue.
+* **The Rule:** External adapters (WhatsApp, SMS, Payments) MUST be wrapped in a Circuit Breaker. If the external service fails repeatedly, the breaker opens, rejecting requests instantly with `HttpStatus.SERVICE_UNAVAILABLE` (503) to prevent thread pool exhaustion, triggering a defined fallback queue.
+* **Consequence of violation:** Without a circuit breaker, a slow WhatsApp API holds every request thread for its full timeout duration (Rule 97). Under load, all threads are consumed by waiting requests, making the ENTIRE application unresponsive — not just the WhatsApp feature. This is a full application outage caused by a single external dependency.
+* **Audit evidence required:** Every external adapter file (`{module}-adapters/`) must have circuit breaker configuration visible in the file. No adapter calling an external HTTP endpoint is compliant without it.
 
 ## 48. CQRS Lite (Query vs Command Controllers)
 * **The Rule:** Read operations (GET) and Write operations (POST/PATCH/PUT/DELETE) must be split into separate controllers (e.g., `[role]-[module]-query.controller.ts` and `[role]-[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
@@ -1591,7 +1665,13 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 * Immutable event and financial records MUST bypass soft-delete filtering while remaining permanently append-only.
 
 ## 59. API Response Time SLA Categories
-* **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
+* **The Rule:** Every endpoint MUST declare its SLA category in a comment at the top of the controller method body:
+  - NestJS: `// SLA: FAST` / `// SLA: STANDARD` / `// SLA: HEAVY`
+  - Django: `# SLA: FAST` / `# SLA: STANDARD` / `# SLA: HEAVY`
+  - FAST = target < 200ms, STANDARD = target < 500ms, HEAVY = target > 500ms
+* **Consequence of omission:** Missing SLA declarations make it impossible for AI agents to detect when a feature violates its response budget — leading to undetected performance regressions in production.
+* **Enforcement gate:** Any endpoint marked `HEAVY` that is NOT backed by a background job (Rule 23) = `NON_COMPLIANT`. A synchronous `HEAVY` endpoint MUST be refactored to return `202 Accepted` + background job before it can be marked `COMPLIANT`.
+* **Timeout alignment (Rule 97):** The SLA category MUST align with the timeout configuration — a `FAST` endpoint cannot have a downstream call with a 5-second timeout.
 
 ## 60. Strict Foreign Key Naming Convention
 * **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition.
@@ -1677,25 +1757,39 @@ Backend implementation (services, repositories, DB queries)
 * **Frontend Responsibility:** The backend transmits `12345600` (paise). It is strictly the frontend's responsibility to divide by 100 and format it as `₹1,23,456.00` for display.
 
 ## 74. Mechanical Enforcement of Isolation (The "Tooling Gate")
-* **The Rule:** The backend must explicitly enforce architectural boundaries mechanically. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline must block cross-module violations.
+* **The Rule:** The backend MUST explicitly enforce architectural boundaries mechanically — this is not optional tooling. If using Node.js, mandate `eslint-plugin-boundaries` or `no-restricted-imports`. If using Python, mandate `import-linter`. This guarantees that an AI cannot accidentally import an `attendance` repository into a `billing` service. Trust is not enough; the pipeline MUST block cross-module violations.
+* **Consequence of absence:** Without mechanical enforcement, an AI asked to fix a billing bug will import from attendance or members to "save time". This creates hidden cross-module coupling that breaks the repair isolation principle — the entire value of this architecture is destroyed.
+* **Audit evidence required:** `.eslintrc` (NestJS) or `importlinter.ini` (Django) file must exist with module boundary rules configured. CI pipeline must run boundary checks on every PR. Absence = `NON_COMPLIANT`.
 
 ## 75. Hard File-Size Ceilings (AI Context Limits)
-* **The Rule:** To prevent token explosion and hallucination, backend files must strictly adhere to size limits. If a backend file exceeds its ceiling, the AI must explicitly pause and refactor it by splitting the logic into an Orchestrator/Facade and smaller micro-services.
 
-| File Type | Maximum Lines |
-|---|---|
-| Controller (`*.controller.ts`) | **200 lines** |
-| Service (`*.service.ts`) | **300 lines** |
-| Repository (`*.repository.ts`) | **200 lines** |
-| Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** |
-| Module Config (`*.module.ts`) | **100 lines** |
-| Utilities/Mappers | **120 lines** |
+> ⛔ **HARD CEILING — NON-NEGOTIABLE. Files exceeding the limits below are `NON_COMPLIANT`.**
+> **Consequence of exceeding:** Files over these limits cannot be safely handed to an AI for targeted repair — the AI loses focus, misreads branch boundaries, and produces collateral damage. Any file over its ceiling MUST be refactored before repair work begins.
+> **Procedure when a ceiling is exceeded:** STOP current repair task. Record `NON_COMPLIANT` for the oversized file. Propose a refactor plan to split the file. Execute the split FIRST. Then proceed with the original repair.
+
+| File Type | Maximum Lines | Action if Exceeded |
+|---|---|---|
+| Controller (`*.controller.ts`) | **200 lines** | Split into query + command controllers (Rule 48) |
+| Service (`*.service.ts`) | **300 lines** | Extract micro-services + Orchestrator (Rule 8, Rule 87) |
+| Repository (`*.repository.ts`) | **200 lines** | Split by concern: read/write/search/analytics (Rule 7) |
+| Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** | Split into multiple focused DTOs |
+| Module Config (`*.module.ts`) | **100 lines** | Review imports — barrel file may have crept in (Rule 84) |
+| Utilities/Mappers | **120 lines** | Split into focused mapper/utility files |
 
 ## 76. Strict File Responsibility Contract
 * **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
 
 ## 77. Dependency-Addition Guardrail
-* **The Rule:** An AI agent cannot blindly add new dependencies (`npm install` or `pip install`) without human approval. Before proposing a new library, the AI must check the `package.json` or `requirements.txt` to verify if an existing approved library (e.g., `date-fns` instead of adding `moment`, or a native ORM feature) can suffice for the task.
+
+> ⛔ **STOP BEFORE ANY `npm install` OR `pip install` COMMAND.**
+> **An AI agent MUST NOT add any new dependency without explicit human approval.**
+> **Consequence of violation:** A new dependency may conflict with the approved package registry (Rule 0G-A), introduce a known CVE (Rule 90 Gate 2), or duplicate an already-approved library — all of which block the CI/CD pipeline and require a full revert.
+
+* **The Rule:** Before proposing any new library, the AI MUST:
+  1. Check `package.json` or `requirements.txt` to verify the package is not already present.
+  2. Check Rule 0G-A (Approved Backend NPM Package Registry) to verify the package is approved.
+  3. If not in the approved registry: STOP. Record `DEPENDENCY_NOT_APPROVED`. Do NOT add it. Propose it to the human owner for explicit approval before proceeding.
+* **The Escape is NOT available:** There is no "it seemed like the best fit" justification. Only packages in Rule 0G-A or with explicit written owner approval may be added.
 
 ## 78. Forbidden Patterns File (`[role]-[module]-forbidden.md`)
 * **The Rule:** Every backend module must have a `[role]-[module]-forbidden.md` file listing what is explicitly NOT allowed in that specific module.
