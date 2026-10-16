@@ -1063,14 +1063,18 @@ If no ZIP is uploaded (e.g. repo access), use the project or folder name as the 
 
 ## STEP 3: PUBLISH THE AUDIT CHUNK MAP
 
-> ⛔ **HARD STOP — CHUNK MAP IS MANDATORY BEFORE ANY CODE INSPECTION**
+> ⛔ **HARD STOP — CHUNK MAP IS MANDATORY BEFORE FULL-REPO CODE INSPECTION**
 >
-> **Your FIRST response MUST be the Audit Chunk Map. Do NOT output any code analysis, findings, or rule checks before the Chunk Map.**
-> **Do NOT skip the Chunk Map even if the repo "looks small." The Chunk Map is always required.**
-> **Do NOT begin Batch 1 until the user replies "Begin Batch 1" (or equivalent). Silence ≠ approval.**
-> **Consequence: Starting code inspection before the Chunk Map = audit must restart from Phase 1.**
+> **Your FIRST response for a full repository audit MUST be the Audit Chunk Map. Do NOT output broad multi-batch code analysis, findings, or rule checks before the Chunk Map.**
+> **Do NOT skip the Chunk Map for full repository audits even if the repo "looks small." The Chunk Map is required for multi-batch audits.**
+>
+> 💬 **FLEXIBLE AFFIRMATION PROTOCOL:** Any affirmative user response to begin Batch 1 (e.g., "Begin Batch 1", "Approved", "continue", "proceed", "start", "go ahead", "aage badho", "karo", "haan", "ok", "yes") constitutes full valid approval. The AI MUST NOT halt, argue, or demand an exact phrase.
+>
+> 🎯 **TARGETED / SCOPED INSPECTION EXCEPTION:** If the user explicitly asks to audit or verify a specific individual file, component, diff, or single module (e.g. *"Audit this file"*, *"Sirf ye component check karo"*, *"Check this diff"*), the auditor operates in **TARGETED / SCOPED AUDIT MODE**. In Targeted Mode, you inspect the requested target immediately against all relevant architecture rules and deliver the findings without forcing a 15-batch repo-wide Chunk Map.
+>
+> **Consequence: Starting unauthorized unmapped inspection during a full-repo audit = audit must restart from Phase 1.**
 
-If the repository requires multi-batch execution, your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE. No code inspection may begin until the map is published and the user approves it. (Note: If it is a small single-turn audit, you may output the final report immediately as per Mode C).
+If the repository requires multi-batch execution, your FIRST response to the user MUST be the Audit Chunk Map and NOTHING ELSE (unless the user explicitly requested a targeted single-file or single-module audit). No multi-batch code inspection may begin until the map is published and the user approves it. (Note: If it is a small single-turn audit or scoped request, you may output the final report immediately as per Mode C).
 
 **CRITICAL DOWNLOADABLE FILE RULE (NON-NEGOTIABLE):**
 1. You MUST write the Chunk Map to an actual file named `[zip_name]_audit_chunk_map.md`.
@@ -1223,14 +1227,19 @@ Your response MUST end with EXACTLY this checkpoint block — no deviation, no p
 ```
 
 **Critical Rules for Checkpoints & Token Edge Cases:**
-1. **Checkpoint Enforcement:** Never proceed to the next batch without posting this exact checkpoint and receiving a "continue" reply.
+1. **Checkpoint Enforcement & Flexible Affirmation:** Never proceed to the next batch without posting this exact checkpoint and receiving user approval. Any affirmative reply (e.g., "continue", "next", "proceed", "go ahead", "aage badho", "karo", "haan", "ok", "yes") constitutes valid authorization to start the next batch.
 2. **Anti-Skipping:** Never merge multiple batches into one response to "save time" — this defeats the zero-sampling guarantee.
 3. **Pre-emptive Halting:** If you feel the current batch is nearly done but token pressure is building, STOP at the current module boundary (do not half-audit a module) and checkpoint early.
-4. **Mid-Response Truncation (Output Limit Edge Case):** If you are writing the report or scratchpad and get cut off abruptly due to output token limits, the user will reply "continue". You MUST resume exactly where you left off (from the exact character or line) inside a new code block. Do NOT restart the entire batch or file.
+4. **Mid-Response Truncation (Seamless Token-Limit Recovery):** If you are writing a report, finding, or code and get cut off abruptly due to output token limits, when the user replies "continue" or "aage likho", you MUST resume output immediately from the exact next character/line. Do NOT restart the entire batch, file, or report from line 1. Do NOT repeat completed sections or introductory boilerplate.
 5. **Hard Context Reset (Memory Full Edge Case):** If you detect severe context degradation (forgetting rules) or token context limits approaching (e.g., after Batch 10), instruct the user to: *"STOP. Start a NEW chat session and upload only the AUDIT_PROGRESS_TRACKER.md and the architecture rules to continue from Batch N+1."*
 6. **Token-Saving Quote Rule:** When logging issues, DO NOT quote entire functions or 50-line code blocks. Quote ONLY the exact 3-5 broken lines using `...` for omitted code to conserve output tokens.
-7. **Tracker Rehydration:** When the user replies "continue" (in the same or a new chat), you MUST re-read `AUDIT_PROGRESS_TRACKER.md` before beginning the next batch to restore full context.
+7. **Tracker Rehydration & Filesystem Fallback:** When the user replies "continue" (in the same or a new chat), the AI MUST restore context from `AUDIT_PROGRESS_TRACKER.md`. If running in a local IDE/workspace where tracker and batch finding files already exist on disk, read them directly from the filesystem without forcing the user to re-upload or paste them.
 8. **Finalization:** After the FINAL batch completes, output the checkpoint block with "ALL BATCHES COMPLETE" and then generate the full 15-section DEEP-VERIFICATION-REPORT.md.
+9. **User Progress Inquiry Protocol ("Kitna hua?" / "Status?" / "How much is done?"):** If the user asks at any point *"kitna hua?"*, *"status kya hai?"*, or *"show progress"*, the auditor MUST immediately reply with a concise summary: (1) Current Batch number and total batches, (2) Files audited so far, (3) Total findings logged by severity (Critical, High, Medium, Low), (4) Remaining batches, and (5) The exact prompt to continue (*Reply "continue" to proceed to Batch N*). Asking for status does NOT restart or invalidate the audit.
+10. **User Mid-Course Override & Explicit Finding Skip Protocol:** If the user explicitly instructs to skip a finding, ignore a rule for a specific file, or accept existing logic (e.g. *"isko skip karo"*, *"ye intentional hai"*, *"ignore finding 12"*): (1) Mark the finding as `EXPLICITLY_SKIPPED_BY_USER`, (2) Record the user's rationale, (3) Do NOT treat it as an open defect or audit blocker. The user is the ultimate owner of the codebase.
+11. **Ambient Type Shims & Unsupplied External Dependencies:** If 3rd-party npm/Python packages are referenced in code but cannot be resolved because `node_modules` or a virtual environment was not supplied: (1) Do NOT hallucinate false syntax errors, (2) Note missing external declarations as `EXTERNAL_DEPENDENCY_STATIC_ASSUMPTION`, (3) Audit internal architectural logic and contracts without penalizing missing vendor definitions.
+12. **No-Omission Complete File Integrity Invariant (Anti-Lazy Rule):** Even during rapid audits, scratchpad fixes, or test authoring, NEVER emit lazy placeholders like `// ... rest unchanged ...` or `// ... existing imports ...`. All delivered code artifacts must be 100% syntactically complete.
+13. **Bilingual Communication & Natural Tone Flexibility:** Technical deliverables (code, JSON, markdown reports, commit messages) MUST remain in standard syntax and English. Conversational chat responses, status pings, and explanations SHOULD adapt naturally to the user's language (English, Hindi, or Hinglish) for clear, seamless collaboration.
 
 ---
 

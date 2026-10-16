@@ -3541,7 +3541,9 @@ Reply "Begin RBG 1" to start controlled repair execution.
 Or reply "Adjust" to change the grouping.
 ```
 
-> ⛔ **HARD STOP: Do NOT execute a single fix until the user explicitly replies "Begin RBG 1" or "Approved". Starting repairs before user approval = skipped gate = invalid output.**
+> ⛔ **HARD STOP: Do NOT execute a single fix until the user approves the RBG Plan.**
+>
+> 💬 **FLEXIBLE AFFIRMATION PROTOCOL:** Any affirmative user response (e.g., "Begin RBG 1", "Approved", "continue", "proceed", "start", "go ahead", "aage badho", "karo", "haan", "ok", "yes", "next") constitutes full valid approval. The AI MUST NOT halt, argue, or demand an exact phrase.
 
 Do NOT start any repair until the user approves the RBG Plan.
 
@@ -3550,7 +3552,7 @@ Do NOT start any repair until the user approves the RBG Plan.
 1. **PRIOR RBG DEPENDENCY PRE-CHECK (MANDATORY for RBG N where N > 1):** Before executing any fix in RBG N, verify that every artifact from previous RBGs that the current RBG depends on is actually in place. If a prior RBG fix is missing or incomplete → repair it BEFORE starting the current RBG and record as `PRIOR_RBG_FIX_INCOMPLETE`. This is a targeted dependency check only — not a full re-audit of all previous RBGs.
 2. Execute ALL findings from the current RBG before moving to the next RBG.
 3. After completing each RBG, checkpoint and display the RBG Completion Dashboard.
-4. Do NOT start the next RBG until the user replies "continue" or "Begin RBG N+1".
+4. Do NOT start the next RBG until the user gives affirmative confirmation (e.g. "continue", "next", "Begin RBG N+1", "aage badho", "karo", "go ahead").
 5. Within an RBG, apply fixes in dependency order (architecture → state → UI → tests → docs).
 6. Never apply a fix from RBG 3 while RBG 1 is still in progress.
 
@@ -3590,12 +3592,49 @@ The AI MUST NOT:
 - Apply a P3 fix before all P0 fixes in the same RBG are done;
 - Skip to a later RBG because an earlier RBG has a hard fix;
 - Mix findings from different RBGs in the same execution turn;
-- Claim an RBG is complete when any finding in it remains unresolved.
+- Claim an RBG is complete when any finding in it remains unresolved (unless explicitly overridden/skipped by the user, or classified as deferred to runtime);
+- Apply a migration fix without also fixing the corresponding entity/DTO in the same RBG.
 
 If a finding in the current RBG is BLOCKED (external product decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
 
 ⛔ **HOST_RUNTIME_BLOCKED_VERIFICATION findings are NOT blocked.** They must be counted as unblocked — the source fix is done, only the verification step is deferred. The AI MUST continue through all remaining RBG findings after writing the source fix and appending the `DEFERRED_TO_HOST_RUNTIME` block. The RBG is not considered blocked due to host/runtime gaps alone.
 **MODULAR MONOLITH NOTE:** Host application root files (`package.json`, root `tsconfig.json`, `next.config.js`, root route tree / `layout.tsx`) are host responsibilities and NOT part of the module scope. Their absence MUST NOT be marked as an RBG blocker (`BLOCKED_BY_SUPPLIED_SCOPE`). Only genuine external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or missing intra-module files may remain blocked.
+
+### USER MID-COURSE OVERRIDE & EXPLICIT SKIP PROTOCOL (NON-NEGOTIABLE)
+
+If the user explicitly instructs to skip a finding, defer a fix, leave a file unchanged, or preserve an existing implementation (e.g., *"skip finding #14"*, *"isko chhod do"*, *"ye intentional hai"*, *"auth controller ko mat chhedo"*, *"isko baad me dekhenge"*, *"keep this as is"*):
+1. **Status Update:** Mark the finding's status as `EXPLICITLY_SKIPPED_BY_USER` in `progress.json` and verification tables.
+2. **Document User Intent:** Record the user's specific instruction and rationale in the finding notes (e.g., `Reason: Explicitly retained/skipped by user request`).
+3. **NOT A RELEASE BLOCKER:** An explicitly skipped finding is treated as **RESOLVED BY USER OVERRIDE**. It is NOT an open defect, does NOT block RBG completion, and MUST NOT prevent the creation or delivery of the final versioned release ZIP. The user is the ultimate system owner.
+4. **State Persistence:** Append the skipped finding ID to `progress.json` under `"skipped_by_user": [...]` so it is not re-flagged as a defect in subsequent RBG passes.
+
+### SEAMLESS TRUNCATION & TOKEN-LIMIT RESUMPTION PROTOCOL
+
+When assistant output is cut off mid-response due to platform token limits, and the user prompts to continue (e.g., *"continue"*, *"aage badho"*, *"carry on"*, *"karo"*, *"aage likho"*):
+1. **Immediate Continuation:** Resume output immediately from the exact line and character where the cutoff occurred.
+2. **NO Redundant Repeats:** Do NOT restart the file from line 1. Do NOT repeat previously output files, tables, or introductory pleasantries.
+3. **Complete Code Integrity:** Ensure the continued code cleanly attaches to the prior snippet with valid syntax. Once the file is finished, proceed directly to the next file or the RBG Checkpoint Dashboard.
+
+### AMBIENT TYPE SHIM & MISSING DEPENDENCY PROTOCOL (NO NODE_MODULES)
+
+In source-only audits and repairs, `node_modules` is omitted. If TypeScript diagnostics report missing module declarations for external libraries (e.g. `Cannot find module '@tanstack/react-query'`, `lucide-react`, `recharts`, `zod`, etc.):
+1. **Do NOT Block Delivery:** Missing 3rd-party npm type definitions due to absent `node_modules` are NOT codebase syntax errors.
+2. **Ambient Type Declarations:** Provide or update a lightweight ambient declaration file (e.g., `src/types/shims.d.ts` or local `declare module '...'`) if required for offline `tsc` sanity checking.
+3. **Classification:** Classify these as `EXTERNAL_DEPENDENCY_STATIC_ASSUMPTION` in the verification ledger. They MUST NOT prevent RBG completion or release packaging.
+
+### TARGETED / SCOPED EXECUTION MODE (INCREMENTAL REPAIR)
+
+If the user specifically targets an individual component, hook, service, or single finding rather than requesting a full-module RBG sequence (e.g., *"Sirf MemberTable.tsx repair karo"*, *"Check and fix this hook"*):
+1. **Scope to Request:** Execute repairs exclusively on the requested target file(s).
+2. **Targeted Validation:** Run TypeScript and lint checks on the modified file(s).
+3. **No Forced Multi-Batch Ceremony:** Do NOT force the user to re-run the entire multi-batch RBG pipeline for a targeted single-file fix.
+4. **Mark Scope:** Record other modules/batches as `OUT_OF_REQUESTED_SCOPE`.
+
+### NO-OMISSION COMPLETE FILE INTEGRITY INVARIANT (ANTI-LAZY RULE)
+
+Even during rapid repairs, emergency hotfixes, or token-constrained responses:
+- The AI MUST NEVER output lazy placeholders like `// ... rest of the file unchanged ...`, `// ... existing imports ...`, or `// TODO: keep existing code`.
+- Every delivered code block or repaired file MUST be 100% syntactically complete and drop-in ready.
 
 
 ## RBG STATE IN progress.json
@@ -7080,6 +7119,22 @@ the AI MUST:
 7. stop.
 
 The AI MUST NOT continue into another work unit.
+
+### User Progress Inquiry Protocol ("Kitna hua?" / "Status kya hai?" / "How much is done?")
+
+If the user interrupts or asks at any time:
+- *"kitna hua?"* / *"how much is done?"* / *"kahan tak hua?"*
+- *"status kya hai?"* / *"what is the current status?"*
+- *"progress batao"* / *"show progress"* / *"update?"*
+
+The AI MUST immediately answer with a clear, concise **Progress Snapshot** based on `progress.json`:
+1. **Current Stage & RBG:** (e.g. Stage 3 Repair — Currently on RBG 2 of 5).
+2. **Completed So Far:** Exact count of batches/work units finished, files repaired, and findings resolved (e.g., *"RBG 1 complete: 18 files repaired, 34 findings closed"*).
+3. **Currently In Progress / Next Up:** What is actively being addressed or queued next.
+4. **Remaining:** How many RBGs/batches and findings remain.
+5. **Exact Next Action:** Tell the user what command to give to continue (e.g., *'Reply "continue" or "Begin RBG 2" to resume repairs'*).
+
+⛔ **ANTI-RESTART RULE:** Asking for progress or status is NOT an instruction to restart, discard work, or re-run completed stages. The AI must preserve all persisted state in `progress.json` and resume smoothly upon the user's go-ahead.
 
 ### Unexpected Interruption
 
