@@ -3270,5 +3270,13 @@ When a rule depends on global infrastructure outside the supplied scope:
 
 A feature module CANNOT be declared `COMPLIANT` for a rule if a mandatory global dependency for that rule remains `NOT_VERIFIED` or `BLOCKED_BY_SUPPLIED_SCOPE`. The module's overall readiness MUST reflect this as `NOT_READY_DUE_TO_EXTERNAL_BLOCKER`.
 
+⛔ **ISOLATED ROLE / MODULE SCOPE RULE FOR GLOBAL DEPENDENCIES (NON-NEGOTIABLE):**
+In a modular monolith, individual role modules (e.g., `backend_superadmin/`, `backend_trainer/`) rely on host-level infrastructure (`backend_core`, `@nestjs/common`, TypeORM DataSource, Redis, BullMQ) by architectural contract design.
+- The AI MUST NOT treat missing host-level monolith infrastructure as `BLOCKED_BY_SUPPLIED_SCOPE` or `NOT_READY_DUE_TO_EXTERNAL_BLOCKER`.
+- The AI MUST mark host infrastructure integration as `OUTSIDE_SUPPLIED_SCOPE (HOST_MONOLITH_RESPONSIBILITY)`.
+- If the feature module correctly implements its side of the contract (e.g. `@UseGuards(JwtAuthGuard)`, valid DTO validation, correct entity mapping), the feature module itself is **COMPLIANT** within its supplied modular boundary.
+- The AI MUST NEVER stall, stop, or ask the user to provide host application slices or root bootstrap files.
+
+
 
 

@@ -2712,7 +2712,9 @@ The AI MUST NOT:
 If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
 
 > ⛔ **RBG HOST/RUNTIME UNBLOCKING RULE (NON-NEGOTIABLE):**
-> Findings classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` are NOT BLOCKED. The AI MUST write the complete source-level fix (screens, components, hooks, stores, styles, mocks, tests, docs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no Metro bundler, no simulator/device, no Maestro runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence. Only genuine external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) may remain blocked.
+> Findings classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` are NOT BLOCKED. The AI MUST write the complete source-level fix (screens, components, hooks, stores, styles, mocks, tests, docs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no Metro bundler, no simulator/device, no Maestro runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence.
+> **MODULAR MONOLITH NOTE:** Host application root files (`package.json`, root `tsconfig.json`, `app.json`, root navigation container) are host responsibilities and NOT part of the module scope. Their absence MUST NOT be marked as an RBG blocker (`BLOCKED_BY_SUPPLIED_SCOPE`). Only genuine external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or missing intra-module files may remain blocked.
+
 
 #### RBG STATE IN progress.json
 
@@ -2740,7 +2742,9 @@ Execution MUST be performed through bounded, resumable work units.
 This section modifies EXECUTION CONTROL ONLY. It MUST NOT reduce or weaken any mobile architecture rule, design rule, test requirement, or documentation requirement.
 
 > ⛔ **SOURCE-LEVEL WORK UNIT UNBLOCKING RULE:**
-> A work unit whose source-level code fixes (screens, components, hooks, stores, styles, mocks, tests, docs) are fully written, implemented, and statically inspected within the supplied scope is **COMPLETED** for source repair. If dynamic mobile test execution cannot be run due to absence of a live device/simulator, that verification step is recorded as `DEFERRED_TO_HOST_RUNTIME`, but the work unit itself is NOT blocked and MUST NOT be stalled. Only genuinely missing out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) or external product decisions may remain `BLOCKED`.
+> A work unit whose source-level code fixes (screens, components, hooks, stores, styles, mocks, tests, docs) are fully written, implemented, and statically inspected within the supplied scope is **COMPLETED** for source repair. If dynamic mobile test execution cannot be run due to absence of a live device/simulator, that verification step is recorded as `DEFERRED_TO_HOST_RUNTIME`, but the work unit itself is NOT blocked and MUST NOT be stalled.
+> **MODULAR MONOLITH BOUNDARY:** Host application root files (`package.json`, root `tsconfig.json`, `app.json`, root navigation container) are intentionally host-owned and NOT part of the module's scope. Their absence MUST NEVER be marked as `BLOCKED` or `BLOCKED_BY_SUPPLIED_SCOPE`. Only missing intra-module files or external product decisions may be flagged, and the AI MUST NOT halt to demand host files from the user.
+
 
 Execution flow:
 
@@ -2890,9 +2894,12 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 
 ## MOBILE DELIVERY FREEZE GATE
 
-> ⛔ **HARD STOP — DO NOT DELIVER OR PACKAGE ZIP UNTIL ALL 14 GATES BELOW PASS WITH PROOF.**
-> **Failing or skipping ANY single gate = BLOCKED_DELIVERY. Record `NON_COMPLIANT` and REPAIR immediately.**
-> **An AI MUST NOT deliver a ZIP with unresolved items under any circumstance.**
+> ⛔ **HARD STOP — ALL 14 SOURCE-LEVEL GATES BELOW MUST BE REPAIRED WITH PROOF.**
+> **Failing or skipping ANY single source-level gate = REPAIR immediately.**
+>
+> ⛔ **DELIVERY MANDATE (NEVER WITHHOLD THE REPAIR ZIP):**
+> When all fixable source-level code within the supplied mobile scope is complete, the AI **MUST ALWAYS PACKAGE AND DELIVER THE ZIP**.
+> Host-dependent verification steps (`DEFERRED_TO_HOST_RUNTIME`), host infrastructure files (`OUTSIDE_SUPPLIED_SCOPE`), and external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) MUST be documented in `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`, but MUST NEVER trigger `BLOCKED_DELIVERY` or prevent packaging/delivering the repaired ZIP.
 
 | Gate # | Gate Description | Verification Directive | Consequence of Failure |
 |---|---|---|---|
@@ -2911,10 +2918,11 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 | **Gate 13** | Complete Async States | Verify loading skeletons (`[Feature]Skeleton.tsx`), empty states (`[Feature]EmptyState.tsx`), and error fallbacks implemented | **STOP.** Blank screen on async fetch |
 | **Gate 14** | Changelog & Re-Audit Included | `[featureName]_changelog_vN.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Maestro E2E test suite present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
-> ⛔ **If ANY box fails: STATUS = `BLOCKED_DELIVERY`. Do NOT package or deliver the ZIP.**
+> ⛔ **If ANY source-level code gate fails: STATUS = `REPAIR_REQUIRED`. Fix the source code. Once all source-level code fixes are written, package and deliver the ZIP with deferred/out-of-scope items explicitly documented.**
 >
 > ⛔ **NOTE ON OFFLINE VERIFICATION & MAESTRO TEST RUNS:**
 > Gate 14 and DoD Gate 5 require the Maestro YAML test suite files (`mobile_e2e/`) to be fully authored, structured, and included in the ZIP. If the local environment lacks a mobile device/emulator or Maestro runner, the YAML files are verified statically as PASS, and dynamic execution is recorded as `DEFERRED_TO_HOST_RUNTIME`. Device/runner absence MUST NOT trigger `BLOCKED_DELIVERY` or block delivery when the YAML test suite is fully authored and present.
+
 
 ---
 

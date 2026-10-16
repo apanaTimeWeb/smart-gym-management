@@ -2547,8 +2547,10 @@ No PR may merge if a required gate fails.
 > 1. Check `package.json` to verify if an approved library already satisfies the requirement (e.g. React Hook Form, Zod, date-fns, Zustand, socket.io-client, lucide-react, react-apexcharts).
 > 2. Recharts and Chart.js are **FORBIDDEN** (see `global_design_system.md` §10).
 > 3. Introducing a package NOT in the approved registry requires: (a) explicit written developer approval, (b) documentation in `_features.md`.
+> 4. **Isolated Module Audit Scope:** When auditing an isolated module or role folder without root `package.json`, DO NOT demand the host `package.json` or stall the audit. Assume the approved baseline dependencies (React, Next.js, Tailwind v4, Lucide React, TanStack Query v5, Zustand, React Hook Form, Zod, date-fns) are available. Simply verify that the module does not import unapproved libraries (such as Recharts or Chart.js).
 >
 > *Consequence of violation:* Unapproved dependencies introduce duplicate bundles, security vulnerabilities, breaking changes, and licensing risks. Any unauthorized `npm install` = IMMEDIATE TASK REJECTION.
+
 
 63. **Zero Cross-Module Imports & Controlled Infrastructure Dependencies**:
 - **Zero Cross-Module Business Imports:** Module A (e.g., `billing`) is explicitly FORBIDDEN from importing business logic from Module B (e.g., `attendance`) — no business components, hooks, stores, schemas, types, constants, API services, or business utilities. This MUST be mechanically enforced using ESLint (`no-restricted-imports` or `eslint-plugin-boundaries`).
@@ -3772,9 +3774,12 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 
 ## FRONTEND DELIVERY FREEZE GATE (GAP-20 Fix)
 
-> ⛔ **HARD STOP — DO NOT DELIVER OR PACKAGE ZIP UNTIL ALL 14 GATES BELOW PASS WITH PROOF.**
-> **Failing or skipping ANY single gate = BLOCKED_DELIVERY. Record `NON_COMPLIANT` and REPAIR immediately.**
-> **An AI MUST NOT deliver a ZIP with unresolved items under any circumstance.**
+> ⛔ **HARD STOP — ALL 14 SOURCE-LEVEL GATES BELOW MUST BE REPAIRED WITH PROOF.**
+> **Failing or skipping ANY single source-level gate = REPAIR immediately.**
+>
+> ⛔ **DELIVERY MANDATE (NEVER WITHHOLD THE REPAIR ZIP):**
+> When all fixable source-level code within the supplied module scope is complete, the AI **MUST ALWAYS PACKAGE AND DELIVER THE ZIP**.
+> Host-dependent verification steps (`DEFERRED_TO_HOST_RUNTIME`), host infrastructure files (`OUTSIDE_SUPPLIED_SCOPE`), and external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) MUST be documented in `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`, but MUST NEVER trigger `BLOCKED_DELIVERY` or prevent packaging/delivering the repaired ZIP.
 
 | Gate # | Gate Description | Verification Directive | Consequence of Failure |
 |---|---|---|---|
@@ -3793,7 +3798,8 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 | **Gate 13** | Complete Async States | Verify loading skeletons, empty states (`[Module]EmptyState.tsx`), and error states implemented | **STOP.** Blank screen on async fetch |
 | **Gate 14** | Changelog & Re-Audit Included | `[module_name]_changelog_vN.md` and `RE_AUDIT_CHECKLIST_RESULT.md` present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
-> ⛔ **If ANY box fails: STATUS = `BLOCKED_DELIVERY`. Do NOT package or deliver the ZIP.**
+> ⛔ **If ANY source-level code gate fails: STATUS = `REPAIR_REQUIRED`. Fix the source code. Once all source-level code fixes are written, package and deliver the ZIP with deferred/out-of-scope items explicitly documented.**
+
 
 ---
 
