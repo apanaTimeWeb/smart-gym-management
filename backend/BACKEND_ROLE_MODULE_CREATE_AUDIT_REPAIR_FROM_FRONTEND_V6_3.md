@@ -46,7 +46,8 @@
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and user approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the 112-item Anti-Skipping Checklist passes clean.**
 > ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Selenium test files. They are mandatory deliverables, not suggestions.**
-> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live backend/runtime is absent. State the Static Compliance Rating directly, noting runtime execution as `DEFERRED_TO_DEPLOYMENT`.
+> ⛔ **NO-PAUSE ON MISSING RUNTIME / HOST CAPABILITY (MANDATORY ANTI-STALL RULE):** If a live database (PostgreSQL/MySQL/Mongo), Redis cache, message broker (RabbitMQ/Kafka), running backend server (NestJS/Express/FastAPI/Django), or runtime test runner is absent, you MUST NEVER halt, pause, abort, ask the user to start a server, or declare source-level backend repairs "BLOCKED". You MUST fix every issue that can be fixed directly in the source code (controllers, services, entities, DTOs, repositories, migrations, guards, decorators, validation pipes, tests, mocks, swagger, config, types) in this session. Only live runtime execution / end-to-end network validation may be marked `DEFERRED_TO_HOST_RUNTIME`. Incomplete audit or absent runtime is NEVER an excuse to pause before completing source-level fixes.
+> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live backend/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
 
 ---
 
@@ -253,6 +254,18 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
    - Every rule in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (all applicable numbered, lettered, and special architecture rules/gates discovered from the supplied normative architecture document)
 3. Identify every gap, missing file, wrong naming, missing test, missing doc, wrong architecture.
 4. Fix ALL actionable backend issues that are repairable within the supplied writable backend scope. No actionable in-scope issue may be skipped.
+
+   **ENVIRONMENT CAPABILITY & ANTI-STALL CLAUSE (MANDATORY)**
+   - The AI MUST NEVER pause, stall, abort, or declare source-level fixes "BLOCKED" because a live database (PostgreSQL/MySQL/Mongo), Redis server, messaging broker, running framework server, or test runner is absent in the execution environment.
+   - All source-level repairs within the supplied scope (controllers, services, entities, DTOs, repositories, migrations, guards, decorators, validation pipes, tests, mocks, swagger, config, types) MUST be fully implemented in the code deliverables.
+   - Only live host runtime execution and live end-to-end network verification may be marked `DEFERRED_TO_HOST_RUNTIME`.
+   - Incomplete audit or absent runtime is strictly forbidden as a reason to pause instead of continuing through all remaining source-level fixes.
+
+   **REPAIR CATEGORIZATION MODEL (MODE B)**
+   Every discovered defect in Mode B MUST be placed into one of three strict categories:
+   1. **`SOURCE_LEVEL_FIX`:** Any finding that can be resolved by creating or modifying source files within the supplied backend scope (e.g. adding missing DTO validation, fixing entity column types or relationships, implementing missing service methods or controllers, generating TypeORM/Prisma migration files, adding mock unit tests or Jest fixtures, aligning Swagger decorators, adding custom guards). The AI MUST fix 100% of these in code without stalling.
+   2. **`HOST_RUNTIME_BLOCKED_VERIFICATION`:** Any finding where the source code can be written, but actual command execution requires live host services (running migration against live DB, running tests with a live runner, starting the server). The AI MUST complete the source code fix, and append an explicit `DEFERRED_TO_HOST_RUNTIME` instruction block detailing the exact shell commands for the developer.
+   3. **`BLOCKED_BY_SUPPLIED_SCOPE` / `EXTERNAL_PRODUCT_DECISION_BLOCKED`:** Genuinely missing sibling modules outside the writable scope, or breaking business decisions requiring external product sign-off. Absent runtime MUST NEVER be placed here.
 
    If an issue requires a file outside the supplied writable backend scope:
 
@@ -1138,6 +1151,9 @@ This applies specifically to:
 - cloud resource configuration.
 
 If any of the above is not supplied and verifiable from the supplied inputs, classify the dependency as `NOT_VERIFIED` or `OUTSIDE_SUPPLIED_SCOPE`. Do NOT generate implementation code that claims these services are wired and functional.
+
+> ⛔ **CODE IMPLEMENTATION VS RUNTIME DEPLOYMENT SEPARATION:**
+> The `NO-INVENTED-INFRASTRUCTURE RULE` governs environment runtime claims and shared infrastructure bootstrapping. It DOES NOT forbid writing the feature module's own source code (entities, TypeORM/Prisma models, DTOs, NestJS/FastAPI services, controllers, guards, migrations, and mock-based unit tests) according to architectural rules. Missing live databases or Redis servers in the environment MUST NOT prevent writing complete, fully-implemented feature code and unit tests with stubs/mocks. Live execution is simply deferred as `DEFERRED_TO_HOST_RUNTIME`.
 
 ---
 
@@ -2422,6 +2438,9 @@ IMPLEMENTATION / REPAIR
 
 `BLOCKED` and `NOT_VERIFIED` work units MUST NOT be counted as completed.
 
+> ⛔ **SOURCE-LEVEL WORK UNIT UNBLOCKING RULE:**
+> A work unit whose source-level code fixes (controllers, services, entities, DTOs, migrations, mocks, tests) are fully written, implemented, and statically inspected within the supplied scope is **COMPLETED** for source repair. If host/runtime test execution cannot be run due to absence of live database/runners, that verification step is recorded as `DEFERRED_TO_HOST_RUNTIME`, but the work unit itself is NOT blocked and MUST NOT be stalled. Only genuinely missing out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) or external product decisions may remain `BLOCKED`.
+
 `requirement_ids` and `issue_ids` MUST connect execution work with requirement coverage and issue closure.
 
 No work unit may exist only as an informal chat statement.
@@ -3469,6 +3488,9 @@ The AI MUST NOT:
 - Apply a migration fix without also fixing the corresponding entity/DTO in the same RBG.
 
 If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+
+> ⛔ **RBG HOST/RUNTIME UNBLOCKING RULE (NON-NEGOTIABLE):**
+> Findings classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` are NOT BLOCKED. The AI MUST write the complete source-level fix (code, entities, DTOs, migrations, tests, configs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no live DB, no running server, no test runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence. Only genuine external product/architecture decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) may remain blocked.
 
 ## RBG STATE IN progress.json
 
@@ -9494,6 +9516,9 @@ OVERALL READINESS:
 > - `NOT_READY_DUE_TO_IN_SCOPE_FINDINGS` — one or more release-blocking findings within writable scope remain unresolved.
 > - `NOT_READY_DUE_TO_EXTERNAL_BLOCKER` — all in-scope work is complete, but a release-blocking finding is outside writable scope.
 > - `BACKEND_READY_PENDING_FRONTEND_CHANGE` — backend is correct as far as possible, but requires documented frontend changes for end-to-end integration.
+>
+> ⛔ **HOST/RUNTIME GAP IS NOT A SCORE CAP OR RELEASE BLOCKER:**
+> If all source-level files, schemas, entities, DTOs, migrations, and architecture rules are compliant, runtime/host unavailability (no live DB, no running server, unexecuted tests) MUST NOT cause `NOT_READY_DUE_TO_IN_SCOPE_FINDINGS` or artificially cap the Static Architecture & Code Completeness rating below 10.0. The runtime execution status is reported as `DEFERRED_TO_HOST_RUNTIME` under non-blocking limitations, allowing `READY_WITH_NON_BLOCKING_LIMITATIONS` or `READY` with static compliance rating up to 10.0.
 
 ### FRONTEND_CHANGE_REQUIRED Status Definition
 
@@ -9550,6 +9575,12 @@ Do NOT allow a high pass count to hide a P0/P1 blocker.
 For every unresolved issue create an actionable repair plan.
 
 Order repairs by dependency rather than blindly using categories.
+
+### REPAIR PLAN FIX CLASSIFICATION (MANDATORY)
+Every repair step in the plan MUST be classified under one of the three categories:
+1. **`SOURCE_LEVEL_FIX`:** All source-level changes (controllers, services, entities, DTOs, repositories, migrations, guards, decorators, validation pipes, unit tests, mock fixtures, Swagger documentation, config files, TypeScript types) repairable in the supplied scope. The Repair AI MUST fix all of these in the current session. Host/runtime absence (no live DB, no running server, no test runner) is NEVER a reason to mark these as blocked or to pause.
+2. **`HOST_RUNTIME_BLOCKED_VERIFICATION`:** Code and tests are fully implemented, but running the tests/server requires a host runtime. The Repair AI writes the code, and designates verification as `DEFERRED_TO_HOST_RUNTIME` along with the exact CLI commands for the human developer.
+3. **`EXTERNAL_PRODUCT_DECISION_BLOCKED`:** Genuine external blockers (breaking business requirements, cross-service schema migrations requiring DB admin / product owner approval). Host/runtime absence MUST NEVER be placed here.
 
 Preferred dependency logic:
 
@@ -9746,6 +9777,9 @@ Before producing the final verdict, verify:
 > **This file MUST contain EVERY SINGLE ONE of the 112 items below, evaluated as [PASS / FAIL / BLOCKED].**
 > **Delivering the final ZIP without `RE_AUDIT_CHECKLIST_RESULT.md` = AUTOMATIC REJECTION & DELIVERY FAILURE.**
 > **DO NOT treat this checklist as internal thought-exercise — it is a mandatory customer-facing artifact.**
+>
+> ⛔ **SOURCE-LEVEL FIX COMPLETION GATE:**
+> Prior to final ZIP packaging, EVERY finding classified as `SOURCE_LEVEL_FIX` MUST be verified as resolved in the codebase. The AI is strictly forbidden from delivering a ZIP where source-level defects remain unfixed under the pretext of missing runtime or host capabilities. Only runtime verification commands may be documented as `DEFERRED_TO_HOST_RUNTIME`.
 
 ```text
 [ ] All supplied inputs identified according to Mode A/B rules
@@ -10635,7 +10669,7 @@ It is a targeted verification pass:
    - Confirm the repair was applied.
    - Confirm the repair is correct against the frontend requirement.
    - Confirm no new violation was introduced by the repair.
-   - Change the status to PASS or NOT VERIFIED (if runtime-only).
+   - Change the status to PASS (for all `SOURCE_LEVEL_FIX` items) or record source-fix as PASS with verification marked `DEFERRED_TO_HOST_RUNTIME` (for `HOST_RUNTIME_BLOCKED_VERIFICATION` items). No `SOURCE_LEVEL_FIX` finding within the supplied scope may remain FAIL, PARTIAL, or BLOCKED.
 
 2. **Run the 112-item Anti-Skipping Checklist (Section 84) on the repaired code:**
    - Every `[ ]` item must be re-evaluated against the repaired state.
@@ -10737,6 +10771,9 @@ RULES BLOCKED BY SUPPLIED SCOPE: [count]
 RULES NOT APPLICABLE: [count]
 HIGHEST DISCOVERED RULE NUMBER: [number / identifier]
 ```
+
+> ⛔ **NO ARBITRARY SCORE PENALTY FOR OFFLINE AUDIT:**
+> When commands, migrations, or tests cannot be executed due to the absence of a live host database or server, the Static Architecture & Code Completeness scorecard MUST evaluate code and architecture completeness statically. Unexecuted runtime verification MUST NOT be used to artificially fail rules or deduct points from static compliance. Rules whose source implementation is complete are scored as PASS, with runtime verification noted as `DEFERRED_TO_HOST_RUNTIME`.
 
 # 86B.6 FINAL V6.3 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
 

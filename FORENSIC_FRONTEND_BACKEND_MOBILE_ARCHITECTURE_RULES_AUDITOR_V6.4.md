@@ -40,6 +40,7 @@
 > ⛔ **You MUST NOT output any audit finding, rule check, or code analysis before completing this boot declaration.**
 > ⛔ **You MUST NOT skip the Chunk Map (Section 13A Step 3) even if the repo looks small.**
 > ⛔ **You MUST NOT begin code inspection until the user replies "Begin Batch 1".**
+> ⛔ **NO-PAUSE ON MISSING RUNTIME:** Unavailability of host/runtime (dev server, live database, test runner, build tool, browser automation) is NEVER a reason to pause, stall, abort, or mark the audit blocked. You MUST proceed with 100% full-depth static source code audit.
 > ⛔ **You are a READ-ONLY audit agent. You MUST NOT edit, create, rename, or delete any file. Violation = output is INVALID.**
 >
 > ### MANDATORY AUDIT MODAL WORD-MEANING TABLE
@@ -834,12 +835,26 @@ Verification modes available:
 - If E2E was not run, E2E-dependent rules MUST be marked `NOT_VERIFIED`.
 - The declaration MUST NOT be invented — if a capability is uncertain, mark it `UNKNOWN` and treat it as unavailable.
 - The declaration MUST remain visible in the final report and MUST NOT be removed when summarizing results.
-- **Offline / Static Environment Scoring Directive:** When runtime capabilities (Browser automation, live runtime services, live DB) are declared `NO`, the auditor MUST evaluate ratings and scores strictly based on **Static Code & Architecture Compliance** (type safety, schemas, contracts, structural ceilings, patterns, and logic correctness).
-- The auditor **MUST NOT penalize, artificially deduct points, or refuse to rate** simply because live runtime execution was impossible in the current offline/static environment.
-- The auditor MUST separate evaluation into:
-  1. **Static Architecture & Code Compliance Rating (1 to 10):** Measures actual code quality, contract fulfillment, and rule adherence.
-  2. **Runtime Verification Status:** Clearly marked as `DEFERRED_TO_LIVE_DEPLOYMENT (Offline audit)`.
-- When asked by the user to rate progress or compliance (e.g., "Rate from 1 to 10"), the AI **MUST NOT complain or repeatedly excuse itself** with "I don't have a runtime environment". It MUST state the Static Compliance Rating directly and concisely.
+
+### ENVIRONMENT CAPABILITY & ANTI-STALL CLAUSE (NON-NEGOTIABLE)
+
+1. **NO PAUSING ON MISSING RUNTIME / HOST:**
+   - Unavailability of runtime execution (no node execution, no running backend, no live database, no Playwright browser, no test runner) is **NEVER a valid reason to pause, stall, halt, or declare the audit BLOCKED or INCOMPLETE**.
+   - The AI MUST NOT stop and ask the user for runtime tools or live servers.
+   - The AI MUST NOT leave source code uninspected because runtime verification is unavailable.
+2. **100% STATIC AUDIT COMPLETION IS MANDATORY:**
+   - Every authored file in the supplied scope MUST be inspected to 100% depth statically (line-by-line, zero-sampling).
+   - All code logic, Zod schemas, TypeScript types, error boundaries, loading skeletons, React Hook Form handlers, TanStack Query keys, MSW mock fixtures, API contracts, routing, and documentation MUST be audited completely from static source.
+3. **CATEGORIZATION OF DEFECTS:**
+   - Any defect visible or fixable in the source code MUST be classified as `SOURCE_LEVEL_FIX`.
+   - Only dynamic runtime execution (running tests, browser E2E, live API checks, OS-level builds) is classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` and marked `DEFERRED_TO_HOST_RUNTIME` with exact commands for the developer.
+4. **OFFLINE / STATIC ENVIRONMENT SCORING DIRECTIVE:**
+   - When runtime capabilities (Browser automation, live runtime services, live DB) are declared `NO`, the auditor MUST evaluate ratings and scores strictly based on **Static Code & Architecture Compliance** (type safety, schemas, contracts, structural ceilings, patterns, and logic correctness).
+   - The auditor **MUST NOT penalize, artificially deduct points, or refuse to rate** simply because live runtime execution was impossible in the current offline/static environment.
+   - The auditor MUST separate evaluation into:
+     1. **Static Architecture & Code Compliance Rating (1 to 10):** Measures actual code quality, contract fulfillment, and rule adherence.
+     2. **Runtime Verification Status:** Clearly marked as `DEFERRED_TO_HOST_RUNTIME (Offline audit)`.
+   - When asked by the user to rate progress or compliance (e.g., "Rate from 1 to 10"), the AI **MUST NOT complain or repeatedly excuse itself** with "I don't have a runtime environment". It MUST state the Static Compliance Rating directly and concisely.
 
 ---
 
@@ -1570,12 +1585,12 @@ Available evidence is insufficient to establish presence or absence.
 Use when:
 - Only partial files in the scope have been inspected
 - The file exists but its content could not be read
-- The behavior depends on runtime execution unavailable in this audit
+- The behavior depends on runtime execution unavailable in this audit (mark as NOT_VERIFIED / DEFERRED_TO_HOST_RUNTIME)
 - A prior batch covered the file but current context does not have its content
 
 ## BLOCKED_BY_SUPPLIED_SCOPE
 
-Required evidence is outside supplied scope.
+Required code, module, or architecture specification files are completely outside the supplied scope (e.g. backend repo files when only frontend repo is supplied).
 
 Never collapse these states.
 
@@ -1592,6 +1607,21 @@ FAIL
 ```
 
 just because a complete audit would be easier if the missing evidence existed.
+
+⛔ **CRITICAL SCOPE BOUNDARY RULE:**
+- `BLOCKED_BY_SUPPLIED_SCOPE` applies ONLY when physical source files, sibling repositories, or specification documents are missing from the inputs.
+- Host/runtime unavailability (absence of running Node, live database, test runner, build tool, or browser) MUST NEVER be classified as `BLOCKED_BY_SUPPLIED_SCOPE`.
+- Runtime execution limitations belong strictly to `HOST_RUNTIME_BLOCKED_VERIFICATION` (verification deferred to host/runtime) — they do NOT block source auditing or code inspection.
+
+## DEFECT FIX CLASSIFICATION TAXONOMY (MANDATORY)
+
+Every defect identified during the audit MUST be classified for the downstream Repair AI:
+
+| Classification | Meaning | Repair AI Action |
+|---|---|---|
+| **SOURCE_LEVEL_FIX** | Defect in source code, schemas, types, mock fixtures, error boundaries, loading states, form handlers, query keys, logic, or docs. | **Fix directly in code immediately.** Host/runtime absence does NOT block this fix. |
+| **HOST_RUNTIME_BLOCKED_VERIFICATION** | Source code is fully audited and fixable, but dynamic verification requires running dev server, live DB, test runner, browser, or build. | Implement the complete source fix, mark verification as `DEFERRED_TO_HOST_RUNTIME`, provide exact developer commands. |
+| **EXTERNAL_PRODUCT_DECISION_BLOCKED** | Breaking API change, permission-model redesign, or business rule alteration requiring product owner decision. | Document the blocker clearly; do NOT invent a solution. (Host/runtime unavailability MUST NEVER be put here). |
 
 ---
 
@@ -1719,8 +1749,9 @@ If multiple files violate the exact same rule with the identical root cause and 
 ## 3. RULE EXTRACTION CAP
 Extract normative requirements from the Architecture documents EXACTLY ONCE during Phase 1. Freeze the Rule Registry. DO NOT repeatedly re-extract rules from the same document in every subsequent batch.
 
-## 4. RUNTIME CAPABILITY DETECTION GATE
-Explicitly acknowledge your execution environment. If you cannot run Node, execute a browser, or connect to a DB, you MUST NOT generate findings that depend on those capabilities. State `CAPABILITY UNAVAILABLE` and set status to `STATIC-ONLY` or `NOT_VERIFIED`.
+## 4. RUNTIME CAPABILITY DETECTION GATE (NO-PAUSE MANDATE)
+Explicitly acknowledge your execution environment. If you cannot run Node, execute a browser, or connect to a DB, you MUST NOT generate findings that falsely claim runtime execution. State `CAPABILITY UNAVAILABLE` and set runtime status to `STATIC-ONLY` or `DEFERRED_TO_HOST_RUNTIME`.
+⛔ **CRITICAL ANTI-STALL RULE:** Missing runtime/host capability is NEVER an excuse to stop, pause, or declare the audit incomplete. You MUST proceed immediately with 100% deep static source code inspection of all files in scope. Code defects, schemas, types, error boundaries, handlers, and contracts MUST still be audited and reported as `SOURCE_LEVEL_FIX`.
 
 ## 5. SEVERITY GOVERNANCE (Issue Volume Cap)
 For repetitive P2 or P3 issues, enforce an issue volume cap. Do not flood the report with thousands of minor formatting issues. Use the Defect Collapse Rule aggressively for P2/P3.
@@ -3846,13 +3877,18 @@ HIGH | MEDIUM | LOW
 **Blast radius**:
 [LOCAL | MODULE | CROSS-MODULE | SYSTEM-WIDE]
 
+**Fix Classification**:
+[SOURCE_LEVEL_FIX | HOST_RUNTIME_BLOCKED_VERIFICATION | EXTERNAL_PRODUCT_DECISION_BLOCKED]
+
 **Repair handoff for the next AI**:
+- Fix Classification: [SOURCE_LEVEL_FIX | HOST_RUNTIME_BLOCKED_VERIFICATION | EXTERNAL_PRODUCT_DECISION_BLOCKED]
 - Target file:
 - Target symbol:
 - Required change:
 - Required dependent changes:
 - Required tests:
 - Required verification:
+- Host/Runtime verification steps (if deferred): [DEFERRED_TO_HOST_RUNTIME: exact developer commands / N/A]
 
 **Do NOT change**:
 - ...
@@ -3867,6 +3903,11 @@ HIGH | MEDIUM | LOW
 **Regression guard**:
 [existing behavior that must remain unchanged]
 ```
+
+> ⛔ **MANDATORY FIX CLASSIFICATION RULES FOR AUDITOR:**
+> 1. **SOURCE_LEVEL_FIX:** Any finding that can be fixed in source code (e.g. Zod schema, TypeScript type, missing error boundary, missing loading state, hardcoded token/color, form handler, query key, mock fixture, missing test, etc.). The downstream Repair AI MUST fix all of these directly in code. Missing host/runtime is NEVER a reason to classify these as blocked.
+> 2. **HOST_RUNTIME_BLOCKED_VERIFICATION:** Findings where the code can be written, but verifying execution requires live runtime (running `npm run build`, running Vitest runner, running Playwright browser, live DB connection). The Auditor MUST specify the source fix requirements, and designate the verification step as `DEFERRED_TO_HOST_RUNTIME`.
+> 3. **EXTERNAL_PRODUCT_DECISION_BLOCKED:** Strictly reserved for breaking API changes, backend schema changes requiring product owner sign-off, or permission-model redesigns. Host/runtime unavailability MUST NEVER be placed here.
 
 Never invent:
 
@@ -3976,13 +4017,26 @@ For each phase:
 
 ```text
 PHASE
+Fix Classification: [SOURCE_LEVEL_FIX | HOST_RUNTIME_BLOCKED_VERIFICATION | EXTERNAL_PRODUCT_DECISION_BLOCKED]
 Prerequisites
 Issue IDs
 Affected files
 Dependencies
 Required repair objective
-Verification gate
+Verification gate (including DEFERRED_TO_HOST_RUNTIME steps when applicable)
 ```
+
+### MANDATORY SOURCE-LEVEL VS HOST-RUNTIME DIRECTIVE FOR REPAIR AI
+
+The auditor handoff MUST provide unambiguous instructions to the downstream Repair AI:
+
+1. **ALL `SOURCE_LEVEL_FIX` ISSUES MUST BE FIXED IN CODE:**
+   - The Repair AI MUST fix all issues classified as `SOURCE_LEVEL_FIX` in the supplied codebase without pausing, waiting, or stalling.
+   - Host/runtime unavailability (missing running backend, no live DB, missing browser automation, offline dev server) is NEVER an excuse for the Repair AI to pause, stop, or declare a source-level fix blocked.
+2. **`HOST_RUNTIME_BLOCKED_VERIFICATION` ITEMS DO NOT BLOCK SOURCE CODE DELIVERY:**
+   - For issues classified as `HOST_RUNTIME_BLOCKED_VERIFICATION`, the Repair AI MUST write the complete source-side implementation, and attach an explicit `DEFERRED_TO_HOST_RUNTIME` block detailing the exact shell commands the human developer should run.
+3. **DO NOT MISUSE PRODUCT BLOCKED CATEGORY:**
+   - Host/runtime execution limitations MUST NEVER be placed under `EXTERNAL_PRODUCT_DECISION_BLOCKED`.
 
 > **⚠️ WEAK-EVIDENCE REPAIR PROHIBITION:**
 > If the audit status is `NOT_VERIFIED`, `LOW` confidence, or `EVIDENCE_CONFLICT`, you are PROHIBITED from inventing repair instructions. Write `INSUFFICIENT EVIDENCE FOR REPAIR`.
@@ -4182,10 +4236,10 @@ Critical architecture violation
 
 Multiple critical dead/no-op/disconnected flows
 → MAX 6.0
-
-Runtime verification unavailable
-→ MAX 8.0
 ```
+
+⛔ **HOST/RUNTIME GAP IS NOT A SCORE CAP:**
+If all source-level files, schemas, and contracts are compliant, runtime unavailability MUST NOT artificially cap the Static Architecture & Code Compliance score below 10.0. The runtime verification status is reported separately as `DEFERRED_TO_HOST_RUNTIME (Offline audit)` without deflating the static score.
 
 Report every applied cap.
 
@@ -4350,7 +4404,7 @@ Rating Caps:
 - P0 blockers:                   yes/no → max 4.0
 - Critical architecture:        yes/no → max 5.0
 - Critical dead/no-op flows:     yes/no → max 6.0
-- Runtime unavailable:           yes/no → max 8.0
+- Runtime verification status:   [EXECUTED / DEFERRED_TO_HOST_RUNTIME (does not cap static score)]
 
 OPEN P0: N
 OPEN P1: N
@@ -4591,16 +4645,25 @@ One defect = one issue.
 
 This is NOT repair execution.
 
+It MUST group phases by Fix Classification:
+1. **Phase A: SOURCE_LEVEL_FIX (Immediate Code Fixes)**
+   - All issues fixable in source code directly (Zod schemas, types, error boundaries, loading skeletons, query keys, handlers, MSW mock fixtures, missing tests).
+   - The Repair AI MUST fix all of these in code; host/runtime absence does NOT block this phase.
+2. **Phase B: HOST_RUNTIME_BLOCKED_VERIFICATION (Source Fixed, Verification Deferred)**
+   - Source-side code is written and integrated. Verification execution steps are marked `DEFERRED_TO_HOST_RUNTIME` with exact developer commands.
+3. **Phase C: EXTERNAL_PRODUCT_DECISION_BLOCKED (External Decisions Only)**
+   - Issues strictly requiring external business, product owner, or backend schema changes.
+
 It must contain:
 
 ```text
-Phase
+Phase (Classification: SOURCE_LEVEL_FIX | HOST_RUNTIME_BLOCKED_VERIFICATION | EXTERNAL_PRODUCT_DECISION_BLOCKED)
 Prerequisites
 Issue IDs
 Files
 Dependencies
 Required repair objective
-Verification gate
+Verification gate (including DEFERRED_TO_HOST_RUNTIME developer commands when applicable)
 ```
 
 Repair order must follow actual dependency evidence.
@@ -4862,6 +4925,8 @@ The audit is complete only when ALL of the following are true:
 [ ] Every batch ended with the mandatory Section 13C Checkpoint Template
 [ ] AUDIT_PROGRESS_TRACKER.md was created after Batch 1 and updated after every subsequent batch
 [ ] No module was half-audited — every module received full zero-sampling treatment
+[ ] All findings classified as SOURCE_LEVEL_FIX vs HOST_RUNTIME_BLOCKED_VERIFICATION
+[ ] No SOURCE_LEVEL_FIX finding deferred or marked blocked due to runtime unavailability
 [ ] Final 15-section report was generated ONLY after all batches were complete and checkpointed
 [ ] Issue counts in final report match cumulative running totals from the tracker
 [ ] Any retroactive PASS revisions from later batches are documented in the Coverage Ledger
@@ -5023,6 +5088,8 @@ The audit is complete only when ALL of the following are true:
 48. Do not start a new batch without first re-reading the AUDIT_PROGRESS_TRACKER.md to restore accumulated context.
 49. Do not generate the final 15-section report until ALL batches have been completed and checkpointed.
 50. Do not carry forward findings from a previous batch without explicitly referencing the tracker — silently assuming context is an anti-hallucination violation.
+51. Do not use runtime/host unavailability (missing test runner, missing build tool, missing live server or DB, missing browser automation) as an excuse to pause, stall, or declare the audit BLOCKED. All supplied source code MUST be audited to 100% depth statically.
+52. Do not conflate SOURCE_LEVEL_FIX with HOST_RUNTIME_BLOCKED_VERIFICATION or external product blockers. Never mark source-level defects as blocked due to host/runtime absence.
 
 ---
 

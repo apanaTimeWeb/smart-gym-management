@@ -1,6 +1,6 @@
 # FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
 
-## VERSION 2.4 FINAL — FRONTEND (WEB/MOBILE) / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION
+## VERSION 2.5 FINAL — FRONTEND (WEB/MOBILE) / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION
 
 ---
 
@@ -49,6 +49,23 @@
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist passes clean.**
 > ⛔ **You MUST NOT skip creating `[module_name]_changelog_vN.md`, `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/`. They are mandatory deliverables, not suggestions.**
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly, noting runtime execution as `DEFERRED_TO_DEPLOYMENT`.
+>
+> ⛔⛔⛔ **CONTINUE-THROUGH DIRECTIVE — NON-NEGOTIABLE** ⛔⛔⛔
+>
+> **Runtime/host/build unavailability is NEVER a reason to pause, stop, or defer SOURCE-LEVEL fixes.**
+>
+> The AI MUST distinguish between:
+> - **SOURCE-LEVEL FIXABLE** (file edits, code, types, schemas, mocks, tests, docs, config) — MUST be fixed immediately regardless of runtime availability
+> - **HOST/RUNTIME BLOCKED** (requires a running server, live browser, deployed environment, or external service to verify or execute) — ONLY these may be marked `DEFERRED_TO_HOST_RUNTIME` and documented
+>
+> The AI MUST NOT use "runtime unavailable" as a reason to:
+> - Pause the audit mid-way
+> - Skip remaining source-level sections
+> - Produce only a findings report instead of actual code fixes
+> - Defer AUTO-REPAIRABLE or REPAIRABLE_WITH_ASSUMPTIONS findings to a later pass
+> - Declare the repair "incomplete" when only host-runtime steps remain
+>
+> **RULE:** If a finding can be fixed by editing source files (TypeScript, CSS, config, mocks, tests, docs), fix it NOW. Do not wait for runtime confirmation to write the fix. Mark only genuinely host/runtime-dependent verification steps as `DEFERRED_TO_HOST_RUNTIME`.
 
 ---
 
@@ -65,6 +82,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 5. **FUNCTIONAL CLOSURE MANDATE:** Every interactive control (button, link, dropdown, form, filter, tab, modal, pagination) MUST do something real. Visible controls that do nothing or log to console without user feedback are SEVERE defects. **VIOLATION = rejected UI.**
 6. **MUTABLE MOCK STATE MANDATE:** When backend is absent, mocks MUST simulate real mutable state (create actually adds to list, edit updates list, delete removes from list). Static read-only mocks violate the functional closure requirement. **VIOLATION = incomplete repair.**
 7. **NO PLACEHOLDER CODE OR TRUNCATION:** Every generated or repaired component, hook, or screen MUST be 100% complete and fully implemented. Writing placeholder comments such as `// ... rest of code remains the same ...`, `// ... existing methods ...`, or `// TODO` inside deliverables is STRICTLY FORBIDDEN. Deliverables must be drop-in ready with zero ellipsis. **VIOLATION = broken build = immediate task failure.**
+8. **SOURCE-FIRST REPAIR MANDATE:** Runtime/host/build unavailability is NEVER a reason to stop fixing source-level issues. The AI MUST push through the complete audit and repair ALL source-level findings before declaring any blocking. Pausing the audit mid-way due to runtime unavailability = **INVARIANT VIOLATION = must restart from the paused section and continue through.** Only genuine `BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED` items may pause a repair. `HOST_RUNTIME_BLOCKED_VERIFICATION` items keep the repair moving — only the verification step is deferred.
 
 ---
 
@@ -248,6 +266,100 @@ If the frontend calls an API, you may audit:
 * how the UI consumes the response
 
 But do NOT judge whether the backend itself is correctly implemented.
+
+---
+
+# 1Z. HOST / RUNTIME SCOPE SEPARATION MANDATE (NON-NEGOTIABLE)
+
+> ⛔⛔⛔ **THIS SECTION GOVERNS WHAT THE AI DOES WHEN RUNTIME IS UNAVAILABLE. READ IT BEFORE ANY AUDIT OR REPAIR.**
+
+This section eliminates the most common failure mode of this prompt:
+
+> **AI treats runtime/host unavailability as a reason to pause the audit, stop fixing, produce only a findings report, or mark source-level bugs as "blocked by environment."**
+
+This is PROHIBITED in V2.5.
+
+## The Two-Tier Classification (MANDATORY for every finding)
+
+Every audit finding and every repair action MUST be classified as one of:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│  SOURCE_LEVEL_FIX                                                           │
+│  — The fix is achieved by editing source files only.                       │
+│  — MANDATORY: Fix it directly in code in this pass.                        │
+│  — Runtime availability = IRRELEVANT. Fix it NOW.                          │
+│                                                                             │
+│  Includes: TypeScript, TSX, CSS, JSON, yaml, config, mocks,                │
+│  fixtures, tests, markdown docs, schema files, type files,                 │
+│  constants, API client functions, Zustand stores, hooks.                   │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  HOST_RUNTIME_BLOCKED_VERIFICATION                                         │
+│  — The SOURCE side fix is complete.                                        │
+│  — Only the verification step requires a running environment.              │
+│  — MANDATORY: Write source fix + mark verification DEFERRED_TO_HOST_RUNTIME│
+│  — Provide exact commands the developer must run.                          │
+│                                                                             │
+│  Includes: "Does npm run build succeed?", "Does the API return X?",        │
+│  "Does the browser render this correctly?", "Does Playwright E2E pass?",   │
+│  "Does WebSocket connect?", "Does the test pass in CI?"                    │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Prohibited Behaviors (MUST NOT)
+
+The AI MUST NOT:
+
+1. Stop auditing remaining sections because runtime/host is unavailable.
+2. Produce only a findings report ("here is what is wrong") instead of actual source fixes.
+3. Mark a SOURCE_LEVEL_FIX finding as `BLOCKED BY ENVIRONMENT` or `BLOCKED BY RUNTIME`.
+4. Defer AUTO-REPAIRABLE findings because "I cannot run the build to verify".
+5. Ask the user for permission to write source-level fixes due to runtime unavailability.
+6. State "I cannot complete the repair because the server is not running."
+7. Pause mid-audit and wait for runtime access before continuing through remaining source-level audit sections.
+8. Produce partial source fixes with a note "rest to be done when runtime is available".
+
+## Required Behaviors (MUST)
+
+The AI MUST:
+
+1. Complete ALL source-level audit sections even when runtime is unavailable.
+2. Write the complete fixed code for EVERY SOURCE_LEVEL_FIX finding in this pass.
+3. For each HOST_RUNTIME_BLOCKED_VERIFICATION item: write the source implementation fully, then append a `DEFERRED_TO_HOST_RUNTIME` block with exact developer commands.
+4. Continue through all audit sections (Sections 7–43P) without pausing for runtime availability.
+5. Deliver a complete source-fixed ZIP where ALL source fixes are applied and all host/runtime verification gaps are documented.
+
+## DEFERRED_TO_HOST_RUNTIME Block Format
+
+For every HOST_RUNTIME_BLOCKED_VERIFICATION item, append this block after the fix:
+
+```text
+DEFERRED_TO_HOST_RUNTIME
+Finding ID: [ID]
+Source Fix Status: COMPLETE (code written and included in ZIP)
+What cannot be verified without runtime:
+  [exact description]
+Commands to run after deployment:
+  1. [exact command]
+  2. [exact command]
+Expected result:
+  [what passing looks like]
+```
+
+## Examples: What IS and IS NOT Host/Runtime Blocked
+
+| Finding | Classification | Required Action |
+|---|---|---|
+| Form submits but handler is `console.log` only | SOURCE_LEVEL_FIX | Write real mutation handler NOW |
+| Missing Zod schema for API response | SOURCE_LEVEL_FIX | Add schema NOW |
+| Hardcoded color `#FF5733` in JSX | SOURCE_LEVEL_FIX | Replace with semantic token NOW |
+| Missing loading.tsx for a route | SOURCE_LEVEL_FIX | Create the file NOW |
+| Missing MSW handler for DELETE | SOURCE_LEVEL_FIX | Write the handler NOW |
+| Missing test for search debounce | SOURCE_LEVEL_FIX | Write the test NOW |
+| "Does the API return 200 on /api/v1/members?" | HOST_RUNTIME_BLOCKED | Source fix complete; verification deferred |
+| "Does npm run build succeed?" | HOST_RUNTIME_BLOCKED | Cannot check without environment |
+| "Does Playwright E2E click through modal?" | HOST_RUNTIME_BLOCKED | Write test file; run deferred |
+| "Does WebSocket reconnect after drop?" | HOST_RUNTIME_BLOCKED | Implement reconnect logic; runtime test deferred |
 
 ---
 
@@ -599,33 +711,75 @@ ENVIRONMENT_CAPABILITY_CHECK:
 - Artifact / ZIP generation:[YES / NO / UNKNOWN]
 ```
 
-**When ALL capabilities are available:** Perform repairs directly in code, re-verify the fix by executing tests and build, and deliver the final code in a versioned ZIP.
+⛔ **CRITICAL: Environment capability limitations affect VERIFICATION ONLY — they MUST NEVER stop SOURCE-LEVEL REPAIRS.**
 
-**When ANY capability is unavailable:** Produce a complete repair package instead:
-- File-by-file diffs for every required change
-- Exact commands to apply, test, and verify each fix
-- Explicit `BLOCKED BY ENVIRONMENT CAPABILITY` status for each unexecutable step
-- A manual integration guide for the developer to execute the remaining steps
+### SOURCE-LEVEL VS HOST-RUNTIME SEPARATION (MANDATORY)
 
-Do NOT claim repair completion for steps that were not actually executed. Do NOT produce a fake ZIP or claim test passage without actual test execution evidence.
+Every repair finding MUST be classified into ONE of two categories before deciding action:
+
+```text
+SOURCE_LEVEL_FIX
+  Definition: The fix requires only editing source files (TypeScript, TSX, CSS, JSON,
+              config files, mock files, test files, documentation files).
+  MANDATORY ACTION: Fix it directly in code NOW. Runtime availability is IRRELEVANT.
+  Examples:
+    - Wrong import path → fix the import
+    - Missing Zod schema field → add the field
+    - Hardcoded color → replace with semantic token
+    - Missing loading state → implement the skeleton/spinner
+    - Broken form handler → implement the handler
+    - Missing test → write the test
+    - Missing type → add the type
+    - Wrong query key → fix the query key
+    - Mock missing field → add the field to the mock fixture
+    - Missing error boundary → add the error.tsx file
+
+HOST_RUNTIME_BLOCKED
+  Definition: Verification or execution requires a running server, live browser,
+              deployed environment, external API, database, or OS-level service.
+  MANDATORY ACTION: Fix the SOURCE side fully, then mark verification as
+                    DEFERRED_TO_HOST_RUNTIME with exact steps for the developer.
+  Examples:
+    - "Does the API actually return X?" → cannot verify without running backend
+    - "Does the build pass?" → cannot verify without npm run build in environment
+    - "Does E2E test pass in browser?" → cannot verify without Playwright + browser
+    - "Does WebSocket connect?" → cannot verify without running server
+```
+
+**When ANY capability is unavailable:**
+
+1. Fix ALL `SOURCE_LEVEL_FIX` findings directly in code — no exceptions, no deferrals.
+2. For `HOST_RUNTIME_BLOCKED` items: write the source-side implementation completely, then mark the verification step as `DEFERRED_TO_HOST_RUNTIME` with exact commands the developer must run.
+3. Do NOT produce only diffs. Do NOT produce only a findings report. Write the actual fixed code for every SOURCE_LEVEL_FIX finding.
+4. Do NOT claim repair completion until all SOURCE_LEVEL_FIX items are done. HOST_RUNTIME_BLOCKED items are acceptable as open verification gaps — they must be documented but do not block source delivery.
+
+Do NOT claim test passage without actual test execution evidence. Do NOT produce a fake ZIP. Do NOT mark a SOURCE_LEVEL_FIX as BLOCKED simply because the runtime is unavailable.
 
 ### REPAIR CATEGORIZATION MODEL (MODE B)
 
-Every audit finding MUST be categorized before repair. Do NOT force every finding into immediate direct repair:
+Every audit finding MUST be categorized before repair. The SOURCE-LEVEL vs HOST-RUNTIME distinction from the Environment Capability Clause applies here:
 
 | Category | Definition | Required Action |
 |---|---|---|
-| **AUTO-REPAIRABLE** | Naming violations, token violations, null safety, comment gaps, import order, minor test additions | Repair directly — no approval needed |
+| **AUTO-REPAIRABLE** | Naming violations, token violations, null safety, comment gaps, import order, missing types, broken imports, missing mock fields, minor test additions, missing error boundaries, missing loading states, hardcoded values | **Fix directly in code — NO approval needed. Runtime unavailability does NOT change this.** |
 | **REPAIRABLE WITH ASSUMPTIONS** | Logic gaps where a safe default exists; assumption is clearly documented | Repair + document assumption; flag for human review |
-| **BLOCKED — EXTERNAL DECISION REQUIRED** | Breaking API changes, permission-model changes, backend schema dependencies, visual redesigns, business-rule changes | Do NOT invent a solution; document the blocker; escalate clearly |
+| **BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED** | Breaking API changes that require backend schema or controller changes, permission-model redesigns, business-rule changes that require product owner decision, visual redesigns that require design team sign-off | Do NOT invent a solution; document the blocker; escalate clearly. **This category MUST NOT be used for host/runtime verification gaps — those are SOURCE_LEVEL_FIX + DEFERRED_TO_HOST_RUNTIME.** |
+| **HOST_RUNTIME_BLOCKED_VERIFICATION** | The source fix is complete; only the runtime verification step (running build, running tests, browser E2E, live API check) is unavailable | Fix the source completely, mark verification as `DEFERRED_TO_HOST_RUNTIME`, provide exact commands | 
 | **INTENTIONALLY DEFERRED DEBT** | Known issues explicitly accepted by the team or outside current release scope | Acknowledge + document; do NOT silently fix or silently ignore |
 
+⛔ **CRITICAL RULE: Host/runtime unavailability is NEVER a valid reason to use `BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED`. Runtime gaps go into `HOST_RUNTIME_BLOCKED_VERIFICATION`. Product/business decisions go into `BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED`. These are DIFFERENT categories.**
+
 **The following findings require explicit approval BEFORE repair:**
-- Changes to API request / response contracts
+- Changes to API request / response contracts (fields, methods, URLs)
 - Changes to the permission or role model
 - Changes that require backend schema or controller modification
 - Visual redesigns requiring design team sign-off
 - Business rule changes requiring product owner decision
+
+**The following findings do NOT require approval and MUST be fixed immediately:**
+- Any SOURCE_LEVEL_FIX finding, regardless of runtime availability
+- All AUTO-REPAIRABLE findings
+- All REPAIRABLE_WITH_ASSUMPTIONS findings (fix + document the assumption)
 
 ### NO SAMPLING RULE
 
@@ -2942,11 +3096,13 @@ Do NOT hide a critical failure inside an average.
 
 Score caps:
 
-* Any unresolved P0 → maximum 4/10
+* Any unresolved P0 SOURCE_LEVEL_FIX finding → maximum 4/10
 * Any unresolved critical architecture/data-boundary issue → maximum 5/10
 * Significant unresolved dead/no-op flows → maximum 6/10
-* Major runtime verification missing → maximum 8/10
-* Any category marked NOT VERIFIED → overall score cannot be represented as fully verified
+* Host/runtime verification deferred but ALL source-level fixes complete → score reflects static compliance; note `DEFERRED_TO_HOST_RUNTIME` items explicitly. Do NOT cap score below 9/10 solely due to runtime gaps when source is fully fixed.
+* Any category marked NOT VERIFIED due to insufficient source evidence (not runtime) → overall score cannot be represented as fully verified
+
+⛔ **HOST/RUNTIME GAP IS NOT A SCORE CAP:** If all source-level fixes are complete and only host/runtime verification steps remain deferred, the AI MUST NOT artificially deflate the score. Runtime deferred items must be listed under `DEFERRED_TO_HOST_RUNTIME` in the score evidence, but they do not cap the static compliance score.
 
 If any category required for the module is NOT VERIFIED:
 
@@ -3410,7 +3566,9 @@ The AI MUST NOT:
 - Mix findings from different RBGs in the same execution turn;
 - Claim an RBG is complete when any finding in it remains unresolved.
 
-If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+If a finding in the current RBG is BLOCKED (external product decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
+
+⛔ **HOST_RUNTIME_BLOCKED_VERIFICATION findings are NOT blocked.** They must be counted as unblocked — the source fix is done, only the verification step is deferred. The AI MUST continue through all remaining RBG findings after writing the source fix and appending the `DEFERRED_TO_HOST_RUNTIME` block. The RBG is not considered blocked due to host/runtime gaps alone.
 
 ## RBG STATE IN progress.json
 
@@ -6310,6 +6468,7 @@ Before final delivery, the AI MUST literally verify:
 [ ] Source conflicts reported
 [ ] Documentation freshness checked
 [ ] No unverified item silently presented as PASS
+[ ] SOURCE-LEVEL FIX COMPLETION GATE: All findings classified as SOURCE_LEVEL_FIX have been fixed in source code before the ZIP is packaged. HOST_RUNTIME_BLOCKED_VERIFICATION items are documented with DEFERRED_TO_HOST_RUNTIME blocks. No SOURCE_LEVEL_FIX finding was deferred due to runtime unavailability.
 ```
 
 The audit MUST stop and report `INCOMPLETE AUDIT` if any required checklist item is not completed.
