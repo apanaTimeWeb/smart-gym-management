@@ -7666,6 +7666,9 @@ IMPLEMENTATION / REPAIR
 
 `BLOCKED` and `NOT_VERIFIED` work units MUST NOT be counted as completed.
 
+> ⛔ **SOURCE-LEVEL WORK UNIT UNBLOCKING RULE:**
+> A work unit whose source-level code fixes (components, hooks, stores, styles, mocks, tests) are fully written, implemented, and statically inspected within the supplied scope is **COMPLETED** for source repair. If host/runtime test execution cannot be run due to absence of live browser/runners, that verification step is recorded as `DEFERRED_TO_HOST_RUNTIME`, but the work unit itself is NOT blocked and MUST NOT be stalled. Only genuinely missing out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) or external product decisions may remain `BLOCKED`.
+
 `requirement_ids` and `issue_ids` MUST connect execution work with requirement coverage and issue closure.
 
 ## 44.5 Work-Unit Lifecycle
@@ -8371,7 +8374,7 @@ Checkpointing MUST NOT become a reason to:
 - skip tests;
 - skip documentation.
 
-The final result MUST still satisfy the full V2.4 applicable requirement set.
+The final result MUST still satisfy the full V2.5 applicable requirement set.
 
 ## 44.10 Mode A — CREATE
 

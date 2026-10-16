@@ -1416,6 +1416,9 @@ SOURCE_CONFLICT              — Two authoritative sources conflict on this rule
 EVIDENCE_CONFLICT            — Sources conflict on whether this rule is met
 ```
 
+> ⛔ **HOST/RUNTIME MISSING IS NOT BLOCKED_BY_MISSING_EVIDENCE:**
+> Unavailability of a live running database, Redis server, or test execution runner MUST NOT be classified as `BLOCKED_BY_MISSING_EVIDENCE` if the relevant source code files, entities, DTOs, schemas, or test files exist in the repository. The source code MUST be inspected statically and scored as `APPLICABLE_AND_VERIFIED` (or `APPLICABLE_AND_FAILED`), with dynamic execution recorded separately as `DEFERRED_TO_HOST_RUNTIME`. `BLOCKED_BY_MISSING_EVIDENCE` applies strictly to omitted physical source files.
+
 Every non-PASS result must explain why.
 
 No source requirement may disappear because:

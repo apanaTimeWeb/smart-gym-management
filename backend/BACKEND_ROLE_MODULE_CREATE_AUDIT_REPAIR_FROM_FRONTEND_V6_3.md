@@ -960,9 +960,12 @@ INTEGRATION_TESTED
 E2E_TESTED
 RUNTIME_EXECUTED
 NOT_EXECUTED
-BLOCKED_BY_ENVIRONMENT
-BLOCKED_BY_MISSING_DEPENDENCY
+DEFERRED_TO_HOST_RUNTIME
+BLOCKED_BY_SUPPLIED_SCOPE
 ```
+
+> ⛔ **NOTE ON RUNTIME UNVERIFIABILITY:**
+> Host/runtime unavailability (absence of live database, Redis, message broker, or running server) MUST NOT be marked as `BLOCKED_BY_ENVIRONMENT` or `BLOCKED`. It MUST be designated as `DEFERRED_TO_HOST_RUNTIME` with exact commands for the developer. Only missing out-of-scope files may be marked `BLOCKED_BY_SUPPLIED_SCOPE`.
 
 The AI MUST NOT claim that behavior was runtime-verified unless the relevant command or executable test was actually run and its result was available in the current session.
 
@@ -980,7 +983,7 @@ For every required test category, record separately:
 | Test artifact generated | YES / NO |
 | Static review completed | YES / NO |
 | Runtime execution attempted | YES / NO |
-| Runtime result | PASSED / FAILED / BLOCKED / N/A |
+| Runtime result | PASSED / FAILED / DEFERRED_TO_HOST_RUNTIME / N/A |
 | Environment limitation | Describe if execution was not possible |
 | Remaining risk | What remains unverified |
 
@@ -988,7 +991,7 @@ For every required test category, record separately:
 - A required test is **DELIVERED** when the test artifact is complete and included in the package.
 - A required test is **VERIFIED** only when it has been executed successfully in the current environment.
 - Do NOT mark a requirement fully proven solely because a test file exists.
-- When environment prevents execution: mark `DELIVERED_NOT_EXECUTED` and describe the remaining risk explicitly.
+- When environment prevents execution: mark `DEFERRED_TO_HOST_RUNTIME` and describe the exact commands and remaining risk explicitly.
 
 
 
@@ -2350,7 +2353,7 @@ Each work unit MUST include:
 - **Architecture rule IDs addressed:** from the supplied architecture document;
 - **Implementation summary:** what was created or changed;
 - **Validation performed:** which verification level was achieved (use RUNTIME VERIFICATION taxonomy);
-- **Test status:** GENERATED_NOT_EXECUTED / EXECUTED_AND_PASSED / EXECUTED_AND_FAILED / BLOCKED_BY_ENVIRONMENT;
+- **Test status:** GENERATED_NOT_EXECUTED / EXECUTED_AND_PASSED / EXECUTED_AND_FAILED / DEFERRED_TO_HOST_RUNTIME;
 - **Unresolved dependencies:** anything outside writable scope that remains unresolved;
 - **Rollback / risk notes:** any breaking change, migration risk, or consumer-impact concern.
 
@@ -3243,7 +3246,7 @@ For every generated test, clearly distinguish:
 GENERATED_NOT_EXECUTED
 EXECUTED_AND_PASSED
 EXECUTED_AND_FAILED
-BLOCKED_BY_ENVIRONMENT
+DEFERRED_TO_HOST_RUNTIME
 ```
 
 Never state a test "passes" unless it was actually executed and produced a passing result in the current session.
@@ -3309,22 +3312,21 @@ Repair every actionable in-scope issue through bounded work units.
 
 **ACTIONABLE IN-SCOPE REPAIR RULE**
 
-A finding is actionable in scope ONLY when ALL of the following are true:
-- the required artifact is supplied in the writable scope;
-- the artifact is within the allowed writable boundary;
-- the repair does not require undisclosed credentials, external access, or changes to excluded modules;
-- the repair can be implemented without violating architecture boundaries.
+A finding is actionable in scope whenever the required source code, schema, entity, DTO, service, controller, repository, migration, guard, mock fixture, or unit test can be created or repaired within the supplied writable boundary.
 
-If ANY condition is not met, do NOT simulate a repair. Record the finding as one of:
+> ⛔ **MANDATORY SOURCE-LEVEL VS RUNTIME DISTINCTION:**
+> 1. **SOURCE-LEVEL DEFECTS ARE ALWAYS ACTIONABLE:** Unavailability of undisclosed credentials, live database connections, Redis servers, or running host processes MUST NEVER prevent writing complete, fully-implemented source code and mock-based unit tests. Writing comprehensive mock fixtures, in-memory repository doubles, or unit tests with stubs/mocks is MANDATORY standard engineering practice and is NOT a "false repair".
+> 2. **HOST RUNTIME VERIFICATION DEFERRED:** Only the live dynamic execution step against an external host server/database is deferred, and it MUST be recorded as `DEFERRED_TO_HOST_RUNTIME`.
+
+If an artifact genuinely belongs outside the writable scope or requires external product changes, record it as one of:
 
 ```text
-OUTSIDE_SUPPLIED_SCOPE
-BLOCKED_BY_ENVIRONMENT
+BLOCKED_BY_SUPPLIED_SCOPE
+EXTERNAL_PRODUCT_DECISION_BLOCKED
 FRONTEND_CHANGE_REQUIRED
-EXTERNAL_DEPENDENCY_REQUIRED
 ```
 
-Do NOT write placeholder or stub code to simulate a repair when the real repair is blocked. A stub that pretends to implement a capability is a false repair.
+Do NOT write placeholder comments (such as `// TODO` or `// ... rest of code unchanged`) inside source deliverables. Every delivered file must be 100% complete and fully implemented.
 
 If frontend modification is genuinely required:
 
@@ -9440,7 +9442,7 @@ Overall Coverage Rate:    X%   (Actioned requirements / Total Discovered)
 Rules:
 - `NOT_A_BACKEND_REQUIREMENT` items are excluded from the denominator.
 - `BLOCKED` items reduce confidence but are not counted as failures.
-- `IMPLEMENTED_NOT_VERIFIED` counts as partial, never as COMPLIANT.
+- `IMPLEMENTED_NOT_VERIFIED` counts as partial ONLY when source-level implementation is incomplete. When all source-level code, types, migrations, and unit tests with mocks are fully implemented and verified statically, the static architecture compliance is evaluated as `COMPLIANT` (up to 10.0), with dynamic execution noted as `DEFERRED_TO_HOST_RUNTIME`.
 - If `Not Implemented` count > 0, overall readiness MUST NOT be `READY_FOR_PRODUCTION`.
 
 ```text
@@ -9458,7 +9460,7 @@ BACKEND ARCHITECTURE COMPLIANCE:
 
 RUNTIME VERIFICATION STATUS:
 [use RUNTIME VERIFICATION taxonomy: STATICALLY_INSPECTED / COMPILED / UNIT_TESTED /
-INTEGRATION_TESTED / E2E_TESTED / RUNTIME_EXECUTED / NOT_EXECUTED / BLOCKED_BY_ENVIRONMENT]
+INTEGRATION_TESTED / E2E_TESTED / RUNTIME_EXECUTED / NOT_EXECUTED / DEFERRED_TO_HOST_RUNTIME]
 
 SCOPE AND EVIDENCE LIMITATIONS:
 [what could not be verified; exact list of BLOCKED_BY_SUPPLIED_SCOPE and NOT_VERIFIED items]
