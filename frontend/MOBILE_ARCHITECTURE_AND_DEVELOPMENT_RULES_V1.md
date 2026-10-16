@@ -28,6 +28,10 @@
 > [ ] MOBILE DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
 > ```
 > **Failure to complete the above = entire output is discarded.**
+>
+> ⛔ **NO-PAUSE ON MISSING RUNTIME / HOST CAPABILITY (MANDATORY ANTI-STALL RULE):**
+> Unavailability of a physical mobile device, Android/iOS emulator, Metro bundler, or Maestro E2E test runner is NEVER a reason to pause, stall, abort, or declare mobile code creation, audit, or repair "BLOCKED". The AI MUST fix every issue that can be resolved in source files (screens, components, custom hooks, Zustand stores, Zod schemas, URL configs, query key factories, MSW mock fixtures, documentation trio) in this session. Only live device/emulator execution or live Maestro runner execution is designated as `DEFERRED_TO_HOST_RUNTIME`. Missing runtime is strictly forbidden as a reason to pause.
+> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When live mobile device or simulator execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a physical device or emulator is absent. State the Static Compliance Rating directly (up to 10.0), noting dynamic execution separately as `DEFERRED_TO_HOST_RUNTIME`.
 
 ## CRITICAL MOBILE STRUCTURE GATE (NON-NEGOTIABLE)
 
@@ -2707,6 +2711,9 @@ The AI MUST NOT:
 
 If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
 
+> ⛔ **RBG HOST/RUNTIME UNBLOCKING RULE (NON-NEGOTIABLE):**
+> Findings classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` are NOT BLOCKED. The AI MUST write the complete source-level fix (screens, components, hooks, stores, styles, mocks, tests, docs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no Metro bundler, no simulator/device, no Maestro runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence. Only genuine external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) may remain blocked.
+
 #### RBG STATE IN progress.json
 
 Add to the existing `progress.json` structure:
@@ -2731,6 +2738,9 @@ Add to the existing `progress.json` structure:
 Execution MUST be performed through bounded, resumable work units.
 
 This section modifies EXECUTION CONTROL ONLY. It MUST NOT reduce or weaken any mobile architecture rule, design rule, test requirement, or documentation requirement.
+
+> ⛔ **SOURCE-LEVEL WORK UNIT UNBLOCKING RULE:**
+> A work unit whose source-level code fixes (screens, components, hooks, stores, styles, mocks, tests, docs) are fully written, implemented, and statically inspected within the supplied scope is **COMPLETED** for source repair. If dynamic mobile test execution cannot be run due to absence of a live device/simulator, that verification step is recorded as `DEFERRED_TO_HOST_RUNTIME`, but the work unit itself is NOT blocked and MUST NOT be stalled. Only genuinely missing out-of-scope files (`BLOCKED_BY_SUPPLIED_SCOPE`) or external product decisions may remain `BLOCKED`.
 
 Execution flow:
 
@@ -2902,6 +2912,9 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 | **Gate 14** | Changelog & Re-Audit Included | `[featureName]_changelog_vN.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Maestro E2E test suite present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
 > ⛔ **If ANY box fails: STATUS = `BLOCKED_DELIVERY`. Do NOT package or deliver the ZIP.**
+>
+> ⛔ **NOTE ON OFFLINE VERIFICATION & MAESTRO TEST RUNS:**
+> Gate 14 and DoD Gate 5 require the Maestro YAML test suite files (`mobile_e2e/`) to be fully authored, structured, and included in the ZIP. If the local environment lacks a mobile device/emulator or Maestro runner, the YAML files are verified statically as PASS, and dynamic execution is recorded as `DEFERRED_TO_HOST_RUNTIME`. Device/runner absence MUST NOT trigger `BLOCKED_DELIVERY` or block delivery when the YAML test suite is fully authored and present.
 
 ---
 

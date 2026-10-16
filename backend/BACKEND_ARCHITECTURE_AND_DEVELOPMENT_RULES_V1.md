@@ -352,13 +352,16 @@ Only the following statuses may be used in audit reports, enforcement matrices, 
 | `SUPPLIED_BUT_INCOMPLETE` | Dependency supplied but missing required parts |
 | `OUTSIDE_SUPPLIED_SCOPE` | Dependency exists but is not in the supplied input |
 | `BLOCKED_BY_SUPPLIED_SCOPE` | Cannot verify because required evidence is outside supplied scope |
-| `BLOCKED_BY_ENVIRONMENT` | Cannot verify because the execution environment lacks the capability |
+| `DEFERRED_TO_HOST_RUNTIME` | Static code is complete and compliant; dynamic command/test execution is deferred to host/developer |
 | `EXTERNAL_DEPENDENCY_REQUIRED` | Requires an external system or team action before resolution |
 | `FRONTEND_CHANGE_REQUIRED` | Backend is correct; frontend must change to align |
 | `NOT_VERIFIED` | Insufficient evidence to establish presence or absence |
 | `STACK_CONFLICT` | Supplied code uses a technology not approved by this architecture document |
 | `FRAMEWORK_NOT_VERIFIED` | Active framework cannot be determined from supplied evidence |
 | `DATA_COMPATIBILITY_NOT_VERIFIED` | Existing data compatibility for a schema change cannot be verified |
+
+> ⛔ **NOTE ON RUNTIME UNVERIFIABILITY:**
+> Absence of a live running database, Redis cache, message broker, or framework server in the AI execution environment MUST NOT be classified as `BLOCKED_BY_ENVIRONMENT` or used to fail an architecture rule. Source code, entities, DTOs, controllers, services, repositories, migrations, and mock-based unit tests MUST be evaluated statically as `COMPLIANT` (up to 10.0), with live dynamic execution recorded as `DEFERRED_TO_HOST_RUNTIME`.
 
 Every status MUST include:
 - **Evidence:** what was read or executed to determine this status

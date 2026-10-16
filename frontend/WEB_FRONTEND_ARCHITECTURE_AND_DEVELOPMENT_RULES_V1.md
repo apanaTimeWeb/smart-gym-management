@@ -28,6 +28,10 @@
 > [ ] FRONTEND DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
 > ```
 > **Failure to complete the above = entire output is discarded.**
+>
+> ⛔ **NO-PAUSE ON MISSING RUNTIME / HOST CAPABILITY (MANDATORY ANTI-STALL RULE):**
+> Unavailability of a running web server (Next.js/Vite dev server), live backend API, real browser, or Playwright test runner is NEVER a reason to pause, stall, abort, or declare web frontend code creation, audit, or repair "BLOCKED". The AI MUST fix every issue that can be resolved in source files (pages, layouts, components, custom hooks, Zustand stores, Zod schemas, URL configs, MSW mock fixtures, Playwright test files, documentation trio) in this session. Only live browser automation or live API network execution is designated as `DEFERRED_TO_HOST_RUNTIME`. Missing runtime is strictly forbidden as a reason to pause.
+> ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When live browser or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser or server is absent. State the Static Compliance Rating directly (up to 10.0), noting dynamic execution separately as `DEFERRED_TO_HOST_RUNTIME`.
 
 ## CRITICAL FRONTEND STRUCTURE GATE (NON-NEGOTIABLE)
 
