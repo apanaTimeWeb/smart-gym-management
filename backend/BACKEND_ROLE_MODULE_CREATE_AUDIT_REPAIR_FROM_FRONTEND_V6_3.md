@@ -2348,6 +2348,12 @@ The workflow MUST remain recoverable even if:
 
 Recovery MUST be possible from durable execution artifacts and the actual filesystem without relying on reconstruction of missing assistant prose.
 
+⛔ **FILESYSTEM IS SOLE GROUND TRUTH (ZERO-TRANSCRIPT-DEPENDENCY RULE):**
+- When auditing, repairing, or resuming work on a backend module, the **CURRENT ACTUAL FILESYSTEM STATE** is the sole authoritative ground truth.
+- The AI is **NOT REQUIRED** to reconstruct past conversation transcripts, verify earlier assistant prose, or replay historical patch steps.
+- If current source code in the workspace passes syntax checks, type diagnostics, and architecture rule verification, it is verified as **PASS**.
+- "Reconstruction limitation" or "incomplete exact replay of earlier patches" is **STRICTLY FORBIDDEN** from being treated as an audit defect, release blocker, or reason to withhold the ZIP archive.
+
 ### Recovery Truth Rule
 
 Only persisted evidence may establish:

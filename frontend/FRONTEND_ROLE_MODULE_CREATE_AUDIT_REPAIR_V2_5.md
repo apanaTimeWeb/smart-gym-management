@@ -567,13 +567,15 @@ Resolve conflicts in the following order (highest → lowest trust):
 4. PRODUCTION_COMPONENT_EVIDENCE — Active, rendered components — non-dead, non-conditional-only code paths
 5. TEST_EVIDENCE                — Integration tests, contract tests (with MSW) — these reflect INTENDED behavior
 6. MSW_MOCK_EVIDENCE            — MSW handler fixtures — reflect frontend-assumed contract, may lag real API
-7. STORYBOOK_OR_STATIC_EVIDENCE — Storybook stories, static demo data — illustrative only
-8. DEAD_CODE_EVIDENCE           — Commented-out code, unreachable branches, unused imports
+7. DOCUMENTATION_EVIDENCE       — `[moduleName]_features.md` markdown tables — describe intended spec, but may lag real code
+8. STORYBOOK_OR_STATIC_EVIDENCE — Storybook stories, static demo data — illustrative only
+9. DEAD_CODE_EVIDENCE           — Commented-out code, unreachable branches, unused imports
 ```
 
 Rules:
 - If an API client says `POST /api/v1/admin/members` but an MSW handler says `POST /api/admin/members` → API client wins (rank 2 beats rank 6). Record the conflict explicitly.
 - If a Zod schema defines a required field but a mock fixture omits it → schema wins (rank 3 beats rank 6).
+- **Code vs Documentation Conflicts (e.g. PATCH vs POST or PUT vs PATCH):** Typed, working API client code (`API_CLIENT_EVIDENCE`, rank 2) is the authoritative implementation truth over markdown documentation (`DOCUMENTATION_EVIDENCE`, rank 7). When the API client has working types and tests, update the feature documentation to match the working API client method/contract, document the alignment in the changelog, and mark the finding as RESOLVED. A code-to-doc method discrepancy MUST NEVER be left as an unresolvable release blocker or used to withhold the ZIP archive.
 - Dead code MUST NOT be used as a requirement source. Classify it explicitly as `DEAD_CODE_EVIDENCE` and exclude it.
 - When conflict cannot be resolved from existing sources → record `UNRESOLVABLE_EVIDENCE_CONFLICT` and list both sources.
 
@@ -6516,7 +6518,7 @@ Before final delivery, the AI MUST literally verify:
 [ ] SOURCE-LEVEL FIX COMPLETION GATE: All findings classified as SOURCE_LEVEL_FIX have been fixed in source code before the ZIP is packaged. HOST_RUNTIME_BLOCKED_VERIFICATION items are documented with DEFERRED_TO_HOST_RUNTIME blocks. No SOURCE_LEVEL_FIX finding was deferred due to runtime unavailability.
 ```
 
-The evaluation of Section 43P is complete when every single item is evaluated and recorded individually with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md` as [PASS / FAIL / NOT_APPLICABLE / DEFERRED_TO_HOST_RUNTIME / OUTSIDE_SUPPLIED_SCOPE].
+The evaluation of Section 43P is complete when every single item is evaluated and recorded individually with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md` as [PASS / FAIL / NOT_APPLICABLE / DEFERRED_TO_HOST_RUNTIME / OUTSIDE_SUPPLIED_SCOPE / EXTERNAL_PRODUCT_DECISION_BLOCKED]. Documenting an open spec ambiguity under `EXTERNAL_PRODUCT_DECISION_BLOCKED` satisfies the "Source conflicts reported" check as PASS (evidence preserved).
 
 ⛔ **DELIVERY MANDATE (NEVER WITHHOLD THE REPAIR ZIP):**
 - Unavailability of live runtime verification (`DEFERRED_TO_HOST_RUNTIME`), missing out-of-scope host files (`OUTSIDE_SUPPLIED_SCOPE`), or documented specification conflicts requiring external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) MUST NOT trigger `BLOCKED_DELIVERY` or cause the AI to withhold the ZIP.
@@ -7633,6 +7635,12 @@ The workflow MUST remain recoverable even if:
 - the user reconnects later.
 
 Recovery MUST be possible from durable execution artifacts and the actual filesystem without relying on reconstruction of missing assistant prose.
+
+⛔ **FILESYSTEM IS SOLE GROUND TRUTH (ZERO-TRANSCRIPT-DEPENDENCY RULE):**
+- When auditing, repairing, or resuming work on a module, the **CURRENT ACTUAL FILESYSTEM STATE** is the sole authoritative ground truth.
+- The AI is **NOT REQUIRED** to reconstruct past conversation transcripts, verify earlier assistant prose, or replay historical patch steps.
+- If current source code in the workspace passes syntax checks, type diagnostics, and architecture rule verification, it is verified as **PASS**.
+- "Reconstruction limitation" or "incomplete exact replay of earlier patches" is **STRICTLY FORBIDDEN** from being treated as an audit defect, release blocker, or reason to withhold the ZIP archive.
 
 ## 44.4 Work-Unit Granularity
 
