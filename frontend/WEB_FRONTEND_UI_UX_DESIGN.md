@@ -213,19 +213,19 @@ The canonical machine-readable token source is `globals.css`. All tokens MUST fl
 
 ```
 globals.css (:root / .dark blocks)
-  → tailwind.config.ts (@theme inline / extend.colors)
+  → @theme inline in globals.css (Tailwind v4) or tailwind.config.ts (Tailwind v3)
   → JSX semantic Tailwind classes (e.g. bg-card, text-primary)
 ```
 
 **Token Drift Prevention (CI Required):**
 CI MUST fail when any of the following drift conditions are detected:
 - A Tailwind class references a CSS variable not defined in `globals.css`.
-- A token exists in `globals.css` but is missing from the `tailwind.config.ts` mapping table.
+- A token exists in `globals.css` but is missing from the `@theme inline` (Tailwind v4) or `tailwind.config.ts` (v3) mapping.
 - A token has a light-mode value but no corresponding dark-mode override in `.dark {}`.
 - Any JSX file contains `bg-[var(--*)]`, `text-[var(--*)]`, or raw hex colors (enforced by ESLint `tailwindcss/no-arbitrary-value`).
 - A deprecated token name is used anywhere in the codebase.
 
-**Validation tooling:** Add a token-sync check to the pre-commit hook and CI pipeline that mechanically verifies the `globals.css` → `tailwind.config.ts` mapping is complete and in-sync.
+**Validation tooling:** Add a token-sync check to the pre-commit hook and CI pipeline that mechanically verifies the `globals.css` → `@theme inline` / `tailwind.config.ts` mapping is complete and in-sync.
 
 **Examples of proper JSX styling:**
 - `bg-page`, `bg-card`, `bg-header`, `bg-primary`, `bg-overlay`
@@ -665,7 +665,7 @@ This design system intrinsically supports both Dark and Light modes using CSS va
 When building modules or components, **ALWAYS follow these rules** to ensure seamless theme switching:
 
 1. **Never use hardcoded Tailwind colors** for backgrounds or text (e.g., `bg-white`, `bg-gray-900`, `text-black`, `text-white`). Primary button text must use the semantic `text-on-primary` token — never the hardcoded `text-white` class, as this prevents the theme from centralizing foreground color changes.
-2. **The One Canonical Pattern for CSS Variables:** Define the variable in `globals.css` → map it as a named token in `tailwind.config.ts` → use the Tailwind class name in JSX (e.g., `bg-card`, `text-primary`). **Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.** This is the single source of truth that resolves any ambiguity between Rule 4 and Rule 36 of the Frontend Instructions.
+2. **The One Canonical Pattern for CSS Variables:** Define the variable in `globals.css` → map it as a named token (via `@theme inline` in `globals.css` for Tailwind v4, or in `tailwind.config.ts` for v3) → use the Tailwind class name in JSX (e.g., `bg-card`, `text-primary`). **Never use `bg-[var(--bg-card)]` or raw hex `bg-[#1A1A2E]` directly in JSX.** This is the single source of truth that resolves any ambiguity between Rule 4 and Rule 36 of the Frontend Instructions.
 3. **Theme Provider**: Ensure the app is wrapped in a `ThemeProvider` (like `next-themes`) that toggles a `.dark` class on the `<html>` or `<body>` tag.
 4. **CSS Setup**: In your global CSS file (e.g., `globals.css`), define the light mode variables inside `:root { ... }` and the dark mode variables inside `.dark { ... }`.
 5. **Gradients & Shadows**: For gradients and shadows, use variables like `var(--primary)` instead of hardcoded hex/rgba. Note that shadows like `shadow-dialog` handle dark/light transitions centrally via their semantic definitions.
@@ -971,7 +971,7 @@ Each layer of depth gets a slightly brighter background. The base page is the da
 
 ### Implementation Rules
 1. **Add `--bg-floating`, `--bg-overlay`, and `--bg-popover`** to your `globals.css` `:root` (light) and `.dark` blocks alongside the existing tokens.
-2. **Map them in `tailwind.config.ts`** as `bg-floating`, `bg-overlay`, `bg-popover` tokens.
+2. **Map them in `globals.css` (`@theme inline` for Tailwind v4) or `tailwind.config.ts` (for v3)** as `bg-floating`, `bg-overlay`, `bg-popover` tokens.
 3. **Modals and Dialogs** must use `bg-overlay` (not `bg-card`) so they visually lift above the card layer behind them.
 4. **Dropdowns and Tooltips** must use `bg-popover`.
 5. **Combine with subtle borders:** In dark mode, elevation alone is often not enough. Always add `border-border` to floating elements to provide a crisp edge definition, especially on lower-brightness monitors.

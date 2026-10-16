@@ -657,9 +657,10 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 
 ## 22. DEFINITION OF DONE — Mobile UI/UX Release Checklist
 
-> ⛔ **HARD STOP — ALL ITEMS BELOW ARE MANDATORY INVARIANTS FOR PRODUCTION RELEASE.**
-> **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure.**
-> **If ANY box fails: STATUS = `BLOCKED_RELEASE`. Do NOT proceed or deliver code.**
+> ⛔ **RELEASE CRITERIA & SOURCE DELIVERY MANDATE:**
+> **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure in audit.**
+> **In Repair Mode:** If any code defect is found, repair the code. Once all fixable source-level code is implemented, package and deliver the ZIP.
+> **Dynamic/runtime verification steps (`DEFERRED_TO_HOST_RUNTIME`) do NOT trigger `BLOCKED_RELEASE` and must never prevent delivering the repaired ZIP.**
 
 ### 1. Functional Completeness Gate
 - [ ] **End-to-End User Flows:** All documented user flows work end-to-end with verified navigation transitions. — *STOP if broken navigation or orphaned screen.*

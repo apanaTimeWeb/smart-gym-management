@@ -35,23 +35,25 @@
 
 ## CRITICAL MOBILE STRUCTURE GATE (NON-NEGOTIABLE)
 
-> ⛔ **HARD STOP — DO NOT PROCEED PAST THIS GATE UNTIL ALL ITEMS BELOW ARE VERIFIED.**
-> **Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` and STOP. Do NOT generate or repair any code until structure is compliant.**
+> ⛔ **STRUCTURE INVARIANT & REPAIR PROTOCOL:**
+> - **In Audit Mode:** Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` with file and line evidence.
+> - **In Repair Mode:** Structural violations (folder layout, thin screens, component naming, missing documentation trio) **MUST BE ACTIVELY REPAIRED FIRST (in RBG 1)** before repairing inner feature code.
+> - **ANTI-STALL DIRECTIVE:** Structural non-compliance is the reason repair is required — it is **STRICTLY FORBIDDEN** to use structural violations as an excuse to halt, stall, refuse to repair, or declare code repair impossible.
 
 Before generating, auditing, or repairing ANY mobile feature module, verify ALL of the following:
 
 | Verification Item | Requirement | Consequence of Failure |
 |---|---|---|
-| **Role Container** | Must be `features/frontend_{role}/` (e.g., `features/frontend_admin/`) | **STOP.** Unprefixed role container = ARCHITECTURE VIOLATION. |
-| **Canonical Feature Module** | Must be `{module}/` inside role container (e.g., `features/frontend_admin/members/`) | **STOP.** Unowned or flat placement = IMMEDIATE NON_COMPLIANT. |
-| **Thin Screen Composition** | Screens in `screens/` MUST only compose components; hard maximum **80 lines**; ZERO business logic, state calculations, or direct API calls. | **STOP.** Heavy screen = ARCHITECTURE VIOLATION. Extract to components & custom hooks. |
-| **Prefixed Component Files** | Components in `components/` MUST use PascalCase with feature prefix (e.g., `MembersMemberCard.tsx`). Max **200 lines**. | **STOP.** Unprefixed component = NON_COMPLIANT. |
-| **Feature Custom Hooks** | Hooks in `hooks/` MUST use camelCase with `use` + feature name (e.g., `useMembers.ts`, `useMembersFilters.ts`). Max **150 lines**. | **STOP.** Generic hook name = NON_COMPLIANT. |
-| **Central Hardware Secure Storage** | Auth tokens, refresh tokens, biometric keys MUST use iOS Keychain / Android Keystore via `react-native-keychain`. NEVER `AsyncStorage`. | **STOP.** Tokens in AsyncStorage = CRITICAL SECURITY AUDIT FAILURE. |
-| **Module Documentation Trio** | Every feature MUST contain `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md`. | **STOP.** Missing doc artifact = INCOMPLETE MODULE. Must generate before code completion. |
-| **Centralized URL Config** | `config/[featureName].url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | **STOP.** Missing URL config = HARDCODED ROUTE RISK. |
-| **Query Key Registry** | `api/[featureName].query_keys.ts` or `config/[featureName].query_keys.ts` MUST exist and namespace all TanStack Query keys with resource identity. | **STOP.** Missing query key factory = CACHE INCONSISTENCY RISK. |
-| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | **STOP.** Sibling import = VIOLATION OF RULE 28. |
+| **Role Container** | Must be `features/frontend_{role}/` (e.g., `features/frontend_admin/`) | Unprefixed role container = ARCHITECTURE VIOLATION. In repair: move to canonical prefix in RBG 1. |
+| **Canonical Feature Module** | Must be `{module}/` inside role container (e.g., `features/frontend_admin/members/`) | Unowned or flat placement = NON_COMPLIANT. In repair: relocate to canonical container in RBG 1. |
+| **Thin Screen Composition** | Screens in `screens/` MUST only compose components; hard maximum **80 lines**; ZERO business logic, state calculations, or direct API calls. | Heavy screen = ARCHITECTURE VIOLATION. In repair: extract to components & custom hooks in RBG 1. |
+| **Prefixed Component Files** | Components in `components/` MUST use PascalCase with feature prefix (e.g., `MembersMemberCard.tsx`). Max **200 lines**. | Unprefixed component = NON_COMPLIANT. In repair: rename to prefixed components in RBG 1. |
+| **Feature Custom Hooks** | Hooks in `hooks/` MUST use camelCase with `use` + feature name (e.g., `useMembers.ts`, `useMembersFilters.ts`). Max **150 lines**. | Generic hook name = NON_COMPLIANT. In repair: rename to feature hook in RBG 1. |
+| **Central Hardware Secure Storage** | Auth tokens, refresh tokens, biometric keys MUST use iOS Keychain / Android Keystore via `react-native-keychain`. NEVER `AsyncStorage`. | Tokens in AsyncStorage = CRITICAL SECURITY AUDIT FAILURE. In repair: replace with `react-native-keychain` wrapper in RBG 1. |
+| **Module Documentation Trio** | Every feature MUST contain `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
+| **Centralized URL Config** | `config/[featureName].url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
+| **Query Key Registry** | `api/[featureName].query_keys.ts` or `config/[featureName].query_keys.ts` MUST exist and namespace all TanStack Query keys with resource identity. | Missing query key factory = CACHE INCONSISTENCY RISK. In repair: create query key registry in RBG 1. |
+| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | Sibling import = VIOLATION OF RULE 28. In repair: decouple or route through shared core in RBG 1. |
 
 > ⛔ **Skipping this gate invalidates all downstream compliance results.**
 

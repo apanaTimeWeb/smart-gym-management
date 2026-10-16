@@ -35,23 +35,25 @@
 
 ## CRITICAL FRONTEND STRUCTURE GATE (NON-NEGOTIABLE)
 
-> ⛔ **HARD STOP — DO NOT PROCEED PAST THIS GATE UNTIL ALL ITEMS BELOW ARE VERIFIED.**
-> **Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` and STOP. Do NOT generate or repair any code until structure is compliant.**
+> ⛔ **STRUCTURE INVARIANT & REPAIR PROTOCOL:**
+> - **In Audit Mode:** Failing ANY item = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` with file and line evidence.
+> - **In Repair Mode:** Structural violations (folder names, missing documentation trio, duplicate route trees, barrel files) **MUST BE ACTIVELY REPAIRED FIRST (in RBG 1)** before repairing inner feature code.
+> - **ANTI-STALL DIRECTIVE:** Structural non-compliance is the reason repair is required — it is **STRICTLY FORBIDDEN** to use structural violations as an excuse to halt, stall, refuse to repair, or declare code repair impossible.
 
 Before generating, auditing, or repairing ANY frontend role module, verify ALL of the following:
 
 | Verification Item | Requirement | Consequence of Failure |
 |---|---|---|
-| **Role Container** | Must be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`) | **STOP.** Unprefixed role container = ARCHITECTURE VIOLATION. |
-| **Canonical Feature Module** | Must be `{role}_{module}/` inside role container (e.g., `admin_members/`) | **STOP.** Generic name (`members/`) = IMMEDIATE NON_COMPLIANT. |
-| **No Duplicate Route Tree** | Exactly ONE canonical directory represents the feature. No parallel route tree. | **STOP.** Sibling duplicate (e.g. `dashboard/` + `admin_dashboard/`) = INCOMPLETE AUDIT. |
-| **Root Quarantine** | ONLY `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, `_features.md`, `_forbidden.md`, `_theme_contract.md` allowed in feature root. | **STOP.** Any other `.ts`/`.tsx` file in root = NON_COMPLIANT. Move to prefixed subfolder. |
-| **Prefixed Sub-Folders** | ALL sub-folders must use single prefix: `[moduleName]_components/`, `[moduleName]_hooks/`, `[moduleName]_api/`, `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_store/`, `[moduleName]_utils/`, `[moduleName]_locales/`, `[moduleName]_mocks/`, `[moduleName]_tests/`. | **STOP.** Generic folder (`components/`, `api/`) or double-prefix = NON_COMPLIANT. |
-| **No Barrel Files** | NO `index.ts` or re-export facades. All imports must be direct absolute paths (`@/...`). | **STOP.** Barrel file = CIRCULAR DEPENDENCY RISK. Remove immediately. |
-| **Module Documentation Trio** | Every module MUST contain `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md`. | **STOP.** Missing doc artifact = INCOMPLETE MODULE. Must generate before code completion. |
-| **Centralized URL Config** | `[moduleName]_url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | **STOP.** Missing URL config = HARDCODED ROUTE RISK. |
+| **Role Container** | Must be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`) | Unprefixed role container = ARCHITECTURE VIOLATION. In repair: move to canonical prefix in RBG 1. |
+| **Canonical Feature Module** | Must be `{role}_{module}/` inside role container (e.g., `admin_members/`) | Generic name (`members/`) = NON_COMPLIANT. In repair: rename to prefixed module in RBG 1. |
+| **No Duplicate Route Tree** | Exactly ONE canonical directory represents the feature. No parallel route tree within supplied scope. | Sibling duplicate (e.g. `dashboard/` + `admin_dashboard/`) = ARCHITECTURE VIOLATION. In repair: consolidate into canonical directory in RBG 1. (Do not demand host route trees). |
+| **Root Quarantine** | ONLY `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, `_features.md`, `_forbidden.md`, `_theme_contract.md` allowed in feature root. | Any other `.ts`/`.tsx` file in root = NON_COMPLIANT. In repair: move to prefixed subfolder in RBG 1. |
+| **Prefixed Sub-Folders** | ALL sub-folders must use single prefix: `[moduleName]_components/`, `[moduleName]_hooks/`, `[moduleName]_api/`, `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_store/`, `[moduleName]_utils/`, `[moduleName]_locales/`, `[moduleName]_mocks/`, `[moduleName]_tests/`. | Generic folder (`components/`, `api/`) or double-prefix = NON_COMPLIANT. In repair: rename to prefixed folders in RBG 1. |
+| **No Barrel Files** | NO `index.ts` or re-export facades. All imports must be direct absolute paths (`@/...`). | Barrel file = CIRCULAR DEPENDENCY RISK. In repair: remove barrel files and update imports in RBG 1. |
+| **Module Documentation Trio** | Every module MUST contain `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
+| **Centralized URL Config** | `[moduleName]_url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
 
-> ⛔ **Skipping this gate invalidates all downstream compliance results.**
+> ⛔ **Skipping this gate in audit invalidates downstream compliance results. In repair, all structural defects must be resolved in RBG 1.**
 
 ---
 
@@ -797,7 +799,7 @@ For example:
 - Mocked server data MUST therefore live in the module's mock/fixture layer, not in component constants.
 
 4. **Theme Independence & Portability Contract (No Inline Colors & No Opacity Modifiers)**: 
-Remove all hardcoded Tailwind color utilities from the JSX. Map all CSS variables (e.g., `--bg-card`, `--text-primary`) in `tailwind.config.ts` as named tokens so you can use standard Tailwind classes like `bg-card` or `text-primary` **without** arbitrary bracket values. **The one canonical pattern is: define the variable in `globals.css`, map it in `tailwind.config.ts`, and use the Tailwind class name (e.g., `bg-card`) in JSX. Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.**
+Remove all hardcoded Tailwind color utilities from the JSX. Map all CSS variables (e.g., `--bg-card`, `--text-primary`) as named tokens so you can use standard Tailwind classes like `bg-card` or `text-primary` **without** arbitrary bracket values. **The canonical pattern is: define variables in `globals.css`, map them as tokens (in Tailwind v4 via `@theme inline { ... }` directly in `globals.css`; in Tailwind v3 via `tailwind.config.ts`), and use semantic Tailwind class names (e.g., `bg-card`) in JSX. Never use `bg-[var(--bg-card)]` or raw hex `bg-[#1A1A2E]` directly in JSX.**
 **CRITICAL:** Do NOT use opacity modifiers on semantic backgrounds (e.g., NEVER use `bg-success/10` or `bg-danger/5`). These destroy WCAG contrast and Dark/Light mode scaling. Instead, use the exact semantic variant, such as `bg-success-bg` or `bg-danger-bg`. Furthermore, anytime you use a solid background like `bg-success`, you MUST explicitly pair it with `text-on-success` so it doesn't default to unreadable text.
 - **Theme Portability Contract:** Every module must have a small `[moduleName]_theme_contract.md` or a dedicated comment listing exactly which CSS variables it depends on (e.g., `--bg-card`, `--text-primary`, `--danger-text`, `--danger-bg`). This ensures that when copying the module into a new project, we know exactly what variables need to be defined in the new `globals.css`.
 
@@ -2606,7 +2608,7 @@ Never assume UI state magically filters backend data. Custom hooks (`use[Module]
 You MUST ensure that the length of the headers array (e.g., `TABLE_HEADERS`) EXACTLY matches the number of rendered `<td>` columns in the `<tbody>` row. This includes custom `<td>`s for avatars, checkboxes, or badges. Any empty state `colSpan` values (e.g., `colSpan={9}`) MUST also statically or dynamically match this exact column count. Mismatched columns will completely break the table alignment across all rows.
 
 69. **Social Brand Color Tokens (No Undefined Variables)**:
-Never use undefined CSS variables (e.g., `var(--members-whatsapp)`) for standard social action buttons. Map social brand colors to design tokens in `tailwind.config.ts` (e.g., `bg-social-whatsapp`). Relying on undefined variables will cause the buttons to become transparent with white text, making them completely invisible in Light Mode.
+Never use undefined CSS variables (e.g., `var(--members-whatsapp)`) for standard social action buttons. Map social brand colors to design tokens (in Tailwind v4 via `@theme inline` in `globals.css`; in Tailwind v3 via `tailwind.config.ts`, e.g., `bg-social-whatsapp`). Relying on undefined variables will cause the buttons to become transparent with white text, making them completely invisible in Light Mode.
 
 70. **Interactive KPI Cards as Filters**:
 KPI cards MUST function as filters when the KPI represents a meaningful filterable subset of the adjacent table. Informational KPIs MAY remain non-interactive. When functioning as interactive filters, clicking a KPI card MUST filter the table below to show only the relevant rows. Include a visual indicator (e.g., a primary colored border or ring) to show which KPI filter is currently active, and always ensure there is a clear way to reset the filter (such as a "Total" card or toggling off).

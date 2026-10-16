@@ -2521,7 +2521,7 @@ When BOTH frontend and backend implementations are supplied in the audit scope, 
 
 If any of these do not match, flag as `CROSS-STACK-CONTRACT-FAILURE`. Do NOT attempt to fix either side.
 
-If only ONE stack is supplied, skip this section entirely and mark it `BLOCKED_BY_SUPPLIED_SCOPE`.
+If only ONE stack is supplied, skip this section entirely and mark it `NOT_APPLICABLE (SINGLE_STACK_AUDIT_SCOPE)`. Do NOT mark it as a blocker.
 
 ---
 

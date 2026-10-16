@@ -10078,7 +10078,7 @@ Exact binary DONE criteria.
 
 ## 17. BACKEND DELIVERY FREEZE GATE (GAP-18 Fix)
 
-Before delivering any backend module ZIP, the AI MUST run this gate. If ANY item fails, the ZIP MUST NOT be delivered — it must be repaired first.
+Before delivering any backend module ZIP, the AI MUST run this gate. All source-level code defects must be repaired. Once source-level code fixes are complete, packaging and delivering the versioned ZIP is mandatory. Host-dependent verification steps (`DEFERRED_TO_HOST_RUNTIME`) are documented in `RE_AUDIT_CHECKLIST_RESULT.md` and do not prevent ZIP delivery.
 
 ```text
 BACKEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
@@ -10176,6 +10176,9 @@ DO NOT dump massive output tables directly into the chat. You MUST write your fi
 > **You MUST generate the complete test suites in `backend-selenium/` and `backend-e2e/` before delivering the ZIP.**
 > **Delivering backend code WITHOUT these test files is an INCOMPLETE TASK and will be REJECTED.**
 > **DO NOT treat this as optional or secondary — these tests verify that the backend actually satisfies the frontend.**
+>
+> ⛔ **NOTE ON OFFLINE AUTHORING & DYNAMIC EXECUTION:**
+> The Python Selenium test files (`backend-selenium/`) and E2E test files (`backend-e2e/`) MUST be fully authored, structured, and included in the ZIP. If the local environment lacks a running browser, WebDriver, or live backend server, the test files are verified statically as PASS, and dynamic browser execution is recorded as `DEFERRED_TO_HOST_RUNTIME`. Unexecuted browser runs MUST NOT trigger `BLOCKED_DELIVERY` or block delivering the ZIP when the test files are fully authored and present.
 
 This is a mandatory deliverable that runs in parallel with Stage 2 and is finalized in Stage 3.
 
@@ -10409,15 +10412,12 @@ FINAL DELIVERY            = ATOMIC
 
 ## 86B.3.1 Intermediate Communication
 
-While work remains incomplete:
+While work remains incomplete mid-execution:
 
 DO NOT deliver:
-
-- source files;
-- partial modules;
-- partial ZIPs;
-- download links;
-- partial final reports.
+- fragmented source files;
+- partial split ZIPs;
+- incomplete download links.
 
 The AI MAY emit one concise checkpoint status:
 
@@ -10425,18 +10425,11 @@ The AI MAY emit one concise checkpoint status:
 ⚙ Checkpoint saved — 17/63 work units verified. Reply "continue" to resume.
 ```
 
-## 86B.3.2 No Premature Completion
+## 86B.3.2 Repair Release Delivery Mandate (Non-Negotiable)
 
-Do NOT claim:
-
-```text
-COMPLETE
-FULLY VERIFIED
-FINAL
-READY FOR DELIVERY
-```
-
-until final verification has passed.
+- **Source Fix Completion vs Live Runtime:** When 100% of fixable `SOURCE_LEVEL_FIX` findings within the supplied scope have been repaired, packaging and delivering the versioned ZIP (`backend-{role}-v1-fix.zip` or `backend-{role}-v{N}-fix.zip`) is **MANDATORY**.
+- **External Blockers & Runtime Deferrals:** If items remain deferred to host runtime (`DEFERRED_TO_HOST_RUNTIME`) or require external human product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`), they are documented inside `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`. The archive is delivered as a **REPAIR RELEASE (SOURCE-VERIFIED)**.
+- **ZERO-WITHHOLDING INVARIANT:** The AI MUST NOT refuse to deliver the ZIP, withhold the archive, or declare delivery blocked due to deferred runtime verification, external document conflicts, or absence of host files. "DO NOT deliver partial ZIPs" strictly means do not deliver fragmented/split archives; it NEVER means withholding the complete repaired source ZIP!
 
 ## 86B.3.3 Full Final Verification
 

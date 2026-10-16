@@ -677,6 +677,11 @@ A module MUST NOT be described as fully compliant when:
 
 A high PASS count does NOT override unresolved CRITICAL findings.
 
+⛔ **SEPARATION OF PRODUCTION READINESS VERDICT FROM REPAIR ZIP DELIVERY:**
+- The Production Readiness verdict and Compliance statement accurately report whether unresolved external `SOURCE_CONFLICT`s or deferred host runtime checks exist.
+- However, reporting an unresolved `SOURCE_CONFLICT` or `DEFERRED_TO_HOST_RUNTIME` item **MUST NEVER BLOCK THE PACKAGING OR DELIVERY OF THE REPAIRED SOURCE ZIP**.
+- Once all fixable source-level code in the module is repaired, the AI MUST package and deliver the versioned repair ZIP (e.g., `frontend-{role}-v1-fix.zip`), with any unresolved external conflicts clearly documented in `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`. The AI is strictly forbidden from withholding the ZIP.
+
 ---
 
 
@@ -787,6 +792,13 @@ Every audit finding MUST be categorized before repair. The SOURCE-LEVEL vs HOST-
 - Changes that require backend schema or controller modification
 - Visual redesigns requiring design team sign-off
 - Business rule changes requiring product owner decision
+
+> ⛔ **HANDLING FINDINGS REQUIRING EXTERNAL APPROVAL (ZERO-STALL RULE):**
+> When a contract ambiguity or doc mismatch exists (e.g. PATCH vs POST HTTP method conflict between docs):
+> 1. Preserve the existing working code or adopt the safest non-breaking implementation.
+> 2. Document the conflict under `EXTERNAL_PRODUCT_DECISION_BLOCKED` / `SOURCE_CONFLICT` in `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md` for human review.
+> 3. **CONTINUE through all remaining repairs and deliver the versioned repair ZIP.**
+> 4. Under no circumstances may an external approval item block packaging or delivering the source code ZIP.
 
 **The following findings do NOT require approval and MUST be fixed immediately:**
 - Any SOURCE_LEVEL_FIX finding, regardless of runtime availability
@@ -8519,30 +8531,21 @@ Execution MAY happen through multiple checkpointed work units under Section 44.
 The mandatory distinction is:
 
 ```text
-BOUNDED EXECUTION  = ALLOWED
-CHECKPOINTS        = REQUIRED
-PARTIAL DELIVERY   = FORBIDDEN
-FINAL DELIVERY     = ATOMIC
+BOUNDED EXECUTION           = ALLOWED
+CHECKPOINTS                 = REQUIRED
+FRAGMENTED/SPLIT ARCHIVES   = FORBIDDEN (Do not deliver half the files in one ZIP and half in another)
+REPAIR RELEASE DELIVERY     = ATOMIC (Package all repaired module files and required docs in one versioned ZIP)
 ```
 
 A checkpoint is execution state.
 
 A checkpoint is NOT a product delivery.
 
-## 45.2 No Premature Completion
+## 45.2 Repair Release Delivery Mandate (Non-Negotiable)
 
-The AI MUST NOT claim:
-
-```text
-COMPLETE
-FULLY VERIFIED
-FINAL
-READY FOR DELIVERY
-```
-
-until the entire target module has passed final verification.
-
-A checkpoint progress message is NOT a final status.
+- **Source Fix Completion vs Live Runtime:** When 100% of fixable `SOURCE_LEVEL_FIX` findings within the supplied scope have been repaired, packaging and delivering the versioned ZIP (`frontend-{role}-v1-fix.zip` or `frontend-{role}-v{N}-fix.zip`) is **MANDATORY**.
+- **External Blockers & Runtime Deferrals:** If items remain deferred to host runtime (`DEFERRED_TO_HOST_RUNTIME`) or require external human product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED` / `SOURCE_CONFLICT`), they are documented inside `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`. The archive is delivered as a **REPAIR RELEASE (SOURCE-VERIFIED)**.
+- **ZERO-WITHHOLDING INVARIANT:** The AI MUST NOT refuse to deliver the ZIP, withhold the archive, or declare delivery blocked due to deferred runtime verification, external document conflicts, or absence of host files. "PARTIAL DELIVERY = FORBIDDEN" strictly means do not deliver fragmented/split archives; it NEVER means withholding the complete repaired source ZIP!
 
 ## 45.3 Final Verification Gate
 
