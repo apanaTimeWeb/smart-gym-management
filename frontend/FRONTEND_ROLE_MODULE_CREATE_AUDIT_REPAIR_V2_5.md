@@ -200,18 +200,36 @@ Missing contract information MUST be reported as `BLOCKED BY SUPPLIED SCOPE` rat
 
 ---
 
-## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
+## CONSOLIDATED INTEGRATION GUIDE MANDATE (SINGLE SOURCE OF TRUTH IN EVERY ZIP)
 
-Every delivered ZIP MUST contain a file named `INTEGRATION_GUIDE.md` at the root of the ZIP. This file tells the developer exactly what manual steps are needed to integrate the module into the main Web (Next.js/Vite) or Mobile (React Native/Expo) application.
+Every delivered ZIP MUST contain a single, comprehensive `INTEGRATION_GUIDE.md` file at the root of the ZIP. To prevent cognitive overload, file clutter, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module]_changelog_vN.md`, `ROUTE_PRESERVATION_MATRIX.md`, `FEATURE_BOUNDARY_MATRIX.md`, `FEATURE_PRESERVATION_INVENTORY.md`, `stage_*.md`, or `HOST_VERIFICATION_STEPS.md`) at the root of the ZIP. 
 
-The `INTEGRATION_GUIDE.md` MUST include:
-- **Global Route Registration:** Exact code snippets showing how to import and register the module's routes into the host app's main router/layout (e.g., Next.js `layout.tsx`, React Router `<Route>`, or React Native/Expo Router navigation stacks).
-- **Import Path Resolution (STRICT ALIASING):** You MUST use exact TypeScript path aliases (e.g., `import { X } from '@/app/frontend_superadmin/superadmin_gyms/...'` or `@/components/...`). Do NOT use fragile relative imports like `../../` for cross-module integration.
-- **Global State / Provider Wrapping:** If the module requires a specific Context Provider, TanStack Query client configuration, or Redux slice injection, provide the exact wrapper code for `_app.tsx` or `providers.tsx`.
-- **Environment Variables:** Any new `.env` variables needed for the module's API clients to function.
-- **NPM Dependencies:** Exact `npm install` commands for any new packages the module requires (e.g., `sonner`, `lucide-react`).
-- **Global Styling / Tailwind:** Instructions on importing the module's specific CSS variables or adding its paths to the host's `tailwind.config.ts` (or NativeWind) `content` array.
-- **Verification Steps:** How to manually verify the module is successfully hooked into the global frontend.
+Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED DEVELOPER MANUAL** structured into the following mandatory sections:
+
+### Section 1: Version Changelog & Scope Summary
+- Version identifier (e.g., `v12-fix`) and summary of all repaired defects, mapped directly to original audit findings.
+- Changed files inventory with exact paths and modification rationale.
+
+### Section 2: Route Preservation & URL Migration Matrix (Section 4B)
+- Mandatory Route Preservation Matrix table: `Old Path | New Path | Change Type | Affected Consumers | Migration Strategy | Backward Compatibility`.
+- Exact Next.js `next.config.js` rewrites/redirects code snippets or middleware route mappings to guarantee `404` errors never occur for previously valid paths.
+
+### Section 3: Feature Boundary Decisions & Preserved Screens Inventory (Section 5A)
+- Feature Boundary Decision Matrix table: `Candidate Feature | Current Location | Evidence Inspected | Decision (Parent View vs Sibling Module) | Rationale | Moved Artifacts | Status`.
+- Complete inventory confirming every prior screen, tab, filter, and modal is preserved (zero dropped features).
+
+### Section 4: Host Placement, Strict Aliasing & Environment Variables
+- Canonical host directory placement (e.g., `src/app/frontend_{role}/`).
+- Exact TypeScript path aliases (e.g., `@/app/frontend_manager/manager_members/...`). Zero relative `../../` cross-boundary imports.
+- Environment variables checklist (`NEXT_PUBLIC_*` configuration).
+
+### Section 5: Global Providers, Layout Wiring & Dependencies
+- Provider wrapping code (TanStack Query, ThemeProvider, Toast, Auth/RBAC shell).
+- Exact `npm install` command for locked production dependencies (no unapproved upgrades).
+
+### Section 6: Host Verification Commands & Runtime Deferrals
+- Exact developer verification commands: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, `npx playwright test`.
+- Explicit documentation of any items classified as `DEFERRED_TO_HOST_RUNTIME`, `OUTSIDE_SUPPLIED_SCOPE`, or `EXTERNAL_PRODUCT_DECISION_BLOCKED`.
 ---
 
 You are a Senior Frontend Architect, Code Auditor, Accessibility Reviewer, Design-System Auditor, Testing Reviewer, and AI-Friendly Architecture Specialist.
@@ -920,6 +938,37 @@ Do NOT replace a working implementation with a different pattern without a docum
 
 After every repair, previously passing flows MUST remain passing.
 
+# 4B. ROUTE PRESERVATION MATRIX — MANDATORY BEFORE ANY URL RESTRUCTURING
+
+> ⛔ **Before changing ANY route path, URL structure, query parameter name, or page.tsx file location in the target module, you MUST produce a Route Preservation Matrix. Restructuring routes without this matrix is a CRITICAL SCOPE VIOLATION.**
+
+This applies when the audit or repair involves:
+- Renaming a route segment (e.g., `/admin/members` → `/admin/member-management`)
+- Moving a `page.tsx` to a different folder
+- Changing a dynamic segment name (e.g., `[id]` → `[memberId]`)
+- Adding or removing a route group
+- Changing the `?view=` parameter name or enum values
+- Any Next.js rewrite or redirect entry modification
+
+Produce this table **before** executing the route change:
+
+| Old Path | New Path | Change Type | Affected Consumers (components/links/tests) | Migration Strategy | Backward Compatibility |
+|---|---|---|---|---|---|
+| `/old/path` | `/new/path` | RENAME / MOVE / RESTRUCTURE | List all files with hardcoded old path | Rewrite in next.config.js / Update all links / Redirect | next.config.js permanent redirect / rewrite |
+
+**Rules:**
+1. Every old path MUST have a documented migration strategy — `404` is never an acceptable result for a previously working route.
+2. If the old path was publicly linked or bookmarkable, it MUST be preserved via `next.config.js` rewrite or `redirect()`.
+3. All internal `Link href`, `router.push`, and `usePathname` usages referencing the old path MUST be updated in the same RBG as the route change.
+4. All MSW handlers, test fixtures, and Playwright E2E specs referencing the old path MUST be updated atomically with the route change.
+5. If a route is being REMOVED (not renamed), document the reason, confirm no feature depends on it, and add a not-found redirect.
+
+If no route restructuring is planned in the current repair, state:
+
+```text
+ROUTE PRESERVATION MATRIX: NOT APPLICABLE — No route paths are being changed in this repair.
+```
+
 ---
 
 # 5. FIRST: IDENTIFY THE MODULE BOUNDARY
@@ -965,6 +1014,32 @@ Use actual imports and directory structure.
 
 ---
 
+# 5A. FEATURE BOUNDARY DECISION MATRIX: ROUTE/VIEW VS SIBLING MODULE
+
+> ⛔ **AI AGENTS: Before restructuring screen-level routes or deciding whether a capability should live as a `?view=` inside the parent module or as an independent sibling feature module, you MUST produce this decision matrix. Splitting or merging features based purely on folder counts or aesthetic preference is STRICTLY PROHIBITED.**
+
+### Decision Criteria
+
+Do not create a separate module for every tab, URL, card, or workflow step. Do not stuff an independent business capability into a parent module simply to keep folder counts low. Evaluate based on:
+1. **Business purpose and lifecycle:** Does it share the parent feature's operational lifecycle, or does it have an autonomous domain lifecycle?
+2. **Data / entity model & API contract:** Does it query the parent entity endpoints, or does it own independent REST resources/CRUD operations?
+3. **Permissions and access rules:** Does it require independent RBAC/permission boundaries, or does it inherit the parent screen access?
+4. **User flows & state ownership:** Is state tightly coupled with the parent view, or does it maintain isolated workflows?
+5. **Component / hook / store ownership:** Can it be repaired using only its own folder without cross-module entanglement?
+
+- **Keep as a View / Sub-feature (`?view=` inside parent module):** When it is a closely related workflow, shares the parent's business lifecycle, types, and contracts, and does not require an independent AI repair boundary.
+- **Split into a Sibling Feature Module:** When evidence proves it is an independent business capability with its own API contract, distinct entity model, independent permissions, or separate repair lifecycle. Give it its own module-prefixed canonical categories, URL config, Main orchestrator, and docs. Never retain compatibility copies of its business logic in the parent module.
+
+### Mandatory Table Format
+
+Produce this table for every candidate feature or consolidated route:
+
+| Candidate Feature | Current Location | Evidence Inspected | Decision (Parent View vs Sibling Module) | Rationale | Moved Artifacts | Routes Preserved | Status |
+|---|---|---|---|---|---|---|---|
+| `[Feature Name]` | `[path]` | [APIs / types / permissions inspected] | `PARENT_VIEW` or `SIBLING_MODULE` | [Explicit architectural rationale] | [List components/hooks moved] | [Rewrite/redirect mapped in Section 4B] | PASS / PENDING |
+
+---
+
 # 6. BUILD A MODULE MAP FIRST
 
 Before giving findings, produce:
@@ -984,9 +1059,15 @@ Before giving findings, produce:
 └── documentation (.md files)
 ```
 
-**IMPORTANT:** The names above are structural placeholders. Replace EVERY folder name with the ACTUAL discovered prefixed folder name (e.g., `manager_members_components/`, NOT `components/`). Generic unprefixed folder names are an architecture violation.
+**IMPORTANT FOLDER NAMING & COMPONENT SUBFOLDER GROUPING:**
+1. Replace EVERY folder name with the ACTUAL discovered prefixed folder name (e.g., `manager_members_components/`, NOT `components/`). Generic unprefixed folder names are an architecture violation.
+2. **Responsibility Subfolders inside `[moduleName]_components/`:** Do NOT dump dozens of flat component files directly into `[moduleName]_components/`. Group related components into module-prefixed responsibility subfolders:
+   - `[moduleName]_main/` → contains `<ModuleName>Main.tsx` orchestrator
+   - `[moduleName]_views/` → contains screen-level view components (e.g., `[moduleName]_overview_view/`, `[moduleName]_table_view/`)
+   - `[moduleName]_[feature]_form/`, `[moduleName]_[feature]_table/`, `[moduleName]_[feature]_modal/`
+3. **Category Boundary Rule (CRITICAL):** `[moduleName]_components/` and its subfolders are STRICTLY for React components (`.tsx`). NEVER put independent API clients, hooks, constants, schemas, types, stores, or test suites inside a component subfolder. Those artifacts MUST reside in their respective canonical module category (`[moduleName]_api/`, `[moduleName]_hooks/`, etc.).
 
-But replace the generic names above with the ACTUAL discovered structure.
+Replace the generic names above with the ACTUAL discovered structure.
 
 For every important folder explain:
 
@@ -1071,6 +1152,35 @@ Shared business logic must be judged according to the supplied documentation.
 > **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION):**
 > Do NOT create or move "business-aware" components (e.g., Date Filters with presets, Status Badges with hardcoded text) into global folders like `src/components/ui/` just to avoid code duplication. 
 > Global design/UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature.
+
+# 8.1 CODE & COMPONENT ISOLATION DECISION MATRIX (STRICT WET VS SHARED INFRASTRUCTURE)
+
+> ⛔ **AI AGENTS: Before deciding whether to share or duplicate any component, hook, utility, or constant across roles or modules, you MUST consult this matrix. Guessing is PROHIBITED.**
+
+Use this decision table for EVERY piece of code that appears in more than one feature or role:
+
+| Scenario | Classification | Required Decision |
+|---|---|---|
+| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | SHARE in `src/components/ui/` — no duplication needed |
+| UI component that knows any business status, label, or domain value (StatusBadge with gym states, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | DUPLICATE per feature module — NEVER share |
+| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | DUPLICATE per feature module — NEVER share |
+| Hook that wraps pure infrastructure (useDebounce, usePagination with no domain types) | `INFRASTRUCTURE_HOOK` | SHARE in `src/hooks/` — acceptable shared infra |
+| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | DUPLICATE per feature module — NEVER share across roles |
+| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | DUPLICATE per feature module — NEVER share |
+| Zustand store slice with domain state | `DOMAIN_STORE` | DUPLICATE per feature module — NEVER share |
+| Constants file with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | DUPLICATE per feature module |
+| Constants file with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | SHARE in `src/constants/` — acceptable |
+| Navigation link that references another role's route | `CROSS_ROLE_NAV` | Each role owns its own link — NEVER import from sibling role |
+| Same UI feature needed in Admin AND Manager | `CROSS_ROLE_FEATURE` | DUPLICATE the complete feature in each role module (WET is correct) |
+| Utility with no business domain knowledge (formatDate, cn) | `INFRA_UTILITY` | SHARE in `src/utils/` — acceptable |
+| Utility that formats business-domain data (formatMembershipStatus, formatGymPlan) | `DOMAIN_UTILITY` | DUPLICATE per feature module |
+
+**Decision Rule:**
+- If the code contains ANY reference to a business entity, status, label, or domain type → it is `BUSINESS_AWARE` → it MUST be duplicated.
+- If the code is purely structural/infrastructural with no business knowledge → it MAY be shared.
+- When in doubt, DUPLICATE. Over-isolation is always safer than a broken AI repair boundary.
+
+**Audit action:** For every import in the target module that crosses a role or module boundary, apply this matrix and classify it as `ACCEPTABLE_SHARED_INFRA` or `ISOLATION_VIOLATION`. Report every `ISOLATION_VIOLATION` as a MAJOR finding.
 
 ---
 
@@ -1367,6 +1477,70 @@ Server Component
 → client query/mutation where documented
 
 Do not invent a different pattern.
+
+# 13A. `?view=` QUERY PARAMETER ROUTING PATTERN AUDIT
+
+> **APPLIES WHEN:** The target module uses a single `page.tsx` that conditionally renders different view components based on a `?view=` URL query parameter (Manager V30-style / screen-heavy module pattern). If the module does NOT use this pattern, state `NOT_APPLICABLE — Module uses standard file-based routing` and skip this section.
+
+### Detection — Does this module use `?view=` routing?
+
+Check for:
+- A `page.tsx` that reads `searchParams.view` or `useSearchParams().get('view')`
+- A view registry / switch-case / lookup map keyed on `view` string values
+- Multiple view components rendered conditionally from one route
+
+If ANY of the above exist, this section is MANDATORY.
+
+### Audit Checklist (ALL must PASS)
+
+**1. View Parameter Validation**
+- Is the `?view=` value validated against an exhaustive enum or Zod schema before rendering?
+- Is an invalid `?view=` value (e.g., `?view=hacked`) handled gracefully (default view or not-found)?
+- Is there a clearly defined default view rendered when `?view=` is absent?
+
+```text
+EXPECTED:
+  const VIEW_ENUM = z.enum(['overview', 'members', 'billing', ...]);
+  const view = VIEW_ENUM.catch('overview').parse(searchParams.view);
+FAIL IF: Raw string comparison without validation, or unhandled undefined case.
+```
+
+**2. View Registry Completeness**
+- Is there a single module-owned view registry / map that lists ALL valid `?view=` values?
+- Are ALL registered views actually implemented (no orphan registry entries)?
+- Are ALL implemented views registered (no unregistered views being rendered)?
+
+**3. Legacy / Public Path Preservation**
+- If this module previously had separate `page.tsx` files that were consolidated under `?view=` routing, are the old paths preserved?
+- Produce a Route Preservation Matrix entry (Section 4B) for every legacy path that was consolidated.
+- Verify `next.config.js` rewrites or redirects exist for all legacy paths.
+
+**4. URL State Behavior**
+- Does switching views update the `?view=` parameter in the URL? (Browser back/forward must navigate between views)
+- Is `?view=` driven by `router.push` / `Link` with `?view=X` rather than hidden component state?
+- Verify: browser back from `?view=members` returns to `?view=overview` (or previous view), NOT to the previous page entirely.
+
+**5. Navigation Links**
+- Are all sidebar / tab / breadcrumb links that navigate to a specific view using the correct `?view=` parameter?
+- Are there any hardcoded links pointing to a now-removed standalone route that should use `?view=` instead?
+
+**6. Per-View Isolation**
+- Does each view component live in the module's own `_components/` folder (prefixed correctly)?
+- Does each view component have its own loading/error/empty state?
+- Does any view component import from a SIBLING view component directly (isolation violation)?
+
+**7. Permission-Gated Views**
+- If certain views are permission-restricted, is the restriction enforced BEFORE rendering the view component?
+- Is attempting to navigate to `?view=restricted-view` without permission handled gracefully?
+
+### Audit Output Format
+
+For every discovered `?view=` value, produce:
+
+| View Key | Component | Registered? | Validated? | Permission Gate | Default? | Legacy Path Preserved? | Status |
+|---|---|---|---|---|---|---|---|
+| `overview` | `OverviewView.tsx` | YES | YES | None | YES | N/A | PASS |
+| `members` | `MembersView.tsx` | YES | YES | MANAGER_ROLE | NO | `/manager/members` → rewrite ✅ | PASS |
 
 ---
 
@@ -6554,6 +6728,10 @@ Before final delivery, the AI MUST literally verify:
 [ ] Source conflicts reported
 [ ] Documentation freshness checked
 [ ] No unverified item silently presented as PASS
+[ ] Section 4B — Route Preservation Matrix verified before any URL/route restructuring
+[ ] Section 5A — Feature Boundary Decision Matrix verified (route/view vs sibling module)
+[ ] Section 8.1 — Code & Component Isolation Decision Matrix verified (Zero-business UI vs business-aware duplication)
+[ ] Section 13A — ?view= Query Parameter Routing Pattern validated (if applicable)
 [ ] SOURCE-LEVEL FIX COMPLETION GATE: All findings classified as SOURCE_LEVEL_FIX have been fixed in source code before the ZIP is packaged. HOST_RUNTIME_BLOCKED_VERIFICATION items are documented with DEFERRED_TO_HOST_RUNTIME blocks. No SOURCE_LEVEL_FIX finding was deferred due to runtime unavailability.
 ```
 
@@ -8552,10 +8730,8 @@ Re-audit the repaired module.
 Generate:
 
 ```text
-INTEGRATION_GUIDE.md
-stage_3_final_verdict.md
-RE_AUDIT_CHECKLIST_RESULT.md
-[module_name]_changelog_vN.md
+INTEGRATION_GUIDE.md          ← Consolidated master guide (Changelog, Route Matrix, Feature Decisions, Host Steps, Verification)
+RE_AUDIT_CHECKLIST_RESULT.md  ← Section 43P clean compliance audit result
 playwright_E2E/frontend_[role]_e2e/[target_feature]/[target_feature].spec.ts
 ```
 
@@ -8690,18 +8866,16 @@ frontend-{role}-v{N}-fix.zip
 The ZIP MUST contain:
 
 ```text
-INTEGRATION_GUIDE.md                     ← mandatory integration instructions for the developer
-[module_name]_changelog_vN.md            ← detailed changelog
-frontend-{role}/
-└── [target_feature_module]/             ← ONLY the explicit feature module, plus any explicitly approved global infrastructure/UI files modified
-playwright_E2E/                            ← (MANDATORY) isolated E2E tests for the feature
+INTEGRATION_GUIDE.md          ← MANDATORY CONSOLIDATED GUIDE (Changelog, Route Matrix, Feature Boundary Decisions, Host Steps, Verification)
+RE_AUDIT_CHECKLIST_RESULT.md  ← MANDATORY formal audit compliance ledger (Section 43P verified result)
+playwright_E2E/               ← MANDATORY isolated E2E tests for the feature
 └── frontend_[role]_e2e/
     └── [target_feature]/
-stage_1_frontend_requirements.md         ← requirements extracted
-stage_2_frontend_audit.md                ← audit findings (Mode B only; for Mode A: creation log)
-stage_3_final_verdict.md                 ← final verdict after re-audit / after creation verification
-RE_AUDIT_CHECKLIST_RESULT.md             ← final checklist result on the final code
+frontend-{role}/
+└── [target_feature_module]/  ← Complete feature module with internal documentation trio (_features.md, _forbidden.md, _theme_contract.md)
 ```
+
+> ⛔ **NO LOOSE MARKDOWN CLUTTER RULE:** Do NOT generate separate loose markdown files at the root of the ZIP (such as `[module_name]_changelog_vN.md`, `stage_1_*.md`, `stage_2_*.md`, `stage_3_*.md`, `ROUTE_PRESERVATION_MATRIX.md`, etc.). All changelog notes, route matrices, feature decisions, and audit summaries MUST be consolidated directly into `INTEGRATION_GUIDE.md`. The only two markdown files permitted at the ZIP root are `INTEGRATION_GUIDE.md` and `RE_AUDIT_CHECKLIST_RESULT.md`.
 
 **The `INTEGRATION_GUIDE.md` and `playwright_E2E` suite are NOT optional. An output without them is an incomplete delivery.**
 
@@ -8829,8 +9003,8 @@ but it is NOT required to perform all work inside one uninterrupted execution.
 
 Bounded execution improves reliability without weakening completeness.
 
-### CHANGELOG & VERIFICATION DOCUMENT
-1. Every ZIP delivery MUST contain a dedicated changelog file: `[module_name]_changelog_vN.md`. The changelog MUST be delivered inside the same atomic ZIP. No separate changelog delivery is permitted.
-2. This document MUST detail **exactly what was fixed** in this specific version, mapped directly to the original audit findings.
-3. **Purpose:** The human developer will provide this `.md` file and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
+### CHANGELOG & VERIFICATION CHAPTER IN INTEGRATION_GUIDE.MD
+1. Every ZIP delivery MUST contain a dedicated changelog and verification chapter: **Section 1 of `INTEGRATION_GUIDE.md`**. Delivering a separate loose changelog file is PROHIBITED; the changelog MUST be consolidated into `INTEGRATION_GUIDE.md`.
+2. This chapter MUST detail **exactly what was fixed** in this specific version, mapped directly to the original audit findings.
+3. **Purpose:** The human developer will provide `INTEGRATION_GUIDE.md` and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the Section 1 changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
 

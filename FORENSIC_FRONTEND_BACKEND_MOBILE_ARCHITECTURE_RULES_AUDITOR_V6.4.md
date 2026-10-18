@@ -1929,6 +1929,51 @@ Where the architecture explicitly permits event-based dependencies, distinguish 
 
 Do not classify valid framework infrastructure as business leakage.
 
+# 26A. CODE & COMPONENT ISOLATION AUDIT [WEB FRONTEND ONLY]
+
+> **APPLIES WHEN:** Audit target is WEB FRONTEND (Next.js). Skip and mark `NOT_APPLICABLE_TO_STACK` for Backend and Mobile audits.
+
+For every import that crosses a role or module boundary in the frontend, classify it using the mandatory decision table below and report every `ISOLATION_VIOLATION`:
+
+| Code Category | Classification | Verdict |
+|---|---|---|
+| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/components/ui/` is correct |
+| UI component that contains any business status, label, or domain value (StatusBadge, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Hook wrapping pure infrastructure (useDebounce, usePagination with no domain types) | `INFRASTRUCTURE_HOOK` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/hooks/` is acceptable |
+| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Zustand store slice with domain state | `DOMAIN_STORE` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Constants with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Constants with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/constants/` is acceptable |
+| Navigation link referencing another role's route | `CROSS_ROLE_NAV` | `ISOLATION_VIOLATION` — each role must own its own link |
+| Same UI feature copied across Admin AND Manager | `CROSS_ROLE_FEATURE` | `ACCEPTABLE` — WET duplication is required by architecture; report as `PASS` |
+| Utility with zero business knowledge (formatDate, cn) | `INFRA_UTILITY` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/utils/` is acceptable |
+| Utility that formats business-domain data (formatMembershipStatus) | `DOMAIN_UTILITY` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+
+**Finding format for every cross-boundary import:**
+```text
+FINDING: [ISOLATION_VIOLATION / ACCEPTABLE_SHARED_INFRA]
+Importing file:   [path]
+Imported from:    [path]
+Classification:   [from table above]
+Evidence:         [exact import statement + file line]
+Severity:         MAJOR (for ISOLATION_VIOLATION)
+Remediation:      Duplicate the [component/hook/utility/schema] inside the importing module
+```
+
+---
+
+# 26B. FEATURE BOUNDARY AUDIT: ROUTE/VIEW VS SIBLING MODULE [WEB FRONTEND ONLY]
+
+> **APPLIES WHEN:** Audit target is WEB FRONTEND (Next.js). Skip and mark `NOT_APPLICABLE_TO_STACK` for Backend and Mobile audits.
+
+Audit whether screen-level capabilities are placed at the correct structural boundary:
+1. **Unjustified Monolithic Stuffing:** Is an independent business capability (with its own distinct data model, independent API contracts, distinct RBAC permissions, and separate lifecycle) improperly collapsed into a parent module as a mere `?view=` query parameter without justification?
+   → If YES: Flag as `FINDING: ARCHITECTURAL_OVER_CONSOLIDATION` (Severity: MAJOR). Remediation: Extract to independent sibling feature module.
+2. **Unjustified Module Fragmentation:** Is a closely related workflow step, detail tab, or dependent sub-screen (sharing the same entity lifecycle and contracts) unnecessarily split into a disjoint sibling module, causing artificial cross-module coupling?
+   → If YES: Flag as `FINDING: ARTIFICIAL_MODULE_FRAGMENTATION` (Severity: MINOR). Remediation: Consolidate as module-owned view component under parent module.
+
 ---
 
 # 27. FILE SIZE / MICRO-MODULARIZATION
@@ -2331,6 +2376,55 @@ Inspect:
 Do not audit backend authorization correctness unless backend evidence is explicitly within target boundary.
 
 For frontend, inspect the **representation and enforcement boundary available in frontend scope**.
+
+# 33A. `?view=` QUERY PARAMETER ROUTING AUDIT [WEB FRONTEND ONLY]
+
+> **APPLIES WHEN:** Audit target is WEB FRONTEND (Next.js) AND the module uses a single `page.tsx` that renders different view components based on a `?view=` URL query parameter (Manager V30-style pattern). If the module does NOT use this pattern, state `NOT_APPLICABLE — Standard file-based routing` and skip.
+
+### Detection
+Check for:
+- A `page.tsx` that reads `searchParams.view` or `useSearchParams().get('view')`
+- A view registry / switch-case / map keyed on `view` string values
+- Multiple view components rendered conditionally from a single route
+
+### Audit Checks (Mark PASS / FAIL / NOT_VERIFIED for each)
+
+**1. View Validation** — Is `?view=` validated against an exhaustive Zod enum or string union BEFORE rendering? Is an invalid/absent value handled (default view or not-found)?
+
+**2. View Registry Completeness** — Is there a single module-owned view registry listing ALL valid `?view=` values? Are all registered views implemented? Are all implemented views registered?
+
+**3. URL State** — Does switching views update the URL `?view=` param? Is navigation driven by `router.push` / `Link href` with `?view=X` rather than hidden local state? Does browser back correctly navigate between views (not exit the module)?
+
+**4. Navigation Links** — Do all sidebar / tab / breadcrumb links targeting specific views use the correct `?view=` parameter?
+
+**5. Per-View Isolation** — Does each view component live in the module's own prefixed `_components/` subfolder? Does any view component import directly from a sibling view component (isolation violation)?
+
+**6. Permission-Gated Views** — If any view is permission-restricted, is the restriction enforced BEFORE rendering the view component?
+
+**Audit output — produce for every discovered `?view=` value:**
+
+| View Key | Component | Registered? | Validated? | Permission Gate | Default? | Status |
+|---|---|---|---|---|---|---|
+
+# 33B. ROUTE PRESERVATION AUDIT [WEB FRONTEND ONLY]
+
+> **APPLIES WHEN:** Audit target is WEB FRONTEND and the supplied module shows evidence of route restructuring (renamed segments, moved `page.tsx` files, consolidated routes, changed dynamic segments, or modified `next.config.js`).
+
+If route restructuring is detected, produce a Route Preservation Audit table:
+
+| Old Path | New Path | Change Type | `next.config.js` Rewrite/Redirect? | Internal links updated? | MSW/tests updated? | Status |
+|---|---|---|---|---|---|---|
+
+**Audit checks:**
+- Does every renamed/moved route have a corresponding `next.config.js` permanent rewrite or redirect preserving the old path?
+- Have all internal `Link href`, `router.push`, and `usePathname` references to old paths been updated?
+- Have all MSW handlers, test fixtures, and Playwright E2E specs referencing old paths been updated atomically?
+- Does any removed route leave a navigatable dead-end (no redirect → no-found)?
+
+If NO route restructuring is detected, state:
+```text
+ROUTE PRESERVATION AUDIT: NOT_APPLICABLE — No route paths were changed in the supplied snapshot.
+```
 
 ---
 

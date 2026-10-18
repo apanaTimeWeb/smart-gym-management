@@ -1626,8 +1626,8 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 
 > **AI AGENT NOTE:** Before emitting or consuming any event, verify the event name exists in `src/core/event-registry.constants.ts`. If it does not exist, add it there — never inline the string or create a parallel constants file.
 
-## 51. API Changelog & Deprecation Policy
-* **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
+## 51. API Changelog, Deprecation Policy & Consolidated Integration Guide
+* **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in Section 2 (Endpoint Preservation & DTO Matrix) and Section 1 (Changelog) of the consolidated `INTEGRATION_GUIDE.md` at the root of the delivery ZIP, and maintain it for the deprecation window. Never scatter separate loose changelog or migration markdown files at the root of the delivery package.
 
 ## 52. JWT Refresh Token Rotation & Revocation
 * **The Rule:** Access tokens must be short-lived. Refresh tokens must be stored in HttpOnly cookies. On every refresh, the old token must be rotated/invalidated. A Redis denylist must exist for immediate manual revocation.

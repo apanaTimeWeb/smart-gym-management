@@ -2918,7 +2918,7 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 | **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target feature files changed (`features/frontend_{role}/{module}/**`) | **STOP.** Scope leak = REJECTED DELIVERY |
 | **Gate 12** | Multi-Tenancy Enforced | Verify `x-tenant-id` derived from trusted session context, never from route params or client payload | **STOP.** Cross-tenant data vulnerability |
 | **Gate 13** | Complete Async States | Verify loading skeletons (`[Feature]Skeleton.tsx`), empty states (`[Feature]EmptyState.tsx`), and error fallbacks implemented | **STOP.** Blank screen on async fetch |
-| **Gate 14** | Changelog & Re-Audit Included | `[featureName]_changelog_vN.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Maestro E2E test suite present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
+| **Gate 14** | Consolidated Integration Guide & Re-Audit Included | `INTEGRATION_GUIDE.md` (consolidating changelog, navigation route registry, host integration steps, and verification commands), `RE_AUDIT_CHECKLIST_RESULT.md`, and Maestro E2E test suite present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
 > ⛔ **If ANY source-level code gate fails: STATUS = `REPAIR_REQUIRED`. Fix the source code. Once all source-level code fixes are written, package and deliver the ZIP with deferred/out-of-scope items explicitly documented.**
 >

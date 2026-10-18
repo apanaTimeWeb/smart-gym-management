@@ -3798,7 +3798,7 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 | **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target module files changed (or approved infrastructure) | **STOP.** Scope leak = REJECTED DELIVERY |
 | **Gate 12** | Multi-Tenancy Enforced | Verify `gymId`/`branchId` extracted from auth/session context, never from client body | **STOP.** Cross-tenant data vulnerability |
 | **Gate 13** | Complete Async States | Verify loading skeletons, empty states (`[Module]EmptyState.tsx`), and error states implemented | **STOP.** Blank screen on async fetch |
-| **Gate 14** | Changelog & Re-Audit Included | `[module_name]_changelog_vN.md` and `RE_AUDIT_CHECKLIST_RESULT.md` present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
+| **Gate 14** | Consolidated Integration Guide & Re-Audit Included | `INTEGRATION_GUIDE.md` (consolidating changelog, route preservation matrix, host integration, and verification commands), `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/` present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
 > ⛔ **If ANY source-level code gate fails: STATUS = `REPAIR_REQUIRED`. Fix the source code. Once all source-level code fixes are written, package and deliver the ZIP with deferred/out-of-scope items explicitly documented.**
 

@@ -3302,25 +3302,25 @@ Never claim a ZIP was created, attached, or validated unless that actually occur
 
 ### FINAL DELIVERABLE MANIFEST
 
-Every final delivery MUST include the following, where applicable. Missing any mandatory item = incomplete delivery.
+Every final delivery MUST include the following. To prevent file clutter, cognitive overload, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module_name]_changelog_vN.md`, `stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`, `architecture-rule-enforcement-matrix.md`, `FRONTEND_CHANGE_REQUIRED.md`, `BLOCKED_BY_SUPPLIED_SCOPE.md`, etc.) at the root of the ZIP. 
 
-| # | Artifact | Mode A | Mode B | Condition |
+Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED BACKEND DEVELOPER MANUAL** structured into:
+- **Section 1: Version Changelog & Scope Summary** (all repaired defects mapped to audit findings, changed files manifest)
+- **Section 2: Endpoint Preservation & DTO Matrix** (HTTP method, route path, DTO validation, backward compatibility, breaking changes)
+- **Section 3: Database Migrations & Rollback Instructions** (exact SQL / ORM migration steps)
+- **Section 4: Host Module Registration & Strict Aliasing** (NestJS `@Module({ imports: [...] })` wiring, service providers)
+- **Section 5: Environment Variables & External Dependencies** (new `.env` keys, npm/pip dependencies)
+- **Section 6: Host Verification Commands & Runtime Deferrals** (exact `npm run test`, `npm run test:e2e`, and `DEFERRED_TO_HOST_RUNTIME` notes)
+
+| # | Artifact | Mode A | Mode B | Description |
 |---|---|---|---|---|
-| 1 | Updated or created backend source files | MANDATORY | MANDATORY | Always |
-| 2 | Database migrations and rollback scripts | MANDATORY if schema changes | MANDATORY if schema changes | When schema is modified |
-| 3 | Unit, integration, and API E2E tests | MANDATORY | MANDATORY | Always |
+| 1 | Updated or created backend source files | MANDATORY | MANDATORY | Self-contained module files with local documentation trio |
+| 2 | Database migrations and rollback scripts | MANDATORY if schema changes | MANDATORY if schema changes | Co-located inside module migration folder |
+| 3 | Unit, integration, and API E2E tests | MANDATORY | MANDATORY | Automated test suites (`supertest_e2e/`, `e2e/`) |
 | 4 | UI automation tests (Selenium/Playwright) | MANDATORY | MANDATORY | When frontend flows are testable |
-| 5 | `INTEGRATION_GUIDE.md` | MANDATORY | MANDATORY | Always |
-| 6 | `stage-1-frontend-requirements.md` | MANDATORY | MANDATORY | Always |
-| 7 | `stage-2-backend-audit.md` | — | MANDATORY | Mode B only |
-| 8 | `stage-3-final-verdict.md` | MANDATORY | MANDATORY | Always |
-| 9 | `architecture-rule-enforcement-matrix.md` | MANDATORY | MANDATORY | Always |
-| 10 | `RE_AUDIT_CHECKLIST_RESULT.md` | MANDATORY | MANDATORY | Always |
-| 11 | `FRONTEND_CHANGE_REQUIRED.md` | Conditional | Conditional | ONLY when frontend must change |
-| 12 | `BLOCKED_BY_SUPPLIED_SCOPE.md` | Conditional | Conditional | ONLY when out-of-scope blockers exist |
-| 13 | `external-dependency-requirements.md` | Conditional | Conditional | ONLY when external deps are required |
-| 14 | Complete file manifest (paths, modification status, purpose) | MANDATORY | MANDATORY | Always |
-| 15 | Versioned archive or, if archiving unavailable, manifest + all patches | MANDATORY | MANDATORY | Always |
+| 5 | `INTEGRATION_GUIDE.md` | MANDATORY | MANDATORY | **CONSOLIDATED MASTER DEVELOPER GUIDE** (Changelog, Endpoints, Migrations, Wiring, Verification) |
+| 6 | `RE_AUDIT_CHECKLIST_RESULT.md` | MANDATORY | MANDATORY | **FORMAL AUDIT LEDGER** (All 112 items evaluated) |
+| 7 | Versioned archive (`backend-{role}-v{N}.zip`) | MANDATORY | MANDATORY | Clean delivery ZIP |
 
 If any mandatory artifact is absent, state the reason explicitly in the final verdict. Do NOT silently omit any mandatory item.
 
@@ -3596,12 +3596,9 @@ Add to the existing `progress.json` structure:
 > ⛔ **DELIVERY FREEZE GATE — The ZIP MUST NOT be created or delivered until ALL of the following are confirmed:**
 > - [ ] 112-item Anti-Skipping Checklist re-run on repaired code → clean
 > - [ ] `RE_AUDIT_CHECKLIST_RESULT.md` generated and included in ZIP
-> - [ ] `INTEGRATION_GUIDE.md` included in ZIP
-> - [ ] `stage-1-frontend-requirements.md` included in ZIP
-> - [ ] `[module_name]_changelog_vN.md` included in ZIP (mandatory — lists every file changed, every issue fixed, every rule verified)
-> - [ ] `stage-3-final-verdict.md` included in ZIP
-> - [ ] `architecture-rule-enforcement-matrix.md` included in ZIP
-> - [ ] Complete file manifest included in ZIP
+> - [ ] `INTEGRATION_GUIDE.md` generated and included in ZIP (consolidating changelog, endpoint preservation matrix, schema migrations, and host verification)
+> - [ ] Self-contained backend source module files and automated test suites included in ZIP
+> - [ ] ZERO loose markdown files clutter rule confirmed (no separate `stage-*.md` or loose changelogs at ZIP root)
 > **Delivering a ZIP missing any mandatory artifact = incomplete delivery. Add the missing artifact before delivering.**
 
 ```text
