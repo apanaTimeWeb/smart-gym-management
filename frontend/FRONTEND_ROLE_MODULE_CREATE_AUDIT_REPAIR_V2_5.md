@@ -69,7 +69,7 @@
 >
 > ⛔⛔⛔ **ISOLATED ROLE / FEATURE MODULE SCOPE BOUNDARY (NON-NEGOTIABLE)** ⛔⛔⛔
 >
-> When the user supplies a single feature module or role container ZIP (e.g., `superadmin.zip`, `frontend_superadmin.zip`, `manager_members.zip`, `manager_attendance.zip`):
+> When the user supplies a single feature module or role container ZIP (e.g., `superadmin.zip`, `frontend_superadmin.zip`, `manager_members.zip`, `manager_attendance.zip`, `admin_billing.zip`):
 > 1. **DO NOT DEMAND HOST APPLICATION SLICES:** You MUST NOT stop, pause, stall, refuse to fix, or ask the user to provide:
 >    - Root `package.json` / dependency manifest
 >    - Root `tsconfig.json` / TypeScript path aliases (`@/*`)
@@ -80,7 +80,7 @@
 >    - Path alias `@/*` resolves to `src/*`.
 >    - Standard dependencies (Next.js, React, Tailwind v4, TanStack Query v5, Zustand, React Hook Form, Zod, Lucide React) exist in the host project.
 > 3. **PROCEED TO AUDIT & REPAIR IMMEDIATELY:** You MUST audit, repair, and complete 100% of the supplied in-scope source files, components, hooks, stores, schemas, URL configs, mock fixtures, and tests directly. Demanding host application root slices or declaring repairs "BLOCKED" due to absence of root files is a **CRITICAL SCOPE CREEP VIOLATION & AUDIT FAILURE**.
-> 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 SIDEBAR RULE):** Every primary clickable navigation destination in a role's sidebar (e.g., Attendance, Finance, HR, Members, Plans) maps strictly 1-to-1 to an autonomous feature module folder (`manager_attendance/`, `manager_finance/`, etc.). When a single feature module is supplied for repair or audit, the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling feature modules or root folders is STRICTLY FORBIDDEN.
+> 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 SIDEBAR RULE):** This rule applies universally to EVERY role container (e.g., `frontend_admin`, `frontend_manager`, `frontend_superadmin`, `frontend_trainer`, `frontend_member`). Every primary clickable navigation destination in a role's sidebar/navigation shell maps strictly 1-to-1 to an autonomous feature module folder (`src/app/frontend_{role}/{role}_{feature}/`, e.g., `admin_billing/`, `manager_attendance/`, `superadmin_plans/`, `trainer_schedule/`). When a single feature module is supplied for repair or audit, the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling feature modules or root folders is STRICTLY FORBIDDEN.
 
 ---
 
@@ -1044,16 +1044,18 @@ Produce this table for every candidate feature or consolidated route:
 # 5B. THE SIDEBAR NAVIGATION-TO-FEATURE MODULE 1-TO-1 MAPPING & AI ISOLATED REPAIR LAW (CRITICAL INVARIANT)
 
 > ⛔ **NON-NEGOTIABLE ARCHITECTURAL INVARIANT: Every primary clickable navigation destination in a role container's sidebar/navigation shell MUST map strictly 1-to-1 to an autonomous, self-contained Feature Module folder directly under that role container. Violating this 1-to-1 mapping or fracturing an isolated AI repair boundary is a CRITICAL SYSTEM DEFECT.**
+>
+> ⛔ **UNIVERSAL APPLICABILITY ACROSS ALL ROLES: This law applies globally, equally, and strictly to EVERY role container in the system (e.g., `frontend_admin`, `frontend_manager`, `frontend_superadmin`, `frontend_trainer`, `frontend_member`, and any future role). Any specific module names (such as `manager_attendance`, `admin_billing`, or `superadmin_plans`) referenced below are non-exhaustive concrete illustrations.**
 
 ### Core Tenets of the 1:1 Navigation-to-Folder Law:
 
-1. **Strict 1-to-1 Primary Navigation Mapping:**
-   - Every top-level clickable item defined in the role's sidebar/navigation configuration (e.g., in `manager_navigation/ManagerNavigationConfig.ts`: Dashboard, Inquiries, Members, Attendance, Plans, Maintenance, Grievances, Sales, Finance, Expenses, Reports, HR/Staff, Schedule, PT, Workout, Library, Communications, Referrals, Notifications) MUST have an exact corresponding dedicated feature folder directly inside `src/app/frontend_{role}/` (e.g., `src/app/frontend_manager/manager_attendance/`).
-   - **NO MEGA-MODULE MERGING:** Merging separate sidebar destinations (e.g., combining `manager_finance` and `manager_expenses` or `manager_members` and `manager_attendance` into a single folder) is STRICTLY PROHIBITED.
+1. **Strict 1-to-1 Primary Navigation Mapping (Universal):**
+   - Every top-level clickable item defined in a role's sidebar/navigation configuration (e.g., in Manager: Dashboard, Inquiries, Members, Attendance, Plans, Finance, HR, Schedule, PT; in Admin: Gyms, Billing, Staff, Settings; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients, Workouts) MUST have an exact corresponding dedicated feature folder directly inside `src/app/frontend_{role}/` (e.g., `src/app/frontend_{role}/{role}_{feature}/`).
+   - **NO MEGA-MODULE MERGING:** Merging separate sidebar destinations (e.g., combining `manager_finance` and `manager_expenses`, or `admin_billing` and `admin_plans`) into a single folder is STRICTLY PROHIBITED.
    - **NO ROOT-LEVEL FRACTURING:** A single sidebar destination MUST NOT spawn arbitrary multiple top-level folders for its internal tabs or workflows. All internal tabs, secondary workflows, and sub-pages belonging to that sidebar destination MUST be managed via `?view=` inside that module's `_components/` and `_views/`.
 
 2. **100% Domain Self-Containment Inside the Feature Folder:**
-   - When a user clicks a sidebar item (e.g., Attendance ➔ `/frontend_manager/manager_attendance`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
+   - When a user clicks a sidebar item (e.g., Attendance ➔ `/frontend_manager/manager_attendance`, Billing ➔ `/frontend_admin/admin_billing`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
      - `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
      - `[moduleName]_components/` (Orchestrator, tables, forms, modals, filters, and `[moduleName]_views/` for all `?view=` sub-screens)
      - `[moduleName]_hooks/` (Feature-specific domain hooks)
@@ -1065,19 +1067,19 @@ Produce this table for every candidate feature or consolidated route:
      - `[moduleName]_tests/` (Feature unit/component test suite)
      - `[moduleName]_url_config.ts` (Feature canonical routes and parameter definitions)
      - Local Documentation Trio: `[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md`
-   - **ZERO CROSS-FEATURE BUSINESS LEAKAGE:** A feature module MUST NEVER import business components, hooks, stores, types, or utilities from a sibling feature module. All business domain logic MUST be duplicated per module (Strict WET Principle).
+   - **ZERO CROSS-FEATURE BUSINESS LEAKAGE:** A feature module MUST NEVER import business components, hooks, stores, types, or utilities from a sibling feature module (e.g., `manager_attendance` cannot import from `manager_finance`; `admin_billing` cannot import from `admin_plans`). All business domain logic MUST be duplicated per module (Strict WET Principle).
 
 3. **Autonomous AI Repair Hand-off Law (Single-Folder Boundary):**
-   - **The Golden Operational Invariant:** If a bug, regression, layout defect, or new requirement arises in "Attendance" (whether on the UI screen, in a modal, table, filter, or data fetch):
-     - The developer or host system MUST provide **ONLY** that single feature module folder (`src/app/frontend_manager/manager_attendance/`) to the AI agent.
+   - **The Golden Operational Invariant:** If a bug, regression, layout defect, or new requirement arises in ANY feature of ANY role (e.g., "Attendance" in Manager, "Billing" in Admin, "Plans" in Superadmin, "Schedule" in Trainer):
+     - The developer or host system MUST provide **ONLY** that single feature module folder (`src/app/frontend_{role}/{role}_{feature}/`) to the AI agent.
      - The AI agent MUST audit, repair, test, and deliver that module in complete isolation.
-     - The AI agent MUST NOT request, inspect, or modify other feature folders (`manager_finance/`, `manager_hr/`, etc.) or host application root files (`package.json`, root `layout.tsx`).
+     - The AI agent MUST NOT request, inspect, or modify other feature folders (`{role}_{sibling}/`) or host application root files (`package.json`, root `layout.tsx`).
      - Modifying any file outside the supplied feature module boundary is a **CRITICAL SCOPE CREEP VIOLATION**.
 
 4. **Navigation Shell & Layout Isolation:**
-   - The Sidebar, Header, Breadcrumbs, Command Palette, and Shell layout themselves MUST reside in their own dedicated navigation module (e.g., `src/app/frontend_manager/manager_navigation/`).
+   - The Sidebar, Header, Breadcrumbs, Command Palette, and Shell layout themselves MUST reside in that role's own dedicated navigation module (e.g., `src/app/frontend_{role}/{role}_navigation/`).
    - Navigation components MUST consume ONLY the exported typed URL contracts (`[moduleName]_url_config.ts`) from feature modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature modules.
-   - If a bug occurs in the sidebar itself (e.g., collapsing toggle, mobile drawer focus trap, search filtering, menu group ordering, or active link highlighting), the repair context is STRICTLY the navigation module (`manager_navigation/`), NEVER individual feature modules.
+   - If a bug occurs in the sidebar itself (e.g., collapsing toggle, mobile drawer focus trap, search filtering, menu group ordering, or active link highlighting), the repair context is STRICTLY the navigation module (`{role}_navigation/`), NEVER individual feature modules.
 
 ---
 

@@ -333,15 +333,17 @@ The normal repair context is:
 
 ### 1C.1 SIDEBAR NAVIGATION 1-TO-1 FEATURE MODULE MAPPING & ISOLATED REPAIR HAND-OFF (MANDATORY)
 
+> ⛔ **UNIVERSAL APPLICABILITY ACROSS ALL ROLES: This law applies globally, equally, and strictly to EVERY role container in the application (including `frontend_admin`, `frontend_manager`, `frontend_superadmin`, `frontend_trainer`, `frontend_member`, and any future role). Any specific module names (such as `manager_attendance`, `admin_billing`, or `superadmin_plans`) referenced below are non-exhaustive concrete illustrations.**
+
 To guarantee that any AI agent or human engineer can repair or expand a feature without repo-wide cognitive load, the system enforces a strict 1-to-1 isomorphism between navigation links and directory architecture:
 
-1. **The 1:1 Navigation Law:**
-   - Every top-level clickable item present in a role's sidebar (e.g., in `src/app/frontend_manager/manager_navigation/ManagerNavigationConfig.ts`: Dashboard, Inquiries, Members, Attendance, Plans, Maintenance, Grievances, Sales, Finance, Expenses, Reports, HR/Staff, Schedule, PT, Workout, Library, Communications, Referrals, Notifications) MUST map 1-to-1 to an autonomous feature module folder directly under that role container (e.g., `src/app/frontend_manager/manager_attendance/`).
-   - Grouping multiple distinct sidebar destinations into a single mega-folder (e.g., merging `manager_finance` and `manager_expenses`) is STRICTLY FORBIDDEN.
+1. **The 1:1 Navigation Law (Universal):**
+   - Every top-level clickable item present in ANY role's sidebar (e.g., in Manager: Dashboard, Inquiries, Members, Attendance, Plans, Finance, HR, Schedule, PT; in Admin: Gyms, Billing, Staff, Settings; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients, Workouts) MUST map 1-to-1 to an autonomous feature module folder directly under that role container (e.g., `src/app/frontend_{role}/{role}_{feature}/`).
+   - Grouping multiple distinct sidebar destinations into a single mega-folder (e.g., merging `manager_finance` and `manager_expenses`, or `admin_billing` and `admin_plans`) is STRICTLY FORBIDDEN.
    - Creating ad-hoc top-level folders for sub-views or detail pages belonging to a sidebar feature is STRICTLY FORBIDDEN. Sub-screens and secondary workflows must be contained within that module via `?view=` parameters.
 
 2. **Full Domain Encapsulation:**
-   - When a user clicks a sidebar item (e.g. Attendance ➔ `/frontend_manager/manager_attendance`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
+   - When a user clicks a sidebar item (e.g. Attendance in Manager ➔ `/frontend_manager/manager_attendance`, or Billing in Admin ➔ `/frontend_admin/admin_billing`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
      - Screen entry: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`
      - Presentation: `[moduleName]_components/` (Main orchestrator, forms, tables, modals, and `[moduleName]_views/` for all `?view=` sub-views)
      - Business logic: `[moduleName]_hooks/`, `[moduleName]_store/`, `[moduleName]_api/`
@@ -349,15 +351,15 @@ To guarantee that any AI agent or human engineer can repair or expand a feature 
      - Testing & Verification: `[moduleName]_mocks/` (MSW handlers & mutable state fixtures), `[moduleName]_tests/`
      - Route config: `[moduleName]_url_config.ts`
      - Contract documentation: `[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md`
-   - ZERO cross-feature business imports: It is STRICTLY PROHIBITED for `manager_attendance` to import business components, hooks, stores, or types from `manager_finance` or any sibling feature.
+   - ZERO cross-feature business imports: It is STRICTLY PROHIBITED for any feature module (e.g., `manager_attendance` or `admin_billing`) to import business components, hooks, stores, or types from any sibling feature (e.g., `manager_finance` or `admin_plans`).
 
 3. **Isolated AI Repair Hand-Off:**
-   - If an issue or bug arises in "Attendance" (whether on the UI screen, in a modal, table, filter, or API query):
-     - The developer MUST provide **ONLY** that single feature module folder (`src/app/frontend_manager/manager_attendance/`) to the AI agent.
+   - If an issue or bug arises in ANY feature of ANY role (e.g., "Attendance" in Manager, "Billing" in Admin, "Plans" in Superadmin, "Schedule" in Trainer):
+     - The developer MUST provide **ONLY** that single feature module folder (`src/app/frontend_{role}/{role}_{feature}/`) to the AI agent.
      - The AI agent will audit, repair, test, and package that module in complete isolation without needing or modifying any other feature folder.
 
 4. **Navigation Shell Isolation:**
-   - The Sidebar and Header presentation components, collapse logic, mobile drawer focus traps, and menu configurations belong strictly to the role's navigation module (e.g., `src/app/frontend_manager/manager_navigation/`).
+   - The Sidebar and Header presentation components, collapse logic, mobile drawer focus traps, and menu configurations belong strictly to that role's navigation module (e.g., `src/app/frontend_{role}/{role}_navigation/`).
    - Navigation components consume ONLY the exported typed URL contracts (`[moduleName]_url_config.ts`) from feature modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature modules.
    - If there is an issue with the sidebar layout or navigation menu itself, the repair context is STRICTLY `{role}_navigation/`.
 

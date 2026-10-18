@@ -111,15 +111,17 @@ If a required mobile behavior is not defined by these mobile documents or the su
 
 ## Rule 0A.3 — PRIMARY NAVIGATION 1-TO-1 FEATURE MODULE MAPPING & ISOLATED REPAIR HAND-OFF (MANDATORY)
 
+> ⛔ **UNIVERSAL APPLICABILITY ACROSS ALL ROLES: This law applies globally, equally, and strictly to EVERY mobile role application (e.g., `frontend_admin`, `frontend_manager`, `frontend_trainer`, `frontend_member`, and any future mobile role). Any specific module names (such as `manager_attendance`, `trainer_schedule`, or `member_workouts`) referenced below are non-exhaustive concrete illustrations.**
+
 To guarantee that any AI agent or mobile developer can repair, test, or expand a mobile feature without app-wide regression, the mobile architecture enforces strict 1-to-1 isomorphism between primary navigation destinations and filesystem feature modules:
 
 1. **The 1:1 Navigation Law (Bottom Tabs / Drawer Items):**
-   - Every primary destination present in the mobile role's primary navigation (e.g., in BottomTabNavigator or DrawerNavigator: Attendance, Schedule, Members, Profile, Workouts, Financials) MUST map strictly 1-to-1 to an autonomous, self-contained feature folder directly under the role container (e.g., `features/frontend_manager/manager_attendance/` or `src/features/frontend_trainer/trainer_schedule/`).
-   - Merging distinct primary navigation tabs into a single mega-module (e.g., combining Attendance and Members or Schedule and Workouts) is STRICTLY PROHIBITED.
+   - Every primary destination present in ANY mobile role's primary navigation (e.g., in BottomTabNavigator or DrawerNavigator for Member, Trainer, Manager, Admin: Attendance, Schedule, Members, Profile, Workouts, Financials) MUST map strictly 1-to-1 to an autonomous, self-contained feature folder directly under the role container (e.g., `features/frontend_{role}/{role}_{feature}/` or `src/features/frontend_{role}/{feature}/`).
+   - Merging distinct primary navigation tabs into a single mega-module (e.g., combining Attendance and Members, or Schedule and Workouts) is STRICTLY PROHIBITED.
    - Creating disjoint root-level folders for sub-screens or detail flows belonging to a navigation tab is STRICTLY PROHIBITED.
 
 2. **100% Domain Self-Containment Inside the Feature Folder:**
-   - When a user taps a navigation tab (e.g. Attendance ➔ `AttendanceScreen`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
+   - When a user taps a navigation tab (e.g. Attendance ➔ `AttendanceScreen`, Schedule ➔ `ScheduleScreen`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
      - Screen entries: `*Screen.tsx` (Thin orchestrators under 80 lines)
      - Components / Widgets: Feature-specific cards, list items, bottom sheets, headers, modals (under 200 lines)
      - Custom Hooks / Controllers: Feature data-fetching, mutation, and UI state hooks (under 150 lines)
@@ -128,16 +130,16 @@ To guarantee that any AI agent or mobile developer can repair, test, or expand a
      - API services: REST/GraphQL queries and mutations (`.api.ts`)
      - Testing & Mocks: Unit/widget tests and mock fixtures
      - Local contract documentation: `_features.md`, `_forbidden.md`, `_theme_contract.md`
-   - ZERO cross-feature business imports: It is STRICTLY PROHIBITED for a feature to import business components, hooks, stores, or types from a sibling feature (Rule 28).
+   - ZERO cross-feature business imports: It is STRICTLY PROHIBITED for any feature module to import business components, hooks, stores, or types from any sibling feature (Rule 28).
 
 3. **Isolated AI Repair Hand-Off (Single-Folder Boundary):**
-   - If a bug, UI regression, or data issue occurs in "Schedule" or "Attendance":
-     - The developer or host system MUST provide **ONLY** that single feature module folder (`features/frontend_manager/manager_attendance/`) to the AI agent.
+   - If a bug, UI regression, or data issue occurs in ANY feature (e.g., "Schedule", "Attendance", "Workouts", "Profile"):
+     - The developer or host system MUST provide **ONLY** that single feature module folder (`features/frontend_{role}/{role}_{feature}/`) to the AI agent.
      - The AI agent will audit, repair, test, and package that module in complete isolation.
      - Demanding host application root files (`package.json`, root `tsconfig.json`, `app.json`, root navigation container) or sibling feature folders is a **CRITICAL SCOPE CREEP VIOLATION**.
 
 4. **Navigation Shell Isolation:**
-   - Root navigation orchestrators (`RootNavigator`, `BottomTabNavigator`, `DrawerNavigator`) reside in `src/core/navigation/` (or role navigation shell).
+   - Root navigation orchestrators (`RootNavigator`, `BottomTabNavigator`, `DrawerNavigator`) reside in that role's core navigation shell (e.g., `src/core/navigation/`).
    - Navigation orchestrators consume ONLY typed route constants (`ROUTES.ts`), and MUST NOT import business state, business components, or domain hooks from feature modules.
    - If an issue occurs with tab switching, deep linking config, or drawer presentation, the repair context is STRICTLY `src/core/navigation/`, NEVER individual feature modules.
 

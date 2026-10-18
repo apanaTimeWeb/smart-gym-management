@@ -51,7 +51,7 @@
 >
 > ⛔⛔⛔ **ISOLATED ROLE / FEATURE MODULE SCOPE BOUNDARY (NON-NEGOTIABLE)** ⛔⛔⛔
 >
-> When the user supplies a single backend feature module or role container ZIP (e.g., `backend_superadmin/`, `backend_trainer/`, `superadmin.zip`, `manager-attendance.zip`):
+> When the user supplies a single backend feature module or role container ZIP (e.g., `backend_superadmin/`, `backend_trainer/`, `superadmin.zip`, `manager-attendance.zip`, `admin-billing.zip`):
 > 1. **DO NOT DEMAND HOST APPLICATION SLICES:** You MUST NOT stop, pause, stall, refuse to fix, or ask the user to provide:
 >    - Root `package.json` / dependency manifest
 >    - Root `tsconfig.json` / TypeScript path aliases (`@/*`)
@@ -63,7 +63,7 @@
 >    - Path alias `@/` resolves to `src/`.
 >    - Standard dependencies (`@nestjs/common`, `@nestjs/core`, `@nestjs/typeorm`, TypeORM/Prisma, Redis, BullMQ) exist in the host monolith.
 > 3. **PROCEED TO AUDIT & REPAIR IMMEDIATELY:** You MUST audit, repair, and complete 100% of the supplied in-scope source files (controllers, services, entities, DTOs, migrations, module definitions, tests, mocks, swagger) directly. Demanding host application root slices or declaring repairs "BLOCKED" due to absence of root files is a **CRITICAL SCOPE CREEP VIOLATION & AUDIT FAILURE**.
-> 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 BACKEND SUB-SERVICE RULE):** Every primary feature module visible in the frontend sidebar/navigation (e.g., Attendance, Finance, HR, Members, Plans) maps strictly 1-to-1 to an autonomous backend feature module folder (e.g., `backend-manager/manager-modules/manager-attendance/`). When a single backend feature module is supplied for repair or audit (e.g. `manager-attendance.zip`), the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling backend modules or host application root files (`app.module.ts`, `main.ts`, etc.) is STRICTLY FORBIDDEN.
+> 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 BACKEND SUB-SERVICE RULE):** This rule applies universally across ALL backend roles (e.g., `backend_admin`, `backend_manager`, `backend_superadmin`, `backend_trainer`). Every primary feature module visible in the frontend sidebar/navigation (e.g., in Manager: Attendance, Finance, HR; in Admin: Billing, Gyms; in Superadmin: Plans, Tenants) maps strictly 1-to-1 to an autonomous backend feature module folder (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). When a single backend feature module is supplied for repair or audit (e.g. `manager-attendance.zip` or `admin-billing.zip`), the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling backend modules or host application root files (`app.module.ts`, `main.ts`, etc.) is STRICTLY FORBIDDEN.
 
 
 ---
@@ -5829,10 +5829,11 @@ APPLICATION
 
 The default AI repair boundary is the FEATURE MODULE.
 
-**THE 1-TO-1 FRONTEND FEATURE ISOMORPHISM & AI REPAIR HAND-OFF LAW:**
-1. **Strict 1-to-1 Mapping to Frontend Features:** Every primary feature module established in the frontend (e.g., in Manager role: Attendance, Finance, HR, Members, Plans, Maintenance, Grievances, etc.) MUST have an exact 1-to-1 corresponding autonomous backend feature module (e.g., `backend-manager/manager-modules/manager-attendance/`). Monolithic aggregation of distinct frontend domains into a single backend mega-module is STRICTLY FORBIDDEN.
+**THE 1-TO-1 FRONTEND FEATURE ISOMORPHISM & AI REPAIR HAND-OFF LAW (UNIVERSAL):**
+> ⛔ **UNIVERSAL APPLICABILITY: This law applies equally to EVERY backend role container (`backend-admin`, `backend-manager`, `backend-superadmin`, `backend-trainer`, etc.). References to `manager-attendance` or `admin-billing` are illustrative examples only.**
+1. **Strict 1-to-1 Mapping to Frontend Features:** Every primary feature module established on the frontend across ANY role (e.g., in Manager: Attendance, Finance, HR, Members, Plans; in Admin: Gyms, Billing, Staff; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients) MUST have an exact 1-to-1 corresponding autonomous backend feature module (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). Monolithic aggregation of distinct frontend domains into a single backend mega-module is STRICTLY FORBIDDEN.
 2. **Complete Domain Self-Containment:** 100% of the controllers, services, repositories, entities, DTOs, events, migrations, unit tests, and OpenAPI schemas for that domain MUST reside INSIDE that feature module folder. Zero cross-feature business imports from sibling backend modules.
-3. **Autonomous AI Repair Hand-off:** If a backend defect occurs in Attendance API/data layer, the developer provides ONLY `manager-attendance` module to the AI agent. The AI agent MUST audit and repair that module in total self-containment.
+3. **Autonomous AI Repair Hand-off:** If a backend defect occurs in ANY feature API or data layer (e.g. Attendance, Billing, or Schedule), the developer provides ONLY that specific feature module folder to the AI agent. The AI agent MUST audit and repair that module in total self-containment.
 
 Detect:
 
