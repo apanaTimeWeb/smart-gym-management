@@ -88,7 +88,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 4. RBG PLAN published + user approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
 > 6. 112-item Anti-Skipping Checklist re-run clean → ONLY THEN package ZIP
-> 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` + `CHANGELOG` inside ZIP → ONLY THEN deliver
+> 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` (consolidating Section 1 Changelog) inside ZIP → ONLY THEN deliver
 >
 > **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
 
@@ -3303,7 +3303,7 @@ Never claim a ZIP was created, attached, or validated unless that actually occur
 
 ### FINAL DELIVERABLE MANIFEST
 
-Every final delivery MUST include the following. To prevent file clutter, cognitive overload, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module_name]_changelog_vN.md`, `stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`, `architecture-rule-enforcement-matrix.md`, `FRONTEND_CHANGE_REQUIRED.md`, `BLOCKED_BY_SUPPLIED_SCOPE.md`, etc.) at the root of the ZIP. 
+Every final delivery MUST include the following. To prevent file clutter, cognitive overload, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module_name]_changelog_vN.md`, `stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`, `architecture-rule-enforcement-matrix.md`, `BLOCKED_BY_SUPPLIED_SCOPE.md`, etc.) at the root of the ZIP. (Note: `FRONTEND_CHANGE_REQUIRED.md` is permitted ONLY when backend-only resolution is genuinely impossible and frontend code must be changed). 
 
 Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED BACKEND DEVELOPER MANUAL** structured into:
 - **Section 1: Version Changelog & Scope Summary** (all repaired defects mapped to audit findings, changed files manifest)
@@ -3332,7 +3332,7 @@ STAGE 1:
 Create and freeze:
 
 ```text
-stage-1-frontend-requirements.md
+stage-1-frontend-requirements.md (stored in execution state; excluded from final delivery ZIP)
 ```
 
 STAGE 2:
@@ -3342,7 +3342,7 @@ Audit the supplied backend scope through bounded work units.
 Maintain:
 
 ```text
-stage-2-backend-audit.md
+stage-2-backend-audit.md (stored in execution state; excluded from final delivery ZIP)
 ```
 
 STAGE 3:
@@ -8301,13 +8301,13 @@ where applicable.
 
 ### File Responsibility Map
 
-Every relevant file should identify:
+Every relevant file MUST identify:
 - what it does;
 - what it MUST NOT do.
 
 ### Permissions and Security
 
-Every endpoint should have:
+Every endpoint MUST have:
 - required roles;
 - resource-level authorization where needed;
 - ownership/tenant/branch rules where applicable;
@@ -9313,7 +9313,7 @@ Classify their purpose.
 
 # 76. RUNTIME VERIFICATION
 
-Runtime verification is OPTIONAL from the AI's perspective.
+Live command/runtime verification is DEFERRED_TO_HOST_RUNTIME when live databases, message queues, or host servers are absent. Source-level code, schemas, migrations, unit tests, and mock fixtures are MANDATORY and MUST NOT be skipped.
 
 ONLY run commands/tests when:
 - the environment is already safely available;
@@ -10142,7 +10142,7 @@ BACKEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
 [ ] 8. All seed files are idempotent and wrapped in transactions
 [ ] 9. Redis mechanisms correctly match the decision table (e.g. Streams for critical events, Cache for rate limiting)
 [ ] 10. `progress.json` accurately reflects the final frozen state
-[ ] 11. CHANGELOG inside ZIP is specific and accurate
+[ ] 11. CHANGELOG inside `INTEGRATION_GUIDE.md` (Section 1) is specific and accurate
 
 If ANY box is unchecked: STATUS = REPAIR_REQUIRED — fix the source code. Once all fixable source-level code is implemented, package and deliver the ZIP. Host-dependent verification steps (DEFERRED_TO_HOST_RUNTIME) and out-of-scope files do not prevent ZIP delivery.
 ```
@@ -10628,17 +10628,17 @@ Mode B:
   Do NOT fabricate omitted sibling modules merely to make the ZIP appear to be a complete role container.
   The final ZIP must contain exactly the repaired supplied backend scope plus the required verification/documentation deliverables.
 
-stage-1-frontend-requirements.md         ← requirements extracted from frontend ZIP
-stage-2-backend-audit.md                 ← audit findings (Mode B only; for Mode A: creation log)
-stage-3-final-verdict.md                 ← final verdict after re-audit / after creation verification
-backend-e2e/...                          ← all API E2E test files
-backend-selenium/...                     ← all Selenium test files (Section 86B.2)
-RE_AUDIT_CHECKLIST_RESULT.md            ← 112-item checklist result on the final code
+INTEGRATION_GUIDE.md                    ← MANDATORY CONSOLIDATED GUIDE (Changelog, Endpoints, Migrations, Wiring, Verification)
+RE_AUDIT_CHECKLIST_RESULT.md            ← MANDATORY 112-item checklist result on the final code
 FRONTEND_CHANGE_REQUIRED.md             ← ONLY when backend-only resolution was genuinely impossible
                                             and frontend modification is actually required.
                                             Do NOT create if no frontend change is needed.
                                             INTEGRATION_GUIDE.md must reference this file when it exists.
+backend-e2e/...                         ← all API E2E test files
+backend-selenium/...                    ← all Selenium test files (Section 86B.2)
 ```
+
+> ⛔ **NO LOOSE MARKDOWN CLUTTER RULE:** Do NOT generate separate loose markdown files at the root of the ZIP (such as `[module_name]_changelog_vN.md`, `stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`, `architecture-rule-enforcement-matrix.md`, etc.). All requirements, audit findings, and changelog notes MUST be consolidated directly into `INTEGRATION_GUIDE.md`. The only markdown files permitted at the ZIP root are `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and conditionally `FRONTEND_CHANGE_REQUIRED.md` (only if frontend changes are genuinely required). Intermediate stage files (`stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`) are intermediate execution-state artifacts and MUST NOT be placed at the ZIP root.
 
 **The `INTEGRATION_GUIDE.md`, Postman collection, API E2E, and Selenium suites are NOT optional. An output without them is an incomplete delivery.**
 
@@ -10683,7 +10683,7 @@ Do NOT reproduce:
 
 Those belong inside the ZIP.
 
-The final chat response should contain only:
+The final chat response MUST contain only:
 
 1. final status;
 2. final ZIP link;
