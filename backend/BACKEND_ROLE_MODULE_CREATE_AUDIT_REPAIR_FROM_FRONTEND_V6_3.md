@@ -88,7 +88,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 4. RBG PLAN published + user approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
 > 6. 112-item Anti-Skipping Checklist re-run clean → ONLY THEN package ZIP
-> 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` + `CHANGELOG` inside ZIP → ONLY THEN deliver
+> 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` (consolidating Section 1 Changelog) inside ZIP → ONLY THEN deliver
 >
 > **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
 
@@ -10142,7 +10142,7 @@ BACKEND FREEZE GATE — ALL ITEMS MUST PASS BEFORE ZIP DELIVERY
 [ ] 8. All seed files are idempotent and wrapped in transactions
 [ ] 9. Redis mechanisms correctly match the decision table (e.g. Streams for critical events, Cache for rate limiting)
 [ ] 10. `progress.json` accurately reflects the final frozen state
-[ ] 11. CHANGELOG inside ZIP is specific and accurate
+[ ] 11. CHANGELOG inside `INTEGRATION_GUIDE.md` (Section 1) is specific and accurate
 
 If ANY box is unchecked: STATUS = REPAIR_REQUIRED — fix the source code. Once all fixable source-level code is implemented, package and deliver the ZIP. Host-dependent verification steps (DEFERRED_TO_HOST_RUNTIME) and out-of-scope files do not prevent ZIP delivery.
 ```

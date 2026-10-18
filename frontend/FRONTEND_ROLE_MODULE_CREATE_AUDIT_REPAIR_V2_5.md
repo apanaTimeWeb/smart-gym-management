@@ -32,12 +32,11 @@
 > [ ] Step 4: RBG PLAN published + user explicitly approves — not yet started
 > [ ] Step 5: STAGE 3 REPAIRS — execute repair batches — not yet started
 > [ ] Step 6: Section 43P Anti-Skipping Checklist clean on repaired code — not yet started
-> [ ] Step 7: FINAL DELIVERY (ZIP with Changelog + Integration Guide + Playwright E2E) — not yet started
+> [ ] Step 7: FINAL DELIVERY (ZIP with Consolidated Integration Guide + Re-Audit Checklist + Playwright E2E) — not yet started
 >
 > MANDATORY DELIVERABLES ACKNOWLEDGED:
 > - Versioned ZIP: frontend-{role}-v{N}-fix.zip
-> - [module_name]_changelog_vN.md (inside ZIP)
-> - INTEGRATION_GUIDE.md (inside ZIP)
+> - INTEGRATION_GUIDE.md (consolidated master developer guide with Section 1 Changelog inside ZIP)
 > - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P clean result inside ZIP)
 > - playwright_E2E/ test suite (inside ZIP)
 >
@@ -47,7 +46,7 @@
 > ⛔ **You MUST NOT open or edit any implementation file before completing Stage 1 (requirement freeze).**
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and the user explicitly approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist is re-evaluated on repaired code. All SOURCE_LEVEL_FIX findings must be resolved. Items requiring host/runtime execution (DEFERRED_TO_HOST_RUNTIME), host infrastructure (OUTSIDE_SUPPLIED_SCOPE), or external product decisions (EXTERNAL_PRODUCT_DECISION_BLOCKED) MUST be documented in RE_AUDIT_CHECKLIST_RESULT.md, but their presence MUST NOT block packaging or delivering the ZIP.**
-> ⛔ **You MUST NOT skip creating `[module_name]_changelog_vN.md`, `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/`. They are mandatory deliverables, not suggestions.**
+> ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md` (containing Section 1 Changelog), `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/`. They are mandatory deliverables, not suggestions.**
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
 >
 > ⛔⛔⛔ **CONTINUE-THROUGH DIRECTIVE — NON-NEGOTIABLE** ⛔⛔⛔
@@ -110,7 +109,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 4. RBG PLAN published + user explicitly approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
 > 6. Anti-Skipping Checklist (Section 43P) re-run clean on repaired code → ONLY THEN package ZIP
-> 7. `[module_name]_changelog_vN.md` + `INTEGRATION_GUIDE.md` + `playwright_E2E` + `RE_AUDIT_CHECKLIST_RESULT.md` inside ZIP → ONLY THEN deliver
+> 7. `INTEGRATION_GUIDE.md` (containing Section 1 Changelog) + `playwright_E2E` + `RE_AUDIT_CHECKLIST_RESULT.md` inside ZIP → ONLY THEN deliver
 >
 > **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
 
@@ -173,7 +172,7 @@ In MODE B, determine the existing version from the supplied artifact name, proje
 1. **If explicit version vN is identified:** Increment it to `v(N+1)-fix` (e.g. `frontend-trainer-v1.zip` → `frontend-trainer-v2-fix.zip`).
 2. **If no explicit version number is present in input filename:**
    - Deterministically default to `v1-fix`: `frontend-{role}-v1-fix.zip`.
-   - Record `VERSION: v1-fix (Default assigned for initial repair release)` inside `INTEGRATION_GUIDE.md` and changelog.
+   - Record `VERSION: v1-fix (Default assigned for initial repair release)` inside `INTEGRATION_GUIDE.md` (Section 1 Changelog).
 3. **ZERO-STALL INVARIANT:** The AI MUST NEVER halt, stall, refuse to name the archive, or refuse to package/deliver the ZIP due to absence of an input version tag. Packaging and delivering the repaired ZIP is MANDATORY.
 
 The AI MUST try so hard in its first pass that the user never needs to come back for a second fix. Treat every delivery as if it is the last chance to get it right.
@@ -8741,7 +8740,7 @@ After all creation work units are complete:
 3. repair any remaining issue;
 4. generate the comprehensive Playwright E2E test suite (`playwright_E2E/...`);
 5. generate final documentation;
-6. generate the changelog;
+6. generate the changelog (inside `INTEGRATION_GUIDE.md` Section 1);
 7. generate the final checklist;
 8. only then package `frontend-{role}-v1.zip`.
 
@@ -8895,7 +8894,7 @@ Before packaging:
 2. verify every manifest entry exists;
 3. confirm only the required target scope and required final artifacts are included;
 4. confirm no unrelated project files are included;
-5. verify the changelog is consistent with actual changes.
+5. verify the changelog in `INTEGRATION_GUIDE.md` (Section 1) is consistent with actual changes.
 
 Only then package:
 

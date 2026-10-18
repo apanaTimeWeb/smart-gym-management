@@ -2002,6 +2002,55 @@ Audit whether the role container's sidebar navigation aligns strictly 1-to-1 wit
 
 ---
 
+# 26D. PRIMARY NAVIGATION 1-TO-1 FEATURE MODULE MAPPING AUDIT [MOBILE ONLY]
+
+> **APPLIES WHEN:** Audit target is MOBILE (React Native / Expo). Skip and mark `NOT_APPLICABLE_TO_STACK` for Web and Backend audits.
+>
+> ⛔ **UNIVERSAL SCOPE: This section applies equally to EVERY role application in the mobile codebase (e.g., `frontend_admin`, `frontend_manager`, `frontend_trainer`, `frontend_member`). References to `manager_attendance`, `trainer_schedule`, or `member_workouts` are illustrative examples only.**
+
+Audit whether the mobile primary navigation (Bottom Tab Navigator / Drawer Navigator) aligns strictly 1-to-1 with autonomous feature modules per Rule 0A.3:
+1. **1-to-1 Navigation Mapping Audit:**
+   - Does every primary destination defined in the role's primary navigation (e.g., BottomTabNavigator or DrawerNavigator) map strictly 1-to-1 to a dedicated, autonomous feature module folder directly under the role container (e.g., `features/frontend_{role}/{role}_{feature}/` or `src/features/frontend_{role}/{feature}/`)?
+   - Are multiple distinct primary navigation tabs merged into a single folder (e.g., combining Attendance and Members, or Schedule and Workouts)?
+     → If YES: Flag as `FINDING: MISSING_FEATURE_MODULE_ISOLATION` (Severity: CRITICAL). Remediation: Split into dedicated autonomous sibling feature folders.
+   - Has a single primary navigation tab fractured its screens or sub-flows into multiple disjoint root-level folders instead of encapsulating them inside its own feature folder?
+     → If YES: Flag as `FINDING: UNJUSTIFIED_ROOT_FRACTURING` (Severity: MAJOR). Remediation: Consolidate internal screens and sub-flows under the owning feature folder.
+
+2. **Autonomous AI Repair Hand-off Audit:**
+   - Can the target mobile feature folder (e.g., `features/frontend_{role}/{role}_{feature}/`) be extracted as a standalone ZIP and audited/repaired by an AI agent in 100% isolation?
+   - Does the feature module import ANY business components, domain hooks, stores, domain types, or utilities from a sibling feature module?
+     → If YES: Flag as `FINDING: CROSS_FEATURE_BUSINESS_IMPORT` (Severity: CRITICAL). Remediation: Enforce strict WET duplication per feature folder.
+
+3. **Navigation Shell Isolation Audit:**
+   - Are root navigation orchestrators (`RootNavigator`, `BottomTabNavigator`, `DrawerNavigator`) isolated inside core navigation (`src/core/navigation/` or `{role}_navigation/`)?
+   - Do navigation orchestrators import business state, business components, or domain hooks from feature modules (violating shell isolation)?
+     → If YES: Flag as `FINDING: NAVIGATION_SHELL_DOMAIN_POLLUTION` (Severity: CRITICAL). Remediation: Navigation shell must consume ONLY exported typed route constants (`ROUTES.ts`).
+
+---
+
+# 26E. BACKEND 1-TO-1 FRONTEND FEATURE ISOMORPHISM & REPAIR ISOLATION AUDIT [BACKEND ONLY]
+
+> **APPLIES WHEN:** Audit target is BACKEND (NestJS / Django / FastAPI). Skip and mark `NOT_APPLICABLE_TO_STACK` for Web and Mobile audits.
+>
+> ⛔ **UNIVERSAL SCOPE: This section applies equally to EVERY backend role container (e.g., `backend-admin`, `backend-manager`, `backend-superadmin`, `backend-trainer`). References to `manager-attendance` or `admin-billing` are illustrative examples only.**
+
+Audit whether the backend architecture enforces strict 1-to-1 isomorphism with frontend feature modules per Rule 0A.1:
+1. **1-to-1 Feature Isomorphism Audit:**
+   - Does every primary feature module exposed on the frontend across ANY role map strictly 1-to-1 to a dedicated autonomous backend feature module under the corresponding role container (e.g., `src/backend-{role}/{role}-modules/{role}-{feature}/`)?
+   - Are multiple distinct frontend features merged into a monolithic backend mega-module (e.g., combining `manager-finance` and `manager-expenses`, or `admin-billing` and `admin-plans`)?
+     → If YES: Flag as `FINDING: MISSING_FEATURE_MODULE_ISOLATION` (Severity: CRITICAL). Remediation: Split into dedicated sibling backend feature modules per frontend feature.
+   - Are endpoints, controllers, or services for a single feature scattered across arbitrary or shared role-level controllers?
+     → If YES: Flag as `FINDING: SCATTERED_FEATURE_ENDPOINTS` (Severity: MAJOR). Remediation: Consolidate 100% of the controllers, services, repositories, entities, DTOs, events, and migrations inside `{role}-{feature}/`.
+
+2. **Autonomous AI Repair Hand-off Audit:**
+   - Can the target backend feature module (e.g., `manager-attendance/`, `admin-billing/`, `superadmin-plans/`) be extracted as a standalone ZIP and audited/repaired by an AI agent in 100% isolation?
+   - Does the backend feature module import ANY internal repositories, services, or domain logic directly from a sibling backend feature module?
+     → If YES: Flag as `FINDING: CROSS_FEATURE_COUPLING` (Severity: CRITICAL). Remediation: Communicate via published interfaces, domain events, or decouple business dependencies.
+   - Does the module depend on host application root files (`app.module.ts`, `main.ts`) for its internal domain integrity?
+     → If YES: Flag as `FINDING: HOST_BOOTSTRAP_COUPLING` (Severity: MAJOR). Remediation: The module MUST export its self-contained NestJS/framework module with internal provider wiring.
+
+---
+
 # 27. FILE SIZE / MICRO-MODULARIZATION
 
 Read actual file-size limits from the **SUPPLIED architecture rules document for the detected stack**.
