@@ -2942,7 +2942,7 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 | Gate # | Gate Description | Verification Directive | Consequence of Failure |
 |---|---|---|---|
 | **Gate 1** | No Critical Findings Open | Verify zero broken mobile user flows, wrong resource identity, or data integrity issues | **STOP.** Broken flow = REJECTED DELIVERY |
-| **Gate 2** | No Major Architecture Violations | Verify state ownership, zero cross-feature imports via Rule 28, strict feature naming | **STOP.** Sibling import = REJECTED DELIVERY |
+| **Gate 2** | No Major Architecture Violations | Verify state ownership, zero cross-feature imports via Rule 28, strict feature naming, Rule 0A.3 1:1 primary navigation to feature folder mapping | **STOP.** Sibling import = REJECTED DELIVERY |
 | **Gate 3** | Design Token Mapping Verified | Theme module mapping verified — all semantic tokens produce valid StyleSheet values; zero raw colors or hardcoded dp | **STOP.** Unstyled or broken component in dark/light mode |
 | **Gate 4** | Zero Hardcoded Colors or Insets | Grep for hex `#`, `rgb(`, raw sizes without `// design-exception: <reason>` | **STOP.** Hardcoded style = REJECTED DELIVERY |
 | **Gate 5** | Hardware-Backed Secure Storage Only | Verify auth tokens, refresh tokens, and biometric keys use `react-native-keychain` / Keystore. Zero tokens in `AsyncStorage` | **STOP.** Insecure storage = CRITICAL SECURITY VULNERABILITY |

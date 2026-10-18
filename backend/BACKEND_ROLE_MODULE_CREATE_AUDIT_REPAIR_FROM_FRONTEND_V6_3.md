@@ -9883,7 +9883,7 @@ Before producing the final verdict, verify:
 [ ] Relevant authored files inspected
 [ ] Exclusions recorded
 [ ] Unreadable files recorded
-[ ] Rule 0A — AI repair boundary is FEATURE MODULE not role container verified
+[ ] Rule 0A & 0A.1 — AI repair boundary is FEATURE MODULE (1-to-1 frontend feature isomorphism verified)
 [ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
 [ ] Rule 0C — Change scope failure conditions checked
 [ ] Rule 0D — All backend folders use backend- prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)

@@ -6609,6 +6609,7 @@ Before final delivery, the AI MUST literally verify:
 [ ] All source conflicts reported
 [ ] Web Rule 1 checked
 [ ] Web Rule 1B & 1C — frontend_ namespace prefix + role container hierarchy checked
+[ ] Web Rule 1C.1 & Section 5B — Sidebar navigation 1-to-1 feature module mapping and isolated AI repair hand-off checked
 [ ] Web Rule 1D — Canonical Next.js routing and filesystem structure checked
 [ ] Web Rule 2 checked
 [ ] Web Rule 3 checked
