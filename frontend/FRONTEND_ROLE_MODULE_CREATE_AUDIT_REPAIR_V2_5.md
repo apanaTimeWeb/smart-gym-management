@@ -209,6 +209,7 @@ Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED DEVELOPER MA
 ### Section 1: Version Changelog & Scope Summary
 - Version identifier (e.g., `v12-fix`) and summary of all repaired defects, mapped directly to original audit findings.
 - Changed files inventory with exact paths and modification rationale.
+- **Verification Purpose:** The human developer will provide `INTEGRATION_GUIDE.md` and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the Section 1 changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
 
 ### Section 2: Route Preservation & URL Migration Matrix (Section 4B)
 - Mandatory Route Preservation Matrix table: `Old Path | New Path | Change Type | Affected Consumers | Migration Strategy | Backward Compatibility`.
@@ -9045,9 +9046,4 @@ COMPLETE-BEFORE-DELIVER
 but it is NOT required to perform all work inside one uninterrupted execution.
 
 Bounded execution improves reliability without weakening completeness.
-
-### CHANGELOG & VERIFICATION CHAPTER IN INTEGRATION_GUIDE.MD
-1. Every ZIP delivery MUST contain a dedicated changelog and verification chapter: **Section 1 of `INTEGRATION_GUIDE.md`**. Delivering a separate loose changelog file is PROHIBITED; the changelog MUST be consolidated into `INTEGRATION_GUIDE.md`.
-2. This chapter MUST detail **exactly what was fixed** in this specific version, mapped directly to the original audit findings.
-3. **Purpose:** The human developer will provide `INTEGRATION_GUIDE.md` and the `vN.zip` to a secondary verification AI. The secondary AI will cross-reference the Section 1 changelog against the actual code. If the secondary AI reports that a promised fix is missing or incomplete, the developer will feed that feedback back to the primary AI for the next cycle. The changelog must therefore be highly specific and accurate.
 

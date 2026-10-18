@@ -3306,7 +3306,7 @@ Never claim a ZIP was created, attached, or validated unless that actually occur
 Every final delivery MUST include the following. To prevent file clutter, cognitive overload, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module_name]_changelog_vN.md`, `stage-1-*.md`, `stage-2-*.md`, `stage-3-*.md`, `architecture-rule-enforcement-matrix.md`, `BLOCKED_BY_SUPPLIED_SCOPE.md`, etc.) at the root of the ZIP. (Note: `FRONTEND_CHANGE_REQUIRED.md` is permitted ONLY when backend-only resolution is genuinely impossible and frontend code must be changed). 
 
 Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED BACKEND DEVELOPER MANUAL** structured into:
-- **Section 1: Version Changelog & Scope Summary** (all repaired defects mapped to audit findings, changed files manifest)
+- **Section 1: Version Changelog & Scope Summary** (all repaired defects mapped to audit findings, changed files manifest; human developer feeds this to secondary verification AI to cross-reference fixes against code)
 - **Section 2: Endpoint Preservation & DTO Matrix** (HTTP method, route path, DTO validation, backward compatibility, breaking changes)
 - **Section 3: Database Migrations & Rollback Instructions** (exact SQL / ORM migration steps)
 - **Section 4: Host Module Registration & Strict Aliasing** (NestJS `@Module({ imports: [...] })` wiring, service providers)
