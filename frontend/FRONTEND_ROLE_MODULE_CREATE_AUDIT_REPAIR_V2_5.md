@@ -1027,8 +1027,8 @@ Do not create a separate module for every tab, URL, card, or workflow step. Do n
 4. **User flows & state ownership:** Is state tightly coupled with the parent view, or does it maintain isolated workflows?
 5. **Component / hook / store ownership:** Can it be repaired using only its own folder without cross-module entanglement?
 
-- **Keep as a View / Sub-feature (`?view=` inside parent module):** When it is a closely related workflow, shares the parent's business lifecycle, types, and contracts, and does not require an independent AI repair boundary.
-- **Split into a Sibling Feature Module:** When evidence proves it is an independent business capability with its own API contract, distinct entity model, independent permissions, or separate repair lifecycle. Give it its own module-prefixed canonical categories, URL config, Main orchestrator, and docs. Never retain compatibility copies of its business logic in the parent module.
+- **Keep as a View / Sub-feature (`?view=` inside parent module):** MUST be retained as a module view when it is a closely related workflow, shares the parent's business lifecycle, types, and contracts, and does not require an independent AI repair boundary.
+- **Split into a Sibling Feature Module:** MUST be extracted to an independent sibling feature module when evidence proves it is an autonomous business capability with its own API contract, distinct entity model, independent permissions, or separate repair lifecycle. Give it its own module-prefixed canonical categories, URL config, Main orchestrator, and docs. Retaining duplicate copies of its business logic in the parent module is STRICTLY FORBIDDEN.
 
 ### Mandatory Table Format
 
@@ -1161,24 +1161,24 @@ Use this decision table for EVERY piece of code that appears in more than one fe
 
 | Scenario | Classification | Required Decision |
 |---|---|---|
-| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | SHARE in `src/components/ui/` — no duplication needed |
-| UI component that knows any business status, label, or domain value (StatusBadge with gym states, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | DUPLICATE per feature module — NEVER share |
-| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | DUPLICATE per feature module — NEVER share |
-| Hook that wraps pure infrastructure (useDebounce, usePagination with no domain types) | `INFRASTRUCTURE_HOOK` | SHARE in `src/hooks/` — acceptable shared infra |
-| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | DUPLICATE per feature module — NEVER share across roles |
-| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | DUPLICATE per feature module — NEVER share |
-| Zustand store slice with domain state | `DOMAIN_STORE` | DUPLICATE per feature module — NEVER share |
-| Constants file with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | DUPLICATE per feature module |
-| Constants file with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | SHARE in `src/constants/` — acceptable |
-| Navigation link that references another role's route | `CROSS_ROLE_NAV` | Each role owns its own link — NEVER import from sibling role |
-| Same UI feature needed in Admin AND Manager | `CROSS_ROLE_FEATURE` | DUPLICATE the complete feature in each role module (WET is correct) |
-| Utility with no business domain knowledge (formatDate, cn) | `INFRA_UTILITY` | SHARE in `src/utils/` — acceptable |
-| Utility that formats business-domain data (formatMembershipStatus, formatGymPlan) | `DOMAIN_UTILITY` | DUPLICATE per feature module |
+| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | SHARE in `src/components/ui/` — no duplication permitted |
+| UI component that knows any business status, label, or domain value (StatusBadge with gym states, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
+| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
+| Hook that wraps pure infrastructure (useDebounce, usePagination with zero domain types) | `INFRASTRUCTURE_HOOK` | SHARE in `src/hooks/` — PERMITTED shared infrastructure only |
+| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | DUPLICATE per feature module — SHARING ACROSS ROLES IS STRICTLY FORBIDDEN |
+| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
+| Zustand store slice with domain state | `DOMAIN_STORE` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
+| Constants file with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
+| Constants file with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | SHARE in `src/constants/` — PERMITTED shared constants only |
+| Navigation link that references another role's route | `CROSS_ROLE_NAV` | Each role owns its own link — IMPORTING FROM SIBLING ROLE IS FORBIDDEN |
+| Same UI feature needed in Admin AND Manager | `CROSS_ROLE_FEATURE` | DUPLICATE the complete feature in each role module (Strict WET is MANDATORY) |
+| Utility with no business domain knowledge (formatDate, cn) | `INFRA_UTILITY` | SHARE in `src/utils/` — PERMITTED shared utility only |
+| Utility that formats business-domain data (formatMembershipStatus, formatGymPlan) | `DOMAIN_UTILITY` | DUPLICATE per feature module — SHARING IS STRICTLY PROHIBITED |
 
-**Decision Rule:**
-- If the code contains ANY reference to a business entity, status, label, or domain type → it is `BUSINESS_AWARE` → it MUST be duplicated.
-- If the code is purely structural/infrastructural with no business knowledge → it MAY be shared.
-- When in doubt, DUPLICATE. Over-isolation is always safer than a broken AI repair boundary.
+**Decision Invariants:**
+- If the code contains ANY reference to a business entity, status, label, or domain type → it is `BUSINESS_AWARE` → it MUST be duplicated per feature. Sharing is a CRITICAL ISOLATION VIOLATION.
+- Pure infrastructure code (with ZERO business domain knowledge) is PERMITTED to reside in global infrastructure folders (`src/components/ui/`, `src/hooks/`, `src/utils/`). ANY presence of domain types, business status keys, or API schemas in these global folders is an IMMEDIATE ARCHITECTURAL FAILURE.
+- When in doubt, DUPLICATE. Over-isolation is always compliant; sharing business logic is NEVER permitted.
 
 **Audit action:** For every import in the target module that crosses a role or module boundary, apply this matrix and classify it as `ACCEPTABLE_SHARED_INFRA` or `ISOLATION_VIOLATION`. Report every `ISOLATION_VIOLATION` as a MAJOR finding.
 

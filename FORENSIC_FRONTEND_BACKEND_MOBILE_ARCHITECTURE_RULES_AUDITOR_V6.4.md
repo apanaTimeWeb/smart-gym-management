@@ -1937,19 +1937,19 @@ For every import that crosses a role or module boundary in the frontend, classif
 
 | Code Category | Classification | Verdict |
 |---|---|---|
-| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/components/ui/` is correct |
-| UI component that contains any business status, label, or domain value (StatusBadge, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| Hook wrapping pure infrastructure (useDebounce, usePagination with no domain types) | `INFRASTRUCTURE_HOOK` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/hooks/` is acceptable |
-| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| Zustand store slice with domain state | `DOMAIN_STORE` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| Constants with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
-| Constants with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/constants/` is acceptable |
-| Navigation link referencing another role's route | `CROSS_ROLE_NAV` | `ISOLATION_VIOLATION` — each role must own its own link |
-| Same UI feature copied across Admin AND Manager | `CROSS_ROLE_FEATURE` | `ACCEPTABLE` — WET duplication is required by architecture; report as `PASS` |
-| Utility with zero business knowledge (formatDate, cn) | `INFRA_UTILITY` | `ACCEPTABLE_SHARED_INFRA` — sharing in `src/utils/` is acceptable |
-| Utility that formats business-domain data (formatMembershipStatus) | `DOMAIN_UTILITY` | `ISOLATION_VIOLATION` — must be duplicated per feature module |
+| Pure UI primitive with zero business knowledge (Button, Input, Modal shell, Spinner) | `ZERO_BUSINESS_PRIMITIVE` | `ACCEPTABLE_SHARED_INFRA` — permitted in `src/components/ui/` (zero domain logic) |
+| UI component that contains any business status, label, or domain value (StatusBadge, PaymentBadge, MembershipTag) | `BUSINESS_AWARE_COMPONENT` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
+| Hook that fetches or mutates domain data (useMemberList, useGymStats) | `DOMAIN_HOOK` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
+| Hook wrapping pure infrastructure (useDebounce, usePagination with zero domain types) | `INFRASTRUCTURE_HOOK` | `ACCEPTABLE_SHARED_INFRA` — permitted in `src/hooks/` (zero domain types) |
+| Zod schema or TypeScript type describing a business entity | `DOMAIN_TYPE` | `ISOLATION_VIOLATION` — sharing across roles is strictly forbidden; must be duplicated per feature module |
+| API client function (fetchMembers, createInvoice) | `DOMAIN_API_CLIENT` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
+| Zustand store slice with domain state | `DOMAIN_STORE` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
+| Constants with business-specific values (STATUS_OPTIONS, PLAN_TYPES) | `BUSINESS_CONSTANTS` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
+| Constants with zero-domain values (DEBOUNCE_MS, PAGE_SIZE_OPTIONS) | `INFRA_CONSTANTS` | `ACCEPTABLE_SHARED_INFRA` — permitted in `src/constants/` (zero domain values) |
+| Navigation link referencing another role's route | `CROSS_ROLE_NAV` | `ISOLATION_VIOLATION` — importing from sibling role is strictly forbidden; each role must own its link |
+| Same UI feature copied across Admin AND Manager | `CROSS_ROLE_FEATURE` | `ACCEPTABLE` — strict WET duplication is required by architecture; report as `PASS` |
+| Utility with zero business knowledge (formatDate, cn) | `INFRA_UTILITY` | `ACCEPTABLE_SHARED_INFRA` — permitted in `src/utils/` (zero domain knowledge) |
+| Utility that formats business-domain data (formatMembershipStatus) | `DOMAIN_UTILITY` | `ISOLATION_VIOLATION` — sharing is strictly prohibited; must be duplicated per feature module |
 
 **Finding format for every cross-boundary import:**
 ```text
