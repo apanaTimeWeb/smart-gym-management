@@ -1976,6 +1976,30 @@ Audit whether screen-level capabilities are placed at the correct structural bou
 
 ---
 
+# 26C. SIDEBAR NAVIGATION 1-TO-1 FEATURE MODULE MAPPING AUDIT [WEB FRONTEND ONLY]
+
+> **APPLIES WHEN:** Audit target is WEB FRONTEND (Next.js). Skip and mark `NOT_APPLICABLE_TO_STACK` for Backend and Mobile audits.
+
+Audit whether the role container's sidebar navigation aligns strictly 1-to-1 with autonomous feature modules:
+1. **1-to-1 Sidebar Mapping Audit:**
+   - Does every primary clickable navigation link defined in the role's navigation config (e.g., `ManagerNavigationConfig.ts`) map to a dedicated, autonomous feature module folder directly under the role container (`src/app/frontend_{role}/{role}_{feature}/`)?
+   - Are multiple distinct sidebar destinations merged into a single folder (e.g., combining `manager_finance` and `manager_expenses`)?
+     → If YES: Flag as `FINDING: MISSING_FEATURE_MODULE_ISOLATION` (Severity: CRITICAL). Remediation: Split into dedicated sibling feature modules per sidebar destination.
+   - Has a single sidebar destination fractured its views into multiple disjoint top-level folders instead of encapsulating them via `?view=` inside its own folder?
+     → If YES: Flag as `FINDING: UNJUSTIFIED_ROOT_FRACTURING` (Severity: MAJOR). Remediation: Consolidate internal workflows into the owning feature module under `[moduleName]_views/` with `?view=` routing.
+
+2. **Autonomous AI Repair Hand-off Audit:**
+   - Can the target feature module (e.g., `manager_attendance/`) be extracted as a standalone ZIP and audited/repaired by an AI agent in 100% isolation?
+   - Does the feature module import ANY business components, domain hooks, stores, domain types, or utilities from a sibling feature module?
+     → If YES: Flag as `FINDING: CROSS_FEATURE_BUSINESS_IMPORT` (Severity: CRITICAL). Remediation: Duplicate business logic per feature module (WET Principle).
+
+3. **Navigation Shell Isolation Audit:**
+   - Are Sidebar, Header, Breadcrumbs, and Layout components isolated inside the role's navigation module (`{role}_navigation/`)?
+   - Do navigation components import business state, business components, or domain hooks from feature modules (violating shell isolation)?
+     → If YES: Flag as `FINDING: NAVIGATION_SHELL_DOMAIN_POLLUTION` (Severity: CRITICAL). Remediation: Navigation shell must consume ONLY exported typed URL contracts (`[moduleName]_url_config.ts`).
+
+---
+
 # 27. FILE SIZE / MICRO-MODULARIZATION
 
 Read actual file-size limits from the **SUPPLIED architecture rules document for the detected stack**.
