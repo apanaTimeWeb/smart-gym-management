@@ -523,7 +523,7 @@ When any button triggers an async action it MUST transition to a loading state i
 | State | Visual |
 |---|---|
 | Default | Label text, `primary` fill |
-| Loading | Label remains available; spinner may be shown before or beside the label, `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading` |
+| Loading | Label remains available; spinner MUST be shown beside the label, `Loader` icon `RN ActivityIndicator`, `disabled=true`, same fill color at `opacity-loading`, button `minWidth` locked to prevent layout shift |
 | Success | **Conditional — context-sensitive only:** Brief checkmark flash (`duration-fast`) is used ONLY when ALL of the following are true: (1) the user remains on the same screen, (2) a visible completion state is meaningful to the user, (3) the operation has confirmed final completion (not eventual consistency), (4) the action is NOT destructive, (5) navigation does NOT immediately follow. Skip the checkmark for: immediate navigation after submit, destructive operations (deletion, suspension), background/long-running operations, and operations with eventual consistency where the server response doesn't confirm final state. |
 | Error | Revert to default state — error shown in toast or inline field |
 
@@ -747,10 +747,7 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 | Confirmation before back | Show a bottom sheet confirmation when the user tries to go back from a dirty (unsaved) form | Same behavior |
 
 ### Safe Area & Status Bar
-- Status bar style MUST be set per-screen using `expo-status-bar` or `react-native`'s `StatusBar`. Never hardcode a single global style.
-- Full-screen modals MUST account for top safe area inset.
-- Bottom tab bars MUST account for home indicator safe area.
-- Use `react-native-safe-area-context` `<SafeAreaView>` at screen roots. Never hardcode inset values.
+
 
 ### Bottom Sheets & Action Sheets
 - Use bottom sheets (slide-up panels) for contextual actions, not full modals. Bottom sheets feel native on both platforms.

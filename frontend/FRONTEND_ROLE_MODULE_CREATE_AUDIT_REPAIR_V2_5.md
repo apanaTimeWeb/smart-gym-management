@@ -1073,7 +1073,9 @@ Produce this table for every candidate feature or consolidated route:
 
 3. **Autonomous AI Repair Hand-off Law (Single-Folder Boundary):**
    - **The Golden Operational Invariant:** If a bug, regression, layout defect, or new requirement arises in ANY feature of ANY role (e.g., "Attendance" in Manager, "Billing" in Admin, "Plans" in Superadmin, "Schedule" in Trainer):
-     - The developer or host system MUST provide **ONLY** that single feature module folder (`src/app/frontend_{role}/{role}_{feature}/`) to the AI agent.
+     - The developer or host system MUST provide **ONLY** that single feature module folder to the AI agent:
+       - **Web:** `src/app/frontend_{role}/{role}_{feature}/`
+       - **Mobile:** `src/features/frontend_{role}/{role}_{feature}/`
      - The AI agent MUST audit, repair, test, and deliver that module in complete isolation.
      - The AI agent MUST NOT request, inspect, or modify other feature folders (`{role}_{sibling}/`) or host application root files (`package.json`, root `layout.tsx`).
      - Modifying any file outside the supplied feature module boundary is a **CRITICAL SCOPE CREEP VIOLATION**.
@@ -6645,7 +6647,7 @@ NO UNKNOWN REQUIREMENT
 [ ] Mobile Rule 57 — Import path casing matches disk exactly
 [ ] Mobile Rule 61 — All UI strings via t('namespace.KEY'); locale files co-located in _locales/
 [ ] Mobile Rule 63 — formatCurrency is feature-local with self-contained currencyMetadata
-[ ] Mobile Rule 65 — testID on every interactive control in [module]-[component]-[action] format
+[ ] Mobile Rule 65 — testID on every interactive control in [role]_[module]-[component]-[action] format (e.g., manager_members-addform-submit)
 [ ] Mobile Design §1 — All color tokens from MOBILE_UI_UX_DESIGN.md Section 1
 [ ] Mobile Design §2 — All spacing from space-1 through space-9 tokens
 [ ] Mobile Design §3 — Typography uses exact fontSize/lineHeight/letterSpacing/fontWeight values
@@ -8859,7 +8861,7 @@ Generate:
 INTEGRATION_GUIDE.md          ← Consolidated master guide (Changelog, Route Matrix, Feature Decisions, Host Steps, Verification)
 RE_AUDIT_CHECKLIST_RESULT.md  ← Section 43P clean compliance audit result
 Web:    playwright_E2E/frontend_[role]_e2e/[target_feature]/[target_feature].spec.ts
-Mobile: mobile_e2e/mobile_[role]_e2e/[target_feature]/[target_feature].yaml
+Mobile: mobile_e2e/frontend_{role}_e2e/{role}_{feature}/{role}_{feature}.yaml
 ```
 
 Only after final verification may the versioned fix ZIP be generated.
@@ -8996,7 +8998,7 @@ The ZIP MUST contain:
 INTEGRATION_GUIDE.md          ← MANDATORY CONSOLIDATED GUIDE (Changelog, Route Matrix, Feature Boundary Decisions, Host Steps, Verification)
 RE_AUDIT_CHECKLIST_RESULT.md  ← MANDATORY formal audit compliance ledger (Section 43P verified result)
 playwright_E2E/               ← MANDATORY isolated E2E tests for the feature (Web only)
-mobile_e2e/                   ← MANDATORY Maestro YAML E2E tests (Mobile only)
+mobile_e2e/frontend_{role}_e2e/{role}_{feature}/{role}_{feature}.yaml  ← MANDATORY Maestro YAML E2E tests (Mobile only)
 └── frontend_[role]_e2e/
     └── [target_feature]/
 frontend_{role}/

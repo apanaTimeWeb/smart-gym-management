@@ -529,6 +529,7 @@ Derived calculations (e.g., `fullName`, `membershipStatus`, `expiryIndicator`) M
 ## Rule 5A — Interface, Schema, & TypeScript Strictness
 
 - **Type Isolation (No Inline String Type Unions):** Never hardcode string type unions (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or component definitions. Always extract these into a named type in the module's `types/` folder.
+- **Absolute Imports Mandate:** Every import across the mobile codebase MUST use the `@/...` path alias (e.g., `@/features/frontend_manager/manager_members/hooks/useManagerMembers`). Relative imports (`./` or `../`) are STRICTLY FORBIDDEN except within the same file's immediate test co-location. Configure `tsconfig.json` with `"paths": { "@/*": ["src/*"] }`.
 - **No Barrel Files:** Place schemas and constants strictly in their respective folders (`schemas/`, `config/`). Do NOT create barrel files (`index.ts`) to re-export them. Import the specific file directly using absolute imports.
 - **TypeScript Strictness:**
   - `any` is strictly forbidden. Use `unknown` and narrow safely.
@@ -742,20 +743,6 @@ When the real API endpoint becomes available:
   legitimately changes (see the supplied feature API contract).
 - Any contract change MUST update the corresponding Type/Model, Schema/Validator,
   mock response, `_features.md` API Contract, and tests in the same change.
-
-### Mutable In-Memory Mock State Mandate
-
-When the backend is unavailable, the ``mocks/`` folder MUST maintain an in-memory mutable state store so that Create/Update/Delete operations produce real visible changes:
-
-- **Create** \u2192 subsequent list refetch shows the new record
-- **Update** \u2192 subsequent detail/list refetch shows changed values
-- **Delete** \u2192 record disappears from subsequent list refetch
-
-A toast-only mutation success that leaves the mock list unchanged is **FORBIDDEN**. The mock handlers MUST mutate the in-memory array so that when TanStack Query invalidates and refetches, the updated list is returned.
-
-Structure inside ``mocks/``:
-- ``[role_module].fixtures.ts`` \u2014 initial seed data (exported array)
-- ``[role_module].handlers.ts`` \u2014 MSW handlers that read/mutate the in-memory state
 
 ### AI Verification Requirement
 
@@ -1013,10 +1000,10 @@ Rules:
   multi-file feature flows, API/mock integration, state coordination, and critical
   feature behavior.
 - **E2E tests (Maestro) - AI Zip Principle:**
-  1. **Top-Level Mirrored Folders:** E2E tests MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The internal directory structure of `mobile_e2e/` MUST strictly mirror the mobile route structure (e.g., `mobile_e2e/mobile_admin_e2e/members/members.yaml`). Never dump E2E tests into the feature folders.
-  2. **WET Over DRY (Module-Level Isolation):** Mobile E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `members` test and `dashboard` test need a login helper script, duplicate it directly into BOTH the `members` and `dashboard` test folders.
-     - **Why:** If a bug occurs in the Members mobile flow, a developer must be able to ZIP only the `mobile_e2e/mobile_admin_e2e/members/` folder and feed it to an AI. If the AI is missing parent helpers, it loses context and breaks the test.
-  3. **No Cross-Module Imports:** A test script in `mobile_admin_e2e/members/` MUST NOT import a fixture or helper from `mobile_admin_e2e/dashboard/`. Isolation is absolute.
+  1. **Top-Level Mirrored Folders:** E2E tests MUST live in a completely separate top-level `mobile_e2e/` directory, entirely decoupled from the application code. The canonical path is `mobile_e2e/frontend_{role}_e2e/{role}_{feature}/{role}_{feature}.yaml` (e.g., `mobile_e2e/frontend_manager_e2e/manager_members/manager_members.yaml`). Never dump E2E tests into the feature folders.
+  2. **WET Over DRY (Module-Level Isolation):** Mobile E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E. If both the `manager_members` test and `manager_dashboard` test need a login helper script, duplicate it directly into BOTH folders.
+     - **Why:** If a bug occurs in the manager_members mobile flow, a developer must be able to ZIP only the `mobile_e2e/frontend_manager_e2e/manager_members/` folder and feed it to an AI. If the AI is missing parent helpers, it loses context and breaks the test.
+  3. **No Cross-Module Imports:** A test script in `frontend_manager_e2e/manager_members/` MUST NOT import a fixture or helper from `frontend_manager_e2e/manager_dashboard/`. Isolation is absolute.
 - Native modules (camera, biometrics, secure storage, notifications) are
   mocked at the test boundary — unit and component tests never touch a real
   native API.
@@ -1438,7 +1425,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 62: Feature flags accessed via `useFeatureFlag()` — no raw build/env reads inside components
 - [ ] Rule 63: Currency formatting is feature-local (`formatCurrency.ts`); approved currency metadata used; unsupported codes throw
 - [ ] Rule 64: Tenant data export triggers async backend call + `202 Accepted` success feedback — no in-app download
-- [ ] Rule 65: Every interactive control and critical state indicator has a deterministic `testID` in canonical format
+- [ ] Rule 65: Every interactive control and critical state indicator has a deterministic `testID` in `[role]_[module]-[component]-[action/state]` format (e.g., `manager_members-addform-submit`)
 - [ ] Rule 66: Every custom hook, complex component, and state store has an exhaustive JSDoc / docstring block
 
 ## Known Issues / Tech Debt
@@ -1753,9 +1740,10 @@ Cross-reference: Rule 7 and the feature API contract.
 
 ## Rule 35 — Route / Navigation Constants File (No Hardcoded Route Strings)
 
-Every navigation route name or path MUST be defined as a typed constant in ONE
-central file: `src/core/navigation/routes.ts`. No screen, hook, or component may
-contain a hardcoded route string literal.
+Navigation route names are split into two layers:
+
+1. **Top-level tab/drawer routes** (e.g., `MANAGER_TAB.MEMBERS`) MUST be defined in `src/core/navigation/routes.ts`. This file contains ONLY the top-level tab/drawer entry names — never internal screen names.
+2. **Feature-internal screen routes** (e.g., `MANAGER_MEMBERS_ROUTES.LIST`, `MANAGER_MEMBERS_ROUTES.DETAIL`, `MANAGER_MEMBERS_ROUTES.ADD`) and their `ParamList` types MUST live exclusively in the feature's own `config/{role_module}.url_config.ts`. No screen, hook, or component may contain a hardcoded route string literal.
 
 ```typescript
 // src/core/navigation/routes.ts
@@ -2720,7 +2708,7 @@ Only currencies present in the project's approved currency metadata are supporte
 > ⛔ **AI AGENTS: NEVER import `currencyMetadata` from `@/core/config/currencyMetadata` or any global path. The metadata MUST be self-contained inside the feature-local formatter file. This is a Strict WET requirement — duplicate it per feature.**
 
 ```typescript
-// currencyMetadata is self-contained inside this file \u2014 no external @/core import allowed
+// currencyMetadata is self-contained inside this file — no external @/core import allowed
 const currencyMetadata: Record<string, { divisor: number }> = {
   INR: { divisor: 100 }, USD: { divisor: 100 }, EUR: { divisor: 100 },
   // extend per project approved currencies only
@@ -2787,12 +2775,12 @@ have a deterministic `testID`.
 
 Canonical format:
 
-`testID="[module]-[component]-[action/state]"`
+`testID="[role]_[module]-[component]-[action/state]"`
 
 Examples:
 
-`members-addform-submit`
-`billing-invoice-status-paid`
+`manager_members-addform-submit`
+`manager_billing-invoice-status-paid`
 
 Gesture-driven surfaces MUST expose a `testID` on the view that receives
 the gesture interaction.
@@ -3048,7 +3036,7 @@ Required control files:
 
 ```text
 progress.json
-work-units.json
+work_units.json
 checkpoint-log.md
 ```
 
@@ -3120,7 +3108,7 @@ Reply `continue` to resume from the first unverified or incomplete work unit.
 When the user replies `continue`, the AI MUST:
 
 1. Read `progress.json`;
-2. Read `work-units.json`;
+2. Read `work_units.json`;
 3. Validate checkpoint;
 4. Inspect filesystem;
 5. Compare checkpoint against filesystem;
