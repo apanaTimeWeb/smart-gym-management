@@ -65,6 +65,7 @@
 >
 > ⛔ **You MUST NOT open or edit any implementation file before completing Stage 1 (requirement freeze).**
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and the user explicitly approves it.**
+> ⛔ **[MODE C ONLY] You MUST NOT write a single line of mobile code before completing ALL 5 Extraction Sections from the web ZIP and freezing the mobile requirement baseline. Writing mobile code before extraction is complete = HALLUCINATION RISK = INVARIANT VIOLATION.**
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist is re-evaluated on repaired code. All SOURCE_LEVEL_FIX findings must be resolved. Items requiring host/runtime execution (DEFERRED_TO_HOST_RUNTIME), host infrastructure (OUTSIDE_SUPPLIED_SCOPE), or external product decisions (EXTERNAL_PRODUCT_DECISION_BLOCKED) MUST be documented in RE_AUDIT_CHECKLIST_RESULT.md, but their presence MUST NOT block packaging or delivering the ZIP.**
 > ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md` (containing Section 1 Changelog), `RE_AUDIT_CHECKLIST_RESULT.md`, and the platform-appropriate E2E test suite (`playwright_E2E/` for Web, `mobile_e2e/` for Mobile). They are mandatory deliverables, not suggestions.**
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
@@ -125,11 +126,32 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > The following sequence is ABSOLUTE and cannot be reordered under any circumstance:
 > 1. Read ALL supplied documents completely before touching any code
 > 2. STAGE 1: Freeze full requirement baseline + `baseline_frozen: true` persisted → ONLY THEN open any implementation file
+> The following sequence is ABSOLUTE per mode. Select your mode and follow that block exactly:
+>
+> **MODE A (CREATE):**
+> 1. Read ALL supplied architecture & design documents completely → ONLY THEN create any file
+> 2. STAGE 1: Freeze full requirement baseline + `baseline_frozen: true` → ONLY THEN create any file
+> 3. STAGE 2: Create complete module through bounded work units → ONLY THEN run final re-audit
+> 4. Section 43P Anti-Skipping Checklist clean on created code → ONLY THEN package ZIP
+> 5. `INTEGRATION_GUIDE.md` + `RE_AUDIT_CHECKLIST_RESULT.md` + `playwright_E2E/` inside ZIP → ONLY THEN deliver `frontend-{role}-v1.zip`
+>
+> **MODE B (AUDIT+REPAIR):**
+> 1. Read ALL supplied architecture & design documents completely → ONLY THEN open any implementation file
+> 2. STAGE 1: Freeze full requirement baseline + `baseline_frozen: true` → ONLY THEN open any implementation file
 > 3. STAGE 2: Complete full audit → ONLY THEN begin Stage 3 repairs
 > 4. RBG PLAN published + user explicitly approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
-> 6. Anti-Skipping Checklist (Section 43P) re-run clean on repaired code → ONLY THEN package ZIP
-> 7. `INTEGRATION_GUIDE.md` (containing Section 1 Changelog) + **Web:** `playwright_E2E/` / **Mobile:** `mobile_e2e/` + `RE_AUDIT_CHECKLIST_RESULT.md` inside ZIP → ONLY THEN deliver
+> 6. Section 43P Anti-Skipping Checklist clean on repaired code → ONLY THEN package ZIP
+> 7. `INTEGRATION_GUIDE.md` + `RE_AUDIT_CHECKLIST_RESULT.md` + `playwright_E2E/` inside ZIP → ONLY THEN deliver `frontend-{role}-v{N}-fix.zip`
+>
+> **MODE C (CROSS-PLATFORM MOBILE CREATE):**
+> 1. Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely → ONLY THEN proceed
+> 2. Read MOBILE_UI_UX_DESIGN.md completely → ONLY THEN proceed
+> 3. Complete ALL 5 Extraction Sections from web ZIP → ONLY THEN freeze mobile baseline
+> 4. STAGE 1: Freeze mobile requirement baseline + `baseline_frozen: true` → ONLY THEN write any mobile code
+> 5. STAGE 2: Create complete React Native module through bounded work units → ONLY THEN run final re-audit
+> 6. Section 43P MOBILE RULE CHECKLIST + MODE C EXTRACTION CHECKLIST clean → ONLY THEN package ZIP
+> 7. `INTEGRATION_GUIDE.md` + `RE_AUDIT_CHECKLIST_RESULT.md` + `mobile_e2e/` inside ZIP → ONLY THEN deliver `mobile-{role}-v1.zip`
 >
 > **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
 
@@ -160,8 +182,13 @@ This prompt has **THREE operating modes**. Read the supplied inputs to determine
 1. Deeply read and analyze the feature document and both instruction/design documents.
 2. Create the complete frontend module from SCRATCH for the specific role.
 3. Strictly follow EVERY design requirement in `[SUPPLIED_UI_UX_DESIGN_RULES.md]` and EVERY architectural rule in `[SUPPLIED_ARCHITECTURE_AND_DEVELOPMENT_RULES.md]`.
-4. Deliver a **versioned ZIP**: `frontend-{role}-v1.zip`
-5. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+4. Run Section 43P Anti-Skipping Checklist on all created code before packaging.
+5. Deliver a **versioned ZIP**: `frontend-{role}-v1.zip`
+
+**Mandatory deliverables inside the ZIP:**
+- `INTEGRATION_GUIDE.md` (consolidated developer guide)
+- `RE_AUDIT_CHECKLIST_RESULT.md` (Section 43P clean result — every item evaluated)
+- `playwright_E2E/frontend_{role}_e2e/{module}/{module}.spec.ts` (Playwright E2E test suite)
 
 > **NOT Mode A if:** User supplies a web ZIP and asks for mobile creation → that is **MODE C**.
 
@@ -563,6 +590,12 @@ INTEGRATION_GUIDE.md MUST contain:
   Section 5: DEFERRED_TO_HOST_RUNTIME items
     - Metro bundler verification
     - Device/simulator E2E execution
+  Section 6: Host Verification Commands
+    - npm run lint
+    - npm run typecheck
+    - npm run test
+    - npx maestro test mobile_e2e/
+    - All items classified as DEFERRED_TO_HOST_RUNTIME, OUTSIDE_SUPPLIED_SCOPE, or EXTERNAL_PRODUCT_DECISION_BLOCKED documented here
 ```
 
 ---
@@ -619,6 +652,11 @@ In MODE B, determine the existing version from the supplied artifact name, proje
    - Record `VERSION: v1-fix (Default assigned for initial repair release)` inside `INTEGRATION_GUIDE.md` (Section 1 Changelog).
 3. **ZERO-STALL INVARIANT:** The AI MUST NEVER halt, stall, refuse to name the archive, or refuse to package/deliver the ZIP due to absence of an input version tag. Packaging and delivering the repaired ZIP is MANDATORY.
 
+**MODE C VERSION ASSIGNMENT (ZERO-STALL):**
+- First mobile creation: always `mobile-{role}-v1.zip`. No version detection needed — it is always v1.
+- First fix after v1: `mobile-{role}-v2-fix.zip`.
+- The AI MUST NEVER stall on version naming for Mode C. It is always v1 for first creation.
+
 The AI MUST try so hard in its first pass that the user never needs to come back for a second fix. Treat every delivery as if it is the last chance to get it right.
 
 ---
@@ -647,7 +685,9 @@ Missing contract information MUST be reported as `BLOCKED BY SUPPLIED SCOPE` rat
 
 Every delivered ZIP MUST contain a single, comprehensive `INTEGRATION_GUIDE.md` file at the root of the ZIP. To prevent cognitive overload, file clutter, and fragmented documentation, **do NOT generate separate loose markdown files** (such as `[module]_changelog_vN.md`, `ROUTE_PRESERVATION_MATRIX.md`, `FEATURE_BOUNDARY_MATRIX.md`, `FEATURE_PRESERVATION_INVENTORY.md`, `stage_*.md`, or `HOST_VERIFICATION_STEPS.md`) at the root of the ZIP. 
 
-Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED DEVELOPER MANUAL** structured into the following mandatory sections:
+Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED DEVELOPER MANUAL** structured into the following mandatory sections.
+
+> ⛔ **MODE-CONDITIONAL SECTIONS:** Mode A and Mode B (Web) use Sections 1–6 below. Mode C (Mobile Create) uses a different section structure defined in the MODE C — DELIVERABLES section. Mode C MUST NOT include Route Preservation Matrix or Feature Boundary Decisions — those are Web-only sections. Mode C Section 1 MUST be the Web ZIP Extraction Summary.
 
 ### Section 1: Version Changelog & Scope Summary
 - Version identifier (e.g., `v12-fix`) and summary of all repaired defects, mapped directly to original audit findings.
@@ -3743,6 +3783,13 @@ CREATION BASELINE / REQUIREMENT READINESS SCORE
 and after creation is completed:
 FINAL VERIFIED SCORE
 
+MODE C (CROSS-PLATFORM MOBILE CREATE):
+Since there is no existing mobile code, produce:
+EXTRACTION COMPLETENESS SCORE (after all 5 extraction sections are done)
+  — Scores: API contract completeness, field inventory completeness, screen inventory completeness, permission coverage, enum coverage
+CREATION FINAL SCORE (after mobile module is fully created and 43P checklist is clean)
+  — Score caps: Any invented endpoint not in web ZIP → maximum 4/10. Any Gold color (#FACC15) in mobile output → maximum 5/10. Any expo-* package → maximum 5/10. Any web JSX copied into mobile files → maximum 3/10.
+
 ## BASELINE SCORE — BEFORE REPAIR
 
 First calculate:
@@ -4122,7 +4169,11 @@ For each phase explain:
 
 ---
 
-# 38A. REPAIR BATCH GROUP (RBG) SYSTEM — MANDATORY FOR MODE B
+# 38A. REPAIR BATCH GROUP (RBG) SYSTEM — MANDATORY FOR MODE B / WORK UNIT SYSTEM FOR MODE A & C
+
+> ⛔ **MODE APPLICABILITY:**
+> - **MODE B (AUDIT+REPAIR):** The full RBG system below is MANDATORY. Findings from the audit are grouped into RBGs and executed in dependency order.
+> - **MODE A (CREATE) and MODE C (MOBILE CREATE):** Do NOT use the RBG audit-finding system. Instead use the **bounded work unit system** from Section 44. Creation work is divided into checkpointed work units (e.g., WU-01: types+schemas, WU-02: API client, WU-03: hooks, WU-04: screens, WU-05: mocks, WU-06: tests, WU-07: docs). Each work unit is verified and checkpointed before the next begins.
 
 ## THE PROBLEM THIS SOLVES
 
@@ -4314,7 +4365,19 @@ Add to the existing `progress.json` structure:
   "completed_rbgs": [],
   "remaining_rbgs": [],
   "rbg_findings_fixed": 0,
-  "rbg_findings_remaining": 0
+  "rbg_findings_remaining": 0,
+  "mode_c_extraction": {
+    "arch_rules_read": false,
+    "design_rules_read": false,
+    "web_zip_read": false,
+    "extraction_section_1_api_contract": false,
+    "extraction_section_2_response_fields": false,
+    "extraction_section_3_screens_flows": false,
+    "extraction_section_4_permissions": false,
+    "extraction_section_5_enums_constants": false,
+    "extraction_frozen": false,
+    "mobile_baseline_frozen": false
+  }
 }
 ```
 
@@ -9277,6 +9340,15 @@ Checkpointing MUST NOT become a reason to:
 - skip tests;
 - skip documentation.
 
+**MODE C ADDITIONAL PROTECTION — Checkpointing MUST NOT become a reason to:**
+
+- skip any of the 5 Extraction Sections from the web ZIP;
+- skip the mobile requirement baseline freeze;
+- invent API endpoints not found in the web ZIP;
+- invent TypeScript fields not found in web ZIP types or schemas;
+- skip the MODE C EXTRACTION VERIFICATION CHECKLIST in Section 43P;
+- skip the MOBILE RULE CHECKLIST in Section 43P.
+
 The final result MUST still satisfy the full V2.6 applicable requirement set.
 
 ## 44.10 Mode A — CREATE
@@ -9351,7 +9423,43 @@ Mobile: mobile_e2e/frontend_{role}_e2e/{role}_{feature}/{role}_{feature}.yaml
 
 Only after final verification may the versioned fix ZIP be generated.
 
-## 44.12 Final State
+## 44.12 Mode C — CROSS-PLATFORM MOBILE CREATE
+
+STAGE 1:
+
+Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md and MOBILE_UI_UX_DESIGN.md completely.
+
+Execute ALL 5 Extraction Sections from the web ZIP. Document every extracted item.
+
+Freeze:
+
+```text
+stage_1_mobile_extraction.md (stored in execution state; excluded from final ZIP per Section 45.7)
+```
+
+Checkpoint the completed extraction baseline. Set `mode_c_extraction.extraction_frozen: true`.
+
+STAGE 2:
+
+Create the complete React Native mobile module through bounded work units.
+
+Each work unit MUST be verified and checkpointed before the next begins.
+
+STAGE 3:
+
+After all creation work units are complete:
+
+1. re-read Stage 1 extraction baseline;
+2. perform complete final re-audit against MOBILE_ARCHITECTURE rules;
+3. run Section 43P MODE C EXTRACTION VERIFICATION CHECKLIST;
+4. run Section 43P MOBILE RULE CHECKLIST;
+5. repair any remaining issue;
+6. generate Maestro E2E YAML suite (`mobile_e2e/...`);
+7. generate INTEGRATION_GUIDE.md with Web ZIP Extraction Summary as Section 1;
+8. generate RE_AUDIT_CHECKLIST_RESULT.md with all Mode C + Mobile Rule items evaluated;
+9. only then package `mobile-{role}-v1.zip`.
+
+## 44.13 Final State
 
 ```text
 ALL WORK UNITS COMPLETE
@@ -9394,9 +9502,11 @@ A checkpoint is execution state.
 
 A checkpoint is NOT a product delivery.
 
-## 45.2 Repair Release Delivery Mandate (Non-Negotiable)
+## 45.2 Creation & Repair Release Delivery Mandate (Non-Negotiable)
 
-- **Source Fix Completion vs Live Runtime:** When 100% of fixable `SOURCE_LEVEL_FIX` findings within the supplied scope have been repaired, packaging and delivering the versioned ZIP (`frontend-{role}-v1-fix.zip` or `frontend-{role}-v{N}-fix.zip`) is **MANDATORY**.
+- **Mode A — Creation Delivery:** When all creation work units are complete and Section 43P checklist is clean, packaging and delivering `frontend-{role}-v1.zip` is **MANDATORY**.
+- **Mode B — Source Fix Completion vs Live Runtime:** When 100% of fixable `SOURCE_LEVEL_FIX` findings within the supplied scope have been repaired, packaging and delivering the versioned ZIP (`frontend-{role}-v1-fix.zip` or `frontend-{role}-v{N}-fix.zip`) is **MANDATORY**.
+- **Mode C — Mobile Creation Delivery:** When all 5 extraction sections are complete, all mobile module files are created, and Section 43P MODE C + MOBILE RULE checklists are clean, packaging and delivering `mobile-{role}-v1.zip` is **MANDATORY**. Metro bundler unavailability and device/simulator unavailability are NOT blockers — mark as `DEFERRED_TO_HOST_RUNTIME` and deliver the ZIP.
 - **External Blockers & Runtime Deferrals:** If items remain deferred to host runtime (`DEFERRED_TO_HOST_RUNTIME`) or require external human product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED` / `SOURCE_CONFLICT`), they are documented inside `RE_AUDIT_CHECKLIST_RESULT.md` and `INTEGRATION_GUIDE.md`. The archive is delivered as a **REPAIR RELEASE (SOURCE-VERIFIED)**.
 - **ZERO-WITHHOLDING INVARIANT:** The AI MUST NOT refuse to deliver the ZIP, withhold the archive, or declare delivery blocked due to deferred runtime verification, external document conflicts, or absence of host files. "PARTIAL DELIVERY = FORBIDDEN" strictly means do not deliver fragmented/split archives; it NEVER means withholding the complete repaired source ZIP!
 
@@ -9475,6 +9585,9 @@ frontend-{role}-v1.zip
 
 Mode B:
 frontend-{role}-v{N}-fix.zip
+
+Mode C:
+mobile-{role}-v1.zip
 ```
 
 The ZIP MUST contain:
