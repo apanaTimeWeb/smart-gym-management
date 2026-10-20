@@ -9731,3 +9731,504 @@ but it is NOT required to perform all work inside one uninterrupted execution.
 
 Bounded execution improves reliability without weakening completeness.
 
+
+
+---
+
+# VERSION 2.7 ADDENDUM — MOBILE COMPLETENESS PATCH
+# Fixes 10 identified gaps for Mode C (Cross-Platform Mobile Create)
+# All sections below are MANDATORY and supersede any omission in earlier sections.
+
+---
+
+# 43P. SECTION 43P — MOBILE RULE CHECKLIST (MANDATORY FOR MODE C)
+
+> ⛔ **THIS CHECKLIST IS THE DELIVERY FREEZE GATE FOR MODE C.**
+> Every item MUST be evaluated on the created mobile code before packaging the ZIP.
+> Items marked SOURCE_LEVEL_FIX that FAIL = STOP. Fix before packaging.
+> Items marked DEFERRED_TO_HOST_RUNTIME = document in RE_AUDIT_CHECKLIST_RESULT.md, do NOT block ZIP.
+
+The AI MUST evaluate every item below against the created mobile module and record one of:
+`PASS | FAIL | NOT_APPLICABLE (with reason) | DEFERRED_TO_HOST_RUNTIME`
+
+## 43P-ARCH — Architecture & Structure
+
+- [ ] **43P-ARCH-01:** Feature folder path is `src/features/frontend_{role}/{role}_{module}/` — `frontend_` prefix present on role container
+- [ ] **43P-ARCH-02:** All screens in `screens/` are ≤80 lines — thin composition only, zero business logic, zero direct API calls
+- [ ] **43P-ARCH-03:** Every screen renders exactly ONE `[Role][Module][Screen]MainView.tsx` component
+- [ ] **43P-ARCH-04:** All components in `components/` are ≤200 lines
+- [ ] **43P-ARCH-05:** All hooks in `hooks/` are ≤150 lines
+- [ ] **43P-ARCH-06:** All API files in `api/` are ≤150 lines
+- [ ] **43P-ARCH-07:** All schema files in `schemas/` are ≤150 lines
+- [ ] **43P-ARCH-08:** All type files in `types/` are ≤150 lines
+- [ ] **43P-ARCH-09:** All store files in `state/` are ≤180 lines
+- [ ] **43P-ARCH-10:** All utility files in `utils/` are ≤120 lines
+- [ ] **43P-ARCH-11:** Feature root contains ONLY the three documentation files — no loose source files at root
+- [ ] **43P-ARCH-12:** Zero cross-feature business imports (Rule 28) — no sibling feature imports anywhere
+- [ ] **43P-ARCH-13:** Every component/hook/file uses Role+Module prefix in filename (e.g. `ManagerMembersMemberCard.tsx`)
+- [ ] **43P-ARCH-14:** No abbreviations in file or component names
+- [ ] **43P-ARCH-15:** Exported component name matches filename exactly
+
+## 43P-API — API Contract & URL Config
+
+- [ ] **43P-API-01:** `config/{role}_{module}.url_config.ts` exists and exports all endpoint paths as named constants — zero hardcoded URL strings in `*.api.ts`
+- [ ] **43P-API-02:** `api/{role}_{module}.query_keys.ts` exists with canonical factory pattern including resource identity in all keys
+- [ ] **43P-API-03:** Every API endpoint URL in mobile code EXISTS in the web ZIP's API client or URL config — zero invented endpoints (`CONTRACT_NOT_FOUND_IN_WEB_ZIP` if missing)
+- [ ] **43P-API-04:** Every TypeScript interface field in mobile EXISTS in the web ZIP's types or Zod schemas — zero invented fields
+- [ ] **43P-API-05:** All mutations use dedicated named mutation hooks — zero inline `useMutation` in screens or components
+- [ ] **43P-API-06:** Every dedicated mutation hook invalidates affected TanStack Query keys via `onSuccess: () => queryClient.invalidateQueries(...)` (Rule 60)
+- [ ] **43P-API-07:** TanStack Query v5 native status used directly (`isPending`, `isError`, `data`) — zero parallel `NetworkState<T>` wrappers on server state (Rule 45)
+- [ ] **43P-API-08:** `isLoading` is NOT used anywhere — only `isPending` (TanStack Query v5)
+- [ ] **43P-API-09:** `onSuccess` inside `useQuery` is NOT used anywhere (banned in v5)
+- [ ] **43P-API-10:** Every POST/PATCH/PUT/DELETE mutation carries a stable `Idempotency-Key` header (Rule 53) — same key reused on retry, new key only for new user intent
+
+## 43P-STATE — State Management
+
+- [ ] **43P-STATE-01:** API/server data is NEVER duplicated into Zustand store — TanStack Query is the single source of truth for server state
+- [ ] **43P-STATE-02:** Feature-scoped Zustand store exists for shared UI-only state (filter panel open/close, selected IDs, etc.)
+- [ ] **43P-STATE-03:** Auth tokens stored ONLY in `react-native-keychain` (iOS Keychain / Android Keystore) — NEVER in AsyncStorage or MMKV
+- [ ] **43P-STATE-04:** Non-sensitive preferences use `react-native-mmkv` — never AsyncStorage for performance-sensitive data
+
+## 43P-MOCK — Mock & Fixture Completeness
+
+- [ ] **43P-MOCK-01:** `mocks/{role}_{module}.fixtures.ts` exists with mutable in-memory array (`export let` not `export const`)
+- [ ] **43P-MOCK-02:** `mocks/{role}_{module}.handlers.ts` exists with MSW handlers that READ and MUTATE the in-memory fixtures array
+- [ ] **43P-MOCK-03:** Create mutation handler PUSHES new record to fixtures array — list refetch shows new record
+- [ ] **43P-MOCK-04:** Update mutation handler UPDATES record in fixtures array — detail/list refetch shows changed values
+- [ ] **43P-MOCK-05:** Delete mutation handler REMOVES record from fixtures array — list refetch no longer shows deleted record
+- [ ] **43P-MOCK-06:** Mock fixtures contain ALL fields that the UI renders — zero fields rendering empty/undefined from incomplete mock
+- [ ] **43P-MOCK-07:** Mock fixtures include realistic variation: different statuses, different dates, nullable fields both present and absent, enough records to exercise pagination
+- [ ] **43P-MOCK-08:** Empty-result scenario is reachable (zero records triggers EmptyState component)
+- [ ] **43P-MOCK-09:** Error scenario is reachable (mock handler can return error to trigger ErrorFallback)
+- [ ] **43P-MOCK-10:** NO toast-only mutation success — UI list/detail MUST visibly reflect the mutation result
+
+## 43P-DESIGN — Design Token Compliance
+
+- [ ] **43P-DESIGN-01:** Zero raw hex colors (`#XXXXXX`) in any StyleSheet — all colors from `tokens.color.*`
+- [ ] **43P-DESIGN-02:** Zero Gold/Amber colors from web (`#FACC15`, `yellow-400`, etc.) — mobile uses Indigo (`tokens.color.primary = #4F46E5`)
+- [ ] **43P-DESIGN-03:** Zero arbitrary spacing values — all spacing from `tokens.space[N]`
+- [ ] **43P-DESIGN-04:** Zero arbitrary font sizes — all typography from `tokens.typography.*`
+- [ ] **43P-DESIGN-05:** Zero arbitrary border radius values — all radius from `tokens.radius.*`
+- [ ] **43P-DESIGN-06:** Zero arbitrary icon sizes — all icon sizes from `tokens.icon.*`
+- [ ] **43P-DESIGN-07:** Zero arbitrary animation durations — all durations from `tokens.duration.*`
+- [ ] **43P-DESIGN-08:** Zero arbitrary z-index values — all z-index from `tokens.zIndex.*`
+- [ ] **43P-DESIGN-09:** Shadow/elevation values from `tokens.shadow.*` only
+- [ ] **43P-DESIGN-10:** Runtime-derived exceptions (safe-area insets, screen dimensions) documented with `// design-exception: <reason>` comment
+
+## 43P-WEB-FORBIDDEN — Web Pattern Prohibition
+
+- [ ] **43P-WEB-01:** Zero `className=` props anywhere in mobile output
+- [ ] **43P-WEB-02:** Zero `'use client'` or `'use server'` directives anywhere
+- [ ] **43P-WEB-03:** Zero `next/` imports anywhere (`next/navigation`, `next/image`, etc.)
+- [ ] **43P-WEB-04:** Zero HTML elements (`<div>`, `<span>`, `<table>`, `<input>`, `<button>`) — only React Native primitives
+- [ ] **43P-WEB-05:** Zero Tailwind CSS class strings anywhere
+- [ ] **43P-WEB-06:** Zero `expo-*` or `@expo/*` package imports — bare-metal RN only
+- [ ] **43P-WEB-07:** Zero `react-apexcharts` — use `react-native-gifted-charts`
+- [ ] **43P-WEB-08:** Zero `lucide-react` — use `lucide-react-native`
+- [ ] **43P-WEB-09:** Zero `next/font` — use React Native font linking
+- [ ] **43P-WEB-10:** Zero `localStorage` / `sessionStorage` — use `react-native-mmkv` or `react-native-keychain`
+
+## 43P-MOBILE-RULES — Critical Mobile-Specific Rules
+
+- [ ] **43P-RULES-01:** Every destructive/financial action uses `useConfirm()` + `ConfirmBottomSheet` — `Alert.alert()` is FORBIDDEN for destructive/financial confirmations (Rule 31)
+- [ ] **43P-RULES-02:** `showToast()` is the ONLY toast entry point — zero direct toast library calls anywhere (Rule 40)
+- [ ] **43P-RULES-03:** `showToast()` passes a stable `dedupKey` for all mutation success/error toasts — no duplicate toast stacking
+- [ ] **43P-RULES-04:** Every multi-step form screen wires `useUnsavedChangesGuard(isDirty)` from `src/core/hooks/useUnsavedChangesGuard.ts` (Rule 41)
+- [ ] **43P-RULES-05:** Every form screen wraps content in `KeyboardAvoidingView` with `behavior={Platform.OS === 'ios' ? 'padding' : 'height'}` and `ScrollView keyboardShouldPersistTaps="handled"` (Rule 10A)
+- [ ] **43P-RULES-06:** Every server-backed `FlashList`/`FlatList` implements pull-to-refresh with `refreshing={isRefetching}` and `onRefresh={refetch}` (Rule 10B)
+- [ ] **43P-RULES-07:** Sensitive data masked in list/card views via `maskSensitiveData()` — phone: `98****2310`, national ID: last 4 only (Rule 30)
+- [ ] **43P-RULES-08:** Pessimistic UI on ALL financial/destructive mutations — UI updates ONLY after 2xx response (Rule 32)
+- [ ] **43P-RULES-09:** Search/filter inputs debounced ≥300ms before API call via `useDebounce` from `src/core/hooks/useDebounce.ts` (Rule 32)
+- [ ] **43P-RULES-10:** Lists with >20 items use `@shopify/flash-list` with `React.memo` item renderers — never `ScrollView` wrapping `.map()` (Rule 8)
+- [ ] **43P-RULES-11:** All list items keyed by stable entity ID — zero array index keys (Rule 49)
+- [ ] **43P-RULES-12:** Every async-submit button has `minWidth` from `tokens.layout.buttonMinWidth` — no layout shift on loading state (Rule 39)
+- [ ] **43P-RULES-13:** Token refresh is single-flight — concurrent 401s share the same refresh promise (Rule 54)
+- [ ] **43P-RULES-14:** `x-tenant-id` derived ONLY from trusted session context — never from route params or local state (Rule 55)
+- [ ] **43P-RULES-15:** Haptic feedback wired for: switches (light impact), form success (success notification), destructive actions (error notification) via `react-native-haptic-feedback` (Rule 11)
+
+## 43P-HEADER — File Header Comments
+
+- [ ] **43P-HEADER-01:** Every `.ts`/`.tsx` source file begins with `// RESPONSIBILITY:` comment (1-3 sentences: what it does AND what it does NOT do) (Rule 44)
+- [ ] **43P-HEADER-02:** Every `.ts`/`.tsx` source file has `// FLOW:` comment showing the data/navigation path to and from this file (Rule 44)
+- [ ] **43P-HEADER-03:** Every custom hook has JSDoc with `@param`, `@returns`, cache key (if server state), and non-obvious constraints (Rule 43)
+- [ ] **43P-HEADER-04:** Every exported utility function has JSDoc with `@param`, `@returns`, and example if output format is non-obvious (Rule 43)
+
+## 43P-TESTID — AI-Testable UI
+
+- [ ] **43P-TESTID-01:** Every interactive control has `testID` in format `[role]_[module]-[component]-[action/state]` (e.g. `manager_members-addform-submit`) (Rule 65)
+- [ ] **43P-TESTID-02:** Every critical state indicator has `testID` (e.g. `manager_members-membercard-status-active`)
+- [ ] **43P-TESTID-03:** Gesture-driven surfaces expose `testID` on the view receiving the gesture
+
+## 43P-I18N — Internationalization
+
+- [ ] **43P-I18N-01:** All user-facing static strings use `t('namespace.KEY')` — zero hardcoded English strings in JSX (Rule 61)
+- [ ] **43P-I18N-02:** Backend `response.message` values displayed as-is — NOT passed through `t()` (Rule 61)
+- [ ] **43P-I18N-03:** `_locales/{role}_{module}_en.json` exists with all feature string keys
+- [ ] **43P-I18N-04:** `_locales/{role}_{module}_hi.json` exists with Hindi translations for all keys
+- [ ] **43P-I18N-05:** Locale files use `react-i18next` + `i18next` — NOT `next-intl` (mobile uses `react-i18next`)
+
+## 43P-CURRENCY — Currency & Number Formatting
+
+- [ ] **43P-CURR-01:** Feature-local `utils/{module}FormatCurrency.ts` exists with self-contained `currencyMetadata` (Rule 63)
+- [ ] **43P-CURR-02:** `formatCurrency` is NOT imported from `src/core/` — it is duplicated per feature (Strict WET)
+- [ ] **43P-CURR-03:** API sends amounts in minor units (paise/cents) — `formatCurrency` divides by `currencyMetadata[currency].divisor`
+- [ ] **43P-CURR-04:** Null/undefined amounts return `'—'` from `formatCurrency` — never blank or `'N/A'`
+- [ ] **43P-CURR-05:** Unsupported currency codes throw — never silently default to divisor 100
+
+## 43P-DOCS — Documentation Trio
+
+- [ ] **43P-DOCS-01:** `{role}_{module}_features.md` exists with all 18 mandatory sections (no TBD, no generic filler)
+- [ ] **43P-DOCS-02:** `{role}_{module}_forbidden.md` exists with minimum 5 feature-specific actionable entries
+- [ ] **43P-DOCS-03:** `{role}_{module}_theme_contract.md` exists listing all consumed token names
+- [ ] **43P-DOCS-04:** `_features.md` Rule Compliance Checklist section is honestly filled (no false checkmarks)
+
+## 43P-ASYNC — Async States
+
+- [ ] **43P-ASYNC-01:** Every list screen has `[Feature]ListSkeleton.tsx` that mimics exact card layout — never a full-screen spinner for content areas
+- [ ] **43P-ASYNC-02:** Every list screen has `[Feature]EmptyState.tsx` with contextual icon, message, and CTA
+- [ ] **43P-ASYNC-03:** Every screen has `[Feature]ErrorFallback.tsx` with retry button and backend `response.message`
+- [ ] **43P-ASYNC-04:** Loading, empty, and error states are all reachable via mock fixtures
+
+## 43P-DELIVERY — Final Delivery Gate
+
+- [ ] **43P-DEL-01:** `mobile-{role}-v1.zip` contains complete React Native feature module at `src/features/frontend_{role}/{role}_{module}/`
+- [ ] **43P-DEL-02:** `INTEGRATION_GUIDE.md` present in ZIP root with all Mode C mandatory sections (Web ZIP Extraction Summary, Mobile Module Placement, npm install, Host Verification, DEFERRED items)
+- [ ] **43P-DEL-03:** `RE_AUDIT_CHECKLIST_RESULT.md` present in ZIP root with every 43P item evaluated
+- [ ] **43P-DEL-04:** `mobile_e2e/frontend_{role}_e2e/{role}_{module}/{role}_{module}.yaml` Maestro E2E test suite present in ZIP
+- [ ] **43P-DEL-05:** No `CONTRACT_NOT_FOUND_IN_WEB_ZIP` items left undocumented in `RE_AUDIT_CHECKLIST_RESULT.md`
+
+---
+
+# MODE D — MOBILE AUDIT + REPAIR (Existing Mobile ZIP Supplied)
+
+> ⛔ **THIS IS A DEDICATED OPERATING MODE FOR AUDITING EXISTING REACT NATIVE MOBILE CODE.**
+> Mode D is the mobile equivalent of Mode B. It applies when the user supplies an existing mobile ZIP and requests audit + repair.
+
+## MODE D — DETECTION TRIGGER
+
+**MODE D (MOBILE AUDIT+REPAIR):** Existing mobile ZIP supplied (contains React Native source: `*Screen.tsx`, `react-native` imports, `.ios.ts`/`.android.ts` files, `react-navigation` imports) AND user requests audit or repair.
+
+> ⛔ **MODE D vs MODE C:** If the user supplies a WEB ZIP and asks for mobile creation → MODE C. If the user supplies a MOBILE ZIP and asks for audit/repair → MODE D.
+
+## MODE D — BOOT DECLARATION (MANDATORY FIRST OUTPUT)
+
+```text
+FRONTEND AGENT V2.7 — MODE D BOOT DECLARATION
+===============================================
+MODE:               D — MOBILE AUDIT + REPAIR
+SOURCE ZIP:         [mobile zip filename]
+TARGET MODULE:      [mobile module name]
+TARGET FRAMEWORK:   React Native (Bare-Metal, New Architecture)
+ARCH RULES:         MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md
+DESIGN RULES:       MOBILE_UI_UX_DESIGN.md
+
+ENVIRONMENT CAPABILITY DECLARATION:
+Repository write access:   [YES / NO / UNKNOWN]
+Command execution:         [YES / NO / UNKNOWN]
+Artifact / ZIP generation: [YES / NO / UNKNOWN]
+
+EXECUTION ORDER — MODE D (ALL STEPS MANDATORY):
+[ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely
+[ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely
+[ ] Step 3: STAGE 1 FREEZE — mobile requirement baseline frozen (baseline_frozen: true)
+[ ] Step 4: STAGE 2 AUDIT — complete full gap & contract audit against mobile rules
+[ ] Step 5: RBG PLAN published + user explicitly approves
+[ ] Step 6: STAGE 3 REPAIRS — execute repair batches in RBG order (Rule 67B)
+[ ] Step 7: Section 43P MOBILE RULE CHECKLIST clean on repaired code
+[ ] Step 8: FINAL DELIVERY — mobile-{role}-v{N}-fix.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E
+
+MANDATORY DELIVERABLES:
+- mobile-{role}-v{N}-fix.zip (repaired React Native feature module)
+- INTEGRATION_GUIDE.md (changelog + navigation wiring + npm install + host verification)
+- RE_AUDIT_CHECKLIST_RESULT.md (Section 43P MOBILE RULE CHECKLIST result)
+- mobile_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
+
+FIRST ACTION: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely
+```
+
+## MODE D — VERSIONING
+
+```text
+Mode D — First fix of existing mobile v1:   mobile-{role}-v2-fix.zip
+Mode D — Second fix:                         mobile-{role}-v3-fix.zip
+```
+
+If no explicit version in input filename → default to `v1-fix`: `mobile-{role}-v1-fix.zip`.
+
+## MODE D — AUDIT SCOPE
+
+Mode D audit MUST cover ALL rules from `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A–67) and ALL design rules from `MOBILE_UI_UX_DESIGN.md` (Sections 1–22), evaluated against the supplied mobile ZIP. The Section 43P MOBILE RULE CHECKLIST is the delivery freeze gate for Mode D repairs.
+
+---
+
+# MODE C — CRITICAL RULE ADDITIONS (V2.7 PATCHES)
+
+The following rules are MANDATORY additions to Mode C creation. They patch gaps identified in V2.6.
+
+## PATCH-01 — i18n Library Clarification (Gap 4)
+
+> ⛔ **MODE C MANDATORY:** Mobile uses `react-i18next` + `i18next`. NOT `next-intl`.
+> `next-intl` is a Next.js-only library. It MUST NOT appear in any mobile output.
+> Web ZIP may use `next-intl` — ignore it. Mobile MUST use `react-i18next`.
+
+```text
+MOBILE i18n STACK (LOCKED):
+  Library:        react-i18next + i18next
+  Hook:           useTranslation() from 'react-i18next'
+  Locale files:   _locales/{role}_{module}_en.json + _locales/{role}_{module}_hi.json
+  Generated:      src/i18n/generated/en.ts + hi.ts (merged at build time)
+  Network header: Accept-Language attached by central networkClient.ts
+
+WEB i18n (DO NOT USE IN MOBILE):
+  next-intl       ← FORBIDDEN in mobile output
+  useRouter()     ← FORBIDDEN in mobile output
+  usePathname()   ← FORBIDDEN in mobile output
+```
+
+## PATCH-02 — useUnsavedChangesGuard Mandate (Gap 5)
+
+> ⛔ **MODE C MANDATORY:** Every screen containing a multi-step form or any form with user-entered data MUST wire `useUnsavedChangesGuard(isDirty)`.
+
+During Mode C creation, for EVERY form screen identified in Extraction Section 3:
+
+1. The screen's form hook MUST expose `isDirty` from React Hook Form's `formState.isDirty`
+2. The screen MUST call `useUnsavedChangesGuard(isDirty)` from `src/core/hooks/useUnsavedChangesGuard.ts`
+3. The guard MUST use `navigation.addListener('beforeRemove', ...)` to intercept back navigation
+4. The guard MUST call `useConfirm()` (Rule 31) — NOT `Alert.alert()` — to confirm discard
+
+```typescript
+// ✅ REQUIRED pattern in every form screen
+function ManagerMembersAddScreen() {
+  const { form, isDirty } = useManagerMembersForm();
+  useUnsavedChangesGuard(isDirty); // MANDATORY — Rule 41
+  // ...
+}
+```
+
+## PATCH-03 — Idempotency-Key on ALL Mutations (Gap 6)
+
+> ⛔ **MODE C MANDATORY:** Every POST/PATCH/PUT/DELETE mutation in the created mobile module MUST carry an `Idempotency-Key` header. This is NOT optional and NOT limited to financial mutations.
+
+During Mode C creation, for EVERY mutation API function:
+
+1. The API function signature MUST include `idempotencyKey: string` parameter
+2. The HTTP call MUST attach `headers: { 'Idempotency-Key': idempotencyKey }`
+3. The mutation hook MUST generate the key at user intent: `const idempotencyKey = useRef(uuid()).current`
+4. The SAME key MUST be reused on retry — generate a new key ONLY for a new user intent
+5. Financial/destructive mutations additionally require `useConfirm()` before execution (Rule 31 + Rule 53)
+
+```typescript
+// ✅ REQUIRED — every mutation API function
+export async function createManagerMember(
+  dto: CreateManagerMemberDto,
+  idempotencyKey: string,  // MANDATORY parameter
+): Promise<ApiResponse<ManagerMember>> {
+  return networkClient.post(MANAGER_MEMBERS_URLS.CREATE, dto, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  });
+}
+```
+
+## PATCH-04 — showToast() Dedup Pattern (Gap 7)
+
+> ⛔ **MODE C MANDATORY:** `showToast()` from `src/core/utils/showToast.ts` is the ONLY toast entry point. Zero direct toast library calls anywhere in the created mobile module.
+
+During Mode C creation:
+
+1. Import ONLY `showToast` — never import the underlying toast library directly in feature code
+2. Pass a stable `dedupKey` for all mutation success/error toasts using `toastKey(role, module, action, id)`
+3. The `showToast` implementation MUST enforce semantic deduplication via an `activeToasts` Set (Rule 40)
+
+```typescript
+// ✅ REQUIRED — all mutation feedback
+showToast(response.message, 'success', toastKey('manager', 'members', 'create', newMember.id));
+showToast(response.message, 'error',   toastKey('manager', 'members', 'delete', memberId));
+
+// ❌ FORBIDDEN — direct library call
+Toast.show({ type: 'success', text1: 'Member created' });
+```
+
+## PATCH-05 — useConfirm() + ConfirmBottomSheet / Alert.alert FORBIDDEN (Gap 8)
+
+> ⛔ **MODE C MANDATORY:** `Alert.alert()` is STRICTLY FORBIDDEN for destructive or financial confirmations. Every such action MUST use the centralized `useConfirm()` hook backed by `ConfirmBottomSheet` from `@gorhom/bottom-sheet`.
+
+During Mode C creation, for EVERY destructive or financial action identified in Extraction Section 3:
+
+1. The action MUST NOT execute on single tap
+2. The action MUST call `useConfirm()` first and await user confirmation
+3. The confirm button MUST show loading state while mutation is in-flight
+4. The confirm button MUST be disabled during in-flight to prevent double-submission
+
+```typescript
+// ✅ REQUIRED — destructive/financial actions
+const { confirm } = useConfirm();
+
+const handleDelete = async (memberId: string) => {
+  const confirmed = await confirm({
+    title: 'Delete Member',
+    description: 'This will permanently remove the member and all their data. This cannot be undone.',
+    confirmLabel: 'Delete',
+    variant: 'destructive',
+  });
+  if (!confirmed) return;
+  await deleteManagerMember(memberId, idempotencyKey);
+};
+
+// ❌ FORBIDDEN
+Alert.alert('Delete?', 'Are you sure?', [
+  { text: 'Cancel' },
+  { text: 'Delete', onPress: () => deleteManagerMember(memberId) },
+]);
+```
+
+## PATCH-06 — RESPONSIBILITY + FLOW Header Comment on Every File (Gap 9)
+
+> ⛔ **MODE C MANDATORY:** Every `.ts`/`.tsx` source file created in Mode C MUST begin with the two-line structured comment block BEFORE any imports (Rule 44).
+
+During Mode C creation, EVERY generated file MUST start with:
+
+```typescript
+// RESPONSIBILITY: [1-3 sentences: what this file does AND what it explicitly does NOT do]
+//
+// FLOW: [data/navigation path leading to this file and out of it]
+```
+
+Examples for Mode C created files:
+
+```typescript
+// RESPONSIBILITY: Thin screen entry point for the Manager Members list.
+//   Renders SafeAreaView + StatusBar + ManagerMembersListMainView.
+//   Zero business logic, zero API calls, zero state management.
+//
+// FLOW: ManagerMembersNavigator → ManagerMembersListScreen (this file)
+//   → renders ManagerMembersListMainView → useManagerMembers() → manager_members.api.ts
+import React from 'react';
+```
+
+```typescript
+// RESPONSIBILITY: Central data-fetching hook for the manager members list.
+//   Wraps TanStack Query useQuery. Handles pagination, search, status filter.
+//   Does NOT manage UI state (filter panel open/close lives in useManagerMembersFilters.ts).
+//
+// FLOW: ManagerMembersListMainView → useManagerMembers(params) → manager_members.api.ts
+//   → fetchManagerMembers() → GET /api/v1/manager/members → ApiResponse<ManagerMember[]>
+import { useQuery } from '@tanstack/react-query';
+```
+
+## PATCH-07 — testID Format in Mode C (Gap 10)
+
+> ⛔ **MODE C MANDATORY:** Every interactive control and critical state indicator in the created mobile module MUST have a deterministic `testID` in the canonical format (Rule 65).
+
+**Canonical testID format:** `[role]_[module]-[component]-[action/state]`
+
+During Mode C creation, for EVERY interactive element identified in Extraction Section 3:
+
+```typescript
+// ✅ REQUIRED — interactive controls
+<TouchableOpacity testID="manager_members-addbutton-press">
+<TextInput testID="manager_members-searchinput-input" />
+<TouchableOpacity testID="manager_members-membercard-delete" />
+<TouchableOpacity testID="manager_members-addform-submit" />
+<TouchableOpacity testID="manager_members-confirmsheet-confirm" />
+<TouchableOpacity testID="manager_members-confirmsheet-cancel" />
+
+// ✅ REQUIRED — critical state indicators
+<View testID="manager_members-membercard-status-active" />
+<View testID="manager_members-list-emptystate" />
+<View testID="manager_members-list-skeleton" />
+<View testID="manager_members-list-errorfallback" />
+```
+
+**testID naming rules:**
+- `[role]` = role name without `frontend_` prefix (e.g. `manager`, `admin`, `superadmin`)
+- `[module]` = module name without role prefix (e.g. `members`, `billing`, `attendance`)
+- `[component]` = lowercase component identifier (e.g. `addform`, `membercard`, `searchinput`)
+- `[action/state]` = lowercase action or state (e.g. `submit`, `delete`, `press`, `active`, `loading`)
+
+---
+
+# INTEGRATION_GUIDE.md — MODE C SECTION STRUCTURE (V2.7 CORRECTED)
+
+> ⛔ **Gap 3 Fix:** The V2.6 Mode C INTEGRATION_GUIDE.md template had duplicate Section 4 and Section 6 headings (copy-paste error). The corrected structure is below. This supersedes the Mode C deliverables section in V2.6.
+
+Mode C `INTEGRATION_GUIDE.md` MUST use this exact section structure:
+
+```markdown
+# INTEGRATION_GUIDE.md — Mobile Module: {role}_{module}
+
+## Section 1: Web ZIP Extraction Summary
+- API contract extracted (table: Function | Method | Endpoint | Request | Response)
+- Feature inventory extracted (table: Web Route | Mobile Screen | Purpose | Actions)
+- Mock fixture shapes extracted (table: Entity | Fields extracted | Mock file)
+- CONTRACT_NOT_FOUND_IN_WEB_ZIP items documented (if any)
+- CONTRACT_AMBIGUOUS items documented with both interpretations (if any)
+
+## Section 2: Mobile Module Placement
+- Exact path: src/features/frontend_{role}/{role}_{module}/
+- Navigation wiring instructions (how to mount the feature navigator in root nav)
+- Core infrastructure dependencies required (networkClient, useConfirm, showToast, etc.)
+
+## Section 3: npm install Command
+- Only packages from the approved locked registry in MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md
+- Format: npm install package1 package2 package3
+
+## Section 4: Host Verification Commands
+- npm run lint
+- npm run typecheck
+- npm run test
+- npx maestro test mobile_e2e/
+
+## Section 5: DEFERRED_TO_HOST_RUNTIME Items
+- Metro bundler verification (requires running Metro)
+- Device/simulator E2E execution (requires physical device or emulator)
+- Any other items that require a running environment
+```
+
+> ⛔ **Note:** V2.6 had Section 4 "Host Verification Commands" AND Section 6 "Host Verification Commands" — this was a copy-paste error. V2.7 corrects this: Section 4 = Host Verification Commands, Section 5 = DEFERRED items. There is NO Section 6 in Mode C INTEGRATION_GUIDE.md.
+
+---
+
+# MODE DETECTION UPDATE (V2.7)
+
+The complete mode detection table is now:
+
+```text
+MODE A (WEB CREATE):          No existing ZIP supplied. Feature doc + arch rules + design rules + target module name given.
+MODE B (WEB AUDIT+REPAIR):    Existing WEB ZIP supplied (contains page.tsx, 'use client', Next.js imports). Audit and repair.
+MODE C (MOBILE CREATE):       Web Frontend ZIP supplied + user explicitly requests mobile/React Native module creation.
+MODE D (MOBILE AUDIT+REPAIR): Existing MOBILE ZIP supplied (contains *Screen.tsx, react-native imports). Audit and repair.
+```
+
+> ⛔ **MODE D DETECTION TRIGGER:** If the user supplies a mobile ZIP (contains `*Screen.tsx`, `react-native` imports, `@react-navigation` imports, `.ios.ts`/`.android.ts` files) AND asks to audit or repair → this is MODE D. Do NOT treat it as Mode B.
+
+---
+
+# BOOT SEQUENCE UPDATE (V2.7) — MODE D ADDED
+
+The Boot Declaration execution order block now includes Mode D:
+
+```text
+── MODE D (MOBILE AUDIT+REPAIR) EXECUTION ORDER ────────────────────────────
+[ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely — not yet started
+[ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely — not yet started
+[ ] Step 3: STAGE 1 FREEZE — mobile requirement baseline + baseline_frozen: true — not yet started
+[ ] Step 4: STAGE 2 AUDIT — complete full gap & contract audit (Rules 0A–67 + Design Sections 1–22) — not yet started
+[ ] Step 5: RBG PLAN published + user explicitly approves — not yet started
+[ ] Step 6: STAGE 3 REPAIRS — execute repair batches in RBG order (Rule 67B) — not yet started
+[ ] Step 7: Section 43P MOBILE RULE CHECKLIST clean on repaired code — not yet started
+[ ] Step 8: FINAL DELIVERY (mobile-{role}-v{N}-fix.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E) — not yet started
+```
+
+---
+
+# VERSION HISTORY
+
+| Version | Changes |
+|---|---|
+| V2.5 | Original — Web Modes A + B only |
+| V2.6 | Added Mode C (Cross-Platform Mobile Create from Web ZIP) |
+| V2.7 | **MOBILE COMPLETENESS PATCH:** Added Section 43P Mobile Rule Checklist (Gap 1), Added Mode D Mobile Audit+Repair (Gap 2), Fixed duplicate Section headings in Mode C INTEGRATION_GUIDE (Gap 3), Clarified react-i18next vs next-intl for mobile (Gap 4), Added useUnsavedChangesGuard mandate to Mode C (Gap 5), Added Idempotency-Key mandate to Mode C (Gap 6), Added showToast() dedup pattern to Mode C (Gap 7), Added useConfirm()+ConfirmBottomSheet / Alert.alert FORBIDDEN to Mode C (Gap 8), Added RESPONSIBILITY+FLOW header comment mandate to Mode C (Gap 9), Added testID format mandate to Mode C (Gap 10) |
+
+---
+
+# END OF VERSION 2.7 ADDENDUM
