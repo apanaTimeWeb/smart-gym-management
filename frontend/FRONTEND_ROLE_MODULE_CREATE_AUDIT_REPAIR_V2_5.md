@@ -11,10 +11,10 @@
 > Before producing ANY analysis, code, audit findings, or repair content, you MUST output ALL of the following in your VERY FIRST response:
 >
 > ```
-> FRONTEND AGENT V2.5 — BOOT DECLARATION
+> FRONTEND AGENT V2.6 — BOOT DECLARATION
 > =======================================
 > ROLE:               Frontend Create/Audit/Repair AI
-> MODE:               [CREATE (Mode A) / AUDIT+REPAIR (Mode B) / CROSS-PLATFORM MOBILE CREATE (Mode C) — derived from supplied inputs]
+> MODE:               [MODE A: CREATE / MODE B: AUDIT+REPAIR / MODE C: CROSS-PLATFORM MOBILE CREATE — derived from supplied inputs per Section 0 detection rules]
 > TARGET ROLE/MODULE: [e.g., superadmin / manager_members]
 > FRAMEWORK:          [Next.js App Router / Vite / React / React Native — detected from package.json OR inferred from source conventions/imports/routing]
 >
@@ -25,21 +25,40 @@
 > Build execution:           [YES / NO / UNKNOWN]
 > Artifact / ZIP generation: [YES / NO / UNKNOWN]
 >
-> EXECUTION ORDER CONFIRMATION:
+> ⛔ MODE-SPECIFIC EXECUTION ORDER — SELECT THE BLOCK MATCHING YOUR DETECTED MODE:
+>
+> ── MODE A (CREATE) EXECUTION ORDER ──────────────────────────────────────────
+> [ ] Step 1: Read ALL supplied architecture & design documents completely — not yet started
+> [ ] Step 2: STAGE 1 FREEZE — requirement baseline + baseline_frozen: true — not yet started
+> [ ] Step 3: STAGE 2 CREATE — build complete module from scratch — not yet started
+> [ ] Step 4: Section 43P Anti-Skipping Checklist clean on created code — not yet started
+> [ ] Step 5: FINAL DELIVERY (frontend-{role}-v1.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Playwright E2E) — not yet started
+>
+> ── MODE B (AUDIT+REPAIR) EXECUTION ORDER ────────────────────────────────────
 > [ ] Step 1: Read ALL supplied architecture & design documents completely — not yet started
 > [ ] Step 2: STAGE 1 FREEZE — requirement baseline + baseline_frozen: true — not yet started
 > [ ] Step 3: STAGE 2 AUDIT — complete full gap & contract audit — not yet started
 > [ ] Step 4: RBG PLAN published + user explicitly approves — not yet started
-> [ ] Step 5: STAGE 3 REPAIRS — execute repair batches — not yet started
+> [ ] Step 5: STAGE 3 REPAIRS — execute repair batches in RBG order — not yet started
 > [ ] Step 6: Section 43P Anti-Skipping Checklist clean on repaired code — not yet started
-> [ ] Step 7: FINAL DELIVERY (ZIP with Consolidated Integration Guide + Re-Audit Checklist + **Web:** Playwright E2E / **Mobile:** Maestro E2E) — not yet started
+> [ ] Step 7: FINAL DELIVERY (frontend-{role}-v{N}-fix.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Playwright E2E) — not yet started
+>
+> ── MODE C (CROSS-PLATFORM MOBILE CREATE) EXECUTION ORDER ────────────────────
+> [ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely — not yet started
+> [ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely — not yet started
+> [ ] Step 3: EXTRACTION — extract API contract, screens, types, enums, permissions from web ZIP — not yet started
+> [ ] Step 4: STAGE 1 FREEZE — mobile requirement baseline frozen — not yet started
+> [ ] Step 5: STAGE 2 CREATE — build complete React Native module from scratch — not yet started
+> [ ] Step 6: Section 43P MOBILE RULE CHECKLIST clean on created mobile code — not yet started
+> [ ] Step 7: FINAL DELIVERY (mobile-{role}-v1.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E) — not yet started
 >
 > MANDATORY DELIVERABLES ACKNOWLEDGED:
-> - Versioned ZIP: frontend-{role}-v{N}-fix.zip
+> - Mode A/B Web ZIP: frontend-{role}-v{N}[-fix].zip
+> - Mode C Mobile ZIP: mobile-{role}-v1.zip
 > - INTEGRATION_GUIDE.md (consolidated master developer guide with Section 1 Changelog inside ZIP)
 > - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P clean result inside ZIP)
-> - **Web mode:** `playwright_E2E/` test suite (inside ZIP)
-> - **Mobile mode:** `mobile_e2e/` Maestro YAML test suite (inside ZIP)
+> - **Web mode (A/B):** `playwright_E2E/` test suite (inside ZIP)
+> - **Mobile mode (C):** `mobile_e2e/` Maestro YAML test suite (inside ZIP)
 >
 > FIRST ACTION: [State exact first action — e.g., Read supplied design and architecture rules]
 > ```
@@ -204,7 +223,7 @@ INPUT 4: Target Module Name
 Before ANY analysis or code, output:
 
 ```text
-FRONTEND AGENT V2.5 — MODE C BOOT DECLARATION
+FRONTEND AGENT V2.6 — MODE C BOOT DECLARATION
 ===============================================
 MODE:               C — CROSS-PLATFORM MOBILE CREATE FROM WEB ZIP
 SOURCE ZIP:         [web zip filename, e.g., superadmin.zip]
@@ -217,16 +236,32 @@ WEB ZIP ROLE:       FEATURE SPECIFICATION + API CONTRACT SOURCE ONLY
                     Web code will NOT be copied, ported, or adapted.
                     Web patterns (Next.js, Tailwind, 'use client') are FORBIDDEN in output.
 
-EXTRACTION PLAN:
-[ ] Step 1: Extract API contract from web ZIP (endpoints, types, schemas, mocks)
-[ ] Step 2: Extract feature inventory (screens, flows, forms, permissions)
-[ ] Step 3: Extract mock fixture shapes (all UI data fields)
-[ ] Step 4: FREEZE mobile requirement baseline
-[ ] Step 5: Create complete mobile module per MOBILE_ARCHITECTURE rules
-[ ] Step 6: Apply MOBILE_UI_UX_DESIGN tokens throughout
-[ ] Step 7: Deliver versioned ZIP: mobile-{role}-v1.zip
+ENVIRONMENT CAPABILITY DECLARATION:
+Repository write access:   [YES / NO / UNKNOWN]
+Command execution:         [YES / NO / UNKNOWN]
+Artifact / ZIP generation: [YES / NO / UNKNOWN]
 
-FIRST ACTION: Read and extract API contract + feature inventory from supplied web ZIP
+EXECUTION ORDER — MODE C (ALL STEPS ARE MANDATORY, NONE MAY BE SKIPPED):
+[ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely — not yet started
+[ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely — not yet started
+[ ] Step 3: EXTRACTION SECTION 1 — API contract (endpoints, HTTP methods, request/response types) — not yet started
+[ ] Step 4: EXTRACTION SECTION 2 — Response field inventory (all entity fields, nullable flags) — not yet started
+[ ] Step 5: EXTRACTION SECTION 3 — Screen & flow inventory (all screens, forms, modals, actions) — not yet started
+[ ] Step 6: EXTRACTION SECTION 4 — Permission & role logic — not yet started
+[ ] Step 7: EXTRACTION SECTION 5 — Business constants & enums — not yet started
+[ ] Step 8: STAGE 1 FREEZE — mobile requirement baseline frozen (baseline_frozen: true) — not yet started
+[ ] Step 9: STAGE 2 CREATE — build complete React Native module per MOBILE_ARCHITECTURE rules — not yet started
+[ ] Step 10: Apply MOBILE_UI_UX_DESIGN tokens throughout (Indigo, NOT Gold) — not yet started
+[ ] Step 11: Section 43P MOBILE RULE CHECKLIST clean on all created mobile code — not yet started
+[ ] Step 12: FINAL DELIVERY — mobile-{role}-v1.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E — not yet started
+
+MANDATORY DELIVERABLES:
+- mobile-{role}-v1.zip (complete React Native feature module)
+- INTEGRATION_GUIDE.md (Web ZIP extraction summary + navigation wiring + npm install + host verification)
+- RE_AUDIT_CHECKLIST_RESULT.md (Section 43P MOBILE RULE CHECKLIST result — every item evaluated)
+- mobile_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
+
+FIRST ACTION: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely, then MOBILE_UI_UX_DESIGN.md completely, then begin extraction from web ZIP
 ```
 
 ---
@@ -716,7 +751,7 @@ This section eliminates the most common failure mode of this prompt:
 
 > **AI treats runtime/host unavailability as a reason to pause the audit, stop fixing, produce only a findings report, or mark source-level bugs as "blocked by environment."**
 
-This is PROHIBITED in V2.5.
+This is PROHIBITED in V2.6.
 
 ## The Two-Tier Classification (MANDATORY for every finding)
 
@@ -7002,13 +7037,55 @@ NO UNKNOWN REQUIREMENT
 # 43P. FINAL "NOTHING MISSED" ANTI-SKIPPING CHECKLIST
 
 > ⛔ **PLATFORM GATE — READ BEFORE EXECUTING THIS CHECKLIST:**
-> - **Web mode** (Next.js / React / Vite): Execute Sections 43C through 43E below. Skip Mobile Rule checks.
-> - **Mobile mode** (React Native bare-metal): Execute the **MOBILE RULE CHECKLIST** block below. Skip Web Rule 1–84 and Design §1–31 checks — those are Web-only.
+> - **Mode A / Mode B — Web mode** (Next.js / React / Vite): Execute the WEB RULE CHECKLIST block below. Skip Mobile Rule checks.
+> - **Mode B — Mobile mode** (React Native bare-metal): Execute the MOBILE RULE CHECKLIST block below. Skip Web Rule 1–84 and Design §1–31 checks — those are Web-only.
+> - **Mode C — Cross-Platform Mobile Create from Web ZIP**: Execute BOTH the MODE C EXTRACTION VERIFICATION CHECKLIST block AND the MOBILE RULE CHECKLIST block. Skip Web Rule 1–84 checks.
 > - Framework is determined from `package.json`, file imports, or explicit user declaration.
 
-## MOBILE RULE CHECKLIST (Execute ONLY in Mobile mode — React Native)
+## MODE C EXTRACTION VERIFICATION CHECKLIST (Execute ONLY in Mode C)
 
-> ⛔ When operating in Mobile mode, replace the Web Rule 1–84 + Design §1–31 checklist below with this Mobile checklist. Every item MUST be evaluated with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md`.
+> ⛔ **MANDATORY: Every item MUST be evaluated with concrete evidence in `RE_AUDIT_CHECKLIST_RESULT.md`. No item may be skipped or bundled.**
+
+```text
+[ ] Mode C — MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md read completely BEFORE any mobile code was written
+[ ] Mode C — MOBILE_UI_UX_DESIGN.md read completely BEFORE any mobile code was written
+[ ] Mode C — Web ZIP read completely BEFORE any mobile code was written
+[ ] Mode C — Extraction Section 1: API contract table produced (every endpoint: URL, HTTP method, request shape, response type, auth required)
+[ ] Mode C — Extraction Section 1: Zero invented endpoints — every URL exists in web ZIP API client or url_config
+[ ] Mode C — Extraction Section 1: CONTRACT_AMBIGUOUS items documented where web ZIP evidence was unclear
+[ ] Mode C — Extraction Section 2: Response field inventory table produced (every entity field: name, type, nullable, UI usage, mock value)
+[ ] Mode C — Extraction Section 2: Zero invented fields — every field exists in web ZIP types or Zod schemas
+[ ] Mode C — Extraction Section 2: MOCK_GAP items documented where Zod schema field was absent from mock fixture
+[ ] Mode C — Extraction Section 3: Screen and flow inventory table produced (every web screen mapped to at least one mobile Screen)
+[ ] Mode C — Extraction Section 3: Zero invented screens — every mobile Screen maps to a web screen or view
+[ ] Mode C — Extraction Section 4: Permission and role logic extracted and implemented in mobile module
+[ ] Mode C — Extraction Section 5: All business enums extracted with exact same values as web ZIP (backend wire values preserved)
+[ ] Mode C — Platform Translation: Zero web JSX/TSX copied into mobile files — every mobile file written from scratch
+[ ] Mode C — Platform Translation: Zero className= in mobile output
+[ ] Mode C — Platform Translation: Zero 'use client' in mobile output
+[ ] Mode C — Platform Translation: Zero next/ imports in mobile output
+[ ] Mode C — Platform Translation: Zero HTML elements (div, span, table, input) in mobile output
+[ ] Mode C — Platform Translation: Zero Tailwind class strings in mobile StyleSheets
+[ ] Mode C — Design Token Translation: Zero Gold colors (#FACC15, yellow-*, amber-*) in mobile output
+[ ] Mode C — Design Token Translation: All colors from MOBILE_UI_UX_DESIGN.md tokens.color.*
+[ ] Mode C — Design Token Translation: All spacing from tokens.space[N]
+[ ] Mode C — Design Token Translation: All typography from tokens.typography.*
+[ ] Mode C — Hallucination Prevention Rule 1: No invented endpoints (CONTRACT_NOT_FOUND_IN_WEB_ZIP documented for any missing)
+[ ] Mode C — Hallucination Prevention Rule 2: No invented fields
+[ ] Mode C — Hallucination Prevention Rule 5: No expo-* packages in output
+[ ] Mode C — Hallucination Prevention Rule 7: MSW fixtures are mutable in-memory arrays (create adds, delete removes — static-only = FAIL)
+[ ] Mode C — Anti-Stall: No backend ZIP was demanded
+[ ] Mode C — Anti-Stall: No root package.json was demanded
+[ ] Mode C — INTEGRATION_GUIDE.md Section 1 contains Web ZIP Extraction Summary table
+[ ] Mode C — INTEGRATION_GUIDE.md Section 1 documents all CONTRACT_NOT_FOUND_IN_WEB_ZIP items
+[ ] Mode C — Deliverable ZIP named mobile-{role}-v1.zip
+[ ] Mode C — Maestro E2E YAML present in mobile_e2e/{role}_{module}/{role}_{module}.yaml
+[ ] Mode C — RE_AUDIT_CHECKLIST_RESULT.md present with all Mode C + Mobile Rule items individually evaluated
+```
+
+## MOBILE RULE CHECKLIST (Execute in Mobile mode AND Mode C)
+
+> ⛔ When operating in Mobile mode (Mode B) or Mode C, this Mobile checklist MUST be executed. Every item MUST be evaluated with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md`. In Mode C, also execute the MODE C EXTRACTION VERIFICATION CHECKLIST above.
 
 ```text
 [ ] Mobile Rule 0A.1 — frontend_ prefix on every role container
@@ -9200,7 +9277,7 @@ Checkpointing MUST NOT become a reason to:
 - skip tests;
 - skip documentation.
 
-The final result MUST still satisfy the full V2.5 applicable requirement set.
+The final result MUST still satisfy the full V2.6 applicable requirement set.
 
 ## 44.10 Mode A — CREATE
 
