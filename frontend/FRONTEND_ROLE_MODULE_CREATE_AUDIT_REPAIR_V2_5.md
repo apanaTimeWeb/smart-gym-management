@@ -1,6 +1,6 @@
 # FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
 
-## VERSION 2.5 FINAL — FRONTEND (WEB/MOBILE) / DUAL-MODE (CREATE & REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION
+## VERSION 2.6 FINAL — FRONTEND (WEB/MOBILE) / TRI-MODE (CREATE / AUDIT+REPAIR / CROSS-PLATFORM-MOBILE-CREATE) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION / WEB-ZIP-TO-MOBILE-CREATE
 
 ---
 
@@ -14,7 +14,7 @@
 > FRONTEND AGENT V2.5 — BOOT DECLARATION
 > =======================================
 > ROLE:               Frontend Create/Audit/Repair AI
-> MODE:               [CREATE (Mode A) / AUDIT+REPAIR (Mode B) — derived from supplied inputs]
+> MODE:               [CREATE (Mode A) / AUDIT+REPAIR (Mode B) / CROSS-PLATFORM MOBILE CREATE (Mode C) — derived from supplied inputs]
 > TARGET ROLE/MODULE: [e.g., superadmin / manager_members]
 > FRAMEWORK:          [Next.js App Router / Vite / React / React Native — detected from package.json OR inferred from source conventions/imports/routing]
 >
@@ -118,7 +118,14 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 
 # 0. WHAT THIS PROMPT DOES
 
-This prompt has **TWO operating modes**. Read the supplied inputs to determine which mode applies.
+This prompt has **THREE operating modes**. Read the supplied inputs to determine which mode applies.
+
+> **MODE DETECTION RULES:**
+> - **MODE A (CREATE):** No existing frontend ZIP supplied. Feature doc + architecture + design rules + target module name given. Create from scratch.
+> - **MODE B (AUDIT+REPAIR):** Existing frontend ZIP of the SAME platform supplied (web ZIP for web audit, mobile ZIP for mobile audit). Audit and repair.
+> - **MODE C (CROSS-PLATFORM MOBILE CREATE):** Web Frontend ZIP supplied + user explicitly requests mobile module creation. Extract spec from web ZIP, create React Native module from scratch.
+>
+> ⛔ **MODE C DETECTION TRIGGER:** If the user supplies a web ZIP (contains `page.tsx`, `'use client'`, Next.js imports, Tailwind classes) AND asks to create a mobile/React Native module → this is MODE C. Do NOT treat it as Mode B.
 
 ---
 
@@ -136,6 +143,406 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 3. Strictly follow EVERY design requirement in `[SUPPLIED_UI_UX_DESIGN_RULES.md]` and EVERY architectural rule in `[SUPPLIED_ARCHITECTURE_AND_DEVELOPMENT_RULES.md]`.
 4. Deliver a **versioned ZIP**: `frontend-{role}-v1.zip`
 5. Include `INTEGRATION_GUIDE.md` inside the ZIP.
+
+> **NOT Mode A if:** User supplies a web ZIP and asks for mobile creation → that is **MODE C**.
+
+---
+
+## MODE C — CROSS-PLATFORM MOBILE CREATE FROM WEB FRONTEND ZIP
+
+> ⛔⛔⛔ **THIS IS A DEDICATED OPERATING MODE. READ COMPLETELY BEFORE EXECUTING.**
+>
+> **Trigger condition:** User supplies a Web Frontend ZIP (e.g., `superadmin.zip` containing Next.js/React source) AND explicitly requests a React Native mobile module to be created from it.
+>
+> **This mode is NOT Mode A and NOT Mode B. It has its own mandatory protocol.**
+
+---
+
+### MODE C — WHAT THIS MODE IS
+
+Mode C creates a complete React Native mobile feature module by using the supplied Web Frontend ZIP as the **authoritative feature specification and API contract source** — NOT as code to copy or port.
+
+The web ZIP is treated as a **living feature document** that has already digested the backend. It contains:
+- Exact API endpoints (URLs, HTTP methods, request params)
+- Exact response shapes (TypeScript types, Zod schemas)
+- Exact business flows (screens, forms, modals, user journeys)
+- Exact permissions and role logic
+- Exact mock/MSW fixtures (response field shapes)
+- Exact feature inventory (what screens exist, what actions exist)
+
+The AI MUST extract all of the above from the web ZIP and use it as the feature contract for mobile creation.
+
+---
+
+### MODE C — INPUTS (ALL REQUIRED)
+
+```text
+INPUT 1: Web Frontend ZIP
+  e.g., superadmin.zip — contains Next.js/React source for the target role/module
+  PURPOSE: Feature specification + API contract source
+  AUTHORITY: API_CLIENT_EVIDENCE (rank 2) + SCHEMA_EVIDENCE (rank 3) from web ZIP
+
+INPUT 2: MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md
+  PURPOSE: Target platform architecture rules — governs ALL mobile code output
+
+INPUT 3: MOBILE_UI_UX_DESIGN.md
+  PURPOSE: Mobile design token system — governs ALL mobile styling
+
+INPUT 4: Target Module Name
+  e.g., "superadmin" or "superadmin_gyms" — the mobile module to create
+```
+
+> ⛔ **FORBIDDEN INPUTS in Mode C:**
+> - Backend ZIP / NestJS source — MUST NOT be supplied or demanded
+> - Web architecture rules (`WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`) — MUST NOT govern mobile output
+> - Web design rules (`WEB_FRONTEND_UI_UX_DESIGN.md`) — MUST NOT govern mobile styling
+
+---
+
+### MODE C — BOOT DECLARATION (MANDATORY FIRST OUTPUT)
+
+Before ANY analysis or code, output:
+
+```text
+FRONTEND AGENT V2.5 — MODE C BOOT DECLARATION
+===============================================
+MODE:               C — CROSS-PLATFORM MOBILE CREATE FROM WEB ZIP
+SOURCE ZIP:         [web zip filename, e.g., superadmin.zip]
+TARGET MODULE:      [mobile module name, e.g., superadmin]
+TARGET FRAMEWORK:   React Native (Bare-Metal, New Architecture)
+DESIGN SYSTEM:      MOBILE_UI_UX_DESIGN.md (Indigo primary — NOT Web Gold)
+ARCH RULES:         MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md
+
+WEB ZIP ROLE:       FEATURE SPECIFICATION + API CONTRACT SOURCE ONLY
+                    Web code will NOT be copied, ported, or adapted.
+                    Web patterns (Next.js, Tailwind, 'use client') are FORBIDDEN in output.
+
+EXTRACTION PLAN:
+[ ] Step 1: Extract API contract from web ZIP (endpoints, types, schemas, mocks)
+[ ] Step 2: Extract feature inventory (screens, flows, forms, permissions)
+[ ] Step 3: Extract mock fixture shapes (all UI data fields)
+[ ] Step 4: FREEZE mobile requirement baseline
+[ ] Step 5: Create complete mobile module per MOBILE_ARCHITECTURE rules
+[ ] Step 6: Apply MOBILE_UI_UX_DESIGN tokens throughout
+[ ] Step 7: Deliver versioned ZIP: mobile-{role}-v1.zip
+
+FIRST ACTION: Read and extract API contract + feature inventory from supplied web ZIP
+```
+
+---
+
+### MODE C — MANDATORY EXTRACTION PROTOCOL (STAGE 1)
+
+Before writing a single line of mobile code, the AI MUST extract and document the following from the web ZIP:
+
+#### EXTRACTION SECTION 1 — API CONTRACT
+
+From the web ZIP's `*_api/`, `*_url_config.ts`, `*_types/`, `*_schemas/` folders:
+
+```text
+For EVERY API function found in the web module, extract:
+
+| Function Name | HTTP Method | Endpoint URL | Request Shape | Response Data Type | Auth Required |
+|---|---|---|---|---|---|
+
+Rules:
+- Use API_CLIENT_EVIDENCE (rank 2) as primary source — actual fetch/axios calls
+- Use SCHEMA_EVIDENCE (rank 3) as secondary — Zod schemas, TypeScript interfaces
+- If web API client says POST /api/v1/superadmin/gyms → mobile MUST use same endpoint
+- NEVER invent endpoints not present in web ZIP
+- NEVER shorten or modify endpoint paths
+- Mark any endpoint where web ZIP evidence is ambiguous as CONTRACT_AMBIGUOUS
+```
+
+#### EXTRACTION SECTION 2 — RESPONSE FIELD INVENTORY
+
+From the web ZIP's `*_types/`, `*_schemas/`, `*_mocks/` folders:
+
+```text
+For EVERY entity type used in the module, extract ALL fields:
+
+| Entity | Field Name | Type | Nullable? | Used In UI? | Mock Value Example |
+|---|---|---|---|---|---|
+
+Rules:
+- Every field that appears in web UI components MUST appear in mobile mock fixtures
+- Nullable fields MUST be typed as optional in mobile TypeScript interfaces
+- Do NOT invent fields not present in web types/schemas
+- If a field exists in web Zod schema but not in mock fixture → flag as MOCK_GAP
+```
+
+#### EXTRACTION SECTION 3 — SCREEN & FLOW INVENTORY
+
+From the web ZIP's `*_components/`, `page.tsx`, `*_views/` folders:
+
+```text
+For EVERY screen/view in the web module, extract:
+
+| Web Route / View | Screen Purpose | Primary Actions | Forms | Tables | Modals | Permission |
+|---|---|---|---|---|---|---|
+
+Rules:
+- Every web screen maps to at least one mobile Screen (may be split into List+Detail)
+- Web ?view= params map to mobile stack screens or bottom sheet views
+- Web modals/drawers map to mobile bottom sheets (@gorhom/bottom-sheet)
+- Web tables map to mobile FlashList with card-stack pattern
+- Web sidebar navigation maps to mobile bottom tabs or drawer
+- Do NOT invent screens not present in web ZIP
+```
+
+#### EXTRACTION SECTION 4 — PERMISSION & ROLE LOGIC
+
+From the web ZIP's permission hooks, guards, and conditional rendering:
+
+```text
+For EVERY permission-gated UI element, extract:
+
+| Feature | Required Role/Permission | Web Implementation | Mobile Equivalent |
+|---|---|---|---|
+
+Rules:
+- Mobile MUST implement same permission gates as web
+- Web usePermission() hooks → mobile equivalent permission check
+- Role-masked fields (optional in web types) MUST be optional in mobile types too
+```
+
+#### EXTRACTION SECTION 5 — BUSINESS CONSTANTS & ENUMS
+
+From the web ZIP's `*_constants/`, `*_types/` (enum definitions):
+
+```text
+Extract ALL:
+- Status enums (e.g., GymStatus, MemberStatus, PlanStatus)
+- Filter option arrays
+- Dropdown option arrays
+- Business configuration constants
+
+Rules:
+- Mobile MUST use same enum values as web (they match backend wire values)
+- Do NOT rename enum values
+- Do NOT invent new status values
+```
+
+---
+
+### MODE C — PLATFORM TRANSLATION RULES (NON-NEGOTIABLE)
+
+After extraction, the AI MUST translate web patterns to mobile equivalents. This is NOT porting — it is re-implementation using mobile-native patterns.
+
+```text
+╔══════════════════════════════════════════════════════════════════════╗
+║           WEB → MOBILE TRANSLATION MATRIX                           ║
+╠══════════════════════════════════════════════════════════════════════╣
+║ WEB PATTERN                    │ MOBILE EQUIVALENT                  ║
+╠══════════════════════════════════════════════════════════════════════╣
+║ Next.js page.tsx               │ *Screen.tsx (≤80 lines)            ║
+║ [ModuleName]Main.tsx           │ [Role][Module][Screen]MainView.tsx  ║
+║ Tailwind CSS classes           │ tokens.ts StyleSheet values         ║
+║ CSS variables (--primary)      │ tokens.color.primary                ║
+║ Gold primary (#FACC15)         │ Indigo primary (#4F46E5)            ║
+║ next/navigation router.push    │ navigation.navigate(ROUTES.X)       ║
+║ ?view= query param routing     │ Stack navigator screens             ║
+║ Modal/Dialog component         │ @gorhom/bottom-sheet                ║
+║ Data table with pagination     │ FlashList + pull-to-refresh         ║
+║ Sidebar navigation             │ Bottom tabs / Drawer navigator      ║
+║ TanStack Query (web)           │ TanStack Query v5 (React Native)    ║
+║ Zustand store (web)            │ Zustand store (React Native)        ║
+║ React Hook Form + Zod (web)    │ React Hook Form + Zod (RN)          ║
+║ MSW handlers (web)             │ MSW handlers (React Native)         ║
+║ Playwright E2E                 │ Maestro YAML E2E                    ║
+║ loading.tsx skeleton           │ [Feature]Skeleton.tsx component     ║
+║ error.tsx boundary             │ [Feature]ErrorFallback.tsx          ║
+║ not-found.tsx                  │ [Feature]EmptyState.tsx             ║
+║ 'use client' directive         │ NOT APPLICABLE — remove entirely    ║
+║ next/image                     │ react-native-fast-image             ║
+║ lucide-react                   │ lucide-react-native                 ║
+║ react-apexcharts               │ react-native-gifted-charts          ║
+║ KeyboardEvent / focus trap     │ KeyboardAvoidingView + ScrollView   ║
+║ hover: Tailwind variants       │ NOT APPLICABLE — use onPress only   ║
+║ focus-visible: variants        │ accessibilityLabel + accessible     ║
+║ @media print                   │ NOT APPLICABLE                      ║
+║ localStorage / sessionStorage  │ react-native-mmkv (non-sensitive)   ║
+║ JWT in localStorage            │ react-native-keychain ONLY          ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
+
+> ⛔ **ABSOLUTE PROHIBITION:** The AI MUST NEVER copy web JSX/TSX directly into mobile files.
+> Every mobile file MUST be written from scratch using React Native primitives.
+> Finding `className=`, `style={{}}` with Tailwind, `'use client'`, `next/`, or `<div>/<span>/<table>` in mobile output = CRITICAL VIOLATION.
+
+---
+
+### MODE C — DESIGN TOKEN TRANSLATION (MANDATORY)
+
+The web ZIP uses Gold-based design tokens. Mobile uses Indigo-based tokens from `MOBILE_UI_UX_DESIGN.md`.
+
+```text
+TOKEN TRANSLATION RULE:
+
+The AI MUST NOT:
+- Copy web CSS variable names into mobile code
+- Use web hex values (#FACC15 gold) in mobile StyleSheets
+- Reference Tailwind class names in mobile code
+- Use bg-primary, text-secondary etc. as string values in RN
+
+The AI MUST:
+- Read MOBILE_UI_UX_DESIGN.md completely before writing any styled component
+- Use tokens.color.primary (Indigo #4F46E5) for primary actions
+- Use tokens.space[N] for all spacing
+- Use tokens.typography.* for all text styles
+- Use tokens.color.status.* for status badges
+- Use tokens.color.payment.* for payment badges
+- Reference tokens.ts canonical shape for EVERY style value
+
+SEMANTIC EQUIVALENCE (not value copy):
+Web --primary (#FACC15)     → tokens.color.primary (#4F46E5)
+Web --bg-card               → tokens.color.surface.card
+Web --text-primary          → tokens.color.text.primary
+Web --success-bg            → tokens.color.status.successBg
+Web --danger-text           → tokens.color.status.dangerText
+Web shadow-card             → tokens.shadow.card
+Web border-radius tokens    → tokens.radius.*
+```
+
+---
+
+### MODE C — WHAT TO EXTRACT vs WHAT TO IGNORE FROM WEB ZIP
+
+```text
+╔══════════════════════════════════════════════════════════════════╗
+║  EXTRACT FROM WEB ZIP (use as mobile spec)                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║ ✅ API endpoint URLs and HTTP methods                           ║
+║ ✅ TypeScript interface field names and types                   ║
+║ ✅ Zod schema field names and validation rules                  ║
+║ ✅ MSW fixture data shapes (field names + example values)       ║
+║ ✅ Business enum values (must match backend wire values)        ║
+║ ✅ Screen/view inventory (what screens exist)                   ║
+║ ✅ Form field names and validation rules                        ║
+║ ✅ Permission/role logic (which roles see what)                 ║
+║ ✅ Business flow sequences (create → list → detail → edit)     ║
+║ ✅ Query key namespacing patterns                               ║
+║ ✅ Pagination meta shape (PaginationMeta fields)                ║
+║ ✅ ApiResponse<T> envelope shape                                ║
+║ ✅ Feature constants (status labels, filter options)            ║
+╠══════════════════════════════════════════════════════════════════╣
+║  IGNORE FROM WEB ZIP (do NOT use in mobile)                     ║
+╠══════════════════════════════════════════════════════════════════╣
+║ ❌ JSX/TSX component code — rewrite from scratch                ║
+║ ❌ Tailwind CSS classes — use tokens.ts instead                 ║
+║ ❌ CSS variables and globals.css — not applicable               ║
+║ ❌ Next.js routing patterns — use React Navigation              ║
+║ ❌ 'use client' / 'use server' directives — not applicable      ║
+║ ❌ Web-specific hooks (useRouter, useSearchParams) — rewrite    ║
+║ ❌ Web design tokens (Gold #FACC15) — use Indigo tokens         ║
+║ ❌ Playwright E2E tests — write Maestro YAML instead            ║
+║ ❌ next.config.ts, tsconfig paths — not applicable              ║
+║ ❌ Web folder structure — use mobile canonical structure        ║
+║ ❌ page.tsx / layout.tsx / loading.tsx — use Screen pattern     ║
+║ ❌ HTML elements (div, span, table, input) — use RN primitives  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+### MODE C — MOBILE MODULE CREATION RULES
+
+After extraction and baseline freeze, create the mobile module following ALL rules from `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Key requirements:
+
+**Folder Structure (canonical):**
+```text
+src/features/frontend_{role}/{role}_{module}/
+├── screens/          ← *Screen.tsx files (≤80 lines each)
+├── components/       ← *MainView.tsx + feature components (≤200 lines)
+├── hooks/            ← use{Role}{Module}*.ts (≤150 lines)
+├── api/              ← {role}_{module}.api.ts + query_keys.ts
+├── schemas/          ← {role}_{module}.schema.ts
+├── types/            ← {role}_{module}.types.ts
+├── config/           ← {role}_{module}.url_config.ts
+├── mocks/            ← {role}_{module}.fixtures.ts + handlers.ts (MUTABLE)
+├── state/            ← {role}_{module}.store.ts
+├── tests/            ← integration tests
+├── utils/            ← {role}{Module}FormatCurrency.ts (WET)
+├── _locales/         ← {role}_{module}_en.json + _hi.json
+├── {role}_{module}_features.md
+├── {role}_{module}_forbidden.md
+└── {role}_{module}_theme_contract.md
+```
+
+**Critical mobile-specific requirements extracted from web ZIP:**
+1. API endpoints from web `*_url_config.ts` → mobile `config/{role}_{module}.url_config.ts` (same paths)
+2. TypeScript types from web `*_types/` → mobile `types/{role}_{module}.types.ts` (same fields, RN-compatible)
+3. Zod schemas from web `*_schemas/` → mobile `schemas/{role}_{module}.schema.ts` (same validation)
+4. MSW fixtures from web `*_mocks/` → mobile `mocks/{role}_{module}.fixtures.ts` (MUTABLE in-memory)
+5. Business enums from web `*_constants/` → mobile `types/{role}_{module}.types.ts` (same values)
+
+---
+
+### MODE C — HALLUCINATION PREVENTION RULES
+
+> ⛔ **These rules exist specifically because AI agents hallucinate when creating mobile from web.**
+
+1. **NO INVENTED ENDPOINTS:** Every API URL in mobile code MUST exist in the web ZIP's API client or URL config. If an endpoint is not found in the web ZIP → mark as `CONTRACT_NOT_FOUND_IN_WEB_ZIP` and do NOT invent it.
+
+2. **NO INVENTED FIELDS:** Every TypeScript interface field in mobile MUST exist in the web ZIP's types or Zod schemas. Do NOT add fields that "seem logical" but are absent from web ZIP evidence.
+
+3. **NO WEB PATTERNS IN MOBILE:** If the AI finds itself writing `className=`, `'use client'`, `next/`, `<div>`, or Tailwind classes → STOP. These are web patterns. Rewrite using React Native primitives.
+
+4. **NO GOLD COLORS IN MOBILE:** If the AI finds itself using `#FACC15`, `yellow-400`, or any gold/amber color → STOP. Mobile uses Indigo. Check `MOBILE_UI_UX_DESIGN.md`.
+
+5. **NO EXPO PACKAGES:** If the AI finds itself importing `expo-*` or `@expo/*` → STOP. This is a bare-metal React Native project. Use only packages from the approved locked registry in `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+
+6. **NO BACKEND GUESSING:** If the web ZIP does not contain evidence of an API endpoint → do NOT guess it from backend naming conventions. Mark as `BLOCKED_BY_SUPPLIED_SCOPE`.
+
+7. **NO TOAST-ONLY MOCKS:** Mobile MSW fixtures MUST be mutable in-memory arrays. Create → adds to array. Delete → removes from array. Static fixtures that never change = CRITICAL VIOLATION.
+
+---
+
+### MODE C — DELIVERABLES
+
+```text
+VERSIONED ZIP: mobile-{role}-v1.zip
+
+Contents:
+├── src/features/frontend_{role}/{role}_{module}/  ← complete mobile module
+├── mobile_e2e/frontend_{role}_e2e/{role}_{module}/
+│   └── {role}_{module}.yaml                       ← Maestro E2E tests
+├── INTEGRATION_GUIDE.md                           ← consolidated developer guide
+└── RE_AUDIT_CHECKLIST_RESULT.md                   ← mobile delivery freeze gate results
+
+INTEGRATION_GUIDE.md MUST contain:
+  Section 1: Web ZIP Extraction Summary
+    - API contract extracted (table of all endpoints)
+    - Feature inventory extracted (table of all screens)
+    - Mock fixture shapes extracted
+    - Any CONTRACT_NOT_FOUND_IN_WEB_ZIP items documented
+  Section 2: Mobile Module Placement
+    - Exact path: src/features/frontend_{role}/{role}_{module}/
+    - Navigation wiring instructions
+    - Core infrastructure dependencies
+  Section 3: npm install command
+    - Only packages from approved locked registry
+  Section 4: Host Verification Commands
+    - npm run lint, npm run typecheck, npm run test
+    - npx maestro test mobile_e2e/
+  Section 5: DEFERRED_TO_HOST_RUNTIME items
+    - Metro bundler verification
+    - Device/simulator E2E execution
+```
+
+---
+
+### MODE C — ANTI-STALL RULES
+
+> ⛔ The AI MUST NOT stall, pause, or ask for additional inputs beyond the 4 required inputs.
+
+1. **Missing backend ZIP** → NOT required. Web ZIP contains sufficient API contract evidence.
+2. **Missing root package.json** → NOT required. Assume standard bare-metal RN project.
+3. **Missing root tsconfig.json** → NOT required. Assume `@/*` resolves to `src/*`.
+4. **Missing app.json** → NOT required. Assume standard RN project structure.
+5. **No Metro bundler available** → NOT a blocker. Write source code; mark runtime verification as `DEFERRED_TO_HOST_RUNTIME`.
+6. **No device/simulator available** → NOT a blocker. Write Maestro YAML; mark execution as `DEFERRED_TO_HOST_RUNTIME`.
+7. **Web ZIP has ambiguous API contract** → Mark specific endpoint as `CONTRACT_AMBIGUOUS`, document both interpretations, implement the safer one, continue.
 
 ---
 
@@ -160,10 +567,11 @@ This prompt has **TWO operating modes**. Read the supplied inputs to determine w
 ## VERSIONING RULES
 
 ```text
-First creation:          frontend-{role}-v1.zip
-First fix after v1:      frontend-{role}-v2-fix.zip
-Second fix after v2:     frontend-{role}-v3-fix.zip
-... and so on
+Mode A — First creation (web):    frontend-{role}-v1.zip
+Mode A — First fix after v1:      frontend-{role}-v2-fix.zip
+Mode B — First fix after v1:      frontend-{role}-v2-fix.zip
+Mode C — First mobile creation:   mobile-{role}-v1.zip
+Mode C — First fix after v1:      mobile-{role}-v2-fix.zip
 ```
 
 ### DETERMINISTIC VERSION ASSIGNMENT (ZERO-STALL RULE)
