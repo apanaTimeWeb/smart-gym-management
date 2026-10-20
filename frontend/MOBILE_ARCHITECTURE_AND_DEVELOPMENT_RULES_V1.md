@@ -54,7 +54,7 @@ Before generating, auditing, or repairing ANY mobile feature module, verify ALL 
 | **Module Documentation Trio** | Every feature MUST contain `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
 | **Centralized URL Config** | `config/[featureName].url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
 | **Query Key Registry** | `api/[featureName].query_keys.ts` or `config/[featureName].query_keys.ts` MUST exist and namespace all TanStack Query keys with resource identity. | Missing query key factory = CACHE INCONSISTENCY RISK. In repair: create query key registry in RBG 1. |
-| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | Sibling import = VIOLATION OF RULE 28. In repair: decouple or route through shared core in RBG 1. |
+| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | Sibling import = VIOLATION OF RULE 28. In repair: duplicate the required business artifact locally inside the owning feature module (Strict WET Principle) in RBG 1. Moving business logic to `src/core/` is STRICTLY FORBIDDEN. |
 
 > ⛔ **Skipping this gate invalidates all downstream compliance results.**
 
@@ -883,7 +883,7 @@ Cross-reference: Rule 60 (cache invalidation), Rule 7C (query key registry).
 
 - Use React Native's optimized image-loading mechanism exclusively — one that
   supports caching, placeholders, and format negotiation (e.g., `react-native-fast-image`
-  or Expo Image rather than the bare core `Image`).
+  — never the bare core `Image` or Expo Image).
 - Always specify explicit dimensions or aspect ratio for network images to
   prevent layout shift while loading.
 - Bundled assets are referenced statically — never construct a dynamically
@@ -965,8 +965,7 @@ Rules:
 - Isolate genuinely divergent iOS/Android implementations into separate
   platform-specific files (e.g. `.ios.ts`, `.android.ts`) — not scattered inline
   platform checks throughout shared files.
-- A trivial one-line platform difference (e.g. a shadow property) may remain
-  inline; once a component accumulates three or more such checks, split it.
+- Inline `Platform.OS` / `Platform.select` checks MUST NOT exceed 2 occurrences per file (restricted strictly to minor style offsets such as shadow or border-radius). Any component requiring 3 or more platform checks MUST be split into `.ios.tsx` and `.android.tsx` files.
 - Every platform-specific behavior (permission dialog wording, native UI
   quirks) must be noted in that feature's `_features.md` (Rule 24).
 
@@ -1418,7 +1417,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 42: Every `useEffect` dependency array has an explanatory comment
 - [ ] Rule 43: All hooks and exported utilities have JSDoc blocks
 - [ ] Rule 44: Every file has `RESPONSIBILITY:` + `FLOW:` header comment
-- [ ] Rule 45: Async state uses `NetworkState<T>` — no boolean `isLoading`/`isError` flag pairs
+- [ ] Rule 45: TanStack Query v5 native status (`isPending`, `isError`, `data`) used directly for all API calls — zero parallel `NetworkState<T>` wrappers on server state
 - [ ] Rule 46: Background tasks documented in `_features.md` `## Background Tasks` section
 - [ ] Rule 47: All API calls have explicit timeouts from `TIMEOUT_CONFIG`
 - [ ] Rule 48: 400 validation errors mapped to form fields via `handleValidationErrors()` (422 only if explicitly approved by API contract)
@@ -1616,9 +1615,7 @@ Rules:
 - The confirmation message must clearly state what will happen and whether it is
   reversible. Do not soften destructive messages.
 - Use ONE centralized confirmation module (e.g. a `useConfirm()` hook backed by
-  a shared `ConfirmBottomSheet` component) — never implement ad-hoc alert dialogs
-  per screen. Native `Alert.alert()` is acceptable only as a fallback where a
-  custom bottom sheet cannot be rendered.
+  a shared `ConfirmBottomSheet` component) — Using React Native's native `Alert.alert()` for destructive or financial confirmations is STRICTLY FORBIDDEN in feature code. Every destructive/financial action MUST use the centralized `useConfirm()` hook backed by `ConfirmBottomSheet` (`@gorhom/bottom-sheet`).
 - The confirm button must show a loading state while the mutation is in flight
   and be disabled to prevent double-submission.
 
@@ -1637,8 +1634,7 @@ payment, payroll processing):
 - On error: restore the previous UI state, show the backend `message` field in a
   toast or inline error — never a hardcoded string.
 
-For non-destructive mutations (e.g. updating a display name, adding a note),
-optimistic updates are permitted but must be rolled back cleanly on error.
+Pessimistic UI is the mandatory default for ALL mutations. If optimistic updates are used for non-destructive, non-financial mutations, the hook MUST implement `onError` rollback AND MUST reconcile the cache with the authoritative server response on `onSuccess`. Optimistic updates are STRICTLY FORBIDDEN for any financial or destructive mutation.
 
 ### Search and Filter Input Debouncing
 
@@ -2092,8 +2088,7 @@ function level what Rule 24 applies at the feature level.
 
 ## Rule 44 — `RESPONSIBILITY:` + `FLOW:` Comment Mandate on Every File
 
-Every executable .ts / .tsx source file in a feature folder (component, hook, API, store, schema) MUST begin
-with a two-line structured comment block at the very top of the file (before any imports):
+Every executable .ts / .tsx source file in a feature folder (every screen, navigator, component, hook, API, query_keys, store, schema, type, url_config, util, and mock file) MUST begin with a two-line structured comment block at the very top of the file (before any imports):
 
 ```typescript
 // RESPONSIBILITY: Renders a single member card in the list. Displays masked phone,
@@ -2566,7 +2561,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - Every `useEffect` dependency has an explanatory comment? (Rule 42)
    - All hooks and utilities have JSDoc blocks? (Rule 43)
    - Every file has `RESPONSIBILITY:` + `FLOW:` header comment? (Rule 44)
-   - Async state uses `NetworkState<T>` enum — no boolean flag pairs? (Rule 45)
+   - Async state: TanStack Query v5 native `isPending`/`isError` used directly — zero parallel `NetworkState<T>` wrappers on server state? (Rule 45)
    - Background tasks documented in `_features.md`? (Rule 46)
    - API calls have explicit timeouts from `TIMEOUT_CONFIG`? (Rule 47)
    - 400 validation errors mapped to form fields via `handleValidationErrors()`? (422 only if explicitly approved by API contract) (Rule 48)
@@ -2586,7 +2581,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - WebSocket instantiated only through centralized `WebSocketContext` / `SocketProvider`? (Rule 58)
    - App foreground resume triggers the exact notification-recovery endpoint from the feature API contract? (Rule 58A)
    - Role-masked fields typed as optional in interfaces/schemas; UI handles `undefined` gracefully? (Rule 59)
-   - Every `useMutation` invalidates affected TanStack Query keys via `.mutateAsync().then()` or global `mutationCache`? (Rule 60)
+   - Every dedicated mutation hook invalidates affected TanStack Query keys inside `useMutation({ onSuccess })` per Rule 60? (Rule 60)
    - All client-authored/static user-visible strings use `t('namespace.KEY')` — no hardcoded UI text in components; backend-supplied `response.message` values are displayed as supplied by the API and are NOT passed through `t()` (Rule 61)
    - Locale files named `[featureName]_{lang}.json` and co-located in feature `_locales/`? (Rule 61)
    - `Accept-Language` header attached automatically by central network client? (Rule 61)
@@ -2600,14 +2595,7 @@ The mobile architecture MUST enforce the following security and robustness const
 
 ### Sub-Module `_features.md` Files
 
-For large features with 5+ sub-screens or sub-flows, each major sub-screen folder MAY have its own `_features.md`. These files follow the same quality standard but can be shorter. They MUST still contain:
-- A real Purpose (not "handles X operations")
-- A real Screen + Route table
-- A real API Contract with actual endpoints
-- A real Edge Cases section with feature-specific warnings (minimum 3 items)
-- A Component Responsibility Map
-
-Sub-module files with only generic boilerplate content are considered **undocumented** and MUST be rewritten.
+The module root MUST contain exactly ONE authoritative `[role_module]_features.md` that covers ALL screens, flows, and sub-features of the module. Creating additional `_features.md` files inside sub-folders is FORBIDDEN — it violates Root Quarantine and fragments the AI repair context. All sub-screen documentation MUST be sections within the single root `_features.md`.
 
 ### Documentation Freshness Rule
 
@@ -3175,7 +3163,7 @@ The final result MUST still satisfy the complete applicable mobile architecture 
 | **Gate 5** | Hardware-Backed Secure Storage Only | Verify auth tokens, refresh tokens, and biometric keys use `react-native-keychain` / Keystore. Zero tokens in `AsyncStorage` | **STOP.** Insecure storage = CRITICAL SECURITY VULNERABILITY |
 | **Gate 6** | Centralized URL Config Present | `config/[featureName].url_config.ts` present, exports all routes/APIs with real paths (zero placeholders) | **STOP.** Missing config = REJECTED DELIVERY |
 | **Gate 7** | Feature Map Non-Generic | `[featureName]_features.md` complete with all 18 mandatory sections (no TBDs or boilerplate) | **STOP.** Generic doc = INCOMPLETE MODULE |
-| **Gate 8** | TanStack Query & Hook Architecture | Query keys registered in `[featureName].query_keys.ts` with resource identity; screens NOT calling `useMutation` directly; `onSuccess` invalidation via `.mutateAsync().then()` | **STOP.** Broken server state / crash |
+| **Gate 8** | TanStack Query & Hook Architecture | Query keys registered in `[featureName].query_keys.ts` with resource identity; screens NOT calling `useMutation` directly; cache invalidation via `useMutation({ onSuccess: () => queryClient.invalidateQueries(...) })` per Rule 60 | **STOP.** Broken server state / crash |
 | **Gate 9** | Form Architecture Compliance | React Hook Form + Zod validator class/schema; zero Yup/Joi; controlled inputs | **STOP.** Broken form validation |
 | **Gate 10** | Screen Thinness Ceilings Enforced | All screens in `screens/` ≤ **80 lines**; composition only; zero business logic or direct API calls | **STOP.** Monolithic screen = ARCHITECTURE FAILURE |
 | **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target feature files changed (`features/frontend_{role}/{module}/**`) | **STOP.** Scope leak = REJECTED DELIVERY |
