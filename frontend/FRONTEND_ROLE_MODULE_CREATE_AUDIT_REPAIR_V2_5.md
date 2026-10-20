@@ -32,13 +32,14 @@
 > [ ] Step 4: RBG PLAN published + user explicitly approves — not yet started
 > [ ] Step 5: STAGE 3 REPAIRS — execute repair batches — not yet started
 > [ ] Step 6: Section 43P Anti-Skipping Checklist clean on repaired code — not yet started
-> [ ] Step 7: FINAL DELIVERY (ZIP with Consolidated Integration Guide + Re-Audit Checklist + Playwright E2E) — not yet started
+> [ ] Step 7: FINAL DELIVERY (ZIP with Consolidated Integration Guide + Re-Audit Checklist + **Web:** Playwright E2E / **Mobile:** Maestro E2E) — not yet started
 >
 > MANDATORY DELIVERABLES ACKNOWLEDGED:
 > - Versioned ZIP: frontend-{role}-v{N}-fix.zip
 > - INTEGRATION_GUIDE.md (consolidated master developer guide with Section 1 Changelog inside ZIP)
 > - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P clean result inside ZIP)
-> - playwright_E2E/ test suite (inside ZIP)
+> - **Web mode:** `playwright_E2E/` test suite (inside ZIP)
+> - **Mobile mode:** `mobile_e2e/` Maestro YAML test suite (inside ZIP)
 >
 > FIRST ACTION: [State exact first action — e.g., Read supplied design and architecture rules]
 > ```
@@ -46,7 +47,7 @@
 > ⛔ **You MUST NOT open or edit any implementation file before completing Stage 1 (requirement freeze).**
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and the user explicitly approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist is re-evaluated on repaired code. All SOURCE_LEVEL_FIX findings must be resolved. Items requiring host/runtime execution (DEFERRED_TO_HOST_RUNTIME), host infrastructure (OUTSIDE_SUPPLIED_SCOPE), or external product decisions (EXTERNAL_PRODUCT_DECISION_BLOCKED) MUST be documented in RE_AUDIT_CHECKLIST_RESULT.md, but their presence MUST NOT block packaging or delivering the ZIP.**
-> ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md` (containing Section 1 Changelog), `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/`. They are mandatory deliverables, not suggestions.**
+> ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md` (containing Section 1 Changelog), `RE_AUDIT_CHECKLIST_RESULT.md`, and the platform-appropriate E2E test suite (`playwright_E2E/` for Web, `mobile_e2e/` for Mobile). They are mandatory deliverables, not suggestions.**
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
 >
 > ⛔⛔⛔ **CONTINUE-THROUGH DIRECTIVE — NON-NEGOTIABLE** ⛔⛔⛔
@@ -109,7 +110,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 4. RBG PLAN published + user explicitly approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
 > 6. Anti-Skipping Checklist (Section 43P) re-run clean on repaired code → ONLY THEN package ZIP
-> 7. `INTEGRATION_GUIDE.md` (containing Section 1 Changelog) + `playwright_E2E` + `RE_AUDIT_CHECKLIST_RESULT.md` inside ZIP → ONLY THEN deliver
+> 7. `INTEGRATION_GUIDE.md` (containing Section 1 Changelog) + **Web:** `playwright_E2E/` / **Mobile:** `mobile_e2e/` + `RE_AUDIT_CHECKLIST_RESULT.md` inside ZIP → ONLY THEN deliver
 >
 > **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
 
@@ -188,11 +189,10 @@ For Web/Mobile frontend CREATE or AUDIT+REPAIR work, the AI MUST use only:
 3. `[SUPPLIED_UI_UX_DESIGN_RULES.md]`
 4. The supplied target frontend module/ZIP when operating in AUDIT+REPAIR mode.
 
-The AI MUST NOT require or import:
-- Mobile architecture rules
-- Mobile UI/UX rules
-- Backend architecture rules
-- Backend create/audit/repair prompts
+**Platform-Conditional Isolation Rule:**
+- When operating in **Web mode** (Next.js / React / Vite detected): The AI MUST NOT require or import Mobile architecture rules, Mobile UI/UX rules, React Native-specific patterns, or Maestro E2E rules.
+- When operating in **Mobile mode** (React Native detected): The AI MUST NOT require or import Web frontend architecture rules, Web UI/UX rules, Next.js patterns, Tailwind CSS rules, or Playwright E2E rules.
+- **Detection:** Framework is determined from `package.json` dependencies, file extensions (`.tsx` with `'use client'` / `next/navigation` = Web; `react-native` imports / `.ios.ts` / `.android.ts` = Mobile), or explicit user declaration.
 
 API behavior MUST be derived only from the supplied feature/API contract or verified frontend artifacts.
 
@@ -229,7 +229,9 @@ Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED DEVELOPER MA
 - Exact `npm install` command for locked production dependencies (no unapproved upgrades).
 
 ### Section 6: Host Verification Commands & Runtime Deferrals
-- Exact developer verification commands: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, `npx playwright test`.
+- Exact developer verification commands:
+  - **Web:** `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, `npx playwright test`
+  - **Mobile:** `npm run lint`, `npm run typecheck`, `npm run test`, `npx maestro test mobile_e2e/`
 - Explicit documentation of any items classified as `DEFERRED_TO_HOST_RUNTIME`, `OUTSIDE_SUPPLIED_SCOPE`, or `EXTERNAL_PRODUCT_DECISION_BLOCKED`.
 ---
 
@@ -6589,6 +6591,84 @@ NO UNKNOWN REQUIREMENT
 
 # 43P. FINAL "NOTHING MISSED" ANTI-SKIPPING CHECKLIST
 
+> ⛔ **PLATFORM GATE — READ BEFORE EXECUTING THIS CHECKLIST:**
+> - **Web mode** (Next.js / React / Vite): Execute Sections 43C through 43E below. Skip Mobile Rule checks.
+> - **Mobile mode** (React Native bare-metal): Execute the **MOBILE RULE CHECKLIST** block below. Skip Web Rule 1–84 and Design §1–31 checks — those are Web-only.
+> - Framework is determined from `package.json`, file imports, or explicit user declaration.
+
+## MOBILE RULE CHECKLIST (Execute ONLY in Mobile mode — React Native)
+
+> ⛔ When operating in Mobile mode, replace the Web Rule 1–84 + Design §1–31 checklist below with this Mobile checklist. Every item MUST be evaluated with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md`.
+
+```text
+[ ] Mobile Rule 0A.1 — frontend_ prefix on every role container
+[ ] Mobile Rule 0A.3 — 1:1 navigation-to-feature-folder mapping; feature-owned Navigator + url_config
+[ ] Mobile Rule 0B — Hard write boundary enforced; no sibling feature modifications
+[ ] Mobile Rule 1 — Screen+MainView pattern; 80-line screen ceiling; Role+Module prefixed files
+[ ] Mobile Rule 1 — Canonical path: src/features/frontend_{role}/{role}_{module}/
+[ ] Mobile Rule 1 — Root Quarantine: only 3 doc files at feature root
+[ ] Mobile Rule 1 — Mocks: fixtures.ts + handlers.ts with mutable in-memory state (Rule 7A)
+[ ] Mobile Rule 3 — Zero magic values; all tokens from MOBILE_UI_UX_DESIGN.md
+[ ] Mobile Rule 4 — TanStack Query v5 for server state; isPending not isLoading; onSuccess in useQuery BANNED
+[ ] Mobile Rule 4 — useMutation onSuccess REQUIRED for cache invalidation (Rule 60)
+[ ] Mobile Rule 5 — React Hook Form v7 + Zod; no Yup/Joi
+[ ] Mobile Rule 6 — Auth tokens in react-native-keychain ONLY; never AsyncStorage
+[ ] Mobile Rule 7 — Central network client; canonical ApiResponse<T> shape; typed verb contract
+[ ] Mobile Rule 7A — Mock covers 100% of UI fields; mutable in-memory state; no toast-only mutations
+[ ] Mobile Rule 7B — config/[module].url_config.ts present; no hardcoded URLs in api files
+[ ] Mobile Rule 7C — api/[module].query_keys.ts present; dedicated mutation hooks; no inline useMutation in screens
+[ ] Mobile Rule 8 — FlatList/FlashList for >20 items; 300ms debounce on search
+[ ] Mobile Rule 10 — lucide-react-native only; no mixed icon sets
+[ ] Mobile Rule 10A — KeyboardAvoidingView + keyboardShouldPersistTaps on all form screens
+[ ] Mobile Rule 10B — Pull-to-refresh wired on all user-browsable lists
+[ ] Mobile Rule 11 — react-native-haptic-feedback (NOT expo-haptics); reduced motion respected
+[ ] Mobile Rule 14 — Only packages from Locked NPM Package Registry; no expo-* packages
+[ ] Mobile Rule 17 — Co-located tests; Maestro E2E in mobile_e2e/; no placeholder assertions
+[ ] Mobile Rule 24 — _features.md complete with all 18 sections; non-generic content
+[ ] Mobile Rule 25 — accessibilityLabel/Role/State on all interactive elements; 44pt/48dp targets
+[ ] Mobile Rule 28 — Zero cross-feature imports; formatCurrency is feature-local (Rule 63)
+[ ] Mobile Rule 29 — _forbidden.md present with minimum 5 specific entries
+[ ] Mobile Rule 30 — Sensitive data masked via central maskSensitiveData()
+[ ] Mobile Rule 31 — Destructive/financial actions use confirmation bottom sheet
+[ ] Mobile Rule 32 — Pessimistic UI for financial mutations; 300ms debounce on search
+[ ] Mobile Rule 33 — Canonical PaginationMeta shape used
+[ ] Mobile Rule 34 — String enums for all status/type fields
+[ ] Mobile Rule 35 — ROUTES constants; no hardcoded route strings
+[ ] Mobile Rule 39 — Button minWidth on all async-submit buttons
+[ ] Mobile Rule 40 — All toasts via showToast() with dedup key
+[ ] Mobile Rule 41 — useUnsavedChangesGuard wired on all forms
+[ ] Mobile Rule 44 — RESPONSIBILITY: + FLOW: header on every source file
+[ ] Mobile Rule 45 — TanStack Query native isPending/isError used; no parallel NetworkState<T> for API calls
+[ ] Mobile Rule 52A — _theme_contract.md lists all consumed tokens
+[ ] Mobile Rule 53 — Idempotency-Key on all POST/PATCH/PUT/DELETE mutations
+[ ] Mobile Rule 54 — Single-flight token refresh
+[ ] Mobile Rule 57 — Import path casing matches disk exactly
+[ ] Mobile Rule 61 — All UI strings via t('namespace.KEY'); locale files co-located in _locales/
+[ ] Mobile Rule 63 — formatCurrency is feature-local with self-contained currencyMetadata
+[ ] Mobile Rule 65 — testID on every interactive control in [module]-[component]-[action] format
+[ ] Mobile Design §1 — All color tokens from MOBILE_UI_UX_DESIGN.md Section 1
+[ ] Mobile Design §2 — All spacing from space-1 through space-9 tokens
+[ ] Mobile Design §3 — Typography uses exact fontSize/lineHeight/letterSpacing/fontWeight values
+[ ] Mobile Design §6 — Touch targets ≥44pt iOS / ≥48dp Android
+[ ] Mobile Design §7 — Motion tokens used; reduced motion respected via AccessibilityInfo
+[ ] Mobile Design §8 — Status tokens used for all badges
+[ ] Mobile Design §13 — Loading skeleton + EmptyState + ErrorFallback on every data section
+[ ] Mobile Design §14 — SafeAreaView at screen roots; no hardcoded insets
+[ ] Mobile Design §15 — Named z-index tokens only
+[ ] Mobile Design §16 — Sensitive data masked per masking spec
+[ ] Mobile Design §17 — Confirmation bottom sheet layout matches spec
+[ ] Mobile Design §18 — Button loading state: spinner + disabled + minWidth
+[ ] Mobile Design §19 — tokens.ts shape matches canonical TypeScript template
+[ ] Mobile Design §20 — Haptics + press-scale + reduced motion implemented
+[ ] Mobile Design §21 — Platform conventions: back nav, safe area, bottom sheets, date pickers
+[ ] Mobile Design §22 — All 7 DoD gates verified
+[ ] Delivery — mobile_e2e/ Maestro YAML suite present in ZIP
+[ ] Delivery — INTEGRATION_GUIDE.md present with navigation route registry
+[ ] Delivery — RE_AUDIT_CHECKLIST_RESULT.md present with all items evaluated
+```
+
+## WEB RULE CHECKLIST (Execute ONLY in Web mode — Next.js / React / Vite)
+
 > ⛔⛔⛔ **MANDATORY ARTIFACT GATE: RE_AUDIT_CHECKLIST_RESULT.md IS REQUIRED** ⛔⛔⛔
 >
 > **You MUST generate `RE_AUDIT_CHECKLIST_RESULT.md` at the root of the final delivery ZIP.**
@@ -8739,7 +8819,9 @@ After all creation work units are complete:
 1. re-read Stage 1 requirements;
 2. perform complete final re-audit;
 3. repair any remaining issue;
-4. generate the comprehensive Playwright E2E test suite (`playwright_E2E/...`);
+4. generate the platform-appropriate E2E test suite:
+   - **Web:** Playwright suite (`playwright_E2E/...`)
+   - **Mobile:** Maestro YAML suite (`mobile_e2e/...`)
 5. generate final documentation;
 6. generate the changelog (inside `INTEGRATION_GUIDE.md` Section 1);
 7. generate the final checklist;
@@ -8776,7 +8858,8 @@ Generate:
 ```text
 INTEGRATION_GUIDE.md          ← Consolidated master guide (Changelog, Route Matrix, Feature Decisions, Host Steps, Verification)
 RE_AUDIT_CHECKLIST_RESULT.md  ← Section 43P clean compliance audit result
-playwright_E2E/frontend_[role]_e2e/[target_feature]/[target_feature].spec.ts
+Web:    playwright_E2E/frontend_[role]_e2e/[target_feature]/[target_feature].spec.ts
+Mobile: mobile_e2e/mobile_[role]_e2e/[target_feature]/[target_feature].yaml
 ```
 
 Only after final verification may the versioned fix ZIP be generated.
@@ -8912,7 +8995,8 @@ The ZIP MUST contain:
 ```text
 INTEGRATION_GUIDE.md          ← MANDATORY CONSOLIDATED GUIDE (Changelog, Route Matrix, Feature Boundary Decisions, Host Steps, Verification)
 RE_AUDIT_CHECKLIST_RESULT.md  ← MANDATORY formal audit compliance ledger (Section 43P verified result)
-playwright_E2E/               ← MANDATORY isolated E2E tests for the feature
+playwright_E2E/               ← MANDATORY isolated E2E tests for the feature (Web only)
+mobile_e2e/                   ← MANDATORY Maestro YAML E2E tests (Mobile only)
 └── frontend_[role]_e2e/
     └── [target_feature]/
 frontend_{role}/
@@ -8921,7 +9005,7 @@ frontend_{role}/
 
 > ⛔ **NO LOOSE MARKDOWN CLUTTER RULE:** Do NOT generate separate loose markdown files at the root of the ZIP (such as `[module_name]_changelog_vN.md`, `stage_1_*.md`, `stage_2_*.md`, `stage_3_*.md`, `ROUTE_PRESERVATION_MATRIX.md`, etc.). All changelog notes, route matrices, feature decisions, and audit summaries MUST be consolidated directly into `INTEGRATION_GUIDE.md`. The only two markdown files permitted at the ZIP root are `INTEGRATION_GUIDE.md` and `RE_AUDIT_CHECKLIST_RESULT.md`.
 
-**The `INTEGRATION_GUIDE.md` and `playwright_E2E` suite are NOT optional. An output without them is an incomplete delivery.**
+**The `INTEGRATION_GUIDE.md` and platform-appropriate E2E suite (`playwright_E2E/` for Web, `mobile_e2e/` for Mobile) are NOT optional. An output without them is an incomplete delivery.**
 
 ## 45.6 Packaging Recovery
 

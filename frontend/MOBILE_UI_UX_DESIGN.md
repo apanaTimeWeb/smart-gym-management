@@ -238,7 +238,7 @@ All typography values MUST be expressed as explicit React Native unit properties
 
 **Font family contract:**
 - Default: System UI font stack (`System` — resolves to San Francisco on iOS, Roboto on Android).
-- Custom fonts: Must be loaded via `expo-font` or React Native font linking. Never hardcode a platform-specific font family name directly in JSX.
+- Custom fonts: Must be linked via React Native's native font linking mechanism (`react-native link` or manual native project configuration). Never use `expo-font`.
 - Fallback: If a custom font fails to load, always fall back to the system default.
 
 **Truncation behavior:**
@@ -547,6 +547,134 @@ React Native theme module  ← implements the token values from this file
 Feature UI                 ← consumes semantic tokens ONLY; never hardcodes values
 ```
 
+### CANONICAL `tokens.ts` TYPESCRIPT OBJECT SHAPE (LOCKED)
+
+> ⛔ **AI AGENTS: ALL token property access in components MUST use EXACTLY this object shape. Never guess token names. If you write `theme.colors.primary` when the shape is `tokens.color.primary`, TypeScript will fail. Use this as your reference.**
+
+```typescript
+// src/core/theme/tokens.ts  — canonical shape (implement values from tables above)
+export const tokens = {
+  color: {
+    background:          string,  // Section 1
+    foreground:          string,
+    card:                string,
+    primary:             string,
+    primaryText:         string,  // 'primary-text' token
+    destructive:         string,
+    border:              string,
+    muted:               string,
+    onPrimary:           string,  // 'on-primary'
+    onDestructive:       string,
+    onSuccess:           string,
+    onInfo:              string,
+    focusRing:           string,
+    skeletonBase:        string,
+    skeletonHighlight:   string,
+    // Status tokens (Section 8)
+    statusSuccessText:   string,
+    statusSuccessBg:     string,
+    statusWarningText:   string,
+    statusWarningBg:     string,
+    statusDangerText:    string,
+    statusDangerBg:      string,
+    statusInfoText:      string,
+    statusInfoBg:        string,
+    statusNeutralText:   string,
+    statusNeutralBg:     string,
+    statusPurpleText:    string,
+    statusPurpleBg:      string,
+    // Payment tokens (Section 8a)
+    payCashText:         string,
+    payCashBg:           string,
+    payUpiText:          string,
+    payUpiBg:            string,
+    payCardText:         string,
+    payCardBg:           string,
+    payBankText:         string,
+    payBankBg:           string,
+    // Chart tokens (Section 9)
+    chartPrimary:        string,
+    chartSuccess:        string,
+    chartWarning:        string,
+    chartDanger:         string,
+    chartSecondary:      string,
+    chartInfo:           string,
+  },
+  opacity: {
+    disabled:  number,  // 0.5
+    loading:   number,  // 0.7
+    masked:    number,  // 0.8
+  },
+  space: {
+    1: number,  // 4
+    2: number,  // 8
+    3: number,  // 12
+    4: number,  // 16
+    5: number,  // 20
+    6: number,  // 24
+    7: number,  // 32
+    8: number,  // 40
+    9: number,  // 48
+  },
+  typography: {
+    caption:   { fontSize: 12, lineHeight: 18, letterSpacing: 0.5,  fontWeight: '400' as const },
+    bodySm:    { fontSize: 14, lineHeight: 21, letterSpacing: 0,    fontWeight: '400' as const },
+    body:      { fontSize: 16, lineHeight: 24, letterSpacing: 0,    fontWeight: '400' as const },
+    headingSm: { fontSize: 18, lineHeight: 22, letterSpacing: -0.5, fontWeight: '600' as const },
+    headingLg: { fontSize: 22, lineHeight: 28, letterSpacing: -0.5, fontWeight: '700' as const },
+  },
+  radius: {
+    sm:   4,
+    md:   8,
+    lg:   12,
+    xl:   16,
+    full: 9999,
+  },
+  icon: {
+    sm:     16,
+    md:     20,
+    lg:     24,
+    stroke: 1.75,
+  },
+  layout: {
+    buttonMinWidth:  120,
+    minTouchTarget:  44,  // iOS pt; Android uses 48dp
+  },
+  duration: {
+    fast:   150,
+    base:   200,
+    slow:   300,
+    xslow:  500,
+  },
+  pressScale: 0.96,
+  shadow: {
+    sm: { opacity: 0.05, radius: 2,  elevation: 1 },
+    md: { opacity: 0.1,  radius: 6,  elevation: 3 },
+    lg: { opacity: 0.15, radius: 12, elevation: 8 },
+  },
+  zIndex: {
+    base:        0,
+    sticky:      10,
+    fab:         20,
+    bottomTab:   30,
+    bottomSheet: 40,
+    modal:       50,
+    toast:       60,
+    overlay:     70,
+  },
+} as const;
+
+export type Tokens = typeof tokens;
+
+// Usage in components:
+// tokens.color.primary          ✅
+// tokens.space[4]               ✅
+// tokens.typography.headingSm   ✅
+// tokens.zIndex.bottomSheet     ✅
+// tokens.icon.sm                ✅
+// tokens.layout.buttonMinWidth  ✅
+```
+
 **Workflow rule (when a new token is needed):**
 1. Add the token to THIS file first — with light + dark values and a usage description.
 2. Implement it in the React Native theme module (Rule 3).
@@ -631,27 +759,32 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 - Android: Bottom sheets for all contextual selection.
 
 ### Date & Time Pickers
-- Use platform-native date/time pickers via `@react-native-community/datetimepicker` or `expo-date-picker`.
+- Use platform-native date/time pickers via `@react-native-community/datetimepicker`.
 - Never use a custom HTML-style date picker in a native mobile context.
 - Present date pickers in a bottom sheet on Android (system default) and as an inline or modal picker on iOS (context-dependent).
 
 ### Haptics
-- Pair significant UI state changes with appropriate haptic feedback (`expo-haptics`):
-  - `Haptics.impactAsync(ImpactFeedbackStyle.Light)` — minor UI interactions (tab switch, toggle)
-  - `Haptics.notificationAsync(NotificationFeedbackType.Success)` — form submit, payment success
-  - `Haptics.notificationAsync(NotificationFeedbackType.Error)` — validation failure, destructive action
+- Pair significant UI state changes with appropriate haptic feedback using `react-native-haptic-feedback` (NOT expo-haptics):
+  - Light impact — minor UI interactions (tab switch, toggle)
+  - Success notification — form submit, payment success
+  - Error notification — validation failure, destructive action
 - Never trigger haptics for purely visual/decorative events.
 
 ### Permissions Prompts
-- Always request permissions with `expo-permissions` or the platform-specific APIs at the time of use, never at app launch.
+- Always request permissions with `react-native-permissions` at the time of use, never at app launch.
 - Always provide a clear in-app explanation of WHY the permission is needed before the system dialog appears.
 - Handle denied permissions gracefully: show an informational UI with a link to Settings — never crash or show a blank screen.
 
 ### Icons
-- Use `@expo/vector-icons` (or the project-approved icon library) with consistent size tokens from Section 5B.
-- Never mix icon families within the same screen.
+- Use `lucide-react-native` as the canonical icon library — 100% symmetry with the Web app's `lucide-react`. Never mix icon families within the same screen.
 - iOS uses SF Symbols conventions for system-level actions (share, compose). Android uses Material Design icon conventions for system-level actions.
 - Always pair icon-only controls with `accessibilityLabel`.
+
+### Status Bar
+- Status bar style MUST be set per-screen using React Native's built-in `StatusBar` component. Never hardcode a single global style.
+- Full-screen modals MUST account for top safe area inset.
+- Bottom tab bars MUST account for home indicator safe area.
+- Use `react-native-safe-area-context` `<SafeAreaView>` at screen roots. Never hardcode inset values.
 
 ---
 
