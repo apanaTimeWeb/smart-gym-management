@@ -1,6 +1,6 @@
-# FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
+﻿# FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
 
-## VERSION 2.6 FINAL — FRONTEND (WEB/MOBILE) / TRI-MODE (CREATE / AUDIT+REPAIR / CROSS-PLATFORM-MOBILE-CREATE) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION / WEB-ZIP-TO-MOBILE-CREATE
+## VERSION 2.8 FINAL — FRONTEND (WEB/MOBILE) / QUAD-MODE (CREATE / AUDIT+REPAIR / CROSS-PLATFORM-MOBILE-CREATE / MOBILE-AUDIT+REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION / WEB-ZIP-TO-MOBILE-CREATE / MOBILE-43P-DELIVERY-GATE
 
 ---
 
@@ -11,10 +11,10 @@
 > Before producing ANY analysis, code, audit findings, or repair content, you MUST output ALL of the following in your VERY FIRST response:
 >
 > ```
-> FRONTEND AGENT V2.6 — BOOT DECLARATION
+> FRONTEND AGENT V2.8 — BOOT DECLARATION
 > =======================================
 > ROLE:               Frontend Create/Audit/Repair AI
-> MODE:               [MODE A: CREATE / MODE B: AUDIT+REPAIR / MODE C: CROSS-PLATFORM MOBILE CREATE — derived from supplied inputs per Section 0 detection rules]
+> MODE:               [MODE A: CREATE / MODE B: AUDIT+REPAIR / MODE C: CROSS-PLATFORM MOBILE CREATE / MODE D: MOBILE AUDIT+REPAIR — derived from supplied inputs per Section 0 detection rules]
 > TARGET ROLE/MODULE: [e.g., superadmin / manager_members]
 > FRAMEWORK:          [Next.js App Router / Vite / React / React Native — detected from package.json OR inferred from source conventions/imports/routing]
 >
@@ -452,16 +452,16 @@ The AI MUST:
 - Use tokens.color.primary (Indigo #4F46E5) for primary actions
 - Use tokens.space[N] for all spacing
 - Use tokens.typography.* for all text styles
-- Use tokens.color.status.* for status badges
+- Use tokens.color.statusSuccessText / tokens.color.statusDangerText etc. for status badges (flat camelCase â€” no nested .status.*)
 - Use tokens.color.payment.* for payment badges
 - Reference tokens.ts canonical shape for EVERY style value
 
 SEMANTIC EQUIVALENCE (not value copy):
 Web --primary (#FACC15)     → tokens.color.primary (#4F46E5)
-Web --bg-card               → tokens.color.surface.card
-Web --text-primary          → tokens.color.text.primary
-Web --success-bg            → tokens.color.status.successBg
-Web --danger-text           → tokens.color.status.dangerText
+Web --bg-card               → tokens.color.card
+Web --text-primary          → tokens.color.foreground
+Web --success-bg            → tokens.color.statusSuccessBg
+Web --danger-text           → tokens.color.statusDangerText
 Web shadow-card             → tokens.shadow.card
 Web border-radius tokens    → tokens.radius.*
 ```
@@ -9838,13 +9838,16 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-RULES-06:** Every server-backed `FlashList`/`FlatList` implements pull-to-refresh with `refreshing={isRefetching}` and `onRefresh={refetch}` (Rule 10B)
 - [ ] **43P-RULES-07:** Sensitive data masked in list/card views via `maskSensitiveData()` — phone: `98****2310`, national ID: last 4 only (Rule 30)
 - [ ] **43P-RULES-08:** Pessimistic UI on ALL financial/destructive mutations — UI updates ONLY after 2xx response (Rule 32)
-- [ ] **43P-RULES-09:** Search/filter inputs debounced ≥300ms before API call via `useDebounce` from `src/core/hooks/useDebounce.ts` (Rule 32)
+- [ ] **43P-RULES-09:** Search/filter inputs debounced ≥300ms before API call via `useDebounce` from `src/core/hooks/useDebounce.ts` (Rule 15 â€” Performance & Optimization)
 - [ ] **43P-RULES-10:** Lists with >20 items use `@shopify/flash-list` with `React.memo` item renderers — never `ScrollView` wrapping `.map()` (Rule 8)
 - [ ] **43P-RULES-11:** All list items keyed by stable entity ID — zero array index keys (Rule 49)
 - [ ] **43P-RULES-12:** Every async-submit button has `minWidth` from `tokens.layout.buttonMinWidth` — no layout shift on loading state (Rule 39)
 - [ ] **43P-RULES-13:** Token refresh is single-flight — concurrent 401s share the same refresh promise (Rule 54)
 - [ ] **43P-RULES-14:** `x-tenant-id` derived ONLY from trusted session context — never from route params or local state (Rule 55)
 - [ ] **43P-RULES-15:** Haptic feedback wired for: switches (light impact), form success (success notification), destructive actions (error notification) via `react-native-haptic-feedback` (Rule 11)
+- [ ] **43P-RULES-16:** Every pressable/touchable applies `animatedStyle` with `tokens.pressScale` (0.96) on press-in â€” zero hardcoded scale values
+- [ ] **43P-RULES-17:** Every screen sets `<StatusBar>` explicitly (style, backgroundColor) â€” no screen inherits StatusBar from host app
+- [ ] **43P-RULES-18:** Every screen root uses `<SafeAreaView>` from `react-native-safe-area-context` â€” never from `react-native` core
 
 ## 43P-HEADER — File Header Comments
 
@@ -9852,12 +9855,36 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-HEADER-02:** Every `.ts`/`.tsx` source file has `// FLOW:` comment showing the data/navigation path to and from this file (Rule 44)
 - [ ] **43P-HEADER-03:** Every custom hook has JSDoc with `@param`, `@returns`, cache key (if server state), and non-obvious constraints (Rule 43)
 - [ ] **43P-HEADER-04:** Every exported utility function has JSDoc with `@param`, `@returns`, and example if output format is non-obvious (Rule 43)
+- [ ] **43P-HEADER-05:** Any StyleSheet value that cannot use a token (e.g. runtime safe-area inset, screen dimension) has an inline `// design-exception:` comment explaining why
 
 ## 43P-TESTID — AI-Testable UI
 
 - [ ] **43P-TESTID-01:** Every interactive control has `testID` in format `[role]_[module]-[component]-[action/state]` (e.g. `manager_members-addform-submit`) (Rule 65)
 - [ ] **43P-TESTID-02:** Every critical state indicator has `testID` (e.g. `manager_members-membercard-status-active`)
 - [ ] **43P-TESTID-03:** Gesture-driven surfaces expose `testID` on the view receiving the gesture
+
+## 43P-A11Y â€” Accessibility
+
+- [ ] **43P-A11Y-01:** Every interactive element has `accessibilityLabel` with human-readable description â€” no empty or undefined labels
+- [ ] **43P-A11Y-02:** Every interactive element has correct `accessibilityRole` (`button`, `link`, `checkbox`, `tab`, etc.)
+- [ ] **43P-A11Y-03:** Stateful controls (toggle, checkbox, tab) set `accessibilityState` (`checked`, `selected`, `disabled`) reactively
+- [ ] **43P-A11Y-04:** All touch targets are minimum 44x44pt â€” no icon-only buttons smaller than 44pt without padding
+- [ ] **43P-A11Y-05:** Purely decorative icons have `accessible={false}` and `importantForAccessibility="no-hide-descendants"`
+
+## 43P-PLATFORM â€” Platform & Navigation
+
+- [ ] **43P-PLATFORM-01:** `SafeAreaView` from `react-native-safe-area-context` used on every screen root â€” never from `react-native` core
+- [ ] **43P-PLATFORM-02:** `StatusBar` set explicitly per screen with correct `barStyle` and `backgroundColor` per theme
+- [ ] **43P-PLATFORM-03:** Android back navigation handled â€” `useBackHandler` or `useFocusEffect` with `BackHandler` where custom back behaviour is needed
+- [ ] **43P-PLATFORM-04:** Bottom sheets use `@gorhom/bottom-sheet` â€” never `Modal` for sheet-style UI
+- [ ] **43P-PLATFORM-05:** Date/time pickers use `@react-native-community/datetimepicker` â€” never a web `<input type="date">`
+
+## 43P-NETWORK â€” TypeScript & API Strictness
+
+- [ ] **43P-NETWORK-01:** All API response types are fully typed â€” zero `any` in response interfaces
+- [ ] **43P-NETWORK-02:** All query/mutation hooks have explicit generic types `useQuery<ResponseType, ErrorType>` â€” no implicit inference from `any`
+- [ ] **43P-NETWORK-03:** `axios`/`fetch` calls go through the feature typed API client â€” no raw `fetch()` calls in screen components
+- [ ] **43P-NETWORK-04:** Network errors surface `response.message` from backend â€” never expose raw JS error messages to the user
 
 ## 43P-I18N — Internationalization
 
@@ -9874,10 +9901,11 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-CURR-03:** API sends amounts in minor units (paise/cents) — `formatCurrency` divides by `currencyMetadata[currency].divisor`
 - [ ] **43P-CURR-04:** Null/undefined amounts return `'—'` from `formatCurrency` — never blank or `'N/A'`
 - [ ] **43P-CURR-05:** Unsupported currency codes throw — never silently default to divisor 100
+- [ ] **43P-CURR-06:** Masked amount display uses `tokens.color.textMuted` and `maskSensitiveData()` — never a raw string of asterisks
 
 ## 43P-DOCS — Documentation Trio
 
-- [ ] **43P-DOCS-01:** `{role}_{module}_features.md` exists with all 18 mandatory sections (no TBD, no generic filler)
+- [ ] **43P-DOCS-01:** `{role}_{module}_features.md` exists with all 18 mandatory sections (no TBD, no generic filler): (1) Overview, (2) User Stories, (3) Screen Inventory, (4) Navigation Flow, (5) API Contract, (6) State Management, (7) Component Tree, (8) Token Usage, (9) Permission Requirements, (10) Error States, (11) Empty States, (12) Loading States, (13) Offline Behaviour, (14) Accessibility Notes, (15) i18n Keys, (16) Mock Fixture Strategy, (17) Rule Compliance Checklist, (18) Deferred / Out-of-Scope items
 - [ ] **43P-DOCS-02:** `{role}_{module}_forbidden.md` exists with minimum 5 feature-specific actionable entries
 - [ ] **43P-DOCS-03:** `{role}_{module}_theme_contract.md` exists listing all consumed token names
 - [ ] **43P-DOCS-04:** `_features.md` Rule Compliance Checklist section is honestly filled (no false checkmarks)
@@ -9888,6 +9916,8 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-ASYNC-02:** Every list screen has `[Feature]EmptyState.tsx` with contextual icon, message, and CTA
 - [ ] **43P-ASYNC-03:** Every screen has `[Feature]ErrorFallback.tsx` with retry button and backend `response.message`
 - [ ] **43P-ASYNC-04:** Loading, empty, and error states are all reachable via mock fixtures
+- [ ] **43P-ASYNC-05:** `PermissionDenied` component shown when API returns 403 â€” never a blank screen or generic error
+- [ ] **43P-ASYNC-06:** Offline state handled â€” list screens show last cached data with `OfflineBanner`; mutation screens show `OfflineBlocker` preventing submission
 
 ## 43P-DELIVERY — Final Delivery Gate
 
