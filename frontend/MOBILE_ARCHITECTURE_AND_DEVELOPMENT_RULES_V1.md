@@ -1,4 +1,4 @@
-# React Native Mobile Development Instructions — Enterprise / Industry Scale
+﻿# React Native Mobile Development Instructions — Enterprise / Industry Scale
 
 > ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
 >
@@ -987,6 +987,9 @@ Rules:
   cache invalidation triggers.
 - Any offline write (queued mutation) requires an explicit, written
   conflict-resolution strategy — never silently assume "last write wins."
+- **OfflineBanner vs OfflineBlocker distinction (MANDATORY):**
+  - `[Feature]OfflineBanner` — inline non-blocking banner shown when network is lost BUT cached data is still visible. User can still browse stale data.
+  - `[Feature]OfflineBlocker` — full-screen blocking component shown ONLY when the feature has NO cached data AND requires network to function at all (e.g., payment processing). Never use `OfflineBlocker` when cached data can be shown. Only for features that explicitly declare offline support in `_features.md`.
 
 ## Rule 17 — Testing (Full Pyramid)
 
@@ -1451,6 +1454,8 @@ future AI agents.
 - Respect system font-scaling accessibility settings — never disable dynamic
   text scaling unless a specific pixel-perfect element requires it, and
   document why when it does.
+- Use `accessible={false}` on purely decorative elements to exclude them from the screen reader traversal order.
+- Use `importantForAccessibility="no-hide-descendants"` (Android) on container views that wrap decorative or non-interactive content to prevent TalkBack from traversing into their children. This is the Android equivalent of `accessible={false}` for container-level exclusion.
 
 ## Rule 26 — App Store & Regulatory Compliance
 

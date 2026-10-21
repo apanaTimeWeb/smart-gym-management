@@ -1,4 +1,4 @@
-# React Native Global Design System — Token Source
+﻿# React Native Global Design System — Token Source
 
 > ⛔⛔⛔ **AI AGENT — MANDATORY DESIGN ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
 >
@@ -158,6 +158,7 @@ All screens and components MUST meet these mobile accessibility standards:
 - Use `accessibilityState` to communicate dynamic states: `{ disabled, selected, checked, busy, expanded }`.
 - Use `accessibilityValue` for progress, sliders, and stepped controls.
 - Use `accessible={false}` on purely decorative elements to exclude them from the screen reader traversal order.
+- Use `importantForAccessibility="no-hide-descendants"` (Android) on container views that wrap decorative or non-interactive content to prevent TalkBack from traversing into their children. This is the Android equivalent of `accessible={false}` for container-level exclusion.
 - Logical focus/traversal order MUST follow the visual reading order top-to-bottom, left-to-right.
 
 ### Touch Targets
@@ -424,7 +425,8 @@ No component may ship without its loading, empty, and error states.
 | **Empty** | Fetch succeeded, zero results | A dedicated `[Feature]EmptyState` component with a contextual icon, a short human-readable message, and a primary CTA (e.g. "Add your first member"). Never a blank white screen. |
 | **Error** | Fetch failed or network error | A `[Feature]ErrorFallback` component showing a brief message from `response.message` (backend-driven), a "Try again" retry button, and optionally a help link. Never expose raw error objects. |
 | **Permission denied** | User lacks role access to the resource | A `[Feature]PermissionDenied` component explaining the access restriction. Never show a blank screen or a cryptic error code. |
-| **Offline** | No network detected (if offline is a declared feature) | An inline offline banner (not a full-screen takeover) with the last-cached data still visible. Only for features that explicitly declare offline support in `_features.md`. |
+| **Offline** | No network detected (if offline is a declared feature) | An inline `OfflineBanner` (not a full-screen takeover) with the last-cached data still visible. Only for features that explicitly declare offline support in `_features.md`. |
+| **Offline Blocker** | No network AND feature has no cached data to show | A full-screen `[Feature]OfflineBlocker` component that blocks interaction and explains the feature requires connectivity. Use ONLY when the feature cannot function at all without network (e.g., payment processing). Never use `OfflineBlocker` for features that can show cached data â€” use `OfflineBanner` instead. |
 
 ## 14. Safe Area & Notch Handling
 
