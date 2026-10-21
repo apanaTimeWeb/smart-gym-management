@@ -401,7 +401,7 @@ After extraction, the AI MUST translate web patterns to mobile equivalents. This
 ║ [ModuleName]Main.tsx           │ [Role][Module][Screen]MainView.tsx  ║
 ║ Tailwind CSS classes           │ tokens.ts StyleSheet values         ║
 ║ CSS variables (--primary)      │ tokens.color.primary                ║
-║ Gold primary (#FACC15)         │ Indigo primary (#4F46E5)            ║
+║ Gold primary (#FACC15)         │ Gold primary (#FACC15) — same on both platforms            ║
 ║ next/navigation router.push    │ navigation.navigate(ROUTES.X)       ║
 ║ ?view= query param routing     │ Stack navigator screens             ║
 ║ Modal/Dialog component         │ @gorhom/bottom-sheet                ║
@@ -457,7 +457,8 @@ The AI MUST:
 - Reference tokens.ts canonical shape for EVERY style value
 
 SEMANTIC EQUIVALENCE (not value copy):
-Web --primary (#FACC15)     → tokens.color.primary (#4F46E5)
+Web --primary (#FACC15)     → tokens.color.primary (#FACC15)  <- SAME VALUE, both platforms Gold
+Web on-primary (#111111)    → tokens.color.onPrimary (#111111) <- dark text on gold
 Web --bg-card               → tokens.color.card
 Web --text-primary          → tokens.color.foreground
 Web --success-bg            → tokens.color.statusSuccessBg
@@ -9805,7 +9806,7 @@ The AI MUST evaluate every item below against the created mobile module and reco
 ## 43P-DESIGN — Design Token Compliance
 
 - [ ] **43P-DESIGN-01:** Zero raw hex colors (`#XXXXXX`) in any StyleSheet — all colors from `tokens.color.*`
-- [ ] **43P-DESIGN-02:** Zero Gold/Amber colors from web (`#FACC15`, `yellow-400`, etc.) — mobile uses Indigo (`tokens.color.primary = #4F46E5`)
+- [ ] **43P-DESIGN-02:** Mobile primary MUST use `tokens.color.primary = #FACC15` (Gold) — same as web. `tokens.color.onPrimary = #111111` (dark text on gold). Do NOT replace Gold with Indigo. Gold/Amber values from web are CORRECT for mobile.
 - [ ] **43P-DESIGN-03:** Zero arbitrary spacing values — all spacing from `tokens.space[N]`
 - [ ] **43P-DESIGN-04:** Zero arbitrary font sizes — all typography from `tokens.typography.*`
 - [ ] **43P-DESIGN-05:** Zero arbitrary border radius values — all radius from `tokens.radius.*`
@@ -10257,6 +10258,7 @@ The Boot Declaration execution order block now includes Mode D:
 |---|---|
 | V2.5 | Original — Web Modes A + B only |
 | V2.6 | Added Mode C (Cross-Platform Mobile Create from Web ZIP) |
+| V2.8 | **GOLD MOBILE THEME UPGRADE:** Mode C Boot Declaration updated to V2.8. Mobile primary upgraded from Indigo (#4F46E5) to Gold (#FACC15) matching web theme. Added on-primary = #111111 (dark text on gold). Fixed Translation Matrix Gold row. Fixed 43P-DESIGN-02 to enforce Gold not Indigo. |
 | V2.7 | **MOBILE COMPLETENESS PATCH:** Added Section 43P Mobile Rule Checklist (Gap 1), Added Mode D Mobile Audit+Repair (Gap 2), Fixed duplicate Section headings in Mode C INTEGRATION_GUIDE (Gap 3), Clarified react-i18next vs next-intl for mobile (Gap 4), Added useUnsavedChangesGuard mandate to Mode C (Gap 5), Added Idempotency-Key mandate to Mode C (Gap 6), Added showToast() dedup pattern to Mode C (Gap 7), Added useConfirm()+ConfirmBottomSheet / Alert.alert FORBIDDEN to Mode C (Gap 8), Added RESPONSIBILITY+FLOW header comment mandate to Mode C (Gap 9), Added testID format mandate to Mode C (Gap 10) |
 
 ---
