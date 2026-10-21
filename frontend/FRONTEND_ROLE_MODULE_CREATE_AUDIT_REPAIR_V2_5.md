@@ -250,13 +250,13 @@ INPUT 4: Target Module Name
 Before ANY analysis or code, output:
 
 ```text
-FRONTEND AGENT V2.6 — MODE C BOOT DECLARATION
+FRONTEND AGENT V2.8 — MODE C BOOT DECLARATION
 ===============================================
 MODE:               C — CROSS-PLATFORM MOBILE CREATE FROM WEB ZIP
 SOURCE ZIP:         [web zip filename, e.g., superadmin.zip]
 TARGET MODULE:      [mobile module name, e.g., superadmin]
 TARGET FRAMEWORK:   React Native (Bare-Metal, New Architecture)
-DESIGN SYSTEM:      MOBILE_UI_UX_DESIGN.md (Indigo primary — NOT Web Gold)
+DESIGN SYSTEM:      MOBILE_UI_UX_DESIGN.md (Gold primary — #FACC15/#EAB308, on-primary = #111111)
 ARCH RULES:         MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md
 
 WEB ZIP ROLE:       FEATURE SPECIFICATION + API CONTRACT SOURCE ONLY
@@ -278,7 +278,7 @@ EXECUTION ORDER — MODE C (ALL STEPS ARE MANDATORY, NONE MAY BE SKIPPED):
 [ ] Step 7: EXTRACTION SECTION 5 — Business constants & enums — not yet started
 [ ] Step 8: STAGE 1 FREEZE — mobile requirement baseline frozen (baseline_frozen: true) — not yet started
 [ ] Step 9: STAGE 2 CREATE — build complete React Native module per MOBILE_ARCHITECTURE rules — not yet started
-[ ] Step 10: Apply MOBILE_UI_UX_DESIGN tokens throughout (Indigo, NOT Gold) — not yet started
+[ ] Step 10: Apply MOBILE_UI_UX_DESIGN tokens throughout (Gold #FACC15/#EAB308, on-primary #111111) — not yet started
 [ ] Step 11: Section 43P MOBILE RULE CHECKLIST clean on all created mobile code — not yet started
 [ ] Step 12: FINAL DELIVERY — mobile-{role}-v1.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E — not yet started
 
@@ -436,20 +436,20 @@ After extraction, the AI MUST translate web patterns to mobile equivalents. This
 
 ### MODE C — DESIGN TOKEN TRANSLATION (MANDATORY)
 
-The web ZIP uses Gold-based design tokens. Mobile uses Indigo-based tokens from `MOBILE_UI_UX_DESIGN.md`.
+The web ZIP uses Gold-based design tokens. Mobile ALSO uses Gold-based tokens from `MOBILE_UI_UX_DESIGN.md`. Both platforms share the same brand color.
 
 ```text
 TOKEN TRANSLATION RULE:
 
 The AI MUST NOT:
 - Copy web CSS variable names into mobile code
-- Use web hex values (#FACC15 gold) in mobile StyleSheets
 - Reference Tailwind class names in mobile code
 - Use bg-primary, text-secondary etc. as string values in RN
 
 The AI MUST:
 - Read MOBILE_UI_UX_DESIGN.md completely before writing any styled component
-- Use tokens.color.primary (Indigo #4F46E5) for primary actions
+- Use tokens.color.primary (Gold #FACC15) for primary actions
+- Use tokens.color.onPrimary (#111111) for text/icons ON Gold backgrounds (dark text on gold)
 - Use tokens.space[N] for all spacing
 - Use tokens.typography.* for all text styles
 - Use tokens.color.statusSuccessText / tokens.color.statusDangerText etc. for status badges (flat camelCase â€” no nested .status.*)
