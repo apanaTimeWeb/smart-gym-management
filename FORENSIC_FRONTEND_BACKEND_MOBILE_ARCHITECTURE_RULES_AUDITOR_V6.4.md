@@ -1,4 +1,4 @@
-# FORENSIC FRONTEND BACKEND MOBILE ARCHITECTURE RULES AUDITOR — V6.4
+﻿# FORENSIC FRONTEND BACKEND MOBILE ARCHITECTURE RULES AUDITOR — V6.4
 
 ## FORENSIC SOFTWARE / ARCHITECTURE / UI-UX / CONTRACT COMPLIANCE AUDIT
 
@@ -35,6 +35,7 @@
 >
 > FIRST ACTION:      Phase 1 Combined Discovery Scan (Section 13A)
 > SECOND ACTION:     Publish Audit Chunk Map (Section 13A Step 3)
+> MODE D (MOBILE AUDIT+REPAIR) DETECTION: If the supplied input contains React Native source files (*Screen.tsx, react-navigation imports, .ios.ts/.android.ts files, react-native imports) AND the user requests audit or repair of existing mobile code, this is a MOBILE AUDIT. Apply Section 39A fully. Apply all mobile-specific checks in Section 80. Apply the 43P Mobile Rule Checklist as the delivery freeze gate.
 > ```
 >
 > ⛔ **You MUST NOT output any audit finding, rule check, or code analysis before completing this boot declaration.**
@@ -2135,6 +2136,14 @@ The auditor MUST strictly verify the Canonical Naming Rules based on the supplie
 11. API/types/schema/store/config files MUST use dot-notation (e.g., `members.api.ts`, `members.types.ts`).
 12. URL config lives in `config/` sub-folder (e.g., `members.url_config.ts`).
 13. Query key registry MUST exist per feature inside `api/` or `config/` (e.g., `members.query_keys.ts`).
+14. Locale files MUST be named `{role}_{module}_en.json` / `{role}_{module}_hi.json` and live in `_locales/` sub-folder.
+15. Documentation trio MUST exist: `{role}_{module}_features.md`, `{role}_{module}_forbidden.md`, `{role}_{module}_theme_contract.md` -- missing any = INCOMPLETE MODULE.
+14. Locale files MUST be named `{role}_{module}_en.json` / `{role}_{module}_hi.json` and live in `_locales/` sub-folder.
+15. Documentation trio MUST exist: `{role}_{module}_features.md`, `{role}_{module}_forbidden.md`, `{role}_{module}_theme_contract.md` -- missing any = INCOMPLETE MODULE.
+14. Locale files MUST be named `{role}_{module}_en.json` / `{role}_{module}_hi.json` and live in `_locales/` sub-folder.
+15. Documentation trio MUST exist: `{role}_{module}_features.md`, `{role}_{module}_forbidden.md`, `{role}_{module}_theme_contract.md` -- missing any = INCOMPLETE MODULE.
+14. Locale files MUST be named `{role}_{module}_en.json` / `{role}_{module}_hi.json` and live in `_locales/` sub-folder.
+15. Documentation trio MUST exist: `{role}_{module}_features.md`, `{role}_{module}_forbidden.md`, `{role}_{module}_theme_contract.md` â€” missing any = INCOMPLETE MODULE.
 
 **If BACKEND (NestJS) is in scope:**
 
@@ -2831,6 +2840,44 @@ If the target is Mobile (React Native), inspect ALL of the following where appli
 - Mutations MUST be orchestrated through dedicated mutation hooks (e.g., `useCreateMember.ts`)
 - Screens MUST NOT call `useMutation()` directly
 - `onSuccess` inside `useMutation()` is BANNED — use `.mutateAsync().then()` or global `mutationCache` instead
+- Server state (API data) MUST use TanStack Query - NOT duplicated into a Zustand store
+- Shared client UI state MUST use feature-scoped Zustand stores - NOT one global store
+
+### Form & Keyboard Handling
+- Every form screen MUST wrap content in `KeyboardAvoidingView` with `behavior={Platform.OS === 'ios' ? 'padding' : 'height'}` and `ScrollView keyboardShouldPersistTaps="handled"` -- missing this causes keyboard to cover inputs on iOS
+- Every multi-step form screen MUST wire `useUnsavedChangesGuard(isDirty)` from `src/core/hooks/useUnsavedChangesGuard.ts` -- absence allows silent data loss on back navigation
+
+### Pull-to-Refresh
+- Every server-backed `FlashList`/`FlatList` MUST implement pull-to-refresh with `refreshing={isRefetching}` and `onRefresh={refetch}` -- absence is a UX contract failure
+
+### Pessimistic UI & Mutation Safety
+- ALL financial/destructive mutations MUST use pessimistic UI -- UI updates ONLY after a 2xx response, never optimistically
+- Every destructive/financial action MUST use `useConfirm()` + `ConfirmBottomSheet` -- `Alert.alert()` is FORBIDDEN for destructive/financial confirmations
+
+### Toast & Feedback
+- `showToast()` MUST be the ONLY toast entry point -- zero direct toast library calls anywhere in feature code
+- Every mutation success/error toast MUST pass a stable `dedupKey` to `showToast()` -- absence causes duplicate toast stacking on rapid taps
+- Async-submit buttons MUST have `minWidth` from `tokens.layout.buttonMinWidth` -- prevents layout shift on loading state
+
+### Sensitive Data Masking
+- Sensitive data (phone numbers, national IDs) MUST be masked via `maskSensitiveData()` -- phone: `98****2310`, national ID: last 4 only
+- Raw unmasked PII in list/card views = P1 security finding
+
+### Token Refresh & Tenant Security
+- Token refresh MUST be single-flight -- concurrent 401 responses MUST share the same refresh promise, not each trigger an independent refresh
+- `x-tenant-id` MUST be derived ONLY from trusted session/JWT context -- NEVER from route params, URL query strings, or local component state
+
+### Press Animation & Screen Chrome
+- Every pressable/touchable element MUST apply `animatedStyle` with `tokens.pressScale` (0.96) on press-in -- zero hardcoded scale values
+- Every screen MUST set `<StatusBar>` explicitly (style, backgroundColor) -- no screen may inherit StatusBar from the host app shell
+- Every screen root MUST use `<SafeAreaView>` from `react-native-safe-area-context` -- NEVER from `react-native` core
+
+### Design Token Shape (Flat camelCase -- CRITICAL)
+- Mobile tokens use FLAT camelCase shape -- nested paths are WRONG
+- CORRECT: `tokens.color.card`, `tokens.color.foreground`, `tokens.color.statusSuccessBg`, `tokens.color.statusDangerText`, `tokens.color.textMuted`
+- WRONG: `tokens.color.surface.card`, `tokens.color.text.primary`, `tokens.color.status.successBg`
+- Any nested token path in mobile StyleSheets = FAIL -- report as `WRONG_TOKEN_PATH`
+- StyleSheet values that cannot use a token MUST have an inline `// design-exception:` comment -- absence = FAIL
 - Server state (API data) MUST use TanStack Query — NOT duplicated into a Zustand store
 - Shared client UI state MUST use feature-scoped Zustand stores — NOT one global store
 
@@ -2839,6 +2886,33 @@ If the target is Mobile (React Native), inspect ALL of the following where appli
 - No feature screen calls native permission APIs directly
 - New native dependencies MUST support React Native New Architecture (Fabric/TurboModules)
 - E2E tests MUST use Maestro (YAML-based) as the test tool in the `mobile_e2e/` directory (Section 51C)
+
+### Accessibility (Mobile-Specific)
+- Every interactive element MUST have `accessibilityLabel` with a human-readable description -- empty or undefined labels = FAIL
+- Every interactive element MUST have correct `accessibilityRole` (`button`, `link`, `checkbox`, `tab`, etc.)
+- Stateful controls (toggle, checkbox, tab) MUST set `accessibilityState` (`checked`, `selected`, `disabled`) reactively
+- All touch targets MUST be minimum 44x44pt -- icon-only buttons smaller than 44pt without padding = FAIL
+- Purely decorative icons MUST have `accessible={false}` and `importantForAccessibility="no-hide-descendants"`
+
+### i18n (Mobile-Specific)
+- Mobile uses `react-i18next` + `i18next` -- NOT `next-intl` (Web-only)
+- Presence of `next-intl` imports in React Native code = FAIL
+- All user-facing static strings MUST use `t('namespace.KEY')` -- zero hardcoded English strings in JSX
+- Backend `response.message` values displayed as-is -- NOT passed through `t()`
+
+### Currency & Number Formatting (Mobile-Specific)
+- Feature-local `utils/{module}FormatCurrency.ts` MUST exist with self-contained `currencyMetadata` including `divisor` per currency
+- `formatCurrency` MUST NOT be imported from `src/core/` -- duplicated per feature (Strict WET)
+- Null/undefined amounts MUST return en-dash from `formatCurrency` -- never blank or N/A
+- Unsupported currency codes MUST throw -- never silently default to divisor 100
+- Masked amount display MUST use `tokens.color.textMuted` and `maskSensitiveData()` -- never raw asterisks
+
+### Async States (Mobile-Specific)
+- Every list screen MUST have `[Feature]ListSkeleton.tsx` mimicking exact card layout
+- Every list screen MUST have `[Feature]EmptyState.tsx` with contextual icon, message, and CTA
+- Every screen MUST have `[Feature]ErrorFallback.tsx` with retry button and backend `response.message`
+- `PermissionDenied` component MUST be shown when API returns 403 -- never a blank screen
+- Offline state MUST be handled -- list screens show last cached data with `OfflineBanner`; mutation screens show `OfflineBlocker`
 
 Do NOT apply Web/DOM rules to React Native code.
 
@@ -2996,6 +3070,12 @@ Aesthetic preference is not a documented rule.
 2. No raw hex/RGB colors or arbitrary dp values in any feature component.
 3. Motion durations MUST use named token constants from the theme module.
 4. **AUDIT CHECK (not a repair action):** Verify whether CI is configured to fail when the theme module references an unknown token. If no such CI check exists, classify as `FAIL — CI_TOKEN_VALIDATION_MISSING`.
+5. **FLAT CAMELCASE TOKEN SHAPE ENFORCEMENT (CRITICAL):** Mobile tokens use a FLAT camelCase shape -- NOT nested object paths. Verify:
+   - `tokens.color.card` (NOT `tokens.color.surface.card`) -- wrong nested path = FAIL
+   - `tokens.color.foreground` (NOT `tokens.color.text.primary`) -- wrong nested path = FAIL
+   - `tokens.color.statusSuccessBg`, `tokens.color.statusDangerText`, `tokens.color.statusSuccessText` (NOT `tokens.color.status.*`) -- wrong nested path = FAIL
+   - `tokens.color.textMuted` (NOT `tokens.color.text.muted`) -- wrong nested path = FAIL
+   - Any nested token path in mobile StyleSheets = `FAIL - WRONG_TOKEN_PATH`
 
 ---
 
@@ -3126,6 +3206,14 @@ Check whether those attributes are:
 - semantically appropriate;
 - connected to actual controls;
 - consistent with interaction behavior.
+
+### Mobile Accessibility Specifics (React Native)
+When auditing React Native, additionally verify:
+- `accessibilityLabel` present and non-empty on every interactive element (Button, TouchableOpacity, Pressable, TextInput)
+- `accessibilityRole` correct for every interactive element (`button`, `link`, `checkbox`, `tab`, `image`, `text`, etc.)
+- `accessibilityState` set reactively on stateful controls: `{ checked }` for checkboxes, `{ selected }` for tabs, `{ disabled }` for disabled controls
+- Touch targets minimum 44x44pt -- use `minWidth`/`minHeight` or padding; icon-only buttons without padding = FAIL
+- Decorative icons: `accessible={false}` AND `importantForAccessibility="no-hide-descendants"` -- missing either = screen reader announces decorative noise
 
 ---
 
@@ -3471,6 +3559,10 @@ Verify:
 [ ] Each module's E2E tests are 100% self-contained — login helpers, fixtures duplicated per module
 [ ] No cross-module imports: `mobile_admin_e2e/members/` MUST NOT import from `mobile_admin_e2e/dashboard/`
 [ ] A developer must be able to ZIP only one module's E2E folder and run it independently
+[ ] Each Maestro YAML flow covers: happy path, empty state, error state (API failure), and offline state
+[ ] Destructive action flows verify the ConfirmBottomSheet appears before the action executes
+[ ] Financial mutation flows verify pessimistic UI (no premature UI update before 2xx)
+[ ] Form flows verify unsaved-changes guard triggers on back navigation with dirty state
 ```
 
 ---
@@ -3503,6 +3595,12 @@ Find:
 - missing tenant/resource context
 
 A mock can be internally valid but still fail to represent the real contract.
+
+### Mobile Mock Fixture Specifics (React Native)
+For React Native modules, additionally verify:
+- MSW fixtures are mutable in-memory arrays -- `create` adds to the array, `delete` removes from it; static-only fixtures that never mutate = FAIL
+- Every fixture covers: list (populated), list (empty), single item detail, create success, create error, update success, update error, delete success, delete error, 403 PermissionDenied, offline/network error
+- Fixture amounts are in minor units (paise/cents) matching the API contract -- raw decimal amounts in fixtures = contract mismatch
 
 Do not label a mock incorrect without evidence of contract mismatch or explicit rule violation.
 
@@ -3543,6 +3641,8 @@ For every frontend feature module, verify that ALL THREE mandatory documentation
 [ ] [featureName]_features.md     — MANDATORY (see required sections below)
 [ ] [featureName]_forbidden.md    — MANDATORY (must list concrete forbidden patterns for this module)
 [ ] [featureName]_theme_contract.md — MANDATORY (must list all design tokens used by this module)
+
+> **MOBILE DOCUMENTATION NOTE:** For React Native modules, the `_features.md` MUST contain all 18 mandatory sections: (1) Overview, (2) User Stories, (3) Screen Inventory, (4) Navigation Flow, (5) API Contract, (6) State Management, (7) Component Tree, (8) Token Usage, (9) Permission Requirements, (10) Error States, (11) Empty States, (12) Loading States, (13) Offline Behaviour, (14) Accessibility Notes, (15) i18n Keys, (16) Mock Fixture Strategy, (17) Rule Compliance Checklist, (18) Deferred / Out-of-Scope items.
 ```
 
 **Missing any of these 3 files = FAIL.**
@@ -5208,6 +5308,28 @@ The audit is complete only when ALL of the following are true:
 [ ] — Mobile: Screens not calling useMutation() directly check done
 [ ] — Mobile: onSuccess inside useMutation() banned — .mutateAsync().then() or global mutationCache used instead
 [ ] — Maestro E2E structure verified (mobile_e2e/ + WET principle)
+[ ] — Mobile: KeyboardAvoidingView + keyboardShouldPersistTaps on all form screens check done
+[ ] — Mobile: Pull-to-refresh (refreshing={isRefetching} + onRefresh={refetch}) on all server-backed lists check done
+[ ] — Mobile: Pessimistic UI on financial/destructive mutations check done (no optimistic updates)
+[ ] — Mobile: useConfirm() + ConfirmBottomSheet for destructive/financial actions check done (no Alert.alert())
+[ ] — Mobile: showToast() sole entry point + dedupKey on all mutation toasts check done
+[ ] — Mobile: useUnsavedChangesGuard(isDirty) on all multi-step forms check done
+[ ] — Mobile: maskSensitiveData() for PII in list/card views check done
+[ ] — Mobile: tokens.layout.buttonMinWidth on async-submit buttons check done
+[ ] — Mobile: Token refresh single-flight (concurrent 401s share one promise) check done
+[ ] — Mobile: x-tenant-id from session/JWT only (never route params or local state) check done
+[ ] — Mobile: pressScale (tokens.pressScale = 0.96) animatedStyle on all pressables check done
+[ ] — Mobile: Per-screen explicit StatusBar (style + backgroundColor) check done
+[ ] — Mobile: SafeAreaView from react-native-safe-area-context (not react-native core) check done
+[ ] — Mobile: Flat camelCase token paths verified (tokens.color.card, tokens.color.foreground, tokens.color.statusSuccessBg etc.) check done
+[ ] — Mobile: design-exception comments on non-token StyleSheet values check done
+[ ] — Mobile: accessibilityLabel + accessibilityRole + accessibilityState on interactive elements check done
+[ ] — Mobile: 44x44pt minimum touch targets check done
+[ ] — Mobile: Decorative icons accessible={false} + importantForAccessibility check done
+[ ] — Mobile: react-i18next used (not next-intl) check done
+[ ] — Mobile: Feature-local formatCurrency with divisor per currency check done
+[ ] — Mobile: PermissionDenied component for 403 responses check done
+[ ] — Mobile: OfflineBanner (list) + OfflineBlocker (mutation) offline state check done
 [ ] Security checked when applicable
 [ ] Data/transaction/concurrency checked when applicable
 [ ] Jobs/events checked when applicable
