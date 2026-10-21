@@ -21,9 +21,11 @@
 > ⛔ **BEFORE WRITING ANY CODE OR AUDIT FINDING, CONFIRM:**
 > ```text
 > [ ] Read complete MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all 67+ rules)
+> [ ] Read complete MOBILE_UI_UX_DESIGN.md (all 22 sections)
 > [ ] Confirmed TECHNOLOGY BASELINE — React Native Bare-Metal (New Architecture / Fabric + TurboModules)
 > [ ] CRITICAL MOBILE STRUCTURE GATE passed — folder tree verified before any deeper rule
-> [ ] Canonical feature structure confirmed (features/frontend_{role}/{module}/)
+> [ ] Canonical feature structure confirmed (src/features/frontend_{role}/{role}_{module}/)
+> [ ] WET PRINCIPAL confirmed — zero cross-feature business imports, zero DRY shortcuts for business logic
 > [ ] File size ceilings verified (Screen 80 lines, Component 200 lines, Hooks/API 150 lines, Store 180 lines, Util 120 lines)
 > [ ] MOBILE DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
 > ```
@@ -54,7 +56,8 @@ Before generating, auditing, or repairing ANY mobile feature module, verify ALL 
 | **Module Documentation Trio** | Every feature MUST contain `[featureName]_features.md`, `[featureName]_forbidden.md`, and `[featureName]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
 | **Centralized URL Config** | `config/[featureName].url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
 | **Query Key Registry** | `api/[featureName].query_keys.ts` or `config/[featureName].query_keys.ts` MUST exist and namespace all TanStack Query keys with resource identity. | Missing query key factory = CACHE INCONSISTENCY RISK. In repair: create query key registry in RBG 1. |
-| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | Sibling import = VIOLATION OF RULE 28. In repair: duplicate the required business artifact locally inside the owning feature module (Strict WET Principle) in RBG 1. Moving business logic to `src/core/` is STRICTLY FORBIDDEN. |
+| **Zero Cross-Feature Imports** | A feature MUST NOT import business components, hooks, or state from sibling features. | Sibling import = VIOLATION OF RULE 28 (WET PRINCIPAL). In repair: duplicate the required business artifact locally inside the owning feature module (Strict WET Principal) in RBG 1. Moving business logic to `src/core/` is STRICTLY FORBIDDEN. |
+| **No Barrel Files** | NO `index.ts` or re-export facades. All imports must be direct absolute paths (`@/...`). | Barrel file = CIRCULAR DEPENDENCY RISK. In repair: remove barrel files and update imports in RBG 1. |
 
 > ⛔ **Skipping this gate invalidates all downstream compliance results.**
 
@@ -106,9 +109,11 @@ This document defines the canonical architecture and development rules for a Rea
 > ⛔ **FORBIDDEN packages (common AI hallucination traps):**
 > `expo-font`, `expo-status-bar`, `expo-haptics`, `expo-permissions`, `expo-date-picker`, `@expo/vector-icons`, `react-native-vector-icons` (use `lucide-react-native` instead), `react-native-elements`, `native-base`
 
-## CODE & COMPONENT ISOLATION DECISION MATRIX (STRICT WET VS SHARED INFRASTRUCTURE)
+## CODE & COMPONENT ISOLATION DECISION MATRIX (STRICT WET PRINCIPAL)
 
 > ⛔ **AI AGENTS: Before deciding whether to share or duplicate any component, hook, utility, or constant across roles or modules, you MUST consult this matrix. Guessing is PROHIBITED.**
+>
+> **THE WET PRINCIPAL:** "Write Everything Twice" (WET) is the mandatory default for all business-aware code. Traditional DRY principles MUST NOT override the project's AI isolation requirement. Over-isolation is always compliant; sharing business logic is NEVER permitted.
 
 | Scenario | Classification | Required Decision |
 |---|---|---|
@@ -129,6 +134,112 @@ This document defines the canonical architecture and development rules for a Rea
 - If the code contains ANY reference to a business entity, status, label, or domain type → it is `BUSINESS_AWARE` → it MUST be duplicated per feature. Sharing is a CRITICAL ISOLATION VIOLATION.
 - `formatCurrency` is ALWAYS `DOMAIN_UTILITY` — it MUST be feature-local (`[feature]/utils/[module]FormatCurrency.ts`), never in `src/core/`.
 - When in doubt, DUPLICATE. Over-isolation is always compliant; sharing business logic is NEVER permitted.
+
+---
+
+## NO ROLE-WIDE BUSINESS BUCKETS
+
+The project MUST NOT create role-wide business folders such as:
+
+```text
+frontend_manager_components/
+frontend_manager_hooks/
+frontend_manager_store/
+frontend_manager_api/
+```
+
+when those files contain business behavior belonging to individual features. Feature-specific responsibilities MUST remain inside the owning feature:
+
+```text
+src/features/
+└── frontend_manager/
+    ├── manager_members/
+    │   ├── components/
+    │   ├── hooks/
+    │   ├── api/
+    │   └── ...
+    ├── manager_attendance/
+    │   ├── components/
+    │   ├── hooks/
+    │   ├── api/
+    │   └── ...
+    └── manager_billing/
+        └── ...
+```
+
+The same principle applies to every role and every domain.
+
+---
+
+## Mandatory vs Conditionally Required Artifacts
+
+> ⛔ **NO OMISSION OF REQUIRED ARTIFACTS:**
+> AI agents MUST NOT use "only required folders need to exist" as an excuse to omit tests, mocks, schemas, or documentation.
+
+| Artifact | Requirement Level | Mandatory Trigger Condition | Consequence of Omission |
+|---|---|---|---|
+| `[featureName]_features.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks architectural map |
+| `[featureName]_forbidden.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks safety boundaries |
+| `[featureName]_theme_contract.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Visual portability contract unverified |
+| `config/[featureName].url_config.ts` | **MANDATORY FOR ALL MODULES** | Every module with routes or API calls | `NON_COMPLIANT` — URL centralization contract broken |
+| `api/[featureName].query_keys.ts` | **MANDATORY FOR ALL MODULES** | Every module with API calls | `NON_COMPLIANT` — Cache key consistency broken |
+| `screens/` | **MANDATORY FOR ALL MODULES** | Every feature module with UI | `NON_COMPLIANT` — Missing screen entry points |
+| `components/` | **MANDATORY FOR ALL MODULES** | Every feature module with UI | `NON_COMPLIANT` — Missing view layer |
+| `hooks/` | **MANDATORY FOR ALL MODULES** | Any component with logic/state | `NON_COMPLIANT` — Logic coupled to view |
+| `api/` | **MANDATORY FOR ALL MODULES** | Any API call | `NON_COMPLIANT` — API centralization broken |
+| `types/` | **MANDATORY FOR ALL MODULES** | Every feature module | `NON_COMPLIANT` — Type isolation contract broken |
+| `schemas/` | **MANDATORY FOR ALL MODULES** | Every module with forms/API responses | `NON_COMPLIANT` — Runtime validation missing |
+| `mocks/` | **MANDATORY FOR ALL MODULES** | Every feature module (fixtures + MSW handlers) | `NON_COMPLIANT` — Untestable/unmocked module |
+| `_locales/` | **MANDATORY FOR ALL MODULES** | Every feature module (`_en.json` + active languages) | `NON_COMPLIANT` — Hardcoded strings in JSX |
+| `state/` | **Conditionally Required** | MUST exist when module has shared client state | `NON_COMPLIANT` if client state is stored in global or component state |
+| `utils/` | **Conditionally Required** | MUST exist when module has formatters/helpers | `NON_COMPLIANT` if helpers are placed in global `src/core/` |
+| `tests/` | **MANDATORY FOR ALL MODULES** | Every feature module (integration tests) | `NON_COMPLIANT` — Zero integration test verification |
+
+---
+
+## AI PORTABILITY CONTRACT
+
+A feature module is considered AI-portable only when an AI can receive the feature directory as its primary context and understand the feature's purpose, user flows, UI, state ownership, API contract, schemas, business constants, mock behavior, tests, error handling, loading/empty behavior, permissions, and documented external dependencies — without receiving unrelated sibling business modules.
+
+The canonical workflow is:
+
+```text
+FEATURE BUG
+   ↓
+PROVIDE ONLY THE FEATURE MODULE FOLDER
+   ↓
+AI READS _features.md FIRST, THEN _forbidden.md
+   ↓
+AI UNDERSTANDS THE FEATURE
+   ↓
+AI REPAIRS THE FEATURE
+   ↓
+AI RUNS FEATURE TESTS
+   ↓
+ONLY FEATURE FILES ARE CHANGED
+```
+
+For example, if a bug exists in `src/features/frontend_manager/manager_members/`, the preferred AI context is ONLY that folder — NOT the entire `frontend_manager/` role container and NOT the entire application.
+
+---
+
+## DUPLICATION IS ALLOWED AND PREFERRED WHEN IT IMPROVES ISOLATION
+
+Traditional DRY principles MUST NOT override the project's AI isolation requirement.
+
+If two independent features need similar business behavior, they MAY contain duplicated implementations. This is intentional when duplication prevents cross-feature business coupling.
+
+The primary optimization target is:
+```text
+AI CONTEXT ISOLATION
++
+BOUNDED CHANGE BLAST RADIUS
++
+FEATURE PORTABILITY
+```
+not minimum source-code duplication.
+
+**FEATURE-LOCAL SINGLE SOURCE OF TRUTH:** The phrase "single source of truth" applies ONLY within the owning feature module. Two modules may contain similar or even identical business constants. Cross-feature consolidation is NOT required and is FORBIDDEN for business-aware code.
 
 ---
 

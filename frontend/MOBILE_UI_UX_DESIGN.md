@@ -69,6 +69,7 @@ This document governs the **React Native mobile application only**. Rules refere
 | Status/payment/chart token palette | ✅ | ✅ | ✅ |
 | Feature isolation, module naming, AI repair boundary | ✅ | ✅ | ✅ |
 | Security principles (auth, permissions, PII masking) | ✅ | ✅ | ✅ |
+| CTA gradient restriction (ERP dashboard) | ✅ | ✅ | ✅ |
 
 **Conflict Resolution Hierarchy:** When rules in this document conflict with each other or with other documents, resolve using this precedence order (highest to lowest):
 1. **Security & Privacy** — authentication, authorization, PII handling
@@ -131,9 +132,36 @@ const { bottom } = useSafeAreaInsets();
 - Feature UI never hardcodes global values.
 - Feature UI never guesses token names.
 
-> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION):**
-> Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text) by moving them to global folders like `widgets/common/` or `ui/`. 
-> Global UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature.
+> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION — WET PRINCIPAL):**
+> Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text) by moving them to global folders like `widgets/common/` or `ui/`.
+> Global UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature (Strict WET Principal).
+> **Consequence:** An AI modifying a shared business component to fix Feature A will silently break Feature B, triggering cross-feature regression cascades.
+
+---
+
+## DESIGN SYSTEM OWNERSHIP BOUNDARY
+
+### GLOBAL DESIGN SYSTEM owns:
+- Semantic color tokens, surface/elevation tokens, typography, radius scale
+- Spacing scale, touch-target tokens, motion tokens
+- Button/card/list-item/form/bottom-sheet visual patterns
+- Global async state patterns (skeleton, empty, error, offline)
+- Approved visual treatment for charts, haptics, toasts, loading, empty and error states
+
+### FEATURE MODULE owns:
+- Business statuses and status-to-semantic-color mapping
+- Feature-specific icons, static UI constants, labels and configuration
+- API/server data, module state, tests, MSW fixtures/handlers, feature behavior
+
+### MODULE THEME CONTRACT owns:
+- The exact list of global semantic tokens required by the module (`[featureName]_theme_contract.md`)
+- Any explicitly justified feature-local visual token
+
+### GLOBAL DESIGN MUST NOT own:
+- Business navigation configuration
+- Business status registry (like `Active`, `Paid`, `Pending`)
+- Feature-specific business data (member/plan/payment/etc.)
+- Feature API behavior, specific constants, or business feature logic
 
 ## 1A. Contrast Validation (WCAG AA)
 
@@ -141,7 +169,7 @@ Every semantic foreground/background pair used for normal UI text MUST meet WCAG
 The theme module MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
-Ensure `primary` (#4F46E5) and `destructive` (#DC2626) against `on-primary` (#FFFFFF) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
+Ensure `primary` (`#FACC15` dark / `#EAB308` light) and `destructive` (#DC2626) against `on-primary` (#111111) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
 
 ## 1B. Semantic Accessibility Tokens
 
@@ -184,25 +212,36 @@ All screens and components MUST meet these mobile accessibility standards:
 - Non-essential animations MUST respect `AccessibilityInfo.isReduceMotionEnabled()`.
 - See Section 7 for full reduced-motion rules.
 
-## 1. Color Tokens
+## 1. Color Tokens — "Luxury Premium Gold" Theme
+
+> **CRITICAL:** This project uses the **Luxury Premium Gold** theme — identical semantic intent as the web platform. The primary brand color is **Premium Gold (`#FACC15`)**, not indigo/purple. This ensures visual consistency across web and mobile surfaces. The ERP relies on the 5-color core architecture (Gold Primary, Blue Info, Green Success, Amber Warning, Red Danger). Aggressive gradients are **strictly restricted** to Landing Page hero CTAs — they MUST NEVER be used inside the authenticated ERP dashboard screens.
 
 | Token | Light | Dark | Usage |
 |---|---|---|---|
-| `background` | #FFFFFF | #0B0B0F | Screen background |
-| `foreground` | #0B0B0F | #F5F5F7 | Primary text |
-| `card` | #F8F8FA | #16161C | Card/surface background |
-| `primary` | #4F46E5 | #4F46E5 | Primary actions, active states |
-| `primary-text` | #4F46E5 | #818CF8 | Text links, primary text buttons |
-| `destructive` | #DC2626 | #DC2626 | Errors, delete actions |
-| `border` | #E5E5EA | #2A2A32 | Dividers, input borders |
-| `muted` | #71717A | #A1A1AA | Secondary/disabled text |
-| `on-primary` | #FFFFFF | #FFFFFF | Text/icon on primary fill |
-| `on-destructive` | #FFFFFF | #FFFFFF | Text/icon on destructive fill |
-| `on-success` | #064E3B | #FFFFFF | Text/icon on success fill |
-| `on-info` | #1E3A8A | #FFFFFF | Text/icon on info fill |
-| `focus-ring` | #A16207 | #EAB308 | Input focus and keyboard focus |
-| `skeleton-base` | #E5E5EA | #2A2A32 | Skeleton shimmer base |
-| `skeleton-highlight` | #F5F5F7 | #3F3F46 | Skeleton shimmer highlight |
+| `background` | `#F4F4F5` | `#050505` | Screen root background |
+| `foreground` | `#000000` | `#FFFFFF` | Primary text, headings |
+| `card` | `#FFFFFF` | `#111111` | Card / surface / bottom sheet background |
+| `card-elevated` | `#FAFAFA` | `#1A1A1A` | Elevated card, floating surfaces, inputs |
+| `overlay` | `#FFFFFF` | `#242424` | Modals, dialogs |
+| `popover` | `#F4F4F5` | `#2E2E2E` | Dropdowns, tooltips |
+| `primary` | `#EAB308` | `#FACC15` | Primary buttons, active nav item, FAB |
+| `primary-hover` | `#CA8A04` | `#EAB308` | Primary button pressed state |
+| `primary-subtle` | `rgba(234,179,8,0.15)` | `rgba(250,204,21,0.15)` | Soft badge backgrounds, selected row highlight |
+| `primary-text` | `#EAB308` | `#FACC15` | Text links, primary text buttons |
+| `destructive` | `#B91C1C` | `#B91C1C` | Errors, delete actions |
+| `border` | `#E4E4E7` | `#27272A` | Dividers, input borders |
+| `border-focus` | `#A16207` | `#FACC15` | Input border on focus |
+| `muted` | `#52525B` | `#A1A1AA` | Secondary/disabled text, placeholders |
+| `on-primary` | `#111111` | `#111111` | Text/icon on primary fill |
+| `on-destructive` | `#FFFFFF` | `#FFFFFF` | Text/icon on destructive fill |
+| `on-success` | `#FFFFFF` | `#FFFFFF` | Text/icon on success fill |
+| `on-info` | `#FFFFFF` | `#FFFFFF` | Text/icon on info fill |
+| `on-warning` | `#111111` | `#111111` | Text/icon on warning fill |
+| `focus-ring` | `#A16207` | `#FACC15` | Input focus and keyboard focus ring |
+| `skeleton-base` | `#E4E4E7` | `#111111` | Skeleton shimmer base |
+| `skeleton-highlight` | `#F4F4F5` | `#1A1A1A` | Skeleton shimmer highlight |
+| `surface-hover` | `rgba(234,179,8,0.08)` | `rgba(250,204,21,0.08)` | List item press highlight |
+| `overlay-backdrop` | `rgba(0,0,0,0.6)` | `rgba(0,0,0,0.6)` | Modal/sheet background dim |
 
 ### Opacity Tokens
 | Token | Value | Usage |
@@ -231,11 +270,13 @@ All typography values MUST be expressed as explicit React Native unit properties
 
 | Token | `fontSize` | `lineHeight` | `letterSpacing` | `fontWeight` | Usage |
 |---|---|---|---|---|---|
-| `caption` | 12 | 18 | 0.5 | `'400'` | Captions, timestamps |
-| `body-sm` | 14 | 21 | 0 | `'400'` | Body secondary |
-| `body` | 16 | 24 | 0 | `'400'` | Body primary |
-| `heading-sm` | 18 | 22 | -0.5 | `'600'` | Section headers |
+| `caption` | 12 | 18 | 0.5 | `'400'` | Captions, timestamps, badge text |
+| `body-sm` | 14 | 21 | 0 | `'400'` | Body secondary, helper text |
+| `body` | 16 | 24 | 0 | `'400'` | Body primary, input text |
+| `heading-sm` | 18 | 22 | -0.5 | `'600'` | Section headers, card titles |
 | `heading-lg` | 22 | 28 | -0.5 | `'700'` | Screen titles |
+| `kpi` | 28 | 34 | -1 | `'700'` | KPI / stat numbers on dashboard cards |
+| `label-uppercase` | 11 | 16 | 1 | `'600'` | UPPERCASED stat card labels, table headers |
 
 **Font family contract:**
 - Default: System UI font stack (`System` — resolves to San Francisco on iOS, Roboto on Android).
@@ -260,7 +301,15 @@ All typography values MUST be expressed as explicit React Native unit properties
 
 ## 5A. Layout Tokens
 
-`button-min-width = 120`
+| Token | Value | Usage |
+|---|---|---|
+| `button-min-width` | 120 | Minimum button width to prevent layout shift on loading |
+| `min-touch-target` | 44 | iOS pt minimum; Android uses 48dp |
+| `header-height` | 56 | Top navigation bar height |
+| `bottom-tab-height` | 60 | Bottom tab bar height |
+| `content-padding` | 16 | Standard screen horizontal padding |
+| `card-padding` | 16 | Standard card internal padding |
+| `fab-size` | 56 | Floating action button size |
 
 ## 5B. Icon Sizes
 
@@ -353,22 +402,25 @@ Payment mode colors are separated from status colors to avoid visual collision. 
 ## 9. Chart Palette
 Series color order (applied consistently across every chart in the app). Charts in feature UI must consume only these semantic tokens.
 
-| Token | Light | Dark |
-|---|---|---|
-| `chart-primary` | `#4F46E5` | `#818CF8` |
-| `chart-success` | `#10B981` | `#86EFAC` |
-| `chart-warning` | `#F59E0B` | `#F59E0B` |
-| `chart-danger` | `#EF4444` | `#EF4444` |
-| `chart-secondary`| `#DB2777` | `#EC4899` |
-| `chart-info` | `#0891B2` | `#06B6D4` |
+| Token | Light | Dark | Usage |
+|---|---|---|---|
+| `chart-primary` | `#EAB308` | `#FACC15` | Primary series (Gold — matches brand primary) |
+| `chart-success` | `#16A34A` | `#4ADE80` | Positive series (Green) |
+| `chart-warning` | `#F59E0B` | `#FBBF24` | Warning series (Amber) |
+| `chart-danger` | `#DC2626` | `#F87171` | Negative series (Red) |
+| `chart-info` | `#2563EB` | `#60A5FA` | Info series (Blue) |
+| `chart-secondary` | `#7C3AED` | `#D8B4FE` | Secondary breakdown (Purple) |
+| `chart-grid` | `rgba(0,0,0,0.06)` | `rgba(255,255,255,0.05)` | Gridlines |
+| `chart-tooltip-bg` | `#FFFFFF` | `#111111` | Tooltip backgrounds |
 
 ## 10. Elevation / Shadow
 
-| Level | Effect (iOS-style shadow) | Effect (Android-style elevation) |
-|---|---|---|
-| `shadow-sm` | opacity 0.05, radius 2 | elevation 1 |
-| `shadow-md` | opacity 0.1, radius 6 | elevation 3 |
-| `shadow-lg` | opacity 0.15, radius 12 | elevation 8 |
+| Level | Effect (iOS-style shadow) | Effect (Android-style elevation) | Usage |
+|---|---|---|---|
+| `shadow-sm` | opacity 0.05, radius 2 | elevation 1 | Subtle card elevation |
+| `shadow-md` | opacity 0.1, radius 6 | elevation 3 | Standard card, list item |
+| `shadow-lg` | opacity 0.15, radius 12 | elevation 8 | Bottom sheet, modal |
+| `shadow-xl` | opacity 0.2, radius 20 | elevation 16 | FAB, prominent overlays |
 
 ## 11. Core Semantic Color Usage (How to Apply Tokens — No Guessing)
 
@@ -392,8 +444,12 @@ Every color token has ONE canonical usage. Never apply a token outside its role.
 | `pay-*-bg` | — | Payment badge background | — |
 | `chart-*` | Chart series data | Chart fill | Chart border |
 
-**Rule:** Never use `primary` for body text. Never use `destructive` for error text (use `status-danger-text` instead). Never use `foreground` as a background.
-Token names describe intent, not appearance — they resolve differently in light vs dark mode.
+**Rules:**
+- Never use `primary` for body text.
+- Never use `destructive` for error text (use `status-danger-text` instead).
+- Never use `foreground` as a background.
+- Token names describe intent, not appearance — they resolve differently in light vs dark mode.
+- **CRITICAL: Solid Background Contrast** — If you use a solid background token (e.g., `primary`, `destructive`), you MUST pair it with the appropriate `on-*` contrasting text token. `on-primary` is `#111111` (dark text on gold), NOT white.
 
 ## 12. Form Interaction States (All 9 States — No Invented Colors)
 
@@ -557,21 +613,31 @@ Feature UI                 ← consumes semantic tokens ONLY; never hardcodes va
 // src/core/theme/tokens.ts  — canonical shape (implement values from tables above)
 export const tokens = {
   color: {
-    background:          string,  // Section 1
+    // Core surfaces (Section 1)
+    background:          string,
     foreground:          string,
     card:                string,
+    cardElevated:        string,  // 'card-elevated'
+    overlay:             string,
+    popover:             string,
     primary:             string,
-    primaryText:         string,  // 'primary-text' token
+    primaryHover:        string,  // 'primary-hover'
+    primarySubtle:       string,  // 'primary-subtle'
+    primaryText:         string,  // 'primary-text'
     destructive:         string,
     border:              string,
+    borderFocus:         string,  // 'border-focus'
     muted:               string,
-    onPrimary:           string,  // 'on-primary'
+    onPrimary:           string,  // 'on-primary' = #111111 (dark text on gold)
     onDestructive:       string,
     onSuccess:           string,
     onInfo:              string,
+    onWarning:           string,  // 'on-warning' = #111111
     focusRing:           string,
     skeletonBase:        string,
     skeletonHighlight:   string,
+    surfaceHover:        string,  // 'surface-hover'
+    overlayBackdrop:     string,  // 'overlay-backdrop'
     // Status tokens (Section 8)
     statusSuccessText:   string,
     statusSuccessBg:     string,
@@ -599,8 +665,10 @@ export const tokens = {
     chartSuccess:        string,
     chartWarning:        string,
     chartDanger:         string,
-    chartSecondary:      string,
     chartInfo:           string,
+    chartSecondary:      string,
+    chartGrid:           string,
+    chartTooltipBg:      string,
   },
   opacity: {
     disabled:  number,  // 0.5
@@ -619,11 +687,13 @@ export const tokens = {
     9: number,  // 48
   },
   typography: {
-    caption:   { fontSize: 12, lineHeight: 18, letterSpacing: 0.5,  fontWeight: '400' as const },
-    bodySm:    { fontSize: 14, lineHeight: 21, letterSpacing: 0,    fontWeight: '400' as const },
-    body:      { fontSize: 16, lineHeight: 24, letterSpacing: 0,    fontWeight: '400' as const },
-    headingSm: { fontSize: 18, lineHeight: 22, letterSpacing: -0.5, fontWeight: '600' as const },
-    headingLg: { fontSize: 22, lineHeight: 28, letterSpacing: -0.5, fontWeight: '700' as const },
+    caption:        { fontSize: 12, lineHeight: 18, letterSpacing: 0.5,  fontWeight: '400' as const },
+    bodySm:         { fontSize: 14, lineHeight: 21, letterSpacing: 0,    fontWeight: '400' as const },
+    body:           { fontSize: 16, lineHeight: 24, letterSpacing: 0,    fontWeight: '400' as const },
+    headingSm:      { fontSize: 18, lineHeight: 22, letterSpacing: -0.5, fontWeight: '600' as const },
+    headingLg:      { fontSize: 22, lineHeight: 28, letterSpacing: -0.5, fontWeight: '700' as const },
+    kpi:            { fontSize: 28, lineHeight: 34, letterSpacing: -1,   fontWeight: '700' as const },
+    labelUppercase: { fontSize: 11, lineHeight: 16, letterSpacing: 1,    fontWeight: '600' as const },
   },
   radius: {
     sm:   4,
@@ -639,8 +709,13 @@ export const tokens = {
     stroke: 1.75,
   },
   layout: {
-    buttonMinWidth:  120,
-    minTouchTarget:  44,  // iOS pt; Android uses 48dp
+    buttonMinWidth:   120,
+    minTouchTarget:   44,   // iOS pt; Android uses 48dp
+    headerHeight:     56,
+    bottomTabHeight:  60,
+    contentPadding:   16,
+    cardPadding:      16,
+    fabSize:          56,
   },
   duration: {
     fast:   150,
@@ -653,6 +728,7 @@ export const tokens = {
     sm: { opacity: 0.05, radius: 2,  elevation: 1 },
     md: { opacity: 0.1,  radius: 6,  elevation: 3 },
     lg: { opacity: 0.15, radius: 12, elevation: 8 },
+    xl: { opacity: 0.2,  radius: 20, elevation: 16 },
   },
   zIndex: {
     base:        0,
@@ -675,6 +751,9 @@ export type Tokens = typeof tokens;
 // tokens.zIndex.bottomSheet     ✅
 // tokens.icon.sm                ✅
 // tokens.layout.buttonMinWidth  ✅
+// tokens.layout.headerHeight     ✅
+// tokens.shadow.xl               ✅
+// tokens.color.onPrimary         ✅  (= #111111 — dark text on gold)
 ```
 
 **Workflow rule (when a new token is needed):**
