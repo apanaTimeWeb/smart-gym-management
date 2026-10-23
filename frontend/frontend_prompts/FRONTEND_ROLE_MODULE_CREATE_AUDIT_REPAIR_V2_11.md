@@ -1,17 +1,62 @@
-﻿# FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
+# FRONTEND ROLE MODULE — CREATE, AUDIT & REPAIR
 
-## VERSION 2.8 FINAL — FRONTEND (WEB/MOBILE) / QUAD-MODE (CREATE / AUDIT+REPAIR / CROSS-PLATFORM-MOBILE-CREATE / MOBILE-AUDIT+REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION / WEB-ZIP-TO-MOBILE-CREATE / MOBILE-43P-DELIVERY-GATE
+## VERSION 2.11 FINAL — FRONTEND (WEB/MOBILE) / QUAD-MODE (CREATE / AUDIT+REPAIR / CROSS-PLATFORM-MOBILE-CREATE / MOBILE-AUDIT+REPAIR) / ZERO-SAMPLING / COMPLETE RULE COVERAGE / COMPLETE DESIGN COVERAGE / CONTRACT INTEGRITY / VERSIONED ZIP DELIVERY / BOUNDED CHECKPOINTED EXECUTION / SOURCE-FIRST REPAIR / HOST-RUNTIME-BLOCKED SEPARATION / WEB-ZIP-TO-MOBILE-CREATE / MOBILE-43P-DELIVERY-GATE
 
 ---
 
+## Master Cross-Document Precedence Order
+
+Apply the following order only for the active platform.
+
+### Shared precedence for all platforms
+1. Security, privacy, legal, authorization, tenant isolation, and data protection
+2. Accessibility and platform-native safety requirements
+3. Explicit user-approved scope and verified API contracts
+
+### Web mode only (Mode A & Mode B)
+4. `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+5. `WEB_FRONTEND_UI_UX_DESIGN.md`
+6. `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR_V2_11.md` for execution workflow, audit sequencing, delivery artifacts, and reporting
+7. Feature-local documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`)
+8. Existing implementation conventions
+
+### Mobile mode only (Mode C & Mode D)
+4. `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+5. `MOBILE_UI_UX_DESIGN.md` for visual/token decisions
+6. `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR_V2_11.md` for execution workflow, audit sequencing, delivery artifacts, and reporting
+7. Feature-local documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`)
+8. Existing implementation conventions
+
+A document for the inactive platform MUST NOT be loaded, applied, or used as a tie-breaker.
+A lower-priority rule MUST NOT override a higher-priority rule.
+Any unresolved conflict MUST be recorded as `BLOCKED_BY_SUPPLIED_CONTRACT` rather than resolved through invention.
+
+## Canonical Rule Reference Policy
+
+When a rule is repeated for convenience:
+- The first named canonical section is authoritative;
+- Repeated copies must link to or reference the canonical rule;
+- Repeated copies must not redefine, weaken, or conflict with the canonical wording;
+- Any conflicting duplicate wording is obsolete and must be removed during the next document revision.
+
+---
+
+
 > ⛔⛔⛔ **AI MANDATORY BOOT SEQUENCE — EXECUTE BEFORE ANYTHING ELSE** ⛔⛔⛔
 >
-> **VIOLATION OF THIS BOOT SEQUENCE = THE ENTIRE OUTPUT IS DISCARDED AND MUST BE RESTARTED.**
+> **COMPLIANCE FAILURE HANDLING (EVIDENCE-BASED REPAIR):**
+> On detecting a violation of this boot sequence or any mandatory invariant, the AI MUST:
+> 1. Stop the affected implementation path immediately;
+> 2. Record the violated rule, affected file, and concrete evidence;
+> 3. Repair the violation before continuing downstream generation;
+> 4. Re-run relevant static compliance checks;
+> 5. Mark final status as compliant ONLY after file-level evidence is verified.
+> The AI MUST NOT silently continue after detecting a violation, and MUST NOT claim compliance without verifiable file evidence.
 >
 > Before producing ANY analysis, code, audit findings, or repair content, you MUST output ALL of the following in your VERY FIRST response:
 >
 > ```
-> FRONTEND AGENT V2.8 — BOOT DECLARATION
+> FRONTEND AGENT V2.11 — BOOT DECLARATION
 > =======================================
 > ROLE:               Frontend Create/Audit/Repair AI
 > MODE:               [MODE A: CREATE / MODE B: AUDIT+REPAIR / MODE C: CROSS-PLATFORM MOBILE CREATE / MODE D: MOBILE AUDIT+REPAIR — derived from supplied inputs per Section 0 detection rules]
@@ -50,15 +95,28 @@
 > [ ] Step 4: STAGE 1 FREEZE — mobile requirement baseline frozen — not yet started
 > [ ] Step 5: STAGE 2 CREATE — build complete React Native module from scratch — not yet started
 > [ ] Step 6: Section 43P MOBILE RULE CHECKLIST clean on created mobile code — not yet started
-> [ ] Step 7: FINAL DELIVERY (mobile-{role}-v1.zip + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E) — not yet started
+> [ ] Step 7: FINAL DELIVERY (mobile-{role}-v1.zip + compliance_manifest.json + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E) — not yet started
+>
+> ── MODE D (MOBILE AUDIT+REPAIR) EXECUTION ORDER ─────────────────────────────
+> [ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely — not yet started
+> [ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely — not yet started
+> [ ] Step 3: Read target feature documentation trio and read-only Core Contract Pack — not yet started
+> [ ] Step 4: STAGE 1 FREEZE — mobile audit baseline + baseline_frozen: true — not yet started
+> [ ] Step 5: STAGE 2 AUDIT — complete full gap & contract audit against mobile architecture and design rules — not yet started
+> [ ] Step 6: RBG PLAN published + user explicitly approves — not yet started
+> [ ] Step 7: STAGE 3 REPAIRS — execute repair batches in RBG order — not yet started
+> [ ] Step 8: Section 43P MOBILE RULE CHECKLIST clean on repaired mobile code — not yet started
+> [ ] Step 9: FINAL DELIVERY (mobile-{role}-v{N}-fix.zip + compliance_manifest.json + INTEGRATION_GUIDE.md + RE_AUDIT_CHECKLIST_RESULT.md + Maestro E2E) — not yet started
 >
 > MANDATORY DELIVERABLES ACKNOWLEDGED:
 > - Mode A/B Web ZIP: frontend-{role}-v{N}[-fix].zip
 > - Mode C Mobile ZIP: mobile-{role}-v1.zip
+> - Mode D Mobile Fix ZIP: mobile-{role}-v{N}-fix.zip
+> - compliance_manifest.json (machine-readable compliance manifest for Mobile Modes C/D)
 > - INTEGRATION_GUIDE.md (consolidated master developer guide with Section 1 Changelog inside ZIP)
 > - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P clean result inside ZIP)
 > - **Web mode (A/B):** `playwright_E2E/` test suite (inside ZIP)
-> - **Mobile mode (C):** `mobile_e2e/` Maestro YAML test suite (inside ZIP)
+> - **Mobile mode (C/D):** `mobile_e2e/` Maestro YAML test suite (top-level mirrored; never stored inside src/features/)
 >
 > FIRST ACTION: [State exact first action — e.g., Read supplied design and architecture rules]
 > ```
@@ -69,6 +127,46 @@
 > ⛔ **You MUST NOT deliver the ZIP before the Section 43P Anti-Skipping Checklist is re-evaluated on repaired code. All SOURCE_LEVEL_FIX findings must be resolved. Items requiring host/runtime execution (DEFERRED_TO_HOST_RUNTIME), host infrastructure (OUTSIDE_SUPPLIED_SCOPE), or external product decisions (EXTERNAL_PRODUCT_DECISION_BLOCKED) MUST be documented in RE_AUDIT_CHECKLIST_RESULT.md, but their presence MUST NOT block packaging or delivering the ZIP.**
 > ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md` (containing Section 1 Changelog), `RE_AUDIT_CHECKLIST_RESULT.md`, and the platform-appropriate E2E test suite (`playwright_E2E/` for Web, `mobile_e2e/` for Mobile). They are mandatory deliverables, not suggestions.**
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
+>
+> ⛔⛔⛔ **CAPABILITY-TRUTH DELIVERY RULE (NON-NEGOTIABLE)** ⛔⛔⛔
+>
+> The AI MUST NEVER fabricate or hallucinate:
+> - ZIP archive creation when bash/archive tools are unavailable;
+> - Repository writes when file-system write capabilities are absent;
+> - Test execution passes when runner commands are unexecutable;
+> - Emulator / simulator / device runtime passes;
+> - CI pipeline success;
+> - Fake artifact download URLs or synthetic hashes.
+>
+> The AI MUST complete all source-level work within its granted scope.
+> Final delivery status MUST be explicitly declared as one of:
+> - `SOURCE_COMPLETE_AND_ARTIFACT_GENERATED` (when file writing and packaging tools are available and executed)
+> - `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING` (when source code is complete but ZIP packaging tool is absent)
+> - `SOURCE_COMPLETE_RUNTIME_VERIFICATION_DEFERRED` (when source code is complete but live device/simulator is absent)
+> - `BLOCKED_BY_SUPPLIED_CONTRACT` (when verified external contract contradicts requirements or lacks essential data)
+> - `BLOCKED_BY_EXPLICIT_SCOPE_RESTRICTION` (when requested changes lie strictly outside granted writable scope)
+>
+> Lack of artifact-generation capability does not block source completion.
+> Lack of device/emulator capability does not block static repair completion.
+>
+## Contract Finding and Delivery Status Taxonomy
+
+### Finding Codes
+- `CONTRACT_NOT_FOUND_IN_WEB_ZIP` — Requested endpoint or data field is completely absent from supplied source evidence.
+- `CONTRACT_AMBIGUOUS` — Evidence contains conflicting, contradictory, or multiple plausible definitions.
+- `CONTRACT_CONFLICT` — Explicit contradiction between supplied contract and normative architecture/security rules.
+- `CONTRACT_INCOMPLETE` — Contract declares an operation but omits required parameters, payload schema, or response model.
+
+### Final Delivery / Blocking Statuses
+- `SOURCE_COMPLETE_AND_ARTIFACT_GENERATED` — All source code is written, verified, and packaged into the requested ZIP artifact.
+- `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING` — All source code is completely written and verified, but archive creation CLI is unavailable.
+- `SOURCE_COMPLETE_RUNTIME_VERIFICATION_DEFERRED` — Source code is complete, but live runtime (Metro, simulator, device) verification is deferred to host.
+- `BLOCKED_BY_SUPPLIED_CONTRACT` — Module cannot safely proceed because a core business invariant or contract is ambiguous or contradictory.
+- `BLOCKED_BY_EXPLICIT_SCOPE_RESTRICTION` — Requested changes lie strictly outside granted writable boundaries.
+
+A finding code explains the issue.
+A delivery/blocking status explains the final execution outcome.
+
 >
 > ⛔⛔⛔ **CONTINUE-THROUGH DIRECTIVE — NON-NEGOTIABLE** ⛔⛔⛔
 >
@@ -101,6 +199,35 @@
 >    - Standard dependencies (Next.js, React, Tailwind v4, TanStack Query v5, Zustand, React Hook Form, Zod, Lucide React) exist in the host project.
 > 3. **PROCEED TO AUDIT & REPAIR IMMEDIATELY:** You MUST audit, repair, and complete 100% of the supplied in-scope source files, components, hooks, stores, schemas, URL configs, mock fixtures, and tests directly. Demanding host application root slices or declaring repairs "BLOCKED" due to absence of root files is a **CRITICAL SCOPE CREEP VIOLATION & AUDIT FAILURE**.
 > 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 SIDEBAR RULE):** This rule applies universally to EVERY role container (e.g., `frontend_admin`, `frontend_manager`, `frontend_superadmin`, `frontend_trainer`, `frontend_member`). Every primary clickable navigation destination in a role's sidebar/navigation shell maps strictly 1-to-1 to an autonomous feature module folder (`src/app/frontend_{role}/{role}_{feature}/`, e.g., `admin_billing/`, `manager_attendance/`, `superadmin_plans/`, `trainer_schedule/`). When a single feature module is supplied for repair or audit, the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling feature modules or root folders is STRICTLY FORBIDDEN.
+> 5. **UNIVERSAL DAY-1 SUB-MODULE ARCHITECTURE & GRANULAR AI REPAIR UNIT:**
+>    - Every feature module folder (`src/app/frontend_{role}/{role}_{feature}/` or `src/features/frontend_{role}/{role}_{feature}/`) is a **Pure Domain Container** containing ONLY a navigation shell (`layout.tsx` or `Navigator.tsx`), a default redirect (`page.tsx`), and one or more autonomous Sub-Modules (`{sub_module}/`).
+>    - **Zero Root Code In Domain Folder:** Creating loose `components/`, `hooks/`, `api/`, `mocks/`, or `utils/` directly at the feature root level is a **CRITICAL ARCHITECTURE VIOLATION**. 100% of executable source code, mocks, and tests MUST live inside `{sub_module}/`.
+>    - **Zero Relationship Between Sibling Sub-Modules (Strict WET Law):** Sibling sub-modules (e.g., `attendance_dashboard/`, `attendance_history/`, `attendance_analytics/`, `attendance_biometrics/`) have **ABSOLUTE ZERO RELATIONSHIPS, ZERO CROSS-IMPORTS, AND ZERO RUNTIME COUPLING**.
+>      - `attendance_dashboard` NEVER imports any component, hook, utility, type, or mock from `attendance_history` or vice versa.
+>      - Creating shared parent folders (e.g. `attendance/common/` or `attendance/shared/`) is **STRICTLY FORBIDDEN**.
+>      - If multiple sub-modules require similar UI elements (e.g. `AttendanceStatusBadge`, date range filter, table row formatter), each sub-module MUST duplicate it locally within its own `components/` or `utils/` (Strict WET Principle).
+>    - **Autonomous Sub-Module Documentation Trio & Run Harness:** Every single sub-module MUST contain its own isolated documentation trio:
+>      - `[role]_[submodule]_features.md` (Complete 22-section specification containing Purpose, User Stories, UI Data Requirements, Frozen API Contracts, Offline Mock Scenarios, Section 20 Standalone Run/Mock Harness, and Section 21 Portability Guide). Reading this file gives 100% complete clarity on the sub-module without reading source code.
+>      - `[role]_[submodule]_forbidden.md` (Anti-patterns & forbidden imports).
+>      - `[role]_[submodule]_theme_contract.md` (Design tokens & responsive contract).
+>    - **The Sub-Module ZIP Guarantee (Granular AI Repair Unit):** When repairing or auditing a sub-feature (e.g., `attendance_history`), the developer zips **ONLY `attendance_history/`** and gives it to any AI. The AI receives a laser-focused 10-15 file context, complete working mocks, and repairs the issue in one shot with 0% risk of breaking sibling sub-modules or the host app.
+>    - **Folder vs File Naming Formula:** Subfolders use canonical standard names (`components/`, `hooks/`, `api/`, `mocks/`, `utils/`, `tests/`), while file names MUST be globally unique with `[Role][Submodule][Name]` prefix (e.g., `ManagerAttendanceHistoryFilterBar.tsx`, `useManagerAttendanceHistoryList.ts`). Sibling sub-modules are 100% decoupled in source code.
+>    - **Meaningful Domain-Prefixed Submodule Naming Standard (No Lazy Names):** Every submodule folder MUST follow the exact semantic formula: `{domain}_{capability}` or `{domain}_{screen_intent}` (e.g., `attendance_dashboard`, `attendance_history`, `profile_overview`, `profile_security`, `billing_invoices`).
+>      - **The 5-Second Comprehension Invariant:** Anyone inspecting ONLY the submodule folder name MUST instantly know within 5 seconds its parent domain and exact business capability/screen intent.
+>      - **Strictly Banned Lazy/Ambiguous Names:** Never use generic or lazy names such as `tab1/`, `tab2/`, `main/`, `default/`, `home/`, `view/`, `details/` (must be `members_detail`), `common/`, `shared/`, `temp/`, or `misc/`. Lazy names are treated as **Critical Naming Violations**.
+>    - **Strict Maximum Nesting Depth Law (The Depth Limit Invariant — Sub-Submodules Strictly BANNED):**
+>      - Hierarchy depth below the Domain Container (`{role}_{domain}/`) is **STRICTLY BOUNDED TO EXACTLY 1 LEVEL** (`{domain}_{capability}/`).
+>      - Tier 4 (`{domain}_{capability}/`) is the **absolute terminal leaf feature execution unit**.
+>      - **Sub-submodules are STRICTLY FORBIDDEN:** Creating nested folders inside a sub-module that act as child sub-modules (e.g., `{domain}_{capability}/{capability}_{sub}/`) is a **CRITICAL ARCHITECTURE VIOLATION**. All decomposition inside a sub-module happens PURELY through standard category folders (`components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `mocks/`, `utils/`, `tests/`).
+>    - **Deterministic 5-Gate Sub-Module Qualification Decision Matrix (How AI Decides Sub-Module vs Internal View):**
+>      - **Gate 1 (Route & Navigation):** Does the capability have its own secondary navigation tab or distinct URL route segment (e.g., `/attendance/history`, `/attendance/biometrics`)? If YES → **Autonomous Sub-Module**. If it is opened by a button click, table row click, modal toggle, drawer slide-out, or multi-step wizard step → **Internal Component/View** inside `components/` (`[Submodule]Views/`, `[Submodule]Modals/`, etc.).
+>      - **Gate 2 (State & Lifecycle Independence):** Can this capability be refreshed, directly navigated to, or reset without depending on uncommitted in-memory React state of another screen? If YES → **Autonomous Sub-Module**. If it strictly depends on live uncommitted form state of a multi-step flow → **Internal View/Component** inside the same sub-module.
+>      - **Gate 3 (Granularity & File Count — The Goldilocks Rule: 5–20 Files):**
+>        - **Healthy Sub-Module Range:** 5 to 20 files.
+>        - **Anti-Pattern 1 (Nano-Module BANNED):** Creating a sub-module for a single component, badge, dropdown, or simple card (< 3 files) is STRICTLY FORBIDDEN. Keep it in `components/`.
+>        - **Anti-Pattern 2 (Mega-Submodule BANNED):** Cramming multiple distinct operational workflows into one giant sub-module (> 25 files) is STRICTLY FORBIDDEN. Split into sibling sub-modules under that domain container.
+>      - **Gate 4 (Standalone Testability & Mockability):** Can this capability run in isolation with its own MSW handlers, mock dataset, and test harness? If YES → **Autonomous Sub-Module**.
+>      - **Gate 5 (Backend Entity Alignment):** Sub-modules map 1:1 to cohesive sub-domain entities or aggregate roots. New CRUD operations or filters on existing entities belong inside the existing sub-module, NOT a new sub-module.
 
 ---
 
@@ -108,7 +235,8 @@
 
 Every AI agent executing this prompt MUST strictly obey these invariants at all times. They supersede any other instruction.
 
-> ⛔ **INVARIANT ENFORCEMENT: Violating ANY invariant = STOP immediately, discard output, restart from violated step.**
+> ⛔ **COMPLIANCE FAILURE HANDLING (EVIDENCE-BASED REPAIR):**
+> Failure to establish required evidence triggers a mandatory compliance stop for the affected work path. The violation must be recorded, repaired in source code, and rechecked before continuation. Previously valid, unaffected work does not need to be discarded.
 
 1. **DO NOT GUESS:** If a design token, layout constraint, or contract type is missing or ambiguous, rely on explicit documented rules or mark it `NOT_VERIFIED`. Do not invent styles or APIs. **VIOLATION = fabricated compliance = task failure.**
 2. **DO NOT FABRICATE:** Never invent fake component imports, fake CSS variables, fake mock data, fake test results, or fake design token compliance. **VIOLATION = entire output is invalid.**
@@ -117,7 +245,7 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 5. **FUNCTIONAL CLOSURE MANDATE:** Every interactive control (button, link, dropdown, form, filter, tab, modal, pagination) MUST do something real. Visible controls that do nothing or log to console without user feedback are SEVERE defects. **VIOLATION = rejected UI.**
 6. **MUTABLE MOCK STATE MANDATE:** When backend is absent, mocks MUST simulate real mutable state (create actually adds to list, edit updates list, delete removes from list). Static read-only mocks violate the functional closure requirement. **VIOLATION = incomplete repair.**
 7. **NO PLACEHOLDER CODE OR TRUNCATION:** Every generated or repaired component, hook, or screen MUST be 100% complete and fully implemented. Writing placeholder comments such as `// ... rest of code remains the same ...`, `// ... existing methods ...`, or `// TODO` inside deliverables is STRICTLY FORBIDDEN. Deliverables must be drop-in ready with zero ellipsis. **VIOLATION = broken build = immediate task failure.**
-8. **SOURCE-FIRST REPAIR MANDATE:** Runtime/host/build unavailability is NEVER a reason to stop fixing source-level issues. The AI MUST push through the complete audit and repair ALL source-level findings before declaring any blocking. Pausing the audit mid-way due to runtime unavailability = **INVARIANT VIOLATION = must restart from the paused section and continue through.** Only genuine `BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED` items may pause a repair. `HOST_RUNTIME_BLOCKED_VERIFICATION` items keep the repair moving — only the verification step is deferred.
+8. **SOURCE-FIRST REPAIR MANDATE:** Runtime/host/build unavailability is NEVER a reason to stop fixing source-level issues. The AI MUST push through the complete audit and repair ALL source-level findings before declaring any blocking. Pausing the audit mid-way due to runtime unavailability = **INVARIANT VIOLATION.** Record the affected check as `DEFERRED_TO_HOST_RUNTIME` and continue through all remaining source-level sections. Only genuine `BLOCKED — EXTERNAL PRODUCT DECISION REQUIRED` items may pause a repair. `HOST_RUNTIME_BLOCKED_VERIFICATION` items keep the repair moving — only the verification step is deferred.
 
 ---
 
@@ -153,20 +281,47 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 6. Section 43P MOBILE RULE CHECKLIST + MODE C EXTRACTION CHECKLIST clean → ONLY THEN package ZIP
 > 7. `INTEGRATION_GUIDE.md` + `RE_AUDIT_CHECKLIST_RESULT.md` + `mobile_e2e/` inside ZIP → ONLY THEN deliver `mobile-{role}-v1.zip`
 >
-> **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
+> **Skipping or reordering any step = COMPLIANCE VIOLATION.**
+> A compliance violation triggers a mandatory stop only for the affected work path.
+> The violation must be recorded, repaired, and rechecked before continuation.
+> Previously verified and unaffected work remains valid and must not be discarded.
 
 ---
 
 # 0. WHAT THIS PROMPT DOES
 
-This prompt has **THREE operating modes**. Read the supplied inputs to determine which mode applies.
+## Canonical Mode Registry
+
+This document has exactly four operating modes. Any statement that this prompt has three modes is obsolete and invalid.
+
+| Mode | Purpose | Source Scope | Test System | Delivery Artifacts |
+|---|---|---|---|---|
+| **A** | Web Create | Web feature specification | Playwright | `frontend-{role}-v1.zip` + `playwright_E2E/` |
+| **B** | Web Audit + Repair | Existing web module ZIP | Playwright | `frontend-{role}-v{N}-fix.zip` + `playwright_E2E/` |
+| **C** | Mobile Create from Web Specification | Web ZIP as specification only | Maestro | `mobile-{role}-v1.zip` + `mobile_e2e/` (top-level mirrored Maestro suite; never inside `src/features/`) |
+| **D** | Mobile Audit + Repair | Existing React Native module ZIP | Maestro | `mobile-{role}-v{N}-fix.zip` + `mobile_e2e/` (top-level mirrored Maestro suite; never inside `src/features/`) |
+
+## Canonical Mobile Maestro E2E Location
+
+Mobile Maestro E2E tests MUST live only at:
+
+```text
+mobile_e2e/frontend_{role}_e2e/{role}_{module}/
+```
+
+They MUST NOT be stored inside `src/features/`.
+
+Each module E2E folder is self-contained.
+Business-specific E2E helpers MUST remain inside that module's `helpers/` folder under strict WET.
+No global shared business E2E helper directory is permitted.
+
+> ⛔ **PLATFORM CROSS-CONTAMINATION PROHIBITION:** No mode may use another platform’s test system, UI rules, framework patterns, or delivery naming conventions. Web modes (A & B) use Playwright and web design rules. Mobile modes (C & D) use Maestro and mobile design rules.
 
 > **MODE DETECTION RULES:**
-> - **MODE A (CREATE):** No existing frontend ZIP supplied. Feature doc + architecture + design rules + target module name given. Create from scratch.
-> - **MODE B (AUDIT+REPAIR):** Existing frontend ZIP of the SAME platform supplied (web ZIP for web audit, mobile ZIP for mobile audit). Audit and repair.
-> - **MODE C (CROSS-PLATFORM MOBILE CREATE):** Web Frontend ZIP supplied + user explicitly requests mobile module creation. Extract spec from web ZIP, create React Native module from scratch.
->
-> ⛔ **MODE C DETECTION TRIGGER:** If the user supplies a web ZIP (contains `page.tsx`, `'use client'`, Next.js imports, Tailwind classes) AND asks to create a mobile/React Native module → this is MODE C. Do NOT treat it as Mode B.
+> - **MODE A (WEB CREATE):** No existing ZIP supplied. Feature doc + web architecture + web design rules + target module name given.
+> - **MODE B (WEB AUDIT+REPAIR):** Existing WEB ZIP supplied (contains `page.tsx`, `'use client'`, Next.js/Vite imports).
+> - **MODE C (MOBILE CREATE FROM WEB SPEC):** Web Frontend ZIP supplied + user explicitly requests mobile module creation. Extract spec from web ZIP, create React Native module from scratch.
+> - **MODE D (MOBILE AUDIT+REPAIR):** Existing MOBILE ZIP supplied (contains `*Screen.tsx`, `react-native` imports, `@react-navigation`). Audit and repair.
 
 ---
 
@@ -250,7 +405,7 @@ INPUT 4: Target Module Name
 Before ANY analysis or code, output:
 
 ```text
-FRONTEND AGENT V2.8 — MODE C BOOT DECLARATION
+FRONTEND AGENT V2.11 — MODE C BOOT DECLARATION
 ===============================================
 MODE:               C — CROSS-PLATFORM MOBILE CREATE FROM WEB ZIP
 SOURCE ZIP:         [web zip filename, e.g., superadmin.zip]
@@ -286,7 +441,11 @@ MANDATORY DELIVERABLES:
 - mobile-{role}-v1.zip (complete React Native feature module)
 - INTEGRATION_GUIDE.md (Web ZIP extraction summary + navigation wiring + npm install + host verification)
 - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P MOBILE RULE CHECKLIST result — every item evaluated)
-- mobile_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
+Mobile Maestro E2E tests MUST live only at:
+mobile_e2e/frontend_{role}_e2e/{role}_{module}/
+
+They MUST NOT be stored inside src/features/.
+- mobile_e2e/frontend_{role}_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
 
 FIRST ACTION: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely, then MOBILE_UI_UX_DESIGN.md completely, then begin extraction from web ZIP
 ```
@@ -399,7 +558,7 @@ After extraction, the AI MUST translate web patterns to mobile equivalents. This
 ╠══════════════════════════════════════════════════════════════════════╣
 ║ Next.js page.tsx               │ *Screen.tsx (≤80 lines)            ║
 ║ [ModuleName]Main.tsx           │ [Role][Module][Screen]MainView.tsx  ║
-║ Tailwind CSS classes           │ tokens.ts StyleSheet values         ║
+║ Tailwind CSS classes           │ useThemeTokens() StyleSheet values  ║
 ║ CSS variables (--primary)      │ tokens.color.primary                ║
 ║ Gold primary (#FACC15)         │ Gold primary (#FACC15) — same on both platforms            ║
 ║ next/navigation router.push    │ navigation.navigate(ROUTES.X)       ║
@@ -420,7 +579,7 @@ After extraction, the AI MUST translate web patterns to mobile equivalents. This
 ║ lucide-react                   │ lucide-react-native                 ║
 ║ react-apexcharts               │ react-native-gifted-charts          ║
 ║ KeyboardEvent / focus trap     │ KeyboardAvoidingView + ScrollView   ║
-║ hover: Tailwind variants       │ NOT APPLICABLE — use onPress only   ║
+║ hover: / pressed: variants     │ tokens.color.primaryPressed / surfacePressed + animated pressScale (0.96) ║
 ║ focus-visible: variants        │ accessibilityLabel + accessible     ║
 ║ @media print                   │ NOT APPLICABLE                      ║
 ║ localStorage / sessionStorage  │ react-native-mmkv (non-sensitive)   ║
@@ -453,8 +612,17 @@ The AI MUST:
 - Use tokens.space[N] for all spacing
 - Use tokens.typography.* for all text styles
 - Use tokens.color.statusSuccessText / tokens.color.statusDangerText etc. for status badges (flat camelCase â€” no nested .status.*)
-- Use tokens.color.payment.* for payment badges
-- Reference tokens.ts canonical shape for EVERY style value
+- Payment badges MUST use:
+  - `tokens.color.payCashText` / `tokens.color.payCashBg`
+  - `tokens.color.payUpiText` / `tokens.color.payUpiBg`
+  - `tokens.color.payCardText` / `tokens.color.payCardBg`
+  - `tokens.color.payBankText` / `tokens.color.payBankBg`
+- Shadows MUST resolve through:
+  `getShadowStyle('sm' | 'md' | 'lg' | 'xl')`
+- Direct shadow composition and `tokens.shadow.card` are forbidden.
+- Feature UI MUST consume tokens via `const tokens = useThemeTokens()`; static import of `tokens.ts` is FORBIDDEN in feature UI.
+- Touch targets MUST resolve via `getMinTouchTarget()` from `@/core/theme/getMinTouchTarget` (iOS 44pt / Android 48dp).
+- Reference Tokens canonical interface shape for EVERY style value.
 
 SEMANTIC EQUIVALENCE (not value copy):
 Web --primary (#FACC15)     → tokens.color.primary (#FACC15)  <- SAME VALUE, both platforms Gold
@@ -463,7 +631,7 @@ Web --bg-card               → tokens.color.card
 Web --text-primary          → tokens.color.foreground
 Web --success-bg            → tokens.color.statusSuccessBg
 Web --danger-text           → tokens.color.statusDangerText
-Web shadow-card             → tokens.shadow.card
+Web shadow-card             → tokens.shadow.sm | tokens.shadow.md | tokens.shadow.lg | tokens.shadow.xl via getShadowStyle('sm' | 'md' | 'lg' | 'xl')
 Web border-radius tokens    → tokens.radius.*
 ```
 
@@ -492,12 +660,12 @@ Web border-radius tokens    → tokens.radius.*
 ║  IGNORE FROM WEB ZIP (do NOT use in mobile)                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║ ❌ JSX/TSX component code — rewrite from scratch                ║
-║ ❌ Tailwind CSS classes — use tokens.ts instead                 ║
+║ ❌ Tailwind CSS classes — use useThemeTokens() instead          ║
 ║ ❌ CSS variables and globals.css — not applicable               ║
 ║ ❌ Next.js routing patterns — use React Navigation              ║
 ║ ❌ 'use client' / 'use server' directives — not applicable      ║
 ║ ❌ Web-specific hooks (useRouter, useSearchParams) — rewrite    ║
-║ ❌ Web design tokens (Gold #FACC15) — use Indigo tokens         ║
+║ ❌ Web CSS/Tailwind classes — use React Native tokens via useThemeTokens() (Gold #FACC15 / #EAB308, onPrimary #111111) ║
 ║ ❌ Playwright E2E tests — write Maestro YAML instead            ║
 ║ ❌ next.config.ts, tsconfig paths — not applicable              ║
 ║ ❌ Web folder structure — use mobile canonical structure        ║
@@ -512,32 +680,38 @@ Web border-radius tokens    → tokens.radius.*
 
 After extraction and baseline freeze, create the mobile module following ALL rules from `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Key requirements:
 
-**Folder Structure (canonical):**
+**Folder Structure (canonical 4-tier Day-1 Sub-Module hierarchy):**
 ```text
-src/features/frontend_{role}/{role}_{module}/
-├── screens/          ← *Screen.tsx files (≤80 lines each)
-├── components/       ← *MainView.tsx + feature components (≤200 lines)
-├── hooks/            ← use{Role}{Module}*.ts (≤150 lines)
-├── api/              ← {role}_{module}.api.ts + query_keys.ts
-├── schemas/          ← {role}_{module}.schema.ts
-├── types/            ← {role}_{module}.types.ts
-├── config/           ← {role}_{module}.url_config.ts
-├── mocks/            ← {role}_{module}.fixtures.ts + handlers.ts (MUTABLE)
-├── state/            ← {role}_{module}.store.ts
-├── tests/            ← integration tests
-├── utils/            ← {role}{Module}FormatCurrency.ts (WET)
-├── _locales/         ← {role}_{module}_en.json + _hi.json
-├── {role}_{module}_features.md
-├── {role}_{module}_forbidden.md
-└── {role}_{module}_theme_contract.md
+src/features/frontend_{role}/{role}_{domain}/
+├── screens/
+│   └── Manager[Domain]Navigator.tsx                 ← Pure domain navigational shell
+├── [role]_[domain]_features.md                      ← Master domain features specification
+├── [role]_[domain]_forbidden.md                     ← Master domain forbidden imports
+├── [role]_[domain]_theme_contract.md                ← Master domain theme contract
+└── {domain}_{capability}/                           ← Autonomous Sub-Module (Terminal Leaf Feature Unit)
+    ├── screens/          ← *Screen.tsx files (≤80 lines each)
+    ├── components/       ← *MainView.tsx + feature components (≤200 lines)
+    ├── hooks/            ← use{Role}{Submodule}*.ts (≤150 lines)
+    ├── api/              ← {role}_{submodule}.api.ts + query_keys.ts
+    ├── schemas/          ← {role}_{submodule}.schema.ts
+    ├── types/            ← {role}_{submodule}.types.ts
+    ├── config/           ← config/{role}_{submodule}.url_config.ts
+    ├── mocks/            ← {role}_{submodule}.fixtures.ts + {role}_{submodule}.handlers.ts + scenarios/{role}_{submodule}.scenarios.ts (MUTABLE)
+    ├── state/            ← {role}_{submodule}.store.ts
+    ├── tests/            ← integration tests + harness/bootstrap.ts & {Role}{Submodule}Harness.tsx
+    ├── utils/            ← {role}{Submodule}FormatCurrency.ts (WET)
+    ├── _locales/         ← {role}_{submodule}_en.json + _hi.json
+    ├── {role}_{submodule}_features.md (ALL 22 canonical sections)
+    ├── {role}_{submodule}_forbidden.md
+    └── {role}_{submodule}_theme_contract.md
 ```
 
 **Critical mobile-specific requirements extracted from web ZIP:**
-1. API endpoints from web `*_url_config.ts` → mobile `config/{role}_{module}.url_config.ts` (same paths)
-2. TypeScript types from web `*_types/` → mobile `types/{role}_{module}.types.ts` (same fields, RN-compatible)
-3. Zod schemas from web `*_schemas/` → mobile `schemas/{role}_{module}.schema.ts` (same validation)
-4. MSW fixtures from web `*_mocks/` → mobile `mocks/{role}_{module}.fixtures.ts` (MUTABLE in-memory)
-5. Business enums from web `*_constants/` → mobile `types/{role}_{module}.types.ts` (same values)
+1. API endpoints from web `*_url_config.ts` → mobile `config/{role}_{submodule}.url_config.ts` (same paths)
+2. TypeScript types from web `*_types/` → mobile `types/{role}_{submodule}.types.ts` (same fields, RN-compatible)
+3. Zod schemas from web `*_schemas/` → mobile `schemas/{role}_{submodule}.schema.ts` (same validation)
+4. MSW fixtures from web `*_mocks/` → mobile `mocks/{role}_{submodule}.fixtures.ts` (MUTABLE in-memory)
+5. Business enums from web `*_constants/` → mobile `types/{role}_{submodule}.types.ts` (same values)
 
 ---
 
@@ -551,27 +725,33 @@ src/features/frontend_{role}/{role}_{module}/
 
 3. **NO WEB PATTERNS IN MOBILE:** If the AI finds itself writing `className=`, `'use client'`, `next/`, `<div>`, or Tailwind classes → STOP. These are web patterns. Rewrite using React Native primitives.
 
-4. **NO GOLD COLORS IN MOBILE:** If the AI finds itself using `#FACC15`, `yellow-400`, or any gold/amber color → STOP. Mobile uses Indigo. Check `MOBILE_UI_UX_DESIGN.md`.
+4. **MOBILE THEME IS LUXURY PREMIUM GOLD (MANDATORY):** Both Web and Mobile surfaces use the **Luxury Premium Gold** theme (`tokens.color.primary = #FACC15` Dark / `#EAB308` Light). On Gold backgrounds, the text/icon color MUST be **`onPrimary = #111111` (dark charcoal) — NEVER white** (WCAG AA 4.5:1 requirement). Indigo/Purple as brand primary is FORBIDDEN. Aggressive gradients are restricted to landing page hero CTAs only; never use inside ERP dashboard screens. Check `MOBILE_UI_UX_DESIGN.md`.
 
 5. **NO EXPO PACKAGES:** If the AI finds itself importing `expo-*` or `@expo/*` → STOP. This is a bare-metal React Native project. Use only packages from the approved locked registry in `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
 
 6. **NO BACKEND GUESSING:** If the web ZIP does not contain evidence of an API endpoint → do NOT guess it from backend naming conventions. Mark as `BLOCKED_BY_SUPPLIED_SCOPE`.
 
 7. **NO TOAST-ONLY MOCKS:** Mobile MSW fixtures MUST be mutable in-memory arrays. Create → adds to array. Delete → removes from array. Static fixtures that never change = CRITICAL VIOLATION.
+8. **CANONICAL SUBFOLDERS & PREFIXED FILES (NO MODULE PREFIX ON FOLDERS):** Subfolders MUST use standard names (`components/`, `hooks/`, `schemas/`, `types/`, `api/`, `config/`, `mocks/`, `state/`, `tests/`, `utils/`, `_locales/`). Naming subfolders as `{module}_components/` or `{module}_hooks/` is FORBIDDEN. The Role+Module prefix MUST be placed on the **files** inside them (e.g., `TrainerMembersMemberCard.tsx`, `useTrainerMembers.ts`).
 
 ---
 
 ### MODE C — DELIVERABLES
 
 ```text
-VERSIONED ZIP: mobile-{role}-v1.zip
+VERSIONED ARTIFACT: mobile-{role}-v1.zip (or source-level delivery per Capability-Truth Rule)
 
-Contents:
-├── src/features/frontend_{role}/{role}_{module}/  ← complete mobile module
+Contents Layout:
+├── src/features/frontend_{role}/{role}_{domain}/{domain}_{capability}/  ← complete mobile module
 ├── mobile_e2e/frontend_{role}_e2e/{role}_{module}/
-│   └── {role}_{module}.yaml                       ← Maestro E2E tests
+│   ├── {role}_{module}.yaml                       ← Maestro E2E tests (top-level mirrored; never stored inside src/features/)
+│   └── helpers/
+│       └── login.yaml                             ← feature-local E2E helper (strict WET)
+├── compliance_manifest.json                       ← machine-readable compliance manifest
 ├── INTEGRATION_GUIDE.md                           ← consolidated developer guide
 └── RE_AUDIT_CHECKLIST_RESULT.md                   ← mobile delivery freeze gate results
+
+> ⛔ **E2E LOCATION CONTRACT:** The feature's `[feature]_features.md` MUST reference its corresponding Maestro suite, but MUST NOT contain executable E2E YAML files inside `src/features/`. Each `mobile_e2e/frontend_{role}_e2e/{role}_{module}/` folder is self-contained. Business-specific E2E helpers MUST be duplicated at module level under strict WET. No shared global `mobile_e2e` helper directory is permitted.
 
 INTEGRATION_GUIDE.md MUST contain:
   Section 1: Web ZIP Extraction Summary
@@ -580,22 +760,19 @@ INTEGRATION_GUIDE.md MUST contain:
     - Mock fixture shapes extracted
     - Any CONTRACT_NOT_FOUND_IN_WEB_ZIP items documented
   Section 2: Mobile Module Placement
-    - Exact path: src/features/frontend_{role}/{role}_{module}/
+    - Exact path: src/features/frontend_{role}/{role}_{domain}/{domain}_{capability}/
     - Navigation wiring instructions
     - Core infrastructure dependencies
   Section 3: npm install command
     - Only packages from approved locked registry
   Section 4: Host Verification Commands
-    - npm run lint, npm run typecheck, npm run test
-    - npx maestro test mobile_e2e/
-  Section 5: DEFERRED_TO_HOST_RUNTIME items
-    - Metro bundler verification
-    - Device/simulator E2E execution
-  Section 6: Host Verification Commands
     - npm run lint
     - npm run typecheck
     - npm run test
     - npx maestro test mobile_e2e/
+  Section 5: DEFERRED_TO_HOST_RUNTIME items
+    - Metro bundler verification
+    - Device/simulator E2E execution
     - All items classified as DEFERRED_TO_HOST_RUNTIME, OUTSIDE_SUPPLIED_SCOPE, or EXTERNAL_PRODUCT_DECISION_BLOCKED documented here
 ```
 
@@ -611,7 +788,53 @@ INTEGRATION_GUIDE.md MUST contain:
 4. **Missing app.json** → NOT required. Assume standard RN project structure.
 5. **No Metro bundler available** → NOT a blocker. Write source code; mark runtime verification as `DEFERRED_TO_HOST_RUNTIME`.
 6. **No device/simulator available** → NOT a blocker. Write Maestro YAML; mark execution as `DEFERRED_TO_HOST_RUNTIME`.
-7. **Web ZIP has ambiguous API contract** → Mark specific endpoint as `CONTRACT_AMBIGUOUS`, document both interpretations, implement the safer one, continue.
+7. **Web ZIP has ambiguous API contract** → Apply Ambiguous API Contract Rule below.
+
+### Ambiguous API Contract Rule
+
+If web ZIP evidence for an endpoint, request field, response field, permission, business rule, or mutation behavior is ambiguous:
+
+1. Record the finding as `CONTRACT_AMBIGUOUS`;
+2. Record the conflicting evidence and affected files;
+3. Do NOT invent, select, or implement one interpretation;
+4. Mark the affected flow as `BLOCKED_BY_SUPPLIED_CONTRACT`;
+5. Continue only with independently verified parts of the module;
+6. Do not expose an unverified API-driven flow to the user.
+
+---
+
+## MODE D — MOBILE AUDIT + REPAIR (Existing React Native Module Supplied)
+
+### Inputs
+1. Existing React Native mobile module ZIP or repository scope.
+2. `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+3. `MOBILE_UI_UX_DESIGN.md`.
+4. Target role/module identifier (e.g. `manager_members`).
+5. Explicit writable scope, if repository access is restricted.
+
+### Mode D Rules
+- Do NOT use Web extraction protocol.
+- Do NOT introduce Web, Next.js, Tailwind, Playwright, DOM, or browser patterns.
+- Read the existing feature documentation trio before reviewing implementation files.
+- Preserve all verified mobile API contracts, route identities, testIDs, permissions, role boundaries, and feature-local business behavior unless the repair explicitly requires a contract correction.
+- Audit the existing React Native module against all currently numbered rules in MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md, including the Mobile Delivery Freeze Gate and Definition of Done, and MOBILE_UI_UX_DESIGN.md (Sections 1–22).
+- Publish the RBG plan and obtain required user approval before applying repairs.
+- Re-run the Mobile Delivery Freeze Gate (Section 43P) after repairs.
+
+### Mode D Execution Order
+1. Read `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` completely.
+2. Read `MOBILE_UI_UX_DESIGN.md` completely.
+3. Read target feature documentation trio and read-only Core Contract Pack.
+4. Freeze the mobile audit baseline (`baseline_frozen: true`).
+5. Complete the full mobile audit.
+6. Publish RBG plan and await required user approval.
+7. Apply approved source-level repairs in dependency order (RBG order).
+8. Re-audit all repaired files against Section 43P checklist.
+9. Update module documentation trio and Maestro E2E test suite.
+10. Deliver source-level completion result and artifact status truthfully per the Capability-Truth Delivery Rule.
+
+### Mode D Delivery Name
+`mobile-{role}-v{N}-fix.zip`
 
 ---
 
@@ -651,7 +874,11 @@ In MODE B, determine the existing version from the supplied artifact name, proje
 2. **If no explicit version number is present in input filename:**
    - Deterministically default to `v1-fix`: `frontend-{role}-v1-fix.zip`.
    - Record `VERSION: v1-fix (Default assigned for initial repair release)` inside `INTEGRATION_GUIDE.md` (Section 1 Changelog).
-3. **ZERO-STALL INVARIANT:** The AI MUST NEVER halt, stall, refuse to name the archive, or refuse to package/deliver the ZIP due to absence of an input version tag. Packaging and delivering the repaired ZIP is MANDATORY.
+3. **ARTIFACT DELIVERY RESOLUTION RULE (ZERO-STALL):**
+The AI MUST complete all source-level work that is within its granted scope.
+- If repository write access and archive-generation capability are available: create the required versioned ZIP artifact and report its exact name and contents.
+- If repository write access or archive-generation capability is unavailable: do NOT claim that a ZIP was created; provide the complete source-level repair or generated file content within the interface; report status as `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING`; list the exact required archive name and artifact layout.
+Missing host packaging capability MUST NOT downgrade valid source-level completion.
 
 **MODE C VERSION ASSIGNMENT (ZERO-STALL):**
 - First mobile creation: always `mobile-{role}-v1.zip`. No version detection needed — it is always v1.
@@ -781,6 +1008,24 @@ If the frontend calls an API, you may audit:
 * how the UI consumes the response
 
 But do NOT judge whether the backend itself is correctly implemented.
+
+## BACKEND-ASSURANCE BOUNDARY
+
+A frontend-only audit may verify that the frontend:
+- sends the expected authenticated request;
+- handles 401, 403, and permission-masked responses correctly;
+- does not treat client-side permission checks as authorization;
+- documents backend authorization requirements in the API contract.
+
+A frontend-only audit MUST NOT claim that backend authorization, tenant isolation,
+database isolation, idempotency persistence, or resource-ownership enforcement has
+been verified unless backend source code and backend tests are explicitly supplied.
+
+Use this exact status when backend implementation evidence is not supplied:
+
+`BACKEND_ENFORCEMENT_REQUIRED_NOT_VERIFIABLE_FROM_FRONTEND`
+
+Frontend permission-denied UX tests do not replace backend integration or authorization tests.
 
 ---
 
@@ -1536,69 +1781,117 @@ Produce this table for every candidate feature or consolidated route:
 ### Core Tenets of the 1:1 Navigation-to-Folder Law:
 
 1. **Strict 1-to-1 Primary Navigation Mapping (Universal):**
-   - Every top-level clickable item defined in a role's sidebar/navigation configuration (e.g., in Manager: Dashboard, Inquiries, Members, Attendance, Plans, Finance, HR, Schedule, PT; in Admin: Gyms, Billing, Staff, Settings; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients, Workouts) MUST have an exact corresponding dedicated feature folder directly inside `src/app/frontend_{role}/` (e.g., `src/app/frontend_{role}/{role}_{feature}/`).
+   - Every top-level clickable item defined in a role's sidebar/navigation configuration (e.g., in Manager: Dashboard, Inquiries, Members, Attendance, Plans, Finance, HR, Schedule, PT; in Admin: Gyms, Billing, Staff, Settings; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients, Workouts) MUST have an exact corresponding dedicated feature domain container directly inside `src/app/frontend_{role}/` (e.g., `src/app/frontend_{role}/{role}_{feature}/`).
    - **NO MEGA-MODULE MERGING:** Merging separate sidebar destinations (e.g., combining `manager_finance` and `manager_expenses`, or `admin_billing` and `admin_plans`) into a single folder is STRICTLY PROHIBITED.
-   - **NO ROOT-LEVEL FRACTURING:** A single sidebar destination MUST NOT spawn arbitrary multiple top-level folders for its internal tabs or workflows. All internal tabs, secondary workflows, and sub-pages belonging to that sidebar destination MUST be managed via `?view=` inside that module's `_components/` and `_views/`.
+   - **NO ROOT-LEVEL FRACTURING:** A single sidebar destination MUST NOT spawn arbitrary multiple top-level folders for its internal tabs or workflows. All internal tabs, secondary workflows, and sub-pages belonging to that sidebar destination MUST be encapsulated as child sub-modules inside that domain container.
 
-2. **100% Domain Self-Containment Inside the Feature Folder:**
-   - When a user clicks a sidebar item (e.g., Attendance ➔ `/frontend_manager/manager_attendance`, Billing ➔ `/frontend_admin/admin_billing`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
-     - `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
-     - `[moduleName]_components/` (Orchestrator, tables, forms, modals, filters, and `[moduleName]_views/` for all `?view=` sub-screens)
-     - `[moduleName]_hooks/` (Feature-specific domain hooks)
-     - `[moduleName]_api/` (Feature REST endpoints and client methods)
-     - `[moduleName]_store/` (Feature Zustand store slice)
-     - `[moduleName]_types/` & `[moduleName]_schemas/` (Feature TypeScript definitions & Zod validation)
-     - `[moduleName]_constants/` & `[moduleName]_utils/` (Feature constants and domain utilities)
-     - `[moduleName]_mocks/` (Feature MSW handlers and mutable mock datasets)
-     - `[moduleName]_tests/` (Feature unit/component test suite)
-     - `[moduleName]_url_config.ts` (Feature canonical routes and parameter definitions)
-     - Local Documentation Trio: `[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md`
-   - **ZERO CROSS-FEATURE BUSINESS LEAKAGE:** A feature module MUST NEVER import business components, hooks, stores, types, or utilities from a sibling feature module (e.g., `manager_attendance` cannot import from `manager_finance`; `admin_billing` cannot import from `admin_plans`). All business domain logic MUST be duplicated per module (Strict WET Principle).
+2. **Universal Day-1 Sub-Module Architecture & Domain Root Quarantine:**
+   - Every feature module folder (`src/app/frontend_{role}/{role}_{domain}/` or `src/features/frontend_{role}/{role}_{domain}/`) is a **Pure Domain Container** containing ONLY:
+     1. Navigational shell (`layout.tsx` or `Manager[Domain]Navigator.tsx`) mounting sub-navigation tabs/links
+     2. Default route redirect (`page.tsx`) redirecting to the primary initial sub-module
+     3. Master domain documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`)
+     4. One or more autonomous Sub-Modules (`{domain}_{capability}/`, e.g., `attendance_dashboard/`, `attendance_history/`, `attendance_analytics/`, `attendance_biometrics/`).
+   - **Zero Root Code in Domain Folder (Domain Root Quarantine):** Creating loose `components/`, `hooks/`, `api/`, `mocks/`, `utils/`, or `state/` directly at the feature domain root level (e.g., `manager_attendance/components/` or `manager_attendance/mocks/`) is a **CRITICAL ARCHITECTURE VIOLATION**. 100% of executable source code, components, hooks, stores, mocks, and tests MUST live inside autonomous child sub-modules (`{domain}_{capability}/`).
+   - **Zero Relationship Between Sibling Sub-Modules (Strict Sibling Isolation Firewall & WET Law):**
+     - Sibling sub-modules (e.g., `attendance_dashboard` vs `attendance_history`) have **ABSOLUTE ZERO RELATIONSHIPS, ZERO CROSS-IMPORTS, AND ZERO RUNTIME COUPLING**.
+     - `attendance_dashboard` NEVER imports any component, hook, utility, type, schema, or mock from `attendance_history` or vice versa (`import from '../attendance_history'` = IMMEDIATE ARCHITECTURAL FAILURE).
+     - Creating shared parent folders (e.g., `attendance/common/`, `attendance/shared/`, or `attendance/components/`) is **STRICTLY FORBIDDEN**.
+     - If multiple sub-modules require similar UI elements (e.g., `AttendanceStatusBadge`, date range filter, table row formatter), each sub-module MUST duplicate it locally within its own `components/` or `utils/` (Strict WET Principle).
 
-3. **Autonomous AI Repair Hand-off Law (Single-Folder Boundary):**
-   - **The Golden Operational Invariant:** If a bug, regression, layout defect, or new requirement arises in ANY feature of ANY role (e.g., "Attendance" in Manager, "Billing" in Admin, "Plans" in Superadmin, "Schedule" in Trainer):
-     - The developer or host system MUST provide **ONLY** that single feature module folder to the AI agent:
-       - **Web:** `src/app/frontend_{role}/{role}_{feature}/`
-       - **Mobile:** `src/features/frontend_{role}/{role}_{feature}/`
-     - The AI agent MUST audit, repair, test, and deliver that module in complete isolation.
-     - The AI agent MUST NOT request, inspect, or modify other feature folders (`{role}_{sibling}/`) or host application root files (`package.json`, root `layout.tsx`).
-     - Modifying any file outside the supplied feature module boundary is a **CRITICAL SCOPE CREEP VIOLATION**.
+3. **Autonomous AI Repair Hand-off Law & The Sub-Module ZIP Guarantee:**
+   - **The Golden Operational Invariant:** If a bug, regression, layout defect, or new requirement arises in ANY sub-feature or feature domain (e.g., "Attendance History" in Manager, "Invoices" in Billing, "Plans" in Superadmin):
+     - The developer or host system provides **ONLY that single sub-module folder** (e.g., `attendance_history/`) or feature domain container to the AI agent.
+     - The AI agent receives a laser-focused 10-15 file context, complete local mocks, and repairs the issue in one shot with 0% risk of breaking sibling sub-modules or the host app.
+     - Demanding host application root slices (`package.json`, root `tsconfig.json`, root `layout.tsx`) or sibling sub-modules when auditing an isolated sub-module is a **CRITICAL SCOPE CREEP VIOLATION & AUDIT FAILURE**.
 
 4. **Navigation Shell & Layout Isolation:**
    - The Sidebar, Header, Breadcrumbs, Command Palette, and Shell layout themselves MUST reside in that role's own dedicated navigation module (e.g., `src/app/frontend_{role}/{role}_navigation/`).
-   - Navigation components MUST consume ONLY the exported typed URL contracts (`[moduleName]_url_config.ts`) from feature modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature modules.
+   - Navigation components MUST consume ONLY the exported typed URL contracts (`[submodule]_url_config.ts`) from feature sub-modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature sub-modules.
    - If a bug occurs in the sidebar itself (e.g., collapsing toggle, mobile drawer focus trap, search filtering, menu group ordering, or active link highlighting), the repair context is STRICTLY the navigation module (`{role}_navigation/`), NEVER individual feature modules.
+
+5. **Strict Maximum Nesting Depth Law (The Depth Limit Invariant — Sub-Submodules Strictly BANNED):**
+   - **The 4-Tier Terminal Leaf Boundary:** The architectural hierarchy stops strictly at Tier 4:
+     - Tier 1: `src/app/` (Application Route Root)
+     - Tier 2: `frontend_{role}/` (Role Container)
+     - Tier 3: `{role}_{domain}/` (Pure Domain Container — Navigational Shell & Quarantine)
+     - Tier 4: `{domain}_{capability}/` (Autonomous Sub-Module — **TERMINAL LEAF FEATURE EXECUTION UNIT**)
+   - **Sub-Submodules are STRICTLY FORBIDDEN:** Creating folders like `{domain}_{capability}/{capability}_{sub}/` (e.g., `attendance_history/history_details/` or `attendance_history/table/`) as child submodules is a **CRITICAL P0 ARCHITECTURE VIOLATION**. Nesting depth below the Domain Container is STRICTLY LIMITED TO EXACTLY 1 LEVEL.
+   - All internal UI decomposition inside an autonomous sub-module happens PURELY via standard canonical category folders (`components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `mocks/`, `utils/`, `tests/`).
+   - Multi-step forms, secondary tabs, detail panels, slide-over drawers, or modals inside a sub-module MUST live inside that sub-module's `components/` folder (e.g. `components/[Submodule]Views/`, `components/[Submodule]Modals/`, `components/[Submodule]Drawers/`), driven by React state or URL search parameters (`?view=`), NEVER by nesting sub-submodule folders.
+
+6. **Deterministic 5-Gate Sub-Module Qualification Decision Matrix (How AI Decides Sub-Module vs Internal View):**
+   When designing, creating, or auditing features, the AI MUST follow this deterministic decision matrix. Never guess or arbitrarily invent sub-modules:
+
+| Level | Granularity Criteria | Location & Structure | Correct Example | FORBIDDEN Anti-Pattern |
+|---|---|---|---|---|
+| **Domain Container (Tier 3)** | Primary clickable item in role's sidebar/primary drawer. Contains high-level business domain. | `src/app/frontend_{role}/{role}_{domain}/` | `manager_attendance/`, `admin_billing/` | Merging separate sidebar items (`manager_finance_and_expenses/`) |
+| **Autonomous Sub-Module (Tier 4)** | Distinct secondary navigation tab, independent sub-route segment, or standalone operational capability with its own lifecycle. | `{domain}_{capability}/` directly under `{role}_{domain}/` (Depth = 1) | `attendance_dashboard/`, `attendance_history/`, `attendance_biometrics/` | Nested sub-submodule (`attendance_history/details/`) or generic name (`tab1/`) |
+| **Internal Component / Sub-View** | Sub-screen, modal, slide-over drawer, filter drawer, or step within a wizard. Controlled by UI interaction or `?view=`. | Inside sub-module `components/` folder (`components/[Submodule]Views/`) | `ManagerAttendanceHistoryDetailDrawer.tsx` inside `attendance_history/components/` | Creating a standalone sub-module for a single drawer (`attendance_history_drawer/`) |
+| **Local Utility / Reusable UI** | UI badge, status pill, table formatter, card wrapper, or local date helper used across this sub-module. | Inside sub-module `components/` or `utils/` | `ManagerAttendanceStatusBadge.tsx` inside `attendance_history/components/` | Nano-module (`attendance_status_badge/`) or parent shared folder (`attendance/common/`) |
+
+   - **The 5 Deterministic Qualification Gates:**
+     1. **Gate 1 (Navigation Invariant):** Does this capability map to a secondary tab in the domain shell or a distinct URL segment (e.g., `/attendance/history`)?
+        - If YES → **Autonomous Sub-Module** (`{domain}_{capability}/`).
+        - If NO (triggered by clicking an "Edit" button, a table row, a filter toggle, or a wizard next step) → **Internal Component/View** in `components/`.
+     2. **Gate 2 (State & Lifecycle Independence):** Can this capability be refreshed directly, deep-linked, or reset without depending on live uncommitted in-memory React state of another screen?
+        - If YES → **Autonomous Sub-Module**.
+        - If NO (e.g., Step 2 of a 3-step checkout or registration wizard that depends on uncommitted form memory from Step 1) → **Internal Component/View** inside the SAME sub-module.
+     3. **Gate 3 (File Count & Granularity Bounds — The Goldilocks Rule: 5–20 Files):**
+        - **Target Range:** 5 to 20 files per sub-module (orchestrator + 2-4 UI components + 1-2 hooks + 1 api client + 1 store + 1 mock + 1 test + doc trio).
+        - **Anti-Pattern 1 (Nano-Module BANNED):** Creating a sub-module for a single button, badge, chip, or static card (< 3 files) is STRICTLY FORBIDDEN. Keep it in `components/`.
+        - **Anti-Pattern 2 (Mega-Submodule BANNED):** Cramming 3+ completely distinct operational workflows (e.g., Attendance Clock-in + Biometric Sync + Payroll Export + Shift Calendar) into one giant sub-module (> 25 files) is STRICTLY FORBIDDEN. Split into separate sibling sub-modules under that domain container.
+     4. **Gate 4 (Standalone Testability & Mockability — ZIP Guarantee):** Can this capability be extracted, supplied with mock data, and tested in total isolation using its own MSW handlers and local harness?
+        - If YES → **Autonomous Sub-Module**.
+     5. **Gate 5 (Backend Entity Lifecycle Alignment):** In Backend, a Sub-Module maps 1:1 to an autonomous sub-domain entity or aggregate root. Additional CRUD actions or filters on the existing entity belong inside the existing sub-module, NEVER as a new sub-module.
 
 ---
 
 # 6. BUILD A MODULE MAP FIRST
 
-Before giving findings, produce:
+Before giving findings, produce the physical ASCII tree following the Universal Day-1 Sub-Module Architecture:
 
 ```text
-[module root]/
-├── [moduleName]_components/
-├── [moduleName]_hooks/
-├── [moduleName]_store/
-├── [moduleName]_api/
-├── [moduleName]_types/
-├── [moduleName]_schemas/
-├── [moduleName]_constants/
-├── [moduleName]_utils/
-├── [moduleName]_mocks/
-├── [moduleName]_tests/
-└── documentation (.md files)
+src/app/frontend_{role}/{role}_{domain}/  <-- Pure Domain Container
+├── layout.tsx                            <-- Navigation shell with sub-navigation tabs
+├── page.tsx                              <-- Default redirect to initial sub-module
+├── [role]_[domain]_features.md           <-- Master domain feature specification
+├── [role]_[domain]_forbidden.md          <-- Master domain forbidden rules
+├── [role]_[domain]_theme_contract.md     <-- Master domain theme tokens
+│
+├── {domain}_{capability_1}/              <-- Autonomous Sub-Module 1 (e.g., attendance_dashboard/)
+│   ├── components/                       <-- Standard sub-module components
+│   ├── hooks/                            <-- Domain hooks
+│   ├── api/                              <-- Sub-module API client & url config
+│   ├── state/                            <-- Feature-scoped Zustand store
+│   ├── types/                            <-- Domain TypeScript interfaces
+│   ├── schemas/                          <-- Zod validation schemas
+│   ├── mocks/                            <-- Module MSW handlers & fixtures
+│   ├── utils/                            <-- Feature-local formatters & helpers
+│   ├── tests/                            <-- Unit/component tests & harness
+│   ├── [role]_[submodule]_features.md    <-- ALL 22 Canonical Sections
+│   ├── [role]_[submodule]_forbidden.md   <-- Sub-module forbidden rules
+│   └── [role]_[submodule]_theme_contract.md <-- Sub-module consumed tokens
+│
+└── {domain}_{capability_2}/              <-- Autonomous Sub-Module 2 (e.g., attendance_history/)
+    ├── components/
+    ├── hooks/
+    ├── api/
+    ├── state/
+    ├── types/
+    ├── schemas/
+    ├── mocks/
+    ├── utils/
+    ├── tests/
+    ├── [role]_[submodule]_features.md
+    ├── [role]_[submodule]_forbidden.md
+    └── [role]_[submodule]_theme_contract.md
 ```
 
-**IMPORTANT FOLDER NAMING & COMPONENT SUBFOLDER GROUPING:**
-1. Replace EVERY folder name with the ACTUAL discovered prefixed folder name (e.g., `manager_members_components/`, NOT `components/`). Generic unprefixed folder names are an architecture violation.
-2. **Responsibility Subfolders inside `[moduleName]_components/`:** Do NOT dump dozens of flat component files directly into `[moduleName]_components/`. Group related components into module-prefixed responsibility subfolders:
-   - `[moduleName]_main/` → contains `<ModuleName>Main.tsx` orchestrator
-   - `[moduleName]_views/` → contains screen-level view components (e.g., `[moduleName]_overview_view/`, `[moduleName]_table_view/`)
-   - `[moduleName]_[feature]_form/`, `[moduleName]_[feature]_table/`, `[moduleName]_[feature]_modal/`
-3. **Category Boundary Rule (CRITICAL):** `[moduleName]_components/` and its subfolders are STRICTLY for React components (`.tsx`). NEVER put independent API clients, hooks, constants, schemas, types, stores, or test suites inside a component subfolder. Those artifacts MUST reside in their respective canonical module category (`[moduleName]_api/`, `[moduleName]_hooks/`, etc.).
-
-Replace the generic names above with the ACTUAL discovered structure.
+**IMPORTANT FOLDER & FILE NAMING RULES:**
+1. **Domain Container Quarantine:** Loose `components/`, `hooks/`, `api/`, `mocks/`, or `utils/` directly at `{role}_{domain}/` root are strictly BANNED. 100% of executable implementation code MUST live inside child sub-modules (`{domain}_{capability}/`).
+2. **Standard Folders inside Sub-Modules:** Inside `{domain}_{capability}/`, canonical standard folder names are used: `components/`, `hooks/`, `api/`, `mocks/`, `utils/`, `state/`, `types/`, `schemas/`, `tests/`.
+3. **Globally Unique File Prefix:** Files inside sub-module folders MUST carry the full unique prefix: `[Role][Submodule][Name]` (e.g., `ManagerAttendanceDashboardMetricCard.tsx`, `useManagerAttendanceDashboardMetrics.ts`).
+4. **Category Boundary Rule (CRITICAL):** `components/` is STRICTLY for React components (`.tsx`). NEVER put independent API clients, hooks, constants, schemas, types, stores, or test suites inside `components/`. Those artifacts MUST reside in their respective canonical category (`api/`, `hooks/`, etc.).
 
 For every important folder explain:
 
@@ -2056,7 +2349,7 @@ FAIL IF: Raw string comparison without validation, or unhandled undefined case.
 - Are there any hardcoded links pointing to a now-removed standalone route that should use `?view=` instead?
 
 **6. Per-View Isolation**
-- Does each view component live in the module's own `_components/` folder (prefixed correctly)?
+- Does each view component live in the sub-module's own `components/` folder (prefixed correctly, e.g., `components/[Submodule]Views/`)?
 - Does each view component have its own loading/error/empty state?
 - Does any view component import from a SIBLING view component directly (isolation violation)?
 
@@ -3494,28 +3787,50 @@ Find existing:
 
 Check whether the documentation reflects reality.
 
-Feature documentation must be evaluated for ALL 18 mandatory sections:
+Under the Universal Day-1 Sub-Module Architecture, every autonomous sub-module MUST contain its own dedicated **Documentation Trio** (`_features.md`, `_forbidden.md`, `_theme_contract.md`).
 
-1. Module Purpose
-2. Dependency Manifest
-3. Feature Lifecycle Contract
-4. Screens & Entry Points
-5. Directory Structure / Folder Structure
-6. User Flows & Interactions
-7. Data and State Architecture
-8. API Contract
-9. Approved External Dependencies
-10. Permissions / Security
-11. Platform-Specific Notes
-12. Offline Behavior
-13. Loading / Empty / Error States
-14. Background Tasks
-15. Edge Cases and AI Warnings
-16. Component Responsibility Map
-17. Rule Compliance Checklist
-18. Known Issues / Tech Debt
+> **MANDATORY FRONTMATTER REQUIREMENT (`_features.md`):**
+> Every `_features.md` MUST begin with this structured YAML frontmatter:
+> ```yaml
+> ---
+> feature: "[role]_[submodule]"
+> owner_role: "[role]"
+> module_version: 1
+> api_contract_source: "verified-api-contract | web-zip-extraction | normative-rules"
+> last_verified_date: "YYYY-MM-DD"
+> last_verified_commit: "commit-sha-or-host-unavailable"
+> documentation_status: "current"
+> portability_score: "8/8"
+> ---
+> ```
+> Missing or non-structured frontmatter = `FAIL — DOCUMENTATION_HEADER_INVALID`.
 
-**Missing even one section = PARTIAL. All 18 must be present and non-boilerplate.**
+Feature documentation must be evaluated for ALL 22 canonical sections:
+
+1. ## Scope and Non-Scope
+2. ## Screen Inventory
+3. ## Navigation Contract
+4. ## API Contract
+5. ## Query Key Registry
+6. ## Mutation Inventory
+7. ## Permissions and Role Rules
+8. ## State Ownership
+9. ## Offline and Reconnect Behavior
+10. ## Security and PII Rules
+11. ## Accessibility Requirements
+12. ## Background Tasks
+13. ## Feature Flags
+14. ## Cache Invalidation
+15. ## Migration and Rollback
+16. ## Test Coverage Map
+17. ## Architecture Exceptions (must document any `// architecture-exception:` comments)
+18. ## Known Contract Gaps
+19. ## Rule Compliance Checklist (35+ Verification Items)
+20. ## Standalone Run, Mock & Test Harness (How to run this sub-module standalone with MSW / mock data)
+21. ## Module Portability & Host Integration Guide (Drop-in reuse into other host applications)
+22. ## Deliverables & Version History (8/8 Portability Score)
+
+**Missing even one section = PARTIAL. All 22 must be present and non-boilerplate.**
 
 Check whether the documentation contains:
 
@@ -3789,7 +4104,7 @@ Since there is no existing mobile code, produce:
 EXTRACTION COMPLETENESS SCORE (after all 5 extraction sections are done)
   — Scores: API contract completeness, field inventory completeness, screen inventory completeness, permission coverage, enum coverage
 CREATION FINAL SCORE (after mobile module is fully created and 43P checklist is clean)
-  — Score caps: Any invented endpoint not in web ZIP → maximum 4/10. Any Gold color (#FACC15) in mobile output → maximum 5/10. Any expo-* package → maximum 5/10. Any web JSX copied into mobile files → maximum 3/10.
+  — Score caps: Any invented endpoint not in web ZIP → maximum 4/10. Any non-Gold / Indigo / Purple primary in mobile output → maximum 5/10. Any white text on Gold backgrounds (must use onPrimary #111111) → maximum 5/10. Any expo-* package → maximum 5/10. Any web JSX copied into mobile files → maximum 3/10.
 
 ## BASELINE SCORE — BEFORE REPAIR
 
@@ -4213,10 +4528,10 @@ MINIMUM: No single RBG may contain fewer than 2 audit batches unless it is the f
 RBGs MUST be ordered by repair dependency, not by batch number:
 
 ```text
-RBG 1 — P0 Critical fixes (architecture blockers, broken flows, security)
-RBG 2 — P1 High fixes (state/API, forms, tables, functional closure)
-RBG 3 — P2 Medium fixes (design system, loading/error states, tests)
-RBG 4 — P3 Low fixes (naming, docs, comments, tooling)
+RBG 1 — P0 Critical Structural & Architectural Foundation fixes (Universal Sub-Module hierarchy normalization, domain root quarantine, removal of banned parent common/shared folders, sibling isolation firewall) + Broken user flows, Auth/Tenant boundaries, and Security vulnerabilities
+RBG 2 — P1 High fixes (state/API, forms, tables, functional closure, optimistic/pessimistic mutation reconciliation)
+RBG 3 — P2 Medium fixes (design system, loading/error/empty states, Autonomous Sub-Module Documentation Trio with 22 Canonical Sections, unit/component tests, MSW mock fixtures)
+RBG 4 — P3 Low fixes (responsibility comments, minor naming conventions, formatting, tooling)
 RBG N — Final re-audit + packaging
 ```
 
@@ -4935,7 +5250,7 @@ Verify ALL requirements from the source section, including:
 
 - one primary React component per component file;
 - related declarations may coexist in a cohesive non-component responsibility;
-- role + module-prefixed internal folders (e.g., manager_members_components);
+- canonical standard internal subfolders (components/, hooks/, api/, schemas/, types/, config/, mocks/, state/, tests/, utils/, _locales/) inside each sub-module with role + module-prefixed files (e.g., ManagerMembersCard.tsx);
 - component maximum 300 lines;
 - custom hook maximum 150 lines;
 - utility/formatter maximum 120 lines;
@@ -4965,7 +5280,7 @@ Verify:
 - Exactly one canonical representation of each feature exists.
 - No parallel route tree or duplicate directory exists for the same feature.
 - Next.js route files (`page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`) are physically owned by the feature module and not duplicated.
-- Any route group serves only as routing infrastructure and contains no duplicated business implementation.
+- Next.js route groups `(group_name)` are STRICTLY FORBIDDEN to prevent route collisions and retain clean 1:1 physical file path-to-URL mapping.
 
 > ⛔ **ISOLATED MODULE SCOPE NOTE:** When auditing an isolated role or feature module ZIP (e.g. `superadmin.zip`), verify canonical routing exclusively *within the supplied module tree*. The AI MUST NOT stop, stall, or demand the host application's root route tree or sibling route groups.
 
@@ -5367,27 +5682,12 @@ Explicitly audit:
 60. centralized unauthenticated redirect handling;
 61. mechanical ESLint/pre-commit enforcement.
 
-For Rule 59 verify the complete source contract, including:
+For Rule 59 verify the canonical discriminated union `ApiResponse<T>` contract from `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`:
 
-```text
-success
-message
-data
-meta?
-error?
-errorCode?
-statusCode?
-validationErrors?
-```
-
-and exact:
-
-```text
-ValidationErrorItem
-PaginationMeta
-```
-
-semantics.
+- `ApiSuccess<T>`: `success: true`, `message: string`, `data: T` (guaranteed non-null payload), `meta?: PaginationMeta`, `requestId: string`.
+- `ApiFailure`: `success: false`, `message: string`, `data: null` (explicitly null), `error?: string`, `errorCode: string`, `statusCode: number`, `requestId: string`, `validationErrors?: ValidationErrorItem[]`.
+- Type narrowing: `ApiResponse<T> = ApiSuccess<T> | ApiFailure`.
+- Ensure exact `ValidationErrorItem` and `PaginationMeta` semantics.
 
 ---
 
@@ -5517,7 +5817,7 @@ Reject:
 
 Audit all details of:
 
-76. CODEOWNERS human review for:
+76. CODEOWNERS human review *(PR merge gate only: does not block autonomous local code generation)* for:
    - auth;
    - API interceptor/token logic;
    - permission hooks;
@@ -5535,7 +5835,7 @@ Audit all details of:
    - human approval for AI-generated changes.
 78. en-dash nullable display fallback and `displayValue`.
 79. complex-form unsaved-change guard including browser exit AND client-side navigation.
-80. centralized currency/number formatter, minor-unit semantics, no raw `.toFixed()`.
+80. feature-local currency/number formatter (WET inside `utils/`), minor-unit integer contract, no raw `.toFixed()`, zero global business formatters (only `src/lib/display_value.ts` for neutral en-dash null fallback).
 81. loading-width stability.
 82. toast deduplication, including:
    - stable IDs;
@@ -7130,7 +7430,7 @@ NO UNKNOWN REQUIREMENT
 [ ] Mode C — Platform Translation: Zero next/ imports in mobile output
 [ ] Mode C — Platform Translation: Zero HTML elements (div, span, table, input) in mobile output
 [ ] Mode C — Platform Translation: Zero Tailwind class strings in mobile StyleSheets
-[ ] Mode C — Design Token Translation: Zero Gold colors (#FACC15, yellow-*, amber-*) in mobile output
+[ ] Mode C — Design Token Translation: Luxury Premium Gold primary (tokens.color.primary = #FACC15/#EAB308, onPrimary = #111111) used via useThemeTokens(); zero Indigo/Purple brand primary
 [ ] Mode C — Design Token Translation: All colors from MOBILE_UI_UX_DESIGN.md tokens.color.*
 [ ] Mode C — Design Token Translation: All spacing from tokens.space[N]
 [ ] Mode C — Design Token Translation: All typography from tokens.typography.*
@@ -7143,7 +7443,7 @@ NO UNKNOWN REQUIREMENT
 [ ] Mode C — INTEGRATION_GUIDE.md Section 1 contains Web ZIP Extraction Summary table
 [ ] Mode C — INTEGRATION_GUIDE.md Section 1 documents all CONTRACT_NOT_FOUND_IN_WEB_ZIP items
 [ ] Mode C — Deliverable ZIP named mobile-{role}-v1.zip
-[ ] Mode C — Maestro E2E YAML present in mobile_e2e/{role}_{module}/{role}_{module}.yaml
+[ ] Mode C — Maestro E2E YAML present in mobile_e2e/frontend_{role}_e2e/{role}_{module}/{role}_{module}.yaml (never stored inside src/features/)
 [ ] Mode C — RE_AUDIT_CHECKLIST_RESULT.md present with all Mode C + Mobile Rule items individually evaluated
 ```
 
@@ -7156,8 +7456,8 @@ NO UNKNOWN REQUIREMENT
 [ ] Mobile Rule 0A.3 — 1:1 navigation-to-feature-folder mapping; feature-owned Navigator + url_config
 [ ] Mobile Rule 0B — Hard write boundary enforced; no sibling feature modifications
 [ ] Mobile Rule 1 — Screen+MainView pattern; 80-line screen ceiling; Role+Module prefixed files
-[ ] Mobile Rule 1 — Canonical path: src/features/frontend_{role}/{role}_{module}/
-[ ] Mobile Rule 1 — Root Quarantine: only 3 doc files at feature root
+[ ] Mobile Rule 1 — Canonical path: src/features/frontend_{role}/{role}_{domain}/{domain}_{capability}/
+[ ] Mobile Rule 1 — Root Quarantine: only 3 doc files at sub-module root
 [ ] Mobile Rule 1 — Mocks: fixtures.ts + handlers.ts with mutable in-memory state (Rule 7A)
 [ ] Mobile Rule 3 — Zero magic values; all tokens from MOBILE_UI_UX_DESIGN.md
 [ ] Mobile Rule 4 — TanStack Query v5 for server state; isPending not isLoading; onSuccess in useQuery BANNED
@@ -7174,8 +7474,8 @@ NO UNKNOWN REQUIREMENT
 [ ] Mobile Rule 10B — Pull-to-refresh wired on all user-browsable lists
 [ ] Mobile Rule 11 — react-native-haptic-feedback (NOT expo-haptics); reduced motion respected
 [ ] Mobile Rule 14 — Only packages from Locked NPM Package Registry; no expo-* packages
-[ ] Mobile Rule 17 — Co-located tests; Maestro E2E in mobile_e2e/; no placeholder assertions
-[ ] Mobile Rule 24 — _features.md complete with all 18 sections; non-generic content
+[ ] Mobile Rule 17 — Top-level Maestro E2E in mobile_e2e/frontend_{role}_e2e/{role}_{module}/ (never inside src/features/); unit/integration tests co-located in tests/; no placeholder assertions
+[ ] Mobile Rule 24 — _features.md complete with ALL 22 canonical sections; non-generic content (superseded by 43P-DOCS-01)
 [ ] Mobile Rule 25 — accessibilityLabel/Role/State on all interactive elements; 44pt/48dp targets
 [ ] Mobile Rule 28 — Zero cross-feature imports; formatCurrency is feature-local (Rule 63)
 [ ] Mobile Rule 29 — _forbidden.md present with minimum 5 specific entries
@@ -7209,7 +7509,7 @@ NO UNKNOWN REQUIREMENT
 [ ] Mobile Design §16 — Sensitive data masked per masking spec
 [ ] Mobile Design §17 — Confirmation bottom sheet layout matches spec
 [ ] Mobile Design §18 — Button loading state: spinner + disabled + minWidth
-[ ] Mobile Design §19 — tokens.ts shape matches canonical TypeScript template
+[ ] Mobile Design §19 — Tokens interface matched; consumed via useThemeTokens() hook; zero static tokens.ts imports in UI
 [ ] Mobile Design §20 — Haptics + press-scale + reduced motion implemented
 [ ] Mobile Design §21 — Platform conventions: back nav, safe area, bottom sheets, date pickers
 [ ] Mobile Design §22 — All 7 DoD gates verified
@@ -7238,10 +7538,9 @@ Before final delivery, the AI MUST literally verify:
 [ ] All source prohibitions checked
 [ ] All source examples that establish mandatory behavior checked
 [ ] All source conflicts reported
-[ ] Web Rule 1 checked
-[ ] Web Rule 1B & 1C — frontend_ namespace prefix + role container hierarchy checked
-[ ] Web Rule 1C.1 & Section 5B — Sidebar navigation 1-to-1 feature module mapping and isolated AI repair hand-off checked
-[ ] Web Rule 1D — Canonical Next.js routing and filesystem structure checked
+[ ] Web Rule 1, 1B & 1C — Universal Day-1 Sub-Module Architecture, Domain Root Quarantine, Sibling Isolation Firewall, Parent Shared Folder Ban, and Strict WET Principle checked
+[ ] Web Rule 1C.1 & Section 5B — Sidebar navigation 1-to-1 feature domain mapping and Sub-Module ZIP Guarantee checked
+[ ] Web Rule 1D — Canonical Next.js routing, layout.tsx shell, and filesystem structure checked
 [ ] Web Rule 2 checked
 [ ] Web Rule 3 checked
 [ ] Web Rule 3B checked
@@ -7252,7 +7551,7 @@ Before final delivery, the AI MUST literally verify:
 [ ] Web Rule 8 checked
 [ ] Web Rule 9 checked
 [ ] Web Rule 10 checked
-[ ] Web Rule 11 checked
+[ ] Web Rule 11 & Rule 40 — Autonomous Sub-Module Documentation Trio (_features.md with ALL 22 canonical sections, _forbidden.md, _theme_contract.md) verified
 [ ] Web Rule 12 checked
 [ ] Web Rule 13 checked
 [ ] Web Rule 14 checked
@@ -7265,11 +7564,11 @@ Before final delivery, the AI MUST literally verify:
 [ ] Web Rule 16 — Robust Forms & Field-Level Validation checked
 [ ] Web Rule 17 — Centralized Error Interception checked
 [ ] Web Rule 18 — Enterprise Accessibility (WCAG 2.2 AA) checked
-[ ] Web Rule 19 — Clickable Table Rows with Detail Navigation checked
-[ ] Web Rule 20 — Keyboard-Equivalent Row Navigation checked
-[ ] Web Rule 21 — Searchable Dropdowns for Large Datasets checked
-[ ] Web Rule 22 — AI-Testable UI (Accessible Selectors First, data-testid for Ambiguous Cases) checked
-[ ] Web Rule 23 — Component-Level AI Docstrings (JSDoc) checked
+[ ] Web Rule 19 — Interactive Data Tables (Clickable Rows & Keyboard Navigation) checked
+[ ] Web Rule 20 — Searchable Dropdowns for Large Datasets & Selection Controls checked
+[ ] Web Rule 21 — Real-Time Communication (In-House WebSocket Architecture) checked
+[ ] Web Rule 22 — Tenant Context & Centralized Headers (Multi-Tenancy) checked
+[ ] Web Rule 23 — Password Visibility Toggle checked
 [ ] Web Rule 24 — Date/Time Formatting & UTC Display checked
 [ ] Web Rule 25 — RBAC UI Hiding vs Authoritative Backend Auth checked
 [ ] Web Rule 26 — Skeleton Loading States checked
@@ -7412,9 +7711,37 @@ Before final delivery, the AI MUST literally verify:
 
 The evaluation of Section 43P is complete when every single item is evaluated and recorded individually with concrete file/line evidence in `RE_AUDIT_CHECKLIST_RESULT.md` as [PASS / FAIL / NOT_APPLICABLE / DEFERRED_TO_HOST_RUNTIME / OUTSIDE_SUPPLIED_SCOPE / EXTERNAL_PRODUCT_DECISION_BLOCKED]. Documenting an open spec ambiguity under `EXTERNAL_PRODUCT_DECISION_BLOCKED` satisfies the "Source conflicts reported" check as PASS (evidence preserved).
 
+
+## Section 6: Compliance Evidence Manifest (`compliance_manifest.json`)
+
+Every Mode C or Mode D mobile delivery MUST include a machine-readable compliance summary (`compliance_manifest.json`) at artifact root:
+
+```json
+{
+  "mode": "MODE_C | MODE_D",
+  "target_role": "{role}",
+  "target_module": "{module}",
+  "source_scope": "src/features/frontend_{role}/{role}_{module}/",
+  "changed_files": [],
+  "static_checks_run": [],
+  "checks_passed": [],
+  "checks_deferred_to_host_runtime": [],
+  "blocked_by_supplied_contract": [],
+  "architecture_exceptions": [],
+  "design_exceptions": [],
+  "artifact_status": "SOURCE_COMPLETE_AND_ARTIFACT_GENERATED | SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING",
+  "runtime_verification_status": "DEFERRED_TO_HOST_RUNTIME"
+}
+```
+
+The manifest MUST NOT claim an executed check unless command execution evidence exists.
+
 ⛔ **DELIVERY MANDATE (NEVER WITHHOLD THE REPAIR ZIP):**
+> This requirement is subject to the Capability-Truth Delivery Rule. If archive generation
+is unavailable, the AI MUST report SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING
+and MUST NOT claim that a ZIP was generated.
 - Unavailability of live runtime verification (`DEFERRED_TO_HOST_RUNTIME`), missing out-of-scope host files (`OUTSIDE_SUPPLIED_SCOPE`), or documented specification conflicts requiring external product decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) MUST NOT trigger `BLOCKED_DELIVERY` or cause the AI to withhold the ZIP.
-- When 100% of fixable in-scope `SOURCE_LEVEL_FIX` items are implemented, the AI **MUST ALWAYS PACKAGE AND DELIVER THE VERSIONED FIX ZIP**.
+- When 100% of fixable in-scope `SOURCE_LEVEL_FIX` items are implemented, the AI MUST deliver the final output per the Artifact Delivery Resolution Rule (package the versioned fix ZIP if archive tools exist, or deliver full source with `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING` status).
 - The AI MUST NOT refuse to deliver the ZIP, nor declare delivery blocked because host/external checks remain deferred.
 Bundling multiple rules into a single check, skipping individual rule evaluation, or delivering without `RE_AUDIT_CHECKLIST_RESULT.md` = FRAUDULENT AUDIT & IMMEDIATE DELIVERY FAILURE.
 
@@ -9754,26 +10081,29 @@ The AI MUST evaluate every item below against the created mobile module and reco
 
 ## 43P-ARCH — Architecture & Structure
 
-- [ ] **43P-ARCH-01:** Feature folder path is `src/features/frontend_{role}/{role}_{module}/` — `frontend_` prefix present on role container
-- [ ] **43P-ARCH-02:** All screens in `screens/` are ≤80 lines — thin composition only, zero business logic, zero direct API calls
+- [ ] **43P-ARCH-01:** Feature folder path is strictly `src/features/frontend_{role}/{role}_{domain}/{domain}_{capability}/` — `frontend_` prefix present on role container and Tier 4 leaf sub-module path enforced. (Any external prompt or legacy checklist expecting `src/app/mobile_{role}/` is strictly obsolete per Master Cross-Document Precedence Order).
+- [ ] **43P-ARCH-02:** All screens in `screens/` are ≤80 lines — hard gate, thin composition only, zero business logic, zero direct API calls
 - [ ] **43P-ARCH-03:** Every screen renders exactly ONE `[Role][Module][Screen]MainView.tsx` component
-- [ ] **43P-ARCH-04:** All components in `components/` are ≤200 lines
-- [ ] **43P-ARCH-05:** All hooks in `hooks/` are ≤150 lines
+- [ ] **43P-ARCH-04:** All components in `components/` are ≤200 lines — hard ceiling with documented exception in `_features.md` if cohesive logic requires
+- [ ] **43P-ARCH-05:** All hooks in `hooks/` are ≤150 lines — hard ceiling with documented exception in `_features.md` if cohesive logic requires
 - [ ] **43P-ARCH-06:** All API files in `api/` are ≤150 lines
 - [ ] **43P-ARCH-07:** All schema files in `schemas/` are ≤150 lines
 - [ ] **43P-ARCH-08:** All type files in `types/` are ≤150 lines
 - [ ] **43P-ARCH-09:** All store files in `state/` are ≤180 lines
 - [ ] **43P-ARCH-10:** All utility files in `utils/` are ≤120 lines
-- [ ] **43P-ARCH-11:** Feature root contains ONLY the three documentation files — no loose source files at root
+- [ ] **43P-ARCH-11:** Sub-module root contains ONLY the three documentation files — zero loose source files at sub-module root
 - [ ] **43P-ARCH-12:** Zero cross-feature business imports (Rule 28) — no sibling feature imports anywhere
 - [ ] **43P-ARCH-13:** Every component/hook/file uses Role+Module prefix in filename (e.g. `ManagerMembersMemberCard.tsx`)
 - [ ] **43P-ARCH-14:** No abbreviations in file or component names
 - [ ] **43P-ARCH-15:** Exported component name matches filename exactly
+- [ ] **43P-ARCH-16:** App Upgrade & Backward Compatibility (Rule 68) — MMKV schema versioned (`version: number`); secure storage migrations handled safely; cached query payloads use optional chaining (`data?.field ?? fallback`) to prevent runtime crashes on API drift
+- [ ] **43P-ARCH-17:** Universal Sub-Module Nesting Depth Law — Maximum folder depth below `{role}_{module}/` is strictly 1 level (`{domain}_{capability}/`). Zero sub-submodules allowed (e.g., `attendance_history/details/` is FORBIDDEN). Submodules qualify strictly by secondary navigation tabs, distinct sub-routes, or independent lifecycle per the 5-Gate Matrix; internal modals, slide-overs, and wizard steps MUST live in `components/` (`[Submodule]Views/`, `[Submodule]Modals/`)
+- [ ] **43P-ARCH-18:** Sub-Module Sizing & Qualification (Goldilocks Rule) — Submodule file count is 5–20 files; zero nano-modules (< 3 files / single badge, button, or chip); zero mega-submodules (> 25 files spanning multi-workflow sprawl; must be split into peer sub-modules)
 
 ## 43P-API — API Contract & URL Config
 
 - [ ] **43P-API-01:** `config/{role}_{module}.url_config.ts` exists and exports all endpoint paths as named constants — zero hardcoded URL strings in `*.api.ts`
-- [ ] **43P-API-02:** `api/{role}_{module}.query_keys.ts` exists with canonical factory pattern including resource identity in all keys
+- [ ] **43P-API-02:** `api/{role}_{module}.query_keys.ts` exists with canonical factory pattern including resource identity prefix `[role_module]` (e.g. `['manager_members']`, NOT generic `['members']`) in all keys to prevent cross-role cache collision
 - [ ] **43P-API-03:** Every API endpoint URL in mobile code EXISTS in the web ZIP's API client or URL config — zero invented endpoints (`CONTRACT_NOT_FOUND_IN_WEB_ZIP` if missing)
 - [ ] **43P-API-04:** Every TypeScript interface field in mobile EXISTS in the web ZIP's types or Zod schemas — zero invented fields
 - [ ] **43P-API-05:** All mutations use dedicated named mutation hooks — zero inline `useMutation` in screens or components
@@ -9802,10 +10132,12 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-MOCK-08:** Empty-result scenario is reachable (zero records triggers EmptyState component)
 - [ ] **43P-MOCK-09:** Error scenario is reachable (mock handler can return error to trigger ErrorFallback)
 - [ ] **43P-MOCK-10:** NO toast-only mutation success — UI list/detail MUST visibly reflect the mutation result
+- [ ] **43P-MOCK-11:** Canonical mock scenarios registry present at `mocks/scenarios/{role}_{module}.scenarios.ts` covering ACTIVE, EMPTY, SERVER_500, TIMEOUT, UNAUTHORIZED
+- [ ] **43P-MOCK-12:** Standalone test harness present at `tests/harness/bootstrap.ts` and `tests/harness/{Role}{Submodule}Harness.tsx` enabling 100% self-sufficient offline mock execution
 
 ## 43P-DESIGN — Design Token Compliance
 
-- [ ] **43P-DESIGN-01:** Zero raw hex colors (`#XXXXXX`) in any StyleSheet — all colors from `tokens.color.*`
+- [ ] **43P-DESIGN-01:** Zero raw hex colors (`#XXXXXX`) in any StyleSheet — all colors consumed via `const tokens = useThemeTokens()`; direct static import of `tokens.ts` in feature UI is FORBIDDEN
 - [ ] **43P-DESIGN-02:** Mobile primary MUST use `tokens.color.primary = #FACC15` (Gold) — same as web. `tokens.color.onPrimary = #111111` (dark text on gold). Do NOT replace Gold with Indigo. Gold/Amber values from web are CORRECT for mobile.
 - [ ] **43P-DESIGN-03:** Zero arbitrary spacing values — all spacing from `tokens.space[N]`
 - [ ] **43P-DESIGN-04:** Zero arbitrary font sizes — all typography from `tokens.typography.*`
@@ -9813,8 +10145,9 @@ The AI MUST evaluate every item below against the created mobile module and reco
 - [ ] **43P-DESIGN-06:** Zero arbitrary icon sizes — all icon sizes from `tokens.icon.*`
 - [ ] **43P-DESIGN-07:** Zero arbitrary animation durations — all durations from `tokens.duration.*`
 - [ ] **43P-DESIGN-08:** Zero arbitrary z-index values — all z-index from `tokens.zIndex.*`
-- [ ] **43P-DESIGN-09:** Shadow/elevation values from `tokens.shadow.*` only
+- [ ] **43P-DESIGN-09:** Shadows use `getShadowStyle('sm' | 'md' | 'lg' | 'xl')` and elevation values from `tokens.shadow.*` only
 - [ ] **43P-DESIGN-10:** Runtime-derived exceptions (safe-area insets, screen dimensions) documented with `// design-exception: <reason>` comment
+- [ ] **43P-DESIGN-11:** Touch targets resolve via `getMinTouchTarget()` from `@/core/theme/getMinTouchTarget` (44pt iOS / 48dp Android)
 
 ## 43P-WEB-FORBIDDEN — Web Pattern Prohibition
 
@@ -9866,17 +10199,25 @@ The AI MUST evaluate every item below against the created mobile module and reco
 
 ## 43P-A11Y â€” Accessibility
 
-- [ ] **43P-A11Y-01:** Every interactive element has `accessibilityLabel` with human-readable description â€” no empty or undefined labels
+- [ ] **43P-A11Y-01:** Every interactive element exposes a meaningful accessible name — icon-only, visually ambiguous, or contextual controls MUST provide an explicit localized `accessibilityLabel`; text-labelled native controls may use visible localized text when complete and unambiguous
 - [ ] **43P-A11Y-02:** Every interactive element has correct `accessibilityRole` (`button`, `link`, `checkbox`, `tab`, etc.)
 - [ ] **43P-A11Y-03:** Stateful controls (toggle, checkbox, tab) set `accessibilityState` (`checked`, `selected`, `disabled`) reactively
-- [ ] **43P-A11Y-04:** All touch targets are minimum 44x44pt â€” no icon-only buttons smaller than 44pt without padding
+- [ ] **43P-A11Y-04:** All touch targets are minimum 44x44pt on iOS and 48x48dp on Android (WCAG AA & Material Design standard) — use hitSlop if visual icon is smaller; zero icon-only buttons smaller without hitSlop/padding
 - [ ] **43P-A11Y-05:** Purely decorative icons have `accessible={false}` and `importantForAccessibility="no-hide-descendants"`
+
+## 43P-FORM — Form Architecture & Field Error Mapping
+
+- [ ] **43P-FORM-01:** Form management uses `react-hook-form` v7 with `@hookform/resolvers/zod` and schema from `schemas/[roleModule].schemas.ts` — zero unmanaged form state
+- [ ] **43P-FORM-02:** Server 400 validation error dictionaries mapped to form fields via `handleValidationErrors()` / `setError()` — never a generic toast when field-specific errors exist
+- [ ] **43P-FORM-03:** All 9 input states handled: default, focused, filled, error, success, disabled, read-only, loading, warning
+- [ ] **43P-FORM-04:** Dirty form navigation guarded by `useUnsavedChangesGuard(isDirty)` with confirmation sheet
+- [ ] **43P-FORM-05:** Numeric inputs constrained via Zod schemas and sanitizers — no raw unvalidated numeric input
 
 ## 43P-PLATFORM â€” Platform & Navigation
 
 - [ ] **43P-PLATFORM-01:** `SafeAreaView` from `react-native-safe-area-context` used on every screen root â€” never from `react-native` core
 - [ ] **43P-PLATFORM-02:** `StatusBar` set explicitly per screen with correct `barStyle` and `backgroundColor` per theme
-- [ ] **43P-PLATFORM-03:** Android back navigation handled â€” `useBackHandler` or `useFocusEffect` with `BackHandler` where custom back behaviour is needed
+- [ ] **43P-PLATFORM-03:** Android back navigation handled — `useBackHandler` or `useFocusEffect` with `BackHandler`; handlers MUST return `true` ONLY when actively dismissing an overlay (sheet/modal/dialog); handlers MUST return `false` in standard screen navigation to allow native stack pop without trapping the user
 - [ ] **43P-PLATFORM-04:** Bottom sheets use `@gorhom/bottom-sheet` â€” never `Modal` for sheet-style UI
 - [ ] **43P-PLATFORM-05:** Date/time pickers use `@react-native-community/datetimepicker` â€” never a web `<input type="date">`
 
@@ -9906,9 +10247,9 @@ The AI MUST evaluate every item below against the created mobile module and reco
 
 ## 43P-DOCS — Documentation Trio
 
-- [ ] **43P-DOCS-01:** `{role}_{module}_features.md` exists with all 18 mandatory sections (no TBD, no generic filler): (1) Overview, (2) User Stories, (3) Screen Inventory, (4) Navigation Flow, (5) API Contract, (6) State Management, (7) Component Tree, (8) Token Usage, (9) Permission Requirements, (10) Error States, (11) Empty States, (12) Loading States, (13) Offline Behaviour, (14) Accessibility Notes, (15) i18n Keys, (16) Mock Fixture Strategy, (17) Rule Compliance Checklist, (18) Deferred / Out-of-Scope items
-- [ ] **43P-DOCS-02:** `{role}_{module}_forbidden.md` exists with minimum 5 feature-specific actionable entries
-- [ ] **43P-DOCS-03:** `{role}_{module}_theme_contract.md` exists listing all consumed token names
+- [ ] **43P-DOCS-01:** Every autonomous sub-module contains dedicated Documentation Trio, with `[role]_[submodule]_features.md` containing ALL 22 canonical sections (no TBD, no generic filler): (1) Scope and Non-Scope, (2) Screen Inventory, (3) Navigation Contract, (4) API Contract, (5) Query Key Registry, (6) Mutation Inventory, (7) Permissions and Role Rules, (8) State Ownership, (9) Offline and Reconnect Behavior, (10) Security and PII Rules, (11) Accessibility Requirements, (12) Background Tasks, (13) Feature Flags, (14) Cache Invalidation, (15) Migration and Rollback, (16) Test Coverage Map, (17) Architecture Exceptions, (18) Known Contract Gaps, (19) Rule Compliance Checklist, (20) Standalone Run, Mock & Test Harness, (21) Module Portability & Host Integration Guide, (22) Deliverables & Version History (8/8 Portability Score)
+- [ ] **43P-DOCS-02:** `{role}_{submodule}_forbidden.md` exists with minimum 5 feature-specific actionable entries
+- [ ] **43P-DOCS-03:** `{role}_{submodule}_theme_contract.md` exists listing all consumed token names
 - [ ] **43P-DOCS-04:** `_features.md` Rule Compliance Checklist section is honestly filled (no false checkmarks)
 
 ## 43P-ASYNC — Async States
@@ -9944,7 +10285,7 @@ The AI MUST evaluate every item below against the created mobile module and reco
 ## MODE D — BOOT DECLARATION (MANDATORY FIRST OUTPUT)
 
 ```text
-FRONTEND AGENT V2.7 — MODE D BOOT DECLARATION
+FRONTEND AGENT V2.11 — MODE D BOOT DECLARATION
 ===============================================
 MODE:               D — MOBILE AUDIT + REPAIR
 SOURCE ZIP:         [mobile zip filename]
@@ -9972,7 +10313,11 @@ MANDATORY DELIVERABLES:
 - mobile-{role}-v{N}-fix.zip (repaired React Native feature module)
 - INTEGRATION_GUIDE.md (changelog + navigation wiring + npm install + host verification)
 - RE_AUDIT_CHECKLIST_RESULT.md (Section 43P MOBILE RULE CHECKLIST result)
-- mobile_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
+Mobile Maestro E2E tests MUST live only at:
+mobile_e2e/frontend_{role}_e2e/{role}_{module}/
+
+They MUST NOT be stored inside src/features/.
+- mobile_e2e/frontend_{role}_e2e/{role}_{module}/{role}_{module}.yaml (Maestro E2E test suite)
 
 FIRST ACTION: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely
 ```
@@ -9988,7 +10333,7 @@ If no explicit version in input filename → default to `v1-fix`: `mobile-{role}
 
 ## MODE D — AUDIT SCOPE
 
-Mode D audit MUST cover ALL rules from `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` (Rules 0A–67) and ALL design rules from `MOBILE_UI_UX_DESIGN.md` (Sections 1–22), evaluated against the supplied mobile ZIP. The Section 43P MOBILE RULE CHECKLIST is the delivery freeze gate for Mode D repairs.
+Mode D audit MUST cover all currently numbered rules in `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, including the Mobile Delivery Freeze Gate and Definition of Done, and all design rules from `MOBILE_UI_UX_DESIGN.md` (Sections 1–22), evaluated against the supplied mobile ZIP. The Section 43P MOBILE RULE CHECKLIST is the delivery freeze gate for Mode D repairs.
 
 ---
 
@@ -10054,7 +10399,7 @@ export async function createManagerMember(
   dto: CreateManagerMemberDto,
   idempotencyKey: string,  // MANDATORY parameter
 ): Promise<ApiResponse<ManagerMember>> {
-  return networkClient.post(MANAGER_MEMBERS_URLS.CREATE, dto, {
+  return networkClient.post(MANAGER_MEMBERS_API.create, dto, {
     headers: { 'Idempotency-Key': idempotencyKey },
   });
 }
@@ -10176,6 +10521,81 @@ During Mode C creation, for EVERY interactive element identified in Extraction S
 - `[component]` = lowercase component identifier (e.g. `addform`, `membercard`, `searchinput`)
 - `[action/state]` = lowercase action or state (e.g. `submit`, `delete`, `press`, `active`, `loading`)
 
+
+## PATCH-08 — Canonical Subfolder Naming vs Role+Module Prefixed Files
+
+> ⛔ **MODE C & MODE D MANDATORY:** Feature modules MUST use standard subfolder names (`screens/`, `components/`, `hooks/`, `schemas/`, `types/`, `api/`, `config/`, `mocks/`, `state/`, `tests/`, `utils/`, `_locales/`). Naming subfolders as `{module}_components/` or `{module}_hooks/` is FORBIDDEN.
+>
+> In contrast, every source file INSIDE those subfolders MUST carry the `[Role][Module]` prefix (PascalCase for components/screens, camelCase with `use` for hooks, dot-notation lowercase for types/schemas/api/store/mocks/locales).
+>
+> Sub-module root is strictly quarantined: it MUST contain ONLY the three documentation files (`{role}_{submodule}_features.md`, `{role}_{submodule}_forbidden.md`, `{role}_{submodule}_theme_contract.md).`
+
+## PATCH-09 — Dedicated Mutation Hook & Resource-Identified Query Key Factory (Rule 7C & 60)
+
+> ⛔ **MODE C & MODE D MANDATORY:** Components and screens MUST NEVER call `useMutation` directly or inline mutation logic inside JSX.
+>
+> 1. **Query Key Registry:** Every feature module MUST own `api/{role}_{module}.query_keys.ts` with explicit resource identity in all keys:
+>    ```typescript
+>    export const MANAGER_MEMBERS_QUERY_KEYS = {
+>      all:     ['manager_members'] as const,
+>      lists:   () => [...MANAGER_MEMBERS_QUERY_KEYS.all, 'list'] as const,
+>      list:    (filters: Record<string, unknown>) => [...MANAGER_MEMBERS_QUERY_KEYS.lists(), filters] as const,
+>      details: () => [...MANAGER_MEMBERS_QUERY_KEYS.all, 'detail'] as const,
+>      detail:  (id: string) => [...MANAGER_MEMBERS_QUERY_KEYS.details(), id] as const,
+>    };
+>    ```
+> 2. **Dedicated Mutation Hooks:** All mutations MUST be encapsulated in named hooks (e.g., `useCreateManagerMember.ts`, `useDeleteManagerMember.ts`).
+> 3. **Canonical Cache Invalidation:** The mutation hook MUST invalidate affected queries inside `useMutation({ onSuccess: () => queryClient.invalidateQueries(...) })`.
+
+## PATCH-10 — Single-Flight 401 Refresh & Trusted Tenant Context (Rule 54 & 55)
+
+> ⛔ **MODE C & MODE D MANDATORY:**
+>
+> 1. **Single-Flight Token Refresh:** If multiple concurrent requests fail with 401 Unauthorized, they MUST share a single refresh promise. Creating multiple concurrent refresh calls is FORBIDDEN.
+> 2. **Trusted Tenant Header:** The `x-tenant-id` header MUST be derived strictly from the authenticated session context inside `src/core/network/networkClient.ts`. Deriving `x-tenant-id` from route parameters or client payload is FORBIDDEN.
+
+## PATCH-11 — Form Keyboard Safety & Loading Width Stability (Rule 10A & 39)
+
+> ⛔ **MODE C & MODE D MANDATORY:**
+>
+> 1. **Keyboard Safety:** Every form screen and form bottom sheet MUST be wrapped in `KeyboardAvoidingView` (`behavior={Platform.OS === 'ios' ? 'padding' : 'height'}`) with a `ScrollView` configured with `keyboardShouldPersistTaps="handled"`. Using a bare `View` as the root of a form screen is FORBIDDEN.
+> 2. **Button Loading Width Stability:** Every async button MUST lock its width via `minWidth: tokens.layout.buttonMinWidth` (120dp) to prevent layout shift when label text is replaced with an ActivityIndicator during in-flight states.
+
+## PATCH-12 — Feature-Local Currency Formatter with Self-Contained Metadata (Strict WET — Rule 63)
+
+> ⛔ **MODE C & MODE D MANDATORY:** Currency formatting is a DOMAIN_UTILITY and MUST be feature-local (`utils/{roleModule}FormatCurrency.ts`). Importing `formatCurrency` or `currencyMetadata` from `src/core/` is FORBIDDEN.
+>
+> 1. The formatter MUST maintain self-contained approved `currencyMetadata` (e.g., `INR: { divisor: 100 }`).
+> 2. Amounts in minor units (paise/cents) are divided by the divisor.
+> 3. Nullable amounts MUST return an en-dash (`—`), never blank or `'N/A'`.
+> 4. Unsupported currency codes MUST throw an explicit Error — never silently default to divisor 100.
+
+## PATCH-13 — En-Dash Null Fallback via displayValue() (Rule 38)
+
+> ⛔ **MODE C & MODE D MANDATORY:** Any data field that may be `null`, `undefined`, or empty string MUST render an en-dash (`—`) via `displayValue()` from `src/core/utils/formatters.ts`. Rendering empty cells, raw `'null'`, `'undefined'`, or `'N/A'` is STRICTLY FORBIDDEN.
+
+## PATCH-14 — Form Architecture, Field Error Mapping & Cross-Platform Touch Targets (Rule 10A, 42, 47 & 48)
+
+> ⛔ **MODE C & MODE D MANDATORY:**
+>
+> 1. **Form State & Schema Validation:** Every form MUST use `react-hook-form` v7 with `@hookform/resolvers/zod` consuming Zod v3 schemas defined in `schemas/[roleModule].schemas.ts`. Manual `useState` tracking for form fields is FORBIDDEN.
+> 2. **Field-Level Validation Error Mapping:** When an API returns a 400 Bad Request with field-level validation errors (e.g. `{ errors: { field: "message" } }`), they MUST be mapped directly to the form fields via `handleValidationErrors()` / `form.setError()`. Showing a generic toast popup when field errors exist is FORBIDDEN.
+> 3. **Cross-Platform Touch Targets:** Touch targets MUST be minimum 44x44pt on iOS and 48x48dp on Android. When visual iconography is smaller, developers MUST apply `hitSlop` (e.g., `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}`).
+> 4. **Query Key Role/Module Scoping:** Query key factories MUST include the resource identity tuple with role prefix (e.g., `['manager_members']` instead of generic `['members']`) to guarantee 100% cache isolation across different roles.
+
+## PATCH-15 — Dynamic Theme Token Access, Rule 68 Compatibility & Interaction Harmonization
+
+> ⛔ **MODE C & MODE D MANDATORY:**
+>
+> 1. **Dynamic Theme Hook Consumption:** Feature UI components MUST consume design tokens via `const tokens = useThemeTokens()` from `@/core/theme/useThemeTokens`. Direct static import of `tokens.ts`, `lightTheme`, or `darkTheme` inside feature files is FORBIDDEN to ensure dynamic runtime switching (Light/Dark/High Contrast) functions correctly.
+> 2. **Cross-Platform Touch & Shadow Resolvers:** Touch target sizing MUST use `getMinTouchTarget()` from `@/core/theme/getMinTouchTarget` (resolves to 44pt on iOS, 48dp on Android). Shadow styles MUST use `getShadowStyle('sm' | 'md' | 'lg' | 'xl')` from `@/core/theme/getShadowStyle` (maps to iOS shadow properties and Android `elevation`).
+> 3. **Hardware Back Handler Trapping Safety:** When wiring Android back handling via `BackHandler` or `useBackHandler`, handlers MUST return `true` ONLY when actively managing an overlay state (e.g., dismissing an open bottom sheet, modal, or dirty-form discard dialog). In all standard navigation states, return `false` so the native stack navigates back normally. Trapping users on a screen by unconditionally returning `true` is FORBIDDEN.
+> 4. **Accessible Name Rules:** Every interactive control MUST expose a meaningful accessible name. Icon-only, visually ambiguous, abbreviated, dynamic, or contextual controls MUST provide an explicit localized `accessibilityLabel`. Text-labelled native controls may use visible localized text as accessible name when complete and unambiguous.
+> 5. **App Upgrade & Backward Compatibility (Rule 68):**
+>    - MMKV state schemas MUST include a `version: number` attribute.
+>    - Keychain/Secure storage schema migrations MUST safely migrate or reset session state without crashing.
+>    - Cached query payloads MUST handle schema additions or optional fields gracefully using optional chaining (`data?.optionalField ?? fallback`).
+
 ---
 
 # INTEGRATION_GUIDE.md — MODE C SECTION STRUCTURE (V2.7 CORRECTED)
@@ -10243,7 +10663,7 @@ The Boot Declaration execution order block now includes Mode D:
 [ ] Step 1: Read MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md completely — not yet started
 [ ] Step 2: Read MOBILE_UI_UX_DESIGN.md completely — not yet started
 [ ] Step 3: STAGE 1 FREEZE — mobile requirement baseline + baseline_frozen: true — not yet started
-[ ] Step 4: STAGE 2 AUDIT — complete full gap & contract audit (Rules 0A–67 + Design Sections 1–22) — not yet started
+[ ] Step 4: STAGE 2 AUDIT — complete full gap & contract audit against all currently numbered rules and design sections — not yet started
 [ ] Step 5: RBG PLAN published + user explicitly approves — not yet started
 [ ] Step 6: STAGE 3 REPAIRS — execute repair batches in RBG order (Rule 67B) — not yet started
 [ ] Step 7: Section 43P MOBILE RULE CHECKLIST clean on repaired code — not yet started
@@ -10258,6 +10678,9 @@ The Boot Declaration execution order block now includes Mode D:
 |---|---|
 | V2.5 | Original — Web Modes A + B only |
 | V2.6 | Added Mode C (Cross-Platform Mobile Create from Web ZIP) |
+| V2.11 | **FINAL HARMONIZATION PATCH:** Fixed Line 3793 Gold score penalty bug (replaces with Gold compliance rule). Mandated useThemeTokens() hook consumption (banning static tokens.ts import in feature UI). Added getMinTouchTarget() and getShadowStyle() core helpers. Updated audit scope to all currently numbered rules in `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, including the Mobile Delivery Freeze Gate and Definition of Done, incorporating Rule 68 App Upgrade & Backward Compatibility. Clarified Android Back Handler return false safety to prevent trapping. Harmonized accessibility label rules for text vs icon controls. Added PATCH-15. |
+| V2.10 | **CROSS-PLATFORM FORM & TOUCH TARGET HARMONIZATION:** Added Section 43P-FORM covering react-hook-form v7, Zod v3 integration, and 400 field-level validation mapping via handleValidationErrors(). Clarified Android 48dp touch targets in 43P-A11Y-04. Added PATCH-14 enforcing Query Key role prefixes (preventing multi-role cache collisions) and cross-platform touch target hitSlop. |
+| V2.9 | **MOBILE ARCHITECTURE & DESIGN SYSTEM SYNC:** Fixed stale Indigo references in Mode C Hallucination Prevention (Rules 492-506, 554) to enforce Luxury Premium Gold (#FACC15 / #EAB308, onPrimary #111111). Clarified canonical subfolder names vs Role+Module prefixed files. Added Patches 08 to 13 covering Query Key Factories, Dedicated Mutation Hooks, Single-Flight 401 Refresh, Trusted Tenant Context, Form Keyboard Safety, Button Loading Stability, Feature-Local Currency (WET), and displayValue en-dash fallbacks. Synchronized 100% with MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md and MOBILE_UI_UX_DESIGN.md. |
 | V2.8 | **GOLD MOBILE THEME UPGRADE:** Mode C Boot Declaration updated to V2.8. Mobile primary upgraded from Indigo (#4F46E5) to Gold (#FACC15) matching web theme. Added on-primary = #111111 (dark text on gold). Fixed Translation Matrix Gold row. Fixed 43P-DESIGN-02 to enforce Gold not Indigo. |
 | V2.7 | **MOBILE COMPLETENESS PATCH:** Added Section 43P Mobile Rule Checklist (Gap 1), Added Mode D Mobile Audit+Repair (Gap 2), Fixed duplicate Section headings in Mode C INTEGRATION_GUIDE (Gap 3), Clarified react-i18next vs next-intl for mobile (Gap 4), Added useUnsavedChangesGuard mandate to Mode C (Gap 5), Added Idempotency-Key mandate to Mode C (Gap 6), Added showToast() dedup pattern to Mode C (Gap 7), Added useConfirm()+ConfirmBottomSheet / Alert.alert FORBIDDEN to Mode C (Gap 8), Added RESPONSIBILITY+FLOW header comment mandate to Mode C (Gap 9), Added testID format mandate to Mode C (Gap 10) |
 

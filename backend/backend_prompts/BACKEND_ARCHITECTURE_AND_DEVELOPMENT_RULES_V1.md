@@ -2,7 +2,34 @@
 
 > ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT HEADER — READ BEFORE ANYTHING ELSE** ⛔⛔⛔
 >
-> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE NON-COMPLIANCE.**
+> The violation MUST be explicitly recorded and handled according to the Failure Handling Protocol: audit it in Audit Mode, repair it within the approved writable scope in Repair Mode, or mark it BLOCKED_BY_SUPPLIED_SCOPE / AUTHORITATIVE_CONFLICT where applicable.
+>
+## Failure Handling Protocol
+
+A rule violation is never silently ignored.
+
+### Audit Mode
+- Record the violation as `NON_COMPLIANT`.
+- Provide rule ID, exact evidence, affected file/path, impact, and remediation.
+- Continue auditing unrelated rules where evidence is available.
+- Do not mark the affected item as compliant.
+
+### Repair Mode
+- Repair violations that are inside the supplied writable scope.
+- Repair structural violations before business-logic violations.
+- Do not halt solely because a repair is required.
+- If the fix requires files outside the supplied writable scope, record `BLOCKED_BY_SUPPLIED_SCOPE` and provide the exact owner action required.
+
+### Hard Stop Conditions
+The AI must stop only when:
+1. A security-sensitive action is ambiguous and could cause data exposure, tenant leakage, financial loss, or irreversible deletion.
+2. A required owner decision is missing due to an authoritative conflict.
+3. The requested implementation requires an unapproved dependency.
+4. The task requires production secrets, credentials, or live infrastructure access.
+
+Previously verified and unaffected work remains valid and MUST NOT be discarded.
+The AI MUST NOT silently continue after detecting a violation.
 >
 > This document is the **absolute normative authority** for all backend code in this project. Every rule is MANDATORY unless the rule itself defines a named `NOT_APPLICABLE` condition with explicit evidence. The following words in this document carry their STRICTEST possible meaning:
 >
@@ -16,18 +43,19 @@
 > | **Optional** (sub-folders) | Only optional when the module **genuinely has no such artifact** — omitting when the artifact exists = VIOLATION |
 > | **except** / **unless** | Only a valid escape when ALL stated conditions for the exception are explicitly met and documented |
 >
-> **RULES APPLY TO THE ENTIRE DOCUMENT.** An AI that reads only the first half of this document and produces output is producing INCOMPLETE and INVALID output. Every rule from Rule 0A through Rule 119 is mandatory. The MINIMUM EVIDENCE STANDARD (near end of document) applies to every audit finding.
+> **RULES APPLY TO THE ENTIRE DOCUMENT.** An AI that reads only the first half of this document and produces output is producing INCOMPLETE and INVALID output. Every rule from Rule 0A through Rule 124 is mandatory, including all lettered rules, the Structure Gate, the Minimum Evidence Standard, and mobile-first rules. The MINIMUM EVIDENCE STANDARD (near end of document) applies to every audit finding.
 >
 > ⛔ **BEFORE WRITING ANY CODE OR AUDIT FINDING, CONFIRM:**
 > ```
-> [ ] Read complete BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all 100+ rules)
+> [ ] Read complete BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md (all rules, including Mobile-First Rules 120–124)
 > [ ] Identified active framework (NestJS or Django) — marked FRAMEWORK_NOT_VERIFIED if unknown
 > [ ] Confirmed PROJECT STACK BASELINE — no unapproved substitutions
 > [ ] CRITICAL STRUCTURE GATE passed — folder tree verified before any deeper rule
 > [ ] CANONICAL RULE INDEX consulted
 > [ ] MINIMUM EVIDENCE STANDARD (bottom of document) loaded into context
 > ```
-> **Failure to complete the above = entire output is discarded.**
+> **Failure to complete the above = the affected item MUST NOT be marked COMPLIANT.**
+> The AI must record the missing evidence and continue only where safe and within scope.
 
 ## The Core Philosophy
 This document outlines the strict architectural rules for building the backend using the approved project framework, primarily **NestJS (TypeScript)** or **Django (Python)**, while preserving the same isolation and architectural principles. The primary goal is **Extreme Isolation**.
@@ -38,25 +66,21 @@ Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the pr
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, an internal sub-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
 
-## GLOBAL AUTHORITATIVE PRECEDENCE ORDER
+## Master Cross-Document Precedence Order
 
-When multiple supplied sources conflict, resolve them in the following order:
+When instructions conflict across documents or layers, apply this exact order of authority:
 
 1. Security, privacy, authorization, tenant isolation, legal/compliance, and data-integrity requirements
-2. Explicit architecture and framework rules
-3. Explicit API/domain contracts
-4. Repository conventions within the supplied writable scope
-5. Frontend API-client/network behavior
-6. Frontend schemas, hooks, tests, mocks, fixtures, and static UI behavior
-7. AI inference or general framework conventions
+2. Database constraint, migration backward compatibility, and transactional integrity rules
+3. Explicit user-approved scope and verified API / domain contracts
+4. `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+5. `BACKEND_ROLE_MODULE_CREATE_AUDIT_REPAIR_FROM_FRONTEND_V6_3.md` for audit sequencing, RBG planning, and repair execution
+6. Frontend API client/network behavior and verified contract fixtures
+7. Feature-local documentation (`_features.md`, `_forbidden.md`)
+8. Existing repository implementation conventions
 
-If a conflict remains unresolved at the same precedence level:
-- Do NOT guess
-- Do NOT silently choose
-- Record `AUTHORITATIVE_CONFLICT`
-- Record both sources
-- Record impact
-- Record required owner decision
+A lower-priority rule MUST NOT override a higher-priority rule.
+Any unresolved conflict MUST be recorded as `BLOCKED_BY_SUPPLIED_CONTRACT` or `AUTHORITATIVE_CONFLICT` rather than resolved through invention.
 
 ---
 
@@ -74,31 +98,64 @@ Before generating, auditing, or repairing ANY backend role module, verify ALL of
 [ ] backend-{role}/ exists (or is created/normalized in RBG 1)
 [ ] {role}-core/ exists inside backend-{role}/ (or host-provided when feature slice is audited)
 [ ] {role}-modules/ exists inside backend-{role}/ (or feature module directory normalized in RBG 1)
-[ ] ALL business feature modules exist ONLY inside {role}-modules/
-[ ] No feature module exists directly under backend-{role}/
-[ ] Every sub-folder inside a feature module follows {module}-{artifact}/ pattern
+[ ] ALL business feature domain modules exist ONLY inside {role}-modules/
+[ ] Domain Module Quarantine: Domain module root contains ONLY [role]-[module].module.ts (aggregator module), master documentation, and child autonomous sub-modules {sub-module}/. Zero business implementation code in domain root.
+[ ] Sub-Module Autonomous Structure: 100% of controllers, services, repositories, DTOs, entities, and tests live inside autonomous sub-modules {sub-module}/
+[ ] Sub-Module Folder Pattern: Every sub-folder inside a sub-module follows {submodule}-{artifact}/ pattern (e.g. dashboard-controllers/, dashboard-services/)
+[ ] Sub-Module Documentation Trio: Every autonomous sub-module contains [role]-[submodule]-backend-feature.md (with structured YAML frontmatter, all 22 canonical sections, Section 20 Standalone Harness, Section 21 Portability Guide), [role]-[submodule]-backend-forbidden.md, and [role]-[submodule]-backend-contract.md
+[ ] Universal API Response Envelope: Standardized discriminated union ApiResponse<T> = ApiSuccess<T> | ApiFailure with requestId, success, data, error, errorCode, statusCode
+[ ] Mandatory Ambient Host Stubs & Manifest: Sub-module contains contracts/core-contracts.stub.ts (stubbing core types, tenant context, event publisher, logger) and required-core-contracts.json (declaring external dependency budget <= 7)
+[ ] Standard Mock Scenario Catalog: Sub-module test harness/mocks implement the 8 standard scenarios (ACTIVE, EMPTY, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, VALIDATION_ERROR, SERVER_500, TIMEOUT)
+[ ] Dual-Layer Multi-Tenancy Invariant: Database-per-tenant connection routing + mandatory gymId/branchId query predicate in every repository query
+[ ] Production Safety Guards: Idempotency-Key: UUIDv4 header on state mutations (accepts Idempotency-Key or X-Idempotency-Key), distributed locking for concurrent resources, rate-limiting, and zero raw secrets
 ```
 
-**✅ COMPLIANT structure:**
+**✅ COMPLIANT structure (Universal Day-1 Sub-Module Hierarchy):**
 
 ```text
-backend-admin/
-├── admin-core/
-└── admin-modules/
-    ├── admin-auth/
-    └── admin-members/
+backend-manager/
+├── manager-core/
+└── manager-modules/
+    └── manager-attendance/
+        ├── manager-attendance.module.ts              # Pure Aggregator NestJS Module
+        ├── manager-attendance-backend-feature.md     # Master Domain Architecture Map
+        ├── manager-attendance-backend-forbidden.md   # Master Domain Boundary Directives
+        ├── manager-attendance-backend-contract.md   # Master Domain Contract
+        │
+        ├── attendance-dashboard/                     # Autonomous Sub-Module 1 (AI Repair & ZIP Unit)
+        │   ├── dashboard-controllers/                # {submodule}-controllers/
+        │   ├── dashboard-services/                   # {submodule}-services/
+        │   ├── dashboard-dto/                        # {submodule}-dto/ (Strict WET)
+        │   ├── dashboard-repositories/               # {submodule}-repositories/ (contains ORM entities)
+        │   ├── dashboard-mappers/                    # {submodule}-mappers/ (Rule 89 toDomain/toEntity)
+        │   ├── dashboard-domain/                     # {submodule}-domain/ (Pure domain models)
+        │   ├── dashboard-tests/                      # {submodule}-tests/ (unit & integration)
+        │   │   ├── harness/                          # Standalone seeder & test harness
+        │   │   └── fixtures/                         # Mock scenario catalog (ACTIVE, EMPTY, etc.)
+        │   ├── contracts/                            # contracts/
+        │   │   └── core-contracts.stub.ts            # Ambient host stubs for standalone compilation
+        │   ├── required-core-contracts.json          # Machine-readable dependency manifest (<= 7)
+        │   ├── attendance-dashboard.module.ts        # Sub-Module NestJS definition
+        │   ├── attendance-dashboard-backend-feature.md
+        │   ├── attendance-dashboard-backend-forbidden.md
+        │   └── attendance-dashboard-backend-contract.md
+        │
+        └── attendance-history/                       # Autonomous Sub-Module 2 (AI Repair & ZIP Unit)
+            └── ... (identical canonical micro-structure)
 ```
 
 **❌ NON-COMPLIANT structure (ARCHITECTURE FAILURE — STOP IMMEDIATELY):**
 
 ```text
-backend-admin/
-├── admin-core/
-├── admin-auth/      ← WRONG: must be inside admin-modules/ — RECORD NON_COMPLIANT
-└── admin-members/   ← WRONG: must be inside admin-modules/ — RECORD NON_COMPLIANT
+backend-manager/
+├── manager-core/
+├── manager-attendance/  ← WRONG: must be inside manager-modules/ — RECORD NON_COMPLIANT
+│   ├── loose-service.ts ← WRONG: zero root business code permitted in domain module root!
+│   └── common/          ← WRONG: parent shared folders strictly forbidden under WET!
 ```
 
-> **Failing ANY item above = ARCHITECTURE FAILURE. Record it. Stop. Do not proceed.**
+> **Failing ANY item above in Audit Mode = ARCHITECTURE FAILURE. Record `NON_COMPLIANT` with file and line evidence.**
+> **In Repair Mode, structural violations (folder layout, missing core wrappers, misplaced feature modules, unprefixed sub-folders) MUST BE ACTIVELY REPAIRED FIRST (in RBG 1) before repairing inner feature code.**
 > AI agents MUST verify this gate BEFORE evaluating any deeper architecture rule.
 > This check takes priority over all other structural evaluations.
 
@@ -124,40 +181,47 @@ Every AI agent MUST consult this index before beginning any audit or implementat
 | 0H | Canonical Naming Single Source of Truth | Naming | All files and folders | Naming matches Rule 0H table |
 | 2 | Descriptive AI-Contextual Filenames | Naming | All backend files | Files begin with role+module prefix |
 | 82A | Complete UI Data Contract | API Contract | UI-backed endpoints | Response DTO, serializer, frontend contract test |
-| 116 | OpenAPI Documentation | API Documentation | REST endpoints | Controller annotations / spec output |
-| 117 | RAG Format Support | Query/API | Applicable query endpoints | `?format=rag` behavior and tests |
+| 116 | OpenAPI Documentation and MCP-Ready API Design | API Documentation | REST endpoints | Controller annotations / spec output |
+| 117 | Universal RAG-Ready Projections | Query/API | All GET query endpoints | `?format=rag` returns token-optimized text |
 
 > ⛔ **AI MANDATORY NOTE — THIS IS NOT OPTIONAL:**
 > **Every rule in this document is mandatory** — whether or not it appears in the index above.
 > This index is a navigation aid only. Unlisted rules are NOT lower priority — they have equal authority.
-> **You MUST read and apply every rule from Rule 0A through Rule 119 and the MINIMUM EVIDENCE STANDARD.**
-> **Stopping after Section 100 or "not having time" to read the full document = incomplete output = task failure.**
-> **Consequence of partial reading:** You will miss Rules 101-119, the MINIMUM EVIDENCE STANDARD, and the RULE APPLICABILITY CRITERIA TEMPLATE — all of which contain mandatory gates that will cause your output to be rejected.
+>
+> ## Canonical Rule Reference Policy
+> Audit and repair workflows MUST reference rules by their official canonical names and section titles rather than fragile numerical spans alone. Audits evaluate against all currently numbered and lettered rules in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, including the Structure Gate, Multi-Tenancy Contract, Mobile-First Rules (Rules 120–124), and Minimum Evidence Standard.
+> **Stopping early or "not having time" to read the full document = incomplete output = task failure.**
 
 ---
 
 
 
-## TERMINOLOGY — WET DEVELOPMENT
+## CANONICAL LAW: WET vs DRY GOVERNANCE BOUNDARY
 
-WET development means deliberate explicitness and traceability.
+> ⛔ **ARCHITECTURAL GOVERNANCE INVARIANT — READ CAREFULLY:**
+> This codebase enforces a strict, mathematically defined boundary between **WET** (Write Everything Twice / Deliberate Isolation) and **DRY** (Don't Repeat Yourself / Reusable Platform Foundation).
+> - **WET applies STRICTLY to Business Logic & Feature Sub-Modules.**
+> - **DRY applies STRICTLY to Core Platform Infrastructure.**
+> Attempting to share business DTOs or feature logic across sub-modules creates cascading coupling that destroys autonomous AI repairability. Conversely, duplicating core security, tenant resolution, or response envelopes creates dangerous divergence.
 
-WET development does NOT mean uncontrolled duplication.
+### The Canonical WET vs DRY Governance Matrix
 
-Allowed:
-- Explicit module contracts
-- Visible authorization logic
-- Feature-local tests
-- Explicit integration boundaries
-- Clear mapping layers
+| Architectural Layer | Paradigm | Governance Rule & Scope | What Must Be Done | What Is Strictly Forbidden |
+|---|---|---|---|---|
+| **Business Feature DTOs** | **STRICT WET** | Sub-Module Local | Each `{submodule}-dto/` defines independent input/output DTOs with local class-validator rules | NEVER import or share DTOs with sibling sub-modules or parent domains |
+| **Business Services & Repositories** | **STRICT WET** | Sub-Module Local | Every sub-module owns its private query logic, domain rules, and entity mappers | NEVER inject sibling services or query sibling repositories directly |
+| **Feature Tests & Mock Scenarios** | **STRICT WET** | Sub-Module Local | Each `{submodule}-tests/` owns its local seeder, harness, and 8-state mock catalog (`fixtures/`) | NEVER depend on sibling test fixtures or shared business mock helpers |
+| **API Envelope & Serialization** | **STRICT DRY** | Platform Core (`src/core/`) | Universal `ApiResponse<T> = ApiSuccess<T> \| ApiFailure` discriminated union with `requestId` | Sub-modules MUST NOT define custom JSON wrapper envelopes |
+| **Tenant Context & Dynamic Routing** | **STRICT DRY** | Platform Core (`src/core/`) | Centralized JWT auth guard, AsyncLocalStorage `TenantContext`, and DataSource pool router | Sub-modules MUST NOT implement custom tenant resolution or bypass `TenantContext` |
+| **Database Pool Budget & Driver Config** | **STRICT DRY** | Platform Core (`src/core/`) | Centralized connection pool limits, timeouts, and statement timeouts (Rule 63) | Sub-modules MUST NOT open raw database connections or override pool limits |
+| **Structured Logging & Tracing** | **STRICT DRY** | Platform Core (`src/core/`) | Global `nestjs-pino` / structured logger injecting correlation ID, span ID, and tenant scope | Sub-modules MUST NOT introduce ad-hoc loggers or raw `console.log` |
+| **Event Bus & Outbox Infrastructure** | **STRICT DRY** | Platform Core (`src/core/`) | Shared transactional outbox publisher and message broker transport (Redis Streams) | Sub-modules emit typed events to the core bus; never communicate via HTTP with siblings |
 
-Forbidden duplication:
-- Duplicated security logic
-- Duplicated tenant filters
-- Duplicated infrastructure bootstrap
-- Duplicated validation rules without a shared source of truth
-- Divergent API response envelopes
-- Duplicated domain constants
+### AI Portability Resolution (How WET Sub-Modules Consume DRY Core)
+When a sub-module (e.g. `attendance-history/`) is zipped in isolation for autonomous AI repair:
+1. It contains a lightweight **Ambient Core Stub** (`contracts/core-contracts.stub.ts`) stubbing the core platform interfaces (`TenantContext`, `ApiResponse`, `EventPublisher`, `Logger`).
+2. It contains a **Machine-Readable Dependency Manifest** (`required-core-contracts.json`) declaring its consumed platform contracts (budget ≤ 7).
+3. The AI can compile, run unit tests, and verify repairs 100% offline without needing the entire monolith source tree.
 
 ---
 
@@ -230,16 +294,16 @@ Do not silently accept or introduce a competing stack.
 
 ### 0A. HIERARCHICAL MODULE BOUNDARY — FEATURE MODULE IS THE AI REPAIR UNIT
 
-The backend strictly follows a 3-tier hierarchy:
+The backend strictly follows a 4-tier hierarchy (Universal Day-1 Sub-Module Architecture):
 
 ```text
 APPLICATION
-  └── DOMAIN / ROLE CONTAINER (e.g. backend-admin)
-        └── FEATURE MODULE
-              └── SUB-FEATURE / USE CASE
+  └── ROLE CONTAINER (e.g., backend-manager/)
+        └── FEATURE DOMAIN MODULE (e.g., manager-modules/manager-attendance/)
+              └── AUTONOMOUS SUB-MODULE / USE CASE (e.g., attendance-dashboard/, attendance-history/)
 ```
 
-**AI Repair Boundary = FEATURE MODULE**
+**AI Repair Boundary = AUTONOMOUS SUB-MODULE (Default Granular AI Repair Unit) or FEATURE DOMAIN (Complete Domain Slice)**
 **Role/Domain Container = NOT the default repair boundary**
 
 ### 0A.1 1-TO-1 FRONTEND FEATURE ISOMORPHISM & AI REPAIR HAND-OFF (MANDATORY)
@@ -255,6 +319,131 @@ To prevent architectural drift and eliminate monolithic backend sprawl, the back
    - The developer provides **ONLY** that feature module folder (`src/backend-{role}/{role}-modules/{role}-{feature}/`) to the AI agent.
    - The AI agent will audit, repair, test, and deliver that module in complete isolation without requiring or modifying sibling modules or host application slices (`app.module.ts`, `main.ts`).
 
+### 0A.2 UNIVERSAL DAY-1 SUB-MODULE ARCHITECTURE & 1-TO-1 SUB-FEATURE ISOMORPHISM (MANDATORY)
+
+> ⛔ **THE LAW: BACKEND MIRRORS THE EXACT SAME SUB-MODULE GRANULARITY AS THE FRONTEND FROM DAY 1**
+>
+> Just as the frontend breaks every feature domain into autonomous sub-modules right from Day 1, the backend MUST mirror this exact same granularity to preserve **1-to-1 Architectural Isomorphism & Granular AI Repairability**.
+>
+> 1. **The Universal Backend 4-Tier Hierarchy:**
+>    ```text
+>    APPLICATION
+>      └── ROLE CONTAINER (e.g., src/backend-manager/)
+>            └── FEATURE DOMAIN MODULE (e.g., manager-modules/manager-attendance/)
+>                  ├── [role]-[module].module.ts              # Pure Aggregator NestJS Module (imports child sub-modules)
+>                  ├── [role]-[module]-backend-feature.md     # Master Domain Documentation
+>                  ├── [role]-[module]-backend-forbidden.md   # Domain-level Forbidden Invariants
+>                  ├── [role]-[module]-dependencies.md        # Cross-Domain & Event Dependencies Map (Rule 49)
+>                  │
+>                  ├── {sub-module-1}/                       # 100% Autonomous Backend Sub-Module (e.g., attendance-dashboard/)
+>                  │    ├── {submodule}-controllers/         # dashboard-controllers/
+>                  │    │    └── [role]-[submodule]-[desc].controller.ts
+>                  │    ├── {submodule}-services/            # dashboard-services/
+>                  │    │    └── [role]-[submodule]-[desc].service.ts
+>                  │    ├── {submodule}-dto/                 # dashboard-dto/
+>                  │    │    └── [role]-[submodule]-[desc].dto.ts
+>                  │    ├── {submodule}-repositories/        # dashboard-repositories/
+>                  │    ├── {submodule}-mappers/             # dashboard-mappers/
+>                  │    ├── {submodule}-domain/              # dashboard-domain/
+>                  │    ├── {submodule}-types/               # dashboard-types/
+>                  │    ├── {submodule}-constants/           # dashboard-constants/
+>                  │    ├── {submodule}-exceptions/          # dashboard-exceptions/
+>                  │    ├── {submodule}-tests/               # Unit, integration & harness tests
+>                  │    │    ├── unit/
+>                  │    │    └── harness/                    # Standalone Run & Test Harness (SQLite/in-memory)
+>                  │    ├── {sub-module}.module.ts           # Sub-module NestJS definition
+>                  │    ├── {sub-module}-backend-feature.md  # Autonomous Sub-Module Spec (all 22 canonical sections)
+>                  │    ├── {sub-module}-backend-forbidden.md# Sibling isolation & WET rules
+>                  │    └── {sub-module}-backend-contract.md # Exposed API & Event contracts
+>                  │
+>                  └── {sub-module-2}/                       # Autonomous Backend Sub-Module (e.g., attendance-history/)
+>                       ├── {submodule}-controllers/         # history-controllers/
+>                       ├── {submodule}-services/            # history-services/
+>                       ├── {submodule}-dto/                 # history-dto/
+>                       ├── {submodule}-repositories/        # history-repositories/
+>                       ├── {submodule}-tests/               # history-tests/
+>                       ├── {sub-module}.module.ts           # Sub-module NestJS definition
+>                       ├── {sub-module}-backend-feature.md  # All 22 canonical sections
+>                       ├── {sub-module}-backend-forbidden.md
+>                       └── {sub-module}-backend-contract.md
+>    ```
+>
+> 2. **Zero Root Business Code in Domain Module (Domain Quarantine):**
+>    - The parent domain module root (`manager-attendance/`) contains ONLY the parent aggregator module (`manager-attendance.module.ts`), master documentation, and child sub-module folders.
+>    - Placing loose controllers, services, repositories, entities, or DTOs directly at the domain root is a **CRITICAL ARCHITECTURE VIOLATION**. 100% of implementation code lives inside its respective sub-module.
+>
+> 3. **Parent Shared Folder Ban (No Domain "Common" or "Shared"):**
+>    - Creating `manager-attendance/common/`, `manager-attendance/shared/`, `manager-attendance/services/`, or `manager-attendance/utils/` is **STRICTLY PROHIBITED**.
+>    - Every reusable helper, DTO, mapper, or query helper needed by multiple sub-modules MUST be duplicated locally in each sub-module following the Strict WET Principle, or promoted to `{role}-core/` only if universally required across all domains of the role.
+>
+> 4. **Sibling Sub-Module Isolation & NestJS DI Boundary (Zero Cross-Submodule Imports):**
+>    - `attendance-dashboard` backend services MUST NEVER directly import internal repositories, services, or DTOs from `attendance-history` (`import from '../attendance-history'`).
+>    - In NestJS, a sub-module MUST NOT import a sibling sub-module's `@Module` or inject a sibling's `@Injectable()` service directly. Direct inter-submodule imports create invisible tight coupling that breaks the Backend Sub-Module ZIP Guarantee.
+>
+> 5. **Framework Boundary Invariants (Foreign Keys & Reads vs Events vs Transactions):**
+>    - **Read Queries & Foreign Keys:** TypeORM / Prisma / SQL relations and foreign keys for reads are 100% permitted within query builders, services, and repositories (e.g., joining `members` with `attendance` records for a dashboard query). Reading related tables via ORM relations does NOT violate isolation.
+>    - **Cross-Domain/Cross-Submodule Mutation Side-Effects:** Mutations that trigger side-effects in other domains or sibling sub-modules (e.g., attendance check-in awards reward points or sends a push notification) MUST be decoupled via Domain Events (emitted to Redis Streams / Transactional Outbox pattern). The triggering sub-module never directly calls the secondary sub-module's mutation service.
+>    - **Multi-Table Atomic Transactions:** When an atomic workflow genuinely requires coordinated mutations across multiple database tables, it MUST be orchestrated by an approved Application Workflow Orchestrator service (e.g., Saga/Orchestrator) at an approved boundary, not by direct inter-submodule imports.
+>
+> 6. **Strict WET Principle for Backend Sub-Modules:**
+>    - Do not create premature abstractions across sibling sub-modules. Duplicate DTOs, mappers, and response transformers locally inside each `{submodule}-dto/` and `{submodule}-services/`.
+>    - If `attendance-dashboard` needs a member summary shape and `attendance-history` also needs a member summary shape, each sub-module defines its own local DTO/interface tailored specifically to its API contract.
+>
+> 7. **Backend Sub-Module ZIP Guarantee & AI Dependency Boundary (Granular AI Repair Unit):**
+>    - When an API defect or logic bug occurs in `attendance-history`, the developer can zip ONLY `src/backend-manager/manager-modules/manager-attendance/attendance-history/`.
+>    - An AI receiving this zip gets a laser-focused context (controllers, services, DTOs, unit tests for history only), with 0% risk of breaking dashboard or analytics code.
+>    - **Ambient Host Stubs (`contracts/core-contracts.stub.ts`):** Every sub-module includes local TypeScript declaration stubs for core host interfaces (`TenantContext`, `ApiResponse`, `EventPublisher`, `Logger`, `ConfigService`). This guarantees the sub-module achieves 100% clean standalone compilation (`tsc --noEmit`) and offline unit test execution without needing the rest of the monolith repo.
+>    - **Machine-Readable Dependency Manifest (`required-core-contracts.json`):** Every sub-module declares its host contracts in a standardized manifest:
+>      ```json
+>      {
+>        "submodule": "attendance-history",
+>        "role": "manager",
+>        "domain": "manager-attendance",
+>        "externalDependencyBudget": 7,
+>        "consumedHostContracts": [
+>          "TenantContext",
+>          "ApiResponse",
+>          "EventPublisher",
+>          "PinoLogger",
+>          "AuthGuard"
+>        ],
+>        "mockCatalogImplemented": true,
+>        "offlineTestable": true
+>      }
+>      ```
+>    - **External Dependency Budget (Hard Ceiling ≤ 7):** A sub-module is strictly forbidden from depending on more than 7 host-level core contracts. Allowed core contracts: (1) Base Logger, (2) TenantContext / Multi-Tenancy DataSource, (3) Universal ApiResponse Envelope, (4) Auth Guard / Principal, (5) Event Publisher / Outbox, (6) Distributed Lock, (7) Cache / Rate Limiter.
+>    - **Sub-Module Local Event Constants:** Sub-modules define their emitted event names locally (e.g. `history-constants/attendance-history.events.ts`). The host aggregates them into `event-registry.constants.ts`. The sub-module never imports global event registries.
+>
+> 8. **Clean Sub-Folder vs Globally Unique File Naming:**
+>    - Sub-folders inside a sub-module use: `{submodule}-{artifact}/` (e.g. `dashboard-controllers/`, `dashboard-services/`, `dashboard-dto/`, `history-controllers/`).
+>    - Files inside those folders use: `[role]-[submodule]-[description].[type].ts` (e.g. `manager-attendance-dashboard-metrics.controller.ts`, `manager-attendance-history-query.service.ts`).
+>
+> 9. **Universal Mapping Across All Roles (Frontend ➔ Backend 1:1 Parity):**
+>    - `manager_profile/profile_overview` ➔ `manager-profile/profile-overview/`
+>    - `manager_profile/profile_security` ➔ `manager-profile/profile-security/`
+>    - `manager_attendance/attendance_dashboard` ➔ `manager-attendance/attendance-dashboard/`
+>    - `manager_attendance/attendance_history` ➔ `manager-attendance/attendance-history/`
+>    - `manager_billing/billing_invoices` ➔ `manager-billing/billing-invoices/`
+>    - `manager_members/members_directory` ➔ `manager-members/members-directory/`
+>
+> 10. **Meaningful Domain-Prefixed Submodule Naming Standard (No Lazy Names):**
+>    - Every backend submodule folder MUST follow the exact semantic formula: `{submodule}` where `{submodule}` matches `{domain}-{capability}` (e.g., `attendance-dashboard/`, `attendance-history/`, `profile-overview/`, `billing-invoices/`).
+>    - **The 5-Second Comprehension Invariant:** Anyone inspecting ONLY the submodule folder name MUST instantly know within 5 seconds its parent domain and exact business capability/API intent.
+>    - **Strictly Banned Lazy/Ambiguous Names:** Never use generic or lazy names such as `tab1/`, `main/`, `default/`, `api/`, `details/` (must be `members-detail`), `common/`, `shared/`, `temp/`, or `misc/`. Lazy names are treated as **Critical Naming Violations**.
+
+### Cross-Feature Workflow Exception
+
+Feature modules must not directly import sibling feature repositories, services, entities, or internal business logic.
+
+If a genuinely atomic workflow spans multiple bounded contexts, it must be owned by an explicitly named workflow/orchestration module under `src/infrastructure/` or an approved application-workflow boundary.
+
+Rules:
+1. The workflow must depend only on published feature interfaces/contracts, never sibling internal repositories.
+2. The workflow must be documented in every affected module's `{role}-{module}-dependencies.md`.
+3. The workflow owner must define the transaction boundary, failure behavior, idempotency behavior, and emitted events.
+4. A direct sibling import remains forbidden.
+5. If atomicity is not genuinely required, use an outbox-backed domain event instead.
+
 ### 0D. BACKEND NAMESPACE PREFIXING (MANDATORY)
 
 Because the project contains a 1-to-1 mapping of frontend and backend roles, the AI MUST explicitly separate backend folders from frontend folders. 
@@ -269,27 +458,34 @@ When fixing a bug in `backend-superadmin/superadmin-modules/superadmin-billing`,
 
 ## QUICK NAMING REFERENCE (AI PRE-CREATION CHECK)
 
-**ROOT MODULE**
-`admin-members/`
+**FEATURE DOMAIN MODULE (Tier 3 — Quarantined Aggregator)**
+`admin-members/` (contains ONLY `admin-members.module.ts`, master docs, and child `{submodule}/` folders)
 
-**SUB-FOLDER**
-`members-services/`
-`members-controllers/`
-`members-dto/`
-`... etc.`
+**AUTONOMOUS SUB-MODULE (Tier 4 — Terminal Leaf AI Repair Unit)**
+`members-directory/` (or `members-registration/`, matching `{domain}-{capability}`)
 
-**FILES**
-`admin-members-registration.service.ts`
-`admin-members-query.controller.ts`
-`admin-members-create.dto.ts`
-`... etc.`
+**SUB-FOLDERS (Inside Autonomous Sub-Module)**
+`directory-services/`
+`directory-controllers/`
+`directory-dto/`
+`directory-repositories/` (contains ORM entities)
+`directory-mappers/`
+`directory-domain/`
+`... etc.` (Pattern: `{submodule}-{artifact}/`)
+
+**FILES (Inside Sub-Folders)**
+`admin-members-directory-command.controller.ts`
+`admin-members-directory-query.controller.ts`
+`admin-members-directory-query.service.ts`
+`admin-members-directory-filter.dto.ts`
+`... etc.` (Pattern: `[role]-[submodule]-[description].[type].ts`)
 
 **RULE:**
-Folders use:
-`{module}-{artifact}`
+Sub-folders use:
+`{submodule}-{artifact}/`
 
 Files use:
-`{role}-{module}-{description}`
+`[role]-[submodule]-[description].[type].ts`
 
 Never invert these rules.
 
@@ -299,27 +495,73 @@ Never double-prefix feature names or folders. If a backend module is named `admi
 
 ### 0H. CANONICAL NAMING SINGLE SOURCE OF TRUTH (GAP-14 Fix)
 
-To eliminate all ambiguity between Rule 0F and Rule 2 (file naming), the following is the definitive unified rule:
+To eliminate all ambiguity between Rule 0F, Rule 0A.2, and Rule 2 (file naming), the following is the definitive unified rule across the hierarchy:
 
 | Level | Pattern | Correct Example | FORBIDDEN Example |
 |---|---|---|---|
-| Root feature module folder | `{role}-{module}/` | `admin-members/` | `members/` or `admin-admin-members/` |
-| Sub-folders inside a feature module | `{module}-{artifact}/` ONLY | `members-services/` | `admin-members-services/` |
-| Files inside those sub-folders | `{role}-{module}-{description}.{type}.ts` | `admin-members-registration.service.ts` | `members-registration.service.ts` |
+| Role Container | `backend-{role}/` | `backend-admin/` | `admin/` or `backend_admin/` |
+| Feature Domain Module | `{role}-{domain}/` | `admin-members/`, `manager-attendance/` | `members/` or `admin-admin-members/` |
+| Autonomous Sub-Module | `{submodule}/` | `members-directory/`, `attendance-dashboard/` | `tab1/`, `api/`, `shared/`, `common/` |
+| Sub-folders inside Sub-Module | `{submodule}-{artifact}/` ONLY | `directory-services/`, `dashboard-controllers/` | `admin-directory-services/`, `common/` |
+| Files inside Sub-Module folders | `[role]-[submodule]-[description].[type].ts` | `admin-members-directory-command.controller.ts` | `directory-command.controller.ts` |
 
-**The key rule in one sentence:** Folders use the MODULE name as prefix; files use the ROLE+MODULE name as prefix. Never mix them up.
+**The key rule in one sentence:** Sub-folders inside a sub-module use the SUBMODULE capability as prefix; files inside those folders use the ROLE+SUBMODULE+DESCRIPTION formula. Never mix them up.
+
+- **Sub-Module NestJS Registration File Exemption:** Sub-module registration files (`{submodule}.module.ts`, e.g., `members-directory.module.ts`, `attendance-dashboard.module.ts`) and sub-module documentation trio files (`{submodule}-backend-feature.md`, `{submodule}-backend-forbidden.md`, `{submodule}-backend-contract.md`) are explicitly exempt from the `[role]-` prefix rule because they represent the autonomous capability itself and are uniquely identified by their sub-module directory name. All executable service, controller, repository, and DTO files inside `{submodule}-{artifact}/` MUST carry the full `[role]-[submodule]-[description].[type].ts` prefix.
 
 ```text
-admin-members/                                    ← root: {role}-{module}
-├── members-services/                             ← sub-folder: {module}-{artifact}
-│   └── admin-members-registration.service.ts     ← file: {role}-{module}-{description}
-├── members-controllers/                          ← sub-folder: {module}-{artifact}
-│   └── admin-members-command.controller.ts       ← file: {role}-{module}-{description}
-└── members-dto/                                  ← sub-folder: {module}-{artifact}
-    └── admin-members-create.dto.ts               ← file: {role}-{module}-{description}
+backend-admin/
+└── admin-modules/
+    └── admin-members/                                            ← domain root: {role}-{domain} (quarantined)
+        ├── admin-members.module.ts                               ← domain aggregator module
+        ├── admin-members-backend-feature.md                      ← domain master doc
+        ├── admin-members-backend-forbidden.md                    ← domain forbidden rules
+        ├── admin-members-dependencies.md                         ← cross-domain & event dependencies map (Rule 49)
+        │
+        └── members-directory/                                    ← autonomous sub-module: {submodule}
+            ├── directory-controllers/                            ← sub-folder: {submodule}-{artifact}
+            │   ├── admin-members-directory-command.controller.ts ← file: {role}-{submodule}-{desc}
+            │   └── admin-members-directory-query.controller.ts
+            ├── directory-services/                               ← sub-folder: {submodule}-{artifact}
+            │   └── admin-members-directory-query.service.ts      ← file: {role}-{submodule}-{desc}
+            ├── directory-dto/                                    ← sub-folder: {submodule}-{artifact}
+            │   └── admin-members-directory-filter.dto.ts
+            ├── directory-repositories/
+            ├── directory-tests/
+            │   └── harness/                                      ← standalone test harness
+            ├── members-directory.module.ts                       ← sub-module NestJS definition (exempt from role-prefix)
+            ├── members-directory-backend-feature.md              ← documentation trio (22 canonical sections)
+            ├── members-directory-backend-forbidden.md
+            └── members-directory-backend-contract.md
 ```
 
 AI agents MUST consult this table before creating any folder or file name. Any deviation = architecture violation.
+
+### 0I. STRICT MAXIMUM NESTING DEPTH LAW (THE DEPTH INVARIANT — SUB-SUBMODULES BANNED)
+
+1. **The 4-Tier Terminal Leaf Boundary:** The backend architectural hierarchy stops strictly at Tier 4:
+   - Tier 1: `src/` (Source Root)
+   - Tier 2: `backend-{role}/` (Role Container)
+   - Tier 3: `{role}-modules/` ➔ `{role}-{domain}/` (Pure Feature Domain Module — Aggregator & Quarantine)
+   - Tier 4: `{submodule}/` (Autonomous Sub-Module — **TERMINAL LEAF BUSINESS EXECUTION UNIT**)
+2. **Business Depth = 1 Law (Sub-Submodules STRICTLY FORBIDDEN):**
+   Inside an autonomous sub-module (`{submodule}/`), the **business nesting depth is strictly 1**. Creating nested folders that act as child business modules (e.g., `members-directory/directory-export/` or `attendance-history/biometrics/`) is a **CRITICAL P0 ARCHITECTURE VIOLATION**. All business code lives directly within standard single-level `{submodule}-{artifact}/` folders.
+3. **Artifact Depth Exemptions (Permitted Leaf Sub-Directories):**
+   The following deterministic leaf artifact directories are strictly permitted and exempt from the depth count:
+   - `{submodule}-tests/` (may contain sub-folders `harness/`, `fixtures/`, `unit/`, `integration/`)
+   - `{submodule}-locales/` (may contain language codes `en/`, `hi/` where backend localization is used)
+   - `contracts/` (contains `core-contracts.stub.ts`)
+   No other sub-directories of any kind are permitted beyond this depth boundary.
+4. **Artifact-Only Decomposition:** All decomposition inside an autonomous sub-module happens PURELY via standard canonical artifact folders (`{submodule}-controllers/`, `{submodule}-services/`, `{submodule}-repositories/`, `{submodule}-dto/`, `{submodule}-mappers/`, `{submodule}-domain/`, `{submodule}-types/`, `{submodule}-tests/`).
+5. **Deterministic 5-Gate Sub-Module Qualification Decision Matrix (Backend):**
+   - **Gate 1 (Frontend Route / Tab Isomorphism):** Does this capability correspond to a distinct secondary tab or dedicated sub-route on the frontend (e.g., `/attendance/history`, `/billing/invoices`)? If YES → **Autonomous Sub-Module** (`{submodule}/`).
+   - **Gate 2 (Entity / Lifecycle Independence):** Does this capability manage an independent sub-domain entity or distinct transactional lifecycle? If YES → **Autonomous Sub-Module**. If it is merely an additional query filter, patch endpoint, or export method on the existing entity → **Method/Controller** inside the existing sub-module.
+   - **Gate 3 (File Count & Granularity Bounds — The Goldilocks Rule: 5–20 Files):**
+     - Target: 5 to 20 files per sub-module (controllers + services + repositories + DTOs + entity + tests + harness + doc trio).
+     - Nano-Module Banned: Creating a sub-module for a single utility or single endpoint (< 3 files) is FORBIDDEN.
+     - Mega-Submodule Banned: Cramming 3+ distinct sub-domain entity lifecycles into one sub-module (> 25 files) is FORBIDDEN; split into sibling sub-modules under `{role}-{domain}/`.
+   - **Gate 4 (Standalone Testability & Mockability):** Can this sub-module run isolated unit/integration tests with its own seeders and harness? If YES → **Autonomous Sub-Module**.
+   - **Gate 5 (DI & Sibling Isolation Boundary):** Sibling sub-modules NEVER import each other's NestJS `@Module`, `@Injectable()` services, or repositories. Cross-domain side-effects use Domain Events (Transactional Outbox).
 
 ### 0B. HARD FEATURE WRITE BOUNDARY
 
@@ -422,6 +664,41 @@ This application is **multi-tenant**. Every feature module across every role MUS
 | `gymId` | JWT payload ONLY | Primary tenant identifier (the gym/organization) |
 | `branchId` | JWT payload ONLY | Sub-tenant identifier (the gym branch) |
 
+### Canonical Dual-Layer Multi-Tenancy Architecture (The Belt-and-Suspenders Invariant)
+
+To guarantee 100% mathematical protection against cross-tenant data leaks without placing an unreasonable cognitive or implementation burden on feature developers or AI agents, the architecture enforces a **Dual-Layer Defense Model**:
+
+1. **Layer 1: Physical Infrastructure Isolation (Connection Routing — Rule 39):**
+   - The platform core dynamically resolves and routes requests to the specific tenant's dedicated database via `TenantContext` created strictly from the authenticated JWT.
+   - Cross-tenant SQL execution is physically blocked at the database instance/schema boundary.
+
+2. **Layer 2: Logical Application Isolation (Repository Query Predicates — Rule 0G):**
+   - Every ORM query, repository method, and SQL statement MUST explicitly bind `gymId` (and `branchId` where scoped) into the `WHERE` clause.
+   - **Why this is NOT redundant:** If a developer accidentally references a master DataSource, if connection pool caching leaks under high concurrency, or if an isolated test harness runs against an in-memory SQLite database, Layer 2 completely prevents cross-tenant data exposure.
+
+3. **Automated Enforcement (Zero Developer Burden):**
+   - Feature repositories extend the platform `TenantAwareRepository<T>` base class (or use TypeORM entity subscribers / Django tenant managers) which automatically injects `where: { gymId: currentTenant.gymId }` into AST query trees.
+   - Sub-modules declare their tenant scope in DTOs/repositories; the base repository handles AST predicate injection automatically, eliminating manual query duplication while guaranteeing mathematical security.
+
+### Tenant Scope Classification
+
+Not every record has the same tenant scope. Every entity and repository method must declare one of these scopes:
+
+| Scope | Required filter | Description |
+|---|---|---|
+| `MASTER_GLOBAL` | Master database only; no gym/branch business data | Global users, tenants registry, system feature flags |
+| `GYM_SCOPED` | `gymId` is mandatory | Subscription plans, membership types, roles/permissions |
+| `BRANCH_SCOPED` | `gymId` and `branchId` are mandatory | Attendance logs, local equipment, shift schedules |
+| `PLATFORM_SCOPED` | Superadmin-only master data | SaaS billing, platform analytics, tenant provisioning |
+| `IMMUTABLE_AUDIT` | Scope follows originating record | Audit logs, security events, compliance archives |
+
+Rules:
+1. `branchId` must not be forced onto gym-wide entities where it has no meaning.
+2. Every repository method must declare its expected tenant scope in its method documentation or responsibility map.
+3. A repository query must apply the filters required by its declared scope.
+4. A missing required scope filter is a P0 security failure.
+5. A repository method handling a master/global entity must use the master DataSource and must never accidentally run against a tenant DataSource.
+
 **ABSOLUTE RULES — NO EXCEPTIONS:**
 1. `gymId` and `branchId` MUST be extracted from the authenticated JWT payload — NEVER from the request body, URL query string, or client-supplied headers. **Consequence of violation:** Client-controlled tenant ID = complete tenant isolation bypass — any user can forge access to any gym's data.
 2. Services MUST NOT accept `gymId`/`branchId` as input parameters from controllers — they receive them from the auth context/JWT payload resolved by the auth guard. **Consequence of violation:** Business logic becomes responsible for tenant enforcement — a missed parameter causes cross-tenant leakage.
@@ -505,6 +782,27 @@ The following are the ONLY approved npm packages for backend feature modules. AI
 
 **Django equivalent packages:** `djangorestframework`, `celery`, `django-redis`, `python-jose` or `djangorestframework-simplejwt`, `pytest-django`, `httpx` for E2E.
 
+### Mandatory Infrastructure Package Approval Matrix
+
+The project owner MUST maintain a version-pinned approved infrastructure package matrix. Any dependency required by a mandatory architecture rule MUST appear here before an AI is instructed to implement that rule.
+
+The approved matrix must include, where applicable:
+
+| Concern | Approved Package / Owner-Approved Implementation |
+|---|---|
+| HTTP security headers | Helmet or framework-approved equivalent (`helmet`) |
+| HTTP compression | compression or framework-approved equivalent (`compression`) |
+| Metrics | prom-client or framework-approved equivalent (`prom-client`) |
+| Distributed tracing | OpenTelemetry packages (`@opentelemetry/api`, `@opentelemetry/sdk-node`) |
+| Image processing | Approved image transformation package (`sharp`) |
+| Object storage | Approved cloud object-storage SDK (`@aws-sdk/client-s3`) |
+| Encryption | Approved AES-256 cryptography implementation (`crypto` native or approved wrapper) |
+| Import-boundary enforcement | eslint-plugin-boundaries or no-restricted-imports |
+| Secret scanning | gitleaks |
+| SAST / dependency scanning | Owner-approved CI security tooling |
+| Git hooks | husky and lint-staged, where Node.js is active |
+
+Zod is forbidden for business request DTO validation but is explicitly permitted only for centralized environment/configuration schema validation.
 ---
 
 ## 0G-B. SEED FILE SPECIFICATION (GAP-15 Fix)
@@ -576,20 +874,23 @@ Every feature module sub-folder MUST be named using the module name as prefix fo
 | Adapters | `{module}-adapters/` | `adapters/`, `external/`, `integrations/` |
 
 > **AI AGENT NOTE:** When creating any sub-folder inside a feature module, you MUST consult this table first. Creating a folder not following `{module}-{artifact}/` pattern is an architecture violation and MUST be flagged.
+> Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2 & Rule 0H), `{module}` inside autonomous sub-modules represents the `{submodule}` capability (e.g., `members-directory/` contains `directory-services/`, `directory-controllers/`, etc.), while domain module roots (`admin-members/`) are quarantined pure aggregators.
 
-**Examples (role: admin, module: members):**
+**Examples (role: admin, domain: members, submodule: directory):**
 ```text
 admin-members/
-├── members-services/            ✅ CORRECT
-├── members-controllers/         ✅ CORRECT
-├── members-repositories/        ✅ CORRECT
-├── members-dto/                 ✅ CORRECT
-├── members-mappers/             ✅ CORRECT
-├── members-domain/              ✅ CORRECT
-├── members-types/               ✅ CORRECT
-├── members-constants/           ✅ CORRECT (module-level constants)
-├── members-exceptions/          ✅ CORRECT
-└── members-locales/             ✅ CORRECT
+├── admin-members.module.ts       ✅ Pure Aggregator NestJS Module (Tier 3)
+└── members-directory/            ✅ Autonomous Sub-Module (Tier 4 AI Repair Unit)
+    ├── directory-services/       ✅ CORRECT: {submodule}-{artifact}/
+    ├── directory-controllers/    ✅ CORRECT
+    ├── directory-repositories/   ✅ CORRECT (contains ORM entities)
+    ├── directory-mappers/        ✅ CORRECT (toDomain / toEntity)
+    ├── directory-domain/         ✅ CORRECT (pure domain model)
+    ├── directory-dto/            ✅ CORRECT
+    ├── directory-types/          ✅ CORRECT
+    ├── directory-constants/      ✅ CORRECT (sub-module local event constants)
+    ├── directory-exceptions/     ✅ CORRECT
+    └── directory-tests/          ✅ CORRECT (unit/ & harness/)
 ```
 
 ## 2. Highly Descriptive, AI-Contextual Filenames & Module Prefixing
@@ -597,7 +898,7 @@ Rename all controllers, services, and models to be extremely descriptive based o
 When you tag a file for AI context (e.g., `@[Filename]`), the AI should instantly know exactly what module it belongs to and what it does, even without seeing the folder path. Duplicate filename collisions are eliminated.
 - ❌ **BAD:** `auth.py`, `utils.js`, `helpers.ts`, `SearchBar.tsx`
 - ✅ **GOOD:** `admin-billing-jwt-token-generator.utils.ts`, `admin-billing-stripe-payment-webhook.controller.ts`, `admin-attendance-member-registration-validator.py`
-* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exception: Global configuration, constants, types, utilities, and root tooling files like `api-response.types.ts`, `database.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories such as `src/core/`, `src/infrastructure/`, or root-level tooling folders like `scripts/`.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
+* **The Rule (CRITICAL):** Every single file name MUST begin with the parent domain/role name (e.g., `superadmin`, `manager`) followed by the module name as a prefix. This applies to EVERYTHING: modules, controllers, services, DTOs, types, constants, utilities, and tests. *(Exceptions: (1) Global configuration, constants, types, utilities, and root tooling files like `api-response.types.ts`, `database.config.ts`, or `event-registry.constants.ts` are exempt from the module prefix rule when placed in global infrastructure directories such as `src/core/`, `src/infrastructure/`, or root-level tooling folders like `scripts/`. (2) Sub-module registration files (`{submodule}.module.ts`, e.g., `members-directory.module.ts`, `attendance-dashboard.module.ts`) and documentation trio files (`{submodule}-backend-feature.md`, `{submodule}-backend-forbidden.md`, `{submodule}-backend-contract.md`) are explicitly exempt from the `[role]-` prefix rule per Rule 0H because they uniquely identify the autonomous sub-module itself.)* Just as the frontend uses `AdminBillingInvoiceSearchBox.tsx`, the backend MUST use `admin-billing-invoice-search-box.controller.ts`.
 * **Component/Class Internal Naming:** The exported class name MUST exactly match the filename logic (converted to PascalCase). For example, `superadmin-auth.module.ts` must export `class SuperadminAuthModule`. `manager-auth.controller.ts` must export `class ManagerAuthController`. This prevents AI hallucination.
 * **Business Folders Prefixing (CRITICAL):** NEVER use generic names for ANY structural business folders (e.g., `modules/`, `common/`, `config/`, `database/`, `utils/`, `i18n/`, `middleware/`, etc.) anywhere in the project. ALL business folders MUST be explicitly prefixed with their parent domain/role name.
   - ❌ **BAD:** `backend-superadmin/core/`, `backend-manager/modules/`, `backend-admin/config/`, `backend-trainer/utils/`
@@ -644,7 +945,7 @@ The `{role}-core/` folder is strictly a **framework infrastructure container**. 
 - Interceptors (e.g., response interceptor, logging interceptor)
 - Pipes (e.g., validation pipe wrappers)
 - Middleware (e.g., tenant resolution middleware)
-- Framework infrastructure (e.g., the role's root NestJS module file)
+- Framework infrastructure (e.g., the role's root NestJS module file, `{role}-core-feature-flag.service.ts` per Rule 108 — cross-cutting flag resolution plumbing only, zero domain business logic)
 
 **FORBIDDEN inside `{role}-core/` — Architecture Violation:**
 - Any business logic service (e.g., `admin-members-suspension.service.ts`)
@@ -673,7 +974,7 @@ admin-core/
 
 * **Global Infrastructure Exception:** The ONLY allowed generic un-prefixed folders are `src/core/` and `src/infrastructure/` which contain NO business logic, only pure framework plumbing (see Rule 10 Edge Case C). These root-level generic folders may contain standard un-prefixed sub-folders (like `src/core/utils/`, `src/core/dtos/`, `src/core/config/`) provided they are strictly global and cross-cutting. Never put business logic in these generic folders.
   
-  **Canonical Mandatory Backend Structure — Complete Physical Module Tree:**
+  **Canonical Mandatory Backend Structure — Complete Physical Sub-Module Tree:**
 
   > The following structure is mandatory. Any deviation is considered architecture non-compliant. AI agents MUST use this tree as the reference template when generating any backend role module.
 
@@ -689,83 +990,110 @@ admin-core/
   │   │   └── admin-core-response.interceptor.ts
   │   └── admin-core.module.ts                            <-- Role root NestJS module
   │
-  └── admin-modules/                                      <-- ALL feature modules live here
+  └── admin-modules/                                      <-- ALL feature domain modules live here
       │
-      ├── admin-auth/                                     <-- Feature module (example)
-      │   ├── auth-controllers/
-      │   │   ├── admin-auth-command.controller.ts        <-- Write operations (POST/PATCH/DELETE)
-      │   │   └── admin-auth-query.controller.ts          <-- Read operations (GET)
-      │   ├── auth-services/
-      │   │   ├── admin-auth-login.service.ts
-      │   │   ├── admin-auth-token-refresh.service.ts
-      │   │   └── admin-auth-orchestrator.service.ts      <-- Orchestrator: opens TX, calls services
-      │   ├── auth-repositories/
-      │   │   ├── admin-auth-read.repository.ts           <-- Concern-based split (Rule 7)
-      │   │   └── admin-auth-write.repository.ts          <-- Concern-based split (Rule 7)
-      │   ├── auth-mappers/
-      │   │   └── admin-auth.mapper.ts                    <-- toDomain() / toEntity() ONLY
-      │   ├── auth-domain/
-      │   │   └── admin-auth.domain.ts                    <-- Pure domain model — zero ORM imports
-      │   ├── auth-dto/
-      │   │   ├── admin-auth-login.dto.ts
-      │   │   └── admin-auth-token-response.dto.ts
-      │   ├── auth-types/
-      │   │   └── admin-auth-jwt-payload.type.ts
-      │   ├── auth-constants/
-      │   │   └── admin-auth.constants.ts
-      │   ├── auth-exceptions/
-      │   │   └── admin-auth.exceptions.ts
-      │   ├── auth-locales/
-      │   │   ├── en/
-      │   │   │   ├── admin-auth-errors.json
-      │   │   │   └── admin-auth-messages.json
-      │   │   └── hi/
-      │   │       ├── admin-auth-errors.json
-      │   │       └── admin-auth-messages.json
-      │   ├── admin-auth.module.ts                        <-- NestJS module registration
-      │   ├── admin-auth-backend-feature.md               <-- MANDATORY: module doc (Rule 19)
-      │   ├── admin-auth-dependencies.md                  <-- MANDATORY: dependency graph (Rule 49)
-      │   └── admin-auth-forbidden.md                     <-- MANDATORY: forbidden patterns (Rule 78)
+      ├── admin-attendance/                               <-- Domain Module (Domain Quarantine)
+      │   ├── admin-attendance.module.ts                  <-- Pure Aggregator NestJS Module (imports child sub-modules)
+      │   ├── admin-attendance-backend-feature.md         <-- Master Domain Documentation
+      │   ├── admin-attendance-backend-forbidden.md       <-- Master Domain Invariants
+      │   │
+      │   ├── attendance-dashboard/                       <-- Autonomous Sub-Module (AI Repair Unit)
+      │   │   ├── dashboard-controllers/
+      │   │   │   ├── admin-attendance-dashboard-command.controller.ts  <-- Mutations (POST/PATCH/DELETE)
+      │   │   │   └── admin-attendance-dashboard-query.controller.ts    <-- Queries (GET)
+      │   │   ├── dashboard-services/
+      │   │   │   ├── admin-attendance-dashboard-metrics.service.ts
+      │   │   │   └── admin-attendance-dashboard-orchestrator.service.ts<-- Orchestrator: opens TX, coordinates services
+      │   │   ├── dashboard-repositories/
+      │   │   │   ├── admin-attendance-dashboard-read.repository.ts     <-- Concern-based split (Rule 7)
+      │   │   │   └── admin-attendance-dashboard-write.repository.ts
+      │   │   ├── dashboard-mappers/
+      │   │   │   └── admin-attendance-dashboard.mapper.ts              <-- toDomain() / toEntity() ONLY
+      │   │   ├── dashboard-domain/
+      │   │   │   └── admin-attendance-dashboard.domain.ts              <-- Pure domain model — zero ORM imports
+      │   │   ├── dashboard-dto/
+      │   │   │   ├── admin-attendance-dashboard-filter.dto.ts
+      │   │   │   └── admin-attendance-dashboard-summary-response.dto.ts
+      │   │   ├── dashboard-types/
+      │   │   │   └── admin-attendance-dashboard.types.ts
+      │   │   ├── dashboard-constants/
+      │   │   │   └── admin-attendance-dashboard.constants.ts
+      │   │   ├── dashboard-exceptions/
+      │   │   │   └── admin-attendance-dashboard.exceptions.ts
+      │   │   ├── dashboard-locales/
+      │   │   │   ├── en/
+      │   │   │   │   ├── admin-attendance-dashboard-errors.json
+      │   │   │   │   └── admin-attendance-dashboard-messages.json
+      │   │   │   └── hi/
+      │   │   │       ├── admin-attendance-dashboard-errors.json
+      │   │   │       └── admin-attendance-dashboard-messages.json
+      │   │   ├── dashboard-tests/
+      │   │   │   ├── unit/
+      │   │   │   │   └── admin-attendance-dashboard-metrics.service.spec.ts
+      │   │   │   └── harness/                                      <-- Standalone Run & Test Harness
+      │   │   │       ├── attendance-dashboard.harness.ts
+      │   │   │       └── attendance-dashboard.seed.ts
+      │   │   ├── attendance-dashboard.module.ts                    <-- Sub-module NestJS definition
+      │   │   ├── attendance-dashboard-backend-feature.md           <-- MANDATORY: 22 canonical sections
+      │   │   ├── attendance-dashboard-backend-forbidden.md         <-- MANDATORY: sibling isolation & WET rules
+      │   │   └── attendance-dashboard-backend-contract.md          <-- MANDATORY: exposed contracts
+      │   │
+      │   └── attendance-history/                         <-- Autonomous Sub-Module (AI Repair Unit)
+      │       ├── history-controllers/
+      │       ├── history-services/
+      │       ├── history-repositories/
+      │       ├── history-dto/
+      │       ├── history-tests/
+      │       │   ├── unit/
+      │       │   └── harness/
+      │       ├── attendance-history.module.ts
+      │       ├── attendance-history-backend-feature.md
+      │       ├── attendance-history-backend-forbidden.md
+      │       └── attendance-history-backend-contract.md
       │
-      └── admin-members/                                  <-- Another feature module (same pattern)
-          ├── members-controllers/
-          ├── members-services/
-          ├── members-repositories/
-          ├── members-mappers/
-          ├── members-domain/
-          ├── members-dto/
-          ├── members-types/
-          ├── members-constants/
-          ├── members-exceptions/
-          ├── members-locales/
-          ├── admin-members.module.ts
+      └── admin-members/                                  <-- Another feature domain module (same pattern)
+          ├── admin-members.module.ts                     <-- Pure Aggregator NestJS Module
           ├── admin-members-backend-feature.md
-          ├── admin-members-dependencies.md
-          └── admin-members-forbidden.md
+          ├── admin-members-backend-forbidden.md
+          ├── members-directory/                          <-- Autonomous Sub-Module
+          │   ├── directory-controllers/
+          │   ├── directory-services/
+          │   ├── directory-dto/
+          │   ├── directory-repositories/
+          │   ├── directory-tests/
+          │   ├── members-directory.module.ts
+          │   ├── members-directory-backend-feature.md
+          │   ├── members-directory-backend-forbidden.md
+          │   └── members-directory-backend-contract.md
+          └── members-registration/                       <-- Autonomous Sub-Module
+              └── ... (identical canonical micro-structure)
   ```
 
-### Mandatory Feature Module Structure
+### Mandatory Autonomous Sub-Module Structure
 
-> ⛔ **ALL folders listed as REQUIRED below must exist for every feature module.**
-> **Consequence of missing folders:** AI agents given only the module root will generate files in wrong locations, create barrel-file imports, and break the naming convention — causing cascading violations across Rules 0F, 0H, 2, and 84.
+> ⛔ **UNIVERSAL SUB-MODULE ISOLATION LAW:**
+> Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2), ALL implementation code lives inside autonomous sub-modules (`{sub-module}/`).
+> Placing loose controllers, services, repositories, or DTOs directly at the domain module root is a **CRITICAL ARCHITECTURE VIOLATION**.
+> Domain module root contains ONLY the pure aggregator module (`[role]-[domain].module.ts`), master documentation, and child sub-module folders.
 
-Every feature module MUST contain ALL of these sub-folders:
-- `{module}-controllers/` — REQUIRED — STOP if absent
-- `{module}-services/` — REQUIRED — STOP if absent
-- `{module}-repositories/` — REQUIRED — STOP if absent
-- `{module}-dto/` — REQUIRED — STOP if absent
-- `{module}-types/` — REQUIRED — STOP if absent
-- `{module}-constants/` — REQUIRED — STOP if absent
-- `{module}-exceptions/` — REQUIRED — STOP if absent
-- `{module}-domain/` — REQUIRED — STOP if absent (Rule 89 domain/entity separation depends on this)
-- `{module}-mappers/` — REQUIRED — STOP if absent (Rule 89 mapper pattern depends on this)
+Every autonomous sub-module MUST contain ALL of these sub-folders:
+- `{submodule}-controllers/` — REQUIRED — STOP if absent
+- `{submodule}-services/` — REQUIRED — STOP if absent
+- `{submodule}-repositories/` — REQUIRED — STOP if absent
+- `{submodule}-dto/` — REQUIRED — STOP if absent
+- `{submodule}-types/` — REQUIRED — STOP if absent
+- `{submodule}-constants/` — REQUIRED — STOP if absent
+- `{submodule}-exceptions/` — REQUIRED — STOP if absent
+- `{submodule}-domain/` — REQUIRED — STOP if absent (Rule 89 domain/entity separation depends on this)
+- `{submodule}-mappers/` — REQUIRED — STOP if absent (Rule 89 mapper pattern depends on this)
+- `{submodule}-tests/` — REQUIRED — STOP if absent (MUST contain `unit/` and `harness/` for standalone execution)
 
-Conditionally required (MUST exist when the module has the corresponding artifact — absence when the artifact exists = VIOLATION):
-- `{module}-locales/` — REQUIRED when the module has user-facing error/message strings (Rule 107)
-- `{module}-jobs/` — REQUIRED when the module has background jobs (Rule 23, Rule 42)
-- `{module}-adapters/` — REQUIRED when the module calls external services (Rule 8 Edge Case D)
+Conditionally required (MUST exist when the sub-module has the corresponding artifact — absence when the artifact exists = VIOLATION):
+- `{submodule}-locales/` — REQUIRED when the sub-module has user-facing error/message strings (Rule 107)
+- `{submodule}-jobs/` — REQUIRED when the sub-module has background jobs (Rule 23, Rule 42)
+- `{submodule}-adapters/` — REQUIRED when the sub-module calls external services (Rule 8 Edge Case D)
 
-> **An AI creating a module MUST create all REQUIRED folders even if they start empty.** Empty sub-folders with a `.gitkeep` file satisfy the structure requirement. Missing folders violate Rules 0F, 0G-D, and 0H.
+> **An AI creating an autonomous sub-module MUST create all REQUIRED folders even if they start empty.** Empty sub-folders with a `.gitkeep` file satisfy the structure requirement. Missing folders violate Rules 0A.2, 0F, 0G-D, and 0H.
 
 ## 3. Strict Validation & DTO Isolation
 Never mix data validation logic (checking if email is valid, password length) with business logic (saving to DB). 
@@ -849,6 +1177,37 @@ In-process event emitters MUST NOT be treated as the durable transport for criti
 
 Redis Pub/Sub is reserved for transient real-time fan-out and MUST NOT replace Redis Streams for durable events. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
 
+### Edge Case A.1: Transactional Outbox for Durable Domain Events
+
+A database mutation and publication of its critical domain event must never rely on two separate non-atomic operations.
+
+Forbidden flow:
+1. Save database record
+2. Commit transaction
+3. Publish Redis Stream event
+4. Process crashes before publish (Permanent Event Loss)
+
+Required flow:
+1. Start database transaction.
+2. Perform domain mutation.
+3. Insert a versioned event record into an `events_outbox` table in the same transaction.
+4. Commit once.
+5. A dedicated outbox relay worker publishes pending events to Redis Streams.
+6. Mark the outbox event as published only after publish acknowledgement.
+7. Consumers must be idempotent because delivery is at-least-once, not exactly-once.
+
+Every critical event must include:
+- `eventId`: UUID v4
+- `eventName`: Standardized screaming snake case event name
+- `eventVersion`: Monotonically increasing schema version
+- `tenantScope`: `gymId` and `branchId` (where applicable)
+- `aggregateId`: Primary entity ID
+- `occurredAt`: ISO 8601 UTC timestamp
+- `correlationId`: Request tracking ID
+- `payload`: Versioned event JSON payload
+
+Redis Streams provide durable delivery. The transactional outbox prevents the database/event dual-write failure before the event reaches Redis Streams.
+
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
 *Solution:* **Orchestrator Pattern with UnitOfWork Abstraction.** 
@@ -888,31 +1247,29 @@ The exported class MUST follow PascalCase matching the filename: `admin-billing-
 
 Orchestrators MUST live inside the module's `{module}-services/` sub-folder alongside other sub-services.
 
-### Feature Module File Rule
+### Module Registration & Aggregator Rule
 
-Every feature module MUST contain exactly one module registration file.
-
-Pattern:
-`{role}-{module}.module.ts`
-
-Examples:
-- `admin-members.module.ts`
-- `manager-billing.module.ts`
-
-Multiple NestJS module files inside a feature module are forbidden.
+Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2):
+1. **Domain Aggregator Module:** Every domain module root (`admin-members/`, `manager-attendance/`) MUST contain exactly one pure aggregator module:
+   - Pattern: `{role}-{domain}.module.ts` (e.g., `admin-members.module.ts`, `manager-attendance.module.ts`).
+   - Responsibility: Imports and aggregates child sub-module NestJS modules. Contains zero controllers, services, or repositories directly.
+2. **Autonomous Sub-Module Module:** Inside each autonomous sub-module directory, there is exactly one sub-module registration file:
+   - Pattern: `{submodule}.module.ts` (e.g., `attendance-dashboard.module.ts`, `attendance-history.module.ts`, `members-directory.module.ts`).
+   - Responsibility: Bundles and registers controllers, services, repositories, and local providers for that specific sub-module.
+3. Multiple NestJS module definition files within a single sub-module directory are strictly forbidden.
 
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
 *Solution:* **WET over DRY for AI (Write Everything Twice).**
-Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-mappers/` (or `billing-constants/`, `billing-types/` respectively). If the Attendance module needs the exact same helper, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-mappers/`. 
-* **Crucial Clarification (Domain vs Module):** WET duplication applies strictly at the **module level, not the domain level**. No shared folder is allowed at ANY level. Even if both the `billing` module and `attendance` module live under the same `manager` domain, they MUST get their own independent copies of a shared utility. There is no `manager/shared/` folder.
-* **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a global `common/` folder, an AI might modify a shared function to fix a bug in HR, inadvertently breaking the Finance module. Complete module isolation guarantees 0% cross-module side effects.
+Strictly ban global `common/` or `shared/` folders. If a helper, enum, or type is used by the Billing module, put it in `backend-manager/manager-modules/manager-billing/billing-invoices/invoice-mappers/` (or `invoice-constants/`, `invoice-types/` respectively). If the Attendance module needs the exact same helper, **duplicate the code** into `backend-admin/admin-modules/admin-attendance/attendance-dashboard/dashboard-mappers/`. 
+* **Crucial Clarification (Domain vs Sub-Module WET Law):** Under the Universal Day-1 Sub-Module Architecture, WET duplication applies strictly at the **sub-module level**. No shared folder is allowed at ANY level — neither at domain level (e.g., `manager-attendance/common/`, `manager-attendance/shared/`, or `manager-attendance/services/` is strictly banned) nor between sibling sub-modules (e.g., `attendance-dashboard/` vs `attendance-history/`). If both `attendance-dashboard` and `attendance-history` need a date formatter, member query helper, or status enum, each gets its own independent copy locally inside its own sub-module directory. There is NO `attendance/common/` or `attendance/shared/` folder.
+* **Why?** In an AI-driven codebase, code repetition is entirely acceptable because AI writes the code. If we use a shared folder, an AI might modify a shared function to fix a bug in HR or Dashboard, inadvertently breaking the Finance or History sub-module. Complete sub-module isolation guarantees 0% cross-submodule side effects.
 
 > ⛔ **ABSOLUTE PROHIBITION — AI AGENTS:**
-> **NEVER move business logic, utilities, or services to global folders like `src/shared/` or `src/common/`.**
-> **Consequence of violation:** AI modifying a shared function to fix module A will silently break module B — this is architecturally FORBIDDEN and constitutes scope expansion (Invariant 3 violation).
-> **Anything containing domain-specific business behavior MUST be duplicated per feature, NEVER globalized.**
-> **Finding a `src/shared/` or `src/common/` folder with business logic = immediate `NON_COMPLIANT` — record it, do not touch the file, request owner decision.**
+> **NEVER move business logic, utilities, or services to global folders like `src/shared/` or domain-level folders like `manager-attendance/common/`.**
+> **Consequence of violation:** AI modifying a shared function to fix sub-module A will silently break sub-module B — this is architecturally FORBIDDEN and constitutes scope expansion (Invariant 3 violation).
+> **Anything containing domain-specific business behavior MUST be duplicated per sub-module, NEVER globalized.**
+> **Finding a `src/shared/`, `src/common/`, or domain-level `attendance/common/` folder with business logic = immediate `NON_COMPLIANT` — record it, do not touch the file, request owner decision.**
 > Only pure infrastructure plumbing (database connection pools, global interceptors, guards — see infrastructure exception below) belongs in `src/core/` or `src/infrastructure/`.
 * **Infrastructure Exception (Framework-Level vs Business-Logic-Level):** The WET-over-DRY / no-shared-folder rule applies strictly to **BUSINESS LOGIC utilities** (domain-specific helpers, formatters, validators). It does **NOT** apply to genuine framework-level infrastructure that every module is architecturally required to **extend OR consistently reference for correctness** (i.e., a single shared registry or config that MUST stay identical across all modules to function correctly — duplicating it would produce inconsistency, not isolation) — e.g. `BaseEntity` (Rule 58), the global `ResponseInterceptor` (Rule 28), `RolesGuard`/`@Roles()` decorator (Rule 83), the structured logger (Rule 14), `AsyncLocalStorage` context propagation (Rule 57), the centralized rate-limit tiers config (Rule 44), the event-registry constants (Rule 50), the Feature Flag Service (Rule 108), and the global database connection pool config (Rule 63). These live in a single, clearly-named `src/core/` or `src/infrastructure/` folder — **NOT** `src/shared/` or `src/common/` (to avoid becoming a dumping ground). This folder is intentionally small, framework-plumbing-only, and rarely touched — it does not carry the same "AI breaks module B while fixing module A" risk because it contains **no business logic**, only structural contracts that every module must extend or reference by architectural design.
 
@@ -931,7 +1288,8 @@ Never hardcode HTTP status code numbers (e.g., `200`, `400`, `500`) in controlle
   - NestJS: `HttpStatus` from `@nestjs/common` (e.g., `HttpStatus.OK`, `HttpStatus.CREATED`)
   - Django: `rest_framework.status` (e.g., `status.HTTP_200_OK`, `status.HTTP_201_CREATED`)
 * **Testing Rule:** This rule applies to EVERY test file without exception. In Python `pytest` suites, ALWAYS use `from http import HTTPStatus` (e.g., `HTTPStatus.OK`, `HTTPStatus.CREATED`). A raw `assert response.status_code == 200` in a test file = architecture violation.
-* **Audit Evidence Required:** When auditing, flag every occurrence of a raw integer HTTP status code as `NON_COMPLIANT`.
+* **Source Code vs Wire Serialization Clarification:** In TypeScript and Python source code, hardcoding integer status codes is strictly forbidden (use `HttpStatus.CREATED`, `HttpStatus.BAD_REQUEST`, etc.). Wire JSON payloads over HTTP network transport serialize these enums to their integer wire representations (`201`, `400`). Documentation examples showing JSON payloads illustrate the serialized wire representation, but in actual source code, `HttpStatus` enum MUST always be referenced.
+* **Audit Evidence Required:** When auditing, flag every occurrence of a raw integer HTTP status code in source code as `NON_COMPLIANT`.
 
 ## 10. Dynamic / Absolute Imports (No Hardcoded Relative Paths)
 *(Applicable to JavaScript/TypeScript Frameworks)*
@@ -955,10 +1313,10 @@ For Non-NestJS projects, strictly adhere to the role and module isolation princi
 - Keep `serializers.py` strictly for validation and data formatting.
 
 
-## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
-Never put tests in a global `tests/` or `pytest-tests/` directory separate from the application code. 
-* **The Rule:** Unit tests (`.spec.ts`) must live directly inside the module they are testing, adjacent to the micro-feature file (e.g., `admin-members-registration.service.spec.ts` next to `admin-members-registration.service.ts`). E2E / black-box API tests are written in Python pytest and live in a separate top-level `backend-e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
-* **Why?** When an AI is asked to add a feature or fix a bug, providing the co-located `.spec.ts` file gives it complete unit-test context. The pytest E2E suite is decoupled from the Node.js runtime entirely.
+## 11. Co-located Unit & Integration Tests vs Centralized E2E Smoke Suite
+Never put unit or integration tests in a global `tests/` directory separate from the application code.
+* **The Rule:** Unit and integration tests (`.spec.ts`) and local test harnesses (`harness/`, `fixtures/`) MUST live directly inside the autonomous sub-module under `{submodule}-tests/` (e.g., `admin-members-registration.service.spec.ts`). Conversely, cross-system black-box E2E API tests are written in Python pytest and live in a separate top-level `backend-e2e/` directory (see Rule 27). Do NOT co-locate pytest files inside the NestJS module folders.
+* **Why?** When an AI is asked to add a feature or fix a bug in a zipped sub-module, providing the co-located `{submodule}-tests/` folder gives it 100% of the unit-test and harness context needed to verify fixes locally. The pytest E2E suite verifies cross-system behavior in staging/CI completely decoupled from the Node.js runtime.
 
 
 ## 12. Strict API Documentation (Swagger/OpenAPI)
@@ -1014,15 +1372,20 @@ Never put tests in a global `tests/` or `pytest-tests/` directory separate from 
 
 ## 19. Module-Level Feature Documentation
 *(Crucial for AI Context & Onboarding)*
-* **The Rule:** Every single module must contain a `[role]-[module]-backend-feature.md` file at its root (e.g., `backend-admin/admin-modules/admin-auth/admin-auth-backend-feature.md`). 
-* **Why:** Before an AI or a new human developer makes any changes to a module, they will read this file first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, and logic, drastically reducing the risk of hallucination or breaking existing architecture.
+* **The Rule:** Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2), every autonomous backend sub-module MUST contain its dedicated **Autonomous Sub-Module Documentation Trio** directly inside its directory (e.g., `src/backend-manager/manager-modules/manager-attendance/attendance-dashboard/`):
+  1. `[role]-[submodule]-backend-feature.md` (or `_backend-feature.md`) — Master architectural map containing ALL 22 Canonical Sections.
+  2. `[role]-[submodule]-backend-forbidden.md` (or `_backend-forbidden.md`) — Concrete, sub-module-specific forbidden anti-patterns and boundary invariants.
+  3. `[role]-[submodule]-backend-contract.md` (or `_backend-contract.md`) — Frozen API, DTO, and domain event contract definitions.
+* **Why:** Before an AI or a new human developer makes any changes to a sub-module, they read this trio first. It acts as the ultimate localized context guide, instantly explaining the routing, file responsibilities, database queries, and invariants, drastically reducing the risk of hallucination or breaking existing architecture.
 
 ### Documentation Placement Rule
 
-The following files MUST exist directly inside the feature module root:
-- `{role}-{module}-backend-feature.md`
-- `{role}-{module}-dependencies.md`
-- `{role}-{module}-forbidden.md`
+The Documentation Trio MUST exist directly inside each autonomous sub-module root:
+- `{submodule}-backend-feature.md` (or `_backend-feature.md`)
+- `{submodule}-backend-forbidden.md` (or `_backend-forbidden.md`)
+- `{submodule}-backend-contract.md` (or `_backend-contract.md`)
+
+Master domain-level documentation (`[role]-[domain]-backend-feature.md`, `[role]-[domain]-backend-forbidden.md`) lives at the parent domain root.
 
 These files MUST NOT be placed inside:
 - `docs/`
@@ -1031,7 +1394,7 @@ These files MUST NOT be placed inside:
 
 ### Documentation Quality Standard
 
-**The purpose of `-backend-feature.md` is that an AI given ONLY that file + the module folder can fully understand, modify, or debug the module without reading anything else. Generic boilerplate defeats this entirely.**
+**The purpose of `-backend-feature.md` is that an AI given ONLY that file + the sub-module folder can fully understand, modify, test, or debug the sub-module without reading anything else. Generic boilerplate defeats this entirely.**
 
 #### ❌ BAD — What AI agents produce without quality enforcement:
 ```markdown
@@ -1079,140 +1442,341 @@ Never call AdminBillingWalletRepository directly from outside this module.
 - Edge Cases with fewer than 3 concrete, module-specific entries
 - Generic warnings not tied to a specific rule number (e.g., "be careful with transactions" with no Rule citation)
 - Feature Inventory rows where Purpose column is just "Handles X"
+- Missing any of the 22 Canonical Sections
 
 **Documentation Freshness Rule:** `-backend-feature.md` MUST be updated in the same commit as any code change to the module. A stale feature doc is worse than no doc — it actively misleads AI agents.
 
 ---
 
-### Mandatory `[role]-[module]-backend-feature.md` Template
-Every backend module MUST use this minimum structure:
+### Mandatory `[role]-[submodule]-backend-feature.md` Template (22 Canonical Sections)
+
+Every autonomous backend sub-module MUST implement ALL 22 canonical sections below:
 
 ```markdown
-# [Module Name] Backend Feature Map
+---
+feature: "[role]_[submodule]"
+owner_role: "[role]"
+module_version: "1.0.0"
+api_contract_source: "[role]-[submodule]-backend-contract.md"
+last_verified_date: "2026-10-23"
+last_verified_commit: "HEAD"
+documentation_status: "COMPLETE"
+portability_score: "10/10"
+---
 
-## Module Purpose
-[REQUIRED: 3+ sentences. What business problem does this module solve? What are
-the key invariants (e.g., "all mutations go through the Orchestrator")? What
-should an AI NEVER do in this module?]
+# [Role] [Sub-Module Name] Backend Feature Map
 
-## Directory Structure
-| File | Responsibility |
-|---|---|
-| [role]-[module]-command.controller.ts | [REQUIRED: exact HTTP mutations it handles] |
-| [role]-[module]-query.controller.ts | [REQUIRED: exact read endpoints it handles] |
-| {module}-services/[role]-[module]-orchestrator.service.ts | [REQUIRED: what it orchestrates] |
-| {module}-repositories/[role]-[module]-<concern>.repository.ts | [REQUIRED: what queries it owns] |
-| {module}-dto/[role]-[module]-create.dto.ts | [REQUIRED: what it validates] |
-| {module}-repositories/[role]-[module].entity.ts | [REQUIRED: what DB table it maps to] |
+## 1. Scope and Non-Scope
+- **In-Scope**: [REQUIRED: 3+ concrete bullet points defining exact API capabilities owned by this sub-module]
+- **Non-Scope / Delegated**: [REQUIRED: Capabilities explicitly owned by other sub-modules or services — e.g., auth verification handled by JwtAuthGuard, payments delegated to payment adapter]
 
-## Feature Inventory
-[REQUIRED: One row per endpoint. Purpose must be a full sentence, not "Handles X".]
-| Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
+## 2. Sub-Module Directory & Component Inventory
+| Directory / File | Type | Responsibility |
+|---|---|---|
+| `{submodule}-controllers/[role]-[submodule]-command.controller.ts` | Command Controller | Handles write mutations (POST/PATCH/DELETE) |
+| `{submodule}-controllers/[role]-[submodule]-query.controller.ts` | Query Controller | Handles read queries (GET) |
+| `{submodule}-services/[role]-[submodule]-orchestrator.service.ts` | Orchestrator | Coordinates transactions and domain sub-services |
+| `{submodule}-services/[role]-[submodule]-[desc].service.ts` | Domain Service | Encapsulates specific business calculation or logic |
+| `{submodule}-repositories/[role]-[submodule]-read.repository.ts` | Read Repository | Executes parameterized read queries & joins |
+| `{submodule}-repositories/[role]-[submodule]-write.repository.ts` | Write Repository | Executes transactional mutations with tenant scoping |
+| `{submodule}-dto/[role]-[submodule]-[desc].dto.ts` | Validation DTO | Class-validator request payloads |
+| `{submodule}-mappers/[role]-[submodule].mapper.ts` | Data Mapper | Pure bidirectional toDomain() and toEntity() transforms |
+| `{submodule}-domain/[role]-[submodule].domain.ts` | Domain Model | Framework-free pure domain entities |
+| `{submodule}-tests/harness/[submodule].harness.ts` | Test Harness | Standalone execution harness with seeders |
+
+## 3. Controller & Endpoint Inventory
+| Controller | Method | Path | Purpose | Status Codes | Auth Guards |
 |---|---|---|---|---|---|
+| `[role]-[submodule]-command.controller.ts` | POST | `/api/v1/[role]/[submodule]/action` | Performs business mutation | 201, 400, 403, 409 | `JwtAuthGuard`, `RolesGuard` |
+| `[role]-[submodule]-query.controller.ts` | GET | `/api/v1/[role]/[submodule]` | Retrieves paginated records | 200, 400, 401 | `JwtAuthGuard`, `RolesGuard` |
 
-## Approved External Dependencies
-[REQUIRED: Explicitly list all external dependencies. If none, write "None".]
-- **Business Feature Dependencies**: [e.g., MemberModule]
-- **Infrastructure Dependencies**: [e.g., CacheManager, Database]
-- **Runtime/Event Dependencies**: [e.g., BILLING.PAYMENT.FAILED]
+## 4. Frozen API Contract
+### Request Shapes
+| Endpoint | Method | Request DTO | Validated Fields |
+|---|---|---|---|
+| `POST /...` | POST | `[role]-[submodule]-create.dto.ts` | `field1: string (IsNotEmpty), field2: number (Min(1))` |
 
-## Data and State Architecture
-[REQUIRED: Fill every field. Write "none" only if genuinely none.]
-- DB Entities: [entity names and their table names]
-- Redis Caching Keys: [key patterns and TTLs, e.g., `billing:wallet:{memberId}` TTL 5min]
-- Event Emitters: [event names from event-registry.constants.ts, e.g., BILLING.PAYMENT.FAILED]
-- Background Jobs: [queue names and what triggers them]
-- Idempotency Keys: [which endpoints require Idempotency-Key header — Rule 103]
-
-## Business Flow / Key Sequences
-[REQUIRED: For each non-trivial mutation, describe the exact execution chain.]
-**Example — Plan Purchase:**
-1. AdminBillingPlanCommandController receives POST /billing/plans/purchase
-2. Validates AdminBillingPlanPurchaseDto (Rule 3)
-3. Calls AdminBillingOrchestratorService.purchasePlan(dto)
-4. Orchestrator opens DB transaction
-5. Calls AdminBillingWalletRepository.deductBalance() with pessimistic lock (Rule 41)
-6. Calls MemberPlanRepository.createPlanRecord()
-7. Commits transaction — emits BILLING.PLAN.PURCHASED event
-8. EventBus listener triggers NotificationService (decoupled — Rule 8)
-
-## File Responsibility Map
-[REQUIRED: One line per file stating its single responsibility and what it must NOT do.]
-- `admin-billing-orchestrator.service.ts` — Opens transactions, calls domain sub-services. MUST NOT contain business logic.
-- `admin-billing-wallet.repository.ts` — Raw DB queries for wallet table only. MUST NOT call other repositories.
-- `admin-billing-plan-purchase.service.ts` — Plan purchase business logic only. MUST NOT touch wallet directly.
-
-## Permissions and Security
-[REQUIRED: List every endpoint with its required role(s) and any resource-level checks.]
-| Endpoint | Required Role(s) | Resource-Level Check |
+### Response Shapes
+| Endpoint | Response Envelope DTO | Wrapped Data Fields |
 |---|---|---|
-| POST /billing/wallet/topup | MANAGER, ADMIN | Actor must belong to same branch as member |
-| GET /billing/history | MANAGER, ADMIN, MEMBER | Member can only see own history |
+| `POST /...` | `ApiResponse<[role]-[submodule]-response.dto.ts>` | `id, status, createdAt, ...` |
 
-CODEOWNERS path: `src/backend-[role]/[role]-[module]/` → @[reviewer-handle]
+## 5. UI-Required Fields Mapping (Rule 82A Parity)
+[REQUIRED: List every field consumed by the frontend UI — table columns, KPI cards, charts, badges, filters. Backend MUST guarantee 100% parity with frontend `_features.md`.]
+- **Table Columns**: `[col1, col2, col3, statusBadge]`
+- **KPI Metrics**: `[metric1, metric2]`
+- **Filter / Search Inputs**: `[search, dateRange, statusFilter]`
 
-## Edge Cases / AI Warnings
-[REQUIRED: Minimum 3 entries. Each must cite a specific Rule number and explain
-the exact consequence of violating it — not just "be careful".]
-- [Specific invariant]: [What breaks if violated] — see Rule [N]
-- [Concurrency risk]: [Race condition scenario] — requires pessimistic lock (Rule 41)
-- [Transaction boundary]: [What must be atomic and why] — see Rule 8
+## 6. Query & Mutation Flow / Key Sequences
+[REQUIRED: Exact step-by-step execution chain for non-trivial flows.]
+1. Controller receives request, validates DTO via ValidationPipe.
+2. Extracts `gymId` and `branchId` from `@CurrentUser()` JWT context.
+3. Orchestrator opens database transaction (`UnitOfWork`).
+4. Read repository fetches aggregate root with pessimistic lock (`SELECT FOR UPDATE`).
+5. Domain service applies business invariants.
+6. Write repository persists state change.
+7. Outbox record inserted for domain event.
+8. Transaction commits and returns canonical ApiResponse envelope.
 
-## Frozen API Contract
-[REQUIRED at API Contract Freeze (Rule 67). Copy the exact frozen contract from the frontend
-`_features.md`. Backend AI reads THIS section instead of needing the frontend folder.]
-
-### Request Shape
-| Endpoint | Method | Request DTO fields |
+## 7. Permissions, RBAC & Tenant Isolation Rules
+| Endpoint | Required Roles | Tenant Scoping Filter |
 |---|---|---|
-| [e.g. POST /billing/wallet/topup] | POST | [e.g. memberId: string, amountMinor: number] |
+| `POST /...` | `MANAGER`, `ADMIN` | `where: { gymId: jwt.gymId, branchId: jwt.branchId }` |
+| `GET /...` | `MANAGER`, `ADMIN` | `where: { gymId: jwt.gymId }` |
 
-### Response Shape
-| Endpoint | Response DTO fields | Notes |
-|---|---|---|
-| [e.g. POST /billing/wallet/topup] | [e.g. walletId, newBalanceMinor, processedAt] | [any computed/joined fields] |
+## 8. Data and State Architecture
+- **DB Entities**: `[entity names and physical table names]`
+- **Table Relationships**: `[Foreign keys and cascade rules]`
+- **Soft-Delete Policy**: `deletedAt IS NULL` filter enforced on all queries (Rule 29).
 
-### UI-Required Fields
-[REQUIRED: List every field consumed by the frontend UI — table columns, KPIs, charts, badges,
-filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
-- Table: [field list]
-- KPI cards: [field list]
-- Charts: [series names and their data fields]
-- Status badges: [field list]
+## 9. Repository Layer & Query Methods
+- Concern-based splitting: read and write repositories separated.
+- N+1 Prevention: All relations eagerly joined or mapped in single query (Rule 34).
+- Parameterized Queries: 100% ORM-managed or parameterized query builder (Rule 7).
 
-### Pagination / Error Contract
-- Pagination: [paginated? yes/no — if yes, include PaginationMeta]
-- Validation errors: statusCode 400, errorCode `VALIDATION.DTO.FAILED`, validationErrors array
-- Business errors: errorCode `DOMAIN.ENTITY.REASON` format
+## 10. Caching Strategy & Redis Key Registry
+- **Cache Key Pattern**: `[role]:[domain]:[submodule]:{gymId}:{entityId}`
+- **TTL**: `300s`
+- **Invalidation Triggers**: Cache evicted on mutation commit via `CacheManager.del()`.
 
-## Rule Compliance Checklist
-- [ ] Rule 7: Approved project ORM used for all DB access (no raw SQL outside parameterized/prepared queries)
-- [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
-- [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
-- [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
-- [ ] Rule 29: Soft-delete by default. (Exception: Immutable event logs (Rule 118) and financial ledgers (Rule 119) are strictly append-only and exempt from standard soft-delete rules. Furthermore, the 90-day tenant hard-delete (Rule 110) must explicitly archive/retain legally required financial/audit ledgers rather than blindly deleting them.)
-- [ ] Rule 115: AI-contextual docstrings added to entities/services/controllers
-- [ ] Rule 116: MCP-Ready API Design conventions followed
-- [ ] Rule 117: RAG-Ready API Projection (`?format=rag`) implemented
-- [ ] Rule 103: Idempotency-Key enforced on all state-mutating endpoints
-- [ ] Rule 34: N+1 queries prevented — eager loading used where needed
-- [ ] Rule 36: Fail-Fast applied — null checks at service layer, DB constraints enforced
-- [ ] Rule 41: Pessimistic locking on all concurrent balance/inventory mutations
-- [ ] Rule 48: Read (query) and write (command) controllers are separate files
-- [ ] Rule 56: findByIdOrThrow() used — null never propagates silently
-- [ ] Rule 62: Explicit return types on all service and repository methods
-- [ ] Rule 76: Every file starts with // RESPONSIBILITY: comment
-- [ ] Rule 79: Every file has // FLOW: comment below RESPONSIBILITY
-- [ ] Rule 80: Framework-appropriate method documentation on all service methods, repositories, and utilities
-- [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
-- [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
-- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements from the Frozen API Contract section in this `-backend-feature.md` — no missing table columns, KPI fields, chart series, or relationship fields
-- [ ] Rule 82A-SYNC: Frozen API Contract section in this file is up-to-date with frontend `_features.md` API contract
-- [ ] Rule 86: Verb contract naming applied (createX, findXById, findXByIdOrThrow)
-- [ ] Rule 87: Every service method ≤ 20 lines, single responsibility
-- [ ] Rule 89: Domain objects used in services — ORM entities stay in repository layer
-- [ ] Rule 92: All ORM orderBy/where with user input validated against allowlist
-- [ ] Rule 93: If module touches auth/billing/webhooks/tenant — CODEOWNERS human review required
+## 11. Event Emitter & Consumer Registry
+- **Emitted Events**: `[DOMAIN].[ENTITY].[ACTION]` (from `event-registry.constants.ts`)
+- **Transport**: Transactional Outbox ➔ Redis Streams (Rule 8 Edge Case A.1).
+- **Consumed Events**: Handled via idempotent event consumers.
+
+## 12. Background Jobs & Distributed Queue Tasks
+- **Queue Name**: `[role]-[submodule]-queue`
+- **Trigger Condition**: Heavy export, PDF, or bulk operation.
+- **Idempotency Guarantee**: BullMQ jobId keyed by `requestId` or entity UUID.
+
+## 13. Concurrency, Locks & Idempotency Rules
+- **Pessimistic Locking**: `SELECT FOR UPDATE` applied on inventory/balance mutations (Rule 41).
+- **Idempotency Key**: Required on mutation routes via `Idempotency-Key` header (Rule 103).
+
+## 14. Error & Exception Registry
+| Exception Class | Domain Error Code | HTTP Status | User Message Key |
+|---|---|---|---|
+| `[submodule]NotFoundException` | `[DOMAIN].[ENTITY].NOT_FOUND` | `HttpStatus.NOT_FOUND` | `errors.[submodule].notFound` |
+| `[submodule]ConflictException` | `[DOMAIN].[ENTITY].CONFLICT` | `HttpStatus.CONFLICT` | `errors.[submodule].conflict` |
+
+## 15. Security, PII & Audit Logging Requirements
+- **PII Masking**: Mask phone numbers, emails, and financial identifiers before logging (Rule 35).
+- **Audit Logging**: Write audit log entry for every critical mutation (Rule 14).
+
+## 16. Approved External & Infrastructure Dependencies
+- **Core Dependencies**: `@/core/guards/`, `@/core/interceptors/`
+- **Sibling Sub-Module Dependencies**: **NONE** (Zero cross-submodule imports).
+- **External Adapters**: Third-party integrations wrapped in local adapters (Rule 8 Edge Case D).
+
+## 17. File Responsibility Map & Architecture Exceptions
+- Every file declares `// RESPONSIBILITY:` and `// FLOW:` header (Rule 76, 79).
+- Any documented exception contains `// architecture-exception: [reason]` (Rule 17).
+
+## 18. ADR (Architectural Decision Records) & Known Contract Gaps
+- **ADR-001**: [Decision description, rationale, consequences]
+- **Known Contract Gaps**: None.
+
+## 19. Rule Compliance Checklist (35+ Verification Items)
+- [ ] Rule 0A.2: Universal Day-1 Sub-Module Architecture verified
+- [ ] Rule 0A.2: Zero root business code in domain module root (Domain Quarantine)
+- [ ] Rule 0A.2: Parent shared folder banned (`manager-attendance/common/` absent)
+- [ ] Rule 0A.2: Zero cross-submodule imports; sibling `@Module` or service NOT imported
+- [ ] Rule 0A.2: Strict WET Principle applied to DTOs, mappers, and helpers
+- [ ] Rule 0A.2: Strict Maximum Nesting Depth verified (depth = 1 below domain module; zero sub-submodules)
+- [ ] Rule 0A.2: Sub-Module Sizing & Qualification verified (5-Gate Matrix; zero nano-modules <3 files; zero mega-modules >25 files)
+- [ ] Rule 0G: Tenant isolation verified (`gymId`/`branchId` from JWT, never body)
+- [ ] Rule 7: Approved project ORM used; parameterized queries only
+- [ ] Rule 8: Event-driven cross-module communication (Redis Streams/Outbox)
+- [ ] Rule 8: Orchestrator pattern used for multi-table transactions
+- [ ] Rule 9: HTTP status codes use `HttpStatus` enum (never raw integers)
+- [ ] Rule 11: Co-located unit tests and standalone test harness present
+- [ ] Rule 12: OpenAPI / Swagger annotations on all endpoints
+- [ ] Rule 13: Strongly typed ConfigService used (no raw `process.env`)
+- [ ] Rule 14: Structured logging via `nestjs-pino` with correlation ID
+- [ ] Rule 17: Standardized backend-driven pagination, sorting, and filtering
+- [ ] Rule 19: Documentation Trio present and up-to-date (Freshness Rule)
+- [ ] Rule 20: Standalone Run, Mock & Test Harness fully documented in Section 20
+- [ ] Rule 21: Module Portability & Host Integration Guide documented in Section 21
+- [ ] Rule 23: Heavy tasks dispatched to BullMQ background queues
+- [ ] Rule 28: ResponseInterceptor wraps all responses in canonical envelope
+- [ ] Rule 29: Soft-delete by default (`deletedAt IS NULL`)
+- [ ] Rule 34: N+1 queries eliminated via eager loading / query builders
+- [ ] Rule 36: Fail-Fast null checks applied in domain services
+- [ ] Rule 41: Pessimistic locking on concurrent balance/inventory mutations
+- [ ] Rule 48: Command (write) and query (read) controllers in separate files
+- [ ] Rule 56: `findByIdOrThrow()` used — null never silently propagated
+- [ ] Rule 62: Explicit TypeScript return types on all methods
+- [ ] Rule 76: Every file starts with `// RESPONSIBILITY:` comment
+- [ ] Rule 79: Every file has `// FLOW:` comment below RESPONSIBILITY
+- [ ] Rule 80: JSDoc method documentation on all service/repo methods
+- [ ] Rule 82A: Complete UI data requirement parity with frontend `_features.md`
+- [ ] Rule 83: RBAC enforced at controller layer via `@Roles()` guard
+- [ ] Rule 85: Guard clauses used — max 2 nesting levels
+- [ ] Rule 86: Verb contract naming applied (`createX`, `findXByIdOrThrow`)
+- [ ] Rule 87: Methods adhere to 20-line soft ceiling or decomposed
+- [ ] Rule 89: Pure domain models in services; ORM entities stay in repo layer
+- [ ] Rule 92: OrderBy/where parameters validated against strict allowlist
+- [ ] Rule 103: Idempotency-Key enforced on non-naturally idempotent mutations
+- [ ] Rule 115: AI-contextual docstrings on entities, services, controllers
+- [ ] Rule 117: Universal RAG projection (`?format=rag`) supported
+
+## 20. Standalone Run, Mock & Test Harness
+### How to Run this Sub-Module Standalone
+1. **Harness Location**: `{submodule}-tests/harness/[submodule].harness.ts`
+2. **In-Memory / SQLite Database**: Harness initializes a lightweight SQLite or Testcontainers PostgreSQL DataSource with local entity definitions.
+3. **Local Seed Data**: `{submodule}-tests/harness/[submodule].seed.ts` populates realistic tenant, member, and domain records.
+4. **Execution Command**:
+   ```bash
+   npm test -- src/backend-[role]/[role]-modules/[role]-[domain]/[submodule]/
+   ```
+5. **Standalone NestJS Testing Module**: Harness exports a standalone `createTestingModule()` with mocked external event busses and cache managers.
+6. **Standard 8-State Mock Scenario Catalog (`{submodule}-tests/fixtures/mock-scenarios.ts`)**:
+   Every sub-module harness MUST implement and own the 8 canonical mock scenarios for deterministic offline verification:
+   - `ACTIVE`: Normal populated success state (valid active tenant, active entity, populated collections).
+   - `EMPTY`: Zero records returned (valid tenant, empty results array / null item).
+   - `UNAUTHORIZED`: Unauthenticated caller (missing or expired JWT).
+   - `FORBIDDEN`: Cross-tenant boundary breach or insufficient role permissions.
+   - `NOT_FOUND`: Target resource ID does not exist for the authenticated `gymId`.
+   - `VALIDATION_ERROR`: Payload failing DTO class-validator rules (canonical 400 shape).
+   - `SERVER_500`: Simulated unhandled database disconnection or infrastructure panic.
+   - `TIMEOUT`: Simulated external service adapter timeout (`504`/`408`).
+
+## 21. Module Portability & Host Integration Guide
+### 4-Step Host Monolith Integration
+1. **Drop-in Directory Placement**:
+   Copy `{submodule}/` into `src/backend-[role]/[role]-modules/[role]-[domain]/`.
+2. **Aggregator Module Registration**:
+   In `[role]-[domain].module.ts`, add `[Submodule]Module` to the `imports` array:
+   ```typescript
+   @Module({
+     imports: [AttendanceDashboardModule, AttendanceHistoryModule],
+     exports: [AttendanceDashboardModule, AttendanceHistoryModule],
+   })
+   export class ManagerAttendanceModule {}
+   ```
+3. **Database Migration Execution**:
+   Run the sub-module migration files to ensure tables and indexes exist.
+4. **Environment / Token Verification**:
+   Verify required Redis and database environment variables are configured in host `ConfigService`.
+
+## 22. Deliverables & Version History
+### Sub-Module Self-Audit & ZIP Compliance Gate (10/10 Required for Release)
+- [ ] 1. **Autonomous Directory Structure**: All controllers, services, repositories, DTOs live inside `{submodule}-{artifact}/` sub-folders. Zero root business code in parent domain.
+- [ ] 2. **Zero Cross-Submodule Imports**: Sibling submodules do not import each other's `@Module`, `@Injectable()` services, or repositories.
+- [ ] 3. **Standalone Test Harness**: Includes working standalone harness in `harness/` with local seeders, runnable independently using SQLite or mocks without host application.
+- [ ] 4. **Complete DTO & Validation Isolation**: Every input payload is strictly validated using local Class-Validator DTOs; no shared DTOs with sibling submodules.
+- [ ] 5. **Complete Repository & Query Isolation**: All queries live in local repository files with explicit tenant filtering and no leaked ORM entities to controllers.
+- [ ] 6. **Documentation Trio Present & Complete**: Submodule contains `_backend-feature.md` (all 22 canonical sections), `_backend-forbidden.md`, and `_backend-contract.md`.
+- [ ] 7. **Frozen API Contract Verified**: Complete parity with frontend `_features.md` requirements (Rule 82A satisfied).
+- [ ] 8. **Ambient Core Stubs & Machine-Readable Manifest**: Sub-module contains `contracts/core-contracts.stub.ts` and `required-core-contracts.json` declaring host contract consumption within budget (≤ 7).
+- [ ] 9. **Standard 8-State Mock Scenario Catalog**: Harness implements the 8 canonical scenarios (`ACTIVE`, `EMPTY`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `SERVER_500`, `TIMEOUT`).
+- [ ] 10. **AI Portability Guarantee**: Submodule folder can be independently zipped, provided to an external autonomous AI agent, compiled cleanly (`tsc --noEmit`), tested, audited, and repaired in 100% total isolation.
+
+### Version Changelog
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| `1.0.0` | `2026-10-23` | AI Architect | Initial autonomous sub-module creation with complete 22-section spec |
+```
+
+---
+
+### Mandatory `[role]-[submodule]-backend-forbidden.md` Template
+
+Every autonomous sub-module MUST contain a `-backend-forbidden.md` detailing concrete boundary anti-patterns:
+
+```markdown
+# [Role] [Sub-Module Name] Forbidden Invariants & Anti-Patterns
+
+## 1. Sibling Sub-Module Isolation Violations (P0 Architecture Failure)
+- ❌ **FORBIDDEN**: Importing sibling sub-module services, controllers, repositories, or DTOs:
+  `import { AttendanceHistoryService } from '../attendance-history/...'`
+- ❌ **FORBIDDEN**: Importing a sibling's `@Module` inside this sub-module's NestJS module.
+- ❌ **FORBIDDEN**: Injecting a sibling sub-module's service directly into this sub-module's constructors.
+- ✅ **MANDATORY**: Decouple sibling interactions via Domain Events (Redis Streams / Outbox) or an Application Workflow Orchestrator.
+
+## 2. Shared Folder & DRY Violations (P0 Architecture Failure)
+- ❌ **FORBIDDEN**: Creating or importing from domain-level shared folders:
+  `src/backend-manager/manager-modules/manager-attendance/common/`
+  `src/backend-manager/manager-modules/manager-attendance/shared/`
+- ❌ **FORBIDDEN**: Moving business helpers, formatters, or DTOs to parent domain root.
+- ✅ **MANDATORY**: Follow Strict WET Principle. Duplicate helpers, mappers, and DTOs locally within `{submodule}-dto/`, `{submodule}-services/`, and `{submodule}-mappers/`.
+
+## 3. Multi-Tenancy & Security Violations (P0 Security Failure)
+- ❌ **FORBIDDEN**: Accepting `gymId` or `branchId` from request body, query params, or client headers.
+- ❌ **FORBIDDEN**: Executing any database query without explicit tenant filter (`gymId: jwt.gymId`).
+- ❌ **FORBIDDEN**: Exposing internal `gymId` or `branchId` in response DTOs.
+- ✅ **MANDATORY**: Extract tenant identifiers exclusively from the verified JWT payload.
+
+## 4. Database & Query Violations
+- ❌ **FORBIDDEN**: Writing raw unparameterized SQL strings.
+- ❌ **FORBIDDEN**: Leaking TypeORM / ORM entity instances outside the repository layer to controllers.
+- ❌ **FORBIDDEN**: Bypassing soft-delete (`deletedAt IS NULL`) on business entities.
+- ❌ **FORBIDDEN**: Omitting pessimistic locking on concurrent balance or inventory mutations.
+
+## 5. Framework & Controller Violations
+- ❌ **FORBIDDEN**: Returning hardcoded numeric HTTP status codes (e.g., `res.status(200)`). Use `HttpStatus.OK`.
+- ❌ **FORBIDDEN**: Combining command (write) and query (read) endpoints in a single monolithic controller.
+- ❌ **FORBIDDEN**: Using raw `process.env` in services. Use strongly-typed `ConfigService`.
+```
+
+---
+
+### Mandatory `[role]-[submodule]-backend-contract.md` Template
+
+Every autonomous sub-module MUST contain a `-backend-contract.md` freezing its public external interface:
+
+```markdown
+# [Role] [Sub-Module Name] Frozen API & Event Contract
+
+## Public HTTP Endpoints
+### 1. `POST /api/v1/[role]/[submodule]/action`
+- **Request Headers**:
+  - `Authorization: Bearer <jwt>` (Required)
+  - `Idempotency-Key: <uuid>` (Required for mutations)
+- **Request Body (JSON)**:
+  ```json
+  {
+    "name": "string",
+    "amountMinor": 1000
+  }
+  ```
+- **Response Body (JSON - Canonical Envelope)**:
+  ```json
+  {
+    "success": true,
+    "statusCode": 201, // Wire representation of HttpStatus.CREATED (Rule 9/28)
+    "message": "Resource created successfully",
+    "requestId": "123e4567-e89b-12d3-a456-426614174000",
+    "data": {
+      "id": "uuid",
+      "status": "ACTIVE",
+      "createdAt": "2026-10-23T00:00:00.000Z"
+    }
+  }
+  ```
+
+## Emitted Domain Events
+### `[DOMAIN].[ENTITY].[ACTION]`
+- **Topic / Stream**: `[domain]-events`
+- **Payload Schema**:
+  ```json
+  {
+    "eventId": "uuid-v4",
+    "eventName": "[DOMAIN].[ENTITY].[ACTION]",
+    "eventVersion": 1,
+    "tenantScope": {
+      "gymId": "uuid",
+      "branchId": "uuid"
+    },
+    "aggregateId": "uuid",
+    "occurredAt": "2026-10-23T00:00:00.000Z",
+    "correlationId": "uuid",
+    "payload": {
+      "entityId": "uuid",
+      "action": "ACTION_NAME"
+    }
+  }
+  ```
 ```
 
 ## 20. Performance & Network Optimization (Compression, Rate Limiting & Caching)
@@ -1221,12 +1785,27 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
   2. **Response Compression:** Enable gzip/Brotli compression at the framework level (e.g., `compression` middleware in Node.js, `GZipMiddleware` in Django) to drastically reduce JSON response sizes and save bandwidth.
 * **Why:** This ensures the backend remains highly available under load and saves massive amounts of egress bandwidth costs.
 
-## 21. Asset Optimization (The WebP Rule)
-* **The Rule:** Never store unoptimized images (like `.png`, `.jpg`, `.jpeg`, `.bmp`) on the server disk or cloud storage. When an image is uploaded (e.g., a member profile picture), it must immediately be processed, compressed, and converted to `.webp` format before saving.
-* **Why:** WebP reduces image file sizes by up to 80% compared to JPEG/PNG without visible quality loss. This drastically reduces cloud storage costs and speeds up frontend loading times, resulting in a much faster app.
+## 21. Asset Optimization (Modern Delivery Pipeline)
+* **The Rule:** Publicly delivered raster images must use an optimized delivery format selected by the asset pipeline, such as WebP or AVIF, with compatibility fallback only where required.
+* **Why:** Modern compression formats offer 25-50% smaller file sizes than legacy formats at equivalent quality, dramatically improving mobile and web page load speeds, reducing mobile data consumption, and lowering CDN bandwidth costs.
+* **Rules:**
+  1. SVG remains permitted for vector logos, diagrams, and icons.
+  2. Original uploads may be retained privately only when required for legal, reprocessing, or quality purposes.
+  3. Public delivery must use optimized derivatives, never unrestricted raw original uploads.
+  4. Orientation normalization, stripping of unsafe EXIF metadata, malware scanning (Rule 65), and MIME validation are mandatory.
+  5. Mobile clients must receive image variants appropriate to requested dimensions and device/network constraints.
+
 
 ## 22. Security Headers, CORS, & Protection
 * **The Rule:** An enterprise app cannot go to production naked. Always implement security middleware (NestJS: Helmet / framework-approved security middleware, Django: SecurityMiddleware / framework-approved security middleware) to set strict HTTP headers. Configure strict CORS policies (only allowing exact frontend domains). Ensure inputs are stripped of executable scripts (XSS protection) and standard ORMs are used to natively prevent SQL injection.
+
+### Native Mobile CORS Clarification
+CORS is a browser enforcement mechanism. Native React Native clients are not protected by browser CORS in the same way as web clients.
+Therefore:
+- CORS must be strict for browser/web origins.
+- Native app security must rely on JWT/session security, certificate/TLS validation, API authorization, tenant isolation, rate limits, app-version policy, and request abuse controls.
+- CORS must never be treated as a security boundary for native mobile clients.
+
 
 ## 23. Background Jobs & Queues (No Hanging Requests)
 * **The Rule:** An HTTP request should respond in under 500ms. If a user triggers a heavy task (e.g., "Send 1,000 promotional emails", "Generate a 50-page PDF report", "Process a video"), DO NOT process it in the main HTTP thread.
@@ -1333,18 +1912,31 @@ Before marking any migration PASS, ALL of the following MUST be verified with ev
 
 ## 28. Standardized Response Envelope (The API Contract)
 * **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers. Both Success and Error responses must share the EXACT SAME canonical type definition.
-* **The Complete Canonical Schema (all 8 fields — single source of truth):**
+* **The Complete Canonical Schema (Discriminated Union — single source of truth):**
   ```typescript
   // src/core/types/api-response.types.ts
-  export interface ApiResponse<T> {
-    success: boolean;                        // true on 2xx, false on all errors
+  import { HttpStatus } from '@nestjs/common';
+
+  export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+
+  export interface ApiSuccess<T> {
+    success: true;                           // true on 2xx
     message: string;                         // human-readable, always present
-    data: T | null;                          // response payload OR null on error
+    data: T;                                 // payload data
     meta?: PaginationMeta;                   // present only on paginated list responses
-    error?: string;                          // error name / category (e.g. "NOT_FOUND")
-    errorCode?: string;                      // machine-readable DOMAIN.ENTITY.REASON (e.g. "BILLING.SUBSCRIPTION.EXPIRED")
-    statusCode?: number;                     // HTTP status code, present on error responses
-    validationErrors?: ValidationErrorItem[]; // present on canonical 400 validation failures; 422 only when explicitly approved by the endpoint API contract
+    requestId: string;                       // correlation/tracing UUID for observability
+    statusCode?: HttpStatus | number;        // HttpStatus enum in source code; integer over HTTP wire
+  }
+
+  export interface ApiFailure {
+    success: false;                          // false on all errors
+    message: string;                         // human-readable error summary
+    data: null;                              // ALWAYS null on error
+    error: string;                           // error category (e.g. "NOT_FOUND", "VALIDATION_ERROR")
+    errorCode: string;                       // machine-readable DOMAIN.ENTITY.REASON (e.g. "BILLING.SUBSCRIPTION.EXPIRED")
+    statusCode: HttpStatus | number;         // HttpStatus enum in source code; integer over HTTP wire
+    requestId: string;                       // correlation/tracing UUID matching error log
+    validationErrors?: ValidationErrorItem[]; // present on canonical 400 validation failures; 422 only when approved
   }
 
   export interface ValidationErrorItem {
@@ -1358,11 +1950,12 @@ Before marking any migration PASS, ALL of the following MUST be verified with ev
   |---|---|---|---|
   | `success` | `true` | `false` | `false` |
   | `message` | Always present | Always present | Always present |
-  | `data` | Present with payload | `null` | `null` |
+  | `data` | Present with payload `T` | `null` | `null` |
   | `meta` | Present if paginated | Absent | Absent |
+  | `requestId` | Always present (UUID) | Always present (UUID) | Always present (UUID) |
   | `error` | Absent | Present | `"VALIDATION_ERROR"` |
   | `errorCode` | Absent | Present where applicable | `"VALIDATION.DTO.FAILED"` |
-  | `statusCode` | Absent | Present | Present (`400`) |
+  | `statusCode` | Optional / 200/201 | Present | Present (`HttpStatus.BAD_REQUEST` / `400`) |
   | `validationErrors` | Absent | Absent | Present (array of field errors) |
 
 * **Rules:**
@@ -1370,8 +1963,9 @@ Before marking any migration PASS, ALL of the following MUST be verified with ev
   - `validationErrors` is ONLY present on validation failures — never on generic errors.
   - `errorCode` follows `DOMAIN.ENTITY.REASON` in `SCREAMING_SNAKE_CASE` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page). See full definition in Rule 64.
   - `meta` is present only on paginated list responses. For non-paginated lists (e.g., dropdowns), `meta` must be `undefined` — never an empty object `{}`.
+  - **Source vs Wire Form:** In TypeScript code, always type and pass `HttpStatus` enum. Over HTTP transport, the interceptor/filter serializes this to the numeric status code.
 * **Implement via:** A global `ResponseInterceptor` (NestJS) that wraps all successful controller returns. A global `ValidationExceptionFilter` (Rule 98) that transforms `400` errors into the `validationErrors` shape. The AI should NEVER shape the raw response manually inside a controller or service.
-* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. If success and error payloads have totally different shapes, the frontend's generic `ApiResponse<T>` parser becomes brittle. A singular standard envelope with one canonical schema — covering all 8 fields — eliminates all ambiguity and ensures Rules 64 and 98 are never treated as isolated additions.
+* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. If success and error payloads have totally different shapes, the frontend's generic `ApiResponse<T>` parser becomes brittle. A singular standard envelope with one canonical schema — covering all fields — eliminates all ambiguity and ensures Rules 64 and 98 are never treated as isolated additions.
 
 
 ---
@@ -1408,7 +2002,7 @@ Before marking any migration PASS, ALL of the following MUST be verified with ev
 ## 31. Idempotency Keys for Critical Mutations
 * **The Rule:** Any endpoint that triggers a financial transaction, sends a communication, or creates a resource that must never be duplicated MUST support an `Idempotency-Key` request header.
 * **Why:** Networks are unreliable. A client might retry a `POST /payments` request after a timeout, not knowing the first one succeeded. Without idempotency, the member gets double-charged.
-* **Superseded by Rule 103:** *Note: Rule 103 expands this requirement from "critical mutations" to ALL state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`). Rule 103 is the superseding architectural standard and defines the strict atomic/transactional safety contracts that must be implemented. AI agents must follow Rule 103's broader scope and safety constraints.*
+* **Superseded by Rule 103:** Superseded by Rule 103. Rule 103 defines the retry-safe mutation policy: Idempotency-Key is mandatory for duplicate-sensitive, offline-queueable, financial, communication, bulk, asynchronous, and externally side-effecting actions. Naturally idempotent state-setting operations may omit the header only when repeated requests cannot create duplicate side effects.
 
 ---
 
@@ -1541,14 +2135,43 @@ backend-manager/
 * **Architecture Strategy:**
   1. **Master Database:** A central database (e.g., `smart_gym_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single PostgreSQL server infrastructure unless the infrastructure architecture explicitly defines otherwise; do not spin up new physical servers/VPS per tenant).*
-  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
-  4. **Strict Tenant Authorization (CRITICAL):** `x-tenant-id` MUST NOT be trusted merely because the client supplied it. The server MUST verify that the authenticated actor is explicitly authorized to access that tenant in the master database before selecting the tenant DataSource. The flow must be: `Request → Authentication → Tenant Authorization → Trusted Tenant Context → DataSource Resolver`.
-  5. **Connection Pool Limits:** **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
+### Dynamic Connection Routing (Request Scoped)
+
+The backend must resolve the tenant database only from a previously authorized TenantContext. The TenantContext is created only after JWT verification and server-side tenant authorization.
+
+Raw client headers, request body fields, query parameters, route parameters, and unverified claims MUST NOT select a tenant database.
+
+The only trusted tenant resolution flow is:
+`Request → JWT authentication → actor identity validation → server-side tenant authorization → trusted TenantContext creation → tenant database/DataSource resolution`
+
+Rules:
+1. `gymId`, `branchId`, and tenant database identity are derived from the verified JWT and server-side authorization only.
+2. A raw client-supplied `x-tenant-id` header MUST NOT be trusted as an authorization source.
+3. If a platform/superadmin user can switch tenant context, the backend must issue a short-lived server-signed tenant-context token or explicitly embed the approved tenant selection in a newly issued JWT.
+4. The selected tenant context must be written to AsyncLocalStorage only after authorization succeeds.
+5. All database routing must use TenantContext, never raw request headers.
+6. **Connection Pool Limits:** ⚠️ See Rule 63 before implementing this — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
+
 * **How to Apply to Different Frameworks:**
-  - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
+  - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the trusted TenantContext created after JWT authentication and tenant authorization.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
-* **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it can reduce dataset size per tenant and improve isolation/performance characteristics, avoiding massive multi-tenant table bottlenecks.
-* **Tenant DB vs Query Filters (Belt & Suspenders):** Even though Database-per-Tenant provides physical isolation, ALL ORM queries MUST still strictly include `gymId` and `branchId` filters as mandated by Rule 0G. This double-security approach ensures logic remains perfectly isolated and future-proofs the codebase if tenants are ever merged into a shared DB.
+* **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, it reduces dataset size per tenant and avoids multi-tenant table locking bottlenecks.
+* **Tenant DB vs Query Filters (The Canonical Dual-Layer Invariant — Rule 0G):** Even though Database-per-Tenant provides physical infrastructure isolation, ALL ORM queries MUST still strictly bind `gymId` and `branchId` filters into repository query ASTs. This belt-and-suspenders architecture guarantees zero data leakage even in local test harnesses (in-memory SQLite) or during connection pool caching edge cases. To eliminate developer/AI implementation friction, repositories extend the core `TenantAwareRepository<T>` base class which injects these filters automatically.
+
+### Tenant Database Lifecycle and Provisioning
+
+Tenant provisioning must be a resumable, auditable state machine:
+`REQUESTED → PROVISIONING → MIGRATING → VERIFYING → ACTIVE`
+
+Failure states: `PROVISIONING_FAILED`, `MIGRATION_FAILED`, `SUSPENDED`, `DELETION_PENDING`.
+
+Rules:
+1. No tenant traffic may be accepted until migration and version verification are complete.
+2. Provisioning must be idempotent; retries must not create duplicate databases.
+3. The master database must store tenant database identifier, schema version, status, provisioning attempt ID, backup policy, and lifecycle audit history.
+4. Tenant migrations must be versioned and executed through a controlled migration runner.
+5. Tenant DataSource caching must have bounded size, idle eviction, and a total connection-budget calculation across active tenants.
+6. Backup, restore, tenant suspension, archival, legal retention, and deletion flows must be explicitly documented.
 
 ---
 
@@ -1580,7 +2203,7 @@ backend-manager/
 ---
 
 ## 43. True E2E Test Database Isolation & Lifecycle Verification
-* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All subsequent tests must inject this test tenant's ID into the `x-tenant-id` headers.
+* **The Rule:** End-to-End (E2E) test suites must NEVER run against your local development or production databases. Instead, the test suite setup (e.g., `conftest.py`) must dynamically hit the API to create a brand-new, isolated Test Tenant/Database specifically for that test run. All E2E tests must authenticate using a test JWT whose verified claims contain the test tenant identity. Test code may never use `x-tenant-id` as an authorization source.
 * **The Data Lifecycle Rule:** True E2E tests must verify the full CRUD lifecycle within that isolated database. Tests cannot rely on stub IDs. They must:
   1. **POST**: Create a uniquely identifiable record and extract its real ID from the `201` response.
   2. **GET by ID**: Fetch that exact ID and assert `200 OK`.
@@ -1621,29 +2244,55 @@ backend-manager/
 
 ### Single Event Registry Enforcement (NON-NEGOTIABLE)
 
-There MUST be exactly **one** `event-registry.constants.ts` file in the entire codebase, located at:
+There MUST be exactly **one** global `event-registry.constants.ts` file in the entire codebase, located at:
 
 ```
 src/core/event-registry.constants.ts
 ```
 
-Creation of any secondary event registry file is **strictly forbidden**, regardless of intent:
+This file serves as the **Host Monolith Event Registry Aggregator** that validates and standardizes all domain event names across all bounded contexts. Creation of any loose, ad-hoc secondary event registry files at the root, in `src/shared/`, or at the parent domain root is **strictly forbidden**:
 
 ❌ **FORBIDDEN — these MUST NOT exist:**
-- `billing-events.constants.ts`
-- `member-events.ts`
-- `admin-event-registry.ts`
-- Any file attempting to define a subset of domain events outside the central registry
+- `src/billing-events.constants.ts`
+- `src/common/member-events.ts`
+- `src/backend-admin/admin-event-registry.ts`
+- `src/backend-manager/manager-modules/manager-attendance/attendance-events.ts` (domain root event file banned)
+- Any loose file attempting to define a secondary global event registry
 
-When a new event is needed, the AI MUST add it to the existing `src/core/event-registry.constants.ts` — never create a new file. If a secondary event registry file is discovered during an audit, it MUST be flagged as an architecture violation and its contents merged into the central registry.
+When a new domain event is created for the host, the AI MUST register it in `src/core/event-registry.constants.ts`. If a secondary loose event registry file is discovered during an audit, it MUST be flagged as an architecture violation and its contents merged into the central registry.
 
-> **AI AGENT NOTE:** Before emitting or consuming any event, verify the event name exists in `src/core/event-registry.constants.ts`. If it does not exist, add it there — never inline the string or create a parallel constants file.
+**Sub-Module Local Event Constants Invariant (Rule 0A.2 Item 7):**
+Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2 Item 7), an autonomous sub-module defines its locally emitted/consumed event string constants within its own `{submodule}-constants/[role]-[submodule].events.ts` file (and in `contracts/core-contracts.stub.ts` for ambient event typing) so that the sub-module can be zipped and compiled (`tsc --noEmit`) and tested completely offline without importing host monolith files. When integrating into the host monolith, the host's `src/core/event-registry.constants.ts` aggregates or imports these sub-module event constants to guarantee system-wide contract integrity.
+
+> **AI AGENT NOTE:** Before emitting or consuming any event at the host level, verify the event name exists in `src/core/event-registry.constants.ts`. Within an isolated autonomous sub-module, define emitted events locally in `{submodule}-constants/` and declare them in `required-core-contracts.json` per Rule 0A.2 Item 7.
 
 ## 51. API Changelog, Deprecation Policy & Consolidated Integration Guide
 * **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in Section 2 (Endpoint Preservation & DTO Matrix) and Section 1 (Changelog) of the consolidated `INTEGRATION_GUIDE.md` at the root of the delivery ZIP, and maintain it for the deprecation window. Never scatter separate loose changelog or migration markdown files at the root of the delivery package.
 
-## 52. JWT Refresh Token Rotation & Revocation
-* **The Rule:** Access tokens must be short-lived. Refresh tokens must be stored in HttpOnly cookies. On every refresh, the old token must be rotated/invalidated. A Redis denylist must exist for immediate manual revocation.
+## 52. JWT Session, Refresh Rotation, Revocation, and Mobile Storage Policy
+
+Access tokens must be short-lived (e.g., 15 minutes).
+
+Refresh tokens must rotate on every successful refresh. Reuse of an already-rotated refresh token must revoke the affected device session, flag the event, and initiate the breach-containment protocol.
+
+### Web client policy
+- Refresh tokens must use Secure, HttpOnly, SameSite cookies.
+- The browser must never access refresh-token values through JavaScript.
+
+### React Native / native mobile policy
+- Refresh tokens must be stored only in the operating system secure credential store such as iOS Keychain or Android Keystore-backed secure storage (`react-native-keychain`).
+- Refresh tokens must never be stored in AsyncStorage, Redux/Zustand state, logs, crash reports, plain files, screenshots, or deep-link URLs.
+- Each refresh token must be bound to a device session identifier (`deviceSessionId`).
+- The backend must support per-device session revocation and global user-session revocation.
+- Access tokens should remain in memory where practical and must not be persisted unless a documented platform security decision explicitly approves it.
+
+### Common backend requirements
+1. Store refresh-token hashes only; never persist raw refresh tokens in the database.
+2. Maintain token/session revocation state in Redis with durable database reconciliation.
+3. Include token family, device session ID, issued time, expiry, and rotation metadata.
+4. Log token reuse and forced session revocation in the immutable audit trail.
+5. Never return refresh tokens in logs, error responses, analytics events, or Swagger examples.
+
 
 ## 53. Sensitive Field Encryption at Rest
 * **The Rule:** Aadhaar numbers, bank accounts, and medical notes MUST be encrypted at the application layer (AES-256) before hitting the DB. Use an `@Encrypted` decorator or EncryptionService. Hash is not enough.
@@ -1683,13 +2332,17 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 * Immutable event and financial records MUST bypass soft-delete filtering while remaining permanently append-only.
 
 ## 59. API Response Time SLA Categories
-* **The Rule:** Every endpoint MUST declare its SLA category in a comment at the top of the controller method body:
-  - NestJS: `// SLA: FAST` / `// SLA: STANDARD` / `// SLA: HEAVY`
-  - Django: `# SLA: FAST` / `# SLA: STANDARD` / `# SLA: HEAVY`
-  - FAST = target < 200ms, STANDARD = target < 500ms, HEAVY = target > 500ms
-* **Consequence of omission:** Missing SLA declarations make it impossible for AI agents to detect when a feature violates its response budget — leading to undetected performance regressions in production.
-* **Enforcement gate:** Any endpoint marked `HEAVY` that is NOT backed by a background job (Rule 23) = `NON_COMPLIANT`. A synchronous `HEAVY` endpoint MUST be refactored to return `202 Accepted` + background job before it can be marked `COMPLIANT`.
-* **Timeout alignment (Rule 97):** The SLA category MUST align with the timeout configuration — a `FAST` endpoint cannot have a downstream call with a 5-second timeout.
+
+Every API endpoint must be categorized into an SLA tier and declared in OpenAPI metadata or a central endpoint performance registry (`endpoint-sla.registry.ts`). A code comment is supplementary only and is not authoritative.
+
+SLA Tiers:
+- **Tier 1 — Real-Time (< 50ms):** Auth validation, health checks, cached reads, toggle flags.
+- **Tier 2 — Standard CRUD (< 200ms):** Single-entity CRUD, paginated lists (< 20 items), simple filters.
+- **Tier 3 — Complex Operations (< 800ms):** Aggregations, multi-table joins, search queries, report previews.
+- **Tier 4 — Async / Background (> 800ms):** Heavy exports, bulk imports, PDF generation, external API calls. Must return `202 Accepted` immediately with a `jobId`.
+
+The SLA declaration must be validated by automated tests or CI configuration.
+
 
 ## 60. Strict Foreign Key Naming Convention
 * **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition.
@@ -1707,7 +2360,26 @@ When a new event is needed, the AI MUST add it to the existing `src/core/event-r
 * **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<ManagerMembersDomainModel>`).
 
 ## 63. Database Connection Pool Configuration
-* **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
+
+Default database connection-pool settings are forbidden.
+
+The project must configure an explicit total connection budget, pool-size limit, connection-acquisition timeout, idle timeout, database statement timeout, and transaction timeout using the exact configuration shape supported by the installed TypeORM and PostgreSQL driver versions.
+
+AI agents MUST verify the installed package versions and official project configuration before selecting option names. They MUST NOT assume that one TypeORM or PostgreSQL pool option name works across every version.
+
+* **NestJS / TypeORM:**
+  ```typescript
+  // Configure pool options compatible with pg driver & TypeORM DataSource
+  extra: {
+    max: 20,                       // Maximum connections in pool per active DataSource
+    min: 5,                        // Minimum idle connections
+    idleTimeoutMillis: 30000,      // Close idle connections after 30s
+    connectionTimeoutMillis: 5000, // Fail if connection not acquired in 5s
+    statement_timeout: 10000,      // Terminate any query that takes longer than 10 seconds
+  }
+  ```
+* **Critical for Multi-Tenancy (Rule 39):** The connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Applying `max: 20` blindly per tenant DataSource will exhaust the PostgreSQL server's `max_connections` ceiling. Tenant pools must use smaller pools (e.g. `max: 5-10`), idle eviction, and bounded LRU DataSource caching.
+
 
 ## 64. Structured Machine-Readable Error Codes
 * **The Rule:** Error responses must include a machine-readable `errorCode` string following `DOMAIN.ENTITY.REASON` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page).
@@ -1767,6 +2439,14 @@ Backend implementation (services, repositories, DB queries)
 * **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion for display purposes should happen purely on the frontend.
 * **API Transmission:** All dates and timestamps MUST be serialized and returned in API responses strictly as **ISO-8601 formatted strings** (e.g., `2023-10-25T10:30:00Z`). Never return raw Unix epoch milliseconds or local date strings to the frontend.
 
+### Tenant Business Timezone Rule
+
+UTC remains mandatory for timestamp storage and API timestamp transmission.
+
+However, every tenant must have an explicit IANA business timezone, for example `Asia/Kolkata`. Backend business calculations involving attendance day boundaries, membership expiry dates, business opening hours, invoice cutoffs, scheduled notifications, and daily reports MUST use the tenant business timezone, never the individual mobile device timezone.
+
+Date-only business fields MUST use `YYYY-MM-DD` and must not be converted into UTC timestamps merely for storage convenience.
+
 ## 72. Per-Endpoint Payload Size Limits
 * **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
 
@@ -1793,6 +2473,17 @@ Backend implementation (services, repositories, DB queries)
 | Entity/DTO (`*.entity.ts`, `*.dto.ts`) | **150 lines** | Split into multiple focused DTOs |
 | Module Config (`*.module.ts`) | **100 lines** | Review imports — barrel file may have crept in (Rule 84) |
 | Utilities/Mappers | **120 lines** | Split into focused mapper/utility files |
+
+### Controlled File-Size Exception Process
+
+When a complex domain service, atomic transaction sequence, state machine, or data mapper legitimately requires exceeding the line ceiling, the AI MUST NOT perform an uncontrolled, arbitrary split.
+
+Instead, the AI MUST follow this controlled exception process:
+1. Document the exception in the feature's `_features.md` under `## Architecture Exceptions`;
+2. Record the exact justification (e.g., preserving atomic database transaction boundary, state transition table);
+3. Cap the exception at a strict maximum of 1.5x the standard ceiling (e.g., maximum 450 lines for a Service, 300 lines for a Controller);
+4. Flag the file with `// ARCHITECTURE-EXCEPTION: Rule 75 [justification] [review-date]`;
+5. Any file exceeding 1.5x of the ceiling is `NON_COMPLIANT` without exception and must be structurally refactored.
 
 ## 76. Strict File Responsibility Contract
 * **The Rule:** Every backend controller, service, or repository MUST start with a single-line comment at the very top of the file explicitly defining its boundary. (e.g., `// RESPONSIBILITY: Processes incoming Stripe webhooks and emits EVENT_PAYMENT_SUCCESS. No direct DB writes.`). This instantly grounds the AI's context when reading the file.
@@ -1973,6 +2664,15 @@ Backend implementation (services, repositories, DB queries)
 
 ---
 
+### Production Safety Constraints for Stubs
+A stub endpoint must never be enabled in staging or production when it can mutate data, simulate payment success, return misleading security-sensitive data, or create a false operational expectation.
+Stub endpoints must:
+- Be read-only unless explicitly approved for non-production sandboxes.
+- Return an explicit non-production/stub indicator header (`X-Stub-Response: true`) in development environments.
+- Be disabled or replaced before production release.
+- Have contract tests proving response parity with the final endpoint.
+
+
 ## 82. Strict Discriminated Union Response Rule (No Ambiguous `data` Shapes)
 * **The Rule:** The `data` field in the standardized API envelope (Rule 28) MUST always be a **single, explicitly typed value** — never a polymorphic bag of mixed objects. The shape of `data` on success MUST be identical in structure regardless of the execution path.
   - ❌ **BAD (Ambiguous):** `data: { member: ManagerMembersResponseDto, invoice: AdminBillingInvoiceResponseDto }` — the frontend `ApiResponse<T>` generic breaks because `T` is not a single entity.
@@ -2081,6 +2781,14 @@ If a backend implementation cannot provide a field currently required by the fro
 
 ## 83. Centralized RBAC / Permission Guards (Role-Based Access Control)
 * **The Rule:** Role and permission checks must NEVER be done inline inside service methods or repository layers (e.g., `if (user.role === 'admin')`). Permission enforcement is strictly a **controller-layer concern** and must be implemented using centralized, declarative guards or decorators.
+
+### Non-HTTP Execution Authorization
+
+Controller guards are the primary authorization boundary for HTTP requests.
+
+For workers, event consumers, scheduled jobs, webhooks, retry processors, and internal commands, authorization and tenant scope MUST be validated using a dedicated application-policy service and a trusted execution context.
+
+Services and repositories MUST NOT contain ad-hoc inline role checks. However, critical domain operations may require an explicit trusted actor/context object so the operation cannot execute without verified authorization, tenant scope, correlation ID, and execution source.
 * **How to implement per framework:**
   - **NestJS:** Use a `@Roles(...)` custom decorator paired with a global `RolesGuard` that reads the JWT payload. Never check `req.user.role` inside a service.
   - **Django:** Use Django REST Framework's `IsAuthenticated` + custom `Permission` classes (e.g., `IsAdminOrManager`). Never check `request.user.is_staff` inside a view's business logic.
@@ -2091,6 +2799,8 @@ If a backend implementation cannot provide a field currently required by the fro
 * **Why:** Client-side visibility is not authorization. The backend MUST independently enforce authentication, role, resource, and tenant authorization. An AI writing a new endpoint will forget to add auth checks if there is no standard, centralized pattern to follow. A declarative decorator is impossible to forget because it's visible at the route definition.
 
 ---
+
+
 
 ## 84. No Barrel File / Re-Export Index Rule & Facade Naming
 * **The Rule:** Strictly avoid using `index.ts` or `index.js` files to re-export modules (barrel files). This restriction exists to preserve AI context isolation and prevent dependency expansion. Always import directly from the explicitly named source file.
@@ -2268,6 +2978,25 @@ All domain models MUST live inside the owning module's `{module}-domain/` sub-fo
 
 ---
 
+## AI Enforcement Principle
+
+No AI agent can be trusted to enforce architecture rules by instruction alone.
+
+Every high-risk architecture requirement must have at least one mechanical control:
+- ESLint/import boundary rule
+- TypeScript strict compilation
+- unit test
+- API contract test
+- E2E tenant-isolation test
+- database constraint
+- migration validation
+- CI gate
+- CODEOWNERS review
+- pre-commit secret scan
+
+If a rule cannot be mechanically enforced, the feature documentation must identify the responsible human review gate.
+
+
 ## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Commit)
 * **The Rule:** The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git commit`. A pre-push hook is an optional additional gate, but pre-commit is mandatory. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
 * **Required Pre-Commit Checks (must all pass):**
@@ -2338,8 +3067,9 @@ All domain models MUST live inside the owning module's `{module}-domain/` sub-fo
   3. **Payment & Financial Mutations** — Any code that triggers charges, refunds, wallet deductions, or invoice generation.
   4. **Database Migration Files** — Any migration that adds `NOT NULL`, drops a column, or modifies a primary key. (Rule 24).
   5. **Webhook Signature Verification** — Any code in webhook handlers that verifies HMAC/cryptographic signatures (Rule 45). A bypass here allows forged payment/delivery events to trigger real financial or state-changing actions — the risk is equivalent to a direct payment mutation.
-  6. **Tenant Provisioning & Connection Routing** — Any code that creates a new tenant database, runs migrations programmatically, or resolves the `x-tenant-id` to a DataSource (Rule 39). A bug here risks cross-tenant data leakage — the single most severe failure mode in this architecture. This includes both the provisioning flow AND any modification to the request-scoped connection resolver.
+  6. **Tenant Provisioning & Connection Routing** — Any code that creates a new tenant database, runs migrations programmatically, or resolves an authorized TenantContext to a tenant DataSource (Rule 39). A bug here risks cross-tenant data leakage — the single most severe failure mode in this architecture. This includes both the provisioning flow AND any modification to the request-scoped connection resolver.
 * **Implementation:** In GitHub/GitLab, create a `CODEOWNERS` file mapping these folders to specific human reviewers. PRs touching these paths cannot be merged without a human approval even if all CI gates pass.
+* **Non-Blocking During AI Development:** This gate applies strictly at Git Pull Request / deployment time before merging into protected branches. It does NOT halt, pause, or block local AI development. AI agents MUST generate the complete source code, comprehensive unit/integration tests, and the mandatory `## Security Impact Analysis` markdown section autonomously without pausing, stalling, or asking for permission during code generation.
 * **PR Description Mandate:** Any PR touching these modules MUST include a section titled `## Security Impact Analysis` explaining what changed, what the risk surface is, and why the change is safe.
 * **Why:** AI code suggestions can frequently introduce security vulnerabilities, especially in security-critical paths. An AI agent might generate a logically correct but cryptographically weak JWT validation, or a permission guard with a subtle bypass. Automated tools cannot catch all semantic security flaws — a human security review is the final, non-negotiable gate.
 
@@ -2457,8 +3187,8 @@ When adding a new enum value, a database migration MUST be generated to update t
   export const SCHEDULED_JOBS_REGISTRY = [
     {
       name: 'MembershipExpiryNotifier',
-      module: 'members',
-      file: 'src/backend-manager/manager-modules/manager-members/members-jobs/manager-members-expiry-notifier.job.ts',
+      module: 'members-roster',
+      file: 'src/backend-manager/manager-modules/manager-members/members-roster/roster-jobs/manager-members-roster-expiry-notifier.job.ts',
       schedule: '0 9 * * *',          // Every day at 9:00 AM UTC
       description: 'Sends renewal reminder notifications to members whose membership expires in 3 days.',
       touchesEntities: ['members', 'notifications'],
@@ -2468,8 +3198,8 @@ When adding a new enum value, a database migration MUST be generated to update t
     },
     {
       name: 'WalletAutoDeductionJob',
-      module: 'billing',
-      file: 'src/backend-manager/manager-modules/manager-billing/billing-jobs/manager-billing-wallet-auto-deduction.job.ts',
+      module: 'billing-subscriptions',
+      file: 'src/backend-manager/manager-modules/manager-billing/billing-subscriptions/subscriptions-jobs/manager-billing-subscriptions-wallet-auto-deduction.job.ts',
       schedule: '0 0 1 * *',          // 1st of every month at midnight UTC
       description: 'Auto-deducts monthly plan fees from member wallets for active auto-renew subscriptions.',
       touchesEntities: ['wallets', 'subscriptions', 'payment_transactions'],
@@ -2540,7 +3270,8 @@ When adding a new enum value, a database migration MUST be generated to update t
     "data": null,
     "error": "VALIDATION_ERROR",
     "errorCode": "VALIDATION.DTO.FAILED",
-    "statusCode": 400,
+    "statusCode": 400, // Wire representation of HttpStatus.BAD_REQUEST (Rule 9/28)
+    "requestId": "123e4567-e89b-12d3-a456-426614174000",
     "validationErrors": [
       { "field": "email",    "message": "email must be a valid email address" },
       { "field": "phone",    "message": "phone must not be empty" },
@@ -2772,27 +3503,32 @@ All imports and file paths MUST exactly match the casing of the actual file on d
 * **Django implementation:** Use `class Meta: db_table = 'prefix_table'`. Always explicitly hardcode the name rather than relying on app-label prefixing defaults.
 * **Why:** A global Naming Strategy (like implicit global naming strategies) blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin-gyms`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.
 
-## Rule 103 — Strict Mutational Idempotency (The `@RequireIdempotencyKey` Rule)
+## Rule 103 — Retry-Safe Mutation and Idempotency Contract
 
-All state-mutating endpoints (`POST`, `PATCH`, `PUT`, `DELETE`) across the entire backend architecture MUST enforce strict idempotency.
-This is a non-negotiable enterprise requirement designed to prevent duplicate payments, duplicate record creation, and partial transaction failures from network retries.
+Every mutation endpoint must declare whether it is naturally idempotent, idempotency-key protected, or intentionally non-retriable.
 
-### NestJS implementation
-Use the centralized `@RequireIdempotencyKey()` decorator/interceptor. The decorator automatically intercepts the request, checks for the `Idempotency-Key` HTTP header, and rejects requests that omit it with a `400 Bad Request`.
+### Idempotency-Key is mandatory for:
+- Financial mutations (payments, refunds, wallet top-ups, deductions)
+- Payment initiation, capture, refund, wallet top-up, and wallet deduction
+- Resource creation where retry could create duplicates (member registration, plan creation)
+- Communication sending (SMS, WhatsApp, Email, Push)
+- Bulk batch actions
+- Offline-queueable mobile mutations
+- Any endpoint that triggers an external side effect (Stripe, payment gateway webhooks)
+- Any endpoint returning `202 Accepted` for asynchronous work
 
-### Django implementation
-Use the project's centralized middleware/decorator/request enforcement mechanism to enforce the same Idempotency-Key contract.
+### Naturally idempotent operations
+A PUT, PATCH, or DELETE endpoint may omit `Idempotency-Key` only if repeated requests with the same desired state cannot create duplicate side effects (e.g., updating a member's profile address to fixed values, setting `is_active = false`).
 
-### Framework-independent requirements
-- all POST/PATCH/PUT/DELETE mutations require the key
-- missing key is rejected
-- request-body hash must match on retry
-- same key = same operation
-- Atomic Concurrency Lock: perform an atomic check-and-set (e.g., using Redis `SETNX`) to establish an "in-progress" lock. Concurrent requests with the same key MUST wait or be rejected immediately with `409 Conflict`.
-- completion recorded only after DB commit (storing the final response payload)
-- fail closed if the idempotency store is unavailable (return `503 Service Unavailable`)
-- Idempotency must be enforced at the Command Controller level (e.g. `[role]-[module]-command.controller.ts`), never buried inside the service layer.
-- `GET` endpoints must NEVER require an idempotency key, as they are natively safe and read-only.
+### Server-side requirements
+1. Idempotency records must be stored durably in PostgreSQL (`idempotency_keys` table), not only in Redis.
+2. Enforce a unique constraint on: `actorId + tenantScope + endpoint + idempotencyKey`.
+3. Store request fingerprint (body hash), final status, and complete final response.
+4. A repeated matching request returns the original cached response with `X-Cache: IDEMPOTENCY_HIT`.
+5. A repeated key with a different payload returns HTTP 409 Conflict with `errorCode: IDEMPOTENCY.KEY.PAYLOAD_MISMATCH`.
+6. Redis distributed locking (`SETNX` with TTL) must be used to prevent race conditions while the first request executes, but PostgreSQL remains the durable source of truth.
+7. Payment provider idempotency keys must also be propagated where supported.
+8. `GET` endpoints must NEVER require an idempotency key.
 
 ## Rule 104 — WebSockets & Real-Time Communication
 * **The Rule:** Any real-time push functionality (like live messaging, active session counts, or live notifications) MUST be implemented using a horizontally scalable WebSocket architecture. 
@@ -2982,6 +3718,7 @@ This is the **authoritative list of languages** this project supports. There is 
 ## Rule 108 — Centralized Feature Flags
 * **The Rule:** Toggling business logic branches based on environment variables (e.g., `if (process.env.ENABLE_NEW_BILLING)`) is strictly forbidden.
 * **Implementation:** Always use a centralized `{role}-core-feature-flag.service.ts` (e.g. `AdminCoreFeatureFlagService`, backed by the master database or an external provider like LaunchDarkly). Feature flags must be evaluated dynamically per-tenant, allowing gradual rollouts, canary deployments, and per-gym toggles without requiring a server restart.
+* **Framework Infrastructure Classification (Rule 2 Harmony):** Although Rule 2 restricts `{role}-core/` to framework infrastructure with zero domain business logic, the feature flag resolution mechanism (`{role}-core-feature-flag.service.ts`) qualifies as cross-cutting framework infrastructure because it provides tenant/user evaluation plumbing, caching, and LaunchDarkly/DB provider integration without containing any domain business rules or entity logic. Business modules consume this service via contract injection to query flag state (e.g., `this.featureFlagService.isEnabled('tenant-123', 'ENABLE_NEW_BILLING')`).
 
 
 ## Rule 109 — Multi-Currency Monetary Amounts
@@ -3149,9 +3886,28 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
 
 **Why:** E2E and Selenium tests frequently become a tangled, brittle web of shared fixtures and helpers. If an AI agent modifies a shared authentication helper to fix a broken Manager test, it risks silently breaking the entire Admin E2E suite. Complete isolation ensures that test fixes remain highly localized and AI context is minimized. Tests must be real and resilient, not just "green" checkboxes.
 
-## Rule 113 — No AI Runtime Verification Requirement
+## Rule 113 — No AI Runtime Verification Requirement & Capability-Truth Delivery Rule
 * **The Rule:** AI agents are NOT required to execute code, run servers, or perform runtime verification to validate their changes, as they often lack the necessary local environment variables, database connections, or API keys.
 * **The Expectation:** Instead of failing or complaining about missing environments, the AI MUST rely on its deep knowledge of the framework, TypeScript, and these architectural guidelines to write syntactically and logically correct code. The AI should aim to write code that is "correct by construction" so that when the human developer runs it locally, it works with zero or minimal issues. Do not attempt to spin up local servers or run `npm run start` if the environment is incomplete.
+
+### Capability-Truth Delivery Resolution Rule
+
+AI agents MUST declare delivery truth based strictly on actual tool execution evidence:
+
+1. Test Execution Truth:
+   - The AI MUST NEVER fabricate, simulate, or hallucinate test execution results, coverage metrics, or CI pipeline success.
+   - If Jest or pytest was not executed via a terminal command tool in the current session, the AI MUST report status as `DEFERRED_TO_HOST_RUNTIME` or `STATIC_STRUCTURE_VERIFIED`.
+   - Claiming tests passed without terminal execution evidence is a P0 Compliance Failure.
+
+2. Artifact Delivery Truth:
+   Every backend repair or delivery MUST declare exactly one delivery status:
+   - `VERIFIED_DELIVERED_ZIP`: Valid ZIP archive generated, written to disk, and verified.
+   - `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING`: All source files, migrations, DTOs, and tests created/modified in workspace tree; host packaging deferred.
+   - `SOURCE_COMPLETE_LOCAL_TREE_VERIFIED`: Source tree verified in-place; no ZIP requested.
+   - `PARTIALLY_DELIVERED_BLOCKED`: Some deliverables blocked by missing contracts or unresolvable imports.
+   - `FAILED_DELIVERY_ENVIRONMENT_LIMITATION`: Tooling or file-system error prevented delivery.
+
+The AI MUST NOT claim `VERIFIED_DELIVERED_ZIP` unless file-writing tool evidence confirms the ZIP exists on disk.
 
 ## Rule 114 — Dashboard & UI Data APIs (Avoid "Mega APIs")
 * **The Rule:** Never create a single "Mega API" endpoint that fetches an entire dashboard's worth of data (e.g., all KPIs, all charts, and all recent table lists) in one massive response payload. You MUST fragment complex dashboards into **widget-based / feature-sliced APIs** (e.g., `/dashboard/kpis`, `/dashboard/charts`, `/dashboard/recent-members`).
@@ -3175,18 +3931,28 @@ The "Extreme Isolation" and "WET over DRY" principles apply just as strictly to 
   3. **Side Effects:** Mention cache invalidations, webhooks, or event emissions.
   4. **AI Notes (Crucial):** Required documentation metadata, warnings, or routing instructions for future AIs.
 
-## Rule 116 - MCP-Ready API Design & AI Introspection
+## Rule 116 — OpenAPI Documentation and MCP-Ready API Design
 * **The Rule:** The backend must be designed to be "Self-Discoverable" by autonomous AI agents via the **Model Context Protocol (MCP)**. 
 * **NestJS implementation:** Every REST endpoint, DTO, and Response object/schema must be heavily annotated using Swagger decorators (`@ApiProperty`, `@ApiOperation`, `@ApiResponse`).
 * **Django implementation:** Every REST endpoint, Serializer, and Response object/schema must be heavily annotated using OpenAPI decorators (e.g., `drf-spectacular`'s `@extend_schema`).
 * **Framework-independent requirement:** The resulting OpenAPI/Swagger schema must be 100% strictly typed with no missing fields, explicitly documenting the response payload structure.
 * **Why:** This allows an MCP Server to ingest the backend's API specification and dynamically convert all your endpoints into **LLM Tools**. An AI agent can then connect to your backend and intuitively execute commands (e.g., `create_member`, `fetch_dashboard_kpis`) natively, treating your backend as an extension of its own brain rather than just static code.
 
-## Rule 117 - RAG-Ready API Projections (LLM / Chatbot Optimization)
-* **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot.
-* **The Rule:** The backend must support "RAG-Ready" API projections for AI agents and Chatbots. However, you MUST NOT create a generic root-level `_rag` namespace, as this violates Rule 0D (Strict API Namespacing). RAG endpoints must remain strictly within their role and module boundary.
-* **Implementation:** You must expose these endpoints either via a dedicated sub-route within the module (e.g., `/api/v1/manager/members/rag`) or via a strict query parameter on the primary endpoint (e.g., `/api/v1/manager/members?format=rag`). These RAG-ready endpoints must return highly compressed, "Token-Optimized Markdown" or flattened textual representations of the data instead of deep JSON trees. (e.g., Returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line JSON object).
-* **Why:** This drastically reduces token costs and hallucinations when feeding user context into the LLM context window.
+## Rule 117 — Universal RAG-Ready API Projections (All Query Endpoints)
+* **The Problem:** Standard REST JSON responses contain excessive noise (UUIDs, nested metadata, timestamps) that waste LLM tokens and degrade AI comprehension when used by an internal Chatbot or AI agent.
+* **The Rule:** ALL read/query endpoints (`GET`) across all backend modules MUST support RAG-Ready API projections out-of-the-box. This is a universal architectural standard for all query endpoints — AI agents MUST implement this natively without pausing, asking for approval, or delaying development.
+* **Implementation (Autonomous Sub-Module Local RAG Formatter Pattern):** 
+  1. Every `GET` endpoint must support the query parameter `?format=rag`.
+  2. When `?format=rag` is omitted or false, the endpoint returns the standard JSON response envelope (`ApiResponse<T>`).
+  3. When `?format=rag=true` (or `?format=rag`) is passed, the endpoint returns a clean, token-optimized Markdown or flattened plain-text representation of the resource (e.g., returning `"Member: Rahul | Status: Active | Plan Expires: 5 Days"` instead of a 50-line nested JSON tree).
+  4. **Autonomous Sub-Module Self-Containment (Zero Global Helpers):** The sub-module implements its RAG projection locally within its own `{submodule}-mappers/{submodule}-rag.mapper.ts` (e.g. `attendance-history-rag.mapper.ts`) with ZERO external formatting dependencies. It directly serializes entity models into clean, deterministic markdown bullet points. An external AI receiving ONLY this sub-module folder can infer, run, test, and repair the RAG formatter without external platform utilities.
+  5. RAG endpoints remain strictly within their role and module boundary; do NOT create a generic root-level `_rag` namespace.
+* **Automated Security & Sanitization (Zero-Delay Built-in Protection):**
+  - Tenant isolation is strictly preserved: RAG projections automatically inherit the query's tenant filter (`gymId`, `branchId` from JWT).
+  - Sensitive fields are automatically excluded: Passwords, password hashes, credit card tokens, secret keys, internal salts, and any field marked with `@Exclude()` or serializer exclusion are stripped automatically.
+  - Read-Only Scope: Mutating endpoints (`POST`, `PUT`, `PATCH`, `DELETE`) do NOT accept `?format=rag` because they are write operations.
+* **Why:** This drastically reduces token costs and hallucinations when feeding entity context into LLMs and Chatbots, while avoiding any human approval bottlenecks during development.
+
 
 ## Rule 118 - Event-Driven Immutable Analytics (Zero-Overwrite Strategy)
 * **The Problem:** Standard CRUD operations (like updating a subscription status from 'Active' to 'Cancelled') overwrite historical state, completely destroying the ability to perform deep, time-series analytics (e.g., "How many users cancelled exactly on day 14?").
@@ -3202,6 +3968,91 @@ While the ledger is the absolute source of truth and balances must never be muta
 * **The Rule:** NEVER update a financial balance directly. Any monetary transaction (POS purchase, subscription prorating, refund, wallet top-up) MUST follow the **Immutable Double-Entry Ledger Pattern**. 
 * **Implementation:** You must insert rows into a `ledger_entries` table for every transaction. Ledger rows are immutable (no `UPDATE` or `DELETE`); corrections require a reversal journal entry. The schema must require: `journal_id` (unique reference for atomicity), `account_id`, `direction` (DEBIT | CREDIT), and `amount_minor_units` (always > 0). The transaction must guarantee `total_debits == total_credits`. The current balance is dynamically calculated. 
 * **Why:** This provides a strong accounting control and makes unbalanced journals detectable/preventable when enforced transactionally, providing a perfect, tamper-proof audit trail for accounting.
+
+---
+
+## 120. Mobile Client Compatibility Contract
+
+The backend must support released mobile app versions for a documented compatibility window. A backend change must never silently break an installed React Native app.
+
+Every mobile request may include:
+- `X-Client-Platform`: `IOS` or `ANDROID`
+- `X-Client-Version`: semantic app version (e.g., `1.4.2`)
+- `X-Request-Id`: client-generated UUID for support and correlation
+
+Rules:
+1. These headers are observability/compatibility metadata only and must never decide authorization or tenant identity.
+2. Breaking API changes require a new API version (`/api/v2/`) or a documented deprecation period.
+3. If an app version must be blocked for security or data-integrity reasons, return a canonical error response with:
+   `errorCode: CLIENT.APP.UPGRADE_REQUIRED` (HTTP 426 Upgrade Required).
+4. The response must contain the minimum supported version and an optional store URL only when defined by the frozen API contract.
+5. Mobile app version information must be included in structured logs and traces but must not include device secrets or personal data.
+
+---
+
+## 121. Offline Sync, Delta Synchronization, and Conflict Resolution
+
+Any feature intended for offline or unstable-network use must define an explicit sync contract in its `{role}-{module}-backend-feature.md`.
+
+The contract must define:
+- Whether offline writes are supported
+- Sync cursor format and expiry
+- Delta endpoint behavior
+- Deletion/tombstone behavior
+- Conflict strategy
+- Retry/idempotency behavior
+- Maximum sync page size
+- Sensitive data excluded from offline storage
+
+Rules:
+1. Sync endpoints must return deltas, not full historical datasets by default.
+2. Soft-deleted records must be represented as tombstones (`is_deleted: true`, `deleted_at: string`) so the mobile client can cleanly purge local cached data.
+3. Every offline mutation must use Rule 103 retry-safe idempotency.
+4. Conflicting writes must return a canonical `409 Conflict` response with a stable error code such as `SYNC.ENTITY.VERSION_CONFLICT`.
+5. The feature documentation must explicitly declare one conflict strategy: server-wins, client-wins, last-write-wins with versioning, merge-by-field, or manual-resolution-required.
+6. Use server-controlled version/revision fields for conflict detection. Do not trust client timestamps as the authoritative ordering source.
+7. Cursor pagination should be available for large feeds, timelines, activity logs, and synchronization endpoints. Offset pagination remains acceptable for normal administrative tables.
+
+---
+
+## 122. Mobile Upload and Download Resilience
+
+Mobile upload endpoints must account for slow networks, application backgrounding, network switching, retry behavior, and duplicate completion callbacks.
+
+Rules:
+1. Uploads above the normal request payload threshold must use an approved resumable or pre-authorized upload flow (S3 signed URLs).
+2. File metadata creation and file binary upload completion must be separate, idempotent steps.
+3. The backend must verify MIME type, file size, checksum where applicable, ownership, and tenant scope before marking an upload usable.
+4. Files must remain in `PENDING_UPLOAD`, `PROCESSING`, `READY`, or `FAILED` states.
+5. The client must not assume an upload is ready immediately after binary transfer.
+6. Signed upload/download URLs must be short-lived (e.g. 15 minutes) and scoped to one actor and one object.
+7. Original filenames must not be used as storage keys.
+8. Any file-processing failure must expose a stable machine-readable error code.
+
+---
+
+## 123. Mobile Push Notification Device Registration
+
+Push device registration must be treated as a tenant-scoped and user-scoped security resource, not as an anonymous string.
+
+Rules:
+1. A device push token must be associated with authenticated user ID, tenant scope, platform, app version, device session ID, and updated timestamp.
+2. Re-registering the same device must be idempotent.
+3. Invalid, expired, or provider-rejected tokens must be deactivated automatically upon receipt of provider feedback.
+4. Logout and device-session revocation must deactivate the device registration immediately.
+5. Push notification payloads must not expose sensitive health, payment, identity, or confidential business data on the device lock screen.
+6. Actual notification content must be fetched from an authenticated API endpoint when sensitive details are required.
+
+---
+
+## 124. Mobile Time, Currency, and Locale Semantics
+
+1. Database timestamps must be stored as UTC timestamps.
+2. Every tenant must have an explicit IANA business timezone, for example `Asia/Kolkata`.
+3. Backend business calculations such as attendance day, membership expiry day, billing cycle, cutoff time, and scheduled-job timing must use the tenant business timezone, not the mobile device timezone.
+4. Date-only business fields must use `YYYY-MM-DD` and must not be converted into a timestamp merely for storage convenience.
+5. Monetary API values must use integer minor units (paise/cents) and include ISO-4217 currency code.
+6. Do not assume all currencies use two decimal places. Currency minor-unit formatting belongs to the client presentation layer.
 
 ---
 
@@ -3286,12 +4137,59 @@ When a rule depends on global infrastructure outside the supplied scope:
 A feature module CANNOT be declared `COMPLIANT` for a rule if a mandatory global dependency for that rule remains `NOT_VERIFIED` or `BLOCKED_BY_SUPPLIED_SCOPE`. The module's overall readiness MUST reflect this as `NOT_READY_DUE_TO_EXTERNAL_BLOCKER`.
 
 ⛔ **ISOLATED ROLE / MODULE SCOPE RULE FOR GLOBAL DEPENDENCIES (NON-NEGOTIABLE):**
-In a modular monolith, individual role modules (e.g., `backend_superadmin/`, `backend_trainer/`) rely on host-level infrastructure (`backend_core`, `@nestjs/common`, TypeORM DataSource, Redis, BullMQ) by architectural contract design.
+In a modular monolith, individual role modules (e.g., `backend-superadmin/`, `backend-trainer/`) rely on host-level infrastructure (`backend-core`, `@nestjs/common`, TypeORM DataSource, Redis, BullMQ) by architectural contract design.
 - The AI MUST NOT treat missing host-level monolith infrastructure as `BLOCKED_BY_SUPPLIED_SCOPE` or `NOT_READY_DUE_TO_EXTERNAL_BLOCKER`.
 - The AI MUST mark host infrastructure integration as `OUTSIDE_SUPPLIED_SCOPE (HOST_MONOLITH_RESPONSIBILITY)`.
 - If the feature module correctly implements its side of the contract (e.g. `@UseGuards(JwtAuthGuard)`, valid DTO validation, correct entity mapping), the feature module itself is **COMPLIANT** within its supplied modular boundary.
 - The AI MUST NEVER stall, stop, or ask the user to provide host application slices or root bootstrap files.
 
+---
 
+## 14-GATE RELEASE FREEZE & AUTONOMOUS AI SUB-MODULE VERIFICATION MATRIX
 
+> ⛔ **CRITICAL RELEASE INVARIANT — 100% PASS REQUIRED:**
+> Before any backend autonomous sub-module (`{submodule}/`) can be certified, committed, frozen, or zipped for autonomous AI development or production deployment, it MUST achieve a deterministic `14/14 PASS` on this verification matrix. A single `FAIL` halts release.
 
+| Gate # | Gate Name | Scope | Verification Standard & Exact Condition | Failure Mode Consequence |
+|---|---|---|---|---|
+| **Gate 1** | **Universal 4-Tier Hierarchy Gate** | Structure | Tree strictly adheres to `backend-{role}/{role}-modules/{role}-{domain}/{submodule}/`. Aggregator module in domain root; all business logic inside child sub-modules. | Critical Structure Failure |
+| **Gate 2** | **Business Depth = 1 Gate** | Structure | Sub-submodules strictly forbidden. Business depth = 1. Artifact exemptions strictly limited to `{submodule}-tests/` (`harness/`, `fixtures/`, `unit/`, `integration/`), `{submodule}-locales/` (`en/`, `hi/`), and `contracts/`. | Nesting Violation |
+| **Gate 3** | **Sibling Isolation Firewall Gate** | Boundary | Zero sibling imports (`import '../sibling'`). Zero sibling DTOs, services, or repos imported. Zero domain-level shared business folders (`manager-attendance/common/` banned). | Cross-Submodule Coupling |
+| **Gate 4** | **WET vs DRY Governance Gate** | Architecture | Business DTOs, services, repos, mappers, and fixtures are strictly WET (sub-module local). Core infrastructure (logger, tenant context, envelope) is strictly DRY. | Architecture Drift |
+| **Gate 5** | **Dual-Layer Multi-Tenancy Gate** | Security | Layer 1: Connection routing via `TenantContext`. Layer 2: Mandatory `where: { gymId }` query AST predicate in all repository queries. JWT payload is sole tenant source. | P0 Cross-Tenant Vulnerability |
+| **Gate 6** | **Discriminated Union API Envelope Gate** | Contract | Universal `ApiResponse<T> = ApiSuccess<T> \| ApiFailure` with mandatory `requestId`, `success`, `message`, `data`, and typed `statusCode?: HttpStatus \| number`. | Frontend Contract Breach |
+| **Gate 7** | **HTTP Status Enum Law Gate** | Quality | TypeScript and Python source code ALWAYS references framework enum (`HttpStatus.OK`, `HttpStatus.CREATED`). Integer status codes in source code strictly banned. | Silent Auth/Authz Bug |
+| **Gate 8** | **Standalone Test Harness & Seeder Gate** | Portability | Working seeder (`[submodule].seed.ts`) and standalone harness (`[submodule].harness.ts`) runnable independently on in-memory SQLite / mock DataSource. | Unrunnable Sub-Module |
+| **Gate 9** | **8-State Mock Scenario Catalog Gate** | Quality | Harness fixtures implement the 8 canonical scenarios: `ACTIVE`, `EMPTY`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `SERVER_500`, `TIMEOUT`. | Untestable Error Paths |
+| **Gate 10** | **Ambient Core Stubs & Manifest Gate** | Portability | Sub-module owns `contracts/core-contracts.stub.ts` and `required-core-contracts.json`. Consumed host platform contracts within hard budget ceiling (≤ 7). | Non-Compilable ZIP |
+| **Gate 11** | **Production Safety Guards Gate** | Safety | `Idempotency-Key` (UUIDv4; accepts `Idempotency-Key` or `X-Idempotency-Key`) on non-naturally idempotent mutations; pessimistic locks on concurrent financial/inventory mutations; zero hardcoded secrets. | Race Condition / Loss |
+| **Gate 12** | **Documentation Trio Freshness Gate** | Docs | Contains `_backend-feature.md` (all 22 canonical sections complete), `_backend-forbidden.md`, and `_backend-contract.md`. | Context Hallucination |
+| **Gate 13** | **Local RAG Projection Self-Containment Gate** | AI Tools | Read endpoints support `?format=rag` using sub-module local mapper (`{submodule}-rag.mapper.ts`) with zero global helper dependencies. | LLM Tooling Failure |
+| **Gate 14** | **Automated CI Portability Gate** | Portability | Sub-module folder zipped alone compiles with `tsc --noEmit` and passes local unit test suite with 0 errors without host repository. | Autonomous ZIP Violation |
+
+---
+
+## AI_REPAIR_SCOPE.md MANDATORY SPECIFICATION
+
+Whenever an autonomous sub-module is zipped or handed to an external AI agent for bug repair or feature enhancement, the root of the sub-module directory MUST contain an `AI_REPAIR_SCOPE.md` file:
+
+```markdown
+# AI Repair Scope & Boundary Contract: [submodule-name]
+
+## 1. Allowed Writable Scope
+- This sub-module directory ONLY: `[submodule-name]/**`
+- Strictly prohibited from creating or modifying files outside this folder.
+
+## 2. Consumed Core Contracts (Budget <= 7)
+- Declared in `required-core-contracts.json`:
+  1. TenantContext (JWT Tenant Scope: gymId, branchId)
+  2. ApiResponse<T> (Universal Discriminated Union Envelope)
+  3. EventPublisher (Transactional Outbox Redis Stream)
+  4. PinoLogger (Structured Correlation Logger)
+  5. AuthGuard / RolesDecorator
+
+## 3. Local Offline Verification
+- Execute local test suite: `npm test`
+- Execute local compilation check: `npm run type-check` (or `tsc --noEmit`)
+- Verify with 8-State Mock Catalog in `tests/fixtures/mock-scenarios.ts`
+```

@@ -1,8 +1,35 @@
-﻿# React Native Global Design System — Token Source
+# React Native Global Design System — Token Source
+
+## Master Cross-Document Precedence Order
+
+When instructions conflict across documents, apply this exact order of authority:
+
+1. Security, privacy, legal, authorization, tenant isolation, and data-protection rules
+2. Accessibility and platform-native safety requirements
+3. Explicit user-approved scope and verified API contracts
+4. `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+5. `MOBILE_UI_UX_DESIGN.md` for visual/token decisions
+6. Execution workflow documents (when supplied: `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR_V2_11.md` or standalone execution mode; when unsupplied, `MOBILE_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` Section 67 serves as the self-contained authority) for audit sequencing, delivery artifacts, and reporting
+7. Sub-module documentation trio (`[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`)
+8. Existing implementation conventions
+
+A lower-priority rule MUST NOT override a higher-priority rule.
+Any unresolved conflict MUST be recorded as `BLOCKED_BY_SUPPLIED_CONTRACT` rather than resolved through invention.
+
+## Canonical Rule Reference Policy
+
+When a rule is repeated for convenience:
+- The first named canonical section is authoritative;
+- Repeated copies must link to or reference the canonical rule;
+- Repeated copies must not redefine, weaken, or conflict with the canonical wording;
+- Any conflicting duplicate wording is obsolete and must be removed during the next document revision.
+
+---
 
 > ⛔⛔⛔ **AI AGENT — MANDATORY DESIGN ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
 >
-> **VIOLATION OF ANY RULE IN THIS DOCUMENT = DESIGN & UI FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+> **COMPLIANCE FAILURE HANDLING (EVIDENCE-BASED REPAIR):**
+> Failure to establish required token evidence triggers a mandatory compliance stop for the affected work path. The violation must be recorded, repaired in source code, and rechecked before continuation. Previously valid, unaffected work does not need to be discarded.
 >
 > This document is the **absolute normative visual authority** and **AI-readable token catalogue** for all React Native mobile styling in this project. Every token and design rule is MANDATORY unless the rule itself defines an explicit design exception with `// design-exception: <reason>`. The following words in this document carry their STRICTEST possible meaning:
 >
@@ -23,12 +50,23 @@
 > [ ] Platform touch targets verified: minimum 44pt (iOS) / 48dp (Android)
 > [ ] Dynamic Type / font scaling verified without clipping text
 > [ ] Safe area handling verified via useSafeAreaInsets / SafeAreaView
-> [ ] Accessibility props wired: accessibilityLabel, accessibilityRole, accessibilityState
+> [ ] Accessibility verified: every interactive element exposes a meaningful
+>     localized accessible name; icon-only/ambiguous controls use
+>     `accessibilityLabel`; `accessibilityRole`, `accessibilityState`,
+>     `accessibilityHint`, and accessibility actions are supplied where relevant.
 > [ ] Reduced motion support implemented via AccessibilityInfo.isReduceMotionEnabled()
-> [ ] Haptic feedback integrated for interactive state changes
+> [ ] Meaningful haptic feedback is implemented only for approved high-value state
+>     transitions; ordinary navigation, passive card taps, scrolling, auto-refresh,
+>     and background actions do not trigger haptics.
 > [ ] Section 22 DEFINITION OF DONE loaded into context
 > ```
-> **Failure to complete the above = entire output is discarded.**
+> **COMPLIANCE FAILURE HANDLING (EVIDENCE-BASED REPAIR):**
+> On detecting a violation, the AI MUST:
+> 1. Stop the affected styling/implementation path immediately;
+> 2. Record the violated token/design rule, affected component, and evidence;
+> 3. Repair the violation before continuing;
+> 4. Re-run relevant static design and contrast compliance checks;
+> 5. Mark final status as compliant ONLY after file-level token evidence is established.
 
 Spacing / radius / icon / touch-target values → dp-equivalent React Native layout units.
 Typography → React Native text scale / fontSize.
@@ -49,6 +87,14 @@ Android elevation is defined separately by the shadow/elevation token system.
 > → Feature UI
 >
 > The VALUES below and the "no magic values anywhere" discipline are universal.
+>
+> “No magic values” applies to visual design decisions: colors, spacing, typography,
+> radius, icon sizes, touch-target dimensions, shadows, opacity, elevation, z-index,
+> and animation durations.
+>
+> React Native structural values are allowed when they are not design decisions,
+> including Flexbox control values, semantic native component props, Boolean values,
+> `StyleSheet.hairlineWidth`, and documented native-library/runtime requirements.
 
 ---
 
@@ -80,7 +126,7 @@ This document governs the **React Native mobile application only**. Rules refere
 6. **Architecture Rules** — isolation, naming, token discipline
 7. **Visual Preferences** — colors, animations, spacing aesthetics
 
-Deviations from this hierarchy MUST be documented in the affected feature's `_features.md`.
+Deviations from this hierarchy MUST be documented in the affected sub-module's `[role]_[submodule]_features.md`.
 
 ---
 
@@ -98,10 +144,39 @@ No feature/screen/component may contain:
 
 Every visual value must resolve through a documented global token.
 
+> ⛔ **REACT NATIVE TOKEN CONTRACT (NO WEB CSS VARIABLES):**
+> In React Native bare-metal (New Architecture), web CSS custom properties (`--primary-color`, `var(...)`) do NOT exist.
+> All visual design decisions MUST be accessed via the typed `useThemeTokens()` hook (`tokens.color.primary`, `tokens.space[4]`, `tokens.typography.body`, `tokens.radius.md`).
+> Components must NEVER hardcode inline hex colors (`#FF0000`), raw dp values (`fontSize: 18`), or ad-hoc style objects without tokens.
+
+### Design-Magic-Value Boundary
+
+“Zero magic values” applies to visual design decisions that could diverge across
+screens: colors, spacing, typography scale, radius, icon size, touch dimensions,
+shadows, opacity, motion durations, z-index, and elevation.
+
+The following React Native structural or platform API values are permitted and do
+not require design tokens when they are not visual design choices:
+
+- Flexbox control values: `flex: 1`, `flexDirection`, `alignItems`, `justifyContent`,
+  `flexGrow`, `flexShrink`, `flexWrap`
+- Boolean component props: `disabled`, `accessible`, `scrollEnabled`
+- React Native semantic props: `numberOfLines`, `ellipsizeMode`, `keyboardType`,
+  `autoCapitalize`, `returnKeyType`
+- Accessibility states and role strings
+- List configuration values required by a native component, when documented
+- Runtime values explicitly covered by the design-exception process
+
+A numeric visual value is permitted only when:
+1. it is read from a global token,
+2. it is a documented runtime-derived exception, or
+3. it is mandated by a React Native/native library API and is documented with
+   `// design-exception: native API requirement`.
+
 **Exception Process — Controlled Runtime Values:**
 Locally derived layout values are permitted ONLY when the value cannot be expressed as a static token AND an explicit `// design-exception: <reason>` comment documents why. Permitted exception categories:
 - Safe-area insets (from `useSafeAreaInsets()`) — device-dependent at runtime
-- Device screen dimensions (from `Dimensions.get('window')`) — cannot be a static token
+- Device screen dimensions (from `useWindowDimensions()` hook — static `Dimensions.get()` is FORBIDDEN due to orientation and foldable device failure)
 - Keyboard offset height — varies per device and input type
 - Image aspect ratios computed from API-provided dimensions
 - Animation interpolation output ranges — runtime-derived from gesture values
@@ -132,10 +207,11 @@ const { bottom } = useSafeAreaInsets();
 - Feature UI never hardcodes global values.
 - Feature UI never guesses token names.
 
-> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION — WET PRINCIPAL):**
-> Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text) by moving them to global folders like `widgets/common/` or `ui/`.
-> Global UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature (Strict WET Principal).
-> **Consequence:** An AI modifying a shared business component to fix Feature A will silently break Feature B, triggering cross-feature regression cascades.
+> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION & SUB-MODULE WET PRINCIPLE):**
+> 1. **Zero Global Business UI:** Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text, Metric Cards) by moving them to global folders like `widgets/common/` or `ui/`. Global UI folders are STRICTLY for zero-business, dumb primitives.
+> 2. **Zero Cross-Sub-Module Styling Imports (Strict WET Law):** Sibling sub-modules (e.g., `attendance_dashboard`, `attendance_history`, `attendance_analytics`, `attendance_biometrics`) MUST NOT import UI components, cards, badges, or styled views from each other.
+> 3. **Parent Shared UI Banned:** Creating shared parent folders (e.g., `attendance/common/` or `attendance/components/`) is **STRICTLY PROHIBITED**. Every sub-module MUST duplicate its required UI components locally inside `{submodule}/components/` (Strict WET Principle).
+> 4. **Consequence:** An AI modifying a shared business component to fix Submodule A will silently break Submodule B, triggering cross-submodule regression cascades and violating the Sub-Module ZIP Guarantee.
 
 ---
 
@@ -148,14 +224,15 @@ const { bottom } = useSafeAreaInsets();
 - Global async state patterns (skeleton, empty, error, offline)
 - Approved visual treatment for charts, haptics, toasts, loading, empty and error states
 
-### FEATURE MODULE owns:
+### FEATURE & SUB-MODULE owns:
 - Business statuses and status-to-semantic-color mapping
 - Feature-specific icons, static UI constants, labels and configuration
+- Local presentational components (`[Role][Submodule][Name].tsx`) inside `{submodule}/components/`
 - API/server data, module state, tests, MSW fixtures/handlers, feature behavior
 
-### MODULE THEME CONTRACT owns:
-- The exact list of global semantic tokens required by the module (`[featureName]_theme_contract.md`)
-- Any explicitly justified feature-local visual token
+### SUB-MODULE THEME CONTRACT owns:
+- The exact list of global semantic tokens required by the specific sub-module (`[role]_[submodule]_theme_contract.md`)
+- Any explicitly justified sub-module local visual token with `// design-exception: <reason>`
 
 ### GLOBAL DESIGN MUST NOT own:
 - Business navigation configuration
@@ -169,18 +246,48 @@ Every semantic foreground/background pair used for normal UI text MUST meet WCAG
 The theme module MUST be contrast-tested for all Light/Dark semantic pairs.
 CI/design validation MUST fail when an approved text/background pair falls below the required threshold.
 
-Ensure `primary` (`#FACC15` dark / `#EAB308` light) and `destructive` (#DC2626) against `on-primary` (#111111) and `on-destructive` (#FFFFFF) pass this contrast validation before final theme lock.
+Ensure `primary` (`#FACC15` dark / `#EAB308` light) and `destructive` (`#B91C1C`) against `on-primary` (`#111111`) and `on-destructive` (`#FFFFFF`) pass this contrast validation before final theme lock.
 
-## 1B. Semantic Accessibility Tokens
+The project default is 4.5:1 minimum for all text, including large text, to
+avoid subjective classification errors. WCAG's lower large-text threshold must
+not be used as an automatic exception.
 
-Mobile UI quality requires proper focus states, screen-reader semantics, and contrast targets. The theme MUST define and consume accessibility tokens (e.g., `focus-visible`, `focus-ring-width`, `focus-ring-offset`, and disabled-state semantics) to ensure screen-reader feedback, keyboard/switch-control navigation, and error/success announcements are universally consistent.
+Any exception below 4.5:1 requires:
+1. documented legal/accessibility approval;
+2. explicit token-level exception in this document;
+3. an alternative non-color communication method;
+4. accessibility review evidence.
+
+## 1B. React Native Accessibility Interaction Tokens
+
+React Native does not use web CSS `:focus-visible`. The design system must support
+native accessibility interaction through:
+
+- `focusRingColor`
+- `focusRingWidth`
+- `focusRingOffset`
+- `disabledOpacity`
+- semantic selected/checked/expanded/busy states
+- accessibility announcement patterns
+- focus restoration after modal, sheet, and error-state dismissal
+
+Focus-ring visuals are required only where the component supports hardware keyboard,
+switch control, TV focus, or a custom focusable implementation. Native controls
+should preserve their platform-native focus behavior.
+
+Do not add web-only ARIA or CSS terminology to React Native implementation rules.
 
 ## 1C. Mobile Accessibility Requirements (Comprehensive)
 
 All screens and components MUST meet these mobile accessibility standards:
 
 ### Screen Reader (VoiceOver / TalkBack)
-- Every interactive element MUST have a meaningful `accessibilityLabel` prop. Never rely on visible text alone when the element is an icon or has ambiguous purpose.
+- Every interactive element MUST expose a meaningful accessible name.
+  - Icon-only, visually ambiguous, abbreviated, dynamic, or contextual controls
+    MUST provide an explicit localized `accessibilityLabel`.
+  - A text-labelled native control may use its visible localized text as its
+    accessible name when that text fully and unambiguously describes the action.
+  - Never rely on visible text alone for icon-only controls.
 - Use `accessibilityHint` to describe the outcome of an action where the label alone is insufficient (e.g., `accessibilityLabel="Delete member"` + `accessibilityHint="Permanently removes the member and all their data"`).
 - Use `accessibilityRole` to communicate the semantic role: `button`, `link`, `header`, `checkbox`, `switch`, `image`, `text`, `none`, etc.
 - Use `accessibilityState` to communicate dynamic states: `{ disabled, selected, checked, busy, expanded }`.
@@ -196,21 +303,43 @@ All screens and components MUST meet these mobile accessibility standards:
 
 ### Dynamic Type / Font Scaling
 - All `<Text>` components MUST support `allowFontScaling={true}` (the RN default).
-- Set `maxFontSizeMultiplier` where needed to prevent layout breakage, with a documented maximum of 1.5× before requiring layout accommodation.
+- Do not cap font scaling for general content. `maxFontSizeMultiplier` is permitted
+  only for tightly measured secondary UI where full text remains accessible through
+  an alternate layout or accessible label. Every cap requires a documented
+  `// design-exception:` and an entry in the owning feature's `_features.md`.
+  See Section 3 for the complete Dynamic Type policy.
 - Test all screens at the largest accessibility text size on both platforms.
 
 ### High Contrast Support
 - Where the platform supports high-contrast mode, verify token pairs maintain sufficient contrast at high-contrast settings.
 - Never use low-contrast muted text for critical information (errors, warnings, primary actions).
 
-### Error and Status Announcements
-- Error messages that appear inline after an async action MUST be announced to screen readers via `accessibilityLiveRegion='polite'` (non-critical) or `'assertive'` (critical errors).
-- Success confirmations MUST also be announced.
+### Async Status Announcement Rule
+
+For asynchronous success, validation, warning, and error updates:
+- **Android:** Use `accessibilityLiveRegion="polite"` (non-critical) or `"assertive"` (critical errors).
+- **iOS:** Use `AccessibilityInfo.announceForAccessibility(localizedMessage)`.
+- Cross-platform critical announcements may use both mechanisms where supported.
+- Announcements MUST use localized, user-safe text.
+- Raw server errors, stack traces, and unvalidated response text MUST NOT be announced.
 - Never rely only on color to communicate an error (pair with icon + text).
 
 ### Reduced Motion (already in Section 7 — cross-reference)
 - Non-essential animations MUST respect `AccessibilityInfo.isReduceMotionEnabled()`.
 - See Section 7 for full reduced-motion rules.
+
+## Accessibility Test Requirement
+
+For every interactive component, tests MUST verify as applicable:
+- accessible name / localized `accessibilityLabel` presence on icon-only and ambiguous controls;
+- `accessibilityRole` (`button`, `link`, `header`, `checkbox`, `switch`, etc.);
+- `accessibilityState` for disabled, selected, checked, expanded, or busy states;
+- `accessibilityHint` where an action outcome is non-obvious;
+- focus containment and focus restoration after modal or bottom-sheet dismissal;
+- readable behavior at increased system font scaling (Dynamic Type);
+- reduced-motion fallback for all non-essential animation.
+
+Critical user journeys must include Maestro accessibility-oriented assertions where supported by the runner environment.
 
 ## 1. Color Tokens — "Luxury Premium Gold" Theme
 
@@ -225,7 +354,7 @@ All screens and components MUST meet these mobile accessibility standards:
 | `overlay` | `#FFFFFF` | `#242424` | Modals, dialogs |
 | `popover` | `#F4F4F5` | `#2E2E2E` | Dropdowns, tooltips |
 | `primary` | `#EAB308` | `#FACC15` | Primary buttons, active nav item, FAB |
-| `primary-hover` | `#CA8A04` | `#EAB308` | Primary button pressed state |
+| `primary-pressed` | `#CA8A04` | `#EAB308` | Primary button pressed state |
 | `primary-subtle` | `rgba(234,179,8,0.15)` | `rgba(250,204,21,0.15)` | Soft badge backgrounds, selected row highlight |
 | `primary-text` | `#EAB308` | `#FACC15` | Text links, primary text buttons |
 | `destructive` | `#B91C1C` | `#B91C1C` | Errors, delete actions |
@@ -240,7 +369,7 @@ All screens and components MUST meet these mobile accessibility standards:
 | `focus-ring` | `#A16207` | `#FACC15` | Input focus and keyboard focus ring |
 | `skeleton-base` | `#E4E4E7` | `#111111` | Skeleton shimmer base |
 | `skeleton-highlight` | `#F4F4F5` | `#1A1A1A` | Skeleton shimmer highlight |
-| `surface-hover` | `rgba(234,179,8,0.08)` | `rgba(250,204,21,0.08)` | List item press highlight |
+| `surface-pressed` | `rgba(234,179,8,0.08)` | `rgba(250,204,21,0.08)` | List item pressed-state highlight |
 | `overlay-backdrop` | `rgba(0,0,0,0.6)` | `rgba(0,0,0,0.6)` | Modal/sheet background dim |
 
 ### Opacity Tokens
@@ -291,9 +420,32 @@ All typography values MUST be expressed as explicit React Native unit properties
 **Font Scaling — Dynamic Type (iOS) and Font Size (Android):**
 - The theme MUST handle Dynamic Type and Android font scaling properly.
 - Set `allowFontScaling={true}` (default) on all `<Text>` components unless a specific measured UI element has a documented exception.
-- Set `maxFontSizeMultiplier` where allowing unbounded scaling would break a critical UI element. The maximum allowed multiplier before requiring layout accommodation is `1.5`.
+- Do not apply `maxFontSizeMultiplier` to general body content, form labels,
+  validation messages, legal text, or primary action labels by default.
+- A cap may be used only for tightly measured secondary UI such as a compact badge,
+  tab label, or decorative KPI label where the full text remains available through
+  an accessible label or alternate layout.
+- Any cap requires a `// design-exception:` comment and must be listed in the
+  owning feature's `_features.md`.
+- The application must remain usable at the platform's largest accessibility text size.
 - Developers MUST test all screens at the largest accessibility text size on both iOS and Android.
 - NEVER hardcode pixel-specific layout dimensions that assume a fixed font size — use `flexShrink`, `flexWrap`, and `minHeight` to accommodate text growth.
+
+### Text Resilience Rules
+
+Every text-bearing layout must be tested with:
+- longest translated string (Hindi/other languages can be 40-100% longer than English),
+- long user-entered name/address,
+- Dynamic Type / Android largest font setting,
+- RTL locale when supported,
+- null/undefined display fallback.
+
+Rules:
+- Use `flexShrink: 1` for text sharing a row with icons or actions.
+- Use `minWidth: 0` in horizontal containers when required for truncation to work.
+- Never truncate primary legal, financial, validation, or destructive-action text.
+- For essential content that cannot fit, allow wrapping or navigate to a detail view.
+- Numeric data must use locale-aware formatting and tabular alignment where comparison matters.
 
 ## 4. Radius Scale
 `radius-sm (4)`, `radius-md (8)`, `radius-lg (12)`, `radius-xl (16)`, `radius-full`
@@ -304,7 +456,9 @@ All typography values MUST be expressed as explicit React Native unit properties
 | Token | Value | Usage |
 |---|---|---|
 | `button-min-width` | 120 | Minimum button width to prevent layout shift on loading |
-| `min-touch-target` | 44 | iOS pt minimum; Android uses 48dp |
+| `min-touch-target-ios` | 44 | Minimum interactive target on iOS |
+| `min-touch-target-android` | 48 | Minimum interactive target on Android |
+| `min-touch-target` | platform-resolved | Use through `getMinTouchTarget()` only |
 | `header-height` | 56 | Top navigation bar height |
 | `bottom-tab-height` | 60 | Bottom tab bar height |
 | `content-padding` | 16 | Standard screen horizontal padding |
@@ -321,6 +475,12 @@ Use named `icon-*` size tokens. Introduce a new token when a supported icon libr
 ## 6. Touch Targets
 `min-touch-target = 44` (iOS pt) / `48` (Android dp) — every tappable element
 must meet this via minimum height/width or padding.
+
+Do not use `tokens.layout.minTouchTargetIos` or `tokens.layout.minTouchTargetAndroid` directly inside feature UI.
+Feature UI MUST use the central helper:
+`src/core/theme/getMinTouchTarget.ts`
+
+This helper returns the correct platform target (`44` on iOS, `48` on Android). This avoids repeated `Platform.OS` checks inside feature components.
 
 ## 7. Motion
 - **Press configuration:** 
@@ -422,6 +582,13 @@ Series color order (applied consistently across every chart in the app). Charts 
 | `shadow-lg` | opacity 0.15, radius 12 | elevation 8 | Bottom sheet, modal |
 | `shadow-xl` | opacity 0.2, radius 20 | elevation 16 | FAB, prominent overlays |
 
+Shadow tokens must be implemented through a central `getShadowStyle(level)` helper (`src/core/theme/getShadowStyle.ts`).
+Feature UI MUST NOT manually compose `shadowColor`, `shadowOpacity`, `shadowRadius`, `shadowOffset`, or `elevation`.
+
+The helper resolves:
+- iOS: complete native shadow style (`shadowColor`, `shadowOffset`, `shadowOpacity`, `shadowRadius`)
+- Android: `elevation` and any supported visual treatment
+
 ## 11. Core Semantic Color Usage (How to Apply Tokens — No Guessing)
 
 Every color token has ONE canonical usage. Never apply a token outside its role.
@@ -474,15 +641,17 @@ Inline validation error messages appear **below** the field in `caption` typogra
 
 Every screen section that loads data MUST implement all applicable states.
 No component may ship without its loading, empty, and error states.
+Every state MUST be deterministically testable via the module's `mocks/scenarios/[role_module].scenarios.ts` presets.
 
-| State | When to show | Implementation |
-|---|---|---|
-| **Loading / skeleton** | Data fetch in progress | A skeleton component that mimics the exact layout of the real content. Use `skeleton-base` for shimmer base, `skeleton-highlight` for shimmer highlight. **Never a full-screen spinner for content areas** — spinner only for button-level actions. |
-| **Empty** | Fetch succeeded, zero results | A dedicated `[Feature]EmptyState` component with a contextual icon, a short human-readable message, and a primary CTA (e.g. "Add your first member"). Never a blank white screen. |
-| **Error** | Fetch failed or network error | A `[Feature]ErrorFallback` component showing a brief message from `response.message` (backend-driven), a "Try again" retry button, and optionally a help link. Never expose raw error objects. |
-| **Permission denied** | User lacks role access to the resource | A `[Feature]PermissionDenied` component explaining the access restriction. Never show a blank screen or a cryptic error code. |
-| **Offline** | No network detected (if offline is a declared feature) | An inline `OfflineBanner` (not a full-screen takeover) with the last-cached data still visible. Only for features that explicitly declare offline support in `_features.md`. |
-| **Offline Blocker** | No network AND feature has no cached data to show | A full-screen `[Feature]OfflineBlocker` component that blocks interaction and explains the feature requires connectivity. Use ONLY when the feature cannot function at all without network (e.g., payment processing). Never use `OfflineBlocker` for features that can show cached data â€” use `OfflineBanner` instead. |
+| State | Canonical Scenario Key | When to show | Implementation |
+|---|---|---|---|
+| **Sunny Day / Populated** | `ACTIVE_RECORDS` | Normal list/detail render | Real fixture/backend response rendered via semantic tokens. |
+| **Loading / skeleton** | `NETWORK_TIMEOUT` | Data fetch in progress | A skeleton component that mimics the exact layout of the real content. Use `skeleton-base` for shimmer base, `skeleton-highlight` for shimmer highlight. **Never a full-screen spinner for content areas** — spinner only for button-level actions. |
+| **Empty** | `EMPTY_DATA` | Fetch succeeded, zero results (`data: []`) | A dedicated `[Feature]EmptyState` component with a contextual icon, a short human-readable message, and a primary CTA (e.g. "Add your first member"). Never a blank white screen. |
+| **Error** | `SERVER_500_ERROR` | Fetch failed or network error (500) | A `[Feature]ErrorFallback` component showing a safe user-facing message, a "Try again" retry button, and optionally a help link. Use backend `response.message` only when the API contract explicitly guarantees that it is user-safe and localized for the active app locale. Otherwise show a feature-specific translated fallback through `t('...')`. Never expose raw Axios errors, JavaScript errors, stack traces, raw `error.message`, or unvalidated server text. |
+| **Permission denied** | `UNAUTHORIZED_401` | User lacks role access to the resource (401/403) | A `[Feature]PermissionDenied` component explaining the access restriction. Never show a blank screen or a cryptic error code. |
+| **Offline** | `NETWORK_TIMEOUT` | No network detected (if offline is a declared feature) | An inline `OfflineBanner` (not a full-screen takeover) with the last-cached data still visible. Only for features that explicitly declare offline support in `_features.md`. |
+| **Offline Blocker** | `NETWORK_TIMEOUT` | No network AND feature has no cached data to show | A full-screen `[Feature]OfflineBlocker` component that blocks interaction and explains the feature requires connectivity. Use ONLY when the feature cannot function at all without network (e.g., payment processing). Never use `OfflineBlocker` for features that can show cached data — use `OfflineBanner` instead. |
 
 ## 14. Safe Area & Notch Handling
 
@@ -560,6 +729,19 @@ from real data without being invisible.
 
 **Z-index:** `z-bottom-sheet` (40) from Section 15.
 
+### Bottom Sheet Accessibility and Interaction Rules
+
+Every bottom sheet must:
+- Expose a meaningful accessible title via `accessibilityLabel` and `accessibilityRole="header"`.
+- Provide an explicit accessible close/cancel action unless closure is intentionally blocked during in-flight mutations.
+- Announce opening context to screen readers via `AccessibilityInfo.announceForAccessibility()`.
+- Prevent interaction with obscured background content while visible (backdrop absorbs taps).
+- Restore focus to the triggering control after dismissal where supported.
+- Handle keyboard appearance for form sheets via keyboard-aware scroll wrappers.
+- Avoid nested bottom sheets: close the parent before opening a replacement sheet.
+- Disable duplicate confirmation presses while the mutation is pending (`disabled={isPending}`).
+- Distinguish swipe-to-dismiss from confirmed destructive action (swipe dismiss = cancel).
+
 ---
 
 ## 18. Button Visual Hierarchy & Loading State
@@ -605,13 +787,48 @@ React Native theme module  ← implements the token values from this file
 Feature UI                 ← consumes semantic tokens ONLY; never hardcodes values
 ```
 
-### CANONICAL `tokens.ts` TYPESCRIPT OBJECT SHAPE (LOCKED)
+### Theme Implementation Model
+
+The design document owns token names and light/dark values.
+
+The application implementation must have three separate layers:
+
+1. `tokenDefinitions.ts`
+   - Stable token names and non-theme scales.
+   - Spacing, typography, radius, durations, icon sizes, z-index, layout.
+
+2. `lightTheme.ts` and `darkTheme.ts`
+   - Each implements the complete `color` object using exactly the same keys.
+
+3. `useThemeTokens()` / `ThemeProvider`
+   - Resolves the active theme and exposes one typed `tokens` object to UI.
+
+Feature UI MUST consume tokens through the theme resolver. It must not directly
+branch on `isDarkMode` to choose colors.
+
+Recommended structure under `src/core/theme/`:
+```text
+src/core/theme/
+  tokenDefinitions.ts
+  lightTheme.ts
+  darkTheme.ts
+  ThemeProvider.tsx
+  useThemeTokens.ts
+  getMinTouchTarget.ts
+  getShadowStyle.ts
+  animationConfig.ts
+```
+
+### CANONICAL ACTIVE TOKEN OBJECT SHAPE (LOCKED)
 
 > ⛔ **AI AGENTS: ALL token property access in components MUST use EXACTLY this object shape. Never guess token names. If you write `theme.colors.primary` when the shape is `tokens.color.primary`, TypeScript will fail. Use this as your reference.**
 
 ```typescript
-// src/core/theme/tokens.ts  — canonical shape (implement values from tables above)
-export const tokens = {
+// This is a TypeScript contract shape, not a directly imported static theme object.
+// src/core/theme/tokenDefinitions.ts defines stable scales and Tokens type.
+// src/core/theme/useThemeTokens.ts returns the active light/dark Tokens value.
+
+export interface Tokens {
   color: {
     // Core surfaces (Section 1)
     background:          string,
@@ -621,7 +838,7 @@ export const tokens = {
     overlay:             string,
     popover:             string,
     primary:             string,
-    primaryHover:        string,  // 'primary-hover'
+    primaryPressed:      string,  // 'primary-pressed'
     primarySubtle:       string,  // 'primary-subtle'
     primaryText:         string,  // 'primary-text'
     destructive:         string,
@@ -636,7 +853,7 @@ export const tokens = {
     focusRing:           string,
     skeletonBase:        string,
     skeletonHighlight:   string,
-    surfaceHover:        string,  // 'surface-hover'
+    surfacePressed:      string,  // 'surface-pressed'
     overlayBackdrop:     string,  // 'overlay-backdrop'
     // Status tokens (Section 8)
     statusSuccessText:   string,
@@ -709,13 +926,14 @@ export const tokens = {
     stroke: 1.75,
   },
   layout: {
-    buttonMinWidth:   120,
-    minTouchTarget:   44,   // iOS pt; Android uses 48dp
-    headerHeight:     56,
-    bottomTabHeight:  60,
-    contentPadding:   16,
-    cardPadding:      16,
-    fabSize:          56,
+    buttonMinWidth:        120,
+    minTouchTargetIos:      44,
+    minTouchTargetAndroid:  48,
+    headerHeight:           56,
+    bottomTabHeight:        60,
+    contentPadding:         16,
+    cardPadding:            16,
+    fabSize:                56,
   },
   duration: {
     fast:   150,
@@ -740,9 +958,7 @@ export const tokens = {
     toast:       60,
     overlay:     70,
   },
-} as const;
-
-export type Tokens = typeof tokens;
+}
 
 // Usage in components:
 // tokens.color.primary          ✅
@@ -755,6 +971,37 @@ export type Tokens = typeof tokens;
 // tokens.shadow.xl               ✅
 // tokens.color.onPrimary         ✅  (= #111111 — dark text on gold)
 ```
+
+Feature UI MUST access the active token value only through:
+
+```ts
+const tokens = useThemeTokens();
+```
+
+Feature UI MUST NOT import `lightTheme`, `darkTheme`, `tokenDefinitions`, or a
+static `tokens` object directly. Those imports are restricted to `src/core/theme/`.
+
+### Machine-Readable Token Authority & Sync
+
+`MOBILE_UI_UX_DESIGN.md` is the canonical human-readable design specification.
+`src/core/theme/tokenDefinitions.ts` is the executable machine-readable authority.
+Both MUST remain synchronized through automated CI tooling.
+
+A CI token-sync script compares:
+- token property names and hierarchy;
+- light and dark value pairs;
+- deprecated token aliases;
+- WCAG AA contrast compliance (4.5:1 for normal text, 3:1 for large text/icons).
+
+### Theme Consumption Performance Rule
+
+Feature UI MUST obtain tokens through `useThemeTokens()`.
+
+For render-heavy components:
+- token-dependent StyleSheet creation MUST be memoized via `useMemo(() => StyleSheet.create({...}), [tokens])`;
+- list item components (e.g. inside `FlashList`) MUST avoid recreating style objects on every render;
+- memoization MUST NOT bypass dynamic theme switching;
+- static token imports remain strictly forbidden outside `src/core/theme/`.
 
 **Workflow rule (when a new token is needed):**
 1. Add the token to THIS file first — with light + dark values and a usage description.
@@ -789,7 +1036,14 @@ CI MUST fail when:
 - deprecated tokens are used;
 - defined text/background semantic pairs fail WCAG AA contrast requirements;
 - interactive controls fail the required minimum touch-target size (44pt/48dp);
-- any screen component imports a raw color value or arbitrary size value without a `// design-exception:` comment.
+- any screen component introduces a raw visual design value for color, spacing,
+  typography, radius, icon size, touch target, shadow, opacity, duration,
+  z-index, or elevation without using an approved token or a documented
+  `// design-exception:`.
+
+Structural React Native values are permitted where they are not visual design
+choices, including Flexbox control values, Boolean props, semantic native props,
+`StyleSheet.hairlineWidth`, and documented runtime/native-library requirements.
 
 **Token Validation Tooling (Required):**
 A token-sync script MUST be included in the CI pipeline that:
@@ -809,10 +1063,48 @@ To ensure the application feels like a world-class, premium native app, **every 
 
 1. **Universal Micro-Animations:** Use the motion tokens (Section 7) universally. Press states MUST scale down slightly (`press-scale = 0.96`). Bottom sheets MUST slide in smoothly. **Reduced-Motion Compliance:** Always respect the OS-level reduced-motion preference as strictly outlined in Section 7. Remove non-essential motion and never use animation as the sole indicator of a state change.
 2. **Haptic Feedback:** Pair visual feedback with tactile feedback.
-   - **Light Impact:** Minor UI changes (switches, dropdown toggles, pulling to refresh).
+
+Haptic feedback is a progressive enhancement, not a mandatory response to every
+tap or navigation event.
+
+Use haptics only for meaningful state transitions such as:
+- successful submit, confirmation, or completion;
+- destructive action confirmation;
+- validation failure or blocked action;
+- selection/toggle state change where tactile confirmation adds value.
+
+Do NOT use haptics for:
+- ordinary navigation;
+- list scrolling;
+- passive card presses;
+- automatic refreshes;
+- repeated rendering;
+- background sync;
+- automatic retries.
+
+Haptic failure or unsupported-device behavior MUST safely no-op and MUST NOT
+delay, block, or change the user action.
+
+   - **Light Impact:** Minor UI changes (switches, dropdown toggles).
    - **Success Notification:** Completing a wizard, saving a form, processing payment.
    - **Error Notification:** Destructive actions, or when validation fails.
 3. **Custom Scroll/Pull-to-Refresh:** Use native refresh controls tinted with the `primary` token.
+
+### Haptic Failure Safety & Progressive Enhancement
+
+Haptic feedback is a progressive enhancement:
+- A haptic failure MUST NOT block navigation, submit, mutation, or UI state changes.
+- Haptics must be triggered through one central adapter (`src/core/interaction/haptics.ts`).
+- The adapter must safely no-op when unsupported, disabled by user preference, or unavailable.
+- Haptics must not fire repeatedly during rapid re-renders, list scrolling, or automatic retries.
+
+**Haptic Hierarchy (Prevent UI Fatigue):**
+- Primary user action (wizard complete, primary submit) → clear visual pending state + haptic notification.
+- Minor toggle / switch → light impact haptic.
+- Error → visual text/icon first, haptic notification second.
+- Background refresh / pull-to-refresh completion → NO haptic.
+- Auto-updating dashboard / KPI chart → NO haptic.
+- Repeated list rows / cards tap → subtle press scale (0.96) only, NO haptic.
 
 ---
 
@@ -824,8 +1116,19 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 | Convention | iOS | Android |
 |---|---|---|
 | Back navigation | Swipe-right gesture (native stack) + back button in nav bar | Hardware/software back button + swipe-right |
-| Gesture navigation | Always use `react-navigation` native stack — never block gestures | Back handler MUST be wired for Android hardware back button |
+| Gesture navigation | Always use `react-navigation` native stack — never block gestures | React Navigation default hardware/software back behavior MUST work correctly. Use a custom `BackHandler` only for documented interception cases such as a dirty form, active selection mode, or an open sheet/modal. Never register a custom back handler on ordinary stack screens. |
 | Confirmation before back | Show a bottom sheet confirmation when the user tries to go back from a dirty (unsaved) form | Same behavior |
+
+### Android Back Interception Safety
+
+When a custom Android `BackHandler` is required:
+
+- It MUST be registered only while the interception state is active.
+- It MUST be removed during cleanup/unmount.
+- First back press behavior, repeated back press, sheet/modal dismissal, and
+  app-root behavior MUST be tested.
+- A custom handler MUST NOT block React Navigation's normal stack pop unless a
+  documented unsaved-change or critical-flow reason exists.
 
 ### Safe Area & Status Bar
 
@@ -871,20 +1174,31 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 > ⛔ **RELEASE CRITERIA & SOURCE DELIVERY MANDATE:**
 > **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure in audit.**
 > **In Repair Mode:** If any code defect is found, repair the code. Once all fixable source-level code is implemented, package and deliver the ZIP.
-> **Dynamic/runtime verification steps (`DEFERRED_TO_HOST_RUNTIME`) do NOT trigger `BLOCKED_RELEASE` and must never prevent delivering the repaired ZIP.**
+> Packaging is mandatory only when archive-generation capability is available.
+> Otherwise, apply the Capability-Truth Delivery Rule and report `SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING`.
+>
+> This requirement is subject to the Capability-Truth Delivery Rule. If archive generation
+> is unavailable, the AI MUST report SOURCE_COMPLETE_ARTIFACT_PENDING_HOST_PACKAGING
+> and MUST NOT claim that a ZIP was generated.
+>
+> **Dynamic/runtime verification steps (`DEFERRED_TO_HOST_RUNTIME`) do NOT trigger `BLOCKED_RELEASE` and must never prevent delivering the repaired source.**
 
 ### 1. Functional Completeness Gate
 - [ ] **End-to-End User Flows:** All documented user flows work end-to-end with verified navigation transitions. — *STOP if broken navigation or orphaned screen.*
 - [ ] **Validation & Error States:** All form validations and error states trigger correctly with field-level feedback. — *STOP if generic error toast replaces field errors.*
 - [ ] **Authoritative Data Rendering:** All API-driven data renders from real fixture or backend response. — *STOP if hardcoded mock data remains in production paths.*
-- [ ] **Mutation Feedback:** All mutations show correct success/error feedback via non-blocking toasts/alerts. — *STOP if mutation completes without visual feedback.*
+- [ ] **Mutation Feedback:** All mutations show correct success/error feedback via non-blocking toasts/alerts with stable `dedupKey`. — *STOP if mutation completes without visual feedback or duplicate toasts stack.*
+- [ ] **Null & Undefined Safe-Fallbacks:** Every nullable or optional field in lists, cards, and profiles uses `displayValue(val, '—')`. — *STOP if raw 'null', 'undefined', or blank cell rendered.*
+- [ ] **Debounced Search Inputs:** All search and rapid filter inputs debounced by ≥ 300ms. — *STOP if API triggers on every keystroke.*
 
 ### 2. State Coverage Gate (Section 13)
 - [ ] **Loading / Skeleton State:** Mimics exact layout of real content (`[Feature]Skeleton.tsx`); never a full-screen spinner. — *STOP if full-screen spinner used.*
 - [ ] **Empty State:** `[Feature]EmptyState.tsx` rendered with icon, message, and CTA where applicable. — *STOP if blank screen shown on empty list.*
 - [ ] **Error State:** `[Feature]ErrorFallback.tsx` rendered with retry button and user-friendly message. — *STOP if raw JavaScript exception shown to user.*
+- [ ] **Large List Virtualization:** Any collection with potential > 50 items uses `FlashList` or optimized `FlatList` with `windowSize={5}`. — *STOP if plain ScrollView or un-virtualized View used.*
 - [ ] **Permission Denied State:** `[Feature]PermissionDenied.tsx` rendered with clear rationale and settings deep link. — *STOP if feature silently fails when permission denied.*
 - [ ] **Offline State:** Non-blocking banner displayed if feature declares offline support. — *STOP if app crashes or locks up when offline.*
+- [ ] **Mock Scenario Validation:** All 5 canonical scenarios (`ACTIVE_RECORDS`, `EMPTY_DATA`, `SERVER_500_ERROR`, `NETWORK_TIMEOUT`, `UNAUTHORIZED_401`) validated against the UI using the standalone `bootstrap.ts` harness. — *STOP if any scenario fails to render or crashes.*
 
 ### 3. Accessibility Gate (Section 1C)
 - [ ] **Interactive Labels:** All interactive elements have meaningful `accessibilityLabel` strings. — *STOP if icon-only button lacks accessibility label.*
@@ -894,7 +1208,7 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 - [ ] **Touch Target Ceilings:** All touch targets ≥ 44pt (iOS) / 48dp (Android); `hitSlop` applied where visual size is smaller. — *STOP if interactive target < 44pt/48dp.*
 - [ ] **Dynamic Type Scaling:** Dynamic Type tested at largest accessibility size without text truncation. — *STOP if text clips or overflows container.*
 - [ ] **Reduced Motion:** Reduced-motion behavior verified; non-animated transitions work when enabled. — *STOP if animation triggers despite reduced-motion preference.*
-- [ ] **Live Regions:** Error/success states announced via `accessibilityLiveRegion`. — *STOP if critical alert omitted from screen reader.*
+- [ ] **Async Announcements:** Error and success states are announced using the appropriate platform mechanism—`accessibilityLiveRegion` on Android and `AccessibilityInfo.announceForAccessibility` on iOS. — *STOP if critical alert omitted from screen reader.*
 - [ ] **Non-Color State Differentiation:** Color is never the sole state differentiator; paired with text or icon. — *STOP if state distinguished only by red/green color.*
 
 ### 4. Design System Compliance Gate
@@ -920,7 +1234,8 @@ Mobile users expect familiar native behavior. UI that ignores platform conventio
 - [ ] **WCAG AA Contrast:** All semantic text/background pairs pass WCAG AA contrast check (4.5:1 minimum). — *STOP if contrast ratio fails WCAG AA.*
 
 ### 7. Documentation & Testing Gate
-- [ ] **Theme Contract Artifact:** `[featureName]_theme_contract.md` lists all consumed tokens. — *STOP if theme contract missing or empty.*
-- [ ] **Feature Spec Sync:** `[featureName]_features.md` updated for any flow, API, or permission change. — *STOP if features doc out of sync.*
+- [ ] **Sub-Module Theme Contract Artifact:** `[role]_[submodule]_theme_contract.md` lists all consumed tokens for this sub-module. — *STOP if theme contract missing or empty.*
+- [ ] **Sub-Module Feature Spec Sync:** `[role]_[submodule]_features.md` updated with all 22 canonical sections (including Section 20 Standalone Harness). — *STOP if features doc out of sync.*
+- [ ] **Sub-Module Forbidden Patterns:** `[role]_[submodule]_forbidden.md` present with zero cross-submodule imports and parent shared folder ban. — *STOP if forbidden patterns missing or generic.*
 - [ ] **Behavioral Tests:** Component and hook tests verify real user actions (tap -> submit -> visible state update). — *STOP if tests only check shallow renders.*
 - [ ] **Maestro E2E Flows:** E2E tests verify critical mobile flows (login, CRUD, permissions). — *STOP if critical user journey lacks E2E coverage.*

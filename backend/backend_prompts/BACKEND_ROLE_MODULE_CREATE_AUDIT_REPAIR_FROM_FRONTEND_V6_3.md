@@ -1,17 +1,20 @@
 # BACKEND ROLE MODULE — CREATE, AUDIT & REPAIR FROM FRONTEND
 
-## VERSION 6.3 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED / BOUNDED CHECKPOINTED EXECUTION
+## VERSION 6.4 — FRONTEND-DRIVEN / BACKEND-CREATION-AND-REPAIR / ZERO-SAMPLING / DEEP CONTRACT VERIFICATION / ARCHITECTURE RULE ENFORCEMENT / VERSIONED ZIP DELIVERY / INTEGRATION GUIDE INCLUDED / BOUNDED CHECKPOINTED EXECUTION
 
 ---
 
-> ⛔⛔⛔ **AI MANDATORY BOOT SEQUENCE — EXECUTE BEFORE ANYTHING ELSE** ⛔⛔⛔
+> ⛔⛔⛔ **AI EXECUTION BOOT SEQUENCE — REQUIRED ONLY WHEN A CREATE/AUDIT/REPAIR JOB IS STARTED** ⛔⛔⛔
 >
-> **VIOLATION OF THIS BOOT SEQUENCE = THE ENTIRE OUTPUT IS DISCARDED AND MUST BE RESTARTED.**
+> This boot declaration is required only when the user invokes an actual backend Create, Audit, or Repair execution task.
+> It is not required when the user asks to explain, review, modify, compare, or discuss this prompt itself.
 >
-> Before producing ANY analysis, code, audit findings, or repair content, you MUST output ALL of the following in your VERY FIRST response:
+> The AI MUST report only capabilities that are actually available in the current execution environment. It MUST NOT claim file-write, command, test, database, archive, or runtime access unless such access is truly available.
+>
+> When starting an execution task, output the following declaration:
 >
 > ```
-> BACKEND AGENT V6.3 — BOOT DECLARATION
+> BACKEND AGENT V6.4 — BOOT DECLARATION
 > =======================================
 > ROLE:               Backend Create/Audit/Repair AI
 > MODE:               [CREATE (Mode A) / AUDIT+REPAIR (Mode B) — from supplied inputs]
@@ -32,7 +35,7 @@
 > [ ] Step 3: STAGE 2 AUDIT — not yet started
 > [ ] Step 4: RBG PLAN + user approval — not yet started
 > [ ] Step 5: STAGE 3 REPAIRS — not yet started
-> [ ] Step 6: 112-item Re-Audit Checklist — not yet started
+> [ ] Step 6: Dynamic Re-Audit Checklist — not yet started
 > [ ] Step 7: FINAL DELIVERY (ZIP + INTEGRATION_GUIDE.md) — not yet started
 >
 > FRONTEND WRITE PROHIBITION ACKNOWLEDGED: YES
@@ -41,17 +44,48 @@
 > FIRST ACTION: [PROJECT STACK GATE / Read Stage 1 requirements / etc. — state exactly]
 > ```
 >
-> ⛔ **You MUST NOT open any backend source file before completing Stage 1 (frontend requirement freeze).**
+> ⛔ **BACKEND FILE INSPECTION BOUNDARY BEFORE STAGE 1:**
+> Before Stage 1 is frozen, the AI may inspect only the minimum backend artifacts required to determine:
+> - Mode A versus Mode B;
+> - active framework and ORM;
+> - supplied writable scope;
+> - package/lockfile availability where supplied;
+> - feature/module root location;
+> - authoritative backend documentation presence.
+>
+> The AI MUST NOT begin detailed backend implementation analysis, code repair, or architecture compliance scoring until the Stage 1 frontend requirement baseline has been frozen.
 > ⛔ **You MUST NOT write any frontend file. EVER. If you do, the ENTIRE output is invalid and must be restarted.**
 > ⛔ **You MUST NOT start repairs before the RBG PLAN is published and user approves it.**
 > ⛔ **You MUST NOT deliver the ZIP before the 112-item Anti-Skipping Checklist is re-evaluated on repaired code. All SOURCE_LEVEL_FIX findings must be resolved. Items requiring host/runtime execution (DEFERRED_TO_HOST_RUNTIME), host infrastructure (OUTSIDE_SUPPLIED_SCOPE), or external product decisions (EXTERNAL_PRODUCT_DECISION_BLOCKED) MUST be documented in RE_AUDIT_CHECKLIST_RESULT.md, but their presence MUST NOT block packaging or delivering the ZIP.**
 > ⛔ **You MUST NOT skip creating `INTEGRATION_GUIDE.md`, `RE_AUDIT_CHECKLIST_RESULT.md`, and Selenium test files. They are mandatory deliverables, not suggestions.**
 > ⛔ **NO-PAUSE ON MISSING RUNTIME / HOST CAPABILITY (MANDATORY ANTI-STALL RULE):** If a live database (PostgreSQL/MySQL/Mongo), Redis cache, message broker (RabbitMQ/Kafka), running backend server (NestJS/Express/FastAPI/Django), or runtime test runner is absent, you MUST NEVER halt, pause, abort, ask the user to start a server, or declare source-level backend repairs "BLOCKED". You MUST fix every issue that can be fixed directly in the source code (controllers, services, entities, DTOs, repositories, migrations, guards, decorators, validation pipes, tests, mocks, swagger, config, types) in this session. Only live runtime execution / end-to-end network validation may be marked `DEFERRED_TO_HOST_RUNTIME`. Incomplete audit or absent runtime is NEVER an excuse to pause before completing source-level fixes.
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When command or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live backend/runtime is absent. State the Static Compliance Rating directly (up to 10.0), noting runtime execution separately as `DEFERRED_TO_HOST_RUNTIME`.
+
+## CANONICAL FAILURE HANDLING PROTOCOL
+
+A violation is never silently ignored. However, a violation does not automatically require stopping the entire task.
+
+### Audit Mode
+- Record the violation as `NON_COMPLIANT`.
+- Include rule reference, exact file/path evidence, severity, impact, and remediation.
+- Continue evaluating all unrelated items where evidence is available.
+
+### Repair Mode
+- Repair every violation that is inside the approved writable scope.
+- Repair structural violations first in RBG 1.
+- Do not halt merely because a repair is required.
+- If a required artifact is genuinely outside supplied writable scope, record `BLOCKED_BY_SUPPLIED_SCOPE` with an exact integration instruction.
+
+### Hard Stop Conditions
+Stop only when:
+1. A required security, authorization, tenant, financial, legal, or data-integrity decision is ambiguous and cannot be safely inferred.
+2. A required dependency is not approved by the normative architecture document.
+3. The task requires unavailable secrets, production credentials, or irreversible production actions.
+4. An authoritative conflict cannot be resolved using the documented precedence order.
 >
 > ⛔⛔⛔ **ISOLATED ROLE / FEATURE MODULE SCOPE BOUNDARY (NON-NEGOTIABLE)** ⛔⛔⛔
 >
-> When the user supplies a single backend feature module or role container ZIP (e.g., `backend_superadmin/`, `backend_trainer/`, `superadmin.zip`, `manager-attendance.zip`, `admin-billing.zip`):
+> When the user supplies a single backend feature module or role container ZIP (e.g., `backend-superadmin/`, `backend-trainer/`, `superadmin.zip`, `manager-attendance.zip`, `admin-billing.zip`):
 > 1. **DO NOT DEMAND HOST APPLICATION SLICES:** You MUST NOT stop, pause, stall, refuse to fix, or ask the user to provide:
 >    - Root `package.json` / dependency manifest
 >    - Root `tsconfig.json` / TypeScript path aliases (`@/*`)
@@ -63,7 +97,41 @@
 >    - Path alias `@/` resolves to `src/`.
 >    - Standard dependencies (`@nestjs/common`, `@nestjs/core`, `@nestjs/typeorm`, TypeORM/Prisma, Redis, BullMQ) exist in the host monolith.
 > 3. **PROCEED TO AUDIT & REPAIR IMMEDIATELY:** You MUST audit, repair, and complete 100% of the supplied in-scope source files (controllers, services, entities, DTOs, migrations, module definitions, tests, mocks, swagger) directly. Demanding host application root slices or declaring repairs "BLOCKED" due to absence of root files is a **CRITICAL SCOPE CREEP VIOLATION & AUDIT FAILURE**.
-> 4. **FEATURE MODULE IS THE PRIMARY AI REPAIR UNIT (THE 1-TO-1 BACKEND SUB-SERVICE RULE):** This rule applies universally across ALL backend roles (e.g., `backend_admin`, `backend_manager`, `backend_superadmin`, `backend_trainer`). Every primary feature module visible in the frontend sidebar/navigation (e.g., in Manager: Attendance, Finance, HR; in Admin: Billing, Gyms; in Superadmin: Plans, Tenants) maps strictly 1-to-1 to an autonomous backend feature module folder (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). When a single backend feature module is supplied for repair or audit (e.g. `manager-attendance.zip` or `admin-billing.zip`), the AI MUST audit and repair ONLY that module in complete isolation. Requesting, touching, or modifying files in sibling backend modules or host application root files (`app.module.ts`, `main.ts`, etc.) is STRICTLY FORBIDDEN.
+> 4. **AI REPAIR UNIT (SUB-MODULE AS DEFAULT GRANULAR REPAIR UNIT):** This rule applies universally across ALL backend roles (e.g., `backend-admin`, `backend-manager`, `backend-superadmin`, `backend-trainer`). Every primary feature domain visible in the frontend sidebar/navigation (e.g., in Manager: Attendance, Finance, HR; in Admin: Billing, Gyms; in Superadmin: Plans, Tenants) maps strictly 1-to-1 to an autonomous backend feature domain module folder (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). Under the Universal Day-1 Sub-Module Architecture, the **Autonomous Sub-Module** (e.g., `attendance-history/`, `attendance-dashboard/`) is the default granular repair unit. When a single sub-module or feature domain is supplied for repair or audit (e.g. `attendance-history.zip` or `manager-attendance.zip`), the AI MUST audit and repair ONLY that module in complete isolation. Demanding, touching, or modifying files in sibling modules or host application root files (`app.module.ts`, `main.ts`, etc.) is STRICTLY FORBIDDEN.
+> 5. **UNIVERSAL DAY-1 SUB-MODULE ARCHITECTURE & 1-TO-1 SUB-FEATURE ISOMORPHISM:**
+>    - Every backend feature module folder (`backend-{role}/{role}-modules/{role}-{feature}/`) is a **Domain Module Container** containing ONLY the root aggregator module (`[role]-[module].module.ts`), master documentation, and one or more autonomous Sub-Modules (`{sub-module}/`, e.g., `attendance-dashboard/`, `attendance-history/`, `attendance-analytics/`, `attendance-biometrics/`, `profile-overview/`) that map 1-to-1 to frontend sub-modules.
+>    - **Zero Root Business Code in Domain Folder (Domain Quarantine):** Creating loose controllers, services, repositories, entities, or DTOs directly at the domain module root is a **CRITICAL ARCHITECTURE VIOLATION**. 100% of executable source code, entities, and tests MUST live inside `{sub-module}/`.
+>    - **Zero Relationship Between Sibling Sub-Modules (Strict Sibling Isolation & DI Firewall):** Sibling backend sub-modules (e.g., `attendance-dashboard/`, `attendance-history/`, `attendance-analytics/`) have **ABSOLUTE ZERO RELATIONSHIPS, ZERO CROSS-IMPORTS, AND ZERO RUNTIME COUPLING**.
+>      - `attendance-dashboard` services MUST NEVER directly import repositories, services, entities, or DTOs from `attendance-history` (`import from '../attendance-history'`).
+>      - In NestJS, a sub-module MUST NOT import a sibling sub-module's `@Module` or inject a sibling's `@Injectable()` service directly.
+>      - Creating shared parent backend folders (e.g. `attendance/common/`, `attendance/shared/`, or `attendance/services/`) is **STRICTLY FORBIDDEN**.
+>      - If multiple backend sub-modules require similar DTO validators, query helpers, or mappers, each sub-module MUST duplicate it locally within its own sub-folder (Strict WET Principle).
+>    - **Framework Boundary Invariants (Foreign Keys & Reads vs Events vs Transactions):**
+>      - **Read Queries & Foreign Keys:** TypeORM / Prisma / SQL relations and foreign keys for reads are 100% permitted within query builders, services, and repositories (e.g., joining `members` with `attendance` records for a dashboard query). Reading related tables via ORM relations does NOT violate isolation.
+>      - **Cross-Domain/Cross-Submodule Mutation Side-Effects:** Mutations that trigger side-effects in other domains or sibling sub-modules (e.g., attendance check-in awards reward points or sends a push notification) MUST be decoupled via Domain Events (emitted to Redis Streams / Transactional Outbox pattern). The triggering sub-module never directly calls the secondary sub-module's mutation service.
+>      - **Multi-Table Atomic Transactions:** When an atomic workflow genuinely requires coordinated mutations across multiple database tables, it MUST be orchestrated by an approved Application Workflow Orchestrator service (e.g., Saga/Orchestrator) at an approved boundary, not by direct inter-submodule imports.
+>    - **Autonomous Backend Sub-Module Documentation Trio:** Every single backend sub-module MUST contain its own isolated documentation trio directly at its root:
+>      - `[role]-[submodule]-backend-feature.md` (or `_backend-feature.md`): Master specification containing ALL 22 Canonical Sections, including Section 20 (Standalone Run, Mock & Test Harness with seeders), Section 21 (Module Portability & Host Integration Guide), Section 22 (Revision History & 10/10 Portability Score), and the Frozen API Contract.
+>      - `[role]-[submodule]-backend-forbidden.md` (or `_backend-forbidden.md`): Concrete, sub-module-specific forbidden anti-patterns and boundary invariants.
+>      - `[role]-[submodule]-backend-contract.md` (or `_backend-contract.md`): Frozen public API endpoints, DTO schemas, and emitted domain event schemas.
+>    - **The Backend Sub-Module ZIP Guarantee (Granular AI Repair Unit):** When repairing or auditing a backend sub-feature (e.g., `attendance-history`), the developer zips **ONLY `attendance-history/`** and gives it to any AI. The AI receives a laser-focused context (controllers, services, DTOs, unit tests, and standalone harness for history only), and repairs the API in one shot with 0% risk of breaking sibling sub-modules or the host monolith.
+>    - **Folder vs File Naming Formula:** Subfolders use `{submodule}-{artifact}/` (e.g., `dashboard-controllers/`, `dashboard-services/`, `dashboard-dto/`), while file names MUST be globally unique with `[role]-[submodule]-[description].[type].ts` (e.g., `manager-attendance-history-query.controller.ts`). Sibling sub-modules are 100% decoupled in source code.
+>    - **Meaningful Domain-Prefixed Submodule Naming Standard (No Lazy Names):** Every backend submodule folder MUST follow the exact semantic formula: `{submodule}` matching `{domain}-{capability}` (e.g., `attendance-dashboard/`, `attendance-history/`, `profile-overview/`, `billing-invoices/`).
+>      - **The 5-Second Comprehension Invariant:** Anyone inspecting ONLY the submodule folder name MUST instantly know within 5 seconds its parent domain and exact business capability/API intent.
+>      - **Strictly Banned Lazy/Ambiguous Names:** Never use generic or lazy names such as `tab1/`, `main/`, `default/`, `api/`, `details/` (must be `members-detail`), `common/`, `shared/`, `temp/`, or `misc/`. Lazy names are treated as **Critical Naming Violations**.
+>    - **Strict Maximum Nesting Depth Law (The Depth Limit Invariant — Sub-Submodules Strictly BANNED):**
+>      - Hierarchy depth below the Domain Module Container (`{role}-{domain}/`) is **STRICTLY BOUNDED TO EXACTLY 1 LEVEL** (`{submodule}/`).
+>      - Tier 4 (`{submodule}/`) is the **absolute terminal leaf business execution unit**.
+>      - **Sub-submodules are STRICTLY FORBIDDEN:** Creating nested folders inside a sub-module that act as child sub-modules (e.g., `attendance-history/export/` or `members-directory/details/`) is a **CRITICAL P0 ARCHITECTURE VIOLATION**. All decomposition inside a sub-module happens PURELY via standard canonical artifact folders (`{submodule}-controllers/`, `{submodule}-services/`, `{submodule}-repositories/`, `{submodule}-dto/`, `{submodule}-mappers/`, `{submodule}-domain/`, `{submodule}-types/`, `{submodule}-tests/`).
+>    - **Deterministic 5-Gate Sub-Module Qualification Decision Matrix (How AI Decides Backend Sub-Module vs Service Method):**
+>      - **Gate 1 (Frontend Route / Tab Isomorphism):** Does this capability correspond to a distinct secondary tab or dedicated sub-route on the frontend (e.g., `/attendance/history`, `/billing/invoices`)? If YES → **Autonomous Sub-Module** (`{submodule}/`).
+>      - **Gate 2 (Entity / Lifecycle Independence):** Does this capability manage an independent sub-domain entity or distinct transactional lifecycle? If YES → **Autonomous Sub-Module**. If it is merely an additional query filter, patch endpoint, or export method on an existing entity → **Method/Controller** inside the existing sub-module.
+>      - **Gate 3 (File Count & Granularity Bounds — The Goldilocks Rule: 5–20 Files):**
+>        - Target: 5 to 20 files per sub-module (controllers + services + repositories + DTOs + entity + tests + harness + doc trio).
+>        - Nano-Module Banned: Creating a sub-module for a single utility or single endpoint (< 3 files) is FORBIDDEN.
+>        - Mega-Submodule Banned: Cramming 3+ distinct sub-domain entity lifecycles into one sub-module (> 25 files) is FORBIDDEN; split into sibling sub-modules under `{role}-{domain}/`.
+>      - **Gate 4 (Standalone Testability & Mockability):** Can this sub-module run isolated unit/integration tests with its own seeders and harness? If YES → **Autonomous Sub-Module**.
+>      - **Gate 5 (DI & Sibling Isolation Boundary):** Sibling sub-modules NEVER import each other's NestJS `@Module`, `@Injectable()` services, or repositories. Cross-domain side-effects use Domain Events (Transactional Outbox).
 
 
 ---
@@ -72,7 +140,7 @@
 
 Every AI agent executing this prompt MUST strictly obey these invariants at all times. They supersede any other instruction.
 
-> ⛔ **INVARIANT ENFORCEMENT: Violating ANY invariant = STOP immediately, discard output, restart from violated step.**
+> ⛔ **INVARIANT ENFORCEMENT: Record as NON_COMPLIANT in Audit Mode, or repair in approved scope during Repair Mode, following the Canonical Failure Handling Protocol.**
 
 1. **DO NOT GUESS:** If a requirement, parameter, or type is missing or ambiguous, you must rely on explicit documented rules or mark it `NOT_VERIFIED`. Do not invent a solution. **VIOLATION = fabricated compliance = task failure.**
 2. **DO NOT FABRICATE:** Never invent fake file paths, fake line numbers, fake mock data, fake test results, or fake architecture compliance. **VIOLATION = entire output is invalid.**
@@ -87,21 +155,40 @@ Every AI agent executing this prompt MUST strictly obey these invariants at all 
 > 3. STAGE 2 audit → ONLY THEN begin Stage 3 repairs
 > 4. RBG PLAN published + user approves → ONLY THEN execute any fix
 > 5. PRIOR RBG DEPENDENCY PRE-CHECK passed → ONLY THEN start next RBG
-> 6. 112-item Anti-Skipping Checklist re-run clean → ONLY THEN package ZIP
+> 6. Dynamic Re-Audit Checklist re-run clean → ONLY THEN package ZIP
 > 7. `RE_AUDIT_CHECKLIST_RESULT.md` + `INTEGRATION_GUIDE.md` (consolidating Section 1 Changelog) inside ZIP → ONLY THEN deliver
 >
-> **Skipping or reordering any step = INVALID OUTPUT. Restart from the violated step.**
+> **Skipping or reordering any step = NON_COMPLIANT. Remediate in dependency order following the Canonical Failure Handling Protocol.**
 
 ---
 
 > ⚡ **ARCHITECTURE DOCUMENT IS FINAL AUTHORITY**
-> If ANY rule, example, checklist item, or wording inside this prompt (V6.3) conflicts with the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, **the architecture document wins — always, without exception**. This prompt is an execution guide, not a rule definition source. Record the conflict and follow the architecture document.
+> If ANY rule, example, checklist item, or wording inside this prompt (V6.4) conflicts with the supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`, **the architecture document wins — always, without exception**. This prompt is an execution guide, not a rule definition source. Record the conflict and follow the architecture document.
 
 ### AUTHORITY MODEL
 
+## ARCHITECTURE RULE LOADING PROTOCOL
+
+`BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is the sole normative source for architecture, security, module structure, package approval, naming, testing, tenancy, API, mobile, event, and implementation rules.
+
+This V6.4 execution prompt MUST NOT redefine, cache, weaken, or expand architecture rules through duplicated examples, rule counts, package lists, or copied checklists.
+
+Before audit or repair, the AI MUST:
+1. Read the complete supplied architecture document.
+2. Build a dynamic Architecture Rule Enforcement Matrix from the actual current document.
+3. Record every applicable rule by canonical rule ID, title, applicability, evidence, result, and remediation.
+4. Treat any conflicting duplicate text in this execution prompt as non-authoritative.
+5. Follow the architecture document where any conflict exists.
+
+Every currently defined applicable rule in the supplied normative architecture document is mandatory, including numbered rules, lettered rules, special gates, and all mobile-first rules (Rules 120–124).
+
+## FRAMEWORK APPLICABILITY
+
+This V6.4 document is **NestJS-first** (NestJS + TypeScript + TypeORM + PostgreSQL) by default. When the supplied project uses Django + Python, the AI MUST follow the normative framework mappings explicitly defined in Section 47G and `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`. Other unapproved frameworks require their own separately maintained execution prompt; the AI must not invent ad-hoc rules by unguided inference.
+
 1. System and execution-environment constraints always apply and cannot be overridden by any document.
 2. The supplied `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` is authoritative for architecture, implementation, security, naming, dependency, testing, and design rules.
-3. This V6.3 prompt is authoritative for audit process, evidence reporting, frontend-contract extraction, delivery structure, and scope-control procedures — unless it directly conflicts with the architecture document.
+3. This V6.4 prompt is authoritative for audit process, evidence reporting, frontend-contract extraction, delivery structure, and scope-control procedures — unless it directly conflicts with the architecture document.
 4. Repository-local conventions apply when they do not conflict with the architecture document or this prompt.
 5. In case of conflict between any two sources, do NOT silently choose one. Record:
    - conflicting texts (exact);
@@ -281,7 +368,7 @@ The AI MAY inspect every file inside the supplied backend scope, but MUST NOT in
    **REPAIR CATEGORIZATION MODEL (MODE B)**
    Every discovered defect in Mode B MUST be placed into one of three strict categories:
    1. **`SOURCE_LEVEL_FIX`:** Any finding that can be resolved by creating or modifying source files within the supplied backend scope (e.g. adding missing DTO validation, fixing entity column types or relationships, implementing missing service methods or controllers, generating TypeORM/Prisma migration files, adding mock unit tests or Jest fixtures, aligning Swagger decorators, adding custom guards). The AI MUST fix 100% of these in code without stalling.
-   2. **`HOST_RUNTIME_BLOCKED_VERIFICATION`:** Any finding where the source code can be written, but actual command execution requires live host services (running migration against live DB, running tests with a live runner, starting the server). The AI MUST complete the source code fix, and append an explicit `DEFERRED_TO_HOST_RUNTIME` instruction block detailing the exact shell commands for the developer.
+   2. **`DEFERRED_TO_HOST_RUNTIME`:** Any finding where the source code can be written, but actual command execution requires live host services (running migration against live DB, running tests with a live runner, starting the server). The AI MUST complete the source code fix, and append an explicit `DEFERRED_TO_HOST_RUNTIME` instruction block detailing the exact shell commands for the developer.
    3. **`BLOCKED_BY_SUPPLIED_SCOPE` / `EXTERNAL_PRODUCT_DECISION_BLOCKED`:** Genuinely missing sibling modules outside the writable scope, or breaking business decisions requiring external product sign-off. Absent runtime MUST NEVER be placed here.
 
    If an issue requires a file outside the supplied writable backend scope:
@@ -351,6 +438,27 @@ Never invent a version number. If version evidence is ambiguous, record the ambi
 The AI MUST try so hard in its first pass (v1 for creation, first increment for first audit) that the user never needs to come back for a second fix. The AI must treat every delivery as if it is the last chance to get it right.
 
 ---
+
+
+## DELIVERY PACKAGE LAYOUT
+
+Delivery artifacts belong at the archive root, not inside the feature-module source root.
+
+Example:
+
+```text
+backend-admin-v2-fix.zip
+├── INTEGRATION_GUIDE.md
+├── RE_AUDIT_CHECKLIST_RESULT.md
+├── FRONTEND_CHANGE_REQUIRED.md              # only when applicable
+├── DELIVERY_MANIFEST.md
+└── backend-admin/
+    └── admin-modules/
+        └── admin-members/
+            ├── admin-members.module.ts
+            ├── admin-members-backend-feature.md
+            └── ...
+```
 
 ## INTEGRATION GUIDE REQUIREMENT (MANDATORY IN EVERY ZIP)
 
@@ -655,6 +763,18 @@ Do not invent rules that are not present in the supplied backend documentation.
 
 ## INPUT 3A — VERIFIED PROJECT STACK
 
+## DEPENDENCY APPROVAL RULE
+
+The approved dependency list, exact package versions, prohibited packages, and framework-specific package decisions are defined only in `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+
+The AI must:
+1. read the current approved package registry;
+2. verify supplied package/lockfile evidence where available;
+3. never add an unapproved dependency;
+4. record any required-but-unapproved package as `EXTERNAL_PRODUCT_DECISION_BLOCKED`.
+
+This execution prompt must not duplicate the package registry.
+
 The supplied backend architecture document contains the normative project stack.
 
 Before any backend implementation begins, the AI MUST establish:
@@ -705,6 +825,36 @@ Without this, E2E completeness cannot be verified, as tests are strictly isolate
 ---
 
 # 2. SCOPE LOCK
+
+## STRUCTURE VALIDATION BY SUPPLIED SCOPE
+
+### Full Role Scope
+When the supplied scope contains `backend-{role}/`, validate the complete role tree:
+- `{role}-core/`
+- `{role}-modules/`
+- feature module placement
+
+### Isolated Feature Scope
+When the supplied ZIP root is one feature module only (e.g. `manager-attendance.zip`):
+- validate the feature domain module tree, its pure aggregator module (`[role]-[domain].module.ts`), master documentation, and child autonomous sub-modules;
+- treat role root, role core, role modules parent, root module registration, root configuration, and host bootstrap as `OUTSIDE_SUPPLIED_SCOPE`;
+- do not create or demand host wrapper folders;
+- provide exact integration instructions only where host wiring is required.
+
+A feature-only input must never fail merely because omitted host folders are absent.
+
+### Isolated Sub-Module Scope
+When the supplied ZIP root is one autonomous sub-module only (e.g., `attendance-dashboard/` or `attendance-history.zip`):
+- validate only the sub-module internal tree (`{submodule}-controllers/`, `{submodule}-services/`, `{submodule}-dto/`, `{submodule}-repositories/`, `{submodule}-tests/`, etc.) and its local Documentation Trio (`_backend-feature.md` with all 22 canonical sections, `_backend-forbidden.md`, `_backend-contract.md`);
+- treat the parent domain aggregator module, sibling sub-modules, role core, and host bootstrap as `OUTSIDE_SUPPLIED_SCOPE`;
+- do not create or demand parent domain or host wrapper folders;
+- verify standalone execution harness in `harness/` with local seeders (`[submodule].seed.ts`);
+- verify Module-Owned 8-State Mock Scenario Catalog (`fixtures/mock-scenarios.ts` covering `ACTIVE`, `EMPTY`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `SERVER_500`, `TIMEOUT`);
+- verify Ambient Host Stubs (`contracts/core-contracts.stub.ts`) and Machine-Readable Manifest (`required-core-contracts.json`) with external budget ceiling ≤ 7;
+- verify universal discriminated union `ApiResponse<T> = ApiSuccess<T> | ApiFailure` envelope with `requestId` and `statusCode?: HttpStatus | number`;
+- provide exact integration instructions for the host domain aggregator module.
+
+A sub-module-only input must never fail merely because omitted parent domain or host folders are absent.
 
 This prompt is BACKEND-FOCUSED only. In MODE A it CREATES the backend. In MODE B it AUDITS and REPAIRS the backend.
 
@@ -1120,7 +1270,7 @@ For repositories where the total file count or token size may exceed a single LL
 Chunking rules:
 
 1. **Frontend ZIP first:** Extract and freeze the full requirement baseline in Stage 1 before inspecting any backend files.
-2. **Per-module backend chunks:** Process each backend sub-module (e.g., `manager-members/`, `manager-billing/`) as a separate bounded work unit. Complete + checkpoint before moving to the next.
+2. **Per-submodule backend chunks:** Process each backend autonomous sub-module (e.g., `manager-members/members-directory/`, `manager-attendance/attendance-history/`) as a separate bounded work unit. Complete + checkpoint before moving to the next.
 3. **Never mix frontend reading with backend repair** in the same bounded unit — this causes context pollution and hallucination.
 4. **Checkpoint after every work unit** (see Section 6.1). The checkpoint must record which frontend-derived requirements have been satisfied so far.
 5. **Stage 3 re-audit runs in chunks too** — re-audit each previously completed work unit, not the entire scope in one pass.
@@ -1260,6 +1410,35 @@ Never treat documentation as proof that code implements something.
 ---
 
 ## 5.4 Conflict handling
+
+## CANONICAL STATUS TAXONOMY
+
+### Artifact Availability
+- `SUPPLIED_AND_VERIFIED`
+- `SUPPLIED_BUT_MISMATCHED`
+- `SUPPLIED_BUT_INCOMPLETE`
+- `OUTSIDE_SUPPLIED_SCOPE`
+- `NOT_SUPPLIED`
+
+### Finding Resolution
+- `COMPLIANT`
+- `NON_COMPLIANT`
+- `REPAIRED`
+- `BLOCKED_BY_SUPPLIED_SCOPE`
+- `EXTERNAL_PRODUCT_DECISION_BLOCKED`
+- `FRONTEND_CHANGE_REQUIRED`
+- `EXPLICITLY_SKIPPED_BY_USER`
+
+### Verification Evidence
+- `STATICALLY_INSPECTED`
+- `COMPILED`
+- `LINTED`
+- `UNIT_TESTED`
+- `INTEGRATION_TESTED`
+- `E2E_TESTED`
+- `RUNTIME_EXECUTED`
+- `DEFERRED_TO_HOST_RUNTIME`
+- `EXTERNAL_DEPENDENCY_STATIC_ASSUMPTION`
 
 If sources disagree, do NOT silently choose one.
 
@@ -3227,7 +3406,7 @@ Checkpointing MUST NOT become permission to:
 - skip E2E/Selenium generation;
 - skip documentation.
 
-The final result MUST still satisfy the complete applicable backend V6.3 requirements and normative backend architecture.
+The final result MUST still satisfy the complete applicable backend V6.4 requirements and normative backend architecture.
 
 ## 6.10 Mode A — CREATE
 
@@ -3317,7 +3496,7 @@ Instead, `INTEGRATION_GUIDE.md` serves as the **SINGLE CONSOLIDATED BACKEND DEVE
 |---|---|---|---|---|
 | 1 | Updated or created backend source files | MANDATORY | MANDATORY | Self-contained module files with local documentation trio |
 | 2 | Database migrations and rollback scripts | MANDATORY if schema changes | MANDATORY if schema changes | Co-located inside module migration folder |
-| 3 | Unit, integration, and API E2E tests | MANDATORY | MANDATORY | Automated test suites (`supertest_e2e/`, `e2e/`) |
+| 3 | Unit, integration, and API E2E tests | MANDATORY | MANDATORY | Automated test suites (`{submodule}-tests/`, `backend-e2e/`, `backend-selenium/`) |
 | 4 | UI automation tests (Selenium/Playwright) | MANDATORY | MANDATORY | When frontend flows are testable |
 | 5 | `INTEGRATION_GUIDE.md` | MANDATORY | MANDATORY | **CONSOLIDATED MASTER DEVELOPER GUIDE** (Changelog, Endpoints, Migrations, Wiring, Verification) |
 | 6 | `RE_AUDIT_CHECKLIST_RESULT.md` | MANDATORY | MANDATORY | **FORMAL AUDIT LEDGER** (All 112 items evaluated) |
@@ -3429,10 +3608,10 @@ MINIMUM: No single RBG may contain fewer than 2 audit batches unless it is the f
 RBGs MUST be ordered by repair dependency, not by batch number:
 
 ```text
-RBG 1 — P0 Critical fixes (security, auth, tenant isolation, broken contracts, missing endpoints)
-RBG 2 — P1 High fixes (DTO/validation, service logic, repository queries, migrations)
-RBG 3 — P2 Medium fixes (architecture rules, naming, documentation, tests)
-RBG 4 — P3 Low fixes (comments, minor naming, tooling)
+RBG 1 — P0 Critical Structural & Foundation fixes (Rule 0A/0A.2 Universal Sub-Module 4-tier hierarchy normalization, domain aggregator quarantine, removal of banned parent common/shared folders, sibling DI isolation firewall) + Security, Auth, Tenant Isolation, Broken Contracts, Missing Endpoints
+RBG 2 — P1 High fixes (DTO/validation, service business logic, repository queries, migrations, outbox event publishing)
+RBG 3 — P2 Medium fixes (Autonomous Sub-Module Documentation Trio with 22 Canonical Sections, Unit/Integration tests, Section 20 Mock/Seeder Test Harness)
+RBG 4 — P3 Low fixes (Code comments, minor naming conventions, formatting, tooling)
 RBG N — Final re-audit + packaging
 ```
 
@@ -3479,12 +3658,13 @@ Or reply "Adjust" to change the grouping.
 
 Do NOT start any repair until the user approves the RBG Plan.
 
+
 ## RBG EXECUTION RULES
 
 1. **PRIOR RBG DEPENDENCY PRE-CHECK (MANDATORY for RBG N where N > 1):** Before executing any fix in RBG N, verify that every artifact from previous RBGs that the current RBG depends on is actually in place. If a prior RBG fix is missing or incomplete → repair it BEFORE starting the current RBG and record as `PRIOR_RBG_FIX_INCOMPLETE`. This is a targeted dependency check only — not a full re-audit of all previous RBGs.
 2. Execute ALL findings from the current RBG before moving to the next RBG.
 3. After completing each RBG, checkpoint and display the RBG Completion Dashboard.
-4. Do NOT start the next RBG until the user gives affirmative confirmation (e.g. "continue", "next", "Begin RBG N+1", "aage badho", "karo", "go ahead").
+4. **MANDATORY APPROVAL GATE AFTER EACH RBG:** Do NOT start the next RBG until the user gives affirmative confirmation (e.g. "continue", "next", "Begin RBG N+1", "aage badho", "karo", "go ahead"). Multi-batch auto-chaining without human pause is strictly prohibited — pausing after each RBG keeps the AI laser-focused on a bounded scope, preserves context integrity, and prevents compounding multi-file errors.
 5. Within an RBG, apply fixes in dependency order:
    - Migrations/entities first → repositories → services → controllers/DTOs → tests → docs.
 6. Never apply a fix from RBG 3 while RBG 1 is still in progress.
@@ -3533,7 +3713,7 @@ The AI MUST NOT:
 If a finding in the current RBG is BLOCKED (external decision required), document it explicitly and continue with the remaining unblocked findings in the same RBG.
 
 > ⛔ **RBG HOST/RUNTIME UNBLOCKING RULE (NON-NEGOTIABLE):**
-> Findings classified as `HOST_RUNTIME_BLOCKED_VERIFICATION` are NOT BLOCKED. The AI MUST write the complete source-level fix (code, entities, DTOs, migrations, tests, configs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no live DB, no running server, no test runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence.
+> Findings classified as `DEFERRED_TO_HOST_RUNTIME` are NOT BLOCKED. The AI MUST write the complete source-level fix (code, entities, DTOs, migrations, tests, configs) in the current RBG, document the verification commands under `DEFERRED_TO_HOST_RUNTIME`, and continue through all remaining RBG findings. Missing runtime/host capability (no live DB, no running server, no test runner) is NEVER an excuse to mark an RBG finding blocked or pause the repair sequence.
 > **MODULAR MONOLITH NOTE:** Host application root files (`app.module.ts`, `main.ts`, `package.json`, root `tsconfig.json`, `.env`) are host responsibilities and NOT part of the module scope. Their absence MUST NOT be marked as an RBG blocker (`BLOCKED_BY_SUPPLIED_SCOPE`). Only genuine external product/architecture decisions (`EXTERNAL_PRODUCT_DECISION_BLOCKED`) or missing intra-module files may remain blocked.
 
 ### USER MID-COURSE OVERRIDE & EXPLICIT SKIP PROTOCOL (NON-NEGOTIABLE)
@@ -5645,7 +5825,7 @@ Verify mutation → successful DB commit → cache invalidation ordering, determ
 
 ### MCP & RAG Readiness (Rule 116 & 117)
 
-Verify that REST endpoints are properly annotated with OpenAPI docstrings (Rule 116) and that query projections natively support `?format=rag` (Rule 117) to return flattened, token-optimized text for Agentic AI consumption where specified by the Architecture document.
+Verify that REST endpoints are properly annotated with OpenAPI docstrings (Rule 116) and that all GET query endpoints natively support `?format=rag` (Rule 117) to return flattened, token-optimized text for Agentic AI consumption with automated sensitive field masking.
 
 ### i18n / Localization
 
@@ -5767,8 +5947,8 @@ Never assume a global facility exists because a feature imports its symbol.
 Trace the actual provider registration and bootstrap wiring where source is supplied.
 
 ⛔ **ISOLATED ROLE MODULE BOUNDARY:**
-When auditing an isolated backend role module (e.g., `backend_superadmin/`, `backend_trainer/`):
-- Global framework dependencies (NestJS core/common decorators, TypeORM/Prisma symbols, BullMQ, Redis) and root core infrastructure (`backend_core`, `@/backend_core`) are ASSUMED to exist in the host application.
+When auditing an isolated backend role module (e.g., `backend-superadmin/`, `backend-trainer/`):
+- Global framework dependencies (NestJS core/common decorators, TypeORM/Prisma symbols, BullMQ, Redis) and root core infrastructure (`backend-core`, `@/backend-core`) are ASSUMED to exist in the host application.
 - The AI MUST NOT classify them as missing or unverified, nor halt to demand root application slices or host `package.json`.
 - Classify host-provided infrastructure symbols as `OUTSIDE_SUPPLIED_SCOPE` (Host Monolith Responsibility) and proceed immediately to complete the module audit and repair.
 
@@ -5822,25 +6002,45 @@ Verify:
 
 ```text
 APPLICATION
-→ DOMAIN / ROLE CONTAINER
-→ FEATURE MODULE
-→ SUB-FEATURE / USE CASE
+→ ROLE CONTAINER (e.g., backend-manager/)
+→ FEATURE DOMAIN MODULE (e.g., manager-modules/manager-attendance/)
+→ AUTONOMOUS SUB-MODULE / USE CASE (e.g., attendance-dashboard/, attendance-history/)
 ```
 
-The default AI repair boundary is the FEATURE MODULE.
+The default AI repair boundary is the **AUTONOMOUS SUB-MODULE** (Default Granular Unit) or **FEATURE DOMAIN MODULE** (Complete Domain Slice).
 
 **THE 1-TO-1 FRONTEND FEATURE ISOMORPHISM & AI REPAIR HAND-OFF LAW (UNIVERSAL):**
 > ⛔ **UNIVERSAL APPLICABILITY: This law applies equally to EVERY backend role container (`backend-admin`, `backend-manager`, `backend-superadmin`, `backend-trainer`, etc.). References to `manager-attendance` or `admin-billing` are illustrative examples only.**
-1. **Strict 1-to-1 Mapping to Frontend Features:** Every primary feature module established on the frontend across ANY role (e.g., in Manager: Attendance, Finance, HR, Members, Plans; in Admin: Gyms, Billing, Staff; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients) MUST have an exact 1-to-1 corresponding autonomous backend feature module (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). Monolithic aggregation of distinct frontend domains into a single backend mega-module is STRICTLY FORBIDDEN.
+1. **Strict 1-to-1 Mapping to Frontend Features:** Every primary feature module established on the frontend across ANY role (e.g., in Manager: Attendance, Finance, HR, Members, Plans; in Admin: Gyms, Billing, Staff; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients) MUST have an exact 1-to-1 corresponding autonomous backend feature domain module (e.g., `backend-{role}/{role}-modules/{role}-{feature}/`). Monolithic aggregation of distinct frontend domains into a single backend mega-module is STRICTLY FORBIDDEN.
 2. **Complete Domain Self-Containment:** 100% of the controllers, services, repositories, entities, DTOs, events, migrations, unit tests, and OpenAPI schemas for that domain MUST reside INSIDE that feature module folder. Zero cross-feature business imports from sibling backend modules.
-3. **Autonomous AI Repair Hand-off:** If a backend defect occurs in ANY feature API or data layer (e.g. Attendance, Billing, or Schedule), the developer provides ONLY that specific feature module folder to the AI agent. The AI agent MUST audit and repair that module in total self-containment.
+3. **Autonomous AI Repair Hand-off:** If a backend defect occurs in ANY feature API or data layer (e.g. Attendance, Billing, or Schedule), the developer provides ONLY that specific sub-module or feature domain module folder to the AI agent. The AI agent MUST audit and repair that module in total self-containment.
+
+### 0A.2 — Universal Day-1 Sub-Module Architecture & Sub-Module Isolation Invariants (MANDATORY)
+
+Verify ALL of the following:
+1. **Domain Module Quarantine:** The parent domain module root (`manager-attendance/`) contains ONLY the parent aggregator module (`manager-attendance.module.ts`), master documentation, and child sub-module folders. Zero loose controllers, services, repositories, entities, or DTOs at domain root.
+2. **100% Sub-Module Autonomous Structure:** 100% of controllers, services, repositories, DTOs, entities, and tests live inside autonomous sub-modules (`{sub-module}/`).
+3. **Parent Shared Folder Ban:** Zero parent-level shared folders (`attendance/common/`, `attendance/shared/`, `attendance/services/`). Any shared helper, DTO, or mapper MUST be duplicated locally per sub-module (Strict WET Principle).
+4. **Sibling Sub-Module Isolation & NestJS DI Boundary:** Sibling sub-modules (`attendance-dashboard` and `attendance-history`) MUST NEVER import each other's `@Module`, `@Injectable()` services, repositories, or DTOs directly (`import from '../attendance-history'` = P0 Architecture Failure).
+5. **Framework Boundary Invariants (Reads/Foreign Keys vs Events vs Transactions):**
+   - **Read Queries & Foreign Keys:** TypeORM / Prisma / SQL relations and foreign keys for reads are 100% permitted within query builders, services, and repositories (e.g., joining `members` with `attendance` records for a dashboard query).
+   - **Cross-Domain/Cross-Submodule Mutation Side-Effects:** Mutations that trigger side-effects in other domains or sibling sub-modules MUST be decoupled via Domain Events (emitted to Redis Streams / Transactional Outbox pattern).
+   - **Multi-Table Atomic Transactions:** Orchestrated exclusively by an approved Application Workflow Orchestrator service, never direct inter-submodule mutation calls.
+6. **Autonomous Sub-Module Documentation Trio:** Every autonomous sub-module contains:
+   - `[role]-[submodule]-backend-feature.md` (or `_backend-feature.md`) with ALL 22 Canonical Sections (including Section 20 Standalone Harness & Seeders, Section 21 Portability Guide, Section 22 Revision History & 10/10 Portability Score)
+   - `[role]-[submodule]-backend-forbidden.md` (or `_backend-forbidden.md`)
+   - `[role]-[submodule]-backend-contract.md` (or `_backend-contract.md`)
+7. **Backend Sub-Module ZIP Guarantee:** Any single sub-module can be zipped independently, provided to an AI agent, and audited/repaired in complete isolation.
+8. **Strict Maximum Nesting Depth Law (The Depth Limit Invariant — Sub-Submodules Strictly BANNED):** Hierarchy depth below `{role}-{domain}/` is **STRICTLY BOUNDED TO EXACTLY 1 LEVEL** (`{submodule}/`). Tier 4 is the terminal leaf business execution unit. Creating nested sub-modules inside a sub-module (e.g., `attendance-history/export/` or `members-directory/details/`) is a **CRITICAL P0 ARCHITECTURE VIOLATION**. All internal decomposition MUST use `{submodule}-{artifact}/` folders.
+9. **Deterministic 5-Gate Sub-Module Qualification Decision Matrix:** Enforce the 5 deterministic qualification gates (frontend tab/route isomorphism, independent entity lifecycle, Goldilocks 5–20 file rule, standalone test harness, and strict DI boundary).
 
 Detect:
-
 - feature repair performed at role-container scope without necessity;
-- sibling feature coupling;
-- domain-level business logic;
-- unclear ownership boundary;
+- sibling sub-module cross-imports or DI coupling;
+- loose business logic at parent domain root (Quarantine breach);
+- domain-level `common/` or `shared/` folders (WET violation);
+- sub-submodules nested inside `{submodule}/` (depth > 1 violation);
+- nano-modules (< 3 files / single endpoint) or mega-modules (> 25 files with multi-workflow sprawl);
 - mega-module mashing multiple frontend feature domains together.
 
 ### 0B — Hard feature write boundary
@@ -5870,23 +6070,37 @@ Verify:
 - E2E role roots use `backend-*-e2e` (e.g., `backend-e2e/backend-admin-e2e/`);
 - Selenium role roots use `backend-*-selenium` (e.g., `backend-selenium/backend-admin-selenium/`);
 - ALL internal structural folders are explicitly prefixed with their parent role/domain name — NO generic `core/`, `modules/`, `common/`, `config/`, `utils/` allowed anywhere unless explicitly matching the Rule 2 global infrastructure exception;
-- filenames begin with the role + module as a prefix (e.g., `admin-billing-invoice.controller.ts`).
+- filenames begin with the role + submodule as a prefix (e.g., `admin-billing-invoices-query.controller.ts`).
 
-Canonical prefixing architecture to verify against:
+Canonical prefixing and sub-module architecture to verify against:
 
 ```text
 backend-admin/
-├── admin-core/                             ← (Top-level prefixed, NOT core/)
-│   ├── admin-guards/                       ← (Sub-folder prefixed, NOT guards/)
-│   │   └── admin-core-jwt-auth.guard.ts    ← (Role: admin, Module: core)
+├── admin-core/                                          ← (Role infrastructure ONLY)
+│   ├── admin-guards/
+│   │   └── admin-core-jwt-auth.guard.ts
 │   └── admin-core.module.ts
-└── admin-modules/                          ← (Top-level prefixed, NOT modules/)
-    └── admin-billing/                      ← (Feature folder prefixed)
-        ├── billing-controllers/            ← (Sub-folder prefixed with module name)
-        │   └── admin-billing-invoice.controller.ts
-        ├── billing-dto/
-        │   └── admin-billing-create-invoice.dto.ts
-        └── admin-billing.module.ts
+└── admin-modules/                                      ← (ALL feature domain modules live here)
+    └── admin-attendance/                               <-- Domain Module (Domain Quarantine)
+        ├── admin-attendance.module.ts                  <-- Pure Aggregator NestJS Module (imports child sub-modules)
+        ├── admin-attendance-backend-feature.md         <-- Master Domain Documentation
+        ├── admin-attendance-backend-forbidden.md
+        │
+        ├── attendance-dashboard/                       <-- Autonomous Sub-Module (AI Repair Unit)
+        │   ├── dashboard-controllers/
+        │   ├── dashboard-services/
+        │   ├── dashboard-repositories/
+        │   ├── dashboard-dto/
+        │   ├── dashboard-tests/
+        │   │   ├── unit/
+        │   │   └── harness/                            <-- Standalone Run & Test Harness
+        │   ├── attendance-dashboard.module.ts          <-- Sub-module NestJS definition
+        │   ├── attendance-dashboard-backend-feature.md <-- All 22 Canonical Sections
+        │   ├── attendance-dashboard-backend-forbidden.md
+        │   └── attendance-dashboard-backend-contract.md
+        │
+        └── attendance-history/                         <-- Autonomous Sub-Module (AI Repair Unit)
+            └── ... (identical canonical micro-structure)
 ```
 
 Any deviation from this canonical pattern (generic folder names without prefix) is a Rule 0D / Rule 2 violation.
@@ -5945,10 +6159,10 @@ Verify ALL of:
 - parent domain/module prefix;
 - exported class matches filename semantics;
 - every structural folder follows required prefixing;
-- no generic `core/`, `modules/`, `common/`, `shared/`, `utils/`, `config/`, etc. unless the architecture explicitly allows an infrastructure exception;
+- no generic `core/`, `modules/`, `common/`, `shared/`, `utils/`, `config/`, etc.;
 - file and class names remain collision-resistant for AI context;
 - every backend role container contains EXACTLY the two mandatory top-level directories: `{role}-core/` and `{role}-modules/` — any feature module placed directly under `backend-{role}/` is a Rule 2 Architecture Violation;
-- all feature module sub-folders follow the mandatory naming table (`{module}-services/`, `{module}-controllers/`, `{module}-repositories/`, `{module}-dto/`, `{module}-mappers/`, `{module}-domain/`, `{module}-types/`, `{module}-constants/`, `{module}-exceptions/`, `{module}-locales/`, `{module}-jobs/`, `{module}-adapters/`) — unprefixed alternatives (`services/`, `dto/`, `mappers/`, etc.) are Architecture Violations;
+- under the Universal Day-1 Sub-Module Architecture (Rule 0A.2), all feature artifact sub-folders MUST live inside `{submodule}/` and follow the mandatory `{submodule}-{artifact}/` naming table (`{submodule}-services/`, `{submodule}-controllers/`, `{submodule}-repositories/`, `{submodule}-dto/`, `{submodule}-mappers/`, `{submodule}-domain/`, `{submodule}-types/`, `{submodule}-constants/`, `{submodule}-exceptions/`, `{submodule}-locales/`, `{submodule}-jobs/`, `{submodule}-adapters/`, `{submodule}-tests/`) — unprefixed alternatives (`services/`, `dto/`, `mappers/`, etc.) or placing artifact folders directly under `{role}-{domain}/` (violating Domain Quarantine) are Critical Architecture Violations;
 - `{role}-core/` contains ONLY framework infrastructure (guards, decorators, interceptors, pipes, middleware, root module) — business logic in `{role}-core/` is an Architecture Violation.
 
 IMPORTANT:
@@ -6180,24 +6394,39 @@ Verify `import`/`export` consistency.
 
 ---
 
-## RULE 19 — MODULE FEATURE DOCUMENTATION
+## RULE 19 — MODULE FEATURE DOCUMENTATION & AUTONOMOUS SUB-MODULE TRIO
 
-Verify EVERY module contains the required feature doc and that it includes:
+Verify EVERY autonomous backend sub-module contains its dedicated **Autonomous Sub-Module Documentation Trio**:
+1. `[role]-[submodule]-backend-feature.md` (or `_backend-feature.md`) containing ALL 22 Canonical Sections:
+   - Scope and Non-Scope
+   - Sub-Module Directory & Component Inventory
+   - Controller & Endpoint Inventory
+   - Frozen API Contract (Request, Response, Envelope)
+   - UI-Required Fields Mapping (Rule 82A Parity)
+   - Query & Mutation Flow / Key Sequences
+   - Permissions, RBAC & Tenant Isolation Rules
+   - Data and State Architecture (Entities, DB Tables, Migrations)
+   - Repository Layer & Query Methods (N+1 Prevention, Joins)
+   - Caching Strategy & Redis Key Registry (TTL, Invalidation)
+   - Event Emitter & Consumer Registry (Domain Events, Outbox, Redis Streams)
+   - Background Jobs & Distributed Queue Tasks (Payload, Retry, Idempotency)
+   - Concurrency, Locks & Idempotency Rules (Pessimistic Locking, Idempotency Keys)
+   - Error & Exception Registry (Domain Error Codes, HTTP Statuses)
+   - Security, PII & Audit Logging Requirements
+   - Approved External & Infrastructure Dependencies (Boundary Invariants)
+   - File Responsibility Map & Architecture Exceptions
+   - ADR (Architectural Decision Records) & Known Contract Gaps
+   - Rule Compliance Checklist (35+ Verification Items)
+   - Section 20: Standalone Run, Mock & Test Harness (Seeders, In-Memory DB / SQLite / Testcontainers)
+   - Section 21: Module Portability & Host Integration Guide (4-Step host integration)
+   - Section 22: Deliverables & Version History (10/10 Portability Score & Changelog)
+2. `[role]-[submodule]-backend-forbidden.md` (or `_backend-forbidden.md`) — concrete forbidden anti-patterns (no sibling imports, no parent shared folders).
+3. `[role]-[submodule]-backend-contract.md` (or `_backend-contract.md`) — public frozen endpoints, DTO schemas, and event contracts.
 
-- 3+ sentence purpose;
-- exact directory structure;
-- feature inventory;
-- external dependencies;
-- data/state architecture;
-- permissions;
-- async/jobs;
-- events;
-- edge cases;
-- rule references;
-- no fake `TBD`;
-- no stale claims.
-
-Also verify freshness against code changes where commit metadata is supplied.
+Also verify:
+- Master domain-level docs at parent domain root (`[role]-[domain]-backend-feature.md`, `[role]-[domain]-backend-forbidden.md`);
+- Freshness rule: documentation updated in the same commit as code changes;
+- Absence of "TBD", "N/A", or boilerplate placeholders (violates Section 47I).
 
 ---
 
@@ -6325,16 +6554,41 @@ Pytest must not become internal unit testing.
 
 ## RULE 28 — CANONICAL API RESPONSE ENVELOPE
 
-Verify exact canonical fields and presence/absence conditions for:
+Verify exact canonical fields and presence/absence conditions for universal discriminated union:
+`ApiResponse<T> = ApiSuccess<T> | ApiFailure`
 
-- success;
-- message;
-- data;
-- meta;
-- error;
-- errorCode;
-- statusCode;
-- validationErrors.
+```typescript
+export interface ApiSuccess<T> {
+  success: true;
+  message: string;
+  data: T;
+  meta?: PaginationMeta;
+  requestId: string;
+  statusCode?: HttpStatus | number;
+}
+
+export interface ApiFailure {
+  success: false;
+  message: string;
+  data: null;
+  error: string;
+  errorCode: string;
+  statusCode: HttpStatus | number;
+  requestId: string;
+  validationErrors?: ValidationErrorItem[];
+}
+```
+
+Verify presence/absence rules:
+- `success`: `true` on 2xx, `false` on all errors.
+- `message`: human-readable, always present.
+- `data`: payload `T` on success, ALWAYS `null` on error.
+- `meta`: present only on paginated list responses, omitted on simple responses.
+- `requestId`: UUID correlation identifier, always present.
+- `error`: error category string, absent on success, present on error.
+- `errorCode`: machine-readable `DOMAIN.ENTITY.REASON` in SCREAMING_SNAKE_CASE.
+- `statusCode`: `HttpStatus` enum in TypeScript/Python code, serialized to numeric on wire.
+- `validationErrors`: present on canonical 400 validation failures.
 
 ---
 
@@ -7407,8 +7661,8 @@ No unified model shortcut.
 Verify physical locations:
 - Mappers MUST be in `{module}-mappers/`
 - Domain objects MUST be in `{module}-domain/`
-- ORM entities (`*.entity.ts`) MUST be in `{module}-repositories/`
-- ORM entities MUST NEVER be placed in `{module}-domain/`
+- ORM entities (`*.entity.ts`) MUST follow canonical entity path from architecture rules
+- ORM entities MUST remain separate from pure domain models
 
 ---
 
@@ -7471,7 +7725,7 @@ Verify:
 - PR security impact section;
 - no bypass.
 
-This is a merge governance requirement, not something an AI may self-certify.
+This is a merge governance requirement, not something an AI may self-certify. *(Development Note: AI agents write 100% of the code, tests, and security impact analysis autonomously without pausing or asking for permission during development; this gate applies at Git PR merge time).*
 
 ---
 
@@ -7677,18 +7931,13 @@ cross-document discrepancy instead of inventing or deleting the rule.
 Future versions of the architecture document may insert, remove, rename, split, or add
 rules. The dynamic rule ledger is always authoritative over this prompt's current examples.
 
-## RULE 103 - STRICT MUTATIONAL IDEMPOTENCY
+## RULE 103 — RETRY-SAFE MUTATION AND IDEMPOTENCY CONTRACT
 
-Apply exactly as defined by the supplied architecture:
+Apply retry-safe idempotency classification as defined in the normative architecture document:
 
-- all POST/PATCH/PUT/DELETE mutations;
-- framework-appropriate idempotency enforcement (e.g., `@RequireIdempotencyKey()` for NestJS or equivalent Django middleware);
-- missing-key rejection;
-- request-body hash verification;
-- atomic in-progress locking;
-- server-side deduplication;
-- completion only after DB commit;
-- fail-closed behavior when Redis/store is unavailable;
+- Idempotency-Key is mandatory for duplicate-sensitive, offline-queueable, financial, communication, bulk, asynchronous, and externally side-effecting mutations;
+- Naturally idempotent state-setting operations may omit the key when repeated requests cannot create duplicate side effects;
+- Verify key validation, hash binding, atomic in-progress locking, server-side deduplication, and PostgreSQL `idempotency_keys` table persistence;
 - GET never requires key.
 
 ---
@@ -7949,15 +8198,16 @@ Verify:
 
 ---
 
-## RULE 117 — RAG-READY API PROJECTIONS
+## RULE 117 — UNIVERSAL RAG-READY API PROJECTIONS
 
 Verify:
 
-- Module exposes a dedicated `?format=rag` query param for AI/Chatbot consumers.
-
+- ALL read/query endpoints (`GET`) across all backend modules MUST support RAG-Ready API projections out-of-the-box via `?format=rag`.
 - RAG endpoints return flattened, token-optimized text/markdown representations, NOT raw deep JSON.
-
+- Automated security and sanitization: tenant isolation strictly preserved (`gymId`, `branchId` from JWT), and sensitive fields (passwords, card tokens, secret keys, internal salts, and any field marked with `@Exclude()` or serializer exclusion) are automatically stripped/masked without requiring human intervention or manual approvals.
 - Data structures are chunkable and avoid UUIDs/timestamps as the primary content.
+- Mutating endpoints (`POST`, `PUT`, `PATCH`, `DELETE`) do NOT accept `?format=rag`.
+- RAG projections remain strictly within their role and module boundary; do NOT create a generic root-level `_rag` namespace.
 
 ---
 
@@ -7992,6 +8242,61 @@ Verify:
 - Each transaction guarantees `total_debits == total_credits` (enforced transactionally).
 
 - Corrections require reversal journal entries; ledger rows are immutable (no UPDATE or DELETE).
+
+---
+
+## RULE 120 — MOBILE CLIENT COMPATIBILITY CONTRACT
+
+Verify:
+- Client platform (`X-Client-Platform`: `IOS` | `ANDROID`) and semantic version (`X-Client-Version`) handling;
+- Backwards-compatible response shapes for supported mobile versions;
+- Deprecation headers (`X-API-Deprecated: true`, `X-API-Sunset: <RFC3339>`);
+- Forced upgrade status response (`CLIENT.APP.UPGRADE_REQUIRED` with 426 Upgrade Required);
+- Zero breaking changes to active mobile fields without a versioned endpoint transition.
+
+---
+
+## RULE 121 — OFFLINE SYNC & DELTA SYNCHRONIZATION
+
+For syncable mobile feature modules, verify:
+- Delta synchronization support via `?since=<ISO8601-UTC>` timestamp query;
+- Response includes `serverTime` (UTC) for client synchronization anchoring;
+- Response contains `deletedIds[]` for tombstone propagation (90-day retention);
+- Pagination of large deltas via cursor or token with `hasMore: boolean`;
+- Soft-deleted entities retain tombstones to enable offline client sync.
+
+---
+
+## RULE 122 — MOBILE UPLOAD AND DOWNLOAD RESILIENCE
+
+Verify:
+- Pre-signed cloud storage URLs (S3/GCS) with short-lived expiration for large file operations;
+- Content-Type / MIME validation before pre-signed URL generation;
+- Chunked upload session initiation and completion endpoints for large media;
+- Content-Length validation against strict maximum limits;
+- Original filenames stripped and replaced with UUIDs before storage.
+
+---
+
+## RULE 123 — MOBILE PUSH NOTIFICATION DEVICE REGISTRATION
+
+Where push notifications are supported, verify:
+- Dedicated device registration endpoint (`POST /devices/register`);
+- Registration payload includes `deviceToken`, `platform` (`IOS` | `ANDROID`), and optional `appVersion`;
+- Push tokens stored in a dedicated `device_tokens` table scoped to `user_id` and `tenant_id`;
+- Inactive/invalid tokens deactivated upon APNs/FCM feedback;
+- No sensitive PII or credentials included in raw push notification payloads.
+
+---
+
+## RULE 124 — MOBILE TIME, CURRENCY, AND LOCALE SEMANTICS
+
+Verify:
+- All timestamps transmitted as ISO-8601 UTC strings (`YYYY-MM-DDTHH:mm:ss.sssZ`);
+- Monetary values transmitted as integers in the smallest currency unit paired with standard ISO 4217 currency codes;
+- Locale negotiation via `Accept-Language` header;
+- Error messages return machine-readable error codes (`ERROR_CODE`) alongside human-readable default text;
+- Backend avoids sending pre-formatted localized currency/date strings that strip raw numerical values from the client.
 
 ---
 
@@ -8213,124 +8518,118 @@ The final report MUST identify which framework mapping was actually used.
 
 ---
 
-# 47H. BACKEND FEATURE-DOCUMENT TEMPLATE COMPLETENESS GATE
+# 47H. BACKEND FEATURE-DOCUMENT TEMPLATE COMPLETENESS GATE (CANONICAL 22 SECTIONS & DOCUMENTATION TRIO)
 
-Rule 19 is not satisfied merely because `[role]-[module]-backend-feature.md` exists.
-
-When a feature document is supplied, verify the COMPLETE mandatory structure:
+Rule 19 is not satisfied merely because `[role]-[module]-backend-feature.md` exists. Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2), every autonomous backend sub-module MUST contain its dedicated **Documentation Trio** with ALL 22 Canonical Sections in `-backend-feature.md`:
 
 ```text
-# [Module Name] Backend Feature Map
-
-## Module Purpose
-## Directory Structure
-## Feature Inventory
-## Approved External Dependencies
-## Data and State Architecture
-## Business Flow / Key Sequences
-## File Responsibility Map
-## Permissions and Security
-## Edge Cases / AI Warnings
-## Frozen API Contract
-### Request Shape
-### Response Shape
-### UI-Required Fields
-### Pagination / Error Contract
-## Rule Compliance Checklist
+[ ] 1. ## Scope and Non-Scope
+[ ] 2. ## Sub-Module Directory & Component Inventory
+[ ] 3. ## Controller & Endpoint Inventory
+[ ] 4. ## Frozen API Contract
+[ ] 5. ## UI-Required Fields Mapping (Rule 82A Parity)
+[ ] 6. ## Query & Mutation Flow / Key Sequences
+[ ] 7. ## Permissions, RBAC & Tenant Isolation Rules
+[ ] 8. ## Data and State Architecture
+[ ] 9. ## Repository Layer & Query Methods
+[ ] 10. ## Caching Strategy & Redis Key Registry
+[ ] 11. ## Event Emitter & Consumer Registry
+[ ] 12. ## Background Jobs & Distributed Queue Tasks
+[ ] 13. ## Concurrency, Locks & Idempotency Rules
+[ ] 14. ## Error & Exception Registry
+[ ] 15. ## Security, PII & Audit Logging Requirements
+[ ] 16. ## Approved External & Infrastructure Dependencies
+[ ] 17. ## File Responsibility Map & Architecture Exceptions
+[ ] 18. ## ADR (Architectural Decision Records) & Known Contract Gaps
+[ ] 19. ## Rule Compliance Checklist (35+ Verification Items)
+[ ] 20. ## Standalone Run, Mock & Test Harness (Seeders, SQLite/Testcontainers Harness)
+[ ] 21. ## Module Portability & Host Integration Guide (Drop-in host integration)
+[ ] 22. ## Deliverables & Version History (Sub-Module Self-Audit 10/10 Portability Score)
 ```
 
-For each section verify the exact source requirements.
+Missing even one of these 22 sections = `PARTIALLY_COMPLIANT` / Documentation Quality Failure.
 
-### Module Purpose
+### Mandatory Verification per Section
 
-Must:
-- be 3+ sentences;
-- explain business problem;
-- state key invariants;
-- state what AI must NEVER do.
+#### 1. Scope and Non-Scope
+Must define 3+ concrete in-scope capabilities and explicitly enumerate non-scope/delegated capabilities.
 
-### Directory Structure
+#### 2. Sub-Module Directory & Component Inventory
+Must list every relevant file inside `{submodule}-{artifact}/` and state its single responsibility.
 
-Must:
-- list exact relevant files;
-- identify file responsibility;
-- avoid generic directory descriptions.
+#### 3. Controller & Endpoint Inventory
+Must contain one row per endpoint with HTTP method, path, purpose, status codes, and auth guards.
 
-### Feature Inventory
+#### 4. Frozen API Contract
+Must specify exact request shapes (DTOs), response shapes (canonical envelope DTOs), and field types.
 
-Must:
-- contain one row per endpoint;
-- use full-sentence purposes;
-- include request DTO;
-- include response DTO.
+#### 5. UI-Required Fields Mapping (Rule 82A Parity)
+Must map every frontend UI requirement from `_features.md` (table columns, KPI metrics, charts, badges, search filters).
 
-### Approved External Dependencies
+#### 6. Query & Mutation Flow / Key Sequences
+For every non-trivial mutation, verify the step-by-step execution chain (Controller ➔ DTO ➔ Orchestrator ➔ UnitOfWork ➔ Service ➔ Repository ➔ Outbox ➔ Commit).
 
-Must distinguish:
-- business feature dependencies;
-- infrastructure dependencies;
-- runtime/event dependencies.
+#### 7. Permissions, RBAC & Tenant Isolation Rules
+Every endpoint MUST declare required roles and explicit tenant filter (`gymId`, `branchId` from JWT).
 
-If none exist, explicitly state `None`.
+#### 8. Data and State Architecture
+Must verify DB entities, table names, foreign key relationships, and soft-delete (`deletedAt IS NULL`) policy.
 
-### Data and State Architecture
+#### 9. Repository Layer & Query Methods
+Must verify concern-based splitting (read/write), N+1 query prevention (Rule 34), and parameterized queries (Rule 7).
 
-Verify:
-- DB entities + table names;
-- Redis cache keys + TTL;
-- event emitters;
-- background jobs;
-- idempotency keys.
+#### 10. Caching Strategy & Redis Key Registry
+Must verify cache key formats, TTL values, and explicit mutation-triggered invalidation.
 
-### Business Flow / Key Sequences
+#### 11. Event Emitter & Consumer Registry
+Must verify emitted domain events from `event-registry.constants.ts` and Transactional Outbox + Redis Streams durability.
 
-For every non-trivial mutation verify the actual sequence:
+#### 12. Background Jobs & Distributed Queue Tasks
+Must verify BullMQ queue names, trigger conditions, payload schemas, retry policies, and idempotency guarantees.
 
-```text
-Controller
-→ DTO validation
-→ Orchestrator
-→ transaction
-→ service
-→ repository
-→ commit
-→ event/job
-```
+#### 13. Concurrency, Locks & Idempotency Rules
+Must verify pessimistic locking (`SELECT FOR UPDATE`) on financial/balance mutations (Rule 41) and `Idempotency-Key` headers (Rule 103).
 
-where applicable.
+#### 14. Error & Exception Registry
+Must map domain exceptions, machine-readable error codes (`DOMAIN.ENTITY.REASON`), HTTP status enums, and message keys.
 
-### File Responsibility Map
+#### 15. Security, PII & Audit Logging Requirements
+Must verify PII masking (Rule 35) and structured audit logging (Rule 14/30).
 
-Every relevant file MUST identify:
-- what it does;
-- what it MUST NOT do.
+#### 16. Approved External & Infrastructure Dependencies
+Must list approved dependencies. Sibling sub-module dependencies must be strictly **NONE**.
 
-### Permissions and Security
+#### 17. File Responsibility Map & Architecture Exceptions
+Every file must declare `// RESPONSIBILITY:` and `// FLOW:` comments (Rule 76, 79). Any exception must include `// architecture-exception: [reason]`.
 
-Every endpoint MUST have:
-- required roles;
-- resource-level authorization where needed;
-- ownership/tenant/branch rules where applicable;
-- CODEOWNERS path when required.
+#### 18. ADR & Known Contract Gaps
+Must document architectural decisions and state known contract gaps (or "None").
 
-### Edge Cases / AI Warnings
+#### 19. Rule Compliance Checklist
+Do NOT accept a static copy-paste. Every checked item (35+ rules) must match current code and current architecture.
 
-Minimum 3 concrete module-specific entries.
-Each must cite the relevant architecture rule.
+#### 20. Standalone Run, Mock & Test Harness
+Must document exact harness location (`{submodule}-tests/harness/[submodule].harness.ts`), local seeders (`[submodule].seed.ts`), in-memory SQLite/Testcontainers DB, and execution command for standalone testing without host monolith.
 
-### Frozen API Contract
+#### 21. Module Portability & Host Integration Guide
+Must provide 4-step instructions for dropping the sub-module into a host application, registering in domain aggregator module, running migrations, and verifying environment keys.
 
-Verify:
-- exact request shape;
-- exact response shape;
-- complete UI-required fields;
-- pagination/error contract;
-- synchronization with frontend `_features.md`.
+#### 22. Deliverables & Version History (10/10 Portability Score)
+Must verify all 10 items of the Sub-Module Self-Audit & ZIP Compliance Gate:
+1. Autonomous Directory Structure (`{submodule}-{artifact}/`)
+2. Zero Cross-Submodule Imports
+3. Standalone Test Harness with Seeders
+4. Complete DTO & Validation Isolation
+5. Complete Repository & Query Isolation
+6. Documentation Trio Present & Complete
+7. Frozen API Contract Verified
+8. Ambient Core Stubs & Machine-Readable Manifest (`contracts/core-contracts.stub.ts`, `required-core-contracts.json` budget ≤ 7)
+9. Standard 8-State Mock Scenario Catalog (`fixtures/mock-scenarios.ts`)
+10. AI Portability Guarantee
 
-### Rule Compliance Checklist
-
-Do NOT accept a static checklist copied from an old module.
-Every checked item must match current code and current architecture.
+### Documentation Trio Audit (`_backend-forbidden.md` & `_backend-contract.md`)
+- `[role]-[submodule]-backend-forbidden.md`: Must list concrete sub-module-specific forbidden anti-patterns (no sibling imports, no parent shared folders, no tenant bypass).
+- `[role]-[submodule]-backend-contract.md`: Must freeze public endpoint URLs, request/response DTO schemas, and emitted event payloads.
 
 ---
 
@@ -9673,7 +9972,7 @@ Order repairs by dependency rather than blindly using categories.
 ### REPAIR PLAN FIX CLASSIFICATION (MANDATORY)
 Every repair step in the plan MUST be classified under one of the three categories:
 1. **`SOURCE_LEVEL_FIX`:** All source-level changes (controllers, services, entities, DTOs, repositories, migrations, guards, decorators, validation pipes, unit tests, mock fixtures, Swagger documentation, config files, TypeScript types) repairable in the supplied scope. The Repair AI MUST fix all of these in the current session. Host/runtime absence (no live DB, no running server, no test runner) is NEVER a reason to mark these as blocked or to pause.
-2. **`HOST_RUNTIME_BLOCKED_VERIFICATION`:** Code and tests are fully implemented, but running the tests/server requires a host runtime. The Repair AI writes the code, and designates verification as `DEFERRED_TO_HOST_RUNTIME` along with the exact CLI commands for the human developer.
+2. **`DEFERRED_TO_HOST_RUNTIME`:** Code and tests are fully implemented, but running the tests/server requires a host runtime. The Repair AI writes the code, and designates verification as `DEFERRED_TO_HOST_RUNTIME` along with the exact CLI commands for the human developer.
 3. **`EXTERNAL_PRODUCT_DECISION_BLOCKED`:** Genuine external blockers (breaking business requirements, cross-service schema migrations requiring DB admin / product owner approval). Host/runtime absence MUST NEVER be placed here.
 
 Preferred dependency logic:
@@ -9883,10 +10182,10 @@ Before producing the final verdict, verify:
 [ ] Relevant authored files inspected
 [ ] Exclusions recorded
 [ ] Unreadable files recorded
-[ ] Rule 0A & 0A.1 — AI repair boundary is FEATURE MODULE (1-to-1 frontend feature isomorphism verified)
+[ ] Rule 0A, 0A.1 & 0A.2 — AI repair boundary is AUTONOMOUS SUB-MODULE (Universal Day-1 Sub-Module Architecture, Domain Module Quarantine, Sibling DI Firewall, Parent Shared Folder Ban, Strict WET, Documentation Trio with all 22 sections, and Sub-Module ZIP Guarantee verified)
 [ ] Rule 0B — Hard feature write boundary (no sibling coupling) verified
 [ ] Rule 0C — Change scope failure conditions checked
-[ ] Rule 0D — All backend folders use backend- prefix; ALL internal structural business folders are role/module-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)
+[ ] Rule 0D — All backend folders use backend- prefix; ALL internal structural business folders are role/submodule-prefixed; NO generic modules/, config/, utils/ exist (src/core/ and src/infrastructure/ exceptions verified)
 [ ] Rule 0E — Feature modules do not independently bootstrap global infrastructure
 [ ] Frontend API/network inventory complete
 [ ] Every frontend backend-derived requirement assigned an ID
@@ -9963,11 +10262,11 @@ Before producing the final verdict, verify:
 [ ] Rule 114 (No Mega API) — No Mega API; dashboard APIs are decomposed
 [ ] Rule 115 (Exhaustive Documentation) — Exhaustive framework-appropriate documentation for classes/methods/DTOs/controllers/services (TypeScript/JavaScript: JSDoc; Python/Django: Python docstrings), database columns (@Column/schema/help_text), and config variables (.env), including Intent + Edge Cases + Side Effects + AI Notes
 [ ] Rule 116 (OpenAPI Annotations) — Endpoints, DTOs, and Response objects/schemas are annotated and strictly typed with OpenAPI
-[ ] Rule 117 (RAG Namespace) — Dedicated RAG formatting (`format=rag`) and token-optimized markdown representation
+[ ] Rule 117 (Universal RAG Projections) — Universal `?format=rag` support on all GET query endpoints with token-optimized markdown representation and automated sensitive field masking
 [ ] Rule 118 (Immutable Event Log) — Immutable domain events emitted to a broker and stored in append-only event log/timeseries; CQRS analytics
 [ ] Rule 119 (Immutable Ledger) — Immutable ledger rows, `journal_id`, `account_id`, `direction`, positive `amount_minor_units`, balanced debits/credits, reversal journals; NO direct UPDATEs
 [ ] Tests checked for behavioral integrity
-[ ] Documentation checked against implementation
+[ ] Rule 19 Documentation Trio verified — every autonomous sub-module contains _backend-feature.md (with ALL 22 canonical sections, Section 20 Standalone Harness & Seeders, Section 21 Portability Guide, Section 22 Revision History & 10/10 Portability Score), _backend-forbidden.md, and _backend-contract.md
 [ ] Shared/outside-scope dependencies classified
 [ ] Runtime availability disclosed
 [ ] Omission sweep completed
@@ -10195,7 +10494,7 @@ SCOPE / EVIDENCE COMPLETENESS
 
 # 85B. LATE-RULE COMPLETENESS SMOKE CHECK
 
-Confirm that Rules 115–119 are present in the dynamic rule ledger and were included in:
+Confirm that Rules 115–124 are present in the dynamic rule ledger and were included in:
 
 - applicability;
 - evidence collection;
@@ -10218,6 +10517,25 @@ DO NOT dump massive output tables directly into the chat. You MUST write your fi
 - Stage 1 Output → `stage-1-frontend-requirements.md`
 - Stage 2 Output → `stage-2-backend-audit.md`
 - Stage 3 Output → `stage-3-final-verdict.md`
+
+*(Note: These stage artifacts are written to the intermediate execution-state directory `/mnt/data/.ai_execution_state/[SAFE_TASK_ID]/` during execution turns to prevent context truncation. In the final delivery ZIP, they are consolidated into `INTEGRATION_GUIDE.md` and `RE_AUDIT_CHECKLIST_RESULT.md` per the No Loose Markdown Clutter Rule in Section 86B.3.8.)*
+
+## UI AUTOMATION APPLICABILITY RULE
+
+API contract tests are mandatory for every backend endpoint implemented or repaired.
+
+UI automation tests are mandatory only when ALL of the following are true:
+1. A frontend test harness is supplied or explicitly approved;
+2. The relevant UI test framework and dependency are approved in the normative package registry;
+3. The writable scope includes the approved UI/E2E test location;
+4. The required test environment can be represented without modifying frontend source.
+
+If any condition is not met:
+- create or update backend API E2E tests where in scope;
+- document the exact UI automation scenario in `INTEGRATION_GUIDE.md`;
+- classify UI runtime execution as `DEFERRED_TO_HOST_RUNTIME` or `OUTSIDE_SUPPLIED_SCOPE`, as applicable;
+- do not falsely claim UI automation coverage.
+
 ## 86B.2 E2E API AND SELENIUM TEST GENERATION MANDATE
 
 > ⛔⛔⛔ **MANDATORY DELIVERABLE GATE: SELENIUM & E2E TEST SUITES ARE NON-NEGOTIABLE** ⛔⛔⛔
@@ -10772,7 +11090,7 @@ It is a targeted verification pass:
    - Confirm the repair was applied.
    - Confirm the repair is correct against the frontend requirement.
    - Confirm no new violation was introduced by the repair.
-   - Change the status to PASS (for all `SOURCE_LEVEL_FIX` items) or record source-fix as PASS with verification marked `DEFERRED_TO_HOST_RUNTIME` (for `HOST_RUNTIME_BLOCKED_VERIFICATION` items). No `SOURCE_LEVEL_FIX` finding within the supplied scope may remain FAIL, PARTIAL, or BLOCKED.
+   - Change the status to PASS (for all `SOURCE_LEVEL_FIX` items) or record source-fix as PASS with verification marked `DEFERRED_TO_HOST_RUNTIME` (for `DEFERRED_TO_HOST_RUNTIME` items). No `SOURCE_LEVEL_FIX` finding within the supplied scope may remain FAIL, PARTIAL, or BLOCKED.
 
 2. **Run the 112-item Anti-Skipping Checklist (Section 84) on the repaired code:**
    - Every `[ ]` item must be re-evaluated against the repaired state.
@@ -10878,7 +11196,7 @@ HIGHEST DISCOVERED RULE NUMBER: [number / identifier]
 > ⛔ **NO ARBITRARY SCORE PENALTY FOR OFFLINE AUDIT:**
 > When commands, migrations, or tests cannot be executed due to the absence of a live host database or server, the Static Architecture & Code Completeness scorecard MUST evaluate code and architecture completeness statically. Unexecuted runtime verification MUST NOT be used to artificially fail rules or deduct points from static compliance. Rules whose source implementation is complete are scored as PASS, with runtime verification noted as `DEFERRED_TO_HOST_RUNTIME`.
 
-# 86B.6 FINAL V6.3 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
+# 86B.6 FINAL V6.4 EXHAUSTIVE CONTRACT-COMPLETENESS REQUIREMENT
 
 A backend MUST NOT be declared “complete” solely because:
 

@@ -1,8 +1,32 @@
 # Enterprise-Grade, AI-Friendly Web Frontend Architecture Guidelines
 
+## Master Cross-Document Precedence Order
+
+When instructions conflict across documents, apply this exact order of authority:
+
+1. Security, privacy, legal, authorization, tenant isolation, and data-protection rules
+2. Accessibility and browser platform safety requirements (WCAG 2.2 AA)
+3. Explicit user-approved scope and verified API contracts
+4. `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`
+5. `WEB_FRONTEND_UI_UX_DESIGN.md` for visual/token decisions
+6. Execution workflow documents (when supplied: `FRONTEND_ROLE_MODULE_CREATE_AUDIT_REPAIR_V2_11.md` or standalone execution mode; when unsupplied, `WEB_FRONTEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md` serves as the self-contained authority) for audit sequencing, delivery artifacts, and reporting
+7. Sub-module documentation trio (`[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`)
+8. Existing implementation conventions
+
+A lower-priority rule MUST NOT override a higher-priority rule.
+Any unresolved conflict MUST be recorded as `BLOCKED_BY_SUPPLIED_CONTRACT` rather than resolved through invention.
+
+## Canonical Rule Reference Policy
+
+When a rule is repeated for convenience:
+- The first named canonical section is authoritative;
+- Repeated copies must link to or reference the canonical rule;
+- Repeated copies must not redefine, weaken, or conflict with the canonical wording;
+- Any conflicting duplicate wording is obsolete and must be removed during the next document revision.
+
 > ⛔⛔⛔ **AI AGENT — MANDATORY ENFORCEMENT & INTEGRITY DIRECTIVE — READ FIRST** ⛔⛔⛔
 >
-> **VIOLATION OF ANY RULE IN THIS DOCUMENT = ARCHITECTURE FAILURE. ALL OUTPUT IS DISCARDED. MUST RESTART.**
+> **ARCHITECTURAL COMPLIANCE IS MANDATORY. FOLLOW THE SEVERITY MODEL AND CANONICAL REPAIR PROTOCOL.**
 >
 > This document is the **absolute normative authority** for all web frontend code in this project. Every rule is MANDATORY unless the rule itself defines a named `NOT_APPLICABLE` condition with explicit evidence. The following words in this document carry their STRICTEST possible meaning:
 >
@@ -27,11 +51,49 @@
 > [ ] ROOT QUARANTINE verified — only permitted files in feature root
 > [ ] FRONTEND DELIVERY FREEZE GATE & DEFINITION OF DONE loaded into context
 > ```
-> **Failure to complete the above = entire output is discarded.**
+> **Failure to confirm the above = verification incomplete. Do not proceed until baseline is verified.**
 >
 > ⛔ **NO-PAUSE ON MISSING RUNTIME / HOST CAPABILITY (MANDATORY ANTI-STALL RULE):**
 > Unavailability of a running web server (Next.js/Vite dev server), live backend API, real browser, or Playwright test runner is NEVER a reason to pause, stall, abort, or declare web frontend code creation, audit, or repair "BLOCKED". The AI MUST fix every issue that can be resolved in source files (pages, layouts, components, custom hooks, Zustand stores, Zod schemas, URL configs, MSW mock fixtures, Playwright test files, documentation trio) in this session. Only live browser automation or live API network execution is designated as `DEFERRED_TO_HOST_RUNTIME`. Missing runtime is strictly forbidden as a reason to pause.
 > ⛔ **OFFLINE / STATIC SCORING DIRECTIVE:** When live browser or runtime test execution is unavailable in the execution environment, ratings (1 to 10) MUST evaluate **Static Architecture & Code Completeness**. The AI MUST NOT penalize, artificially deduct points, or refuse to rate simply because a live browser or server is absent. State the Static Compliance Rating directly (up to 10.0), noting dynamic execution separately as `DEFERRED_TO_HOST_RUNTIME`.
+>
+> ⛔ **AI HALLUCINATION REDUCTION DISCIPLINE (TARGET < 5% HALLUCINATION RATE):**
+> AI coding models hallucinate when context is ambiguous, dependencies are hidden across deep trees, or contracts are assumed rather than explicitly declared. To reduce AI hallucination from the industry baseline (>80% in multi-file projects) to under 5%:
+> 1. The AI MUST NOT invent, guess, or assume API response fields, store actions, Next.js route paths, or UI props. Every contract MUST be verified against Zod schemas, TypeScript types, or `[moduleName]_features.md`.
+> 2. When creating or debugging a module, the AI MUST rely primarily on the module's documentation trio (`[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`) and mock fixtures (`mocks/fixtures/`), treating source code as the LAST resort.
+> 3. Every file and folder MUST satisfy the **5-Second Comprehension Invariant**—a newly initialized AI context or human developer must understand its exact responsibility, inputs, outputs, and boundaries within 5 seconds without inspecting parent or sibling files.
+
+## RULE ENFORCEMENT & SEVERITY MODEL
+
+Rules in this document are classified into three severity levels:
+
+### P0 — Merge Blocker (Architecture Failure)
+Security, authentication, tenant isolation, cross-feature business imports (Rule 63), secret leaks, API contract mismatches, broken routing, typecheck (`tsc --noEmit`) failure, or broken build.
+A P0 failure means the feature MUST NOT be marked complete, approved, or delivered.
+
+### P1 — Required Before Release
+Accessibility (WCAG 2.2 AA), loading/empty/error states (Section 24), co-located test coverage, documentation freshness, responsive collapse, localization (`next-intl`), observability, and performance budgets.
+A P1 failure must be repaired in the current session. If host-dependent verification is required (e.g., live browser E2E execution), it must be explicitly designated as `DEFERRED_TO_HOST_RUNTIME` with CLI verification commands and tracking evidence.
+
+### P2 — Maintainability & Polish
+Descriptive naming, file-size guidance reviews, JSDoc docstrings, organization, and visual consistency.
+A P2 failure must be repaired whenever it materially improves isolation or maintainability.
+
+### Honest Reporting Directive
+The AI MUST NOT claim compliance that it cannot verify.
+If a rule cannot be verified within the provided scope (e.g. missing live backend), report: `NOT_VERIFIED_IN_SCOPE` or `DEFERRED_TO_HOST_RUNTIME` with the exact missing evidence. False-positive compliance claims are strictly prohibited.
+
+### Exception Rule
+A deviation is valid only when documented using:
+- Rule ID
+- Reason
+- Affected files
+- Risk
+- Compensating control
+- Review / expiry date
+- Human approver where required
+
+---
 
 ## CRITICAL FRONTEND STRUCTURE GATE (NON-NEGOTIABLE)
 
@@ -47,11 +109,15 @@ Before generating, auditing, or repairing ANY frontend role module, verify ALL o
 | **Role Container** | Must be `src/app/frontend_{role}/` (e.g., `src/app/frontend_admin/`) | Unprefixed role container = ARCHITECTURE VIOLATION. In repair: move to canonical prefix in RBG 1. |
 | **Canonical Feature Module** | Must be `{role}_{module}/` inside role container (e.g., `admin_members/`) | Generic name (`members/`) = NON_COMPLIANT. In repair: rename to prefixed module in RBG 1. |
 | **No Duplicate Route Tree** | Exactly ONE canonical directory represents the feature. No parallel route tree within supplied scope. | Sibling duplicate (e.g. `dashboard/` + `admin_dashboard/`) = ARCHITECTURE VIOLATION. In repair: consolidate into canonical directory in RBG 1. (Do not demand host route trees). |
-| **Root Quarantine** | ONLY `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the documentation trio (`[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md` or `_features.md`, `_forbidden.md`, `_theme_contract.md`) allowed in feature root. | Any other `.ts`/`.tsx` file in root = NON_COMPLIANT. In repair: move to prefixed subfolder in RBG 1. |
-| **Prefixed Sub-Folders** | ALL sub-folders must use single prefix: `[moduleName]_components/`, `[moduleName]_hooks/`, `[moduleName]_api/`, `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_store/`, `[moduleName]_utils/`, `[moduleName]_locales/`, `[moduleName]_mocks/`, `[moduleName]_tests/`. | Generic folder (`components/`, `api/`) or double-prefix = NON_COMPLIANT. In repair: rename to prefixed folders in RBG 1. |
+| **Root Quarantine** | Feature domain root (`src/app/frontend_{role}/{role}_{module}/`) contains ONLY `layout.tsx` (navigation wrapper/tab bar), `page.tsx` (submodule redirect), master documentation trio, and autonomous sub-module directories `{submodule}/`. 100% of feature business code lives inside autonomous sub-modules. Inside each autonomous sub-module, only route-entry files, `config/[role]_[submodule].url_config.ts`, and the Documentation Trio (`[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`) are allowed in its root. | Any business code in domain root or non-quarantine file in sub-module root = NON_COMPLIANT. In repair: move to child sub-module in RBG 1. |
+| **Sub-Module Sub-Folders & File Prefixing** | Inside autonomous sub-modules (`{domain}_{capability}/`), canonical standard subfolder names are used: `components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `mocks/`, `utils/`, `tests/`, `contracts/`. All files inside them MUST carry the full unique prefix: `[Role][Submodule][Name]` (e.g., `ManagerAttendanceDashboardMetricCard.tsx`, `useManagerAttendanceDashboardMetrics.ts`). Next.js framework dynamic routing folders (`[id]`, `[member_id]`, `[...slug]`, `@modal`, `_private`) are approved routing exceptions and may contain route-entry files only. Route groups like `(group)` are STRICTLY FORBIDDEN to prevent route conflicts. | Unprefixed file names, loose files, or route groups = NON_COMPLIANT. In repair: normalize in RBG 1. |
+| **Sub-Module Nesting Depth & Qualification** | Maximum folder depth below `{role}_{module}/` is strictly 1 level (`{domain}_{capability}/`). Sub-submodules are STRICTLY FORBIDDEN. Submodules qualify strictly by secondary navigation tabs, distinct sub-routes, or independent lifecycle per the 5-Gate Matrix; internal modals, slide-overs, and wizard steps MUST live in `components/` (`[Submodule]Views/`, `[Submodule]Modals/`). Goldilocks file count: 5–20 files; zero nano-modules (< 3 files) and zero mega-modules (> 25 files). | Sub-submodules or nano-modules = ARCHITECTURE VIOLATION. In repair: flatten to depth = 1 in RBG 1. |
 | **No Barrel Files** | NO `index.ts` or re-export facades. All imports must be direct absolute paths (`@/...`). | Barrel file = CIRCULAR DEPENDENCY RISK. In repair: remove barrel files and update imports in RBG 1. |
-| **Module Documentation Trio** | Every module MUST contain `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
-| **Centralized URL Config** | `[moduleName]_url_config.ts` MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
+| **Sub-Module Documentation Trio** | Every autonomous sub-module MUST contain `[role]_[submodule]_features.md` (with structured YAML frontmatter, all 22 canonical sections, Section 20 Standalone Harness, Section 21 Portability Guide), `[role]_[submodule]_forbidden.md`, and `[role]_[submodule]_theme_contract.md`. | Missing doc artifact = INCOMPLETE MODULE. In repair: generate missing docs from source in RBG 1. |
+| **Centralized URL Config** | `[role]_[submodule].url_config.ts` (or `config/[role]_[submodule].url_config.ts`) MUST exist and define all routes and API endpoints as `as const`. | Missing URL config = HARDCODED ROUTE RISK. In repair: generate centralized URL config in RBG 1. |
+| **Universal API Envelope Contract** | Every API response MUST conform to the discriminated union `ApiResponse<T> = ApiSuccess<T> | ApiFailure` with `requestId`, `success: boolean`, typed `data` on success, and `errorCode`, `statusCode`, `message` on failure. | Ad-hoc or untyped API response = ARCHITECTURE VIOLATION. In repair: align to canonical envelope in RBG 1. |
+| **Ambient Host Contract Stubs** | Every autonomous sub-module MUST declare or include `contracts/host-stubs.d.ts` (stubbing `@/lib/api`, `@/lib/logger`, `@/components/ui/*`, `@/lib/socket`, `@/lib/display_value`) guaranteeing 100% standalone TypeScript compilation (`tsc --noEmit`) and mock test execution when zipped. | Missing ambient stubs for external host contracts = PORTABILITY VIOLATION (P1). In repair: add `contracts/host-stubs.d.ts` in RBG 1. |
+| **Production Edge-Case Safety Invariants** | Sub-module code MUST enforce: (1) `Idempotency-Key: UUIDv4` on state-changing mutations, (2) `displayValue()` fallback for nullable data, (3) ≥300ms search debounce, (4) min-w/min-h loading stabilization (CLS < 0.1), (5) toast deduplication `toastId`, (6) `@tanstack/react-virtual` for lists > 50 items, (7) zero client secret exposure, (8) zero business entity persistence in `localStorage`. | Missing safety guards = NON_COMPLIANT. In repair: add required edge-case safety guards in RBG 1. |
 
 > ⛔ **Skipping this gate in audit invalidates downstream compliance results. In repair, all structural defects must be resolved in RBG 1.**
 
@@ -77,7 +143,7 @@ This document governs the **web frontend only** (Next.js / React / TypeScript / 
 | Feature isolation, module naming, AI repair boundary | Both platforms | |
 | Security principles (auth, permissions, PII) | Both platforms | |
 
-**Conflict Resolution Hierarchy:** When rules in this document conflict with each other or with other documents, resolve using this precedence order (highest to lowest):
+**Conflict Resolution Hierarchy:** When rules in this document conflict across documents, resolve using the **Master Cross-Document Precedence Order** defined at the top of this document (Security/Privacy > Platform/A11y > Explicit Contracts > Normative Architecture V1 > UI/UX Design > Execution Workflow V2.11 / Standalone Mode > Documentation Trio > Conventions). Within internal concerns, apply:
 1. **Security & Privacy** — authentication, authorization, PII handling, XSS prevention
 2. **Legal / Compliance** — WCAG 2.2 AA, data protection, financial regulations
 3. **Accessibility** — keyboard navigation, screen-reader support, reduced motion
@@ -87,6 +153,16 @@ This document governs the **web frontend only** (Next.js / React / TypeScript / 
 7. **Visual Preferences** — colors, spacing, micro-animations
 
 Deviations from this hierarchy MUST be documented in the affected module's `[moduleName]_features.md`.
+
+### Cross-Platform Backend Interaction Boundary & Separation of Concerns Scope Note
+
+> ⛔ **BACKEND ARCHITECTURE SEPARATION OF CONCERNS:**
+> This document strictly governs the **Web Frontend Client Tier** (Next.js / React / TypeScript / Tailwind CSS).
+> - **Backend Architectural Patterns Out of Scope for Frontend:** Server-side event-driven architecture patterns (including the Transactional Outbox Pattern, Redis Streams, Kafka event topics, Saga workflow orchestrators, CQRS write/read model segregation, database transaction boundaries, and NestJS/Django service layers) are strictly governed by their dedicated specification: `BACKEND_ARCHITECTURE_AND_DEVELOPMENT_RULES_V1.md`.
+> - **Frontend Interaction Boundaries:** The Web Frontend client interacts with backend services strictly via:
+>   1. **RESTful / RPC Command Endpoints:** Mutation operations MUST attach an `Idempotency-Key: UUIDv4` HTTP header (preventing double-submission / race conditions) and conform to the canonical `ApiResponse<T>` envelope.
+>   2. **Server-Sent Events (SSE) / WebSockets:** Real-time data streams (e.g., live attendance tracking, notifications) are consumed exclusively through the centralized socket client adapter (`@/lib/socket`).
+>   3. **Strict Isolation:** The frontend client NEVER interacts directly with backend database stores, cache layers, or message brokers. All communication crosses the API Gateway boundary.
 
 ---
 
@@ -109,7 +185,7 @@ All entries below are **required** unless explicitly marked as optional. AI agen
 | Real-Time | `socket.io-client` (WebSocket only) | No SSE, no Pusher, no Supabase real-time. See Rule 21. |
 | Icons | `lucide-react` | Size 18px, strokeWidth 2. No mixing icon families. |
 | Charts | `react-apexcharts` | Recharts and Chart.js are **forbidden**. |
-| Date/Time | `date-fns` or `dayjs` | No `moment.js`. See Rule 24. |
+| Date/Time | `date-fns` | 3.x. No `moment.js`, no `dayjs`. See Rule 24 & Approved Registry. |
 | Fonts | `next/font/google` (Inter) | No Google Fonts CDN `@import`. See Rule 56. |
 | Images | `next/image` | Raw `<img>` forbidden except documented exceptions. See Rule 33. |
 | i18n | `next-intl` | Co-located locale files per module. See Rule 18 / Locale Naming. |
@@ -128,9 +204,10 @@ All entries below are **required** unless explicitly marked as optional. AI agen
 
 Please follow these strict architectural rules:
 
-1. **Micro-Modularization, Feature-Based Sub-folders & File Size Ceilings (Crucial)**: 
-Break down all large or mixed files. Every **React component file** MUST contain one primary React component. Non-component files MAY contain multiple closely related declarations when they represent one cohesive responsibility, such as an API service for one entity family, a schema family, or a constants set. **CRITICAL:** Do not dump all these micro-files into a single flat directory. Group them logically into cohesive sub-folders within the module. 
-**IMPORTANT FOLDER NAMING:** Always prefix the main internal folders with the module name exactly once (e.g., use `[moduleName]_components/`, `[moduleName]_store/`, `[moduleName]_api/` instead of generic names like `components/`). Do NOT double-prefix folders (e.g., if the module is `superadmin_analytics`, the folder MUST be `superadmin_analytics_components/`, NOT `superadmin_analytics_analytics_components/`). This ensures that when providing context to an AI (using `@`), the AI only loads the exact folder for this module, avoiding cross-module hallucinations. Inside these prefixed folders, group files logically (e.g., `[moduleName]_components/[role]_[module]_table/`).
+1. **Micro-Modularization, Canonical Sub-folders & File Size Ceilings (Crucial)**: 
+Break down all large or mixed files. Every **React component file** MUST contain one primary React component. Non-component files MAY contain multiple closely related declarations when they represent one cohesive responsibility, such as an API service for one entity family, a schema family, or a constants set. **CRITICAL:** Do not dump all these micro-files into a single flat directory. Group them logically into canonical sub-folders within the autonomous sub-module (`components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `utils/`, `mocks/`, `tests/`, `contracts/`). 
+**The 5-Second Comprehension Invariant:** Every file and folder MUST be organized such that an AI agent or engineer understands its exact purpose, role, inputs, and boundaries within 5 seconds without reading past line 5 or inspecting parent/sibling files.
+**CANONICAL SUB-MODULE SUB-FOLDERS & FILE PREFIXING (UNIVERSAL STANDARD):** Inside each autonomous sub-module container (`src/app/frontend_{role}/{role}_{domain}/{domain}_{capability}/`), internal business artifacts MUST be organized into canonical standard sub-folders: `components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `utils/`, `mocks/`, `tests/`, `config/`, and `contracts/`. To prevent AI context dilution and eliminate name collisions when referencing files across modules, EVERY file inside these sub-folders MUST carry the canonical Role+Submodule prefix: `[Role][Submodule][Name]` in PascalCase for components (e.g., `SuperadminAnalyticsDashboardKpis.tsx`), camelCase for hooks (e.g., `useSuperadminAnalyticsDashboardMetrics.ts`), and snake_case for api/configs (e.g., `superadmin_analytics_dashboard.api.ts`). Loose files at the domain or sub-module root (other than route entry files, config, and the documentation trio) are STRICTLY FORBIDDEN.
 **File Size Ceiling:** React Component: hard maximum 300 lines. If a component's JSX grows beyond that, extract sub-sections into their own child component files inside the same feature folder to force real component-level granularity.
 
 ### Extended File Size Ceilings (Hard Ceilings — Zero Exceptions)
@@ -140,12 +217,12 @@ Break down all large or mixed files. Every **React component file** MUST contain
 
 | File Type | Max Lines | Action When Exceeded | Consequence of Violation |
 |---|---|---|---|
-| React Component (`.tsx`) | **300 lines** | Extract sub-sections into child components in `[moduleName]_components/` | Context dilution, re-render cascades, untestable monolithic JSX |
-| Custom Hook (`use*.ts`) | **150 lines** | Split into sub-hooks by concern (e.g. `useTableFilters`, `useTableSort`) | Mixed state/effect spaghetti, broken memoization |
-| Utility / Formatter file | **120 lines** | Split into domain-specific formatters inside `[moduleName]_utils/` | Unfocused utility soup, untraceable side-effects |
-| Zustand Store (`use*Store.ts`) | **180 lines** | Split slices into sub-slice creators or separate module-scoped stores | Giant monolithic stores, unnecessary re-renders |
-| Zod Schema / Type file | **200 lines** | Split into separate DTO / entity schema files inside `[moduleName]_schemas/` | Type inference slowdowns, circular type dependencies |
-| API Service file (`*Api.ts`) | **200 lines** | Split by entity operation (e.g. `*CrudApi.ts`, `*ExportApi.ts`, `*PaymentApi.ts`) | Giant monolithic API blobs, violation of Rule 31 |
+| React Component (`.tsx`) | **300 lines** | Extract sub-sections into child components in `components/` | Context dilution, re-render cascades, untestable monolithic JSX |
+| Custom Hook (`use*.ts`) | **150 lines** | Split into sub-hooks by concern (e.g. `useTableFilters`, `useTableSort`) in `hooks/` | Mixed state/effect spaghetti, broken memoization |
+| Utility / Formatter file | **120 lines** | Split into domain-specific formatters inside `utils/` | Unfocused utility soup, untraceable side-effects |
+| Zustand Store (`use*Store.ts`) | **180 lines** | Split slices into sub-slice creators or separate module-scoped stores in `state/` | Giant monolithic stores, unnecessary re-renders |
+| Zod Schema / Type file | **200 lines** | Split into separate DTO / entity schema files inside `schemas/` and `types/` | Type inference slowdowns, circular type dependencies |
+| API Service file (`*Api.ts`) | **200 lines** | Split by entity operation (e.g. `*CrudApi.ts`, `*ExportApi.ts`, `*PaymentApi.ts`) in `api/` | Giant monolithic API blobs, violation of Rule 31 |
 
 ### Child Component Size Rule
 If a component contains more than **3 major visual sections**, it MUST be split.
@@ -243,12 +320,306 @@ Do NOT create a global business layer merely to avoid duplication.
 
 If two features contain similar business behavior, duplication is allowed and is preferred when duplication improves AI isolation and feature portability.
 
+### The "Shared Folder" Trap & Strict WET Invariant
+
+A common architectural antipattern is attempting to resolve cross-module needs by creating a `shared/` or `common/` dumping ground (e.g. `src/shared/`, `src/common/`, `src/components/shared/`, or role-level `frontend_{role}/shared/`).
+- **THE TRAP:** Within weeks, developers and AI agents place domain cards, date filters, member status pills, entity dropdowns, and business hooks into `shared/`. Then, modifying a component to satisfy Feature A silently breaks Feature B and Feature C, causing cross-module regressions and destroying tree-shaking.
+- **THE LAW:** Generic zero-business infrastructure belongs in `src/lib/` or `src/components/ui/` ONLY. Any component, hook, utility, or type containing a business noun, domain status, or business rule MUST remain strictly feature-local. If two features require similar business UI or logic, DUPLICATE IT LOCALLY under the Strict WET Principal. Creating `shared/` directories for business logic is STRICTLY FORBIDDEN.
+
 > ⛔ **ABSOLUTE PROHIBITION — AI AGENTS (CRITICAL ISOLATION INVARIANT):** 
 > **NEVER attempt to "DRY up" business components by moving them to global folders like `src/components/ui/` or `src/shared/`.** 
 > **Components like "Date Filters", "Business Dropdowns", "Status Badges", or formatters that contain domain-specific data/constants (e.g. "Last 3 Months", "Active") MUST be duplicated per feature, NEVER globalized.** 
 > `src/components/ui/` is strictly for dumb, zero-business primitives (like raw Buttons, Inputs, Dialogs).
 > **Consequence of violation:** AI modifying a shared business component to fix Module A will silently break Module B, triggering cross-module regression cascades and defeating bundle tree-shaking.
 > **Finding ANY business logic inside `src/components/ui/` or global folders = IMMEDIATE NON_COMPLIANT AUDIT FAILURE.**
+
+### The Feature ZIP Guarantee (Self-Sufficiency Invariant)
+
+Every feature module MUST satisfy the **Feature ZIP Guarantee**:
+1. An AI agent or human developer MUST be able to zip ONLY the feature folder (`src/app/frontend_{role}/{role}_{module}/`) along with the Documentation Trio (`[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md`), drop it into an isolated prompt or project, and completely understand, run, mock, test, and repair it.
+2. The feature MUST NEVER require sibling feature code or ask for other role folders.
+3. All dependencies on application-level infrastructure (API transport, theme tokens, icons) MUST be satisfied through the documented Core Application Contracts.
+4. **Scope of Isolated Sub-Module Testing vs Host E2E:** Inside the isolated sub-module ZIP, 100% self-sufficient testing is achieved via local integration tests and the mock scenario harness (`tests/` and `tests/harness/` with in-memory MSW scenarios). Full-system Playwright E2E test suites reside in the host repository (`playwright_E2E/frontend_{role}_e2e/{role}_{feature}/`) and are classified as `DEFERRED_TO_HOST_RUNTIME` when auditing/testing an isolated sub-module ZIP in a browser-less or standalone AI environment. An isolated sub-module ZIP is 100% self-sufficient for unit, component, and scenario-based harness testing without requiring host Playwright E2E runners.
+
+### Zero Hidden Dependency Principle & Host Contract
+
+A module MUST NEVER rely on implicit global state, unstated route query parameters, or undocumented host runtime contexts.
+Every external host capability consumed by the module MUST declare its **Expected Shape** explicitly inside `[moduleName]_features.md` under `## Approved External Dependencies`:
+- **Auth Session Shape:** e.g., `interface ExpectedAuthUser { id: string; role: Role; branchId: string; }`
+- **Theme Contract:** e.g., `@theme inline` tokens consumed from `globals.css` listed in `[moduleName]_theme_contract.md`
+- **API Transport:** e.g., `apiFetch<T>(endpoint, options): Promise<ApiResponse<T>>`
+- **Zero Hidden Route Dependencies:** A module must extract all route parameters through typed Next.js `params` or its centralized `[moduleName]_url_config.ts`.
+
+### Mandatory Ambient Host Stubs (`contracts/host-stubs.d.ts`)
+
+> ⛔ **THE SUB-MODULE STANDALONE COMPILATION GUARANTEE:**
+> When an autonomous sub-module (e.g., `attendance_dashboard/`) is zipped and handed to an external AI agent or isolated CI environment, the host application files (`@/lib/api`, `@/lib/logger`, `@/components/ui/*`, `@/lib/socket`, `@/lib/display_value`) may not physically exist inside the zip.
+> To guarantee that `tsc --noEmit` and mock tests compile and run with 100% mathematical certainty, every sub-module MUST declare or include ambient TypeScript type stubs inside `contracts/host-stubs.d.ts`:
+
+```typescript
+// contracts/host-stubs.d.ts
+// Ambient host contracts enabling 100% standalone compilation & execution when zipped
+declare module '@/lib/api' {
+  export interface ApiSuccess<T> {
+    success: true;
+    message: string;
+    data: T;
+    meta?: { total: number; page: number; limit: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean };
+    requestId: string;
+  }
+  export interface ApiFailure {
+    success: false;
+    message: string;
+    data: null;
+    error?: string;
+    errorCode: string;
+    statusCode: number;
+    requestId: string;
+    validationErrors?: Array<{ field: string; message: string }>;
+  }
+  export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+  export function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>>;
+}
+
+declare module '@/lib/logger' {
+  export const logger: {
+    info: (message: string, ...args: unknown[]) => void;
+    error: (message: string, ...args: unknown[]) => void;
+    warn: (message: string, ...args: unknown[]) => void;
+    debug: (message: string, ...args: unknown[]) => void;
+  };
+}
+
+declare module '@/lib/socket' {
+  export const socketService: {
+    subscribe: <T>(event: string, callback: (data: T) => void) => () => void;
+    emit: (event: string, payload: unknown) => void;
+  };
+}
+
+declare module '@/lib/display_value' {
+  export function displayValue(value: unknown): string;
+}
+
+declare module '@/components/ui/*' {
+  import type React from 'react';
+  // Ambient fallback stubs for host UI primitives during isolated compilation.
+  // Uses generic Record<string, unknown> with PropsWithChildren to satisfy strict Rule 27 (zero raw any).
+  export type StubComponentProps = React.PropsWithChildren<Record<string, unknown>>;
+  const Component: React.FC<StubComponentProps>;
+  export default Component;
+  export const Button: React.FC<StubComponentProps>;
+  export const Dialog: React.FC<StubComponentProps>;
+  export const Input: React.FC<StubComponentProps>;
+  export const Card: React.FC<StubComponentProps>;
+}
+```
+
+### Feature Dependency Budget (Maximum 7 Core Infrastructure Dependencies)
+
+To guarantee portability and prevent spaghetti coupling, every feature module operates under a strict **External Dependency Budget**:
+- A feature module MUST NOT import from more than **7 distinct core application infrastructure files** (e.g., `@/lib/api`, `@/lib/logger`, `@/components/ui/button`, `@/components/ui/dialog`, `@/lib/socket`, `@/lib/display_value`, `@/lib/auth`).
+- If a feature module requires more than 7 external infrastructure imports, it indicates that the module is over-coupled or trying to do too many unrelated things. It MUST either:
+  1. Internalize helper logic locally (Strict WET), or
+  2. Split into distinct sub-feature modules.
+
+### The Copy-Paste Test & Feature Removal Test (Deletion Safety)
+
+Every feature module must pass two mechanical portability tests before it is approved for production:
+1. **The Copy-Paste Test:** If you copy the feature folder `src/app/frontend_{role}/{role}_{module}/` into an empty host application that supplies only the 7 standard core infrastructure contracts and run `npm test`, all module unit tests and MSW mock scenarios MUST pass immediately with zero compilation errors.
+2. **The Feature Removal Test (Deletion Safety):** If an engineer completely deletes the feature folder `src/app/frontend_{role}/{role}_{module}/` from the project:
+   - The project TypeScript build (`tsc --noEmit`) MUST STILL PASS.
+   - All sibling modules (`{role}_billing`, `{role}_reports`, etc.) MUST CONTINUE TO RUN with zero missing import errors.
+   - If deleting a feature breaks another feature's build, the architecture has FAILED the isolation invariant.
+
+### Universal Day-1 Sub-Module Architecture (Zero Exceptions, Zero Refactoring)
+
+> ⛔ **UNIVERSAL LAW: EVERY FEATURE IN THE SYSTEM IS ORGANIZED INTO SUB-MODULES FROM DAY 1**
+>
+> There are NO special cases, NO file-count thresholds, and NO hardcoded exceptions based on whether a feature has "one screen" or "multiple screens".
+> 
+> **Every single feature domain across the entire application — whether `manager_profile`, `manager_settings`, `manager_attendance`, `manager_notifications`, or `manager_billing` — MUST be structured as an autonomous Sub-Module Container right from Day 1.**
+>
+> An engineer or AI agent is STRICTLY FORBIDDEN from creating loose `components/`, `hooks/`, `api/`, `mocks/`, or `utils/` at the domain root level. 100% of executable source code, mocks, and tests MUST live inside a dedicated `{sub_module}/` folder.
+
+#### The Universal 4-Tier Hierarchy:
+
+```text
+TIER 1: APPLICATION ROOT (src/app/)
+  └── TIER 2: ROLE CONTAINER (e.g., src/app/frontend_manager/)
+        └── TIER 3: FEATURE DOMAIN CONTAINER (e.g., manager_profile/, manager_attendance/, manager_settings/)
+              ├── layout.tsx                                    # Pure UI Shell / Sub-Nav Tab Bar (zero business code)
+              ├── page.tsx                                      # Default redirect to primary sub-module
+              ├── [role]_[domain]_features.md                   # High-level domain architectural map
+              ├── [role]_[domain]_forbidden.md                  # High-level domain boundaries
+              ├── [role]_[domain]_theme_contract.md             # High-level domain theme contract
+              │
+              ├── TIER 4: AUTONOMOUS SUB-MODULE (e.g., attendance_dashboard/ — 100% Autonomous AI Repair & ZIP Unit)
+              │    ├── page.tsx / loading.tsx / error.tsx       # Next.js route entry files
+              │    ├── config/[role]_[submodule].url_config.ts  # Centralized route & API endpoints
+              │    ├── contracts/host-stubs.d.ts                # Ambient host stubs for standalone compilation
+              │    ├── [role]_[submodule]_features.md           # Canonical 22-section specification
+              │    ├── [role]_[submodule]_forbidden.md          # Sub-module boundary & WET directives
+              │    ├── [role]_[submodule]_theme_contract.md     # Sub-module design token bindings
+              │    ├── components/                              # [Role][Submodule][Name].tsx
+              │    ├── hooks/                                   # use[Role][Submodule][Name].ts
+              │    ├── api/                                     # [role]_[submodule].api.ts & query keys
+              │    ├── state/                                   # use[Role][Submodule]Store.ts
+              │    ├── types/ & schemas/                        # Zod schemas & types
+              │    ├── mocks/                                   # scenarios/, fixtures, MSW handlers
+              │    ├── utils/                                   # Feature-local formatters
+              │    └── tests/                                   # Co-located unit & integration tests
+              │
+              └── {sub_module_2}/                               # Additional Sub-Features (Day 1 or Future)
+                   └── ... (identical canonical micro-structure)
+```
+
+#### Concrete Proof Across ALL Domains (No Exceptions):
+
+| Feature Domain | Day-1 Initial Sub-Module | Future / Additional Sub-Modules |
+|---|---|---|
+| **Profile** (`manager_profile/`) | `profile_overview/` | `profile_security/`, `profile_preferences/` |
+| **Settings** (`manager_settings/`) | `settings_general/` | `settings_notifications/`, `settings_integrations/` |
+| **Attendance** (`manager_attendance/`) | `attendance_dashboard/` | `attendance_history/`, `attendance_analytics/`, `attendance_biometrics/` |
+| **Billing** (`manager_billing/`) | `billing_invoices/` | `billing_subscriptions/`, `billing_payment_methods/` |
+| **Members** (`manager_members/`) | `members_directory/` | `members_profile/`, `members_attendance/` |
+| **Notifications** (`manager_notifications/`) | `notifications_inbox/` | `notifications_preferences/`, `notifications_templates/` |
+
+#### Why the Universal Day-1 Rule Kills 100% of AI Hallucinations:
+1. **Zero Guesswork:** An AI NEVER has to ask *"Is this 1 screen or 2 screens? Should I put mocks at root or in a subfolder?"* The answer is ALWAYS: **All code lives inside `{sub_module}/`. The domain root is a pure shell.**
+2. **Zero Refactoring Forever:** When `manager_profile` gets a `profile_security` tab in month 6, nobody breaks or moves existing files. `profile_overview/` remains completely untouched. You simply add a new sibling folder `profile_security/`!
+3. **Predictable AI ZIP Guarantee:** The AI repair unit is ALWAYS `frontend_{role}/{role}_{domain}/{sub_module}/`. An engineer zips only that sub-module, giving any AI a clean 10-15 file context with 100% working mocks and tests.
+
+#### ⛔ The Forbidden Root Code Monolith (Zero Root Code In Domain Folder):
+It is **STRICTLY FORBIDDEN** to create loose `mocks/`, `utils/`, `api/`, or `components/` at the feature domain root:
+```text
+❌ FORBIDDEN ROOT POLLUTION:
+manager_profile/
+├── mocks/                  <-- ❌ FORBIDDEN! Mocks must live inside profile_overview/mocks/!
+├── components/             <-- ❌ FORBIDDEN! Components must live inside profile_overview/components/!
+└── profile_overview/
+```
+The domain root contains ONLY `layout.tsx` (navigation wrapper) and `page.tsx` (redirect). 100% of feature code lives inside sub-modules.
+
+#### Meaningful Domain-Prefixed Submodule Naming Standard (Strict Ban on Lazy / Ambiguous Names):
+Every submodule folder MUST follow the exact semantic formula: `{domain}_{capability}` or `{domain}_{screen_intent}`:
+- ✅ **Compliant Examples:** `attendance_dashboard/`, `attendance_history/`, `attendance_analytics/`, `attendance_biometrics/`, `profile_overview/`, `profile_security/`, `billing_invoices/`, `billing_subscriptions/`, `members_directory/`, `members_detail/`.
+- **The 5-Second Comprehension Invariant:** Anyone (developer or AI agent) inspecting ONLY the submodule folder name MUST instantly know within 5 seconds its parent domain and exact business capability/screen intent.
+- ❌ **Strictly Banned Lazy/Ambiguous Names:** Never use generic or lazy names such as `tab1/`, `tab2/`, `main/`, `default/`, `home/`, `view/`, `details/` (must be `members_detail`), `common/`, `shared/`, `temp/`, or `misc/`. Lazy names are treated as **Critical Naming Violations**.
+
+
+### Sub-Module Isolation Firewall (Zero Cross-Sub-Module Imports & Sub-Module ZIP Guarantee)
+
+> ⛔ **ABSOLUTE RULE: SIBLING SUB-MODULES ARE 100% UNRELATED AT SOURCE CODE LEVEL**
+> 
+> When an oversized feature is split into sub-navigation domain folders (e.g., `attendance/` split into `attendance_dashboard/`, `attendance_history/`, `attendance_analytics/`, `attendance_biometrics/`), the **Zero Cross-Module Relationship & 100% Isolation Law** applies with identical, ruthless strictness between sibling sub-folders:
+>
+> 1. **Zero Cross-Sub-Module Imports (Absolute Decoupling):**
+>    - `attendance_dashboard` MUST NEVER import any component, hook, state, type, mock, or utility from `attendance_history`.
+>    - `attendance_history` MUST NEVER import anything from `attendance_analytics` or `attendance_dashboard`.
+>    - Neither sub-folder has ANY knowledge of the internal code, state, or types of any sibling sub-folder.
+>
+> 2. **100% Self-Contained Sub-Module Directory:**
+>    - Every sub-navigation folder is an autonomous, complete micro-modular application:
+>      ```text
+>      attendance/
+>      ├── attendance_dashboard/
+>      │    ├── components/
+>      │    ├── hooks/
+>      │    ├── api/
+>      │    ├── state/
+>      │    ├── types/
+>      │    ├── schemas/
+>      │    ├── mocks/
+>      │    ├── tests/
+>      │    ├── attendance_dashboard_features.md
+>      │    ├── attendance_dashboard_forbidden.md
+>      │    └── attendance_dashboard_theme_contract.md
+>      ├── attendance_history/
+>      │    ├── components/
+>      │    ├── hooks/
+>      │    ├── api/
+>      │    ├── state/
+>      │    ├── types/
+>      │    ├── schemas/
+>      │    ├── mocks/
+>      │    ├── tests/
+>      │    ├── attendance_history_features.md
+>      │    ├── attendance_history_forbidden.md
+>      │    └── attendance_history_theme_contract.md
+>      ├── attendance_analytics/
+>      └── attendance_biometrics/
+>      ```
+>
+> 3. **Parent Shared Folders Are STRICTLY FORBIDDEN:**
+>    - Creating a shared folder inside the parent (e.g. `attendance/common/`, `attendance/shared/`, or `attendance/components/`) is **STRICTLY PROHIBITED**.
+>    - *Why?* A shared parent folder immediately breaks the AI Zip Guarantee. If `attendance_history` depends on `attendance/common/`, zipping only `attendance_history/` will produce broken imports and compilation errors for an AI.
+>
+> 4. **Strict WET (Write Everything Twice) Between Sub-Modules:**
+>    - If both `attendance_dashboard` and `attendance_history` require an `AttendanceStatusBadge`, a date range picker, or a table row formatter, each sub-module MUST define its own copy locally inside its own `components/` or `utils/`.
+>    - If the UI element is a pure, domain-agnostic primitive with zero business rules (e.g. generic `<Button>`, `<Dialog>`), it is consumed from core application UI (`@/components/ui/`). But any business-aware UI or logic MUST be duplicated locally.
+>
+> 5. **The Sub-Module ZIP Guarantee (Granular AI Repair Unit):**
+>    - If a bug occurs in `attendance_history`, the developer does NOT need to zip the entire parent `attendance/` folder.
+>    - The developer zips **ONLY `attendance_history/`**!
+>    - An AI receiving `attendance_history.zip` has 100% complete context, runs its own local unit tests, runs its own MSW mocks, reads its own Documentation Trio, and repairs the bug in one shot with zero missing dependency errors.
+>
+> 6. **Sub-Module Deletion Safety (Zero Blast-Radius):**
+>    - If an engineer completely deletes `attendance_analytics/` or `attendance_biometrics/`:
+>      - `tsc --noEmit` MUST compile with zero errors.
+>      - `attendance_dashboard` and `attendance_history` MUST continue to build, render, and pass all tests without missing a single import.
+>
+> 7. **Navigation & Inter-Module Communication Boundary:**
+>    - The ONLY permissible communication between sibling sub-modules is via **URL Navigation & Typed Query Parameters** (e.g., navigating from Dashboard to History via `router.push('/attendance/history?employeeId=EMP001')`).
+>    - Sibling sub-modules MUST NEVER share React Context, Zustand stores, or in-memory state.
+>
+> 8. **Sub-Module Role+Submodule Naming Invariant (AI Anti-Hallucination):**
+>    - To eliminate AI naming hallucinations across split sub-modules, all artifacts MUST carry the full `[Role][Submodule]` prefix:
+>      - Components: `[Role][Submodule][Name].tsx` (e.g., `ManagerAttendanceDashboardMetricCard.tsx`, `ManagerAttendanceHistoryFilterBar.tsx`).
+>      - Custom Hooks: `use[Role][Submodule][Name].ts` (e.g., `useManagerAttendanceDashboardMetrics.ts`).
+>      - Local Stores: `use[Role][Submodule]Store.ts` (e.g., `useManagerAttendanceDashboardStore.ts`).
+>      - URL Config: `config/[role]_[submodule].url_config.ts`.
+>      - Query Keys: `api/[role]_[submodule].query_keys.ts`.
+>      - Documentation Trio: `[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`.
+>
+> 9. **Zero Root Code in Parent Domain Folder (Parent Quarantine):**
+>    - The parent grouping folder (e.g., `attendance/`) MUST NOT contain loose executable source files, shared hooks, or root components.
+>    - It serves exclusively as a filesystem directory containing the self-contained sub-modules. Any top-level layout or tab switcher lives in the shell/navigation layer, never as an un-isolated business component directly inside `attendance/`.
+>
+> 10. **Query Key & MSW Mock Namespace Separation:**
+>     - Each sub-module MUST isolate its TanStack Query keys with its own distinct sub-module namespace:
+>       ```typescript
+>       export const managerAttendanceDashboardKeys = { all: ['manager', 'attendance', 'dashboard'] as const }
+>       export const managerAttendanceHistoryKeys = { all: ['manager', 'attendance', 'history'] as const }
+>       ```
+>     - MSW mock handlers MUST mock distinct sub-feature REST endpoints (e.g., `/api/manager/attendance/dashboard/metrics` vs `/api/manager/attendance/history`). Cross-sub-module query invalidation or shared cache keys are STRICTLY FORBIDDEN.
+>
+> 11. **Strict Maximum Nesting Depth Law (The Depth Limit Invariant — Sub-Submodules Strictly BANNED):**
+>     - Hierarchy depth below the Domain Container (`{role}_{domain}/`) is **STRICTLY BOUNDED TO EXACTLY 1 LEVEL** (`{domain}_{capability}/`).
+>     - Tier 4 (`src/app/frontend_{role}/{role}_{domain}/{domain}_{capability}/`) is the **absolute terminal leaf feature execution unit**.
+>     - **Sub-submodules are STRICTLY FORBIDDEN:** Creating nested folders inside a sub-module that act as child sub-modules (e.g., `attendance_history/details/` or `attendance_history/table/`) is a **CRITICAL P0 ARCHITECTURE VIOLATION**. All decomposition inside a sub-module happens PURELY via standard canonical category folders (`components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `mocks/`, `utils/`, `tests/`).
+>     - Multi-step forms, secondary tabs, detail panels, slide-over drawers, or modals inside a sub-module MUST live inside that sub-module's `components/` folder (e.g. `components/[Submodule]Views/`, `components/[Submodule]Modals/`, `components/[Submodule]Drawers/`), driven by React state or URL search parameters (`?view=`), NEVER by nesting sub-submodule folders.
+>
+> 12. **Deterministic 5-Gate Sub-Module Qualification Decision Matrix (How AI Decides Sub-Module vs Internal View):**
+>     When designing, creating, or auditing features, the AI MUST follow this deterministic decision matrix. Never guess or arbitrarily invent sub-modules:
+>
+> | Level | Granularity Criteria | Location & Structure | Correct Example | FORBIDDEN Anti-Pattern |
+> |---|---|---|---|---|
+> | **Domain Container (Tier 3)** | Primary clickable item in role's sidebar/primary drawer. Contains high-level business domain. | `src/app/frontend_{role}/{role}_{domain}/` | `manager_attendance/`, `admin_billing/` | Merging separate sidebar items (`manager_finance_and_expenses/`) |
+> | **Autonomous Sub-Module (Tier 4)** | Distinct secondary navigation tab, independent sub-route segment, or standalone operational capability with its own lifecycle. | `{domain}_{capability}/` directly under `{role}_{domain}/` (Depth = 1) | `attendance_dashboard/`, `attendance_history/`, `attendance_biometrics/` | Nested sub-submodule (`attendance_history/details/`) or generic name (`tab1/`) |
+> | **Internal Component / Sub-View** | Sub-screen, modal, slide-over drawer, filter drawer, or step within a wizard. Controlled by UI interaction or `?view=`. | Inside sub-module `components/` folder (`components/[Submodule]Views/`) | `ManagerAttendanceHistoryDetailDrawer.tsx` inside `attendance_history/components/` | Creating a standalone sub-module for a single drawer (`attendance_history_drawer/`) |
+> | **Local Utility / Reusable UI** | UI badge, status pill, table formatter, card wrapper, or local date helper used across this sub-module. | Inside sub-module `components/` or `utils/` | `ManagerAttendanceStatusBadge.tsx` inside `attendance_history/components/` | Nano-module (`attendance_status_badge/`) or parent shared folder (`attendance/common/`) |
+>
+>     - **The 5 Deterministic Qualification Gates:**
+>       1. **Gate 1 (Navigation Invariant):** Does this capability map to a secondary tab in the domain shell or a distinct URL segment (e.g., `/attendance/history`)? If YES → **Autonomous Sub-Module** (`{domain}_{capability}/`). If NO (triggered by clicking an "Edit" button, a table row, a filter toggle, or a wizard next step) → **Internal Component/View** in `components/`.
+>       2. **Gate 2 (State & Lifecycle Independence):** Can this capability be refreshed directly, deep-linked, or reset without depending on live uncommitted in-memory React state of another screen? If YES → **Autonomous Sub-Module**. If NO (e.g., Step 2 of a 3-step checkout or registration wizard that depends on uncommitted form memory from Step 1) → **Internal Component/View** inside the SAME sub-module.
+>       3. **Gate 3 (File Count & Granularity Bounds — The Goldilocks Rule: 5–20 Files):**
+>          - Target Range: 5 to 20 files per sub-module (orchestrator + 2-4 UI components + 1-2 hooks + 1 api client + 1 store + 1 mock + 1 test + doc trio).
+>          - Anti-Pattern 1 (Nano-Module BANNED): Creating a sub-module for a single button, badge, chip, or static card (< 3 files) is STRICTLY FORBIDDEN. Keep it in `components/`.
+>          - Anti-Pattern 2 (Mega-Submodule BANNED): Cramming 3+ completely distinct operational workflows into one giant sub-module (> 25 files) is STRICTLY FORBIDDEN. Split into separate sibling sub-modules under that domain container.
+>       4. **Gate 4 (Standalone Testability & Mockability — ZIP Guarantee):** Can this capability be extracted, supplied with mock data, and tested in total isolation using its own MSW handlers and local harness? If YES → **Autonomous Sub-Module**.
+>       5. **Gate 5 (Backend Entity Lifecycle Alignment):** Sub-modules map 1:1 to cohesive backend sub-module API contracts. Additional CRUD actions or filters on the existing entity belong inside the existing sub-module, NEVER as a new sub-module.
+>
 
 ---
 
@@ -259,8 +630,8 @@ The project MUST use the following architectural hierarchy:
 ```text
 APPLICATION
   └── ROLE CONTAINER (Prefixed with frontend_)
-        └── FEATURE MODULE
-              └── FEATURE SUB-FEATURES / CHILD COMPONENTS
+        └── FEATURE DOMAIN CONTAINER (Pure Domain Shell & Quarantine)
+              └── AUTONOMOUS SUB-MODULE (Granular AI Repair Unit)
 ```
 
 This hierarchy applies to EVERY frontend project regardless of business domain.
@@ -299,37 +670,36 @@ The exact names will differ by project, but the `frontend_` prefix is non-negoti
 
 ### 1E. ANTI-DOUBLE-PREFIXING RULE (CRITICAL)
 
-Never double-prefix feature names or folders. If a module is named `superadmin_analytics`, its child folders must be named `superadmin_analytics_components` or `superadmin_analytics_api`, NEVER `superadmin_analytics_analytics_components` or `superadmin_analytics_superadmin_analytics_api`. Double-prefixing breaks readability and violates the naming contract.
+Never double-prefix feature names or files. If an autonomous sub-module is named `analytics_dashboard`, its components must be named `SuperadminAnalyticsDashboard[Name].tsx` and its API client `superadmin_analytics_dashboard.api.ts`, NEVER `superadmin_analytics_analytics_dashboard...` or `SuperadminSuperadminAnalytics...`. Double-prefixing breaks readability and violates the naming contract.
 
-IMPORTANT:
+### 1E.1 AI REPAIR BOUNDARY & GRANULAR HAND-OFF (MANDATORY)
 
-A ROLE CONTAINER is NOT itself the default AI repair boundary.
-
-A FEATURE MODULE is the default AI repair boundary.
+> ⛔ **THE SUB-MODULE ZIP GUARANTEE & AI REPAIR BOUNDARY:**
+> - **Primary Granular AI Repair Boundary = AUTONOMOUS SUB-MODULE (`{domain}_{capability}/`)**:
+>   When repairing or extending a specific capability (e.g. Attendance Dashboard metrics, Plans List filters, Member Directory pagination), the AI MUST be given ONLY the Autonomous Sub-Module directory:
+>   `src/app/frontend_{role}/{role}_{domain}/{domain}_{capability}/`
+>   (e.g., `src/app/frontend_superadmin/superadmin_plans/plans_list/` or `src/app/frontend_manager/manager_attendance/attendance_dashboard/`).
+> - **Parent Domain Navigation / Orchestration Boundary = FEATURE DOMAIN CONTAINER (`{role}_{domain}/`)**:
+>   `src/app/frontend_{role}/{role}_{domain}/` owns only domain-level routing shells (`layout.tsx`, `page.tsx`) and the master domain documentation trio. It is the repair boundary ONLY when modifying the top-level tab bar or domain redirect logic.
+> - **Role Container (`frontend_[role]/`) = NOT the repair boundary.** Providing an entire role container causes severe AI context dilution, cross-module hallucinations, and accidental sibling regression.
 
 For example:
-
 ```text
-ROLE CONTAINER:
-`/frontend_superadmin/`
+ROLE CONTAINER (Too Broad — Do NOT hand off):
+`/src/app/frontend_superadmin/`
 
-FEATURE MODULE:
-`/frontend_superadmin/superadmin_plans/`
+FEATURE DOMAIN CONTAINER (Domain Orchestration Shell):
+`/src/app/frontend_superadmin/superadmin_plans/`
+
+AUTONOMOUS SUB-MODULE (Canonical Granular Repair & ZIP Unit):
+`/src/app/frontend_superadmin/superadmin_plans/plans_list/`
 ```
 
-Therefore:
-
+Therefore, when an AI agent is tasked with fixing a Plans List bug or adding an export button to attendance, you provide ONLY:
 ```text
-/frontend_superadmin/
+/src/app/frontend_superadmin/superadmin_plans/plans_list/
 ```
-
-is not the normal context that should be provided to an AI for a Plans bug.
-
-The normal repair context is:
-
-```text
-/frontend_superadmin/superadmin_plans/
-```
+Inside this folder, the AI has everything required: view components, custom hooks, API service, Zod schemas, local MSW mock handlers, co-located tests, and ambient host stubs (`contracts/host-stubs.d.ts`).
 
 ### 1C.1 SIDEBAR NAVIGATION 1-TO-1 FEATURE MODULE MAPPING & ISOLATED REPAIR HAND-OFF (MANDATORY)
 
@@ -340,27 +710,69 @@ To guarantee that any AI agent or human engineer can repair or expand a feature 
 1. **The 1:1 Navigation Law (Universal):**
    - Every top-level clickable item present in ANY role's sidebar (e.g., in Manager: Dashboard, Inquiries, Members, Attendance, Plans, Finance, HR, Schedule, PT; in Admin: Gyms, Billing, Staff, Settings; in Superadmin: Tenants, Subscriptions, Platform Analytics; in Trainer: Schedule, Clients, Workouts) MUST map 1-to-1 to an autonomous feature module folder directly under that role container (e.g., `src/app/frontend_{role}/{role}_{feature}/`).
    - Grouping multiple distinct sidebar destinations into a single mega-folder (e.g., merging `manager_finance` and `manager_expenses`, or `admin_billing` and `admin_plans`) is STRICTLY FORBIDDEN.
-   - Creating ad-hoc top-level folders for sub-views or detail pages belonging to a sidebar feature is STRICTLY FORBIDDEN. Sub-screens and secondary workflows must be contained within that module via `?view=` parameters.
+   - Creating ad-hoc top-level folders outside the owning feature for sub-views or detail pages is STRICTLY FORBIDDEN. All sub-screens and secondary workflows must be owned by that feature module according to the Sub-View Routing Decision Matrix below.
 
-2. **Full Domain Encapsulation:**
-   - When a user clicks a sidebar item (e.g. Attendance in Manager ➔ `/frontend_manager/manager_attendance`, or Billing in Admin ➔ `/frontend_admin/admin_billing`), **100% of the UI, state, and logic for that capability MUST reside INSIDE that single folder**:
-     - Screen entry: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`
-     - Presentation: `[moduleName]_components/` (Main orchestrator, forms, tables, modals, and `[moduleName]_views/` for all `?view=` sub-views)
-     - Business logic: `[moduleName]_hooks/`, `[moduleName]_store/`, `[moduleName]_api/`
-     - Domain contracts: `[moduleName]_types/`, `[moduleName]_schemas/`, `[moduleName]_constants/`, `[moduleName]_utils/`
-     - Testing & Verification: `[moduleName]_mocks/` (MSW handlers & mutable state fixtures), `[moduleName]_tests/`
-     - Route config: `[moduleName]_url_config.ts`
-     - Contract documentation: `[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md`
-   - ZERO cross-feature business imports: It is STRICTLY PROHIBITED for any feature module (e.g., `manager_attendance` or `admin_billing`) to import business components, hooks, stores, or types from any sibling feature (e.g., `manager_finance` or `admin_plans`).
+### Sub-View Routing Decision Matrix
 
-3. **Isolated AI Repair Hand-Off:**
-   - If an issue or bug arises in ANY feature of ANY role (e.g., "Attendance" in Manager, "Billing" in Admin, "Plans" in Superadmin, "Schedule" in Trainer):
-     - The developer MUST provide **ONLY** that single feature module folder (`src/app/frontend_{role}/{role}_{feature}/`) to the AI agent.
-     - The AI agent will audit, repair, test, and package that module in complete isolation without needing or modifying any other feature folder.
+Use URL query parameters (`?view=`, `?page=`, `?status=`, `?tab=`) ONLY for state that modifies the view of the SAME resource:
+- Search queries, filters, sorting, and pagination
+- Table density modes and column toggles
+- Selected tab when it does not represent a separate resource lifecycle or permissions boundary
+
+Use nested routes inside the SAME feature module for:
+- Entity detail pages (e.g. `[member_id]/page.tsx`)
+- Create / add / edit flows (e.g. `create/page.tsx`, `[member_id]/edit/page.tsx`)
+- Resource-specific history or activity timeline
+- Workflows requiring distinct route-level permissions or distinct Next.js loading/error boundaries
+- Independently refreshable and deep-linkable URLs
+
+Allowed hierarchical structure following Universal Day-1 Sub-Module Architecture:
+```text
+src/app/frontend_manager/manager_members/              ← Pure Domain Container (Quarantined)
+├── layout.tsx                                         ← Shell mounting sub-navigation tabs
+├── page.tsx                                           ← Default redirect to initial sub-module
+├── manager_members_features.md                        ← Master domain specification
+├── manager_members_forbidden.md                       ← Master domain forbidden rules
+├── manager_members_theme_contract.md                  ← Master domain theme tokens
+│
+├── members_directory/                                 ← Autonomous Sub-Module 1 (AI Repair Unit)
+│   ├── components/                                    ← Standard category folders
+│   ├── hooks/
+│   ├── api/
+│   ├── state/
+│   ├── types/
+│   ├── schemas/
+│   ├── mocks/
+│   ├── utils/
+│   ├── tests/
+│   ├── config/manager_members_directory.url_config.ts
+│   ├── manager_members_directory_features.md          ← ALL 22 Canonical Sections
+│   ├── manager_members_directory_forbidden.md
+│   └── manager_members_directory_theme_contract.md
+│
+└── members_detail/                                    ← Autonomous Sub-Module 2 (AI Repair Unit)
+    └── ... (identical canonical micro-structure)
+```
+
+**Rule:** One sidebar item = one feature domain container. But all business implementation code MUST live inside autonomous child sub-modules (`{domain}_{capability}/`).
+
+2. **Universal Day-1 Sub-Module Architecture & Domain Root Quarantine:**
+   - Every feature module folder (`src/app/frontend_{role}/{role}_{domain}/`) is a **Pure Domain Container** containing ONLY:
+     1. Navigational shell (`layout.tsx`) mounting sub-navigation tabs/links
+     2. Default route redirect (`page.tsx`) redirecting to the primary initial sub-module
+     3. Master domain documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`)
+     4. One or more autonomous Sub-Modules (`{domain}_{capability}/`, e.g., `attendance_dashboard/`, `attendance_history/`, `members_directory/`, `members_detail/`).
+   - **Zero Root Code in Domain Folder (Domain Root Quarantine):** Creating loose `components/`, `hooks/`, `api/`, `mocks/`, `utils/`, or `state/` directly at the feature domain root level is a **CRITICAL ARCHITECTURE VIOLATION**. 100% of executable source code, components, hooks, stores, mocks, and tests MUST live inside autonomous child sub-modules (`{domain}_{capability}/`).
+   - **Zero Relationship Between Sibling Sub-Modules (Strict Sibling Isolation Firewall & WET Law):** Sibling sub-modules have ABSOLUTE ZERO cross-imports. Shared parent folders (`attendance/common/`, `members/shared/`) are STRICTLY BANNED. UI badges, formatters, and types are duplicated locally (Strict WET).
+
+3. **Autonomous AI Repair Hand-Off & The Sub-Module ZIP Guarantee:**
+   - Under the Universal Day-1 Sub-Module Architecture, the **Autonomous Sub-Module** (e.g., `attendance_history/` or `members_directory/`) is the default granular repair unit.
+   - When a bug or task arises in ANY capability, the developer provides **ONLY that single sub-module folder** (e.g., `members_directory.zip`) to the AI agent.
+   - The AI agent receives a laser-focused 10–15 file context, complete local mocks, and repairs the issue in one shot with 0% risk of breaking sibling sub-modules or the host app.
 
 4. **Navigation Shell Isolation:**
    - The Sidebar and Header presentation components, collapse logic, mobile drawer focus traps, and menu configurations belong strictly to that role's navigation module (e.g., `src/app/frontend_{role}/{role}_navigation/`).
-   - Navigation components consume ONLY the exported typed URL contracts (`[moduleName]_url_config.ts`) from feature modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature modules.
+   - Navigation components consume ONLY the exported typed URL contracts (`[submodule]_url_config.ts`) from feature sub-modules. Navigation components MUST NOT import any business components, business stores, or domain hooks from feature modules.
    - If there is an issue with the sidebar layout or navigation menu itself, the repair context is STRICTLY `{role}_navigation/`.
 
 ---
@@ -371,31 +783,42 @@ The frontend MUST have exactly ONE canonical representation of each feature.
 
 The canonical hierarchy is:
 
+```text
 APPLICATION
-└── ROLE CONTAINER
-    └── FEATURE MODULE
-        ├── page.tsx / layout.tsx / loading.tsx / error.tsx where required
-        ├── [moduleName]_components/
-        ├── [moduleName]_hooks/
-        ├── [moduleName]_api/
-        ├── [moduleName]_types/
-        ├── [moduleName]_schemas/
-        ├── [moduleName]_constants/
-        ├── [moduleName]_store/
-        ├── [moduleName]_utils/
-        ├── [moduleName]_tests/
-        ├── [moduleName]_mocks/
-        ├── [moduleName]_locales/
-        ├── [moduleName]_features.md
-        ├── [moduleName]_forbidden.md
-        ├── [moduleName]_theme_contract.md
-        ├── [moduleName]_url_config.ts
-        └── ... etc
+└── ROLE CONTAINER (src/app/frontend_{role}/)
+    └── FEATURE DOMAIN CONTAINER ({role}_{domain}/)  <-- Pure Domain Container (Quarantined)
+        ├── layout.tsx                                <-- Shell mounting sub-nav tabs/links
+        ├── page.tsx                                  <-- Default redirect to initial sub-module
+        ├── [role]_[domain]_features.md               <-- Master domain specification
+        ├── [role]_[domain]_forbidden.md              <-- Master domain forbidden rules
+        ├── [role]_[domain]_theme_contract.md         <-- Master domain theme tokens
+        │
+        ├── {domain}_{capability_1}/                  <-- Autonomous Sub-Module 1 (AI Repair Unit)
+        │   ├── components/                           <-- Standard category folders
+        │   ├── hooks/
+        │   ├── api/
+        │   ├── state/
+        │   ├── types/
+        │   ├── schemas/
+        │   ├── mocks/
+        │   ├── utils/
+        │   ├── tests/
+        │   ├── config/[role]_[submodule].url_config.ts
+        │   ├── [role]_[submodule]_features.md        <-- ALL 22 Canonical Sections
+        │   ├── [role]_[submodule]_forbidden.md
+        │   └── [role]_[submodule]_theme_contract.md
+        │
+        └── {domain}_{capability_2}/                  <-- Autonomous Sub-Module 2
+            └── ... (identical canonical micro-structure)
+```
 
 Example:
 
 src/app/frontend_superadmin/
 └── superadmin_dashboard/
+    ├── layout.tsx
+    ├── page.tsx
+    └── dashboard_overview/
 
 There MUST NOT simultaneously exist:
 
@@ -408,18 +831,32 @@ for the same business feature.
 No parallel route tree, duplicate route tree, mirror directory, compatibility copy,
 or second implementation of the same feature is permitted.
 
+### Next.js Framework Folder Exceptions & Strict Prohibition of Route Groups
+
+Inside each autonomous sub-module, business artifacts are organized into canonical standard sub-folders: `components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `utils/`, `mocks/`, `tests/`, `contracts/`, and `config/`. All files within them carry the `[Role][Submodule][Name]` prefix.
+
+The following Next.js App Router folders are approved framework exceptions:
+- dynamic segments: `[id]`, `[member_id]`, `[...slug]`, `[[...slug]]`
+- parallel routes: `@slot_name`
+- private implementation folders: `_folder_name`
+
+These folders may contain ONLY route-entry infrastructure (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`).
+They MUST NOT become a second business implementation.
+All business components, hooks, stores, API clients, schemas, mocks, fixtures, and business constants remain inside the canonical sub-module folders.
+
+#### STRICT PROHIBITION OF NEXT.JS ROUTE GROUPS `(group_name)`
+Next.js route groups (folders enclosed in parentheses like `(auth)`, `(dashboard)`, `(marketing)`) are **STRICTLY FORBIDDEN**.
+- **Reason for Prohibition:** Route groups omit the folder name from the browser URL path. This creates silent URL collisions/conflicts between different roles and modules, breaks clean 1:1 physical file path mapping, and confuses AI during module isolation and repair.
+- Every route in the application MUST map explicitly 1:1 to its physical role and feature module folder hierarchy (e.g., `src/app/frontend_admin/admin_members/...`).
+- Any folder with parentheses `(group_name)` is an immediate structural violation (`NON_COMPLIANT`).
+
 ### NEXT.JS ROUTING
 
 Next.js route files MUST be physically owned by the corresponding feature module.
 
 A feature's `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, dynamic route
 segments, and route-specific layout MUST NOT be duplicated outside that feature module.
-
-If clean public URLs require Next.js route groups, use a route-group structure that
-preserves feature ownership without creating a second business implementation.
-
-Route groups are routing infrastructure only and MUST contain no duplicated business
-components, hooks, APIs, schemas, stores, fixtures, handlers, or feature logic.
+No parallel route tree, duplicate route tree, mirror directory, compatibility copy, or second implementation of the same feature is permitted.
 
 ### SINGLE SOURCE OF TRUTH
 
@@ -450,32 +887,43 @@ If any duplicate representation exists:
 STATUS = INCOMPLETE
 Do not package or deliver the ZIP.
 
-### Feature Module Self-Containment Requirement
+### Sub-Module Self-Containment Requirement (The Sub-Module ZIP Guarantee)
 
-Every feature module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that feature.
+Every autonomous sub-module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that sub-feature independently.
 
-The canonical feature module structure MUST contain:
+The canonical autonomous sub-module structure MUST contain:
 
 ```text
-[moduleName]/
-├── page.tsx / layout.tsx / loading.tsx / error.tsx / not-found.tsx
-├── [moduleName]_url_config.ts
-├── [moduleName]_features.md
-├── [moduleName]_forbidden.md
-├── [moduleName]_theme_contract.md
-├── [moduleName]_components/
-├── [moduleName]_hooks/
-├── [moduleName]_api/
-├── [moduleName]_types/
-├── [moduleName]_schemas/
-├── [moduleName]_constants/
-├── [moduleName]_store/
-├── [moduleName]_utils/
-├── [moduleName]_locales/
-├── [moduleName]_mocks/
+{domain}_{capability}/                                    # Autonomous Sub-Module Container
+├── page.tsx / loading.tsx / error.tsx / not-found.tsx    # Next.js route entry files
+├── config/
+│   └── [role]_[submodule].url_config.ts                  # Centralized routes and endpoints
+├── contracts/
+│   └── host-stubs.d.ts                                   # Ambient host stubs for standalone compilation
+├── [role]_[submodule]_features.md                        # ALL 22 Canonical Sections
+├── [role]_[submodule]_forbidden.md                       # Sub-module boundary & WET directives
+├── [role]_[submodule]_theme_contract.md                  # Sub-module design token bindings
+├── components/                                           # [Role][Submodule][Name].tsx
+├── hooks/                                                # use[Role][Submodule][Name].ts
+├── api/                                                  # [role]_[submodule].api.ts & query keys
+├── types/                                                # [role]_[submodule].types.ts
+├── schemas/                                              # [role]_[submodule].schemas.ts (Zod)
+├── constants/                                            # [role]_[submodule].constants.ts
+├── state/                                                # use[Role][Submodule]Store.ts
+├── utils/                                                # [role]_[submodule][Util].ts
+├── locales/                                              # [role]_[submodule]_[lang].json
+├── mocks/                                                # Local MSW handlers, mock fixtures & scenarios
 │   ├── fixtures/
-│   └── handlers/
-└── [moduleName]_tests/
+│   │   └── [role]_[submodule].fixtures.ts
+│   ├── handlers/
+│   │   └── [role]_[submodule].handlers.ts
+│   └── scenarios/
+│       └── [role]_[submodule].scenarios.ts
+└── tests/                                                # Co-located Vitest / RTL tests & test harness
+    ├── [role]_[submodule].integration.test.tsx
+    └── harness/
+        ├── bootstrap.ts
+        └── [Role][Submodule]Harness.tsx
 ```
 
 ### Mandatory vs Conditionally Required Artifacts (GAP-FIX)
@@ -486,23 +934,24 @@ The canonical feature module structure MUST contain:
 
 | Artifact | Requirement Level | Mandatory Trigger Condition | Consequence of Omission |
 |---|---|---|---|
-| `[moduleName]_features.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks architectural map |
-| `[moduleName]_forbidden.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Module lacks safety boundaries |
-| `[moduleName]_theme_contract.md` | **MANDATORY FOR ALL MODULES** | Every single feature module | `NON_COMPLIANT` — Visual portability contract unverified |
-| `[moduleName]_url_config.ts` | **MANDATORY FOR ALL MODULES** | Every module with routes or API calls | `NON_COMPLIANT` — URL centralization contract broken |
-| `[moduleName]_components/` | **MANDATORY FOR ALL MODULES** | Every feature module with UI | `NON_COMPLIANT` — Missing view layer |
-| `[moduleName]_hooks/` | **MANDATORY FOR ALL MODULES** | Any component with logic/state | `NON_COMPLIANT` — Logic coupled to view |
-| `[moduleName]_api/` | **MANDATORY FOR ALL MODULES** | Any API call | `NON_COMPLIANT` — API centralization broken |
-| `[moduleName]_types/` | **MANDATORY FOR ALL MODULES** | Every feature module | `NON_COMPLIANT` — Type isolation contract broken |
-| `[moduleName]_schemas/` | **MANDATORY FOR ALL MODULES** | Every module with forms/API responses | `NON_COMPLIANT` — Runtime validation missing |
-| `[moduleName]_constants/` | **Conditionally Required** | MUST exist when module has static enums/options | `NON_COMPLIANT` if magic values are inlined |
-| `[moduleName]_store/` | **Conditionally Required** | MUST exist when module has shared client state | `NON_COMPLIANT` if client state is stored in global or component state |
-| `[moduleName]_utils/` | **Conditionally Required** | MUST exist when module has formatters/helpers | `NON_COMPLIANT` if helpers are placed in global `src/lib/` |
-| `[moduleName]_locales/` | **MANDATORY FOR ALL MODULES** | Every feature module (`_en.json` + active languages) | `NON_COMPLIANT` — Hardcoded strings in JSX |
-| `[moduleName]_mocks/` | **MANDATORY FOR ALL MODULES** | Every feature module (fixtures + MSW handlers) | `NON_COMPLIANT` — Untestable/unmocked module |
-| `[moduleName]_tests/` | **MANDATORY FOR ALL MODULES** | Every feature module (co-located RTL/Vitest) | `NON_COMPLIANT` — Zero test verification |
+| `[role]_[submodule]_features.md` (or `_features.md`) | **MANDATORY FOR ALL SUB-MODULES** | Every single autonomous sub-module (all 22 canonical sections) | `NON_COMPLIANT` — Sub-module lacks architectural map |
+| `[role]_[submodule]_forbidden.md` (or `_forbidden.md`) | **MANDATORY FOR ALL SUB-MODULES** | Every single autonomous sub-module | `NON_COMPLIANT` — Sub-module lacks safety boundaries & WET rules |
+| `[role]_[submodule]_theme_contract.md` (or `_theme_contract.md`) | **MANDATORY FOR ALL SUB-MODULES** | Every single autonomous sub-module | `NON_COMPLIANT` — Visual portability contract unverified |
+| `config/[role]_[submodule].url_config.ts` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module with routes or API calls | `NON_COMPLIANT` — URL centralization contract broken |
+| `contracts/host-stubs.d.ts` | **MANDATORY FOR ALL SUB-MODULES** | Every autonomous sub-module | `NON_COMPLIANT` — Missing ambient host stubs for standalone compilation |
+| `components/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module with UI | `NON_COMPLIANT` — Missing view layer |
+| `hooks/` | **MANDATORY FOR ALL SUB-MODULES** | Any component with logic/state | `NON_COMPLIANT` — Logic coupled to view |
+| `api/` | **MANDATORY FOR ALL SUB-MODULES** | Any API call | `NON_COMPLIANT` — API centralization broken |
+| `types/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module | `NON_COMPLIANT` — Type isolation contract broken |
+| `schemas/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module with forms/API responses | `NON_COMPLIANT` — Runtime validation missing |
+| `constants/` | **Conditionally Required** | MUST exist when sub-module has static enums/options | `NON_COMPLIANT` if magic values are inlined |
+| `state/` | **Conditionally Required** | MUST exist when sub-module has shared client state | `NON_COMPLIANT` if client state is stored in global or component state |
+| `utils/` | **Conditionally Required** | MUST exist when sub-module has formatters/helpers | `NON_COMPLIANT` if helpers are placed in global `src/lib/` |
+| `locales/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module (`_en.json` + active languages) | `NON_COMPLIANT` — Hardcoded strings in JSX |
+| `mocks/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module (fixtures/, handlers/, scenarios/ for ACTIVE, EMPTY, SERVER_500, TIMEOUT, UNAUTHORIZED) | `NON_COMPLIANT` — Untestable/unmocked module |
+| `tests/` | **MANDATORY FOR ALL SUB-MODULES** | Every sub-module (co-located RTL/Vitest integration tests + tests/harness/bootstrap.ts & [Role][Submodule]Harness.tsx) | `NON_COMPLIANT` — Zero test verification |
 
-Anything containing business behavior specific to the feature MUST live inside that feature module. Creating empty folders when no artifacts exist is not required, but **omitting a folder when the artifact or trigger condition exists is an ARCHITECTURAL VIOLATION.**
+Anything containing business behavior specific to the sub-feature MUST live inside that sub-module. Creating empty folders when no artifacts exist is not required, but **omitting a folder when the artifact or trigger condition exists is an ARCHITECTURAL VIOLATION.**
 
 ---
 
@@ -525,31 +974,61 @@ superadmin_tests/
 
 when those files contain business behavior belonging to individual features.
 
-Instead, feature-specific responsibilities MUST remain inside the owning feature:
+Instead, feature-specific responsibilities MUST remain inside the owning sub-module:
 
 ```text
 src/app/
 └── frontend_superadmin/
     ├── superadmin_plans/
-    │   ├── superadmin_plans_components/
-    │   ├── superadmin_plans_hooks/
-    │   ├── superadmin_plans_api/
-    │   ├── superadmin_plans_types/
-    │   ├── superadmin_plans_schemas/
-    │   ├── superadmin_plans_constants/
-    │   ├── superadmin_plans_utils/
-    │   ├── superadmin_plans_mocks/
-    │   └── superadmin_plans_tests/
+    │   ├── layout.tsx                                    # Tab navigation shell
+    │   ├── page.tsx                                      # Default redirect to plans_list
+    │   ├── superadmin_plans_features.md                  # Master domain documentation
+    │   ├── superadmin_plans_forbidden.md
+    │   ├── superadmin_plans_theme_contract.md
+    │   │
+    │   ├── plans_list/                                   # Autonomous Sub-Module 1 (ZIP Unit)
+    │   │   ├── page.tsx
+    │   │   ├── components/
+    │   │   │   ├── SuperadminPlansListMain.tsx
+    │   │   │   ├── SuperadminPlansListTable.tsx
+    │   │   │   └── SuperadminPlansListFilters.tsx
+    │   │   ├── hooks/
+    │   │   │   └── useSuperadminPlansList.ts
+    │   │   ├── api/
+    │   │   │   ├── superadmin_plans_list.api.ts
+    │   │   │   └── superadmin_plans_list.query_keys.ts
+    │   │   ├── state/
+    │   │   │   └── useSuperadminPlansListStore.ts
+    │   │   ├── types/
+    │   │   ├── schemas/
+    │   │   ├── contracts/
+    │   │   │   └── host-stubs.d.ts
+    │   │   ├── mocks/
+    │   │   │   ├── fixtures/
+    │   │   │   │   └── superadmin_plans_list.fixtures.ts
+    │   │   │   ├── handlers/
+    │   │   │   │   └── superadmin_plans_list.handlers.ts
+    │   │   │   └── scenarios/
+    │   │   │       └── superadmin_plans_list.scenarios.ts
+    │   │   ├── tests/
+    │   │   │   ├── superadmin_plans_list.integration.test.tsx
+    │   │   │   └── harness/
+    │   │   │       ├── bootstrap.ts
+    │   │   │       └── SuperadminPlansListHarness.tsx
+    │   │   ├── config/
+    │   │   │   └── superadmin_plans_list.url_config.ts
+    │   │   ├── superadmin_plans_list_features.md
+    │   │   ├── superadmin_plans_list_forbidden.md
+    │   │   └── superadmin_plans_list_theme_contract.md
+    │   │
+    │   └── plans_create/                                 # Autonomous Sub-Module 2 (ZIP Unit)
+    │       └── ... (identical canonical micro-structure)
     │
     ├── superadmin_invoices/
-    │   ├── superadmin_invoices_components/
-    │   ├── superadmin_invoices_hooks/
-    │   ├── superadmin_invoices_api/
-    │   ├── superadmin_invoices_types/
-    │   ├── superadmin_invoices_schemas/
-    │   ├── superadmin_invoices_utils/
-    │   ├── superadmin_invoices_mocks/
-    │   └── superadmin_invoices_tests/
+    │   ├── layout.tsx
+    │   ├── page.tsx
+    │   └── invoices_list/
+    │       └── ...
     │
     └── superadmin_reports/
         └── ...
@@ -598,28 +1077,28 @@ AI RUNS FEATURE TESTS
 ONLY FEATURE FILES ARE CHANGED
 ```
 
-For example, if a bug exists in:
+For example, if a bug exists in billing invoices within admin billing:
 
 ```text
-src/app/frontend_admin/admin_billing/
+src/app/frontend_admin/admin_billing/billing_invoices/
 ```
 
-the preferred AI context is:
+the preferred AI context under the Sub-Module ZIP Guarantee is:
 
 ```text
-src/app/frontend_admin/admin_billing/
+src/app/frontend_admin/admin_billing/billing_invoices/
 ```
 
-NOT:
+NOT the parent domain container:
 
 ```text
-/frontend_admin/
+/frontend_admin/admin_billing/
 ```
 
 and NOT:
 
 ```text
-the entire application
+/frontend_admin/ (role container) or the entire application
 ```
 
 unless the feature documentation explicitly identifies an unavoidable application-infrastructure dependency that is genuinely required for the repair.
@@ -741,37 +1220,55 @@ Rename all components, files, and folders to be extremely descriptive based on e
 To eliminate AI naming hallucinations, strictly follow this pattern:
 
 
-- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., `admin_members_components/`, `admin_members_filters/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `AdminMembers/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
-- **Component Files:** PascalCase with Role+Module (e.g., `AdminMembersTable.tsx`, `AdminMembersForm.tsx`, `AdminMembersEmptyState.tsx`)
-- **Business Logic Files (Constants, Schemas, QueryKeys, API, Types):** PascalCase with Role+Module (e.g., `AdminMembersConstants.ts`, `AdminMembersSchema.ts`, `AdminMembersQueryKeys.ts`, `AdminMembersCrudApi.ts`, `AdminMembersTypes.ts`).
-- **Hook Files:** camelCase with `use` + Role+Module (e.g., `useAdminMembers.ts`, `useAdminMembersTable.ts`)
-- **Store Files:** camelCase with `use` + Role+Module + `Store` (e.g., `useAdminMembersStore.ts`)
-- **Special Config/Doc Files:** snake_case with role and module (e.g., `admin_members_url_config.ts`, `admin_members_features.md`, `admin_members_forbidden.md`, `admin_members_theme_contract.md`)
+- **Folders (CRITICAL ENFORCEMENT):** ALL folders MUST use `snake_case` (e.g., role containers `frontend_admin/`, feature domains `admin_members/`, sub-modules `members_directory/`, and canonical sub-folders `components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `constants/`, `utils/`, `mocks/`, `tests/`, `contracts/`, `config/`). You are STRICTLY FORBIDDEN from using PascalCase or camelCase for folder names (e.g., NEVER use `AdminMembers/` or `adminMembers/`). Next.js App Router relies on lowercase/snake_case paths, and mixing casing causes fatal Linux CI/CD build failures.
+- **Component Files:** PascalCase with `[Role][Submodule][Name].tsx` (e.g., `AdminMembersDirectoryTable.tsx`, `AdminMembersDirectoryForm.tsx`, `AdminMembersDirectoryEmptyState.tsx`). PascalCase is strictly reserved for React components.
+- **API Client:** Lowercase snake_case with dot notation: `[role]_[submodule].api.ts` (e.g., `admin_members_directory.api.ts`).
+- **Types:** Lowercase snake_case with dot notation: `[role]_[submodule].types.ts` (e.g., `admin_members_directory.types.ts`).
+- **Schemas:** Lowercase snake_case with dot notation: `[role]_[submodule].schemas.ts` (e.g., `admin_members_directory.schemas.ts`).
+- **Constants:** Lowercase snake_case with dot notation: `[role]_[submodule].constants.ts` (e.g., `admin_members_directory.constants.ts`).
+- **Query Keys:** Lowercase snake_case with dot notation: `[role]_[submodule].query_keys.ts` (e.g., `admin_members_directory.query_keys.ts`).
+- **Hook Files:** camelCase with `use` + Role+Submodule: `use[Role][Submodule][Name].ts` (e.g., `useAdminMembersDirectory.ts`, `useAdminMembersDirectoryTable.ts`).
+- **Store Files:** camelCase with `use` + Role+Submodule + `Store`: `use[Role][Submodule]Store.ts` (e.g., `useAdminMembersDirectoryStore.ts`).
+- **Special Config & Documentation Files:** snake_case with role and submodule (`config/[role]_[submodule].url_config.ts`, `[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`).
+- **Ban on Dual Casing:** Allowing both PascalCase and snake_case for the same artifact class (e.g. `AdminMembersDirectoryApi.ts` vs `admin_members_directory.api.ts`) is STRICTLY FORBIDDEN. Every artifact class has exactly one canonical casing convention.
 
 ### Locale File Naming Convention (GAP-1 Fix)
-Locale files MUST follow: `[moduleName]_{lang}.json`
-(e.g., `admin_members_en.json`, `admin_members_hi.json`)
-The `[moduleName]_locales/` folder MUST contain ONLY locale files.
-Locale files are grouped by module, NOT by language.
+Locale files MUST follow: `[role]_[submodule]_{lang}.json`
+(e.g., `admin_members_directory_en.json`, `admin_members_directory_hi.json`)
+The `locales/` folder inside each autonomous sub-module MUST contain ONLY locale files.
+Locale files are grouped by sub-module, NOT by language.
 Do NOT create `src/locales/en/` global folders.
 
 ### URL Config Contract (GAP-2 Fix)
-Every feature module MUST have exactly one `[moduleName]_url_config.ts` which MUST export:
-1. All API endpoint URL strings as named constants (UPPER_SNAKE_CASE).
-2. A typed MODULE_URLS object grouping all endpoints.
+Every autonomous sub-module MUST have exactly one `config/[role]_[submodule].url_config.ts` which MUST export two distinct typed contracts:
+1. `[ROLE]_[SUBMODULE]_ROUTES`: Internal UI navigation route paths owned by this module.
+2. `[ROLE]_[SUBMODULE]_API`: Backend API endpoint paths consumed by this module.
 3. NO hardcoded base URLs — only paths relative to API base.
 4. NO business logic — only URL string definitions.
 
+**Usage Restrictions:**
+- Navigation components (sidebar, header, breadcrumbs) may import ONLY `[ROLE]_[SUBMODULE]_ROUTES`.
+- Feature API clients may import ONLY `[ROLE]_[SUBMODULE]_API`.
+- A sibling feature module may NEVER import either object.
+- API endpoint strings must NEVER be consumed by navigation UI.
+
 Example export shape:
 ```typescript
-export const ADMIN_MEMBERS_URLS = {
-  LIST:   '/api/v1/admin/members',
-  DETAIL: (id: string) => `/api/v1/admin/members/${id}`,
-  CREATE: '/api/v1/admin/members',
+// config/admin_members_directory.url_config.ts
+export const ADMIN_MEMBERS_DIRECTORY_ROUTES = {
+  root: '/admin/members_directory',
+  detail: (id: string) => `/admin/members_directory/${id}`,
+} as const;
+
+export const ADMIN_MEMBERS_DIRECTORY_API = {
+  list:   '/api/v1/admin/members',
+  detail: (id: string) => `/api/v1/admin/members/${id}`,
+  create: '/api/v1/admin/members',
 } as const;
 ```
 
-### `[moduleName]_features.md` Content Specification (MANDATORY — GAP-4 Fix)
+### `[role]_[submodule]_features.md` Content Specification (MANDATORY — GAP-4 Fix)
+*(See Rule 13 for the authoritative, complete 22-canonical-section specification and template required for every autonomous sub-module).*
 This file MUST contain ALL of:
 1. Module Purpose — exact business purpose
 2. Routes — all URL paths with their page components
@@ -784,18 +1281,37 @@ This file MUST contain ALL of:
 9. Known Forbidden Patterns — cross-reference to _forbidden.md
 Generic boilerplate defeats the AI-portable goal.
 
-### Child Folder Naming Contract
+### Sub-Module & Sub-Folder Naming Contract
 
-Every child folder MUST inherit Role + Module identity.
-- ✅ **GOOD:** `admin_members_table/`, `admin_members_filters/`, `admin_members_profile/`
-- ❌ **BAD:** `table/`, `filters/`, `profile/`, `modal/`
-*Why:* When you ZIP a child folder and give it to an AI, it instantly knows the full context without relying on parent path information.
+Every autonomous child sub-module MUST inherit the domain identity (`{domain}_{capability}/`, e.g., `attendance_dashboard/`, `attendance_history/`, `members_directory/`).
+Inside each autonomous sub-module, canonical standard category subfolder names are used: `components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `constants/`, `utils/`, `locales/`, `mocks/`, `tests/`, `contracts/`.
+- ✅ **GOOD (Sub-Module Containers):** `members_directory/`, `members_detail/`, `attendance_dashboard/`
+- ❌ **BAD (Lazy / Generic Names):** `table/`, `filters/`, `profile/`, `modal/`, `details/`, `tab1/`, `common/`
+- ✅ **GOOD (Internal Category Folders & Files):** `members_directory/components/AdminMembersDirectoryTable.tsx`, `members_directory/hooks/useAdminMembersDirectory.ts`, `members_directory/constants/AdminMembersDirectoryConstants.ts`
+*Why:* When you ZIP an autonomous sub-module and give it to an AI, it instantly knows the full context without relying on parent path information.
+
+### No Magic / Ambiguous File Names Rule
+
+Generic, uninformative file names degrade AI reasoning speed and create search ambiguity across large codebases.
+- ❌ **STRICTLY FORBIDDEN FILE NAMES:**
+  `config.ts`, `utils.ts`, `helpers.ts`, `common.ts`, `shared.ts`, `misc.ts`, `types.ts`, `api.ts`, `constants.ts`, `styles.ts`, `store.ts`
+- ✅ **MANDATORY DESCRIPTIVE FILE NAMES:**
+  Every file MUST state its role, module, and exact domain responsibility:
+  - `AdminMembersApiClient.ts` (not `api.ts`)
+  - `AdminMembersUrlConfig.ts` (not `config.ts`)
+  - `AdminMembersFormatting.ts` (not `utils.ts`)
+  - `AdminMembersValidationSchema.ts` (not `schema.ts`)
+  - `AdminMembersTypes.ts` (not `types.ts`)
+  - `useAdminMembersStore.ts` (not `store.ts`)
+  - `AdminMembersPermissionRules.ts` (not `permissions.ts`)
+*Enforcing the 1-Glance Comprehension Rule:* An AI or engineer scanning a directory listing must immediately comprehend the exact purpose of every file without opening it.
+
 3B. **Backend-Ready Centralized Data (Single Source of Truth)**: 
-Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingPaymentModeConstants.ts` inside the `admin_billing_constants/` folder) or a module-level constants file prefixed with the full Role+Module name (e.g., `AdminBillingConstants.ts`) for data used across multiple sub-folders.
+Find all hardcoded UI data (dropdown options, filter lists, default preset arrays, payment modes, etc.) scattered across the UI components. Extract them into feature-specific constant files alongside their components (e.g., `AdminBillingPaymentModeConstants.ts` inside the `constants/` folder) or a module-level constants file prefixed with the full Role+Module name (e.g., `AdminBillingConstants.ts`) for data used across multiple sub-folders.
 *Why?* Centralizing static UI configuration minimizes UI changes when a backend source is introduced; the backend transition must still update the API contract, types, schema, mock layer, and API client as required. Derive your TypeScript types directly from these central arrays where applicable.
 
 ### Constants Organization (No Barrel Files)
-Place all module-wide constants strictly inside the `[moduleName]_constants/` folder. Do not create barrel files or entry points to re-export constants. Import the specific constant file you need directly using absolute imports.
+Place all module-wide constants strictly inside the `constants/` folder. Do not create barrel files or entry points to re-export constants. Import the specific constant file you need directly using absolute imports.
 
 ### Enum Registry Rule
 Business statuses MUST originate from one constants source.
@@ -899,8 +1415,8 @@ Extract all heavy logic into an adjacent custom hook file (e.g., `use[ComponentN
 *Consequence of violation:* Mixing business/API/state calculations directly inside JSX markup destroys isolation, triggers unnecessary re-renders, makes headless unit testing impossible, and causes regression bugs during logic repairs. Finding business calculations or direct API calls in JSX = `NON_COMPLIANT`.
 
 ### Main Component Ownership Rule
-Every feature module MUST contain exactly one `[ModuleName]Main.tsx` (e.g. `AdminMembersMain.tsx`). This component MUST be placed inside `[moduleName]_components/`, NOT in the root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
-*(Note: `page.tsx` in the root folder is just a minimal Next.js wrapper that imports and renders `[ModuleName]Main.tsx`).*
+Every autonomous sub-module MUST contain exactly one `[Role][Submodule]Main.tsx` (e.g. `AdminMembersDirectoryMain.tsx`). This component MUST be placed inside the sub-module's `components/` folder, NOT in the sub-module root folder. It orchestrates the layout, assembles child components, and manages route-level providers. 
+*(Note: `page.tsx` in the sub-module root folder is just a minimal Next.js route-entry wrapper that imports and renders `[Role][Submodule]Main.tsx`).*
 - **Forbidden in Main.tsx:** API calls, fetch logic, business calculations, validation logic, transformation logic, large `useEffect` chains.
 *Why:* Prevents the AI from creating a monolithic "God Component".
 
@@ -937,11 +1453,11 @@ UI Interaction
 A visible control without functional closure MUST be treated as a defect.
 
 7. **Interface & Type Isolation (The Prop Blueprint)**:
-Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `[moduleName]_types/` folder.
-- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `_constants/` or `_types/` folder.
+Never define complex `Interfaces` or `Types` directly inside the component files. Extract all TypeScript definitions (Component Props, API Payloads, State Shapes) into a dedicated `types/` folder.
+- **No Inline String Type Unions:** Never hardcode string type unions or any values as string literals (e.g., `'idle' | 'loading' | 'success' | 'error'`) inline inside interfaces or hook declarations. Always extract these into a named type inside the module's `constants/` or `types/` folder.
 
 #### SCHEMA ORGANIZATION (NO BARREL FILES)
-Place all schema files strictly inside the `[moduleName]_schemas/` folder. Do not create barrel files or single entry points to re-export them. Import the specific schema you need directly using absolute imports.
+Place all schema files strictly inside the `schemas/` folder. Do not create barrel files or single entry points to re-export them. Import the specific schema you need directly using absolute imports.
 
 Separate schemas where responsibility requires them. Examples:
 - `AdminMembersCreateSchema.ts`
@@ -971,10 +1487,11 @@ Rules:
 
 Recommended structure:
 ```text
-[moduleName]_types/
+types/
   ManagerMembersApiGenerated.ts
-  [ModuleName]Schema.ts
-  [ModuleName]Types.ts
+  [Role][Submodule]Types.ts
+schemas/
+  [Role][Submodule]Schemas.ts
 ```
 
 8. **Strict Server vs. Client Component Boundaries (Next.js Specific)**: 
@@ -1010,7 +1527,7 @@ If initial server data is passed into a Client Component:
 - Avoid maintaining an unrelated duplicate local state copy.
 
 ### Query Key Registry Rule
-Every feature module MUST contain a dedicated registry for TanStack query keys located strictly inside the `[moduleName]_constants/` or `[moduleName]_api/` folder (e.g., `AdminMembersQueryKeys.ts`):
+Every autonomous sub-module MUST contain a dedicated registry for TanStack query keys located strictly inside its `api/` folder (e.g., `api/admin_members_directory.query_keys.ts`):
 ```typescript
 export const ADMIN_MEMBERS_QUERY_KEYS = {
   all: ['admin_members'] as const,
@@ -1095,18 +1612,28 @@ Never use relative imports (like `../../` or `./`) for importing components, con
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 *Consequence of violation:* Relative imports break module extraction and portability, produce fragile import chains that fail during refactoring, and bypass ESLint boundary protection. Finding ANY relative import (`../` or `./`) outside of Next.js routing convention = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
+### Generated Code Exception to Absolute Imports
+
+The absolute-import rule applies strictly to handwritten application and feature code.
+
+Generated code located under `src/generated/**` (such as OpenAPI, Orval, or swagger-codegen artifacts) may use internal relative imports as required by the generator engine. Generated files MUST NOT be manually refactored, edited, or rewritten merely to satisfy handwritten import style conventions.
+
+Generator configuration and generated output integrity must be verified automatically in CI. Handwritten feature code consuming generated contracts MUST import them exclusively through approved absolute paths (e.g., `@/generated/openapi/...`).
+
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
-Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each module must have exactly one centralized URL configuration file, named exactly `[moduleName]_url_config.ts` (e.g., `admin_billing_url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
+Never hardcode URLs (e.g., `/api/auth/refresh`, `/login`, etc.) directly into API wrappers or React components. Each autonomous sub-module must have exactly one centralized URL configuration file, placed at `config/[role]_[submodule].url_config.ts` (e.g., `config/admin_billing_invoices.url_config.ts`). This file must export all internal page routes and external API routes used by that module as named constants: `[ROLE]_[SUBMODULE]_ROUTES` and `[ROLE]_[SUBMODULE]_API`. Module-owned API/navigation call sites MUST use their module URL config. Global infrastructure may receive a fully constructed path/URL as an argument and MUST NOT own module-specific URLs.
 *Consequence of violation:* Hardcoded URLs create silent 404s upon routing refactors, break multi-tenant reverse proxy mappings, and make centralized URL auditing impossible. Finding raw endpoint strings in components or hooks = `NON_COMPLIANT`.
 
-### CANONICAL `[moduleName]_url_config.ts` TEMPLATE (GAP-18 Fix)
+### CANONICAL `config/[role]_[submodule].url_config.ts` TEMPLATE (GAP-18 Fix)
 
-Every `[moduleName]_url_config.ts` MUST follow this exact shape. AI agents MUST generate this file for every module — no improvisation allowed.
+Every sub-module `config/[role]_[submodule].url_config.ts` MUST follow this exact shape. AI agents MUST generate this file for every module — no improvisation allowed.
 
 ```typescript
-// [moduleName]_url_config.ts
-// Owned by: [role]/[module] feature module
-// DO NOT import this file from outside this module boundary.
+// config/[role]_[submodule].url_config.ts
+// Owned by: [role]/[domain]/[submodule] autonomous sub-module
+// API endpoint exports MUST NOT be imported outside this feature module.
+// Route exports may be imported only by the owning role-level navigation layer
+// for navigation wiring. Sibling business features must never import either export.
 
 // ─── Internal Navigation Routes ────────────────────────────────────────────
 // These are the Next.js page routes owned by this module.
@@ -1135,6 +1662,21 @@ export const [MODULE_NAME]_API = {
 } as const;
 ```
 
+### Module URL Config Import Boundary & Allowed Exports
+
+Only two module URL exports are permitted from `[moduleName]_url_config.ts`:
+- `[MODULE_NAME]_ROUTES` — internal browser navigation paths
+- `[MODULE_NAME]_API` — backend endpoint paths
+
+`[MODULE_NAME]_URLS`, `ROUTES_CONFIG`, endpoint constants scattered across API files, or alternative route naming objects are forbidden.
+
+**Import boundary:**
+- `[MODULE_NAME]_API` may be imported only inside the owning feature module (by its own API client and MSW handlers).
+- `[MODULE_NAME]_ROUTES` may be imported by:
+  1. the owning feature module (for internal links, redirections, and tab views); and
+  2. the owning role-level navigation configuration only (sidebar, navbar, breadcrumbs).
+- A sibling feature module MUST NOT import another feature's `_ROUTES` or `_API`. Cross-module business consumption is strictly prohibited.
+
 **Rules:**
 - Replace `[MODULE_NAME]`, `[role]`, `[module]` with the actual values.
 - Add/remove endpoint entries to match the actual backend contract.
@@ -1143,15 +1685,17 @@ export const [MODULE_NAME]_API = {
 - AI MUST NOT hardcode these strings directly in API client files.
 
 #### STRICT SUB-FOLDER PLACEMENT RULE (NO ROOT FACADES)
-All files (Constants, Schemas, QueryKeys, API, Main component, etc.) MUST be placed STRICTLY inside their corresponding prefixed sub-folders (e.g., `[moduleName]_api/`, `[moduleName]_schemas/`, `[moduleName]_components/`). 
-DO NOT place facade files or entry-point files in the root of the feature module folder. 
+All files (Constants, Schemas, QueryKeys, API, Main component, etc.) MUST be placed STRICTLY inside their corresponding canonical sub-folders inside the autonomous sub-module (e.g., `api/`, `schemas/`, `components/`, `hooks/`, `state/`, `types/`, `utils/`, `mocks/`, `tests/`, `contracts/`). 
+DO NOT place facade files or entry-point files in the root of the feature domain or sub-module folder. 
 
-**THE ROOT FOLDER IS QUARANTINED.** The ONLY files allowed in the root of the feature folder are: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`, `[moduleName]_url_config.ts`, and the `[moduleName]_features.md`, `[moduleName]_forbidden.md`, and `[moduleName]_theme_contract.md` documentation files. ALL OTHER FILES (.ts, .tsx) MUST go inside prefixed subfolders. ZERO EXCEPTIONS.
+**THE ROOTS ARE QUARANTINED:**
+- **Domain Root Quarantine:** The feature domain root (`src/app/frontend_{role}/{role}_{domain}/`) contains ONLY `layout.tsx` (tab navigation shell), `page.tsx` (sub-module redirect), master domain documentation trio, and autonomous sub-module directories `{domain}_{capability}/`. ZERO business code, components, or API calls allowed.
+- **Autonomous Sub-Module Root Quarantine:** The sub-module root (`{domain}_{capability}/`) contains ONLY Next.js route entry files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`), `config/[role]_[submodule].url_config.ts`, and the Documentation Trio (`[role]_[submodule]_features.md`, `[role]_[submodule]_forbidden.md`, `[role]_[submodule]_theme_contract.md`). ALL OTHER FILES (.ts, .tsx) MUST go inside canonical subfolders (`components/`, `hooks/`, `api/`, etc.) with `[Role][Submodule][Name]` prefixing. ZERO EXCEPTIONS.
 
-For example, `ManagerAttendanceSchemaExport.ts` MUST live inside `manager_attendance_schemas/ManagerAttendanceSchemaExport.ts`. It MUST NOT be placed at the root of `manager_attendance/`. The root feature module folder MUST ONLY contain the main sub-folders, documentation `.md` files, `[moduleName]_url_config.ts`, and Next.js reserved routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`). Any other file placed in root = ARCHITECTURAL VIOLATION = REJECTED MODULE.
+For example, `ManagerAttendanceDashboardSchema.ts` MUST live inside `attendance_dashboard/schemas/ManagerAttendanceDashboardSchema.ts`. It MUST NOT be placed at the root of `manager_attendance/` or `attendance_dashboard/`. Any non-whitelisted file placed in root = ARCHITECTURAL VIOLATION = REJECTED MODULE.
 
 #### NO API FACADES (NO BARREL FILES)
-Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/.../admin_members_api/AdminMembersCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
+Do not create API facade files or barrel files (like `index.ts` or `AdminMembersApi.ts` that just re-export other files). Since we use absolute imports (`@/`), you MUST import the specific file you need directly (e.g., `import { createMember } from '@/app/frontend_admin/admin_members/members_directory/api/AdminMembersDirectoryCrudApi'`). This ensures clean tree-shaking, clear file paths, and prevents circular dependencies.
 
 Internally, the module MUST organize implementation into specific files when required. Examples:
 - `AdminMembersCrudApi.ts`
@@ -1196,6 +1740,57 @@ The AI may expand context only when:
 3. the feature cannot be correctly repaired without inspecting that dependency.
 
 The AI MUST NOT expand context merely because another feature contains similar code.
+
+---
+
+## AI TASK COMPLETION REPORT
+
+Every AI creation, audit, or repair task must conclude with this standardized report:
+
+```markdown
+## AI TASK COMPLETION REPORT
+1. Scope
+   - Owning Feature Module: `[path]`
+   - Allowed Infrastructure Inspected: `[paths]`
+2. Changed Files
+   - Exact path list of modified/created files
+3. Rules Verified
+   - Verified Rule IDs with concrete source line evidence
+4. Deferred to Host Runtime
+   - `DEFERRED_TO_HOST_RUNTIME` items with exact CLI verification commands
+5. Verified Exceptions
+   - Any documented exception with Rule ID, reason, and risk analysis
+6. Test Evidence
+   - Unit/Component/E2E tests created or updated and behavioral proof
+7. Contract Integrity
+   - API, schema, MSW, docs, permissions, routes verified unchanged or updated
+```
+
+---
+
+## APPROVED APPLICATION INFRASTRUCTURE ALLOWLIST
+
+Feature modules may import ONLY from the following approved external application infrastructure areas:
+
+- `src/lib/api.ts` (Global API transport wrapper)
+- `src/config/env.ts` (Validated environment configuration)
+- `src/lib/auth/*` (Authentication/session token management)
+- `src/lib/permissions/*` (Role and permission evaluator utilities)
+- `src/lib/monitoring/*` (Error monitoring and telemetry adapters)
+- `src/lib/telemetry/*` (Logging and telemetry infrastructure)
+- `src/lib/display_value.ts` (`displayValue()` zero-business neutral null/empty-state primitive only)
+- `src/components/ui/*` (Zero-business UI primitives: Button, Input, Dialog, Tooltip, etc.)
+- `src/components/providers/*` (Application-level React context providers)
+- `src/design-system/*` (Global design tokens and theme constants)
+- `src/infrastructure/msw/browser.ts` (Global MSW bootstrap and handler registry)
+- `src/generated/openapi/*` (OpenAPI generated transport types)
+
+Every allowed import path must be classified as transport, auth, security, platform provider, design primitive, generated contract, or observability.
+Any path not in this allowlist is forbidden by default. Sibling feature modules are strictly excluded from this allowlist.
+
+`src/lib/display_value.ts` may export only `displayValue()` for neutral rendering of nullish or empty UI values.
+A global business formatter library is forbidden.
+Currency, dates, phone numbers, tax, invoices, membership lifecycle labels, financial values, and feature-specific status formatting MUST remain feature-local inside the autonomous sub-module `utils/` folder.
 
 ---
 
@@ -1355,6 +1950,11 @@ with only documented application-infrastructure changes allowed as exceptions.
 13. **Update AI-Context Documentation (The Feature Map)**:
 Once the entire refactor is complete, generate or update a `[moduleName]_features.md` documentation file inside the module's root folder. This document MUST serve as a master map for future AI sessions and human developers. A future AI reading only this file must be able to answer: What does this module do? What can the user do in it? What files handle what? What are the API endpoints? What must never be broken?
 
+### Source Code as Last Resort Mandate
+An AI agent or engineer MUST be able to completely understand the feature's business purpose, user flows, state lifecycle, API contracts, permissions, test requirements, and edge cases purely by reading `[moduleName]_features.md` and `[moduleName]_forbidden.md`.
+- **The Rule:** Source code inspection MUST be the last resort, never the starting point.
+- **The Rationale:** When an AI is forced to reverse-engineer business intent from JSX markup and complex React hooks, hallucinations soar to 80%. When the AI operates against verified contract documentation, guessing drops below 5%. If an AI cannot understand the feature without opening source code files, the documentation has FAILED.
+
 ### The Documentation Quality Standard
 
 **CRITICAL — The difference between useful and useless documentation:**
@@ -1406,85 +2006,89 @@ The rule is simple: **if a section contains "TBD", "Main module view", "Do not b
 Every module feature map MUST use this structure. Each section has mandatory content depth requirements listed below it.
 
 ```markdown
-# [Module Name] — Feature Map
+---
+feature: "[role]_[submodule]"
+owner_role: "[role]"
+module_version: 1
+api_contract_source: "verified-api-contract | normative-rules"
+last_verified_date: "YYYY-MM-DD"
+last_verified_commit: "commit-sha-or-host-unavailable"
+documentation_status: "current"
+portability_score: "8/8"
+---
 
-## Module Purpose
+# [Module Name] — Feature Map (ALL 22 CANONICAL SECTIONS)
+
+## 1. Scope and Non-Scope (Module Purpose, System Context & Dependencies)
 [REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve?
 (2) Who uses it (which role/persona)? (3) What are the 3–5 most important things a user
 can DO in this module? (4) What is strictly OFF-LIMITS for this role in this module?
+If an AI or engineer has only 30 seconds, reading this section alone must convey complete business context.
 Generic phrases like "handles X operations" are forbidden.]
 
-## Dependency Manifest
-[REQUIRED: Explicit list of the exact stack technologies used by this module. Example: TanStack Query, Zustand, React Hook Form, Zod. This allows an AI to instantly know what stack is used.]
+### Feature Ownership & System Context
+- **Feature / Role Owner:** [e.g., "Gym Manager / Operations Team"]
+- **Backend Microservice / API Base:** [e.g., "members-service (`/api/v1/manager/members`)"]
+- **Authoritative Database Tables:** [e.g., `members`, `memberships`, `member_attendance_logs`]
+- **Background / Queued Jobs:** [e.g., `member_sync_queue`, `biometric_device_sync_cron` — "None" if purely synchronous]
 
-## Feature Lifecycle Contract
-[REQUIRED: Every module must define its CRUD capability: Create, Read, Update, Delete. If a lifecycle operation does not exist, it MUST be explicitly documented *why* it does not exist, to prevent AI from blindly assuming standard CRUD capability.]
+### Dependency Manifest
+- **State Pattern:** TanStack Query v5 (server state) + Zustand (UI state) + URL search params
+- **Form & Validation:** React Hook Form + Zod schemas
+- **Icons & Primitives:** Lucide React + headless primitives
 
-## Directory Structure
-[REQUIRED: A table or bullet list of EVERY folder inside this module with a one-line
-description of its exact responsibility. Must name the actual files/components inside
-each folder, not just the folder name. Example:]
-
+### Autonomous Sub-Module Directory Structure
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `manager_members_components/manager_members_table/` | Renders the paginated member list table with search, filter, and row-click navigation | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersTableColumns.ts` |
-| `manager_members_components/manager_members_profile/` | Full member profile modal: personal info, membership history, payment records, diet/workout assignment | `ManagerMembersProfileModal.tsx`, `ManagerMembersProfileTabs.tsx` |
-| `manager_members_api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersCrudApi.ts` |
-| `manager_members_types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
-| `manager_members_store/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
-| `manager_members_constants/` | Hardcoded data, dropdown options, query keys, enums | `ManagerMembersConstants.ts`, `ManagerMembersQueryKeys.ts` |
-| `manager_members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
-| `manager_members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
+| `components/` | Renders the paginated member list table, modals, and detail views | `ManagerMembersTable.tsx`, `ManagerMembersTableRow.tsx`, `ManagerMembersProfileModal.tsx` |
+| `hooks/` | Domain query and mutation hooks | `useManagerMembersList.ts`, `useManagerMembersMutations.ts` |
+| `api/` | All API calls for member CRUD, renewal, payment recording | `ManagerMembersCrudApi.ts` |
+| `types/` | TypeScript interfaces for Member, MembershipRecord, PaymentRecord, form DTOs | `ManagerMembersTypes.ts` |
+| `schemas/` | Zod validation schemas for forms and payloads | `ManagerMembersSchemas.ts` |
+| `state/` | Zustand store for selected member ID, active tab, filter state | `useManagerMembersStore.ts` |
+| `utils/` | Feature-local formatters and helpers (Strict WET) | `ManagerMembersFormatters.ts` |
+| `mocks/` | Module-specific MSW handlers and fixtures | `ManagerMembersMockHandlers.ts`, `ManagerMembersMockFixtures.ts` |
+| `tests/` | Unit, component tests and standalone mounting harness | `ManagerMembersTable.test.tsx`, `ManagerMembersHarness.tsx` |
 
-### Approved External Dependencies
+### Approved External Dependencies & Expected Host Contract
+[REQUIRED: Maximum 7 Application Infrastructure items permitted under the Feature Dependency Budget. Each dependency MUST document its exact expected TypeScript interface/contract so an isolated AI never guesses.]
 
-This section MUST contain an explicit inventory of everything outside the feature module that the feature imports or relies upon.
+- `@/lib/api` — `apiFetch<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>>`
+- `@/lib/logger` — `logger.info(msg, meta)`, `logger.error(msg, error)`
+- `@/components/ui/Dialog` — zero-business-logic primitive `{ open: boolean, onOpenChange: (open: boolean) => void }`
+- Host Session Context — `interface ExpectedAuthUser { id: string; role: Role; branchId: string; }`
 
-Example:
-
-```text
-## Approved External Dependencies
-
-### Application Infrastructure
-- `@/lib/api` — global HTTP transport only
-- `@/lib/logger` — application logging infrastructure
-- `@/components/ui/Dialog` — zero-business-logic dialog primitive
-
-### Business Feature Dependencies
-- None
-
-### Role-Level Business Dependencies
-- None
-```
-
-A feature that has no external business dependency MUST explicitly say:
-
-```text
 Business Feature Dependencies:
-- None
+- None (STRICTLY FORBIDDEN under Strict WET Principal)
 
 Role-Level Business Dependencies:
 - None
-```
 
-This is mandatory.
-
-The AI MUST use this section as the dependency allowlist during future repairs.
-
-If a new external dependency is introduced, the feature documentation MUST be updated in the same change.
-
-## Feature Inventory
-[REQUIRED: Every distinct user-facing feature gets its own row. "Core UI" is NOT a feature.
+## 2. Screen Inventory & Component Responsibility Map
+[REQUIRED: Every distinct user-facing feature/tab gets its own row. "Core UI" is NOT a feature.
 Each row must have a real Purpose description (what the user actually does), real API
 endpoints (not "TBD"), and an accurate Status. Minimum 1 row per meaningful UI section.]
 
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
+| Feature / Screen | Route | What the User Can Do | Key Components | Main API Calls | Status |
 |---|---|---|---|---|---|
+| Members Directory | `/frontend_manager/manager_members` | View paginated list, search by name/phone, filter by status, trigger member modals | `ManagerMembersTable.tsx`, `ManagerMembersSearch.tsx` | `fetchMembers()` | Complete |
+| Member Detail Modal | Modal view over directory | View profile tabs (Overview, Membership, Attendance, Billing) | `ManagerMembersProfileModal.tsx` | `fetchMemberById()` | Complete |
+| Member Registration | Modal view over directory | 3-tab registration wizard: Personal Info → Membership Plan → Payment | `ManagerMembersAddModal.tsx` | `createMember()` | Complete |
 
-## User Flows & Interactions
-[REQUIRED: Describe the 2–4 most important multi-step user journeys in this module.
-Format: numbered steps. This section is what lets an AI understand the full flow
-without reading every component file. Example:]
+### Component Responsibility Map
+[REQUIRED: Lists every component file with a one-line responsibility statement so an AI knows exactly which file to open.]
+
+| Component File | Responsibility |
+|---|---|
+| `ManagerMembersMain.tsx` | Root client orchestrator. Owns layout, renders toolbar + KPIs + table. No direct API calls. |
+| `ManagerMembersTable.tsx` | Renders paginated member rows. Handles row-click → opens profile modal. |
+| `ManagerMembersProfileModal.tsx` | Full member detail modal with tabs. Receives `memberId` prop, renders profile using query-hook-provided data. |
+| `ManagerMembersAddModal.tsx` | 3-tab add member form. Renders form and delegates submission to form/mutation hook. Closes on success. |
+| `ManagerMembersKPIs.tsx` | 4 stat cards (Total, Active, Expired, Due Today). Read-only display. |
+| `ManagerMembersEmptyState.tsx` | Empty state UI shown when table has zero rows. Has "Add Member" CTA. |
+
+## 3. Navigation Contract & User Flows
+[REQUIRED: Document the 2–4 most important multi-step user journeys in this module, route parameters, and zero-code logical integration points.]
 
 ### Flow 1: Add New Member
 1. User clicks "Add Member" button in `ManagerMembersMain` toolbar
@@ -1500,23 +2104,16 @@ without reading every component file. Example:]
 3. `ManagerMembersRenewalModal` opens with pre-filled current plan
 4. On confirm: `renewMembership(memberId, dto)` called → Query cache invalidated/updated → toast shown
 
-## Data and State Architecture
-[REQUIRED: Must name the ACTUAL store files, context files, and query keys — not "TBD".]
+### Logical Integration Points (Zero Code Imports)
+| Target Domain / Feature | Interaction Type | Data Flow / Event | Isolation Mechanism |
+|---|---|---|---|
+| `admin_members` | Entity Identity | Consumes `memberId` via route param or URL query | Zero code imports; state passed purely via URL / route params |
+| `admin_billing` | Payment Status | Triggers billing redirect or receives payment verification via API | Decoupled via centralized API endpoint / route config |
+| `notifications` | Async Alert | Dispatches or listens to server-sent WebSocket events | Centralized `WebSocketContext` at `@/lib/socket`, zero module-to-module imports |
 
-- **State pattern:** [e.g., "TanStack Query for server state + Zustand for UI state."]
-- **Zustand stores:** [List actual store files and what state they hold, e.g., `useManagerMembersStore.ts` — holds: selectedMemberId, isAddModalOpen, isEditModalOpen, activeProfileTab. (Note: searchQuery and currentPage MUST go in URL state, not Zustand)]
-- **Local-storage keys:** ["None" is a valid answer if accurate]
-- **MSW handler location:** [actual module-owned handler file]
-- **MSW fixture location:** [actual module-owned fixture file]
-- **MSW global bootstrap:** [actual global registration/bootstrap file, if applicable]
-- **MSW scenarios:** [normal / empty / error / filter / sort / pagination / permission-denied, as applicable]
-
-## API Contract
+## 4. API Contract & UI Data Requirements
 [REQUIRED: Every API function in the module's API file must be listed with its exact
-HTTP method, endpoint, request shape, and response type. "List all endpoint builders"
-is not acceptable — actually list them.]
-
-All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta, error?: string, errorCode?: string, statusCode?: number, validationErrors?: ValidationErrorItem[] }`
+HTTP method, endpoint, request shape, and response type. All calls go through `apiFetch` with `ApiResponse<T>`.]
 
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
@@ -1527,81 +2124,144 @@ All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: b
 | `deleteMember(id)` | DELETE | `/api/v1/manager/members/:id` | — | `null` |
 | `renewMembership(id, dto)` | POST | `/api/v1/manager/members/:id/renew` | `RenewalDto` | `MembershipRecord` |
 
-## UI Data Requirements
-[REQUIRED: List every table column, KPI, chart series, filter, dropdown, detail field,
-and other data-driven UI element with its exact API response field. This section is the
-source used to verify MSW fixture completeness. No UI element may be left unlisted.
-Generic entries like "All fields" are forbidden — name every column and field explicitly.]
+### UI Data Requirements Mapping
+| UI Element | Required Field(s) | API Endpoint | Response Path | Availability | Nullable? | Mocked? | UI Behavior When Unavailable |
+|---|---|---|---|---|---|---|---|
+| Table: Member Name | `name` | `GET /api/v1/manager/members` | `data.items[].name` | `required` | No | Yes | Render fallback text |
+| Table: Status Badge | `status` | `GET /api/v1/manager/members` | `data.items[].status` | `required` | No | Yes | Neutral badge |
+| Table: Phone | `phone` | `GET /api/v1/manager/members` | `data.items[].phone` | `permission_masked` in list | No | Yes | `maskSensitiveData()` |
+| KPI: Total Revenue | `monthlyRevenue` | `GET /api/v1/manager/finance/stats` | `data.monthlyRevenue` | `permission_masked` | No | Yes | Hide KPI, show authorized summary |
+| Filter: Status | `status` | `GET /api/v1/manager/members` | `data.items[].status` | `required` | No | Yes | All options |
 
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+Availability values: `required` (mandatory data), `nullable` (rendered via `displayValue()`), `permission_masked` (hidden/masked without breaking layout), `feature_flagged` (conditional field), `not_applicable` (static UI).
+
+## 5. Query Key Registry & Server State
+[REQUIRED: Strict query key factory to prevent cache collisions and enforce granular invalidation.]
+
+```typescript
+export const managerMembersKeys = {
+  all: ['manager_members'] as const,
+  lists: () => [...managerMembersKeys.all, 'list'] as const,
+  list: (params: Record<string, unknown>) => [...managerMembersKeys.lists(), params] as const,
+  details: () => [...managerMembersKeys.all, 'detail'] as const,
+  detail: (id: string) => [...managerMembersKeys.details(), id] as const,
+};
+```
+
+- **Default Stale Time:** 60,000ms (1 minute)
+- **Garbage Collection Time (`gcTime`):** 300,000ms (5 minutes)
+- **Refetch on Window Focus:** `false` for large tabular reports; `true` for status-critical screens
+
+## 6. Mutation Inventory & Lifecycle Operations
+[REQUIRED: Document every state-modifying action, idempotency keys, and cache invalidation targets.]
+
+| Mutation Action | HTTP Method | Target Endpoint | Payload DTO | Idempotency Key? | Cache Invalidation Target |
 |---|---|---|---|---|---|
-| Table: Member Name | `name` | `GET /api/v1/manager/members` | `data.items[].name` | No | Yes |
-| Table: Status Badge | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
-| KPI: Total Members | `totalCount` | `GET /api/v1/manager/members/stats` | `data.totalCount` | No | Yes |
-| Filter: Status | `status` | `GET /api/v1/manager/members` | `data.items[].status` | No | Yes |
+| Create Member | POST | `/api/v1/manager/members` | `CreateMemberDto` | Yes (`Idempotency-Key: UUIDv4`) | `managerMembersKeys.lists()` |
+| Update Profile | PATCH | `/api/v1/manager/members/:id` | `UpdateMemberDto` | No | `managerMembersKeys.detail(id)`, `managerMembersKeys.lists()` |
+| Renew Membership | POST | `/api/v1/manager/members/:id/renew` | `RenewalDto` | Yes (`Idempotency-Key: UUIDv4`) | `managerMembersKeys.detail(id)`, `managerMembersKeys.lists()` |
+| Delete Member | DELETE | `/api/v1/manager/members/:id` | None | No | `managerMembersKeys.lists()` |
 
-*(Replace the example rows above with the real field names, endpoint names, and response
-paths for this specific module. Every rendered UI element must have a row here.)*
+## 7. Permissions and Role Rules
+[REQUIRED: Specify exact roles, protected actions, and guards. Generic statements are forbidden.]
 
-## Permissions and Security
-[REQUIRED: Must specify the exact role, what actions are protected, and HOW they are
-protected (which hook/component/guard). Generic statements are not acceptable.]
+- **Required role:** `MANAGER` — enforced by `middleware.ts` checking session token
+- **Destructive actions and their guards:** Delete member → `useConfirm()` modal with warning: "This will permanently delete the member and all their records."
+- **Sensitive data handling:** Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal.
+- **Cross-role isolation:** Zero imports from `src/app/frontend_admin`, `src/app/frontend_trainer`, `src/app/frontend_superadmin`.
+- **CODEOWNERS:** Operations / Security team review required for payment and deletion handlers.
 
-- **Required role:** [e.g., `MANAGER` — enforced by `middleware.ts` checking `smart_gym_token` cookie]
-- **Destructive actions and their guards:** [e.g., "Delete member → `useConfirm()` from `ManagerConfirmProvider` with message 'This will permanently delete the member and all their records.'"]
-- **Sensitive data handling:** [e.g., "Phone numbers masked via `maskSensitiveData()` in list view. Full number visible only in profile modal."]
-- **Cross-role isolation:** [e.g., "Zero imports from `src/app/frontend_admin`, `src/app/frontend_trainer`, `src/app/frontend_superadmin`. Enforced in `manager_members_forbidden.md`."]
-- **CODEOWNERS:** [e.g., "No payment/auth logic in this module — standard review applies."]
+## 8. State Ownership & Architecture Flow
+- **Server State:** TanStack Query v5 (`useQuery`, `useMutation`). Authoritative server response reconciliation.
+- **UI Transient State:** Zustand store (`useManagerMembersStore.ts`) — selected member ID, modal open states, active profile tab.
+- **URL Search Params:** Search query (`?q=`), current page (`?page=`), active status filter (`?status=`). Never stored in Zustand.
+- **Local Storage:** None (Strictly forbidden for business data).
 
-## Loading, Empty, and Error States
-[REQUIRED: For every major UI section, name the exact file/component that handles each
-state. "Uses loading.tsx skeleton" is not enough — describe what the skeleton looks like.]
+### Module Architecture Flow
+```text
+Page (Route Entry & Quarantine: page.tsx)
+      ↓
+Child Components (Thin Composition, ≤300 lines in components/)
+      ↓
+Custom Hooks / Store (Zustand UI State + TanStack Query Server State)
+      ↓
+Module API Client (api/*Api.ts via apiFetch with ApiResponse<T>)
+      ↓
+MSW Handlers / Fixtures (Dev/Test) OR Real Backend API (Prod)
+```
+
+## 9. Offline, Loading, Empty, and Error States
+[REQUIRED: Explicit state handling per major UI section.]
 
 | Section | Loading State | Empty State | Error State |
 |---|---|---|---|
 | Full page | `loading.tsx` — skeleton mimicking toolbar + 8 KPI cards + table with 5 ghost rows | N/A | `error.tsx` — module-branded error with Retry button calling `reset()` |
-| Members table | table-shaped skeleton matching rows/columns while the TanStack Query request is pending/fetching | `ManagerMembersEmptyState.tsx` — icon + "No members found" + "Add Member" CTA button | Inline error banner with retry link |
+| Members table | Table-shaped skeleton matching rows/columns while query is fetching | `ManagerMembersEmptyState.tsx` — icon + "No members found" + "Add Member" CTA | Inline error banner with retry link |
 | Profile modal | Skeleton tabs + ghost text lines | N/A | Inline "Failed to load profile" with retry |
 
-## Edge Cases and AI Warnings
-[REQUIRED: This is the most important section for AI safety. Must list SPECIFIC risks
-for THIS module — not generic advice. Every item must be actionable. Minimum 5 items
-for any module with CRUD operations. Format: bold warning title + explanation.]
+- **Network Offline Fallback:** Surfaces user-friendly i18n message (`t('errors.network')`), never exposes raw fetch errors.
 
-- **[Specific warning title]:** [Specific explanation of what breaks, why, and what to do instead]
+## 10. Security and PII Rules (Data Masking & Guards)
+- **PII Fields:** Member phone numbers and email addresses masked in list views using `maskSensitiveData(phone)`.
+- **Zero Client Secrets:** No backend API keys or service tokens embedded in client bundles.
+- **Input Sanitization:** All text inputs validated and sanitized via Zod schemas before API submission.
+- **Authorization Verification:** In-component role verification prevents rendering unauthorized mutation buttons.
 
-Examples of REQUIRED specificity:
-- **Never call `window.confirm()` for member deletion:** Always use `useConfirm()` from `ManagerConfirmProvider`. `window.confirm()` is blocked by most browsers in iframes and breaks the design system.
-- **Renewal form pre-fills current plan — do not reset on open:** `ManagerMembersRenewalModal` receives `currentPlan` as a prop and pre-fills the plan selector. If you reset the form on modal open, the user loses context.
-- **`deleteMember` removes ALL membership history:** This is irreversible. The confirm dialog must explicitly state this. Do not soften the warning message.
-- **Member status badge colors are defined in `ManagerMembersConstants.ts`:** Never add inline color classes for status. Add new statuses to the constants map.
-- **Phone number masking applies to list view only:** `ManagerMembersTable` uses `maskSensitiveData()`. `ManagerMembersProfileModal` shows the full number. Do not add masking to the profile modal.
+## 11. Accessibility Requirements (A11y)
+- **Keyboard Navigation:** Full Tab order through table rows, action buttons, and modal dialogs.
+- **Modal Focus Traps:** Focus locked within active modals (`ManagerMembersAddModal`, `ManagerMembersProfileModal`) until dismissed.
+- **ARIA Attributes:** `aria-expanded` on accordion rows, `aria-haspopup="dialog"` on modal trigger buttons.
+- **Color Contrast:** All text passes WCAG AA minimum 4.5:1 contrast against surface backgrounds.
 
-## Component Responsibility Map
-[REQUIRED for modules with 5+ components. Lists every component file with a one-line
-responsibility statement. This lets an AI know exactly which file to open for any task
-without reading all files.]
+## 12. Background Tasks & Realtime Events
+- **Realtime Attendance Feed:** Centralized `WebSocketContext` at `@/lib/socket` dispatches `MEMBER_CHECKIN` events.
+- **Toast Notifications:** Standard backend-driven toast triggers upon successful mutation or async event.
+- **Polling Fallback:** 30s background poll when WebSockets are unavailable.
 
-| Component File | Responsibility |
-|---|---|
-| `ManagerMembersMain.tsx` | Root client orchestrator. Owns layout, renders toolbar + KPIs + table. No direct API calls. |
-| `ManagerMembersTable.tsx` | Renders paginated member rows. Handles row-click → opens profile modal. |
-| `ManagerMembersProfileModal.tsx` | Full member detail modal with tabs. Receives `memberId` prop, renders profile using query-hook-provided data. |
-| `ManagerMembersAddModal.tsx` | 3-tab add member form. Renders form and delegates submission to form/mutation hook. Closes on success. |
-| `ManagerMembersKPIs.tsx` | 4 stat cards (Total, Active, Expired, Due Today). Read-only display. |
-| `ManagerMembersEmptyState.tsx` | Empty state UI shown when table has zero rows. Has "Add Member" CTA. |
+## 13. Feature Flags & Tenant Settings
+- **Biometric Sync Flag:** `useFeatureFlag('enable_biometric_sync')` controls biometric registration tab in modal.
+- **Graceful Fallback:** If disabled, the biometric tab is cleanly omitted without layout breakage.
+- **Tenant Currency & Timezone:** Consumed via Tenant Config Provider for locale-accurate formatting.
 
-## Rule Compliance Checklist
-[REQUIRED: Every checkbox must be honestly marked. Do NOT mark [x] if the rule is not
-actually implemented. An honest [ ] is better than a false [x].]
+## 14. Cache Invalidation & Consistency
+- **Authoritative Reconciliation:** Mutations return updated entity or triggers `queryClient.invalidateQueries({ queryKey: managerMembersKeys.lists() })`.
+- **Multi-Tab Sync:** Query refetches on window focus for critical member status changes.
+- **Optimistic Updates:** Disallowed for complex financial or biometric mutations; authoritative server response required.
 
-- [ ] Rule 1: Micro-modularization — module-prefixed subfolders, 300-line ceiling
+## 15. Migration, Rollback & Edge Cases (AI Warnings)
+[REQUIRED: Specific, non-generic warnings for THIS module.]
+
+- **Never call `window.confirm()` for member deletion:** Always use `useConfirm()` from `ManagerConfirmProvider`. `window.confirm()` is blocked in iframes and breaks styling.
+- **Renewal form pre-fills current plan — do not reset on open:** `ManagerMembersRenewalModal` receives `currentPlan` as a prop and pre-fills the plan selector.
+- **`deleteMember` removes ALL membership history:** Irreversible operation; confirm dialog must state this explicitly.
+- **Member status badge colors are defined in `ManagerMembersConstants.ts`:** Never add inline color classes for status.
+- **Phone number masking applies to list view only:** List view uses `maskSensitiveData()`, profile modal reveals full number.
+
+## 16. Test Coverage Map & Quality Gates
+- **Unit Test Files:** `ManagerMembersFormatters.test.ts`, `useManagerMembersList.test.ts`
+- **Component Tests:** `ManagerMembersTable.test.tsx`, `ManagerMembersAddModal.test.tsx`
+- **Mock Scenario Coverage:** ACTIVE, EMPTY, SERVER_500, TIMEOUT, UNAUTHORIZED in `mocks/scenarios/`
+- **Stress Datasets:** Tier 1 (10), Tier 2 (100), Tier 3 (500+) records in `mocks/fixtures/`
+
+## 17. Architecture Exceptions (ADRs)
+| Decision / Parameter | Chosen Approach | Rationale / Trade-Off | Date / Approver |
+|---|---|---|---|
+| Pagination Page Size | 50 rows default | Balanced throughput vs DOM node count for gym member tables | Standard Arch |
+| Mutation State Update | Invalidation over Optimistic | Complex backend triggers (biometrics, billing recalculations) require authoritative server response | Standard Arch |
+| Local Utility Duplication | Formatter kept module-local | WET principle strictly enforced to preserve AI portability and zero cross-module coupling | Rule 1A Compliance |
+
+## 18. Known Contract Gaps & Bug Log
+None
+
+## 19. Rule Compliance Checklist (35+ Verification Items)
+- [ ] Rule 0A.2: Universal Day-1 Sub-Module Architecture — Autonomous sub-modules at depth = 1
+- [ ] Rule 1: Micro-modularization — sub-module subfolders, 300-line ceiling
 - [ ] Rule 2: Total Role Isolation — zero cross-role imports verified
 - [ ] Rule 3: Hyper-descriptive naming — role prefix on all files
 - [ ] Rule 4: Theme Independence — no hardcoded hex/Tailwind colors in JSX
-- [ ] Rule 5: Smart State Management — Zustand for UI state, Context for cross-tree
+- [ ] Rule 5: Smart State Management — Zustand for UI state, TanStack Query for server state
 - [ ] Rule 6: Logic/UI Separation — custom hooks extract all useEffect/logic
-- [ ] Rule 7: Type Isolation — all types in `*_types/` folder, no inline interfaces
+- [ ] Rule 7: Type Isolation — all types in `types/` folder, no inline interfaces
 - [ ] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
 - [ ] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present and non-generic
 - [ ] Rule 11: Centralized URL Config — `[moduleName]_url_config.ts` file present, no hardcoded URLs
@@ -1621,7 +2281,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 44: No `console.log` in production code
 - [ ] Rule 48: Empty state component present per entity list
 - [ ] Rule 55: No `key={index}` on reorderable/filterable lists
-- [ ] Rule 64: Mobile-first — `flex-col sm:flex-row`, responsive breakpoints verified
+- [ ] Rule 64: Mobile-first — `flex-col sm:flex-row`, responsive breakpoints verified (320px, 375px, 768px, 1024px, 1440px)
 - [ ] Rule 68: Table column count matches header count exactly
 - [ ] Rule 71: Double verification — destructive actions use `useConfirm()` modal
 - [ ] Rule 72: API function naming follows verb contract
@@ -1630,34 +2290,74 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 75: Module-Owned MSW — feature-specific handlers live inside the owning module
 - [ ] Module-Owned Fixtures — feature-specific mock data lives inside the owning module
 - [ ] Global MSW Bootstrap Isolation — global MSW code contains infrastructure only
-- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `[moduleName]_features.md` is complete
-- [ ] Module Self-Containment — all feature-specific business code, components, hooks, state, API clients, types, schemas, constants, utilities, tests, mocks, fixtures, handlers, and documentation are owned by this feature module
-- [ ] Feature Dependency Firewall — zero imports from sibling business features or role-level business folders
-- [ ] AI Portability — this feature can be provided independently to an AI as the default repair context
-- [ ] Hard Write Boundary — normal feature repairs can be completed without changing sibling business modules
-- [ ] Approved External Dependencies — every external application-infrastructure dependency is explicitly documented
-- [ ] Mock Ownership documented in `[moduleName]_features.md`
+- [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields
+- [ ] Mock Scenario Registry — `mocks/scenarios/` covers ACTIVE, EMPTY, SERVER_500, TIMEOUT, UNAUTHORIZED
+- [ ] Standalone Harness — `bootstrap.ts` / `[Role][Submodule]Harness.tsx` allows isolated component preview
+- [ ] Module Self-Containment — all code, state, types, mocks, and docs owned by this feature module
+- [ ] Feature Dependency Firewall — zero imports from sibling business features or parent shared folders
+- [ ] Strict Maximum Nesting Depth Law — depth = 1 below domain container; sub-submodules strictly BANNED
+- [ ] Deterministic 5-Gate Qualification Matrix — sub-module satisfies all 5 qualification gates
+- [ ] AI Portability — this sub-module can be zipped independently as the default repair context
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
-- [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
-- [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all complex forms and wizards
-- [ ] Rule 80: Currency/number formatting - feature-local `[module]FormatCurrency()` used for all monetary values (minor-unit input), no raw `.toFixed()` in JSX, no global formatters.ts
-- [ ] Rule 81: Button loading width stability — no layout shift on loading state, `min-w` or text+spinner pattern used
-- [ ] Rule 82: Toast deduplication — all `toast()` calls pass a stable `id`, no stacking identical toasts
-- [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
-- [ ] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
-- [ ] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
-- [ ] Design §29: `motion-safe:` prefix on all transitions and animations
+- [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields
+- [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all forms
+- [ ] Rule 80: Currency formatting — feature-local formatter used, no raw `.toFixed()` in JSX
+- [ ] Rule 81: Button loading width stability — `min-w` pattern used
+- [ ] Rule 82: Toast deduplication — stable `id` passed to all `toast()` calls
+- [ ] Mutation Safety: `Idempotency-Key` (UUIDv4) attached to all state-changing mutations
+- [ ] Debounced Search: All live search/filter inputs debounced by ≥300ms
+- [ ] Zero Horizontal Scroll: Verified across 320px, 375px, 425px, 768px, 1024px, 1440px, 1920px
+
+## 20. Standalone Run, Mock & Test Harness
+[REQUIRED: Exact commands, route paths, test credentials, and MSW mock scenario toggles to run, verify, and mock THIS specific sub-module in complete isolation.]
+
+- **Primary Route Path:** `/frontend_{role}/{role}_{domain}/{domain}_{capability}`
+- **Unit / Component Test Suite:** `npm run test -- src/app/frontend_{role}/{role}_{domain}/{domain}_{capability}`
+- **Playwright E2E Suite:** `playwright_E2E/frontend_{role}_e2e/{role}_{domain}/{domain}_{capability}.spec.ts`
+- **Seed Test User & Role:** `role: "MANAGER"`, `branchId: "branch-001"`, `tenantId: "tenant-dev"`
+- **Mock Scenario Toggles:**
+  - *Standard List:* MSW returns seeded fixtures array from `mocks/fixtures/`
+  - *Empty State:* Query flag `?empty=true` triggers empty state component
+  - *Error State:* Trigger 500 error / network failure to verify `error.tsx` boundary with retry CTA
+  - *Permission Denied:* Set role to unauthorized to verify 403 / redirect
+  - *Slow Network:* Simulated 2000ms latency to verify loading skeletons and button spinners
+
+## 21. Module Portability & Host Integration Guide
+[REQUIRED: Exact 4-step instructions to copy and plug this sub-module into another project or host app.]
+
+1. **Folder Transfer:** Copy `src/app/frontend_{role}/{role}_{domain}/{domain}_{capability}` into target host.
+2. **Route Registration:** Register route in host navigation/router config.
+3. **Core Contracts Alignment:** Verify target host provides core plumbing (`@/lib/api`, `@/lib/logger`, `@/components/ui/` primitives).
+4. **Mock / Live Backend Verification:** Verify immediate standalone execution via sub-module MSW fixtures, or connect to production backend via `_url_config.ts`.
+
+## 22. Deliverables & Version History (8/8 Portability Score)
+[REQUIRED: Every sub-module must score 8/8 before delivery freeze. Any unchecked box rejects the sub-module.]
+
+### Feature Self-Audit & ZIP Portability Score
+- [ ] **1. ZIP Self-Sufficiency:** Sub-module can be zipped and given to an external AI agent with zero parent codebase context and zero missing types.
+- [ ] **2. Zero Cross-Module Business Imports:** Zero imports from sibling sub-modules or parent shared folders.
+- [ ] **3. Mock Parity & Scenario Completeness:** Handlers cover all 5 canonical scenarios (ACTIVE, EMPTY, SERVER_500, TIMEOUT, UNAUTHORIZED).
+- [ ] **4. Standalone Harness / Bootstrap:** `bootstrap.ts` / `[Role][Submodule]Harness.tsx` mounts the sub-module in total isolation.
+- [ ] **5. Token Integrity:** Zero hardcoded hex, RGB, or magic sizes; 100% theme token consumption.
+- [ ] **6. Triad UI States:** Skeleton loading, non-generic EmptyState, and ErrorFallback with retry CTA verified.
+- [ ] **7. Mutation Safety:** Idempotency key attached to all state-changing calls, double-click prevention verified.
+- [ ] **8. Responsive Breakpoints:** Verified on 320px, 375px, 768px, 1024px, and 1440px viewports without horizontal overflow.
+
+### Module Changelog & Revision History
+| Version | Date | Author / Agent | Changes & Architectural Rationale |
+|---|---|---|---|
+| v1.0.0 | [YYYY-MM-DD] | [Engineer/AI] | Initial canonical sub-module implementation with MSW mocks and doc trio |
 ```
 
-### Sub-Module `[moduleName]_features.md` Files
+### Autonomous Sub-Module Documentation Trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`)
 
-For large modules (5+ sub-features), each sub-folder MAY have its own `[moduleName]_features.md`. These sub-module files follow the same quality standard but can be shorter. They MUST still contain:
-- A real Module Purpose (not "handles X operations")
-- A real Feature Inventory with actual API endpoints
-- A real Edge Cases section with module-specific warnings (minimum 3 items)
-- A Component Responsibility Map
+> ⛔ **UNIVERSAL SUB-MODULE DOCUMENTATION TRIO LAW (MANDATORY FROM DAY 1):**
+> Under the Universal Day-1 Sub-Module Architecture (Rule 0A.2), **EVERY autonomous sub-module** (e.g., `attendance_dashboard/`, `attendance_history/`, `profile_overview/`) MUST maintain its own dedicated Documentation Trio right inside its directory:
+> 1. `[role]_[submodule]_features.md` — MUST contain all 22 canonical sections, including Section 20 (Module Run, Mock & Test Harness) and Section 21 (Module Portability & Host Integration Guide).
+> 2. `[role]_[submodule]_forbidden.md` — MUST enforce strict sibling sub-module decoupling (zero cross-submodule imports), zero parent shared folders (`attendance/common/` or `attendance/components/` strictly forbidden), and strict WET law.
+> 3. `[role]_[submodule]_theme_contract.md` — MUST document all global semantic design tokens consumed by the sub-module.
 
-Sub-module files with only generic boilerplate content are considered **undocumented** and must be regenerated.
+Sub-module documentation files with only generic boilerplate content or missing any of the 22 canonical sections are considered **undocumented** and MUST be regenerated.
 
 ### Documentation Freshness Rule
 
@@ -1784,9 +2484,20 @@ Co-location rule (Unit & Component Tests ONLY):
 
 **Complete Isolation for E2E Testing (The AI Zip Principle):**
 1. **Top-Level Mirrored Folders:** All E2E tests MUST live in a completely separate top-level `playwright_E2E/` directory, entirely decoupled from the `src/` app folder. The internal directory structure of `playwright_E2E/` MUST mirror the frontend route structure, but the role container must be suffixed with `_e2e` (e.g., `playwright_E2E/frontend_admin_e2e/admin_members/admin_members_e2e.spec.ts`).
-2. **WET Over DRY (Module-Level):** Frontend E2E tests must be 100% self-contained at the **MODULE level**. Do NOT create a global `shared/` or `utils/` folder for E2E business fixtures or business helpers. If both the `admin_members` test and `admin_billing` test need a login helper, duplicate it directly into BOTH the `admin_members` and `admin_billing` test folders.
-   - **Why:** If a UI bug occurs in the Members feature, a developer must be able to ZIP only the `playwright_E2E/frontend_admin_e2e/admin_members/` folder and feed it to the AI. If the AI is missing parent helpers, it hallucinates.
-3. **No Cross-Module Business Imports:** A test script in `playwright_E2E/frontend_manager_e2e/manager_members/` MUST NOT import a business fixture or business helper from `playwright_E2E/frontend_manager_e2e/manager_billing/`.
+### E2E WET/DRY Boundary
+
+Business-specific E2E fixtures, feature workflows, permissions, data setup, assertions, and domain helpers MUST remain module-local and may be duplicated under WET.
+
+Approved global E2E infrastructure may be shared only for:
+- authenticated session/bootstrap setup;
+- browser/context lifecycle;
+- non-business accessibility helpers;
+- screenshot/video/reporting setup;
+- environment/base URL configuration;
+- test-account provisioning where centrally required.
+
+Global E2E helpers MUST NOT contain business fixtures, module-specific workflow logic, feature assertions, or role-specific product behavior.
+A test script in `playwright_E2E/frontend_manager_e2e/manager_members/` MUST NOT import a business fixture or business helper from `playwright_E2E/frontend_manager_e2e/manager_billing/`.
 
 ### Controlled Framework-Neutral Test-Support Layer (Exception to WET Rule)
 
@@ -2126,6 +2837,44 @@ Requirements:
 - All application diagnostics must use the centralized logger. `console.log` is forbidden in committed code.
 - Define an owner and alert policy for critical failures.
 
+15F. **Core Production Edge-Case Safety Invariants (P0 Directives)**:
+To ensure enterprise reliability, prevent double-submissions, guarantee zero data glitches, and eliminate AI hallucinations during automated execution, every autonomous sub-module MUST enforce the following 8 immutable production safety invariants:
+
+1. **Idempotency Key (`Idempotency-Key: UUIDv4`) on All State Mutations:**
+   - Every state-changing HTTP mutation (`POST`, `PUT`, `PATCH`, `DELETE`) initiated by an API client or TanStack Query mutation hook MUST attach a unique client-generated UUIDv4 header:
+     The canonical HTTP transport header is strictly `Idempotency-Key: UUIDv4` (e.g., injecting `{'Idempotency-Key': crypto.randomUUID()}` or `uuidv4()`). Note: Per Backend Rule 103, server-side infrastructure is configured to accept both `Idempotency-Key` and `X-Idempotency-Key` for multi-platform transport resilience, but frontend mutation clients MUST send `Idempotency-Key: UUIDv4` deterministically.
+   - If a network failure occurs and the client retries, the exact same idempotency key is transmitted. This prevents duplicate financial transactions, double billing charges, or redundant entity creations.
+
+2. **Universal Null-Safe Fallback (`displayValue()` Invariant):**
+   - Every dynamic, optional, or nullable data point rendered in JSX tables, descriptions, badges, and detail views MUST pass through the canonical zero-business utility `displayValue(val)` (Rule 78).
+   - If the value is `null`, `undefined`, or an empty trimmed string (`""`), `displayValue()` MUST return an en-dash (`—`) or an explicit fallback string.
+   - Raw `undefined` strings, empty table cells (`<td></td>`), or blank cards are STRICTLY FORBIDDEN. Meaningful `0` and `false` values MUST be preserved and displayed.
+
+3. **Debounced Search & Filter Inputs (≥ 300ms):**
+   - Every text search input, search-as-you-type filter, or slider that triggers an API query or expensive client-side filter MUST be debounced by at least **300ms** (e.g., using `useDebounce(searchTerm, 300)`).
+   - Instant firing of API requests on every individual keystroke is STRICTLY FORBIDDEN to prevent backend denial-of-service, race conditions, and out-of-order query responses.
+
+4. **Min-Width / Min-Height Loading Stabilization (Cumulative Layout Shift < 0.1):**
+   - All skeleton loaders, spinners, and async loading containers MUST declare explicit minimum dimensions (`min-w-[...]`, `min-h-[...]`, or fixed container dimensions matching the final rendered state).
+   - Swapping from loading state to resolved data MUST NOT cause sudden layout jank, content reflow, or layout shifts. Cumulative Layout Shift (CLS) MUST remain strictly `< 0.1`.
+
+5. **Toast Notification Deduplication (`toastId`):**
+   - Every toast notification dispatched by mutation success/error handlers, global error interceptors, or socket events MUST supply an explicit, deterministic `id` or `toastId` (e.g., `toast.error(message, { id: 'network-timeout' })` or `toast.success(message, { id: 'member-created' })`).
+   - Rapid repeated user clicks or rapid API error bursts MUST NOT cascade identical duplicate toasts across the user screen.
+
+6. **List Virtualization Threshold (> 50 Items):**
+   - Any list, table, or grid capable of rendering more than **50 items** without server-side pagination MUST use virtualized windowing via `@tanstack/react-virtual`.
+   - Rendering 50+ un-virtualized DOM table rows or card elements causes massive memory overhead, DOM bloat, and severe scroll performance degradation.
+
+7. **Zero Client Secret Exposure & Strict Env Variable Separation:**
+   - Only variables prefixed with `NEXT_PUBLIC_` are accessible in client-side code.
+   - Private API keys, JWT signing secrets, database credentials, AWS access keys, and webhook secrets MUST NEVER appear in client bundles, `.env.local`, or frontend TypeScript files.
+   - Any commit or PR introducing a private secret into frontend code causes an immediate `NON_COMPLIANT` security failure.
+
+8. **Business Entity Persistence Banned in `localStorage`:**
+   - Browser storage (`localStorage`, `sessionStorage`) is STRICTLY RESTRICTED to non-sensitive user UI preferences (e.g., dark/light mode toggle, sidebar collapsed state, active tab index).
+   - Domain business entities, member records, financial ledgers, or sensitive cached objects MUST NEVER be persisted in `localStorage`. All domain data MUST reside in the normalized TanStack Query server cache or secure transient React state.
+
 16. **Robust Form Handling & Validation**:
 For any forms with more than two inputs, strictly avoid using individual `useState` hooks. Use a robust form management library (like **React Hook Form**) paired with a schema validation library (like **Zod**). For non-trivial forms, schema location and structure MUST follow Rule 15B. Do not place form schemas in generic `_utils` folders merely for convenience.
 
@@ -2135,11 +2884,24 @@ Global interceptor handles only truly global concerns such as authentication exp
 18. **Enterprise Accessibility (a11y)**:
 Ensure UI components are accessible. Use semantic HTML, include `aria-label` tags for icon-only buttons, and ensure modals and dropdowns can be navigated via keyboard (Tab trapping, Esc to close).
 
-19. **Interactive Data Tables (Clickable Rows)**:
-Whenever displaying a list of entities in a table, the entire row MUST be clickable. Add `cursor-pointer` to the `<tr>` element. Remove redundant "View/Eye" buttons. Action buttons (Edit, Delete) must have `e.stopPropagation()`. A clickable table row MUST provide an equivalent keyboard-accessible interaction. Do not rely on `cursor-pointer` alone. Enter/Space or a semantic link/button MUST provide the same navigation/action. Nested Edit/Delete controls MUST remain independently keyboard accessible.
+19. **Interactive Data Tables (Clickable Rows & Explicit Interaction Models)**:
+A production entity table row MUST be clickable only when that row has one canonical detail destination and clicking the row does not conflict with selection, inline editing, drag-and-drop, bulk actions, or nested interactive controls.
+When row navigation is appropriate, add `cursor-pointer` to the `<tr>` element. Remove redundant "View/Eye" buttons. Action buttons (Edit, Delete) must have `e.stopPropagation()`. A clickable table row MUST provide an equivalent keyboard-accessible interaction. Do not rely on `cursor-pointer` alone. Enter/Space or a semantic link/button MUST provide the same navigation/action. Nested Edit/Delete controls MUST remain independently keyboard accessible.
 
-20. **Searchable Dropdowns for Large Datasets**:
-Whenever presenting a dropdown for a large dataset, you MUST NOT use a native HTML `<select>` element. You must implement a custom popover/dropdown component that includes a search `<input>` field at the top.
+For non-clickable rows, provide explicit accessible row actions where applicable. The module documentation must state the table interaction model: `ROW_NAVIGATION`, `EXPLICIT_ACTIONS`, `INLINE_EDITING`, `SELECTION`, or `READ_ONLY`.
+
+20. **Searchable Dropdowns for Large Datasets & Selection Controls**:
+Use a native `<select>` for a small static option set of 20 or fewer options where search is not required.
+
+Use an accessible searchable combobox/popover when any of the following applies:
+- more than 20 options;
+- asynchronously loaded options;
+- server-side search;
+- option metadata beyond a plain label;
+- user needs to find an item by typing;
+- list size can grow beyond the small static threshold.
+
+A custom dropdown MUST implement proper keyboard navigation, focus management, selection announcement, escape behavior, and accessible labels.
 
 21. **Real-Time Communication (In-House WebSocket Architecture)**:
 For any real-time in-app communication, the project strictly uses an in-house WebSocket architecture. Real-time communication MUST use WebSocket transport through `socket.io-client`. Long-polling transport MUST be disabled by configuration (`transports: ['websocket']`) unless a documented infrastructure exception exists. Do NOT rely on SSE or external managed services like Pusher/Supabase.
@@ -2151,7 +2913,7 @@ The backend utilizes a strict Database-per-Tenant architecture. The frontend MUS
 Whenever there is a password input field, you MUST include an eye icon (visibility toggle) to switch between `password` and `text`. Use standard icons from lucide-react.
 
 24. **Date & Time Standardization (Timezone Safety)**:
-UI/form layers may use typed date values appropriate to the component; serialization to UTC ISO 8601 MUST occur at the module API boundary before the request is sent. When displaying, convert UTC strings to local time using `date-fns` or `dayjs`.
+UI/form layers may use typed date values appropriate to the component; serialization to UTC ISO 8601 MUST occur at the module API boundary before the request is sent. When displaying, convert UTC strings to local time using `date-fns` (Rule 24 & Approved Registry).
 
 25. **Role-Based UI Hiding (RBAC) — Frontend Checks are UX Controls Only:**
 
@@ -2198,37 +2960,16 @@ Whenever the user performs an action that sends a proof/document, present an opt
 Every **user-browsable data table** MUST implement applicable pagination, sorting, and filtering. If a control is not applicable because the dataset is static/small/read-only, the module documentation MUST state why. **Table Header Sorting Indicators:** Any sortable column header MUST include a visible sorting icon (e.g., up/down arrows like `ArrowUpDown`, `ArrowUp`, `ArrowDown` from `lucide-react`). The actively sorted column must highlight the directional arrow (e.g., in a primary/accent color) to clearly indicate the current sort direction.
 
 31. **Modularized API Clients (No Centralized API Blob)**:
-Do not define module-specific API routes in a giant global file. Every module MUST have its own API file inside a dedicated folder (e.g., `[moduleName]_api/[moduleName]_api.ts`) importing the core base fetcher.
+Do not define module-specific API routes in a giant global file. Every autonomous sub-module MUST have its own API file inside its dedicated `api/` folder (e.g., `api/[role]_[submodule].api.ts`) importing the core base fetcher.
 *Consequence of violation:* Giant monolithic API blobs couple independent features, balloon AI context windows, and create cross-module regression cascades. Finding centralized API blobs = `NON_COMPLIANT`.
 
-32. **The "No Barrel File" Rule — With Controlled Public-API Exception:**
+32. **The "No Barrel File" Rule — No Barrel Files or Re-export Facades:**
 
-**Default rule:** Strictly avoid using `index.ts`, `index.js`, or any other barrel/facade files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies and maintain clean tree-shaking. You MUST NOT create files like `*Export.ts` or `*Facade.ts` to consolidate exports. Direct absolute imports (`@/`) are mandatory for every file.
-*Consequence of violation:* Barrel files cause circular dependency deadlocks, disable tree-shaking, and inflate JavaScript bundle sizes by up to 400%. Finding unauthorized barrel files (`index.ts`, `*Export.ts`, `*Facade.ts`) = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
+**Default rule:** Strictly avoid using `index.ts`, `index.js`, or any other barrel/facade files to re-export modules. Always import directly from the explicitly named file to prevent circular dependencies and maintain clean tree-shaking. You MUST NOT create files like `*Export.ts`, `*Facade.ts`, or `*public_api.ts` to consolidate exports. Direct absolute imports (`@/`) are mandatory for every file.
+*Consequence of violation:* Barrel files cause circular dependency deadlocks, disable tree-shaking, and inflate JavaScript bundle sizes by up to 400%. Finding unauthorized barrel files (`index.ts`, `*Export.ts`, `*Facade.ts`, `*public_api.ts`) = IMMEDIATE `NON_COMPLIANT` AUDIT FAILURE.
 
-**Controlled exception — Curated public module entry points:**
-A single curated `[moduleName]_public_api.ts` entry-point file is permitted ONLY when ALL of the following conditions are true:
-1. The module exposes approved, stable contracts to other parts of the **application infrastructure** (not to sibling business modules — those imports remain forbidden).
-2. The entry point exposes ONLY explicitly approved public contracts (types, constants, utilities), not all internal files.
-3. The entry point prevents deep imports into internal module implementation files.
-4. The entry point does NOT create circular dependencies.
-5. The entry point is documented in the module's `[moduleName]_features.md` under "Approved External Dependencies".
-
-**This exception does NOT apply to:**
-- Feature-to-feature business imports (still forbidden by Rule 63).
-- Re-exporting all module internals (still forbidden).
-- Replacing absolute imports within the module itself.
-
-```typescript
-// ✅ PERMITTED — approved public entry point exposing stable infrastructure contract
-// src/app/frontend_admin/admin_members/admin_members_public_api.ts
-export type { MemberStatus } from './admin_members_types/AdminMembersTypes';
-// Only export what is explicitly approved for cross-infrastructure use.
-
-// ❌ FORBIDDEN — barrel re-exporting everything
-export * from './admin_members_components/AdminMembersTable';
-export * from './admin_members_hooks/useAdminMembers';
-```
+**Zero Barrel Exception for Business Modules:**
+No public API barrel exception exists for business modules. The allowed root URL contract file (`[moduleName]_url_config.ts`) is a directly imported named contract file, NOT a barrel and NOT a re-export facade. Sibling features must never import from another feature's internal or root files. Cross-module business consumption is strictly prohibited.
 
 33. **Framework-Specific Media Optimization**:
 Make Next.js `<Image>` component (`next/image`) default and mandatory. Permit documented exceptions for third-party controlled markup, emails, SVG assets, or technically incompatible external content where standard `<img>` tags are needed.
@@ -2282,18 +3023,22 @@ In every Zustand store and custom hook, document the data flow direction at the 
 `// DATA FLOW: API → useManagerMembersTable.ts → useManagerMembersStore → ManagerMembersTable`
 *(Note: As per Rule 5, React Context MUST NOT be used for feature data or state. Use Zustand).*
 
-40. **Forbidden Patterns File (`[moduleName]_forbidden.md`)**:
-Every module must have a tiny markdown file listing what is explicitly NOT allowed in that module.
+40. **Forbidden Patterns File (`[role]_[submodule]_forbidden.md` / `[moduleName]_forbidden.md`)**:
+Every autonomous sub-module (and feature module) must have a dedicated markdown file listing what is explicitly NOT allowed in that unit.
 
-Every module's `[moduleName]_forbidden.md` MUST explicitly document:
+Every sub-module's `[role]_[submodule]_forbidden.md` MUST explicitly document:
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
+- **Zero Cross-Sub-Module Imports:** Do not import any component, hook, store, type, utility, or mock from any sibling sub-module (e.g. `attendance_dashboard` MUST NEVER import from `attendance_history`).
+- **Zero Parent Shared Folders:** Do not create or import from parent shared folders (e.g. `attendance/common/`, `attendance/shared/`, or `attendance/components/` are strictly forbidden).
+- **Strict WET Principle:** Duplicate shared badges, filters, or formatters locally inside `{submodule}/components/` or `{submodule}/utils/`.
+- **Zero In-Memory Cross-Submodule State:** Do not share React Context or Zustand stores between sub-modules; communicate solely via URL navigation and typed query parameters.
+- Do not place feature mock data outside this sub-module.
+- Do not create duplicate global mock handlers for this sub-module.
+- Do not import another sub-module's business fixtures.
 - Do not add component-level fake business fallbacks.
 - Do not bypass the module API client by reading fixtures directly.
 - Do not modify global MSW bootstrap for a module-local feature change unless registration is actually required.
-*Consequence of violation:* Without explicit module-level forbidden patterns, future AI sessions re-introduce previously eradicated antipatterns (like barrel files, relative imports, and fake UI fallbacks). Missing or generic `[moduleName]_forbidden.md` = `NON_COMPLIANT`.
+*Consequence of violation:* Without explicit sub-module forbidden patterns, future AI sessions re-introduce previously eradicated antipatterns (like barrel files, relative imports, cross-submodule leaks, and fake UI fallbacks). Missing or generic `[role]_[submodule]_forbidden.md` = `NON_COMPLIANT`.
 
 41. **URL as State for Shareable Views**:
 Any filterable, searchable, or paginated list page MUST sync its state to the URL as query parameters using `useSearchParams` / `useRouter`.
@@ -2384,24 +3129,34 @@ Example:
 `APP_MODULE_FILTERS_V1`
 `APP_DASHBOARD_LAYOUT_V1`
 
-59. **Standardized `ApiResponse<T>` Generic (The API Contract)**:
-Every API call must be typed using a global `ApiResponse<T>` generic interface that matches the canonical `ApiResponse<T>` envelope defined in this Rule 59. Both Success and Error responses must share this exact canonical shape:
+59. **Standardized `ApiResponse<T>` Generic (Discriminated Union Contract)**:
+Every API call must be typed using a global `ApiResponse<T>` discriminated union that matches the canonical envelope defined below. A discriminated union on `success` guarantees that valid payloads always have data and error payloads always have error details, making invalid states (like `success: true` with `data: null` or error codes) impossible in TypeScript.
 
 ```typescript
-export interface ApiResponse<T> {
-  success: boolean;                         // true on 2xx, false on all errors
-  message: string;                          // human-readable, always present
-  data: T | null;                           // response payload OR null on error
-  meta?: PaginationMeta;                    // present only on paginated list responses
-  error?: string;                           // error name / category (e.g. "NOT_FOUND")
-  errorCode?: string;                       // machine-readable DOMAIN.ENTITY.REASON code
-  statusCode?: number;                      // HTTP status code, present on error responses
+export type ApiSuccess<T> = {
+  success: true;                            // true on 2xx
+  message: string;                          // human-readable success description
+  data: T;                                  // guaranteed non-null payload for success
+  meta?: PaginationMeta;                    // present on paginated list responses
+  requestId: string;                        // trace identifier from API Gateway
+};
+
+export type ApiFailure = {
+  success: false;                           // false on all errors (4xx, 5xx)
+  message: string;                          // human-readable error message
+  data: null;                               // payload is explicitly null on failure
+  error?: string;                           // error category (e.g. "NOT_FOUND", "UNAUTHORIZED")
+  errorCode: string;                        // stable machine-readable DOMAIN.ENTITY.REASON code
+  statusCode: number;                       // HTTP status code (400, 401, 403, 404, 409, 500)
+  requestId: string;                        // trace identifier for error tracking and support
   validationErrors?: ValidationErrorItem[]; // present ONLY on 400 validation failures
-}
+};
+
+export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
 
 export interface ValidationErrorItem {
   field: string;    // exact DTO property name, dot-notation for nested fields
-  message: string;  // human-readable error from class-validator
+  message: string;  // human-readable validation error message
 }
 
 export interface PaginationMeta {
@@ -2414,7 +3169,10 @@ export interface PaginationMeta {
 }
 ```
 
-This interface is the single source of truth for all API response parsing across the application. Never define a partial or alternative shape.
+The backend OpenAPI contract, generated frontend transport types (`@/generated/openapi/*`), module Zod schemas, MSW fixtures, and API clients MUST conform strictly to this discriminated union contract.
+- `success: true` MUST always contain valid `data` and `requestId`.
+- `success: false` MUST always contain `data: null`, a stable machine-readable `errorCode`, numeric `statusCode`, and `requestId`.
+This eliminates ambiguous null/error states and guarantees type narrowing in client code.
 
 60. **No Direct `router.push('/login')` in Components**:
 Handle unauthenticated redirects centrally in `middleware.ts` or an API interceptor.
@@ -2661,8 +3419,8 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
-- ❌ **BAD:** `import { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
-- ✅ **GOOD:** `import type { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/admin_members_types/AdminMembersTableProps'`
+- ❌ **BAD:** `import { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/members_directory/types/AdminMembersTableProps'`
+- ✅ **GOOD:** `import type { AdminMembersTableProps } from '@/app/frontend_admin/admin_members/members_directory/types/AdminMembersTableProps'`
 - **Why:** `import type` statements are completely erased at compile time, reducing bundle size, preventing accidental runtime usage of type definitions, and eliminating a major category of circular dependency errors. TypeScript's `verbatimModuleSyntax` compiler option can mechanically enforce this. This requirement exists to guarantee predictable TypeScript module behavior, reduce accidental runtime imports, and prevent circular dependency problems.
 
 74. **Security Scanning in Frontend CI/CD Tooling Gates (Extending Rule 61)**:
@@ -2704,21 +3462,40 @@ Example:
 src/app/
 └── frontend_manager/
     └── manager_members/
-        ├── manager_members_components/
-        ├── manager_members_hooks/
-        ├── manager_members_api/
-        ├── manager_members_types/
-        ├── manager_members_schemas/
-        ├── manager_members_store/
-        ├── manager_members_tests/
-        ├── manager_members_mocks/
-        │   ├── handlers/
-        │   │   └── ManagerMembersMockHandlers.ts
-        │   └── fixtures/
-        │       └── ManagerMembersMockFixtures.ts
+        ├── layout.tsx
+        ├── page.tsx
         ├── manager_members_features.md
         ├── manager_members_forbidden.md
-        └── manager_members_theme_contract.md
+        ├── manager_members_theme_contract.md
+        └── members_directory/
+            ├── components/
+            │   └── ManagerMembersDirectoryTable.tsx
+            ├── hooks/
+            │   └── useManagerMembersDirectory.ts
+            ├── api/
+            │   └── manager_members_directory.api.ts
+            ├── types/
+            ├── schemas/
+            ├── state/
+            ├── contracts/
+            │   └── host-stubs.d.ts
+            ├── tests/
+            │   ├── manager_members_directory.integration.test.tsx
+            │   └── harness/
+            │       ├── bootstrap.ts
+            │       └── ManagerMembersDirectoryHarness.tsx
+            ├── mocks/
+            │   ├── fixtures/
+            │   │   └── manager_members_directory.fixtures.ts
+            │   ├── handlers/
+            │   │   └── manager_members_directory.handlers.ts
+            │   └── scenarios/
+            │       └── manager_members_directory.scenarios.ts
+            ├── config/
+            │   └── manager_members_directory.url_config.ts
+            ├── manager_members_directory_features.md
+            ├── manager_members_directory_forbidden.md
+            └── manager_members_directory_theme_contract.md
 
 The exact folder/file names may follow the module naming rules, but ownership is mandatory:
 
@@ -2879,12 +3656,12 @@ The MSW response MUST contain all fields that the UI actually consumes.
 
 Every feature that depends on MSW MUST document or be able to derive the following mapping (use the `## UI Data Requirements` section of its `[moduleName]_features.md` — see Rule 13):
 
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| Table: Gym Name | `name` | `GET /.../gyms` | `data.items[].name` | No | Yes |
-| Table: Owner | `ownerName` | `GET /.../gyms` | `data.items[].ownerName` | Yes | Yes |
-| KPI: Active Gyms | `activeCount` | `GET /.../gyms/stats` | `data.activeCount` | No | Yes |
-| Filter: Plan | `planId`, `planName` | `GET /.../gyms` | `data.items[]` | No | Yes |
+| UI Element | Required Field(s) | API Endpoint | Response Path | Availability | Nullable? | Mocked? | UI Behavior When Unavailable |
+|---|---|---|---|---|---|---|---|
+| Table: Gym Name | `name` | `GET /.../gyms` | `data.items[].name` | `required` | No | Yes | Render fallback text |
+| Table: Owner | `ownerName` | `GET /.../gyms` | `data.items[].ownerName` | `nullable` | Yes | Yes | `displayValue()` |
+| KPI: Active Gyms | `activeCount` | `GET /.../gyms/stats` | `data.activeCount` | `permission_masked` | No | Yes | Hide KPI or show neutral badge |
+| Filter: Plan | `planId`, `planName` | `GET /.../gyms` | `data.items[]` | `required` | No | Yes | All options |
 
 The actual project feature MUST use its real field names, endpoint names, and response paths. The example above is illustrative only.
 
@@ -2992,6 +3769,102 @@ UI requires field
 → render from response
 ```
 
+### Byte-for-Byte Mock & Real API Envelope Symmetry
+
+A critical production bug occurs when an MSW mock handler returns bare data while the production backend returns a canonical response envelope (or vice versa).
+
+```typescript
+// ❌ FORBIDDEN MOCK ENVELOPE MISMATCH (Crash Anti-Pattern):
+// In MSW Mock Handler:
+HttpResponse.json({
+  id: "1",
+  name: "Rahul Sharma"
+})
+
+// But Real Backend API returns canonical ApiResponse<T> envelope:
+{
+  "success": true,
+  "message": "Member fetched successfully",
+  "data": {
+    "id": "1",
+    "name": "Rahul Sharma"
+  },
+  "meta": { "page": 1, "total": 1 }
+}
+// Consequence: Frontend code written against the bare mock accesses `response.name`. This passes mock tests, but crashes instantly in production with `TypeError: Cannot read properties of undefined (reading 'name')`!
+
+// ✔ MANDATORY CONTRACT LOCK:
+// Every MSW mock handler MUST return the canonical ApiResponse<T> envelope matching @/lib/api:
+HttpResponse.json({
+  success: true,
+  message: "Success",
+  data: memberData,
+  meta: paginationMeta,
+})
+```
+
+### Mock Scenarios Registry (`[role]_[submodule].scenarios.ts`)
+
+Every feature module's mock suite MUST define a canonical scenarios registry at `mocks/scenarios/[role]_[submodule].scenarios.ts`.
+This ensures any engineer or AI agent can immediately switch scenarios and verify all UI states deterministically without manual mocking hacks.
+
+Standard mandatory scenario keys:
+1. `ACTIVE_RECORDS` (Default): Standard populated dataset for sunny-day rendering.
+2. `EMPTY_DATA`: Zero records array (`data: []`, `total: 0`) to verify the module's `EmptyState` component.
+3. `SERVER_500_ERROR`: Simulated 500 error response to verify the module's `error.tsx` boundary and retry CTA.
+4. `NETWORK_TIMEOUT`: Simulated high latency (15,000ms delay) to verify loading skeletons, button disabled states, and timeout errors.
+5. `UNAUTHORIZED_401` / `FORBIDDEN_403`: Session expiry or permission denial to verify redirect / auth toast.
+
+```typescript
+// Example: members_directory/mocks/scenarios/managerMembersDirectory.scenarios.ts
+export const MANAGER_MEMBERS_SCENARIOS = {
+  ACTIVE_RECORDS: {
+    status: 200,
+    envelope: { success: true, message: "OK", data: mockMembersList, meta: mockPaginationMeta, requestId: "req-mock-001" }
+  },
+  EMPTY_DATA: {
+    status: 200,
+    envelope: { success: true, message: "No members found", data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false }, requestId: "req-mock-002" }
+  },
+  SERVER_500_ERROR: {
+    status: 500,
+    envelope: { success: false, message: "Internal server error occurred", data: null, errorCode: "ERR_INTERNAL_500", statusCode: 500, requestId: "req-mock-500" }
+  },
+  NETWORK_TIMEOUT: {
+    delayMs: 15000,
+    status: 504,
+    envelope: { success: false, message: "Gateway timeout", data: null, errorCode: "ERR_TIMEOUT", statusCode: 504, requestId: "req-mock-504" }
+  },
+  UNAUTHORIZED_401: {
+    status: 401,
+    envelope: { success: false, message: "Session expired", data: null, errorCode: "ERR_UNAUTHORIZED", statusCode: 401, requestId: "req-mock-401" }
+  }
+} as const;
+```
+
+### Standalone Module Harness / Bootstrap (`bootstrap.ts` / `[Role][Module]Harness.tsx`)
+
+To guarantee absolute **Feature ZIP Portability**, every module MUST include a self-contained mounting harness located inside `tests/harness/` (e.g., `ManagerMembersHarness.tsx` or `bootstrap.ts`).
+
+The Harness MUST:
+1. Initialize the module's MSW worker with the active scenario;
+2. Wrap the primary client component (`[Role][Module]Main.tsx`) with necessary zero-business providers (`QueryClientProvider`, `ThemeTokenProvider`, mock session context);
+3. Expose a scenario selector dropdown in development mode so developers and automated test agents can toggle between `ACTIVE`, `EMPTY`, `500_ERROR`, and `TIMEOUT` live without reloading the whole application.
+
+### Dataset Scale & Stress Testing Fixtures (10, 100, 500+ Records)
+
+To guarantee that UI components, virtualized tables, and pagination controls perform smoothly under enterprise loads without UI freezing or DOM thrashing, every feature module's `mocks/fixtures/` MUST provide three deterministic scale tiers:
+1. **Tier 1 (Small / 10 records):** For baseline rendering and snapshot tests.
+2. **Tier 2 (Standard / 100 records):** Exercises multi-page pagination, table search filters, and sorting.
+3. **Tier 3 (Stress / 500+ records):** Stress-tests virtualization (`@tanstack/react-virtual`), infinite scroll, and browser memory consumption.
+
+```typescript
+// Example: members_directory/mocks/fixtures/managerMembersDirectory.fixtures.ts
+export const MOCK_MEMBERS_TIER_1_SMALL   = generateMockMembers(10);
+export const MOCK_MEMBERS_TIER_2_MEDIUM  = generateMockMembers(100);
+export const MOCK_MEMBERS_TIER_3_STRESS  = generateMockMembers(500);
+```
+
 ### Fixture Source-of-Truth Rule
 
 MSW fixtures are mock implementations of the API contract. They are NOT an alternative business-data architecture.
@@ -3011,6 +3884,19 @@ When the real backend endpoint becomes available:
 - The feature API client MUST remain the same unless the backend contract legitimately changes.
 - Components MUST NOT require a rewrite merely because mocked responses are replaced by real responses.
 - Any contract change MUST update the corresponding TypeScript types, Zod schemas, MSW handlers, `[moduleName]_features.md` documentation, and tests in the same change.
+
+### API Contract Compatibility Gate
+
+To prevent MSW mock drift and ensure true backend readiness:
+1. The backend OpenAPI contract (`swagger.json` or OpenAPI spec) is the canonical transport contract.
+2. Generated API types (`src/generated/openapi/*`) are regenerated in CI when OpenAPI changes.
+3. Module Zod response schemas must validate against the OpenAPI contract shape.
+4. Each module-owned MSW fixture and mock response must validate against the same Zod response schema.
+5. CI must fail when:
+   - Frontend API client uses removed or renamed fields;
+   - MSW fixture lacks required response fields defined by the OpenAPI schema;
+   - Backend breaking change has no version/migration pathway;
+   - `## UI Data Requirements` in `[moduleName]_features.md` references a nonexistent API field.
 
 Backend integration does NOT require moving module-owned mocks or handlers into a global mock folder.
 
@@ -3062,7 +3948,8 @@ required by the finished UI."
 
 76. **`CODEOWNERS` Human Review Gate for Security-Critical Frontend Code**:
 Security-critical frontend changes require mandatory human review. The frontend MUST implement a `CODEOWNERS` file requiring mandatory human reviewer approval on PRs that touch security-critical frontend paths. AI agents cannot self-certify security-critical UI changes.
-- **Mandatory Human Review Required For:**
+- **Non-Blocking During AI Development:** This gate applies strictly at Git Pull Request / deployment time before merging into protected branches. It does NOT halt, pause, or block local AI development. AI agents MUST generate the complete source code, comprehensive unit/E2E tests, and the mandatory `## Security Impact Analysis` markdown section autonomously without pausing, stalling, or asking for permission during code generation.
+- **Mandatory Human Review Required For (at PR Merge Time):**
   1. **Auth UI** — Any changes to `src/app/auth/` (login form, logout, refresh logic).
   2. **API Interceptor & Token Logic** — Any changes to the centralized `api.ts` wrapper, the token refresh interceptor, or `middleware.ts`.
   3. **Permission Hooks** — Any changes to `usePermissions()` or any hook that conditionally hides/shows restricted UI elements.
@@ -3110,7 +3997,8 @@ Never render completely blank table cells or profile field values when an API re
 - **Why:** A blank cell is visually indistinguishable from a broken render or a missing API field. An en-dash is an explicit, intentional signal to the user that the data does not exist. This is especially critical in financial tables, member profiles, and audit logs where a blank value could be misread as a data integrity issue.
 - ❌ **BAD:** `<td>{member.trainerName}</td>` — renders nothing if `null`
 - ✅ **GOOD:** `<td>{displayValue(member.trainerName)}</td>` — renders `—` explicitly
-- **Centralize the fallback:** Define a shared utility `displayValue` in `src/lib/formatters.ts`. `displayValue()` accepts all primitive display values required by the UI, including string, number, boolean, null, and undefined, while preserving meaningful zero/false values. *(Note: `displayValue()` contains zero business logic and qualifies as approved global infrastructure under Rule 63. It is the only formatter permitted in `src/lib/`. All other formatters must remain feature-local per Rule 80).*
+- **Centralize the neutral fallback:** Define a shared zero-business utility `displayValue` in `src/lib/display_value.ts`. `displayValue()` accepts primitive display values required by the UI, including string, number, boolean, null, and undefined, rendering an en-dash (`—`) for nullish/empty values while preserving meaningful zero (`0`) and false values.
+*(Note: `src/lib/display_value.ts` contains zero business logic and qualifies as approved global presentation infrastructure under Rule 63. No global business formatting library may exist. All business-aware formatters—currency, date, phone, tax, invoice, etc.—MUST remain strictly feature-local inside the autonomous sub-module `utils/` folder per Rule 80).*
 
 79. **Unsaved Changes Guard (Data Loss Prevention)**:
 Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to prevent accidental data loss. Rule 79 supersedes Rule 46 for scope; Rule 46 defines only the browser `beforeunload` mechanism.
@@ -3128,10 +4016,10 @@ Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to pr
 80. **Currency & Number Formatting Standardization**:
 Never manually concatenate currency symbols, format numbers with raw `.toFixed()`, or build locale strings directly inside JSX or component logic. All financial values and large numeric metrics MUST be piped through a centralized formatting utility.
 - **Minor-unit contract:** API monetary values are stored as minor units (paise, cents). Always divide by the appropriate currency subunit divisor (e.g., 100 for INR) before formatting. Never pass a raw API minor-unit value to a display formatter that expects major units — this causes a 100× display error.
-- **Required utilities:** Define `[module]FormatCurrency(amountMinor: number, currencyCode: string, locale: string): string` locally inside the feature module. **Do NOT use a global `src/lib/formatters.ts`.** Each feature module must own its own formatting utility to prevent cross-module coupling. This is the single source of truth for numeric display formatting within that feature.
+- **Required utilities:** Define `[module]FormatCurrency(amountMinor: number, currencyCode: string, locale: string): string` locally inside the feature module under the autonomous sub-module `utils/` folder. **Do NOT create or use a global formatters library.** Each feature module must own its own formatting utility to prevent cross-module coupling. The only permitted global presentation utility is `src/lib/display_value.ts` for zero-business en-dash fallbacks.
 - **Locale consistency:** The utility must use the `Intl.NumberFormat` API to ensure consistent comma separators, decimal places, and currency symbol placement based on the app's configured locale — never hardcoded.
 - **Decimal precision:** Financial values MUST use the feature-local currency formatter. Metric counts (e.g., total members) must display with comma separators but no decimals.
-- **This rule is the numeric parallel to Rule 24** (which standardizes date/time formatting via `date-fns`/`dayjs`). Just as Rule 24 forbids raw `new Date()` in JSX, this rule forbids raw number concatenation.
+- **This rule is the numeric parallel to Rule 24** (which standardizes date/time formatting via `date-fns`). Just as Rule 24 forbids raw `new Date()` in JSX, this rule forbids raw number concatenation.
 - ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>` — `payment.amount` is in paise; this displays 100× too large.
 - ✅ **GOOD:** `<td>{adminBillingFormatCurrency(payment.amount, 'INR', locale)}</td>`
 - **ESLint enforcement:** Add a custom ESLint rule or `no-restricted-syntax` pattern to flag direct `.toFixed()` calls and currency symbol string concatenation in `.tsx` files.
@@ -3192,13 +4080,13 @@ EVERY frontend API client function that performs a mutation MUST require an `ide
 Example:
 ```typescript
 import { apiFetch } from '@/lib/api';
-import { MANAGER_MEMBERS_URLS } from '@/app/frontend_manager/manager_members/manager_members_url_config';
+import { MANAGER_MEMBERS_API } from '@/app/frontend_manager/manager_members/manager_members_url_config';
 
 export const updateMemberProfile = async (
   id: string,
   body: unknown,
   idempotencyKey: string,
-) => apiFetch(MANAGER_MEMBERS_URLS.PROFILE(id), {
+) => apiFetch(MANAGER_MEMBERS_API.detail(id), {
   method: 'PATCH',
   body: JSON.stringify(body),
   headers: {
@@ -3233,32 +4121,34 @@ The frontend uses `next-intl` (Next.js) with **co-located locale files inside ea
 - **Other languages:** Written by the AI agent in the same commit
 - **Runtime cost:** Zero — all files are static JSON, bundled at build time
 
-### Module-Level File Structure
-Each feature module owns its own `[moduleName]_locales/` folder:
+### Sub-Module-Level File Structure
+Each autonomous sub-module owns its own `locales/` folder:
 ```text
 src/app/
   frontend_admin/
     admin_members/
-      [moduleName]_locales/
-        admin_members_en.json   ← AI writes this when creating the module
-        admin_members_hi.json   ← AI translates this in the same commit
-      admin_members_components/
-      admin_members_hooks/
+      members_directory/
+        locales/
+          admin_members_directory_en.json   ← AI writes this when creating the sub-module
+          admin_members_directory_hi.json   ← AI translates this in the same commit
+        components/
+        hooks/
   frontend_superadmin/
     superadmin_gyms/
-      [moduleName]_locales/
-        superadmin_gyms_en.json
-        superadmin_gyms_hi.json
-      superadmin_gyms_components/
-      superadmin_gyms_hooks/
+      gyms_list/
+        locales/
+          superadmin_gyms_list_en.json
+          superadmin_gyms_list_hi.json
+        components/
+        hooks/
 scripts/
-  merge-locales.ts   ← Merges all _locales into one bundle at build time
+  merge-locales.ts   ← Merges all sub-module locales into one bundle at build time
 ```
 
-### `[moduleName]_locales/[moduleName]_en.json` (Source of Truth per Module)
+### `locales/[role]_[submodule]_en.json` (Source of Truth per Sub-Module)
 ```json
 {
-  "SUPERADMIN_GYMS": {
+  "SUPERADMIN_GYMS_LIST": {
     "PAGE_TITLE": "Gyms",
     "ADD_GYM": "Add Gym",
     "EMPTY_STATE": "No gyms found. Add your first gym to get started."
@@ -3268,12 +4158,12 @@ scripts/
 
 ### AI Agent Translation Rule
 When writing a new feature module, the AI MUST:
-1. Create `[moduleName]_locales/[moduleName]_en.json` with all English UI strings used in the module.
+1. Create `locales/[role]_[submodule]_en.json` with all English UI strings used in the sub-module.
 2. In the **same commit**, create locale files for all currently active languages defined in the "Currently Active Languages" section, using its own translation capability.
 3. Translations must be **contextually correct** for a Gym Management SaaS.
 
 ```json
-// [moduleName]_locales/[moduleName]_hi.json — AI writes this, context-aware
+// locales/[role]_[submodule]_hi.json — AI writes this, context-aware
 {
   "MEMBERS": {
     "PAGE_TITLE": "सदस्य",
@@ -3302,7 +4192,7 @@ export const ManagerMembersPage = () => {
 ```
 
 ### `scripts/merge-locales.ts` (Build-Time Merge Script)
-Merges all module `[moduleName]_locales/` folders into a single bundle per language. Runs automatically at build time.
+Merges all sub-module `locales/` folders into a single bundle per language. Runs automatically at build time.
 
 ```typescript
 // scripts/merge-locales.ts
@@ -3314,7 +4204,7 @@ import { globSync } from 'glob';
 const OUTPUT_DIR = 'public/locales';
 const merged: Record<string, Record<string, unknown>> = {};
 
-for (const file of globSync('src/app/frontend_*/**/[moduleName]_locales/*.json')) {
+for (const file of globSync('src/app/frontend_*/**/locales/*.json')) {
   const lang = path.basename(file, '.json');         // 'en', 'nl', etc.
   const content = JSON.parse(fs.readFileSync(file, 'utf-8'));
   merged[lang] = { ...merged[lang], ...content };
@@ -3352,14 +4242,14 @@ export const apiFetch = async (url: string, options?: RequestInit) => {
 ```
 
 ### Developer Workflow
-1. AI writes a new feature module and creates `[moduleName]_locales/[moduleName]_en.json`.
-2. AI, in the **same response**, creates all currently active target-language `[moduleName]_locales/[moduleName]_{lang}.json` files.
+1. AI writes a new feature module and creates `locales/[role]_[submodule]_en.json`.
+2. AI, in the **same response**, creates all currently active target-language `locales/[role]_[submodule]_{lang}.json` files.
 3. Run `npm run i18n:merge` (or let CI/build do it automatically).
-4. Commit all `[moduleName]_locales/` files alongside the feature module code.
+4. Commit all `locales/` files alongside the feature module code.
 5. **Never** put locale files in a central `src/messages/` or `src/i18n/` folder.
 
 ### Currently Active Languages
-This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `[moduleName]_locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
+This is the **authoritative list of languages** currently active in the project. When an AI agent creates any new module, it MUST generate `locales/` files ONLY for the languages in this active list, unless the task explicitly requires additional locales.
 
 | Code | Language | Region | Script | Priority |
 |------|----------|--------|--------|----------|
@@ -3387,7 +4277,7 @@ When a planned language becomes officially active, every affected module MUST ad
 
 > **Indian Script Note (Web):** Indian scripts (Devanagari, Tamil, Telugu, etc.) require specific fonts. Use `next/font` to load Google Fonts such as `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu` etc. for each script. Load fonts lazily — only load a script font when that locale is active. Never embed all script fonts at initial page load.
 
-> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `[moduleName]_locales/[moduleName]_en.json` AND all currently active target-language files (e.g., `[moduleName]_locales/[moduleName]_hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
+> **AI AGENT NOTE:** Every UI string in JSX MUST use `t('NAMESPACE.KEY')`. When creating a new feature module, you MUST create `locales/[role]_[submodule]_en.json` AND all currently active target-language files (e.g., `locales/[role]_[submodule]_hi.json`) in the same response. Use your own translation capability — do NOT call external APIs. Hardcoding English strings in JSX is a critical violation.
 
 ## Rule 19 — Centralized Feature Flags
 * **The Rule:** Never use environment variables (e.g., `NEXT_PUBLIC_ENABLE_FEATURE`) directly in JSX logic to conditionally render UI elements. 
@@ -3402,7 +4292,7 @@ The backend sends all monetary amounts as **integers in the smallest currency un
 ### Canonical Formatting Utility
 Create ONE shared utility per feature module. All currency display in that module MUST go through this function:
 ```typescript
-// admin_billing_utils/adminBillingFormatCurrency.ts (co-located inside the feature module)
+// utils/adminBillingFormatCurrency.ts (co-located inside the sub-module utils/ folder)
 /**
  * Formats a monetary amount from its smallest unit to a locale-aware display string.
  * @param amount  Integer in smallest unit (e.g., 9999 for ₹99.99)
@@ -3495,10 +4385,10 @@ Each responsibility MUST have exactly one owner to kill hallucination vectors:
 Forbidden: having the same responsibility duplicated in multiple places.
 
 ### Entry Point Discovery Rule
-An AI MUST be able to discover the module architecture within 60 seconds by reading exactly two files:
-1. `admin_members_features.md`
-2. `admin_members_components/AdminMembersMain.tsx`
-If this is not possible, the module FAILS the portability and architecture review.
+An AI MUST be able to discover the sub-module architecture within 60 seconds by reading exactly two files:
+1. `[role]_[submodule]_features.md` (e.g., `admin_members_directory_features.md`)
+2. `components/[Role][Submodule]Main.tsx` (e.g., `members_directory/components/AdminMembersDirectoryMain.tsx`)
+If this is not possible, the sub-module FAILS the portability and architecture review.
 
 
 ## AI Introspection & Agentic Compatibility Rules
@@ -3519,6 +4409,7 @@ If this is not possible, the module FAILS the portability and architecture revie
 * **The Problem:** The `[moduleName]_features.md` file provides module-level context, but AI agents also need granular, file-level context when editing a specific hook or component.
 * **The Rule:** Every Custom Hook, complex React Component, and State Store MUST have an exhaustive JSDoc block directly above its declaration.
 * **What to include:** Explain the business intent, state dependencies, and explicit edge cases. Example: `/** @description Manages local wizard state for Member Creation. @dependencies Requires auth session. @edge-case Resets to step 1 if the API throws 409 Conflict. */`
+* **Enforcing the 5-Second Comprehension Invariant:** This mandatory docstring ensures that any human engineer or AI agent immediately grasps the exact boundaries, non-responsibilities, and call flow of the file within 5 seconds without reading past line 5.
 
 ---
 
@@ -3531,6 +4422,8 @@ The following are the ONLY approved npm packages for feature modules. AI agents 
 | Framework | `next` | 15.x | CRA, Remix, Vite standalone |
 | UI State | `zustand` | 5.x | Redux, MobX, Jotai, Recoil |
 | Server State | `@tanstack/react-query` | 5.x | SWR, Apollo Client |
+| List Virtualization | `@tanstack/react-virtual` | 3.x | `react-window`, `react-virtualized` |
+| HTTP Status Codes | `http-status-codes` | 2.x | Magic integer literals (e.g., 200, 404, 500) |
 | Forms | `react-hook-form` | 7.x | Formik, Final Form |
 | Form Validation | `zod` | 3.x | Yup, Joi |
 | Form Resolver | `@hookform/resolvers` | 3.x | — |
@@ -3542,6 +4435,19 @@ The following are the ONLY approved npm packages for feature modules. AI agents 
 | Routing Progress | `nextjs-toploader` | latest | — |
 | i18n | `next-intl` | latest | i18next, react-i18next |
 | Theme | `next-themes` | latest | — |
+
+### Approved Test & Tooling Infrastructure Registry (Scoped to `tests/`, `mocks/`, and `playwright_E2E/`)
+
+The following packages are approved exclusively for testing, mock interception, and test runner execution. They MUST NOT be imported into runtime feature components, hooks, or stores:
+
+| Concern | Approved Package | Version Lock | FORBIDDEN Alternatives |
+|---|---|---|---|
+| Mock Service Worker | `msw` | 2.x | miragejs, nock (for browser/RTL) |
+| Unit / Component Test Runner | `vitest` | latest | jest (for new web features) |
+| React Component Testing | `@testing-library/react` | latest | enzyme |
+| DOM Assertions | `@testing-library/jest-dom` | latest | chai, custom DOM matchers |
+| User Event Simulation | `@testing-library/user-event` | latest | fireEvent raw triggers |
+| Browser E2E Testing | `@playwright/test` | latest | cypress, puppeteer, selenium |
 
 **Rules:**
 - Introducing a package NOT in this list requires: (a) adding it to this registry, (b) documenting the justification in the feature's `_features.md`, and (c) explicit human developer approval.
@@ -3822,15 +4728,15 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 | **Gate 3** | CSS Token Mapping Verified | `globals.css` / `@theme inline` mapping verified — all semantic tokens produce valid Tailwind classes | **STOP.** Broken styles in light/dark mode |
 | **Gate 4** | Zero Hardcoded Colors | Grep JSX for hex `#`, `rgb(`, raw Tailwind colors (`bg-red-500`), or arbitrary CSS var brackets | **STOP.** Hardcoded color = REJECTED DELIVERY |
 | **Gate 5** | Zero Forbidden Opacity Modifiers | Grep JSX for `bg-success/10`, `bg-danger/5`, etc. Only semantic background tokens permitted | **STOP.** Contrast/theme violation |
-| **Gate 6** | Centralized URL Config Present | `[moduleName]_url_config.ts` present, exports all routes/APIs with real paths (zero placeholders) | **STOP.** Missing config = REJECTED DELIVERY |
-| **Gate 7** | Feature Map Non-Generic | `[moduleName]_features.md` complete with real endpoints, flows, and component tree (no TBDs) | **STOP.** Generic doc = INCOMPLETE MODULE |
+| **Gate 6** | Centralized URL Config Present | `config/[role]_[submodule].url_config.ts` present, exports `[ROLE]_[SUBMODULE]_ROUTES` and `[ROLE]_[SUBMODULE]_API` with real paths (zero placeholders) | **STOP.** Missing config = REJECTED DELIVERY |
+| **Gate 7** | Feature Map Non-Generic | `[role]_[submodule]_features.md` complete with real endpoints, flows, component tree, and Module Run, Mock & Test Harness (no TBDs) | **STOP.** Generic doc = INCOMPLETE MODULE |
 | **Gate 8** | TanStack Query v5 Compliance | Verify `isPending` used (no `isLoading`), no deprecated callbacks in `useQuery` | **STOP.** Broken server state / crash |
 | **Gate 9** | React Hook Form v7 Compliance | Verify `zodResolver` used, schemas co-located, zero Yup/Joi resolvers | **STOP.** Broken form validation |
 | **Gate 10** | Zero Barrel Files | Verify zero `index.ts`, `*Export.ts`, or re-export facades across entire module | **STOP.** Circular dependency risk |
 | **Gate 11** | Scope Integrity Verified | Changed-file list produced — strictly target module files changed (or approved infrastructure) | **STOP.** Scope leak = REJECTED DELIVERY |
 | **Gate 12** | Multi-Tenancy Enforced | Verify `gymId`/`branchId` extracted from auth/session context, never from client body | **STOP.** Cross-tenant data vulnerability |
 | **Gate 13** | Complete Async States | Verify loading skeletons, empty states (`[Module]EmptyState.tsx`), and error states implemented | **STOP.** Blank screen on async fetch |
-| **Gate 14** | Consolidated Integration Guide & Re-Audit Included | `INTEGRATION_GUIDE.md` (consolidating changelog, route preservation matrix, host integration, and verification commands), `RE_AUDIT_CHECKLIST_RESULT.md`, and `playwright_E2E/` present inside ZIP root | **STOP.** Missing deliverable = REJECTED DELIVERY |
+| **Gate 14** | Consolidated Integration Guide & Re-Audit Included | `INTEGRATION_GUIDE.md` (consolidating changelog, route preservation matrix, host integration, and verification commands), `RE_AUDIT_CHECKLIST_RESULT.md`, and local test harness + mirrored `playwright_E2E/` present | **STOP.** Missing deliverable = REJECTED DELIVERY |
 
 > ⛔ **If ANY source-level code gate fails: STATUS = `REPAIR_REQUIRED`. Fix the source code. Once all source-level code fixes are written, package and deliver the ZIP with deferred/out-of-scope items explicitly documented.**
 
@@ -3843,14 +4749,14 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 > **Every item MUST be verified against actual code with file and line evidence. Record `NON_COMPLIANT` for any failure.**
 
 ### 1. Architecture & Isolation Gate
-- [ ] **AI Portability:** Feature folder alone provides complete context for understanding, mocking, testing, and repairing the feature. — *STOP if sibling business files are required.*
-- [ ] **Zero Cross-Module Business Imports:** Zero imports from sibling feature modules. (Verified by ESLint boundaries). — *STOP if `import ... from '../sibling'` found.*
+- [ ] **AI Portability:** Autonomous sub-module folder alone provides complete context for understanding, mocking, testing, and repairing the feature. — *STOP if sibling business files are required.*
+- [ ] **Zero Cross-Module Business Imports:** Zero imports from sibling feature modules or sibling sub-modules. (Verified by ESLint boundaries). — *STOP if `import ... from '../sibling'` found.*
 - [ ] **No Role-Wide Business Buckets:** No generic `superadmin_components/`, `admin_hooks/`, etc., containing feature business logic. — *STOP if unowned bucket exists.*
-- [ ] **Root Quarantine Compliant:** ONLY routing files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `template.tsx`, `default.tsx`), `[moduleName]_url_config.ts`, and the documentation trio (`[moduleName]_features.md`, `[moduleName]_forbidden.md`, `[moduleName]_theme_contract.md` or `_features.md`, `_forbidden.md`, `_theme_contract.md`) exist at feature root. All other files (.ts, .tsx) are in prefixed subfolders. — *STOP if any other code file is at root.*
-- [ ] **Feature Map Freshness:** `[moduleName]_features.md` contains real endpoints, data requirements table, component tree, and permissions without placeholder text. — *STOP if generic or outdated.*
-- [ ] **Forbidden Patterns Enforced:** `[moduleName]_forbidden.md` present and specific to this module. — *STOP if missing.*
-- [ ] **Theme Contract Verified:** `[moduleName]_theme_contract.md` lists all consumed design tokens. — *STOP if missing.*
-- [ ] **URL Centralization Verified:** `[moduleName]_url_config.ts` present and consumed by all API and navigation call sites. — *STOP if raw URL in JSX/hooks.*
+- [ ] **Root Quarantine Compliant:** Pure Domain Container root (`{role}_{domain}/`) contains ONLY `layout.tsx` (tab bar), `page.tsx` (sub-module redirect), master domain doc trio, and child sub-module directories. Autonomous Sub-Module root (`{domain}_{capability}/`) contains ONLY routing entry files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`), `config/[role]_[submodule].url_config.ts`, and the sub-module documentation trio (`_features.md`, `_forbidden.md`, `_theme_contract.md`). All executable source code (.ts, .tsx) lives inside canonical category subfolders (`components/`, `hooks/`, `api/`, `state/`, `types/`, `schemas/`, `constants/`, `utils/`, `locales/`, `mocks/`, `tests/`, `contracts/`) with `[Role][Submodule][Name]` prefixing. Zero loose code files at root. — *STOP if any unapproved code file is at root.*
+- [ ] **Feature Map Freshness:** `[role]_[submodule]_features.md` contains all 22 canonical sections, real endpoints, data requirements table, component tree, permissions, and Section 20 Standalone Harness without placeholder text. — *STOP if generic or outdated.*
+- [ ] **Forbidden Patterns Enforced:** `[role]_[submodule]_forbidden.md` present and specific to this sub-module. — *STOP if missing.*
+- [ ] **Theme Contract Verified:** `[role]_[submodule]_theme_contract.md` lists all consumed design tokens. — *STOP if missing.*
+- [ ] **URL Centralization Verified:** `config/[role]_[submodule].url_config.ts` present and consumed by all API and navigation call sites. — *STOP if raw URL in JSX/hooks.*
 
 ### 2. State & Data Contract Gate
 - [ ] **Server State via TanStack Query v5:** Uses `isPending`, namespaced query keys (Rule 8), no deprecated v4 APIs. — *STOP if `isLoading` on mutation.*
@@ -3876,7 +4782,7 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 ### 5. Testing & Verification Gate
 - [ ] **Interaction Testing (Behavioral Proof):** Unit/component tests verify real user actions (click -> submit -> visible state update). Button existence checks alone are REJECTED. — *STOP if tests are superficial.*
 - [ ] **Coverage Standards:** Custom hooks tested at ≥80% branch coverage; utilities tested at ≥90% branch coverage. — *STOP if coverage below threshold.*
-- [ ] **Isolated Playwright E2E:** Critical flows covered in mirrored `playwright_E2E/frontend_{role}_e2e/{role}_{module}/` directory. — *STOP if E2E missing for critical CRUD.*
+- [ ] **Isolated Playwright E2E:** Critical flows covered in mirrored `playwright_E2E/frontend_{role}_e2e/{role}_{module}/` directory (classified as `DEFERRED_TO_HOST_RUNTIME` during standalone/browser-less AI ZIP evaluation; sub-module `tests/` and `tests/harness/` provide 100% self-sufficient offline verification). — *STOP if E2E missing for critical CRUD.*
 - [ ] **Zero Fake Test Assertions:** Zero `expect(true).toBe(true)` or tautological assertions. — *STOP if fake test found.*
 
 ### 6. Performance & UX Gate
@@ -3887,7 +4793,7 @@ Every project MUST have a `globals.css` (or equivalent canonical theme styleshee
 
 ### 7. Localization Gate
 - [ ] **Zero Hardcoded Strings in JSX (Rule 18):** All user-facing text uses `t('KEY')` via `next-intl`. — *STOP if hardcoded English string in JSX.*
-- [ ] **Module-Co-located Locales:** `[moduleName]_locales/[moduleName]_en.json` and all active language files generated inside module. — *STOP if centralized messages folder used.*
+- [ ] **Module-Co-located Locales:** `locales/[role]_[submodule]_en.json` and all active language files generated inside autonomous sub-module `locales/` folder. — *STOP if centralized messages folder used.*
 - [ ] **Locale-Aware Currency & Numbers (Rule 80):** Currency formatted via module-local `[module]FormatCurrency()`. Minor units correctly divided by subunit divisor. — *STOP if raw minor units rendered.*
 - [ ] **Container Translation Expansion:** UI containers accommodate translated text up to 2× English length without truncation or overflow. — *STOP if layout breaks on long text.*
 
